@@ -1,6 +1,7 @@
 import { Plugin } from "../plugin";
 import { closestSvgRoot, isContentEditable, isZwnbsp } from "../utils/dom_info";
 import { closestElement, selectElements } from "../utils/dom_traversal";
+import { leftPos, rightPos } from "../utils/position";
 import { DISABLED_NAMESPACE } from "./toolbar/toolbar_plugin";
 
 /**
@@ -8,17 +9,18 @@ import { DISABLED_NAMESPACE } from "./toolbar/toolbar_plugin";
  * elements (see `isContentEditable`).
  *
  * A text of an SVG cannot contain HTML elements: it cannot be split into blocks
- * nor contain line breaks, tabs or formatting.
+ * nor contain line breaks, tabs or formatting. Enter and Tab are used to go from
+ * one text to another instead, as in a form.
  */
 export class InlineSvgPlugin extends Plugin {
     static id = "inlineSvg";
     static dependencies = ["feff", "selection"];
     /** @type {import("plugins").EditorResources} */
     resources = {
-        split_element_block_overrides: ({ targetNode }) => !!closestSvgRoot(targetNode),
+        split_element_block_overrides: this.handleSplitInSvg.bind(this),
         insert_line_break_element_overrides: ({ targetNode }) => !!closestSvgRoot(targetNode),
-        tab_overrides: () => this.isSelectionInSvg(),
-        shift_tab_overrides: () => this.isSelectionInSvg(),
+        tab_overrides: () => this.selectSiblingText("next"),
+        shift_tab_overrides: () => this.selectSiblingText("previous"),
         properties: {
             predicate: (node) => !!closestSvgRoot(node),
             formattable: false,
@@ -43,9 +45,86 @@ export class InlineSvgPlugin extends Plugin {
         },
     };
 
-    isSelectionInSvg() {
+    /**
+     * At the end of a text, Enter moves the cursor to the start of the next
+     * text of the SVG, or right after the SVG if there is none. Elsewhere in
+     * the SVG, it does nothing.
+     *
+     * @param {Object} params
+     * @param {Node} params.targetNode
+     * @param {number} params.targetOffset
+     * @returns {boolean} whether the split was handled
+     */
+    handleSplitInSvg({ targetNode, targetOffset }) {
+        const svg = closestSvgRoot(targetNode);
+        if (!svg) {
+            return false;
+        }
+        const textEl = closestElement(targetNode, "text");
+        if (textEl && this.isAtTextEnd(textEl, targetNode, targetOffset)) {
+            const nextTextEl = this.getSiblingText(svg, textEl, "next");
+            if (nextTextEl) {
+                this.dependencies.selection.setCursorStart(nextTextEl);
+            } else {
+                const [anchorNode, anchorOffset] = rightPos(svg);
+                this.dependencies.selection.setSelection({ anchorNode, anchorOffset });
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Tab and Shift+Tab select the content of the next or previous text of
+     * the SVG, so that typing replaces it. From the last or first text, they
+     * move the cursor right after or right before the SVG.
+     *
+     * @param {"next"|"previous"} direction
+     * @returns {boolean} whether the selection is in an SVG
+     */
+    selectSiblingText(direction) {
         const { anchorNode } = this.dependencies.selection.getEditableSelection();
-        return !!closestSvgRoot(anchorNode);
+        const svg = closestSvgRoot(anchorNode);
+        if (!svg) {
+            return false;
+        }
+        const textEl = closestElement(anchorNode, "text");
+        const siblingTextEl = textEl && this.getSiblingText(svg, textEl, direction);
+        if (siblingTextEl) {
+            this.dependencies.selection.setSelection({
+                anchorNode: siblingTextEl,
+                anchorOffset: 0,
+                focusNode: siblingTextEl,
+                focusOffset: siblingTextEl.childNodes.length,
+            });
+        } else if (textEl) {
+            const [anchorNode, anchorOffset] = (direction === "next" ? rightPos : leftPos)(svg);
+            this.dependencies.selection.setSelection({ anchorNode, anchorOffset });
+        }
+        return true;
+    }
+
+    /**
+     * @param {SVGSVGElement} svg
+     * @param {SVGTextElement} textEl
+     * @param {"next"|"previous"} direction
+     * @returns {SVGTextElement|undefined}
+     */
+    getSiblingText(svg, textEl, direction) {
+        const texts = [...svg.querySelectorAll("text")];
+        return texts[texts.indexOf(textEl) + (direction === "next" ? 1 : -1)];
+    }
+
+    /**
+     * @param {SVGTextElement} textEl
+     * @param {Node} node
+     * @param {number} offset
+     * @returns {boolean} whether there is no visible text after the position
+     */
+    isAtTextEnd(textEl, node, offset) {
+        const range = this.document.createRange();
+        range.setStart(node, offset);
+        range.setEnd(textEl, textEl.childNodes.length);
+        return !range.toString().replaceAll("\ufeff", "");
     }
 
     /**

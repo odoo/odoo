@@ -233,22 +233,86 @@ describe("SVG with text", () => {
                 contentAfter: `<p>ab${textSvg("x[]y")}cd</p>`,
             });
         });
-    });
 
-    describe("Tab", () => {
-        test("should not insert a tab in the SVG text", async () => {
+        test("should move to the next text of the SVG at the end of a text", async () => {
             await testEditor({
-                contentBefore: `<p>ab${textSvg("x[]y")}cd</p>`,
-                stepFunction: keydownTab,
-                contentAfter: `<p>ab${textSvg("x[]y")}cd</p>`,
+                contentBefore: `<p>ab<svg><text>x[]</text><circle r="5"></circle><text>y</text></svg>cd</p>`,
+                stepFunction: splitBlock,
+                contentAfter: `<p>ab<svg><text>x</text><circle r="5"></circle><text>[]y</text></svg>cd</p>`,
             });
         });
 
-        test("should do nothing in the SVG text with Shift+Tab", async () => {
+        test("should move to the next text of the SVG at the end of a tspan", async () => {
             await testEditor({
-                contentBefore: `<p>ab${textSvg("x[]y")}cd</p>`,
+                contentBefore: `<p>ab<svg><text>x<tspan>y[]</tspan></text><text>z</text></svg>cd</p>`,
+                stepFunction: splitBlock,
+                contentAfter: `<p>ab<svg><text>x<tspan>y</tspan></text><text>[]z</text></svg>cd</p>`,
+            });
+        });
+
+        test("should move after the SVG at the end of its last text", async () => {
+            await testEditor({
+                contentBefore: `<p>ab${textSvg("xy[]")}cd</p>`,
+                stepFunction: splitBlock,
+                contentAfter: `<p>ab${textSvg("xy")}[]cd</p>`,
+            });
+        });
+
+        test("should move after the SVG at the end of its last text, at the end of a paragraph", async () => {
+            await testEditor({
+                contentBefore: `<p>ab${textSvg("xy[]")}</p>`,
+                stepFunction: splitBlock,
+                contentAfter: `<p>ab${textSvg("xy")}[]</p>`,
+            });
+        });
+    });
+
+    describe("Tab", () => {
+        const threeTexts = (a, b, c) =>
+            `<svg><text>${a}</text><circle r="5"></circle><text>${b}</text><text>${c}</text></svg>`;
+
+        test("should select the next text of the SVG", async () => {
+            await testEditor({
+                contentBefore: `<p>ab${threeTexts("x[]y", "z", "w")}cd</p>`,
+                stepFunction: keydownTab,
+                contentAfter: `<p>ab${threeTexts("xy", "[z]", "w")}cd</p>`,
+            });
+        });
+
+        test("should replace the text selected with Tab when typing", async () => {
+            // As elsewhere in the editor, the typed text keeps the formatting
+            // of the end of the replaced selection (here the <tspan>).
+            await testEditor({
+                contentBefore: `<p>ab${threeTexts("x[]y", "z<tspan>t</tspan>", "w")}cd</p>`,
+                stepFunction: async (editor) => {
+                    await keydownTab(editor);
+                    await insertText(editor, "N");
+                },
+                contentAfter: `<p>ab${threeTexts("xy", "<tspan>N[]</tspan>", "w")}cd</p>`,
+            });
+        });
+
+        test("should move after the SVG from its last text", async () => {
+            await testEditor({
+                contentBefore: `<p>ab${threeTexts("x", "z", "w[]")}cd</p>`,
+                stepFunction: keydownTab,
+                contentAfter: `<p>ab${threeTexts("x", "z", "w")}[]cd</p>`,
+            });
+        });
+
+        test("should select the previous text of the SVG with Shift+Tab", async () => {
+            await testEditor({
+                contentBefore: `<p>ab${threeTexts("x", "z", "w[]")}cd</p>`,
                 stepFunction: keydownShiftTab,
-                contentAfter: `<p>ab${textSvg("x[]y")}cd</p>`,
+                contentAfter: `<p>ab${threeTexts("x", "[z]", "w")}cd</p>`,
+            });
+        });
+
+        test("should move before the SVG from its first text with Shift+Tab", async () => {
+            await testEditor({
+                contentBefore: `<p>ab${threeTexts("x[]", "z", "w")}cd</p>`,
+                stepFunction: keydownShiftTab,
+                contentAfter: `<p>ab[]${threeTexts("x", "z", "w")}cd</p>`,
             });
         });
     });
