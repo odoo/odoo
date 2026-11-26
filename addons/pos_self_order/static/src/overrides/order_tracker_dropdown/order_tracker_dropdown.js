@@ -1,6 +1,7 @@
 import { useEffect, signal, t } from "@odoo/owl";
 import { patch } from "@web/core/utils/patch";
 import { OrderTrackerDropdown } from "@point_of_sale/app/components/order_tracker_dropdown/order_tracker_dropdown";
+import { ConnectionLostError } from "@web/core/network/rpc";
 
 patch(OrderTrackerDropdown.prototype, {
     setup() {
@@ -31,18 +32,26 @@ patch(OrderTrackerDropdown.prototype, {
         const externalOrderSummary = super.externalOrderSummary;
         if (this.pos.config.self_ordering_mode === "mobile") {
             const activeSnooze = this.pos.getActiveSnooze("self-ordering");
+            const doneOrderIds = new Set(this.pos.paidSelfOrderIds);
+            let ongoing = 0;
+            for (const order of this.pos.models["pos.order"].getAll()) {
+                if (order.source !== "mobile") {
+                    continue;
+                }
+                if (order.state === "draft") {
+                    ongoing++;
+                } else if (["paid", "done"].includes(order.state)) {
+                    doneOrderIds.add(order.id);
+                }
+            }
             return [
                 {
                     type: "SOURCE",
                     searchTerm: "mobile",
                     imageUrl: this.pos.config.receiptLogoUrl,
                     new: 0, // All self-orders are sent directly to the kitchen!
-                    ongoing: this.pos.models["pos.order"].filter(
-                        (o) => o.source == "mobile" && o.state == "draft"
-                    ).length,
-                    done: this.pos.models["pos.order"].filter(
-                        (o) => o.source == "mobile" && ["paid", "done"].includes(o.state)
-                    ).length,
+                    ongoing,
+                    done: doneOrderIds.size,
                     onToggle: () => this.snoozeSelfOrdering(),
                     isChecked: !activeSnooze?.id,
                     counter: this.selfSnoozeCountdown(),
@@ -51,6 +60,26 @@ patch(OrderTrackerDropdown.prototype, {
             ];
         }
         return externalOrderSummary;
+    },
+    async goToOrders(serviceName, state, searchTerm = "") {
+        if (serviceName === "SOURCE" && state === "DONE") {
+            await this.loadPaidSelfOrders();
+        }
+        return super.goToOrders(serviceName, state, searchTerm);
+    },
+    async loadPaidSelfOrders() {
+        const orderModel = this.pos.models["pos.order"];
+        const missingIds = this.pos.paidSelfOrderIds.filter((id) => !orderModel.get(id));
+        if (!missingIds.length) {
+            return;
+        }
+        try {
+            await this.pos.data.loadServerOrders([["id", "in", missingIds]]);
+        } catch (error) {
+            if (!(error instanceof ConnectionLostError)) {
+                throw error;
+            }
+        }
     },
     updateSelfCountdown() {
         const activeSnooze = this.pos.getActiveSnooze("self-ordering");
