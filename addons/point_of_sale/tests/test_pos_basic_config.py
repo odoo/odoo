@@ -4,6 +4,7 @@
 import odoo
 
 from odoo import fields
+from odoo.exceptions import UserError
 from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 from freezegun import freeze_time
 from dateutil.relativedelta import relativedelta
@@ -1358,3 +1359,32 @@ class TestPoSBasicConfig(TestPoSCommon):
         open_session_lines = open_session.statement_line_ids
         open_session.try_cash_in_out('out', 50, 'withdrawal', {'translatedType': 'out'})
         self.assertEqual((open_session.statement_line_ids - open_session_lines).amount, -50)
+
+    def test_sync_printed_draft_order(self):
+        """ An order saved as draft, then completed and paid offline, can have its receipt print
+        reach the server before its payments. It must still be synced as paid, and its payments
+        must be locked once it is paid.
+        """
+        self.open_new_session()
+        uuid = self.create_random_uid()
+
+        draft_order_data = self.create_ui_order_data([(self.product1, 1)], payments=[], uuid=uuid)
+        draft_order_data['state'] = 'draft'
+        res = self.env['pos.order'].sync_from_ui([draft_order_data])
+        order = self.env['pos.order'].browse(res['pos.order'][0]['id'])
+        order.write({'nb_print': 1})
+
+        paid_order_data = self.create_ui_order_data([(self.product1, 1), (self.product2, 1)], uuid=uuid)
+        paid_order_data.update({
+            'state': 'paid',
+            'nb_print': 1,
+            'lines': paid_order_data['lines'][1:],
+        })
+        self.env['pos.order'].sync_from_ui([paid_order_data])
+
+        self.assertRecordValues(order, [{'state': 'paid', 'nb_print': 1, 'amount_paid': order.amount_total}])
+        self.assertEqual(order.lines.product_id, self.product1 | self.product2)
+        self.assertEqual(len(order.payment_ids), 1)
+        self.assertEqual(order.picking_count, 1)
+        with self.assertRaises(UserError):
+            order.write({'payment_ids': [(0, 0, {'amount': 1, 'payment_method_id': self.cash_pm1.id})]})

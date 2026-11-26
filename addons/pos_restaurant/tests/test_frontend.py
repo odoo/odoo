@@ -568,3 +568,27 @@ class TestFrontend(TestFrontendCommon):
     def test_quantity_correctly_displayed_after_transfer(self):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_quantity_correctly_displayed_after_transfer', login="pos_user")
+
+    def test_draft_order_not_merged_into_printed_order_of_table(self):
+        """ An order paid offline and printed is still a draft on the server until it is synced.
+        A new draft order sent for the same table must not be merged into it.
+        """
+        self.pos_config.with_user(self.pos_user).open_ui()
+        table_order = self.env['pos.order'].create({
+            'session_id': self.pos_config.current_session_id.id,
+            'table_id': self.main_floor_table_5.id,
+            'amount_tax': 0,
+            'amount_total': 0,
+            'amount_paid': 0,
+            'amount_return': 0,
+        })
+        new_order_data = {
+            'uuid': 'b7c1e1a2-3c4d-4e5f-8a9b-0c1d2e3f4a5b',
+            'session_id': self.pos_config.current_session_id.id,
+            'table_id': self.main_floor_table_5.id,
+            'state': 'draft',
+        }
+        self.assertEqual(self.env['pos.order']._get_open_order(new_order_data), table_order)
+
+        table_order.nb_print = 1
+        self.assertFalse(self.env['pos.order']._get_open_order(new_order_data))
