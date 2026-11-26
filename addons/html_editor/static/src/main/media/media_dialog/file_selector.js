@@ -424,6 +424,7 @@ export class FileSelector extends Component {
         this.state.attachments = this.state.attachments.filter(
             (attachment) => attachment.id !== attachmentId
         );
+        this.props.onAttachmentRemoved?.(attachmentId);
     }
 
     selectAttachment(attachment) {

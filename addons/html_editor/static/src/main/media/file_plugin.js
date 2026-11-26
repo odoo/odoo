@@ -213,6 +213,14 @@ export class FilePlugin extends Plugin {
             this.editable.focus();
             return;
         }
+        if (!this.config.publicAttachments) {
+            for (const attachment of attachments) {
+                this.services["pending_attachment_service"]?.addPendingAttachments(
+                    attachment.id,
+                    this.recordInfo
+                );
+            }
+        }
         if (this.config.onAttachmentChange) {
             attachments.forEach(this.config.onAttachmentChange);
         }

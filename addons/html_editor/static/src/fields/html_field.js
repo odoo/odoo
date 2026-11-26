@@ -29,7 +29,6 @@ import { EditorVersionPlugin } from "@html_editor/core/editor_version_plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { canRenderAsHTML, fixInvalidHTML, instanceofMarkup } from "@html_editor/utils/sanitize";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
-import { extractUnmappedAttachmentsIds } from "@html_editor/main/media/media_plugin";
 
 const HTML_FIELD_METADATA_ATTRIBUTES = ["data-last-history-commits"];
 
@@ -256,12 +255,7 @@ export class HtmlField extends Component {
                 await this.updateValue(this.editor.getContent());
             }
             const changeId = this.lastChangeId;
-            const editable = this.editor.editable;
             const el = await this.getEditorContent();
-            this.pendingAttachmentsService.addPendingAttachments(
-                this.props.record,
-                extractUnmappedAttachmentsIds(editable)
-            );
             const content = el.innerHTML;
             this.clearElementToCompare(el);
             const comparisonValue = el.innerHTML;
@@ -339,15 +333,8 @@ export class HtmlField extends Component {
                 return { resModel, resId, data, fields, id };
             },
             resources: {},
-            getPendingAttachmentsIds: () => {
-                this.pendingAttachmentsService.addPendingAttachments(
-                    this.props.record,
-                    extractUnmappedAttachmentsIds(this.editor.editable)
-                );
-                return (
-                    this.pendingAttachmentsService.pendingAttachmentIds[this.props.record.id] || []
-                );
-            },
+            getPendingAttachmentsIds: () =>
+                this.pendingAttachmentsService.pendingAttachmentIds[this.props.record.id] || [],
             ...this.props.editorConfig,
         };
 
@@ -512,12 +499,19 @@ const pendingAttachmentsService = {
     dependencies: ["orm"],
     start(env, { orm }) {
         const pendingAttachmentIds = {};
-        function addPendingAttachments(record, ids) {
-            if (ids?.length && !record.resId) {
-                if (!pendingAttachmentIds[record.id]) {
-                    pendingAttachmentIds[record.id] = [];
+        function addPendingAttachments(attachmentId, { id, resId } = {}) {
+            if (attachmentId && id && !resId) {
+                if (!pendingAttachmentIds[id]) {
+                    pendingAttachmentIds[id] = [];
                 }
-                pendingAttachmentIds[record.id].push(...ids);
+                pendingAttachmentIds[id].push(parseInt(attachmentId));
+            }
+        }
+        function removePendingAttachments(attachmentId, { id } = {}) {
+            if (pendingAttachmentIds[id]) {
+                pendingAttachmentIds[id] = pendingAttachmentIds[id].filter(
+                    (pendingId) => pendingId !== attachmentId
+                );
             }
         }
         function clearPendingAttachments(record) {
@@ -545,6 +539,7 @@ const pendingAttachmentsService = {
         return {
             pendingAttachmentIds,
             addPendingAttachments,
+            removePendingAttachments,
             clearPendingAttachments,
             unlinkPendingAttachments,
             addAttachmentsIdsToContext,
