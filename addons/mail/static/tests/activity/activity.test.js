@@ -247,7 +247,7 @@ test("call activity displays phone actions", async () => {
     expect(".o-mail-Activity-call").not.toHaveClass("text-action");
     expect(".o-mail-Activity-call").toHaveAttribute("href", "tel:+12025550182");
     expect(".o-mail-Activity-copy").toHaveAttribute("aria-label", "Copy");
-    expect(".o-mail-Activity-copy > span").toHaveCount(1);
+    expect(".o-mail-Activity-copy > i").toHaveCount(1);
     expect(".o-mail-Activity-copy").toHaveStyle({ opacity: "0" });
     await contains(".o-mail-Activity-call:count(1)").click();
     expect.verifySteps(["tel:+12025550182"]);
