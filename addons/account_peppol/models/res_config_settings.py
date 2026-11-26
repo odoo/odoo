@@ -205,23 +205,17 @@ class ResConfigSettings(models.TransientModel):
     @api.model
     def _get_sk_peppol_module_info(self):
         sk_module = self.env['ir.module.module'].sudo()._get('l10n_sk_peppol')  # avoid returning it since it is sudoed
+        can_install = self.env.user.has_group('base.group_system')
         warning = self.env._(
             "Your company is located in Slovakia. To send and receive invoices via Peppol, "
             "you first need to install the Slovak - E-Invoicing (Peppol) module."
         )
-        action = action_name = False
-        if not self.env.user.has_group('base.group_system'):
-            warning += "\n" + self.env._("Please ask your administrator to activate this module.")
-        elif sk_module:
-            action = sk_module._get_records_action()
-            action_name = self.env._("Go to module")
+        if can_install:
+            warning += "\n" + self.env._("It will be installed automatically when you register.")
         else:
-            action = self.env.ref('base.action_view_base_module_update').id
-            action_name = self.env._("Update App List")
-            warning += "\n" + self.env._("The module was not found. Please update the app list first.")
+            warning += "\n" + self.env._("Please ask your administrator to activate this module.")
         return {
             'is_installed': sk_module and sk_module.state == 'installed',
-            'action': action,
-            'action_name': action_name,
+            'can_install': can_install,
             'warning_message': warning,
         }
