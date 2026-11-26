@@ -1,4 +1,5 @@
 import contextlib
+from unittest.mock import patch
 
 from odoo import Command
 from odoo.exceptions import AccessError, ValidationError
@@ -123,6 +124,22 @@ class TestRules(TransactionCase):
         corecords = parent_user.child_ids
         self.assertFalse(corecords)
         self.assertFalse(corecords.has_access('read'))
+
+    def test_many2many_inaccessible_checked_once(self):
+        """ A forbidden record related to many records is checked once: reading
+        the field must not check access again for every record that holds it. """
+        ids = [self.allowed.id, self.forbidden.id]
+        containers = self.env['test_access_right.container'].create([
+            {'some_ids': [Command.set(ids)]} for _ in range(10)
+        ])
+        containers_user = containers.with_user(self.env.ref('base.public_user'))
+
+        SomeObj = self.registry['test_access_right.some_obj']
+        with patch.object(SomeObj, '_filtered_access', autospec=True, side_effect=SomeObj._filtered_access) as spy:
+            values = containers_user.read(['some_ids'])
+
+        self.assertEqual([vals['some_ids'] for vals in values], [[self.allowed.id]] * 10)
+        self.assertLessEqual(spy.call_count, 1)
 
     def test_access_rule_performance(self):
         env = self.env(user=self.env.ref('base.public_user'))
