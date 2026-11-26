@@ -103,6 +103,8 @@ class TestSelfOrderPreset(SelfOrderCommonTest):
                 'hour_to': 24,
             }) for day in range(0, 6)],
         })
+        florida_state = self.env.ref("base.state_us_10")
+        self.pos_config.company_id.state_id = florida_state
         self.preset_takeaway.write({
             'use_timing': True,
             'resource_calendar_id': resource_calendar,
@@ -115,3 +117,4 @@ class TestSelfOrderPreset(SelfOrderCommonTest):
         last_order = self.env["pos.order"].search([], limit=1, order="id desc")
         self.assertEqual(last_order.floating_order_name, 'Dr Dre')
         self.assertNotEqual(last_order.preset_time, False)
+        self.assertEqual(last_order.partner_id.state_id.id, florida_state.id)

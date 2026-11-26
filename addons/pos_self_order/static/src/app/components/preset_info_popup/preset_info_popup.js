@@ -118,7 +118,7 @@ export class PresetInfoPopup extends Component {
         this.dialog = useService("dialog");
 
         const partner = this.selfOrder.currentOrder.partner_id;
-        const companyStateId = this.selfOrder.config.company_id.country_id.state_ids[0]?.id;
+        const companyStateId = this.selfOrder.config.company_id.state_id?.id;
         const companyCountryId = this.selfOrder.config.company_id.country_id.id;
 
         this.state = proxy({
