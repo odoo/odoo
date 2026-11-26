@@ -1628,7 +1628,7 @@ class HrLeave(models.Model):
         'work_entry_type_id', 'number_of_hours',
         'work_entry_type_request_unit', 'number_of_days', 'department_id',
     )
-    @api.depends_context('short_name', 'hide_employee_name', 'groupby', 'scale')
+    @api.depends_context('short_name', 'hide_employee_name', 'group_by', 'scale')
     def _compute_display_name(self):
         for leave in self:
             leave.display_name = self._build_leave_display_name(
