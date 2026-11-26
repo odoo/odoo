@@ -32,14 +32,22 @@ export class ProductLabelSectionAndNoteListRender extends SectionAndNoteListRend
         let activeColumns = super.getActiveColumns(list);
         const productCol = activeColumns.find((col) => this.productColumns.includes(col.name));
         const labelCol = activeColumns.find((col) => col.name === "name");
+        // The label is only rendered inside the product cell when the product column uses a widget
+        // extending ProductLabelSectionAndNoteField. Otherwise, the "name" column must stay visible.
+        const productColShowsLabel =
+            productCol?.field?.component?.prototype instanceof ProductLabelSectionAndNoteField ||
+            productCol?.field?.component === ProductLabelSectionAndNoteField;
 
-        if (productCol) {
+        if (productCol && productColShowsLabel) {
             if (labelCol) {
                 list.records.forEach((record) => (record.columnIsProductAndLabel = true));
             } else {
                 list.records.forEach((record) => (record.columnIsProductAndLabel = false));
             }
             activeColumns = activeColumns.filter((col) => col.name !== "name");
+            this.titleField = productCol.name;
+        } else if (productCol) {
+            list.records.forEach((record) => (record.columnIsProductAndLabel = false));
             this.titleField = productCol.name;
         } else {
             this.titleField = "name";
