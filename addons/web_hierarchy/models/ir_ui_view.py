@@ -13,12 +13,9 @@ HIERARCHY_VALID_ATTRIBUTES = {
     'create',
     'edit',
     'delete',
-    'parent_field',
     'child_field',
-    'draggable',
     'default_order',
-    'avatar_field',
-    'label',
+    'card_id',
 }
 
 
@@ -29,6 +26,15 @@ class IrUiView(models.Model):
 
     def _is_qweb_based_view(self, view_type):
         return super()._is_qweb_based_view(view_type) or view_type == "hierarchy"
+
+    def _postprocess_tag_hierarchy(self, node, name_manager, node_info):
+        if child_field_name := node.get('child_field'):
+            child_field = name_manager.model._fields.get(child_field_name)
+            names = [child_field_name, child_field.inverse_name] if child_field else [child_field_name]
+            name_manager.must_have_fields(node, names, node_info, ('child_field', child_field_name))
+        if card_id := node.get('card_id'):
+            card_arch, _card_view = self._get_view(view_id=int(card_id), view_type='card')
+            node.append(card_arch)
 
     def _validate_tag_hierarchy(self, node, name_manager, node_info):
         if not node_info['validate']:
@@ -45,6 +51,35 @@ class IrUiView(models.Model):
             elif child.tag != 'field':
                 msg = _('Hierarchy child can only be field or template, got %s', child.tag)
                 self._raise_view_error(msg, child)
+
+        card_id = node.get('card_id')
+        if card_id and not card_id.isdigit():
+            self._raise_view_error(_("Invalid card_id '%s' in hierarchy view, it must be a view id", card_id), node)
+        if not card_id and not templates_count:
+            self._raise_view_error(_("Hierarchy view must have a card_id attribute or a templates tag"), node)
+
+        child_field_name = node.get('child_field')
+        if not child_field_name:
+            self._raise_view_error(_("Hierarchy view must have a child_field attribute"), node)
+        child_field = name_manager.model._fields.get(child_field_name)
+        if child_field is None:
+            self._raise_view_error(_(
+                "Field '%(field)s' set as child_field does not exist on model '%(model)s'",
+                field=child_field_name, model=name_manager.model._name,
+            ), node)
+        if child_field.type != 'one2many':
+            self._raise_view_error(_(
+                "Field '%s' set as child_field must be a one2many field", child_field_name,
+            ), node)
+        if child_field.comodel_name != name_manager.model._name:
+            self._raise_view_error(_(
+                "Field '%(field)s' set as child_field must target the model of the view '%(model)s'",
+                field=child_field_name, model=name_manager.model._name,
+            ), node)
+        if not child_field.inverse_name:
+            self._raise_view_error(_(
+                "Field '%s' set as child_field must have an inverse many2one field", child_field_name,
+            ), node)
 
         remaining = set(node.attrib) - HIERARCHY_VALID_ATTRIBUTES
         if remaining:

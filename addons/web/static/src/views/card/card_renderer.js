@@ -73,19 +73,21 @@ export function getFormattedRecord(record) {
     return formattedRecord;
 }
 
+export const cardRendererProps = {
+    archInfo: t.any(),
+    className: t.string().optional(),
+    Compiler: t.any().optional(),
+    readonly: t.any().optional(),
+    record: t.any(),
+};
+
 export class CardRenderer extends Component {
     static components = {
         Field,
         ViewButton,
         Widget,
     };
-    props = useProps({
-        archInfo: t.any(),
-        className: t.string().optional(),
-        Compiler: t.any().optional(),
-        readonly: t.any().optional(),
-        record: t.any(),
-    });
+    props = useProps(cardRendererProps);
     static CARD_ATTRIBUTE = CARD_ATTRIBUTE;
     static template = "web.CardRenderer";
     static Compiler = CardCompiler;

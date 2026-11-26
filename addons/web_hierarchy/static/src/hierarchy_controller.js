@@ -1,15 +1,18 @@
-import { Component, signal, t, useProps } from "@odoo/owl";
+import { Component, signal, t, useProps, proxy, computed } from "@odoo/owl";
 
 import { useModel } from "@web/model/model";
 import { addFieldDependencies, extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
 import { useSetupAction } from "@web/search/action_hook";
+import { useService } from "@web/core/utils/hooks";
 import { CogMenu } from "@web/search/cog_menu/cog_menu";
 import { Layout } from "@web/search/layout";
 import { SearchBar } from "@web/search/search_bar/search_bar";
 import { useSearchBarToggler } from "@web/search/search_bar/search_bar_toggler";
 import { standardViewProps } from "@web/views/standard_view_props";
-import { useViewButtons } from "@web/views/view_button/view_button_hook";
+import { executeButtonCallback, useViewButtons } from "@web/views/view_button/view_button_hook";
 import { ActionHelper } from "@web/views/action_helper";
+
+import { HierarchyPager } from "./hierarchy_pager";
 
 export class HierarchyController extends Component {
     static components = {
@@ -17,6 +20,7 @@ export class HierarchyController extends Component {
         CogMenu,
         SearchBar,
         ActionHelper,
+        HierarchyPager,
     };
     static template = "web_hierarchy.HierarchyView";
 
@@ -30,31 +34,27 @@ export class HierarchyController extends Component {
 
     rootRef = signal.ref();
 
+    displayNoContent = computed(() => this.model.root?.count === 0);
+
     setup() {
         const { parentFieldName, childFieldName } = this.props.archInfo;
-        const { activeFields, fields } = extractFieldsFromArchInfo(
-            this.props.archInfo,
-            this.props.fields
-        );
-        const additionalFields = [{ name: parentFieldName }];
-        if (childFieldName) {
-            additionalFields.push({ name: childFieldName });
-        }
+        const { activeFields, fields } = extractFieldsFromArchInfo(this.props.archInfo, this.props.fields);
+        const additionalFields = [{ name: "display_name" }, {name: parentFieldName, type: "many2one"}];
         addFieldDependencies(activeFields, fields, additionalFields);
         const modelConfig = this.props.state?.modelState?.config || {};
-        this.model = useModel(this.props.Model, {
-            config: modelConfig,
-            resModel: this.props.resModel,
-            activeFields,
+        this.model = proxy(useModel(this.props.Model, {
+            config: {
+                ...modelConfig,
+                resModel: this.props.resModel,
+                activeFields,
+                fields,
+            },
             defaultOrderBy: this.props.archInfo.defaultOrder,
-            fields,
             parentFieldName,
             childFieldName,
-        });
+        }));
         useViewButtons(this.rootRef, {
-            beforeExecuteAction: this.beforeExecuteActionButton.bind(this),
-            afterExecuteAction: this.afterExecuteActionButton.bind(this),
-            reload: this.model.reload.bind(this.model),
+            reload: this.model.load.bind(this.model),
         });
         useSetupAction({
             rootRef: this.rootRef,
@@ -63,17 +63,16 @@ export class HierarchyController extends Component {
             }),
         });
         this.searchBarToggler = useSearchBarToggler();
-    }
-    get displayNoContent() {
-        return this.model.resIds.length === 0;
+        this.uiService = useService("ui");
     }
 
-    async openRecord(node, newWindow) {
-        const activeIds = this.model.root.resIds;
-        this.props.selectRecord(node.resId, { activeIds, newWindow });
+    openRecord(record, newWindow) {
+        const activeIds = this.model.root.records.map((record) => record.resId);
+        this.props.selectRecord(record.resId, { activeIds, newWindow });
     }
 
-    async beforeExecuteActionButton(clickParams) {}
+    async onClickCreate(_ev, newWindow) {
+        return executeButtonCallback(this.rootRef(), () => this.props.createRecord(newWindow));
+    }
 
-    async afterExecuteActionButton(clickParams) {}
 }

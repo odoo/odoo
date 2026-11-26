@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<templates>
+    <t t-name="web_hierarchy.HierarchyPager" t-inherit="web.Pager" t-inherit-mode="primary">
+        <xpath expr="//button[hasclass('o_pager_previous')]" position="attributes">
+            <attribute name="aria-label">Load fewer nodes</attribute>
+            <attribute name="data-tooltip">Load fewer nodes</attribute>
+            <attribute name="t-att-data-hotkey">false</attribute>
+            <attribute name="t-att-disabled">this.state.isDisabled or !this.canLoadLess()</attribute>
+        </xpath>
+        <xpath expr="//button[hasclass('o_pager_previous')]/i" position="attributes">
+            <attribute name="data-icon">compress</attribute>
+        </xpath>
+        <xpath expr="//button[hasclass('o_pager_next')]" position="attributes">
+            <attribute name="aria-label">Load more nodes</attribute>
+            <attribute name="data-tooltip">Load more nodes</attribute>
+            <attribute name="t-att-data-hotkey">false</attribute>
+            <attribute name="t-att-disabled">this.state.isDisabled or !this.canLoadMore()</attribute>
+        </xpath>
+        <xpath expr="//button[hasclass('o_pager_next')]/i" position="attributes">
+            <attribute name="data-icon">expand</attribute>
+        </xpath>
+    </t>
+</templates>
