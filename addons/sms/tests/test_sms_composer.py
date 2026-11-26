@@ -103,6 +103,25 @@ class TestSMSComposerComment(SMSCommon, SMSCase):
         self.assertEqual(template.body, 'SMS Template new body')
         self.assertEqual(template.model_id.model, 'res.partner')
 
+    def test_sms_composer_default_records_vs_active_ids(self):
+        """ Records given through default_res_id(s) are kept: active_id(s) from the
+        context are used only when no record is given. """
+        partners = self.env['res.partner'].create([{'name': f'Partner {idx}'} for idx in range(3)])
+        for defaults, active_ctx, exp_res_id, exp_records in [
+            ({'default_res_ids': partners[0].ids}, {'active_id': partners[1].id}, False, partners[0]),
+            ({'default_res_ids': partners[0].ids}, {'active_ids': partners[1:].ids}, False, partners[0]),
+            ({'default_res_id': partners[0].id}, {'active_ids': partners[1:].ids}, partners[0].id, partners[0]),
+        ]:
+            with self.subTest(defaults=defaults, active_ctx=active_ctx):
+                composer = self.env['sms.composer'].with_context(
+                    active_model='res.partner',
+                    default_composition_mode='comment',
+                    **defaults, **active_ctx,
+                ).create({'body': 'Test'})
+                self.assertEqual(composer.res_id, exp_res_id)
+                self.assertEqual(composer.comment_single_recipient, bool(exp_res_id))
+                self.assertEqual(composer._get_records(), exp_records)
+
     def test_sms_composer_schedule_action(self):
         """ Test that simulates the correct working of the 'Schedule' button in the wizard """
         test_partner = self.env['res.partner'].create({
