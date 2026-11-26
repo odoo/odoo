@@ -12,7 +12,7 @@ class HrLeaveReportCalendar(models.Model):
     _description = 'Time Off Calendar'
     _inherit = 'hr.leave.display.name.mixin'
     _auto = False
-    _order = "request_date_from DESC, employee_id"
+    _order = "request_date_from DESC, employee_id, id"
 
     name = fields.Char(string='Name', readonly=True, compute="_compute_name")
     request_date_from = fields.Date(string='Request Start Date', readonly=True)

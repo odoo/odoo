@@ -46,7 +46,7 @@ class HrLeave(models.Model):
     """
     _name = 'hr.leave'
     _description = "Time Off"
-    _order = "date_from desc"
+    _order = "date_from desc, id"
     _inherit = ['mail.thread.main.attachment', 'mail.activity.mixin', 'hr.leave.display.name.mixin', 'hr.time.rule.source.mixin']
     _mail_post_access = 'read'
 
@@ -496,7 +496,23 @@ class HrLeave(models.Model):
         """
         return Domain('source_leave_id', '!=', False) | Domain('time_rule_id', '!=', False)
 
-    @api.depends('employee_id', 'state', 'request_date_from', 'request_date_to',
+    def _get_overlap_conflict_domain(self):
+        """Return the domain of the time off conflicting with this one when their periods overlap.
+
+        Override to let some time types coexist on the same hours.
+
+        :rtype: odoo.fields.Domain
+        """
+        self.ensure_one()
+        return (
+            Domain('employee_id', 'in', self.employee_id.ids)
+            & Domain('count_as', '=', self.count_as)
+            & Domain('date_from', '<', self.date_to)
+            & Domain('date_to', '>', self.date_from)
+            & Domain('id', 'not in', self.ids)
+        )
+
+    @api.depends('employee_id', 'state', 'work_entry_type_id', 'request_date_from', 'request_date_to',
             'request_hour_from', 'request_hour_to', 'request_date_from_period', 'request_date_to_period')
     def _compute_dashboard_warning_message(self):
         not_generated = ~self._get_generated_leave_domain()
@@ -516,13 +532,7 @@ class HrLeave(models.Model):
             & Domain('state', 'not in', ['cancel', 'refuse'])
         )
         for holiday in check_warning_leaves:
-            conflicting_holidays = all_leaves.filtered_domain([
-                ('employee_id', 'in', holiday.employee_id.ids),
-                ('count_as', '=', holiday.count_as),
-                ('date_from', '<', holiday.date_to),
-                ('date_to', '>', holiday.date_from),
-                ('id', 'not in', holiday.ids),
-            ])
+            conflicting_holidays = all_leaves.filtered_domain(holiday._get_overlap_conflict_domain())
             if not conflicting_holidays:
                 holiday.dashboard_warning_message = False
                 continue
