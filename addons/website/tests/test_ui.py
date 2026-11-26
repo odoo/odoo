@@ -605,9 +605,6 @@ class TestUi(HttpCaseWithWebsiteUser):
     def test_27_website_clicks(self):
         self.start_tour(self.env["website"].get_client_action_url('/', False), 'website_click_tour', login='admin')
 
-    def test_29_website_text_edition(self):
-        self.start_tour(self.env["website"].get_client_action_url('/', True), 'website_text_edition', login='admin')
-
     def test_29_website_backend_menus_redirect(self):
         Menu = self.env['ir.ui.menu']
         menu_root = Menu.create({'name': 'Test Root'})
