@@ -11,6 +11,9 @@ import { localeCompare, normalize } from "@web/core/l10n/utils";
 import { useService } from "@web/core/utils/hooks";
 import { debounce } from "@web/core/utils/timing";
 
+const DISPLAY_LIMIT_STEP = 100;
+const MAX_DISPLAY_LIMIT = 1000;
+
 export class PartnerList extends Component {
     static components = { PartnerLine, Dialog, Input };
     static template = "point_of_sale.PartnerList";
@@ -29,16 +32,27 @@ export class PartnerList extends Component {
         this.modalRef = signal.ref();
         this.modalContent = computed(() => this.modalRef()?.querySelector(".modal-body") ?? null);
         this.searchInputRef = signal.ref();
+        const initialPartners = this.pos.models["res.partner"].toRaw().filter((p) => {
+            const par = p.property_account_receivable_id;
+            return !par || par.non_trade !== true;
+        });
+        this.sortedInitialPartners = markRaw(
+            initialPartners
+                .slice(0, MAX_DISPLAY_LIMIT)
+                .toSorted((a, b) =>
+                    this.props.partner?.id === a.id
+                        ? -1
+                        : this.props.partner?.id === b.id
+                        ? 1
+                        : localeCompare(a.name, b.name)
+                )
+        );
         this.state = proxy({
-            initialPartners: markRaw(
-                this.pos.models["res.partner"].toRaw().filter((p) => {
-                    const par = p.property_account_receivable_id;
-                    return !par || par.non_trade !== true;
-                })
-            ),
+            initialPartners: markRaw(initialPartners),
             loadedPartners: [],
             query: "",
             loading: false,
+            displayLimit: DISPLAY_LIMIT_STEP,
         });
         this.loadedPartnerIds = new Set(this.state.initialPartners.map((p) => p.id));
         useHotkey("enter", () => this.onEnter(), {
@@ -61,6 +75,14 @@ export class PartnerList extends Component {
         const scrollHeight = modalContent.scrollHeight;
 
         if (scrollTop + height >= scrollHeight * 0.8) {
+            const maxLocalDisplay = Math.min(this.state.initialPartners.length, MAX_DISPLAY_LIMIT);
+            if (!this.state.query?.trim() && this.state.displayLimit < maxLocalDisplay) {
+                this.state.displayLimit = Math.min(
+                    this.state.displayLimit + DISPLAY_LIMIT_STEP,
+                    maxLocalDisplay
+                );
+                return;
+            }
             this.getNewPartners();
         }
     }
@@ -117,18 +139,22 @@ export class PartnerList extends Component {
         this.props.resolve({ confirmed: true, payload: this.state.selectedPartner });
         this.pos.closeTempScreen();
     }
-    getPartners(partners) {
+    getPartners(partners, limit = MAX_DISPLAY_LIMIT) {
         const searchWord = normalize(this.state.query?.trim() ?? "");
         if (!searchWord) {
+            if (partners === this.state.initialPartners) {
+                return this.sortedInitialPartners.slice(0, limit);
+            }
             return partners
-                .slice(0, 1000)
+                .slice(0, MAX_DISPLAY_LIMIT)
                 .toSorted((a, b) =>
                     this.props.partner?.id === a.id
                         ? -1
                         : this.props.partner?.id === b.id
                         ? 1
                         : localeCompare(a.name, b.name)
-                );
+                )
+                .slice(0, limit);
         }
 
         const exactMatches = partners.filter((partner) => partner.exactMatch(searchWord));

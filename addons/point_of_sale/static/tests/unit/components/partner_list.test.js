@@ -1,4 +1,5 @@
 import { expect, test } from "@odoo/hoot";
+import { animationFrame } from "@odoo/hoot-mock";
 import { mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
 import { setupPosEnv } from "@point_of_sale/../tests/unit/utils";
@@ -68,4 +69,54 @@ test("PartnerList skips exactMatch on empty query, uses normalized searchString,
     const capped = comp.getPartners(spiedPartners);
     expect(capped.length).toBe(50);
     expect(searchStringReads).toBe(50);
+});
+
+test("PartnerList renders initial partners progressively on scroll before fetching from server", async () => {
+    const store = await setupPosEnv();
+    for (let i = 0; i < 230; i++) {
+        store.models["res.partner"].create({
+            id: 3000 + i,
+            name: `Scroll Partner ${String(i).padStart(3, "0")}`,
+        });
+    }
+
+    let fetchCalls = 0;
+    patchWithCleanup(PartnerList.prototype, {
+        async getNewPartners() {
+            fetchCalls++;
+            return [];
+        },
+    });
+
+    const comp = await mountWithCleanup(PartnerList, {
+        props: {
+            getPayload: () => {},
+            close: () => {},
+        },
+    });
+    const totalLocal = comp.state.initialPartners.length;
+    expect(totalLocal).toBeGreaterThan(200);
+    expect(".partner-list .partner-info").toHaveCount(100);
+
+    comp.modalContent = () => ({ offsetHeight: 500, scrollTop: 900, scrollHeight: 1000 });
+
+    PartnerList.prototype.onScroll.call(comp);
+    await animationFrame();
+    expect(fetchCalls).toBe(0);
+    expect(comp.state.displayLimit).toBe(200);
+    expect(".partner-list .partner-info").toHaveCount(200);
+
+    PartnerList.prototype.onScroll.call(comp);
+    await animationFrame();
+    expect(fetchCalls).toBe(0);
+    expect(comp.state.displayLimit).toBe(totalLocal);
+    expect(".partner-list .partner-info").toHaveCount(totalLocal);
+
+    PartnerList.prototype.onScroll.call(comp);
+    expect(fetchCalls).toBe(1);
+
+    comp.state.displayLimit = 100;
+    comp.state.query = "Scroll";
+    PartnerList.prototype.onScroll.call(comp);
+    expect(fetchCalls).toBe(2);
 });

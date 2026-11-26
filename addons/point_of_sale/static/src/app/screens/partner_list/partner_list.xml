@@ -20,7 +20,7 @@
                     debounceMillis="300"
                     getRef.bind="(ref) => this.searchInputRef = ref" />
             </t>
-            <t t-set="initialPartners" t-value="this.getPartners(this.state.initialPartners)"/>
+            <t t-set="initialPartners" t-value="this.getPartners(this.state.initialPartners, this.state.displayLimit)"/>
             <t t-set="loadedPartners" t-value="this.getPartners(this.state.loadedPartners)"/>
             <t t-set="nbrPartners" t-value="initialPartners.length + loadedPartners.length"/>
             <div class="h-100" t-att-class="{'d-flex justify-content-center align-items-center text-center': !nbrPartners}">
