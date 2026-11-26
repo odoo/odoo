@@ -553,7 +553,10 @@ export class TablePlugin extends Plugin {
                         ? tableGrid[rowIndex][gridCellIndex + 1]
                         : tableGrid[rowIndex][gridCellIndex - 1])
                 ) {
-                    cell.colSpan += 1;
+                    // A merged cell crossing the new column grows by one.
+                    if (cell !== tableGrid[rowIndex - 1]?.[gridCellIndex]) {
+                        cell.colSpan += 1;
+                    }
                     continue;
                 }
                 const newCell = this.document.createElement(cell.tagName);
@@ -569,8 +572,12 @@ export class TablePlugin extends Plugin {
                 } else {
                     const row = tableGrid[rowIndex];
                     const nextAdjacentCell = sholdInsertAfter
-                        ? row.findLast((c, index) => index < gridCellIndex && c.rowSpan === 1)
-                        : row.find((c, index) => index > gridCellIndex && c.rowSpan === 1);
+                        ? row.findLast(
+                              (c, index) => index < gridCellIndex && rows[rowIndex].contains(c)
+                          )
+                        : row.find(
+                              (c, index) => index > gridCellIndex && rows[rowIndex].contains(c)
+                          );
                     if (nextAdjacentCell) {
                         nextAdjacentCell[position](newCell);
                     } else {
@@ -610,7 +617,11 @@ export class TablePlugin extends Plugin {
     addRow(position, reference, rowsToAdd = 1) {
         const table = closestElement(reference, "table");
         const tableGrid = this.buildTableGrid(table);
-        const rowIndex = getRowIndex(reference);
+        let rowIndex = getRowIndex(reference);
+        if (position === "after") {
+            rowIndex = tableGrid.findLastIndex((row) => row[0] === tableGrid[rowIndex][0]);
+            reference = table.rows[rowIndex];
+        }
 
         const referenceRowHeight = reference.style.height && parseFloat(reference.style.height);
         for (let rowOffset = 0; rowOffset < rowsToAdd; rowOffset++) {
@@ -624,13 +635,15 @@ export class TablePlugin extends Plugin {
             for (let columnIndex = 0; columnIndex < gridCells.length; columnIndex++) {
                 const cell = gridCells[columnIndex];
                 if (
-                    columnIndex > 0 &&
                     cell ===
-                        (position === "after"
-                            ? tableGrid[rowIndex + 1]?.[columnIndex]
-                            : tableGrid[rowIndex - 1]?.[columnIndex])
+                    (position === "after"
+                        ? tableGrid[rowIndex + 1]?.[columnIndex]
+                        : tableGrid[rowIndex - 1]?.[columnIndex])
                 ) {
-                    cell.rowSpan += 1;
+                    // A merged cell crossing the new row grows by one row.
+                    if (cell !== gridCells[columnIndex - 1]) {
+                        cell.rowSpan += 1;
+                    }
                 } else {
                     const td = this.document.createElement("td");
                     const baseContainer = this.dependencies.baseContainer.createBaseContainer();

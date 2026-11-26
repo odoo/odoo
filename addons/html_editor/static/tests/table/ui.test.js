@@ -1521,6 +1521,110 @@ test("insert row at the end of a rowspan cell", async () => {
     );
 });
 
+test("insert row below a cell merged over several rows", async () => {
+    const { el, editor } = await setupEditor(
+        unformat(`
+        <table>
+            <tbody>
+                <tr><td rowspan="2">a[]</td><td rowspan="3">b</td><td>c</td></tr>
+                <tr><td>d</td></tr>
+                <tr><td>e</td><td>f</td></tr>
+            </tbody>
+        </table>`)
+    );
+    editor.shared.table.addRow("after", el.querySelector("tr"));
+    expect(getContent(el)).toBe(
+        unformat(`
+        <p data-selection-placeholder=""><br></p>
+        <table>
+            <tbody>
+                <tr><td rowspan="2">a[]</td><td rowspan="4">b</td><td>c</td></tr>
+                <tr><td>d</td></tr>
+                <tr><td><p><br></p></td><td><p><br></p></td></tr>
+                <tr><td>e</td><td>f</td></tr>
+            </tbody>
+        </table>
+        <p data-selection-placeholder=""><br></p>`)
+    );
+});
+
+test("insert row in the middle of a cell merged over several columns", async () => {
+    const { el, editor } = await setupEditor(
+        unformat(`
+        <table>
+            <tbody>
+                <tr><td>a[]</td><td rowspan="2" colspan="2">b</td></tr>
+                <tr><td>c</td></tr>
+            </tbody>
+        </table>`)
+    );
+    editor.shared.table.addRow("after", el.querySelector("tr"));
+    expect(getContent(el)).toBe(
+        unformat(`
+        <p data-selection-placeholder=""><br></p>
+        <table>
+            <tbody>
+                <tr><td>a[]</td><td rowspan="3" colspan="2">b</td></tr>
+                <tr><td><p><br></p></td></tr>
+                <tr><td>c</td></tr>
+            </tbody>
+        </table>
+        <p data-selection-placeholder=""><br></p>`)
+    );
+});
+
+test("insert column in the middle of a cell merged over several rows", async () => {
+    const { el, editor } = await setupEditor(
+        unformat(`
+        <table>
+            <tbody>
+                <tr><td class="a">a[]</td><td>b</td><td>c</td></tr>
+                <tr><td rowspan="2" colspan="2">d</td><td>e</td></tr>
+                <tr><td>f</td></tr>
+            </tbody>
+        </table>`)
+    );
+    editor.shared.table.addColumn("after", el.querySelector("td.a"));
+    expect(getContent(el)).toBe(
+        unformat(`
+        <p data-selection-placeholder=""><br></p>
+        <table>
+            <tbody>
+                <tr><td class="a">a[]</td><td><p><br></p></td><td>b</td><td>c</td></tr>
+                <tr><td rowspan="2" colspan="3">d</td><td>e</td></tr>
+                <tr><td>f</td></tr>
+            </tbody>
+        </table>
+        <p data-selection-placeholder=""><br></p>`)
+    );
+});
+
+test("insert column keeps the new cells in their column next to rowspan cells", async () => {
+    const { el, editor } = await setupEditor(
+        unformat(`
+        <table>
+            <tbody>
+                <tr><td class="a" rowspan="2">a[]</td><td>b</td><td>c</td></tr>
+                <tr><td rowspan="2">d</td><td>e</td></tr>
+                <tr><td>f</td><td>g</td></tr>
+            </tbody>
+        </table>`)
+    );
+    editor.shared.table.addColumn("before", el.querySelector("td.a"));
+    expect(getContent(el)).toBe(
+        unformat(`
+        <p data-selection-placeholder=""><br></p>
+        <table>
+            <tbody>
+                <tr><td><p><br></p></td><td class="a" rowspan="2">a[]</td><td>b</td><td>c</td></tr>
+                <tr><td><p><br></p></td><td rowspan="2">d</td><td>e</td></tr>
+                <tr><td><p><br></p></td><td>f</td><td>g</td></tr>
+            </tbody>
+        </table>
+        <p data-selection-placeholder=""><br></p>`)
+    );
+});
+
 test("move column left operation", async () => {
     const { el, editor } = await setupEditor(
         unformat(`
