@@ -192,6 +192,17 @@ class TestLinkPreview(MailCommon):
             session = requests.Session()
             link_preview.get_link_preview_from_url(url, session)
 
+    def test_link_preview_redirected_to_consent_page(self):
+        def _patch_redirected_to_consent_page(*args, **kwargs):
+            response = self._patch_without_og_properties()
+            response.history = [requests.Response()]
+            response.url = 'https://consent.youtube.com/m?continue=https://www.youtube.com/watch?v=abc'
+            return response
+
+        with patch.object(requests, 'get', _patch_redirected_to_consent_page):
+            preview = link_preview.get_link_preview_from_url('https://www.youtube.com/watch?v=abc')
+        self.assertFalse(preview)
+
     def test_link_preview_ignore_internal_link(self):
         """Test internal links are properly ignored from link preview."""
         with patch.object(requests.Session, "get", self._patch_with_og_properties), patch.object(

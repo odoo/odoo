@@ -4,6 +4,7 @@ import re
 from lxml import html
 import chardet
 import requests
+from urllib.parse import urlsplit
 from urllib3.exceptions import LocationParseError
 
 
@@ -36,6 +37,12 @@ def get_link_preview_from_url(url, request_session=None):
     except LocationParseError:
         return False
     if not response.ok or not response.headers.get('Content-Type'):
+        return False
+    if response.history and (urlsplit(response.url).hostname or '').startswith('consent.'):
+        # Redirected to a cookie consent page (e.g. consent.youtube.com for
+        # requests from European servers) instead of the requested page: its
+        # title (e.g. "Before you continue to YouTube") would be misleading.
+        response.close()
         return False
     # Content-Type header can return a charset, but we just need the
     # mimetype (eg: image/jpeg;charset=ISO-8859-1)
