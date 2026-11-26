@@ -4,7 +4,7 @@ from odoo.fields import Command
 from odoo.tests import Form, HttpCase, tagged
 
 from odoo.addons.website_event_sale.tests.common import TestWebsiteEventSaleCommon
-from odoo.addons.website_sale.controllers.main import WebsiteSale as CheckoutController
+from odoo.addons.website_sale.controllers.main import WebsiteSale
 
 
 @tagged('post_install', '-at_install')
@@ -20,7 +20,7 @@ class TestEventCheckout(TestWebsiteEventSaleCommon, HttpCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.CheckoutController = CheckoutController()
+        cls.CheckoutController = WebsiteSale()
 
     def test_checkout_impossible_if_tickets_are_expired(self):
         self.ticket.sudo().write({'seats_max': 1, 'seats_limited': True})

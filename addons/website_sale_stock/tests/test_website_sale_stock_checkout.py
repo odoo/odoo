@@ -2,19 +2,19 @@
 
 from odoo.tests import HttpCase, tagged
 
-from odoo.addons.website_sale.controllers.main import WebsiteSale as CheckoutController
+from odoo.addons.website_sale.controllers.main import WebsiteSale
 from odoo.addons.website_sale_stock.tests.common import WebsiteSaleStockCommon
 
 
 @tagged("post_install", "-at_install")
 class TestWebsiteSaleStockCheckout(WebsiteSaleStockCommon, HttpCase):
     _test_user_groups = (
-        'base.group_user',
-        'product.group_product_manager',
-        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+        "base.group_user",
+        "product.group_product_manager",
+        "sales_team.group_sale_manager",  # FIXME: use sales_team.group_sale_salesman
     )
 
-    _test_user_name = 'Test Sales & Product Manager'
+    _test_user_name = "Test Sales & Product Manager"
 
     @classmethod
     def setUpClass(cls):
@@ -22,7 +22,7 @@ class TestWebsiteSaleStockCheckout(WebsiteSaleStockCommon, HttpCase):
         cls.product.write({"allow_out_of_stock_order": False, "is_storable": True})
         cls.stock_location = cls.warehouse.lot_stock_id
         cls.partner.write(cls.dummy_partner_address_values)
-        cls.CheckoutController = CheckoutController()
+        cls.CheckoutController = WebsiteSale()
 
     def test_checkout_possible_if_at_least_one_warehouse_can_fulfill_the_order(self):
         wh2 = self._create_warehouse()
@@ -43,5 +43,5 @@ class TestWebsiteSaleStockCheckout(WebsiteSaleStockCommon, HttpCase):
             "pickup_delivery_method_id": self.carrier.id,
         })
         with self.mock_request():
-            address_data = CheckoutController()._prepare_address_data(self.partner)
+            address_data = WebsiteSale()._prepare_address_data(self.partner)
         self.assertNotIn(pickup_address, address_data["delivery_addresses"])

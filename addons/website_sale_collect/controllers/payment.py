@@ -2,7 +2,7 @@
 
 from odoo.exceptions import ValidationError
 
-from odoo.addons.website_sale.controllers.payment import PaymentPortal
+from odoo.addons.website_sale.controllers.checkout.payment import PaymentPortal
 
 
 class OnSitePaymentPortal(PaymentPortal):

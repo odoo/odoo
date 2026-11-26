@@ -4,10 +4,10 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.http import request, route
 
 from odoo.addons.payment import utils as payment_utils
-from odoo.addons.website_sale.controllers.main import WebsiteSale
+from odoo.addons.website_sale.controllers.checkout.address import Address
 
 
-class Delivery(WebsiteSale):
+class Delivery(Address):
     _express_checkout_delivery_route = "/shop/express/shipping_address_change"
 
     @route("/shop/delivery_methods", type="jsonrpc", auth="public", website=True)
@@ -252,7 +252,7 @@ class Delivery(WebsiteSale):
                     continue  # Express checkout doesn't allow selecting locations.
                 res[dm] = rate["price"]
         return res
-
+    
     @staticmethod
     def _get_rate(delivery_method, order, is_express_checkout_flow=False):
         """Compute the delivery rate and apply the taxes if relevant.
