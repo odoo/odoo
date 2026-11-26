@@ -214,6 +214,8 @@ class StockPickingBatch(models.Model):
     def action_l10n_ro_edi_stock_send_etransport(self):
         self.ensure_one()
 
+        if any(not picking.carrier_id for picking in self.picking_ids):
+            raise UserError(_("Missing Carrier information (Other Info tab)."))
         send_type = self.env.context.get('l10n_ro_edi_stock_send_type', 'send')
         self._l10n_ro_edi_stock_send_etransport_document(send_type=send_type)
 

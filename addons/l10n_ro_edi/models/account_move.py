@@ -182,7 +182,6 @@ class AccountMove(models.Model):
                 session=session,
             )
             if not result:  # SPV is still processing the XML (no answer yet); do nothing
-                invoice.message_post(body=_("SPV has not finished processing the invoice, try again later."))
                 continue
 
             if 'error' in result:  # Fetch error
