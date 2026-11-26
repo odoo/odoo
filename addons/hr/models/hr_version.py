@@ -756,7 +756,7 @@ class HrVersion(models.Model):
 
     @api.depends(
         'contract_date_start', 'contract_date_end', 'date_version', 'employee_id',
-        'employee_id.version_ids.date_version', 'departure_date')
+        'employee_id.version_ids.date_version', 'employee_id.version_ids.active', 'departure_date')
     def _compute_dates(self):
         """Compute ``date_start`` and ``date_end``, the period during which the version is in effect.
 
