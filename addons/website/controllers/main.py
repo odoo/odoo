@@ -911,6 +911,9 @@ class Website(Home):
             )
         # Chrome may show thin gaps between sections in scaled iframes. The
         # `.o_we_shape` and `section` rules overlap them to hide those gaps.
+        # In a scaled iframe, Chrome also samples a backdrop-filter from the
+        # wrong area, so blurred boxes show mirrored patches of the page; the
+        # blur is dropped and their translucent background is kept.
         return (
             '<style id="o_configurator_theme_preview_overrides">'
             f':root{{{root_variables}}}'
@@ -919,6 +922,7 @@ class Website(Home):
             f'{area_overrides}'
             '.o_we_shape{top:-2px;bottom:-2px;}'
             'section{margin-top:-2px;}'
+            '.o_bg_blur_option{backdrop-filter:none;}'
             '</style>'
         )
 
