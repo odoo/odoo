@@ -314,6 +314,16 @@ class PaymentProvider(models.Model):
         self.ensure_one()
         return stripe_utils.get_publishable_key(self.sudo())
 
+    def _stripe_get_capture_method(self):
+        """Return the capture method of the provider, in Stripe format.
+
+        Note: `self.ensure_one()`
+
+        :rtype: str
+        """
+        self.ensure_one()
+        return "manual" if self.capture_manually else "automatic"
+
     def _stripe_get_inline_form_values(
         self, amount, currency, partner_id, is_validation, payment_method_sudo=None, **kwargs
     ):
@@ -355,7 +365,7 @@ class PaymentProvider(models.Model):
                     arbitrary_decimal_number=const.CURRENCY_DECIMALS.get(currency.name),
                 )
             ),
-            "capture_method": "manual" if self.capture_manually else "automatic",
+            "capture_method": self._stripe_get_capture_method(),
             "billing_details": {
                 "name": partner.name or "",
                 "email": partner.email or "",
