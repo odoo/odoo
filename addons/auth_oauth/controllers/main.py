@@ -3,7 +3,7 @@ import contextlib
 import json
 import logging
 import secrets
-from urllib.parse import urlencode
+from urllib.parse import urlencode, urlsplit
 from zoneinfo import ZoneInfo
 
 import werkzeug.urls
@@ -228,6 +228,14 @@ class OAuthController(Controller):
             # whichever flow the callback claims to come back from
             raise BadRequest()
 
+        # before anything of the callback is acted upon, whichever the flow:
+        # the access token (implicit) or the code and its verifier (pkce) must
+        # not reach a provider other than the one that issued the response
+        try:
+            self._validate_issuer(provider, kw)
+        except AccessDenied:
+            return self._oauth_error_redirect('access_denied')
+
         if provider.flow == 'pkce':
             # the provider hands over a single use authorization code, traded
             # here for the access token the rest of the sign in is the same
@@ -291,6 +299,47 @@ class OAuthController(Controller):
             error = 'access_denied'
 
         return self._oauth_error_redirect(error)
+
+    def _validate_issuer(self, provider, params):
+        """Make sure the authorization response comes from the provider the
+        state names, countering the mix-up attack (RFC 9700 §4.4): a hostile
+        provider A forwards the authorization request of the user to an honest
+        provider B, whose response then comes back with the state of A. Acted
+        upon as a response of A, it would hand B's access token (implicit) or
+        B's code along with its verifier (pkce) over to A.
+
+        Providers supporting RFC 9207 identify themselves with an ``iss``
+        parameter on every authorization response, compared here (§2.4, plain
+        string comparison) with the issuer configured on the provider. When
+        the issuer is not configured, an ``iss`` is still checked against the
+        origin of the authorization endpoint, which a response of another
+        provider never comes from.
+
+        :param provider: the ``auth.oauth.provider`` named by the state
+        :param dict params: the parameters of the callback
+        :raise AccessDenied: if the response does not come from ``provider``
+        """
+        iss = params.get('iss')
+        if provider.issuer:
+            if iss != provider.issuer:
+                _logger.info(
+                    "OAuth2: the callback of provider %r does not come from its "
+                    "issuer %r but from %r",
+                    provider.name, provider.issuer, iss,
+                )
+                raise AccessDenied()
+        elif iss is not None:
+            try:
+                same_origin = urlsplit(iss)[:2] == urlsplit(provider.auth_endpoint)[:2]
+            except (ValueError, AttributeError):  # not a url at all
+                same_origin = False
+            if not same_origin:
+                _logger.info(
+                    "OAuth2: the callback of provider %r comes from issuer %r, which "
+                    "is not the origin of its authorization endpoint",
+                    provider.name, iss,
+                )
+                raise AccessDenied()
 
     def _auth_oauth_pkce_token(self, provider, state, params):
         """Turn the authorization code of the callback into an access token, so

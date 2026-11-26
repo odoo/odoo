@@ -33,6 +33,7 @@
                             </group>
                             <group string="Endpoints" name="endpoints">
                                 <field name="auth_endpoint" />
+                                <field name="issuer" />
                                 <field name="token_endpoint" invisible="flow != 'pkce'" required="flow == 'pkce'"/>
                                 <field name="validation_endpoint" />
                                 <field name="data_endpoint" />

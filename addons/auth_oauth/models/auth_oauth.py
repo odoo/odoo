@@ -58,6 +58,14 @@ class AuthOauthProvider(models.Model):
              "exchanged for an access token on the token endpoint.",
     )
     auth_endpoint = fields.Char(string='Authorization URL', required=True)  # OAuth provider URL to authenticate users
+    issuer = fields.Char(
+        help="Issuer identifier of the provider, the \"issuer\" value of its OpenID "
+             "discovery document. When set, every authorization response must carry "
+             "it back in an \"iss\" parameter (RFC 9207), which protects against "
+             "mix-up attacks between providers. Leave empty if the provider does not "
+             "send \"iss\": a response carrying one is then only accepted if it "
+             "comes from the origin of the Authorization URL.",
+    )
     token_endpoint = fields.Char(
         string='Token URL',
         help="Provider endpoint trading the authorization code for an access token. "
