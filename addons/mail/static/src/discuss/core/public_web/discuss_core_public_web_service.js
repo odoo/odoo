@@ -12,8 +12,31 @@ export class DiscussCorePublicWeb {
         this.env = env;
         this.store = services["mail.store"];
         this.busService = services.bus_service;
+<<<<<<< 73ab2ca1845c9cd40a1c5cf0a3f8b793b97c179b
         this.busService.subscribe("discuss.channel/joined", async (payload) => {
             const { store_data, channel_id } = payload;
+||||||| b93d8533d2631ccb17eaa47dce4ed26026a4ece9
+        this.notificationService = services.notification;
+        this.busService.subscribe("discuss.channel/joined", async (payload) => {
+            const {
+                store_data,
+                channel_id,
+                invite_to_rtc_call,
+                invited_by_user_id: invitedByUserId,
+            } = payload;
+=======
+        this.notificationService = services.notification;
+        this.busService.subscribe("discuss.channel/joined", async (payload, { id }) => {
+            // Notifications of the new channel sent after this one, such as the join
+            // message, must not be missed.
+            this.busService.forceUpdateChannels({ fromId: id });
+            const {
+                store_data,
+                channel_id,
+                invite_to_rtc_call,
+                invited_by_user_id: invitedByUserId,
+            } = payload;
+>>>>>>> 84fd4f0262b6611de2c6c87fc1d09fd1e1b22efa
             this.store.insert(store_data);
             await this.store.fetchChannel(channel_id);
         });

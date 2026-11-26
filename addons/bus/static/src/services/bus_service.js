@@ -168,7 +168,8 @@ export const busService = {
             setLoggingEnabled: (isEnabled) =>
                 workerService.send("BUS:SET_LOGGING_ENABLED", isEnabled),
             downloadLogs: () => workerService.send("BUS:REQUEST_LOGS"),
-            forceUpdateChannels: () => workerService.send("BUS:FORCE_UPDATE_CHANNELS"),
+            forceUpdateChannels: ({ fromId } = {}) =>
+                workerService.send("BUS:FORCE_UPDATE_CHANNELS", { fromId }),
             trigger: bus.trigger.bind(bus),
             removeEventListener: bus.removeEventListener.bind(bus),
             send: (eventName, data) =>
