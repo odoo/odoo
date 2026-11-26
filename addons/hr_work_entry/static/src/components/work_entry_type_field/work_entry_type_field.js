@@ -1,5 +1,6 @@
-import { Component, useProps } from "@odoo/owl";
+import { Component, onWillStart, useProps } from "@odoo/owl";
 import { registry } from "@web/core/registry";
+import { user } from "@web/core/user";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import {
     buildM2OFieldDescription,
@@ -36,9 +37,19 @@ export class Many2OneWorkEntryTypeField extends Component {
         Many2One,
     };
     props = useProps(many2OneFieldProps);
+
+    setup() {
+        // only the users who can configure the time types get the internal link to them
+        onWillStart(async () => {
+            this.canWriteWorkEntryType = await user.checkAccessRight("hr.work.entry.type", "write");
+        });
+    }
+
     get m2oProps() {
+        const props = computeM2OProps(this.props);
         return {
-            ...computeM2OProps(this.props),
+            ...props,
+            canOpen: props.canOpen && this.canWriteWorkEntryType,
             specification: Object.fromEntries(
                 badgeFields.getAll().map(({ name }) => [name, {}])
             ),
