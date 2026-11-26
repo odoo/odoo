@@ -85,7 +85,11 @@ export class HtmlField extends Component {
         this.codeViewRef = useRef("codeView");
 
         const { model } = this.props.record;
-        useBus(model.bus, "WILL_SAVE_URGENTLY", () => this.commitChanges({ urgent: true }));
+        useBus(model.bus, "WILL_SAVE_URGENTLY", () => {
+            // An urgent save doesn't call `onWillSaveRecord`.
+            this.pendingAttachmentsService.addAttachmentsIdsToContext(this.props.record);
+            this.commitChanges({ urgent: true });
+        });
         useBus(model.bus, "NEED_LOCAL_CHANGES", ({ detail }) =>
             detail.proms.push(this.commitChanges())
         );
@@ -139,20 +143,24 @@ export class HtmlField extends Component {
         const onRecordDiscarded = model.hooks.onRecordDiscarded;
         const onWillSaveRecord = model.hooks.onWillSaveRecord;
         const onRecordSaved = model.hooks.onRecordSaved;
-        model.hooks.onRecordDiscarded = (...args) => {
-            if (this.props.record.isNew) {
-                this.pendingAttachmentsService.unlinkPendingAttachments(this.props.record?.resId);
+        model.hooks.onRecordDiscarded = (record, ...args) => {
+            if (record.id === this.props.record.id && record.isNew) {
+                this.pendingAttachmentsService.unlinkPendingAttachments(record);
             }
-            return onRecordDiscarded(...args);
+            return onRecordDiscarded(record, ...args);
         };
-        model.hooks.onWillSaveRecord = (...args) => {
-            this.pendingAttachmentsService.addAttachmentsIdsToContext(this.props.record);
-            return onWillSaveRecord(...args);
+        model.hooks.onWillSaveRecord = (record, ...args) => {
+            if (record.id === this.props.record.id) {
+                this.pendingAttachmentsService.addAttachmentsIdsToContext(record);
+            }
+            return onWillSaveRecord(record, ...args);
         };
-        model.hooks.onRecordSaved = (...args) => {
-            this.pendingAttachmentsService.clearPendingAttachments(false);
-            this.pendingAttachmentsService.clearAttachmentsIdsFromContext(this.props.record);
-            return onRecordSaved(...args);
+        model.hooks.onRecordSaved = (record, ...args) => {
+            if (record.id === this.props.record.id) {
+                this.pendingAttachmentsService.clearPendingAttachments(record);
+                this.pendingAttachmentsService.clearAttachmentsIdsFromContext(record);
+            }
+            return onRecordSaved(record, ...args);
         };
     }
 
@@ -251,7 +259,7 @@ export class HtmlField extends Component {
             const editable = this.editor.editable;
             const el = await this.getEditorContent();
             this.pendingAttachmentsService.addPendingAttachments(
-                this.props.record?.resId,
+                this.props.record,
                 extractUnmappedAttachmentsIds(editable)
             );
             const content = el.innerHTML;
@@ -333,12 +341,12 @@ export class HtmlField extends Component {
             resources: {},
             getPendingAttachmentsIds: () => {
                 this.pendingAttachmentsService.addPendingAttachments(
-                    this.props.record?.resId,
+                    this.props.record,
                     extractUnmappedAttachmentsIds(this.editor.editable)
                 );
-                return this.pendingAttachmentsService.pendingAttachmentIds[
-                    this.props.record?.resId
-                ];
+                return (
+                    this.pendingAttachmentsService.pendingAttachmentIds[this.props.record.id] || []
+                );
             },
             ...this.props.editorConfig,
         };
@@ -504,36 +512,41 @@ const pendingAttachmentsService = {
     dependencies: ["orm"],
     start(env, { orm }) {
         const pendingAttachmentIds = {};
-        async function unlinkPendingAttachments(recordId) {
-            if (pendingAttachmentIds[recordId]?.length) {
-                orm.unlink("ir.attachment", [...new Set(pendingAttachmentIds[recordId])]);
-                clearPendingAttachments(recordId);
+        function addPendingAttachments(record, ids) {
+            if (ids?.length && !record.resId) {
+                if (!pendingAttachmentIds[record.id]) {
+                    pendingAttachmentIds[record.id] = [];
+                }
+                pendingAttachmentIds[record.id].push(...ids);
             }
         }
-        function addPendingAttachments(recordId, ids) {
-            if (!pendingAttachmentIds[recordId]) {
-                pendingAttachmentIds[recordId] = [];
-            }
-            if (ids) {
-                pendingAttachmentIds[recordId].push(...ids);
-            }
+        function clearPendingAttachments(record) {
+            delete pendingAttachmentIds[record.id];
         }
-        function clearPendingAttachments(recordId) {
-            delete pendingAttachmentIds[recordId];
+        async function unlinkPendingAttachments(record) {
+            const ids = pendingAttachmentIds[record.id];
+            clearPendingAttachments(record);
+            if (ids?.length) {
+                await orm.unlink("ir.attachment", [...new Set(ids)]);
+            }
         }
         function addAttachmentsIdsToContext(record) {
-            if (pendingAttachmentIds[record?.resId]) {
-                record.context["pending_attachment_ids"] = pendingAttachmentIds[record?.resId];
+            if (record.isNew && pendingAttachmentIds[record.id]) {
+                record.context["pending_attachment_ids"] = [
+                    ...new Set(pendingAttachmentIds[record.id]),
+                ];
+                record.context["pending_attachment_res_model"] = record.resModel;
             }
         }
         function clearAttachmentsIdsFromContext(record) {
             delete record.context["pending_attachment_ids"];
+            delete record.context["pending_attachment_res_model"];
         }
         return {
-            unlinkPendingAttachments,
+            pendingAttachmentIds,
             addPendingAttachments,
             clearPendingAttachments,
-            pendingAttachmentIds,
+            unlinkPendingAttachments,
             addAttachmentsIdsToContext,
             clearAttachmentsIdsFromContext,
         };
