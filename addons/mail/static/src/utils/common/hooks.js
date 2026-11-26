@@ -461,12 +461,13 @@ export function useOnBottomScrolled(ref, callback, threshold = 1) {
 
 /**
  * Observes the visibility of the element of `ref` while `ready`. The element is
- * observed from the mount/patch following a change of `ref` or `ready`, i.e.
- * once the patched DOM is scrolled in place: observed from the change itself,
- * it could be reported visible before the patch scrolls it away (e.g. to a
- * highlighted message). The rendering of the component must read `ready` so
- * that a patch follows its change. A change of `ref` is also followed when the
- * element is patched by another component (e.g. in a slot).
+ * observed from the mount/patch following a change of `ref`, or of `ready` to
+ * true, i.e. once the patched DOM is scrolled in place: observed from the
+ * change itself, it could be reported visible before the patch scrolls it away
+ * (e.g. to a highlighted message). The rendering of the component must read
+ * `ready` so that a patch follows its change. A change of `ref` is also
+ * followed when the element is patched by another component (e.g. in a slot).
+ * The observation stops as soon as `ready` turns false.
  *
  * @param {import("@odoo/owl").Signal<HTMLElement>} ref
  * @param {function} [cb] called with the visibility on each change
@@ -504,10 +505,37 @@ export function useVisible(ref, cb, { ready = true } = {}) {
             observedEl = el;
         }
     };
+    /**
+     * Reads the current layout, as the observer can report a scroll after its "scrollend".
+     *
+     * @returns {Promise<boolean|undefined>} undefined when not observed
+     */
+    state.readVisibility = () => {
+        const el = observedEl;
+        if (!el) {
+            return Promise.resolve(undefined);
+        }
+        const { promise, resolve } = Promise.withResolvers();
+        const readObserver = new IntersectionObserver((entries) => {
+            readObserver.disconnect();
+            resolve(el === observedEl ? entries.at(-1).isIntersecting : undefined);
+        });
+        readObserver.observe(el);
+        return promise;
+    };
     onMounted(observe);
     onPatched(observe);
     // the ref can be patched by another component (e.g. in a slot)
     useOnChange(() => [ref()], observe);
+    useOnChange(
+        () => [state.ready],
+        (ready) => {
+            if (!ready) {
+                unobserve();
+            }
+        },
+        { initialRun: false }
+    );
     onWillUnmount(unobserve);
     return state;
 }

@@ -120,7 +120,10 @@ export class Thread extends Component {
             this.loadOlderRef,
             async () => {
                 await this.scroll.waitForIdle();
-                if (this.loadOlderState.isVisible && this.shouldTriggerLoadOnVisible) {
+                if (
+                    (await this.loadOlderState.readVisibility()) &&
+                    this.shouldTriggerLoadOnVisible
+                ) {
                     this.props.thread.fetchMoreMessages();
                 }
             },
@@ -128,7 +131,7 @@ export class Thread extends Component {
         );
         const loadNewerIfVisible = async () => {
             await this.scroll.waitForIdle();
-            if (this.loadNewerState.isVisible && this.shouldTriggerLoadOnVisible) {
+            if ((await this.loadNewerState.readVisibility()) && this.shouldTriggerLoadOnVisible) {
                 this.props.thread.fetchMoreMessages({ epoch: LIST_LOADER_EPOCH.NEWER });
             }
         };
