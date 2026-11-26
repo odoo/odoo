@@ -136,9 +136,7 @@ class AdyenController(http.Controller):
                 f"/payment/adyen/return?merchantReference={reference}",
             ),
             **adyen_utils.include_partner_addresses(tx_sudo),
-            "lineItems": [
-                {"amountIncludingTax": converted_amount, "quantity": "1", "description": reference}
-            ],
+            "lineItems": tx_sudo._adyen_prepare_line_items_payload(),
         }
 
         # Force the capture delay on Adyen side if the provider is not configured for capturing

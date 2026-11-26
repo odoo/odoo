@@ -74,13 +74,7 @@ class PaymentTransaction(models.Model):
             "shopperName": adyen_utils.format_partner_name(self.partner_name),
             "telephoneNumber": self.partner_phone,
             **adyen_utils.include_partner_addresses(self),
-            "lineItems": [
-                {
-                    "amountIncludingTax": converted_amount,
-                    "quantity": "1",
-                    "description": self.reference,
-                }
-            ],
+            "lineItems": self._adyen_prepare_line_items_payload(),
         }
 
         # Force the capture delay on Adyen side if the provider is not configured for capturing
@@ -103,6 +97,57 @@ class PaymentTransaction(models.Model):
             ),
         )
         self._record(response_content)
+
+    def _adyen_prepare_line_items_payload(self):
+        """Prepare the line items of the payment request payload.
+
+        :return: The Adyen-formatted line items payload.
+        :rtype: list
+        """
+        decimal_number = const.CURRENCY_DECIMALS.get(self.currency_id.name)
+        converted_amount = payment_utils.to_minor_currency_units(
+            self.amount, self.currency_id, decimal_number
+        )
+        # Send a single line covering the whole amount if the items cannot be sent.
+        default_line_items = [
+            {"amountIncludingTax": converted_amount, "quantity": "1", "description": self.reference}
+        ]
+        line_items = self._get_line_items().values()
+        if any(line_item["total"] < 0 for line_item in line_items) or any(
+            not line_item["name"] for line_item in line_items
+        ):
+            return default_line_items
+
+        items = []
+        total_amount = 0
+        for index, line_item in enumerate(line_items, start=1):
+            line_amount = payment_utils.to_minor_currency_units(
+                line_item["total"], self.currency_id, decimal_number
+            )
+            quantity = line_item["quantity"]
+            unit_amount = round(line_amount / quantity) if quantity else 0
+            if quantity < 1 or quantity != int(quantity) or unit_amount * quantity != line_amount:
+                # Force the quantity to 1, priced at the line total, for non-whole quantities or when
+                # the rounded unit amount does not add up to the total.
+                quantity, unit_amount = 1, line_amount
+            total_amount += line_amount
+            item = {
+                "id": str(index),
+                "description": line_item["name"],
+                "quantity": int(quantity),
+                "amountIncludingTax": unit_amount,
+            }
+            if sku := line_item.get("sku"):
+                item["sku"] = sku
+            if url := line_item.get("url"):
+                item["productUrl"] = url
+            if image_url := line_item.get("image_url"):
+                item["imageUrl"] = image_url
+            items.append(item)
+
+        if not items or total_amount != converted_amount:  # Partial payment or rounding mismatch.
+            return default_line_items
+        return items
 
     def _send_capture_request(self):
         """Override of `payment` to send a capture request to Adyen."""

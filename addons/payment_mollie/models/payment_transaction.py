@@ -77,20 +77,7 @@ class PaymentTransaction(models.Model):
             "redirectUrl": f"{redirect_url}?ref={self.reference}",
             "webhookUrl": f"{webhook_url}?ref={self.reference}",
             "billingAddress": self._mollie_prepare_billing_address_payload(),
-            "lines": [
-                {
-                    "description": "Odoo purchase",
-                    "quantity": 1,
-                    "unitPrice": {
-                        "currency": self.currency_id.name,
-                        "value": f"{self.amount:.{decimal_places}f}",
-                    },
-                    "totalAmount": {
-                        "currency": self.currency_id.name,
-                        "value": f"{self.amount:.{decimal_places}f}",
-                    },
-                }
-            ],
+            "lines": self._mollie_prepare_lines_payload(decimal_places),
         }
         if self.token_id:
             payload["sequenceType"] = "recurring"
@@ -103,6 +90,75 @@ class PaymentTransaction(models.Model):
         else:
             payload["sequenceType"] = "oneoff"
         return payload
+
+    def _mollie_prepare_lines_payload(self, decimal_places):
+        """Prepare the lines of the payment request payload.
+
+        :param int decimal_places: The number of decimal places of the currency.
+        :return: The Mollie-formatted lines payload.
+        :rtype: list
+        """
+        # Mollie requires a line, so send a single one covering the whole amount if the items
+        # cannot be sent.
+        default_lines = [
+            {
+                "description": "Odoo purchase",
+                "quantity": 1,
+                "unitPrice": {
+                    "currency": self.currency_id.name,
+                    "value": f"{self.amount:.{decimal_places}f}",
+                },
+                "totalAmount": {
+                    "currency": self.currency_id.name,
+                    "value": f"{self.amount:.{decimal_places}f}",
+                },
+            }
+        ]
+        line_items = self._get_line_items().values()
+        if any(line_item["total"] < 0 for line_item in line_items) or any(
+            not line_item["name"] for line_item in line_items
+        ):
+            return default_lines
+
+        lines = []
+        total_amount = 0
+        for line_item in line_items:
+            line_amount = payment_utils.to_minor_currency_units(
+                line_item["total"], self.currency_id, arbitrary_decimal_number=decimal_places
+            )
+            quantity = line_item["quantity"]
+            unit_amount = round(line_amount / quantity) if quantity else 0
+            if quantity < 1 or quantity != int(quantity) or unit_amount * quantity != line_amount:
+                # Force the quantity to 1, priced at the line total, for non-whole quantities or when
+                # the rounded unit amount does not add up to the total.
+                quantity, unit_amount = 1, line_amount
+            total_amount += line_amount
+            line = {
+                "description": line_item["name"][:255],
+                "quantity": int(quantity),
+                "unitPrice": {
+                    "currency": self.currency_id.name,
+                    "value": f"{unit_amount / 10**decimal_places:.{decimal_places}f}",
+                },
+                "totalAmount": {
+                    "currency": self.currency_id.name,
+                    "value": f"{line_amount / 10**decimal_places:.{decimal_places}f}",
+                },
+            }
+            if (sku := line_item.get("sku")) and len(sku) <= 64:
+                line["sku"] = sku
+            if url := line_item.get("url"):
+                line["productUrl"] = url
+            if image_url := line_item.get("image_url"):
+                line["imageUrl"] = image_url
+            lines.append(line)
+
+        amount = payment_utils.to_minor_currency_units(
+            self.amount, self.currency_id, arbitrary_decimal_number=decimal_places
+        )
+        if not lines or total_amount != amount:  # No items, partial payment, or rounding mismatch.
+            return default_lines
+        return lines
 
     def _mollie_create_customer(self):
         """Create a Mollie customer.
