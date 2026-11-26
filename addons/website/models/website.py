@@ -1470,8 +1470,25 @@ class Website(models.CachedModel):
             raise
 
     def _get_font_urls(self):
-        """Return the list of font URLs to emit as <link> tags in <head>."""
-        return re.findall(r'--o-font-url-\d+:\s*"([^"]*)"', self._get_scss_exports())
+        """Return the list of font URLs to emit as <link> tags in <head>.
+
+        Local font URLs get the attachment checksum as `unique` parameter so
+        they can be cached long-term by browsers.
+        """
+        # (url, attachment_id), attachment_id being '' for non-local fonts
+        urls = re.findall(
+            r'--o-font-url-\d+:\s*"((?:/web/content/(\d+)/)?[^"]*)"',
+            self._get_scss_exports(),
+        )
+        attachment_ids = {int(attachment_id) for _url, attachment_id in urls if attachment_id}
+        checksums = {
+            str(attachment.id): attachment.checksum
+            for attachment in self.env['ir.attachment'].sudo().browse(attachment_ids).exists()
+        }
+        return [
+            f'{url}?unique={checksums[attachment_id]}' if attachment_id in checksums else url
+            for url, attachment_id in urls
+        ]
 
     @tools.conditional(
         'xml' not in tools.config['dev_mode'],

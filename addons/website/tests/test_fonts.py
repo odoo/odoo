@@ -95,7 +95,7 @@ class TestWebsiteFontUrls(odoo.tests.HttpCase):
         })
         self.assertEqual(
             self._get_font_urls(),
-            [f'/web/content/{attachment.id}/google-font-Roboto'],
+            [f'/web/content/{attachment.id}/google-font-Roboto?unique={attachment.checksum}'],
         )
 
     def test_google_font_made_local_stores_each_file_once(self):
@@ -242,7 +242,7 @@ class TestWebsiteFontUrls(odoo.tests.HttpCase):
         ]
         self.assertEqual(preload_links, [
             ('<link rel="preload" as="font" crossorigin="" '
-            f'href="/web/content/{font_file.id}/s-arvo-v23-the-one.woff2" '
+            f'href="/web/content/{font_file.id}/s-arvo-v23-the-one.woff2?unique={font_file.checksum}" '
             'type="font/woff2"/>'),
         ])
 
