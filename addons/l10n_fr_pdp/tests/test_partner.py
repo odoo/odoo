@@ -401,3 +401,32 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon, MailCase):
                 'peppol_verification_state': 'valid',
                 'pdp_verification_display_state': 'pdp_valid',
             }])
+
+    def test_validate_fr_partner_from_peppol_company(self):
+        """Checks if a Peppol (non-PDP) company verifies a 0225 partner through Peppol lookup so it can send BIS3"""
+        partner = self.partner_a
+        with mock.patch.object(self.env.registry['res.company'], '_get_peppol_proxy_type', return_value='peppol'):
+            partner.invalidate_recordset(['l10n_fr_is_pdp', 'pdp_verification_display_state'])
+            self.assertFalse(partner.l10n_fr_is_pdp)
+            partner.invoice_edi_format = 'ubl_bis3'
+            partner.button_account_peppol_check_partner_endpoint()
+            self.assertRecordValues(partner, [{
+                'peppol_verification_state': 'not_valid',
+                'pdp_verification_display_state': 'peppol_not_valid',
+                'invoice_edi_format': 'ubl_bis3',
+            }])
+
+            def _request_handler(s: requests.Session, r: requests.PreparedRequest, /, **kwargs):
+                self.assertEqual(r.method, "GET")
+                origin = self.env['account_edi_proxy_client.user']._get_proxy_urls()['peppol']['test']
+                self.assertTrue(r.url.startswith(f"{origin}/api/peppol/1/lookup?peppol_identifier="))
+                peppol_identifier = parse_qs(r.path_url.rsplit('?')[1])['peppol_identifier'][0]
+                return self._get_peppol_lookup_response(peppol_identifier, "0225:968515759_96851575905808")
+
+            with mock.patch.object(requests.sessions.Session, 'send', _request_handler):
+                partner.button_account_peppol_check_partner_endpoint()
+                self.assertRecordValues(partner, [{
+                    'peppol_verification_state': 'valid',
+                    'pdp_verification_display_state': 'peppol_valid',
+                    'invoice_edi_format': 'ubl_bis3',
+                }])

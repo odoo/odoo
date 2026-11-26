@@ -196,10 +196,10 @@ class ResPartner(models.Model):
     @api.model
     @handle_demo
     def _get_peppol_verification_state(self, routing_identifier, invoice_edi_format, process_type='billing', partner=None):
-        # EXTENDS 'account_peppol': French PDP participants (EAS 0225) are verified against the
-        # PDP annuaire (the official French directory) instead of the Peppol SML.
+        # EXTENDS 'account_peppol': when the current company sends through PDP, French PDP participants (EAS 0225) are verified against the
+        # PDP annuaire (the official French directory) instead of the Peppol SML. Other companies use Peppol lookup and can send BIS3.
         scheme, _sep, _endpoint = routing_identifier.lower().partition(":")
-        if scheme != '0225':
+        if scheme != '0225' or self.env.company._get_peppol_proxy_type() != 'pdp':
             return super()._get_peppol_verification_state(routing_identifier, invoice_edi_format, process_type=process_type, partner=partner)
         return self._get_pdp_annuaire_verification_state(routing_identifier, invoice_edi_format, partner=partner)
 
