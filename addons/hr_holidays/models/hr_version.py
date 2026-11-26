@@ -419,7 +419,8 @@ class HrVersion(models.Model):
     def _generate_work_entries_postprocess_adapt_to_calendar(self, vals):
         """Compute the duration of time off not requested in hours from the schedule.
 
-        Time rule outputs keep their real span.
+        Time rule outputs keep their real span, so does time off requested in hours on a
+        flexible schedule.
 
         :param dict vals: raw work entry value
         :rtype: bool
@@ -431,6 +432,10 @@ class HrVersion(models.Model):
         if vals['leave_ids'].source_leave_id:
             return False
         work_entry_type = vals['work_entry_type_id']
+        version = vals.get('version_id')
+        if work_entry_type.request_unit == 'hour' and version and version._is_flexible():
+            # the average day of a flexible schedule is no planning: the hours taken count
+            return False
         return res or (work_entry_type.count_as == 'absence' or work_entry_type.request_unit != 'hour')
 
     @api.model
