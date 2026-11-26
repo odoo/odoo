@@ -257,6 +257,9 @@
         <field name="model">mrp.workorder</field>
         <field name="arch" type="xml">
             <kanban highlight_color="color" class="o_mrp_workorder_kanban" js_class="mrp_workorder_kanban" can_open="1" create="0" sample="1" default_group_by="workcenter_id">
+                <header>
+                    <button name="action_select_mo_to_plan" type="object" string="Plan MO" display="always"/>
+                </header>
                 <field name="last_working_user_id"/>
                 <field name="workcenter_id" invisible="True"/>
                 <field name="uom_id" invisible="True" force_save="True"/>
