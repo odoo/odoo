@@ -804,7 +804,7 @@ class ProductCategory(models.Model):
                 products_to_update = self.env['product.product'].search([('categ_id', 'in', updated_categories.ids)])
         res = super().write(vals)
         if products_to_update:
-            products_to_update._correct_inventory_valuation(self.env.company._get_last_closing_date())
+            products_to_update._correct_inventory_valuation(self.env.company.sudo()._get_last_closing_date())
             products_to_update._update_standard_price()
         products_lot_valuated = products_to_update.filtered(lambda p: p.lot_valuated)
         if products_lot_valuated:

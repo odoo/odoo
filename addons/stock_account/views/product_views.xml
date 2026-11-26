@@ -61,5 +61,32 @@
             </field>
         </record>
 
+        <record id="view_category_property_form_stock_account" model="ir.ui.view">
+            <field name="name">product.category.form.stock.account</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="account.view_category_property_form"/>
+            <field name="arch" type="xml">
+                <!-- the costing method is needed with Invoicing only; the rest of the page is for Accounting -->
+                <page name="accounting" position="attributes">
+                    <attribute name="groups"/>
+                </page>
+                <group name="properties" position="attributes">
+                    <attribute name="groups">account.group_account_readonly</attribute>
+                </group>
+                <field name="property_valuation" position="attributes">
+                    <attribute name="groups">account.group_account_readonly</attribute>
+                </field>
+                <field name="property_stock_valuation_account_id" position="attributes">
+                    <attribute name="groups">account.group_account_readonly</attribute>
+                </field>
+                <field name="account_stock_variation_id" position="attributes">
+                    <attribute name="groups">account.group_account_readonly</attribute>
+                </field>
+                <field name="property_price_difference_account_id" position="attributes">
+                    <attribute name="groups">account.group_account_readonly</attribute>
+                </field>
+            </field>
+        </record>
+
     </data>
 </odoo>
