@@ -45,7 +45,7 @@ class StockWarehouse(models.Model):
                 'use_existing_lots': True,
             },
         })
-        return data, max_sequence + 2
+        return data, next_sequence + 2
 
     def _get_picking_type_update_values(self):
         data = super(StockWarehouse, self)._get_picking_type_update_values()

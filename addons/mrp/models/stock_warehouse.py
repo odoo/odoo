@@ -252,7 +252,7 @@ class StockWarehouse(models.Model):
                 'company_id': self.company_id.id,
             },
         })
-        return data, max_sequence + 4
+        return data, next_sequence + 4
 
     def _get_picking_type_update_values(self):
         data = super(StockWarehouse, self)._get_picking_type_update_values()
