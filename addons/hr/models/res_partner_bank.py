@@ -1,8 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import re
+
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
-from odoo.tools.bank_account_number import validate_iban
+from odoo.tools.bank_account_number import (
+    _map_iban_template,
+    normalize_account_number,
+    validate_iban,
+)
 
 
 class ResPartnerBank(models.Model):
@@ -49,6 +55,10 @@ class ResPartnerBank(models.Model):
 
             bank.employee_id = (linked_employees.filtered(same_company) or linked_employees or employees.filtered(same_company))[:1]
 
+    @api.constrains('account_number', 'bank_bic')
+    def _check_employee_bank_account(self):
+        self._check_employee_bank_accounts()
+
     @api.depends_context('uid')
     def _compute_display_name(self):
         # Because a read access at the recordset level would evaluate to False if one record is not accessible,
@@ -75,3 +85,53 @@ class ResPartnerBank(models.Model):
         except ValidationError:
             pass
         return False
+
+    @api.model
+    def _looks_like_iban(self, account_number):
+        """Return whether ``account_number`` has the structure and the checksum of an IBAN.
+
+        Unlike :meth:`_is_iban_valid`, the country does not need an IBAN template: the IBAN of
+        a country without one (e.g. Morocco) has the account type "Normal" but is an IBAN.
+
+        :param str account_number: the account number, formatted or not.
+        :rtype: bool
+        """
+        number = normalize_account_number(account_number)
+        if not re.fullmatch(r'[A-Z]{2}[0-9]{2}[A-Z0-9]{11,30}', number):
+            return False
+        rearranged = number[4:] + number[:4]
+        return int(''.join(str(int(char, 36)) for char in rearranged)) % 97 == 1
+
+    def _get_employee_bank_account_error(self, employee):
+        """Return why the account cannot be a bank account of ``employee``.
+
+        An account number starting like an IBAN of a known country must be a valid IBAN. Other
+        numbers pass: the payment reports check them for their format (e.g. SEPA). Override it
+        to add the rules of a localization.
+
+        :param hr.employee employee: the employee holding the account.
+        :return: the error message, or ``None`` if the account is accepted.
+        :rtype: str | None
+        """
+        self.ensure_one()
+        number = normalize_account_number(self.account_number)
+        if (
+            re.match(r'[A-Z]{2}[0-9]{2}', number)
+            and number[:2].lower() in _map_iban_template
+            and not self._is_iban_valid(number)
+        ):
+            return self.env._("The bank account of an employee must be a valid IBAN.")
+        return None
+
+    def _check_employee_bank_accounts(self, employee=None):
+        """Check the accounts held by an employee (see :meth:`_get_employee_bank_account_error`).
+
+        :param hr.employee employee: the employee holding the accounts, defaults to the employee
+            of each account; the accounts without employee are not checked.
+        :raise ValidationError: if an account is refused.
+        """
+        # sudo: the accounts are checked whatever the access of the user to the employees
+        for account in self.sudo():
+            account_employee = employee.sudo() if employee else account.employee_id[:1]
+            if account_employee and (error := account._get_employee_bank_account_error(account_employee)):
+                raise ValidationError(error)

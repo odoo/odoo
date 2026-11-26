@@ -2416,6 +2416,9 @@ class HrEmployee(models.Model):
         employees.filtered(lambda e: not e.work_contact_id).sudo()._create_work_contacts()
         if self.env.context.get('salary_simulation'):
             return employees
+        if any('bank_account_ids' in vals for vals in vals_list):
+            for employee in employees:
+                employee.bank_account_ids._check_employee_bank_accounts(employee)
         for employee_sudo in employees.sudo():
             # creating 'svg/xml' attachments requires specific rights
             if not employee_sudo.image_1920 and self.env['ir.ui.view'].sudo(False).has_access('write'):
@@ -2485,7 +2488,12 @@ class HrEmployee(models.Model):
         # Only one write call for all the fields from hr.version
         new_vals = vals.copy()
         version_vals = {val: new_vals.pop(val) for val in vals if val in self._fields and self._fields[val].inherited}
+        # only the added accounts: an older refused account must not block the fix of the employee
+        previous_bank_accounts = {employee: employee.bank_account_ids for employee in self} if 'bank_account_ids' in vals else {}
         res = super().write(new_vals)
+
+        for employee, bank_accounts in previous_bank_accounts.items():
+            (employee.bank_account_ids - bank_accounts)._check_employee_bank_accounts(employee)
         if previous_skills_summary:
             self._log_skill_changes(previous_skills_summary)
         if 'work_contact_id' in vals:
