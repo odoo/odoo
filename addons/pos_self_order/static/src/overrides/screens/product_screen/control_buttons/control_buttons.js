@@ -5,13 +5,6 @@ import { DynamicQrPopup } from "@pos_self_order/overrides/components/dynamic_qr_
 import { _t } from "@web/core/l10n/translation";
 
 patch(ControlButtons.prototype, {
-    get showDynamicQr() {
-        return (
-            this.pos.config.module_pos_restaurant &&
-            this.pos.config.self_ordering_mode === "mobile" &&
-            this.pos.config.self_ordering_service_mode === "dynamic_qr"
-        );
-    },
     async clickDynamicQr() {
         const order = this.currentOrder;
         if (typeof order.id !== "number") {

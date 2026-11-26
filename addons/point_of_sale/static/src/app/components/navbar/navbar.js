@@ -159,6 +159,13 @@ export class Navbar extends Component {
     onClickScan() {
         this.pos.toggleScanning();
     }
+    get showScanButton() {
+        return (
+            this.isBarcodeScannerSupported() &&
+            ["ProductScreen", "TicketScreen"].includes(this.pos.router.currentScreen()) &&
+            !this.pos.config.module_pos_restaurant
+        );
+    }
     get showCashMoveButton() {
         return this.pos.showCashMoveButton;
     }

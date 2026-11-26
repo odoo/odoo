@@ -3,7 +3,7 @@
     <t t-name="pos_self_order.ControlButtons" t-inherit="point_of_sale.ControlButtons" t-inherit-mode="extension">
         <xpath expr="//t[@t-if='this.props.showRemainingButtons']/div/t[@name='o_pricelist_button']" position="before">
             <!-- Dynamic QR Button -->
-            <t t-if="this.showDynamicQr" t-call="point_of_sale.controlButton"
+            <t t-if="this.pos.config.useDynamicQr" t-call="point_of_sale.controlButton"
                 icon="'qr_code'"
                 btnText.translate="Dynamic QR"
                 btnClasses="'btn-secondary '"

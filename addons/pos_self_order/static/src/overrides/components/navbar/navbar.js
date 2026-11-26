@@ -5,4 +5,10 @@ patch(Navbar.prototype, {
     get showOderTrackerDropdown() {
         return super.showOderTrackerDropdown || this.pos.config.self_ordering_mode === "mobile";
     },
+    get showScanButton() {
+        return (
+            super.showScanButton ||
+            (this.pos.config.useDynamicQr && this.pos.router.currentScreen() === "TicketScreen")
+        );
+    },
 });

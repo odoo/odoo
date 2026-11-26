@@ -18,5 +18,12 @@
                 <attribute name="t-if">not conditions.get('from_self')</attribute>
             </div>
         </template>
+        <template id="pos_self_order.pos_order_receipt" inherit_id="point_of_sale.pos_order_receipt">
+            <div name="before-footer" position="before">
+                <div t-if="image.get('dynamic_qr_code')" class="w-100 text-center my-3" name="dynamic_qr_code">
+                    <img t-att-src="image['dynamic_qr_code']" alt="QR Code" style="width: 60%; max-width: 250px;" />
+                </div>
+            </div>
+        </template>
     </data>
 </odoo>
