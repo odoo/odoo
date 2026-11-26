@@ -49,7 +49,7 @@ class HrAttendance(http.Controller):
         """
         response = {}
         if employee:
-            attendance_fields = ['check_in', 'check_out', 'worked_hours', 'work_entry_type_id', 'wet_display_code']
+            attendance_fields = ['check_in', 'check_out', 'worked_hours']
             if include_attendance_details:
                 attendance_fields += [
                     'break_duration',
@@ -62,10 +62,7 @@ class HrAttendance(http.Controller):
                 'name': employee.name,
                 'hours_today': float_round(employee.hours_today, precision_digits=3),
                 'hours_previously_today': float_round(employee.hours_previously_today, precision_digits=2),
-                'today_attendance_ids': [
-                    dict(values, wet_color=attendance.work_entry_type_id.sudo().color)
-                    for attendance, values in zip(employee.today_attendance_ids, employee.today_attendance_ids.read(attendance_fields))
-                ],
+                'today_attendance_ids': employee.today_attendance_ids.read(attendance_fields),
                 'last_attendance_worked_hours': float_round(employee.last_attendance_worked_hours, precision_digits=2),
                 'last_check_in': employee.last_check_in,
                 'attendance_state': employee.attendance_state,
@@ -105,11 +102,9 @@ class HrAttendance(http.Controller):
                 },
                 'overtime_today': sum(request.env['hr.attendance'].sudo().search([
                     ('employee_id', '=', employee.id),
-                    ('time_rule_id', '!=', False),
-                    ('source_attendance_id', '!=', False),
                     ('check_in', '<', datetime.datetime.combine(fields.Date.context_today(request.env.user), datetime.time.max)),
                     ('check_out', '>', datetime.datetime.combine(fields.Date.context_today(request.env.user), datetime.time.min)),
-                ]).mapped('worked_hours')) or 0,
+                ]).mapped('overtime_hours')),
                 'use_pin': employee.company_id.attendance_kiosk_use_pin,
                 'display_overtime': True,
                 'device_tracking_enabled': employee.company_id.attendance_device_tracking,
@@ -123,19 +118,11 @@ class HrAttendance(http.Controller):
         """Return :meth:`_get_employee_info_response` with the ``notification`` of the check in
         or out, if any.
 
-        When the employee is checked out, also ``split_summary``: how the time rules split the
-        last attendance (``hr.attendance._get_time_rule_split_summary``), ``False`` if they
-        did not.
-
         :rtype: dict
         """
         response = cls._get_employee_info_response(employee)
         if notification:
             response['notification'] = notification
-        employee_sudo = employee.sudo()
-        last_attendance = employee_sudo.last_attendance_id
-        if employee_sudo and employee_sudo.attendance_state == 'checked_out' and last_attendance.check_out:
-            response['split_summary'] = last_attendance._get_time_rule_split_summary()
         return response
 
     @staticmethod
@@ -493,8 +480,7 @@ class HrAttendance(http.Controller):
         """Check the current user's employee in or out from the systray (``systray`` mode).
 
         :return: :meth:`_get_attendance_action_response` updated with
-            :meth:`_get_user_attendance_data` (with details); on a check-out split by the time
-            rules, the ``notification`` (if none) describes the split
+            :meth:`_get_user_attendance_data` (with details)
         """
         employee = request.env.user.with_company(self._get_active_company(request)).employee_id
         if not employee:
@@ -509,9 +495,6 @@ class HrAttendance(http.Controller):
         notification = employee.sudo().with_context({'is_from_systray_check_in_out': True})._attendance_action_change(geo_ip_response, check_in_image_data)
         response = self._get_attendance_action_response(employee, notification)
         response.update(self._get_user_attendance_data(employee, include_attendance_details=True))
-        split_summary = response.get('split_summary')
-        if split_summary and not notification:
-            response['notification'] = {'type': 'info', 'message': split_summary['message']}
         return response
 
     @http.route('/hr_attendance/attendance_user_data', type="jsonrpc", auth="user", replica=True)

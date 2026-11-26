@@ -24,8 +24,8 @@ class HrHolidaysOvertimeCommon(TransactionCase):
         })
         cls.env.company.tz = 'UTC'
 
-        cls.att_wet = cls.env.company._get_default_attendance_work_entry_type()
-        cls.env.company.attendance_work_entry_type_id = cls.att_wet
+        # the time rules see the attendances as Work
+        cls.att_wet = cls.env.ref('hr_work_entry.generic_work_entry_type_attendance')
         cls.overtime_wet = cls.env.ref('hr_work_entry.be_work_entry_type_overtime')
 
         # deactivate all data-file rules so tests are self-contained
@@ -40,7 +40,7 @@ class HrHolidaysOvertimeCommon(TransactionCase):
             'name': 'OT Test Employee',
             'user_id': cls.user.id,
             'tz': 'UTC',
-            'attendance_based': True,
+            'work_entry_source': 'attendance',
             'date_version': '2020-01-01',
             'contract_date_start': '2020-01-01',
             'wage': 3500,
@@ -57,14 +57,15 @@ class HrHolidaysOvertimeCommon(TransactionCase):
     def _output_atts(self, employee, rule=None):
         domain = [
             ('employee_id', '=', employee.id),
+            ('attendance_id', '!=', False),
             ('time_rule_id', '!=', False),
         ]
         if rule:
             domain.append(('time_rule_id', '=', rule.id))
-        return self.env['hr.attendance'].search(domain)
+        return self.env['hr.leave'].search(domain)
 
     def _output_hours(self, atts):
-        return sum(a.worked_hours for a in atts)
+        return sum((a.date_to - a.date_from).total_seconds() / 3600 for a in atts)
 
     def new_attendance(self, check_in, check_out):
         return self.env['hr.attendance'].create({
@@ -85,7 +86,7 @@ class TestHolidaysOvertimeRules(HrHolidaysOvertimeCommon):
         flex_emp = self.env['hr.employee'].create({
             'name': 'Flex OT Employee',
             'tz': 'UTC',
-            'attendance_based': True,
+            'work_entry_source': 'attendance',
             'date_version': '2020-01-01',
             'contract_date_start': '2020-01-01',
             'wage': 3000,
@@ -117,7 +118,7 @@ class TestHolidaysOvertimeRules(HrHolidaysOvertimeCommon):
                                msg="50h worked - 40h scheduled = 10h weekly overtime")
 
     def test_overtime_timing_adjacent_intervals(self):
-        """Adjacent timing rules must not merge into one output attendance.
+        """Adjacent timing rules must not merge into one output time off.
 
         Daytime rule:   17:00-21:00 (4h window)
         Nighttime rule: 21:00-24:00 (3h window)
@@ -173,11 +174,11 @@ class TestHolidaysOvertimeRules(HrHolidaysOvertimeCommon):
 class TestHolidaysOvertimeKiosk(HrHolidaysOvertimeCommon, HttpCase):
 
     def test_employee_kiosk_total_overtime(self):
-        """Kiosk endpoint reports total_overtime = output attendance hours from time rules.
+        """Kiosk endpoint reports the total_overtime of the employee: worked - expected hours.
 
-        Two weekend attendances of 9h each = 18h of overtime output (schedule has 0h on Sat/Sun).
+        Two weekend attendances of 9h each = 18h of overtime (schedule has 0h on Sat/Sun).
         """
-        # Jan 2 (Sat) and Jan 3 (Sun) 2021 — 0h scheduled → all hours become overtime output
+        # Jan 2 (Sat) and Jan 3 (Sun) 2021 — 0h scheduled → all hours are overtime
         self.new_attendance(
             check_in=datetime(2021, 1, 2, 8),
             check_out=datetime(2021, 1, 2, 17),
@@ -198,5 +199,5 @@ class TestHolidaysOvertimeKiosk(HrHolidaysOvertimeCommon, HttpCase):
             response.get('total_overtime'),
             18.0,
             places=1,
-            msg="Kiosk should show total_overtime matching output attendance hours",
+            msg="Kiosk should show total_overtime matching the overtime of the attendances",
         )

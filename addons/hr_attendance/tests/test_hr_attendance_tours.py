@@ -62,13 +62,13 @@ class TestHrAttendanceTours(HttpCase):
             {'state': 'draft', 'has_issue': True},
             {'state': 'draft', 'has_issue': True},
             {'state': 'draft', 'has_issue': True},
-            {'state': 'draft', 'has_issue': False},
+            {'state': 'draft', 'has_issue': True},  # Because of the undertime.
         ])
         self.assertRecordValues(late[0] | early[1] | overtime[1] | undertime[1], [
-            {'is_late_check_in': True, 'is_early_check_out': False, 'is_overtime': False, 'is_undertime': False},
-            {'is_late_check_in': False, 'is_early_check_out': True, 'is_overtime': False, 'is_undertime': False},
-            {'is_late_check_in': False, 'is_early_check_out': False, 'is_overtime': True, 'is_undertime': False},
-            {'is_late_check_in': False, 'is_early_check_out': False, 'is_overtime': False, 'is_undertime': True},
+            {'is_late_check_in': True, 'is_early_check_out': False, 'overtime_hours': 0.0},
+            {'is_late_check_in': False, 'is_early_check_out': True, 'overtime_hours': 0.0},
+            {'is_late_check_in': False, 'is_early_check_out': False, 'overtime_hours': 1.0},
+            {'is_late_check_in': False, 'is_early_check_out': False, 'overtime_hours': -1.0},
         ])
 
         self.start_tour('/odoo', 'hr_attendance_review_tour', login='att_manager')

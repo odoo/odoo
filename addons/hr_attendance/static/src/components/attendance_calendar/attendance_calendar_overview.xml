@@ -4,8 +4,7 @@
         <div class="o_attendance_info_bar px-3">
             <div class="d-flex flex-row py-2 gap-3 overflow-x-auto">
                 <t t-foreach="this.state.entries" t-as="entry" t-key="entry_index">
-                    <div class="o_attendance_entry_card d-inline-flex flex-row align-items-center justify-content-center bg-gradient-lg rounded px-4 py-2"
-                         t-attf-class="bg-color-{{entry.color + 1}}-light">
+                    <div class="o_attendance_entry_card d-inline-flex flex-row align-items-center justify-content-center bg-gradient-lg rounded px-4 py-2 bg-color-1-light">
                         <div class="d-flex flex-row flex-wrap justify-content-center align-items-baseline row-gap-1 column-gap-2 text-nowrap">
                             <span class="o_attendance_entry_duration">
                                 <t t-out="this.formatDuration({ hours: entry.worked_hours })"/>

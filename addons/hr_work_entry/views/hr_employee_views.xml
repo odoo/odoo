@@ -5,11 +5,25 @@
         <field name="model">hr.employee</field>
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="arch" type="xml">
+            <field name="resource_calendar_id" position="after">
+                <field name="work_entry_source" placeholder="Time Off and Schedule"/>
+            </field>
             <group name="identification_group" position="after">
                 <group name="exports" string="Export">
                     <field name="external_code" placeholder="Code used in work entry exports"/>
                 </group>
             </group>
+        </field>
+    </record>
+
+    <record id="hr_contract_template_view_form" model="ir.ui.view">
+        <field name="name">hr.contract.template.view.form.inherit.hr_work_entry</field>
+        <field name="model">hr.version</field>
+        <field name="inherit_id" ref="hr.hr_contract_template_form_view"/>
+        <field name="arch" type="xml">
+            <field name="resource_calendar_id" position="after">
+                <field name="work_entry_source" placeholder="Time Off and Schedule"/>
+            </field>
         </field>
     </record>
 

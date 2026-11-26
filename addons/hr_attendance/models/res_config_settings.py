@@ -17,13 +17,8 @@ class ResConfigSettings(models.TransientModel):
     auto_check_out_mode = fields.Selection(related="company_id.auto_check_out_mode", readonly=False)
     auto_check_out_tolerance = fields.Float(related="company_id.auto_check_out_tolerance", readonly=False)
     auto_check_out_specific_time = fields.Float(related="company_id.auto_check_out_specific_time", readonly=False)
-    absence_management = fields.Boolean(related="company_id.absence_management", readonly=False)
     attendance_validation = fields.Selection(related="company_id.attendance_validation", readonly=False)
     attendance_validation_tolerance = fields.Integer(related="company_id.attendance_validation_tolerance", readonly=False)
-    attendance_work_entry_type_id = fields.Many2one(
-        related='company_id.attendance_work_entry_type_id',
-        readonly=False,
-    )
     attendance_tolerance = fields.Boolean(related="company_id.attendance_tolerance", readonly=False)
     attendance_tolerance_early_check_in = fields.Integer(related="company_id.attendance_tolerance_early_check_in", readonly=False)
     attendance_tolerance_late_check_in = fields.Integer(related="company_id.attendance_tolerance_late_check_in", readonly=False)
@@ -32,7 +27,6 @@ class ResConfigSettings(models.TransientModel):
     attendance_device_tracking = fields.Boolean(related="company_id.attendance_device_tracking", readonly=False)
     attendance_capture_check_in = fields.Boolean(related="company_id.attendance_capture_check_in", readonly=False)
     attendance_break_management = fields.Boolean(related="company_id.attendance_break_management", readonly=False)
-    attendance_based = fields.Boolean(string="Default Tracking", related='company_id.attendance_based', groups="hr.group_hr_user", readonly=False)
 
     def set_values(self):
         super().set_values()

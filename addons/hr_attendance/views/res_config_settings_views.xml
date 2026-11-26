@@ -64,9 +64,6 @@
                                 </div>
                             </div>
                         </setting>
-                        <setting string="Absence Management" company_dependent="1" help="If checked, days not covered by an attendance will be visible in the Report. Does not apply to employees with a flexible working schedule.">
-                            <field name="absence_management"/>
-                        </setting>
                         <setting string="Attendances from Backend" company_dependent="1" help="Allow Users to Check in/out from Odoo.">
                             <field name="attendance_from_systray" required="1"/>
                         </setting>
@@ -79,10 +76,6 @@
                         <setting string="Break Management on Checkout" company_dependent="1"
                             help="If enabled, employees can record their total break duration after checking out.">
                             <field name="attendance_break_management"/>
-                        </setting>
-                        <setting string="Attendance Work Entry Type" company_dependent="1"
-                                 help="Default work entry type assigned to attendance records. Used by the time rule engine.">
-                            <field name="attendance_work_entry_type_id" widget="many2one_work_entry_type" options="{'no_create': True}"/>
                         </setting>
                     </block>
                     <block title="Kiosk Settings">

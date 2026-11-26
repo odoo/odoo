@@ -73,7 +73,7 @@ class TestHrTimeRulePerformance(TransactionCase):
             'contract_date_start': date.today() - relativedelta(months=2),
             'contract_date_end': False,
             'resource_calendar_id': cls.calendar_38h.id,
-            'attendance_based': True,
+            'work_entry_source': 'attendance',
             'company_id': cls.company.id,
         } for i in range(100)])
         for employee in employees:
@@ -98,7 +98,7 @@ class TestHrTimeRulePerformance(TransactionCase):
 
         t0 = time.time()
         with self.assertQueryCount(467):
-            self.env['hr.leave']._process_time_rules_for(affected)
+            self.env['hr.attendance']._process_time_rules_for(affected)
         t1 = time.time()
 
         _logger.info(

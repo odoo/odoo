@@ -30,18 +30,88 @@ class TestWorkentryAttendance(HrWorkEntryAttendanceCommon):
 
     def test_attendance_based_break_duration_reduces_work_entry(self):
         """
-        Test that an attendance of 8h with a 2h unpaid break should
-        only generate 6 hours of worked time (excluding the break)
+        Test that the unpaid break of an attendance is not worked time for the time rules: a 10h
+        attendance with a 2h break is 8h worked, no overtime; without the break it has 2h of overtime.
+        The work entries come from the schedule, with the time off written by the time rules.
         """
-        self.env['hr.attendance'].create({
+        self.env['hr.time.rule'].search([]).write({'active': False})
+        overtime_type = self.env.ref('hr_work_entry.l10n_us_work_entry_type_overtime')
+        self.env['hr.time.rule'].create({
+            'name': 'Daily overtime',
+            'calendar_source': 'employee',
+            'quantity_period': 'day',
+            'work_entry_type_id': overtime_type.id,
+            'condition_work_entry_type_ids': [self.env.ref('hr_work_entry.generic_work_entry_type_attendance').id],
+        })
+        with_break, without_break = self.env['hr.attendance'].create([{
             'employee_id': self.employee.id,
             'check_in': datetime(2021, 9, 13, 8, 0, 0),
-            'check_out': datetime(2021, 9, 13, 16, 0, 0),
+            'check_out': datetime(2021, 9, 13, 18, 0, 0),
             'break_duration': 2.0,
-        })
+        }, {
+            'employee_id': self.employee.id,
+            'check_in': datetime(2021, 9, 14, 8, 0, 0),
+            'check_out': datetime(2021, 9, 14, 18, 0, 0),
+        }])
+        self.assertFalse(with_break.related_leave_ids, "8h worked, nothing above the schedule")
+        output = without_break.related_leave_ids
+        self.assertEqual(output.work_entry_type_id, overtime_type)
+        self.assertAlmostEqual((output.date_to - output.date_from).total_seconds() / 3600, 2.0)
         work_entries_vals = self.version.generate_work_entries(date(2021, 9, 13), date(2021, 9, 13))
-        total_work_entry_duration = sum(vals['duration'] for vals in work_entries_vals)
-        self.assertEqual(total_work_entry_duration, 6.0)
+        self.assertEqual(sum(vals['duration'] for vals in work_entries_vals), 8.0)
+
+    def test_time_off_of_attendances_is_no_conflict(self):
+        """The time off generated from the attendances, the working time of a flexible schedule or
+        the time rule outputs of a fixed one, is no time off the attendances overlap."""
+        self.env['hr.time.rule'].search([]).write({'active': False})
+        self.env['hr.time.rule'].create({
+            'name': 'Daily overtime',
+            'calendar_source': 'employee',
+            'quantity_period': 'day',
+            'work_entry_type_id': self.env.ref('hr_work_entry.l10n_us_work_entry_type_overtime').id,
+            'condition_work_entry_type_ids': [self.env.ref('hr_work_entry.generic_work_entry_type_attendance').id],
+        })
+        self.richard_emp.version_id.write({
+            'resource_calendar_id': self.env['resource.calendar'].create({
+                'name': 'Flexible Calendar',
+                'calendar_type': 'undefined',
+                'attendance_ids': [],
+            }).id,
+            'work_entry_source': 'attendance',
+        })
+        day_off = self.env['hr.leave'].create({
+            'employee_id': self.employee.id,
+            'work_entry_type_id': self.env['hr.work.entry.type'].create({
+                'name': 'Day Off',
+                'code': 'DAYOFF',
+                'count_as': 'absence',
+                'requires_allocation': False,
+            }).id,
+            'request_date_from': date(2021, 9, 14),
+            'request_date_to': date(2021, 9, 14),
+        })
+        day_off.action_approve()
+        flexible, overtime, on_day_off = self.env['hr.attendance'].create([{
+            'employee_id': self.richard_emp.id,
+            'check_in': datetime(2021, 9, 13, 8, 0, 0),
+            'check_out': datetime(2021, 9, 13, 16, 0, 0),
+        }, {
+            'employee_id': self.employee.id,
+            'check_in': datetime(2021, 9, 13, 8, 0, 0),
+            'check_out': datetime(2021, 9, 13, 18, 0, 0),
+        }, {
+            'employee_id': self.employee.id,
+            'check_in': datetime(2021, 9, 14, 8, 0, 0),
+            'check_out': datetime(2021, 9, 14, 12, 0, 0),
+        }])
+        self.assertTrue(flexible.related_leave_ids, "the working time of the flexible schedule")
+        self.assertTrue(overtime.related_leave_ids, "the overtime above the schedule")
+        attendances = flexible | overtime | on_day_off
+        self.assertEqual(attendances.mapped('has_time_off_conflict'), [False, False, True])
+        self.assertEqual(
+            self.env['hr.attendance'].search([('id', 'in', attendances.ids), ('has_time_off_conflict', '=', True)]),
+            on_day_off,
+        )
 
     def test_timezones(self):
         """ Basic check that timezones do not cause weird behaviors:
@@ -63,8 +133,9 @@ class TestWorkentryAttendance(HrWorkEntryAttendanceCommon):
         self.assertEqual(work_entries_vals[0]['duration'], 8)
 
     def test_attendance_within_period(self):
-        # Tests that an attendance created within an already generated period generates a work entry
-        boundaries_attendances = self.env['hr.attendance'].create([
+        # Tests that an attendance created within an already generated period doesn't change the work entries:
+        # they come from the schedule, one per working day
+        self.env['hr.attendance'].create([
             {
                 'employee_id': self.employee.id,
                 'check_in': datetime(2021, 9, 1, 14, 0, 0),
@@ -77,9 +148,9 @@ class TestWorkentryAttendance(HrWorkEntryAttendanceCommon):
             },
         ])
         work_entries_vals = self.version.generate_work_entries(date(2021, 9, 1), date(2021, 9, 30))
-        self.assertEqual(len(work_entries_vals), len(boundaries_attendances))
+        self.assertEqual(len(work_entries_vals), 22)  # working days of september 2021
 
-        inner_attendance = self.env['hr.attendance'].create([
+        self.env['hr.attendance'].create([
             {
                 'employee_id': self.employee.id,
                 'check_in': datetime(2021, 9, 14, 14, 0, 0),
@@ -87,7 +158,7 @@ class TestWorkentryAttendance(HrWorkEntryAttendanceCommon):
             }
         ])
         work_entries_vals = self.version.generate_work_entries(date(2021, 9, 1), date(2021, 9, 30))
-        self.assertEqual(len(work_entries_vals), len(boundaries_attendances) + len(inner_attendance))
+        self.assertEqual(len(work_entries_vals), 22)
 
     @freeze_time("2021-09-01")  # to have the timezone in summer time
     def test_attendance_spanning_days(self):
@@ -170,7 +241,7 @@ class TestWorkentryAttendance(HrWorkEntryAttendanceCommon):
         })
         self.richard_emp.version_id.write({
             'resource_calendar_id': flexible_calendar.id,
-            'attendance_based': True,
+            'work_entry_source': 'attendance',
             'tz': 'Europe/Brussels',
         })
 
@@ -207,7 +278,7 @@ class TestWorkentryAttendance(HrWorkEntryAttendanceCommon):
             'date_version': datetime(2025, 6, 1).date(),
             'contract_date_start': datetime(2025, 6, 1).date(),
             'wage': 5000.0,
-            'attendance_based': True,
+            'work_entry_source': 'attendance',
             'resource_calendar_id': fully_flexible_calendar.id,
         })
 
@@ -235,61 +306,3 @@ class TestWorkentryAttendance(HrWorkEntryAttendanceCommon):
             datetime(2025, 6, 25).date(),
             datetime(2025, 6, 29).date()
         )
-
-    def test_working_time_leave_keeps_attendances_of_its_type_on_other_days(self):
-        homework_type = self.env['hr.work.entry.type'].create({
-            'name': 'Homework',
-            'code': 'TEST_HOMEWORK',
-            'count_as': 'working_time',
-            'requires_allocation': False,
-        })
-        attendance = self.env['hr.attendance'].create({
-            'employee_id': self.employee.id,
-            'check_in': datetime(2021, 9, 13, 8, 0, 0),
-            'check_out': datetime(2021, 9, 13, 12, 0, 0),
-            'work_entry_type_id': homework_type.id,
-        })
-        leave = self.env['hr.leave'].create({
-            'name': 'Homework',
-            'employee_id': self.employee.id,
-            'work_entry_type_id': homework_type.id,
-            'request_date_from': '2021-09-14',
-            'request_date_to': '2021-09-14',
-        })
-        self.assertEqual(leave.state, 'validate')
-        work_entries_vals = self.version._get_work_entries_values(date(2021, 9, 13), date(2021, 9, 14))
-        self.assertEqual(
-            [(vals['date_start'], vals['date_stop']) for vals in work_entries_vals if vals.get('attendance_ids') == attendance],
-            [(datetime(2021, 9, 13, 8, 0, 0), datetime(2021, 9, 13, 12, 0, 0))],
-        )
-
-    def test_allowed_work_entry_types_exclude_allocation_types(self):
-        """ Time types that require an allocation are time off types: they cannot be chosen
-            as the time type of an attendance. """
-        country = self.env['res.country'].create({'name': 'Allocland', 'code': 'Q3'})
-        self.employee.company_id.country_id = country
-        # undo the live-generated fallback types: this test wants only the two created below.
-        self.env['hr.time.rule'].sudo().search([('country_id', '=', country.id)]).unlink()
-        self.env['hr.work.entry.type'].sudo().with_context(active_test=False).search(
-            [('country_id', '=', country.id)]).unlink()
-        free_type, allocation_type = self.env['hr.work.entry.type'].create([{
-            'name': 'Free working time',
-            'code': 'TDOM_FREE',
-            'count_as': 'working_time',
-            'country_id': country.id,
-            'requires_allocation': False,
-        }, {
-            'name': 'Allocated working time',
-            'code': 'TDOM_ALLOC',
-            'count_as': 'working_time',
-            'country_id': country.id,
-            'requires_allocation': True,
-        }])
-        attendance = self.env['hr.attendance'].create({
-            'employee_id': self.employee.id,
-            'check_in': datetime(2021, 9, 13, 8, 0, 0),
-            'check_out': datetime(2021, 9, 13, 12, 0, 0),
-            'work_entry_type_id': free_type.id,
-        })
-        self.assertEqual(attendance.allowed_work_entry_type_ids, free_type)
-        self.assertNotIn(allocation_type, attendance.allowed_work_entry_type_ids)

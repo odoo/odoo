@@ -606,7 +606,7 @@ class TestLeaveAttendanceReport(TestHrHolidaysCommon):
             'in_mode': 'kiosk',
             'out_mode': 'kiosk',
         })
-        self.assertRecordValues(attendance, [{'is_late_check_in': True, 'is_overtime': False, 'state': 'draft'}])
+        self.assertRecordValues(attendance, [{'is_late_check_in': True, 'overtime_hours': -4.0, 'state': 'draft'}])
         day_off = self.env['hr.leave'].create({
             'name': 'Day off',
             'work_entry_type_id': self.env['hr.work.entry.type'].create({
@@ -620,9 +620,9 @@ class TestLeaveAttendanceReport(TestHrHolidaysCommon):
             'request_date_to': monday,
         })
         self.assertEqual(day_off.state, 'validate', "Created by a time off officer for another employee: approved")
-        self.assertRecordValues(attendance, [{'is_late_check_in': False, 'is_overtime': True, 'state': 'draft'}])
+        self.assertRecordValues(attendance, [{'is_late_check_in': False, 'overtime_hours': 4.0, 'state': 'draft'}])
         day_off.action_refuse()
-        self.assertRecordValues(attendance, [{'is_late_check_in': True, 'is_overtime': False, 'state': 'draft'}])
+        self.assertRecordValues(attendance, [{'is_late_check_in': True, 'overtime_hours': -4.0, 'state': 'draft'}])
 
     def test_attendance_reviewed_after_morning_off(self):
         """A morning off approved after the afternoon was worked: the afternoon is no longer late nor short, so it is
@@ -630,7 +630,11 @@ class TestLeaveAttendanceReport(TestHrHolidaysCommon):
         employee = self.employee_emp
         today = fields.Date.today()
         monday = today - timedelta(days=today.weekday() + 7 * 8)
-        employee.version_id.write({'date_version': monday - timedelta(days=7), 'contract_date_start': monday - timedelta(days=7)})
+        employee.version_id.write({
+            'date_version': monday - timedelta(days=7),
+            'contract_date_start': monday - timedelta(days=7),
+            'work_entry_source': 'attendance',
+        })
         # Only an overtime rule on the employee's schedule, as the localizations add their own rules
         self.env['hr.time.rule'].search([]).write({'active': False})
         self.env['hr.time.rule'].create({
@@ -645,7 +649,8 @@ class TestLeaveAttendanceReport(TestHrHolidaysCommon):
             'in_mode': 'kiosk',
             'out_mode': 'kiosk',
         })
-        self.assertRecordValues(afternoon, [{'is_late_check_in': True, 'is_undertime': True, 'state': 'draft'}])
+        self.assertRecordValues(afternoon, [{'is_late_check_in': True, 'state': 'draft'}])
+        self.assertLess(afternoon.overtime_hours, 0)
         morning_off = self.env['hr.leave'].create({
             'name': 'Morning off',
             'work_entry_type_id': self.env['hr.work.entry.type'].create({
@@ -662,5 +667,5 @@ class TestLeaveAttendanceReport(TestHrHolidaysCommon):
             'request_date_to_period': 'am',
         })
         self.assertEqual(morning_off.state, 'validate')
-        self.assertRecordValues(afternoon, [{'is_late_check_in': False, 'is_undertime': False, 'state': 'validated'}])
-        self.assertTrue(afternoon.overtime_attendance_ids, "The time rules moved the extra 10 minutes to an output")
+        self.assertRecordValues(afternoon, [{'is_late_check_in': False, 'overtime_hours': 0.0, 'state': 'validated'}])
+        self.assertTrue(afternoon.related_leave_ids, "The time rules wrote the extra 10 minutes as an output")

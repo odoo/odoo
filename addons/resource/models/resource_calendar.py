@@ -575,7 +575,8 @@ class ResourceCalendar(models.Model):
             :meth:`_attendance_intervals_batch`
         :param list domain: domain (as a list) on ``resource.calendar.leaves``. ``None``
             means ``[('count_as', '=', 'absence')]``; any other value, even ``[]``, replaces
-            that default, so leaves counted as working time are then included.
+            that default, so leaves counted as working time are then included. Always restricted
+            by ``resource.calendar.leaves._get_leave_intervals_domain``.
         :return: ``{resource_id: Intervals}`` for every resource of ``resources_per_tz``, plus
             the key ``False`` when ``self`` is set or ``resources_per_tz`` is empty
         :rtype: dict
@@ -584,6 +585,7 @@ class ResourceCalendar(models.Model):
 
         if domain is None:
             domain = [('count_as', '=', 'absence')]
+        domain = domain + self.env['resource.calendar.leaves']._get_leave_intervals_domain()
         if self:
             domain = domain + [('calendar_id', 'in', [False] + self.ids)]
 

@@ -3385,12 +3385,15 @@ class HrEmployee(models.Model):
         """Return the work intervals each employee is expected to attend between two datetimes.
 
         Computed per version in contract during the period, each with its own
-        calendar and timezone, minus the leaves counted as absence (a resource
+        calendar and timezone, minus the leaves, absence or working time (a resource
         only gets the public holidays of its company). The first version starts
         at the start of the contract. Without any version in contract, the
         current calendar is used for the whole period. The employees sharing a
         calendar and a timezone are computed together, over the union of their
-        periods, then cut on each period.
+        periods, then cut on each period. A fully flexible calendar expects
+        nothing: the employee works whenever they want. A flexible calendar
+        with hours targets expects its average day on the first days of each
+        week (from Monday) until the hours per week are reached.
 
         :param datetime.datetime date_from: timezone-aware start
         :param datetime.datetime date_to: timezone-aware end
@@ -3418,11 +3421,19 @@ class HrEmployee(models.Model):
         result = defaultdict(Intervals)
         dummy = self.env['resource.calendar.attendance']
         for (calendar, tz), periods in periods_per_key.items():
+            if calendar._is_fully_flexible():
+                continue
+            start = min(start for _employee, start, _stop in periods)
+            if calendar._is_flexible():
+                # the average days of a flexible schedule fill each 7 days from the start: start on a
+                # Monday, so that they are the first days of the week, whatever the period asked
+                local_start = start.astimezone(tz)
+                start = datetime.combine(local_start.date() - timedelta(days=local_start.weekday()), time.min, tz)
             intervals_per_resource = calendar._work_intervals_batch(
-                min(start for _employee, start, _stop in periods),
+                start,
                 max(stop for _employee, _start, stop in periods),
                 resources_per_tz={tz: self.env['resource.resource'].union(employee.resource_id for employee, *_ in periods)},
-                domain=[('count_as', '=', 'absence')],
+                domain=[],
             )
             for employee, start, stop in periods:
                 result[employee.id] |= intervals_per_resource[employee.resource_id.id] & Intervals([(start, stop, dummy)])

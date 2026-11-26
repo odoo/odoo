@@ -161,11 +161,11 @@ class TestHrAttendanceKiosk(HttpCase):
 
         result = self._update_break(employee_id=self.employee_A.id, attendance_id=afternoon.id, break_duration=0.5)
         self.assertTrue(result['attendance'])
-        self.assertRecordValues(afternoon, [{'break_duration': 0.5, 'is_undertime': True, 'state': 'draft'}])
+        self.assertRecordValues(afternoon, [{'break_duration': 0.5, 'overtime_hours': -0.5, 'state': 'draft'}])
 
         # within the tolerance
         self._update_break(employee_id=self.employee_A.id, attendance_id=afternoon.id, break_duration=0.1)
-        self.assertRecordValues(afternoon, [{'break_duration': 0.1, 'is_undertime': False, 'state': 'validated'}])
+        self.assertRecordValues(afternoon, [{'break_duration': 0.1, 'overtime_hours': 0.0, 'state': 'validated'}])
 
     def test_update_break_duration_does_not_change_refused_attendance(self):
         attendance = self._create_checked_out_attendance()
@@ -179,24 +179,6 @@ class TestHrAttendanceKiosk(HttpCase):
 
         self.assertFalse(result)
         self.assertFalse(attendance.break_duration)
-
-    def test_kiosk_check_in_time_type_of_employee_company(self):
-        """ The attendance created by the kiosk of a company has the time type of that company,
-        and not the one of the company of the public user """
-        work_type_a, work_type_b = self.env['hr.work.entry.type'].create([{
-            'name': f'Attendance {company.name}',
-            'code': f'ATT_{company.name}',
-            'count_as': 'working_time',
-        } for company in (self.company_A, self.company_B)])
-        self.company_A.attendance_work_entry_type_id = work_type_a
-        self.company_B.attendance_work_entry_type_id = work_type_b
-        self.make_jsonrpc_request('/hr_attendance/manual_selection', {
-            'token': self.company_B.attendance_kiosk_key,
-            'employee_id': self.employee_A.id,
-            'pin_code': '1234',
-        })
-        attendance = self.env['hr.attendance'].search([('employee_id', '=', self.employee_A.id)])
-        self.assertEqual(attendance.work_entry_type_id, work_type_b)
 
     def test_set_settings_writes_token_company(self):
         admin = self.env.ref('base.user_admin')

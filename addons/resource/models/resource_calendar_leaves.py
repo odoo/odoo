@@ -75,6 +75,15 @@ class ResourceCalendarLeaves(models.Model):
         if self.filtered(lambda leave: leave.date_from > leave.date_to):
             raise ValidationError(_('The start date of the time off must be earlier than the end date.'))
 
+    @api.model
+    def _get_leave_intervals_domain(self):
+        """Return the domain of the leaves that :meth:`resource.calendar._leave_intervals_batch`
+        may return, whatever the domain it is given. All by default.
+
+        :rtype: list
+        """
+        return []
+
     def _copy_leave_vals(self):
         """ Return the values to duplicate this (global) leave on another calendar, used
         to copy the company's public holidays to a new calendar. """
