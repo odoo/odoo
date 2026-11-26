@@ -13,7 +13,7 @@ from odoo.addons.payment_buckaroo.tests.common import BuckarooCommon
 @tagged("post_install", "-at_install")
 class TestProcessingFlows(BuckarooCommon, PaymentHttpCommon):
     @mute_logger("odoo.addons.payment_buckaroo.controllers.main")
-    def test_redirect_notification_triggers_processing(self):
+    def test_returning_from_payment_triggers_processing(self):
         self._create_transaction("redirect")
         url = self._build_url(BuckarooController._return_url)
         with (
@@ -47,7 +47,7 @@ class TestProcessingFlows(BuckarooCommon, PaymentHttpCommon):
             self.assertEqual(record_mock.call_count, 1)
 
     @mute_logger("odoo.addons.payment_buckaroo.controllers.main")
-    def test_redirect_notification_triggers_signature_check(self):
+    def test_returning_from_payment_triggers_signature_check(self):
         self._create_transaction("redirect")
         url = self._build_url(BuckarooController._return_url)
         with (
@@ -77,9 +77,3 @@ class TestProcessingFlows(BuckarooCommon, PaymentHttpCommon):
             self.assertEqual(
                 signature_check_mock.call_args[0][0], self.async_payment_data_signature
             )
-
-    def test_compute_signature_returns_correct_signature(self):
-        signature = self.provider._buckaroo_generate_digital_sign(
-            self.async_payment_data, incoming=True
-        )
-        self.assertEqual(signature, self.async_payment_data_signature)

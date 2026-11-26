@@ -15,6 +15,35 @@ from odoo.addons.payment_iyzico.tests.common import IyzicoCommon
 
 @tagged("post_install", "-at_install")
 class TestPaymentTransaction(IyzicoCommon, PaymentHttpCommon):
+    def test_no_item_missing_from_rendering_values(self):
+        """Test that the rendering values are conform to the transaction fields."""
+        tx = self._create_transaction("redirect")
+        with self._mock_send_api_request(return_value={"paymentPageUrl": "https://dummy.com"}):
+            rendering_values = tx._get_specific_rendering_values(None)
+        self.assertDictEqual(
+            rendering_values,
+            {
+                "api_url": "https://dummy.com",
+                "http_method": "get",
+                "url_params": payment_utils.extract_url_params("https://dummy.com"),
+            },
+        )
+
+    @mute_logger("odoo.addons.payment.models.payment_transaction")
+    def test_no_input_missing_from_redirect_form(self):
+        """Test that the `api_url` key is not omitted from the rendering values."""
+        tx = self._create_transaction("redirect")
+        with patch(
+            "odoo.addons.payment_iyzico.models.payment_transaction.PaymentTransaction"
+            "._get_specific_rendering_values",
+            return_value={"api_url": "https://dummy.com", "http_method": "get", "url_param": {}},
+        ):
+            processing_values = tx._get_processing_values()
+        form_info = self._extract_values_from_html_form(processing_values["redirect_form_html"])
+        self.assertEqual(form_info["action"], "https://dummy.com")
+        self.assertEqual(form_info["method"], "get")
+        self.assertDictEqual(form_info["inputs"], {})
+
     def test_no_item_missing_from_cf_initialize_payload(self):
         """Test that the request values are conform to the transaction fields."""
         tx = self._create_transaction("redirect")
@@ -62,21 +91,6 @@ class TestPaymentTransaction(IyzicoCommon, PaymentHttpCommon):
             },
         )
 
-    @mute_logger("odoo.addons.payment.models.payment_transaction")
-    def test_no_input_missing_from_redirect_form(self):
-        """Test that the `api_url` key is not omitted from the rendering values."""
-        tx = self._create_transaction("redirect")
-        with patch(
-            "odoo.addons.payment_iyzico.models.payment_transaction.PaymentTransaction"
-            "._get_specific_rendering_values",
-            return_value={"api_url": "https://dummy.com", "http_method": "get", "url_param": {}},
-        ):
-            processing_values = tx._get_processing_values()
-        form_info = self._extract_values_from_html_form(processing_values["redirect_form_html"])
-        self.assertEqual(form_info["action"], "https://dummy.com")
-        self.assertEqual(form_info["method"], "get")
-        self.assertDictEqual(form_info["inputs"], {})
-
     def test_extract_reference_finds_reference(self):
         """Test that the transaction reference is found in the payment data."""
         tx = self._create_transaction(flow="redirect")
@@ -118,3 +132,11 @@ class TestPaymentTransaction(IyzicoCommon, PaymentHttpCommon):
         tx = self._create_transaction(flow="redirect")
         tx.with_context(payment_safe_write=True)._apply_updates({"paymentStatus": "FAILURE"})
         self.assertEqual(tx.state, "error")
+
+    def test_extract_amount_data_returns_amount_and_currency(self):
+        """Test that the amount and currency are returned from the payment data."""
+        tx = self._create_transaction(flow="redirect")
+        amount_data = tx._extract_amount_data({"price": tx.amount, "currency": tx.currency_id.name})
+        self.assertDictEqual(
+            amount_data, {"amount": tx.amount, "currency_code": tx.currency_id.name}
+        )
