@@ -426,7 +426,6 @@ class HrEmployee(models.Model):
             'domain': [('employee_id', 'in', self.ids)],
             'context': {
                 'employee_id': self.ids,
-                'search_default_filter_date_from': 1,
                 'search_default_group_date_from': 1,
                 'default_employee_id': self.id,
             },
