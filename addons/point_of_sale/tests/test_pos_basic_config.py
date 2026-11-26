@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from unittest.mock import patch
+
 from dateutil.relativedelta import relativedelta
 
 import odoo
@@ -181,6 +183,21 @@ class TestPoSBasicConfig(TestPoSCommon):
         # Also used to load the next partners
         limited_partner_ids = {row[0] for row in self.config.get_limited_partners_loading()}
         self.assertEqual(set(active_partners.ids) - limited_partner_ids, set())
+
+    def test_fiscal_positions_of_loaded_partners(self):
+        """ The fiscal positions loaded for the customers include the ones set on them,
+        without computing each customer's fiscal position. """
+        fiscal_position = self.env['account.fiscal.position'].create({'name': 'Set on the customer'})
+        partners = self.env['res.partner'].create([
+            {'name': 'With a fiscal position', 'property_account_position_id': fiscal_position.id},
+            {'name': 'Without'},
+        ])
+        FiscalPosition = self.env['account.fiscal.position']
+        data = {'res.partner': partners, 'pos.config': self.config, 'pos.preset': self.env['pos.preset']}
+        with patch.object(type(FiscalPosition), '_get_fiscal_position', autospec=True) as get_fiscal_position:
+            domain = FiscalPosition._load_pos_data_domain(data)
+        get_fiscal_position.assert_not_called()
+        self.assertIn(fiscal_position, FiscalPosition.search(domain))
 
     def test_pos_payment_method_copy(self):
         """
