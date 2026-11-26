@@ -8,7 +8,7 @@ from odoo.addons.mail.tools.parser import parse_res_ids
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import html2plaintext
-from odoo.tools.misc import clean_context, format_date
+from odoo.tools.misc import clean_context
 _logger = logging.getLogger(__name__)
 
 
@@ -55,6 +55,7 @@ class MailActivitySchedule(models.TransientModel):
     plan_id = fields.Many2one('mail.activity.plan', ui_domain="[('id', 'in', plan_available_ids)]",
                               compute='_compute_plan_id', store=True, readonly=False)
     plan_has_user_on_demand = fields.Boolean(related="plan_id.has_user_on_demand")
+    plan_steps_count = fields.Integer(related="plan_id.steps_count")
     plan_schedule_line_ids = fields.One2many('mail.activity.schedule.line', 'activity_schedule_id',
                                              string='Schedule Lines', compute='_compute_plan_schedule_line_ids')
     plan_on_demand_user_id = fields.Many2one(
@@ -193,8 +194,22 @@ class MailActivitySchedule(models.TransientModel):
     @api.onchange('plan_id')
     def _onchange_plan_id(self):
         """ Reset UX """
-        if self.plan_id:
+        if not self.plan_id:
+            return
+        template = self.plan_id.template_ids
+        if len(template) != 1:
             self.activity_type_id = False
+            return
+        # a plan with a single activity is scheduled like a regular activity
+        self.activity_type_id = template.activity_type_id
+        self.summary = template.summary
+        self.note = template.note
+        self.date_deadline = template._get_date_deadline(self.plan_date)
+        self.activity_role_id = template.role_id
+        responsible = self._get_plan_template_responsible(template)
+        if not responsible and not template.role_id:
+            responsible = self.env.user
+        self.activity_user_id = responsible
 
     @api.depends('res_model', 'res_ids')
     def _compute_plan_date(self):
@@ -210,23 +225,7 @@ class MailActivitySchedule(models.TransientModel):
                     'line_description': template.summary or template.activity_type_id.name,
                 }
 
-                # try to determine responsible user, light re-coding of '_determine_responsible' but
-                # we don't always have a target record here
-                responsible_user = False
-                res_ids = scheduler._evaluate_res_ids()
-                if template.responsible_id:
-                    responsible_user = template.responsible_id
-                elif template.responsible_type == 'on_demand':
-                    responsible_user = scheduler.plan_on_demand_user_id
-                elif scheduler.res_model and res_ids and len(res_ids) == 1:
-                    record = self.env[scheduler.res_model].browse(res_ids)
-                    if record.exists():
-                        responsible_user = template._determine_responsible(
-                            scheduler.plan_on_demand_user_id,
-                            scheduler.activity_user_id_fname,
-                            record,
-                        )['responsible']
-
+                responsible_user = scheduler._get_plan_template_responsible(template)
                 if responsible_user:
                     schedule_line_values['responsible_user_id'] = responsible_user.id
                 if template.responsible_type == 'role':
@@ -265,7 +264,8 @@ class MailActivitySchedule(models.TransientModel):
     @api.onchange('activity_type_id')
     def _onchange_activity_type_id(self):
         """ Reset UX """
-        if self.activity_type_id:
+        template = self.plan_id.template_ids
+        if self.activity_type_id and (len(template) != 1 or template.activity_type_id != self.activity_type_id):
             self.plan_id = False
 
     @api.depends('activity_type_id')
@@ -349,8 +349,6 @@ class MailActivitySchedule(models.TransientModel):
         applied_on = self._get_applied_on_records()
         activities_vals_list = []
         for record in applied_on:
-            body = _('The plan "%(plan_name)s" has been started', plan_name=self.plan_id.name)
-            activity_descriptions = []
             for template in self._plan_filter_activity_templates_to_schedule():
                 responsible = template._determine_responsible(
                     self.plan_on_demand_user_id, self.activity_user_id_fname, record,
@@ -374,16 +372,7 @@ class MailActivitySchedule(models.TransientModel):
                     role_id=role.id,
                     activity_template_id=template.id,
                 ))
-                activity_descriptions.append(
-                    _('%(activity)s, assigned to %(name)s, due on the %(deadline)s',
-                      activity=template.summary or template.activity_type_id.name,
-                      name=responsible.name, deadline=format_date(self.env, date_deadline)))
 
-            if activity_descriptions:
-                body += Markup('<ul>%s</ul>') % (
-                    Markup().join(Markup('<li>%s</li>') % description for description in activity_descriptions)
-                )
-            record.message_post(body=body)
         self.env['mail.activity'].with_context(clean_context(self.env.context)).create(activities_vals_list)
 
         if len(applied_on) == 1:
@@ -397,6 +386,21 @@ class MailActivitySchedule(models.TransientModel):
             'target': 'current',
             'domain': [('id', 'in', applied_on.ids)],
         }
+
+    def _get_plan_template_responsible(self, template):
+        # try to determine responsible user, light re-coding of '_determine_responsible' but
+        # we don't always have a target record here
+        self.ensure_one()
+        if template.responsible_id:
+            return template.responsible_id
+        if template.responsible_type == 'on_demand':
+            return self.plan_on_demand_user_id
+        record = self._get_applied_on_records()
+        if record and len(record) == 1 and record.exists():
+            return template._determine_responsible(
+                self.plan_on_demand_user_id, self.activity_user_id_fname, record,
+            )['responsible']
+        return self.env['res.users']
 
     def _check_plan_templates_error(self, applied_on):
         self.ensure_one()
@@ -431,10 +435,14 @@ class MailActivitySchedule(models.TransientModel):
     def _action_schedule_activities(self):
         if not self.res_model:
             return self._action_schedule_activities_personal()
+        if len(self.plan_id.template_ids) > 1:
+            raise ValueError(_('A plan with several activities cannot be scheduled as a single activity.'))
         records = self._get_applied_on_records()
         is_single_call = self.activity_category == 'phonecall' and len(records) == 1
         activity_values = {
             'activity_type_id': self.activity_type_id.id,
+            'activity_plan_id': self.plan_id.id,
+            'activity_template_id': self.plan_id.template_ids.id,
             'automated': False,
             'summary': self.summary,
             'note': self.note,
@@ -494,6 +502,7 @@ class MailActivitySchedule(models.TransientModel):
         return Domain.AND([
             ['|', ('company_id', '=', False), ('company_id', '=', self.company_id.id)],
             ['|', ('res_model', '=', False), ('res_model', '=', self.res_model)],
+            ['|', ('user_ids', '=', False), ('user_ids', 'in', self.env.uid)],
             [('template_ids', '!=', False)],  # exclude plan without activities
         ])
 
