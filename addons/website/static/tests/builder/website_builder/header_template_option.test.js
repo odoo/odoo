@@ -75,6 +75,21 @@ describe("header blur option", () => {
         await waitSidebarUpdated();
         expect("[data-label='Blur']").toBeVisible();
     });
+
+    test("the blur option is hidden for an opaque header background over the content", async () => {
+        const { waitSidebarUpdated } = await setupWebsiteBuilder("", {
+            openEditor: true,
+            headerContent,
+            // Unscrolled, a header over the content is rendered transparent.
+            styleContent: `
+                #wrapwrap > header nav { --menu-custom: rgb(255, 0, 0); }
+                #wrapwrap.o_header_overlay > header nav { background: transparent !important; }`,
+        });
+        queryOne(":iframe #wrapwrap").classList.add("o_header_overlay");
+        await contains(":iframe #wrapwrap > header").click();
+        await waitSidebarUpdated();
+        expect("[data-label='Blur']").not.toHaveCount();
+    });
 });
 
 describe("header width option", () => {

@@ -980,13 +980,6 @@ class TestUi(HttpCaseWithWebsiteUser):
     def test_header_bg_blur_option(self):
         self.start_tour(self.env['website'].get_client_action_url('/', True), 'header_bg_blur_option', login='admin')
 
-    def test_header_over_the_content_bg_blur_option(self):
-        self.start_tour(
-            self.env['website'].get_client_action_url('/', True),
-            'header_over_the_content_bg_blur_option',
-            login='admin',
-        )
-
     def test_website_img_width_height(self):
         self.env['res.lang'].create({
             'name': 'Parseltongue',
