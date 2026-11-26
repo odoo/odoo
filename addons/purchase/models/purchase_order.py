@@ -369,22 +369,40 @@ class PurchaseOrder(models.Model):
             raise ValidationError(self.env._("Unsupported operator"))
         purchase_domain = self._get_domain_is_late(operator, value)
         if operator == "=" and value or operator == "!=" and not value:
-            purchase_lines_late = Domain('order_id', 'any', purchase_domain) & Domain.custom(
-                to_sql=lambda model, alias, query: SQL(
-                    "%s < %s",
-                    model._field_to_sql(alias, 'qty_received', query),
-                    model._field_to_sql(alias, 'product_qty', query),
-                )
-            )
+            purchase_lines_late = Domain('order_id', 'any', purchase_domain) & Domain.OR([
+                Domain('product_id.purchase_method', '=', 'purchase') & Domain.custom(
+                    to_sql=lambda model, alias, query: SQL(
+                        "%s < %s",
+                        model._field_to_sql(alias, 'qty_invoiced', query),
+                        model._field_to_sql(alias, 'product_qty', query),
+                    )
+                ),
+                Domain('product_id.purchase_method', '=', 'receive') & Domain.custom(
+                    to_sql=lambda model, alias, query: SQL(
+                        "%s < %s",
+                        model._field_to_sql(alias, 'qty_received', query),
+                        model._field_to_sql(alias, 'product_qty', query),
+                    )
+                ),
+            ])
             return Domain('order_line', 'any', purchase_lines_late)
         else:
-            purchase_lines_on_time = Domain('order_id', 'any', purchase_domain) & Domain.custom(
-                to_sql=lambda model, alias, query: SQL(
-                    "%s >= %s",
-                    model._field_to_sql(alias, 'qty_received', query),
-                    model._field_to_sql(alias, 'product_qty', query),
-                )
-            )
+            purchase_lines_on_time = Domain('order_id', 'any', purchase_domain) & Domain.OR([
+                Domain('product_id.purchase_method', '=', 'purchase') & Domain.custom(
+                    to_sql=lambda model, alias, query: SQL(
+                        "%s >= %s",
+                        model._field_to_sql(alias, 'qty_invoiced', query),
+                        model._field_to_sql(alias, 'product_qty', query),
+                    )
+                ),
+                Domain('product_id.purchase_method', '=', 'receive') & Domain.custom(
+                    to_sql=lambda model, alias, query: SQL(
+                        "%s >= %s",
+                        model._field_to_sql(alias, 'qty_received', query),
+                        model._field_to_sql(alias, 'product_qty', query),
+                    )
+                ),
+            ])
             return Domain('order_line', 'any', purchase_lines_on_time)
 
     def _get_domain_is_late(self, operator, value):
