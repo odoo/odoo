@@ -180,7 +180,6 @@ test("BadgesSelectionField: verify options are filtered via the allowed_selectio
         type: "form",
         arch: `
             <form>
-                <field name="allowed_colors" invisible="1"/>
                 <field name="color" widget="badges_selection" 
                     options="{'allowed_selection_field': 'allowed_colors'}"
                 />
@@ -192,6 +191,22 @@ test("BadgesSelectionField: verify options are filtered via the allowed_selectio
     expect("span.o_selection_badge").toHaveCount(1);
 });
 
+test("BadgesSelectionField: verify options are filtered via the excluded_selection_field option", async () => {
+    await mountView({
+        resModel: "res.partner",
+        resId: 2,
+        type: "form",
+        arch: `
+            <form>
+                <field name="color" widget="badges_selection"
+                    options="{'excluded_selection_field': 'allowed_colors'}"
+                />
+            </form>`,
+    });
+    expect("span.o_selection_badge").toHaveCount(1);
+    expect("span.o_selection_badge").toHaveText("Black");
+});
+
 test("BadgesSelectionField: verify handle falsy allowed selectionfield", async () => {
     await mountView({
         resModel: "res.partner",
@@ -199,7 +214,6 @@ test("BadgesSelectionField: verify handle falsy allowed selectionfield", async (
         type: "form",
         arch: `
             <form>
-                <field name="allowed_colors" invisible="1"/>
                 <field name="color" widget="badges_selection"
                     options="{'allowed_selection_field': 'allowed_colors'}"
                 />

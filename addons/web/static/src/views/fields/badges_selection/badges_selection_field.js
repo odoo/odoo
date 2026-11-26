@@ -78,6 +78,10 @@ export const badgesSelectionField = {
     component: BadgesSelectionField,
     displayName: _t("Badges"),
     supportedTypes: ["selection"],
+    fieldDependencies: ({ options }) =>
+        [options.allowed_selection_field, options.excluded_selection_field]
+            .filter(Boolean)
+            .map((name) => ({ name, type: "json" })),
     supportedOptions: [
         {
             label: _t("Maximum Visible Badges"),
