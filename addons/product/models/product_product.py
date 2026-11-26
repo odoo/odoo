@@ -73,7 +73,7 @@ class ProductProduct(models.Model):
         context={'display_attribute_name': False}
     )
     product_template_variant_value_ids = fields.Many2many(
-        string="Attributes",
+        string="Variant Values",
         comodel_name='product.template.attribute.value',
         relation='product_variant_combination',
         domain=[('attribute_line_id.value_count', '>', 1)],
