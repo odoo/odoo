@@ -1,7 +1,8 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { click, dblclick, press, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
-import { makeMockEnv, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { makeMockEnv, mockService, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { session } from "@web/session";
 import { setupEditor } from "./_helpers/editor";
 import { getContent } from "./_helpers/selection";
 import { insertText } from "./_helpers/user_actions";
@@ -303,4 +304,17 @@ test("documents tab domain excludes uploaded fonts and their css", async () => {
     await animationFrame();
     await click(".nav-link:contains('Documents')");
     expect.verifySteps(["fonts excluded from attachments domain"]);
+});
+
+test("file larger than 3/4 of the max upload size is not uploaded", async () => {
+    patchWithCleanup(session, { max_file_upload_size: 4 });
+    mockService("notification", { add: (message) => expect.step(message) });
+    onRpc("/html_editor/attachment/add_data", () => expect.step("add_data"));
+    const env = await makeMockEnv();
+    // The 4 byte file is 8 bytes in base64, over the 4 byte limit.
+    const file = new File(["test"], "test.txt", { type: "text/plain" });
+    await env.services.upload.uploadFiles([file], {});
+    expect.verifySteps([
+        "The selected file (4B) is larger than the maximum allowed file size (3B).",
+    ]);
 });
