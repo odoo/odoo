@@ -13,7 +13,7 @@ from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 
 from odoo.exceptions import UserError
 
-from odoo.addons.l10n_pl_edi.exceptions import KSeFRateLimitError
+from odoo.addons.l10n_pl_edi.exceptions import KSeFRateLimitError, KSeFTimeoutError, KSeFUnavailableError
 
 
 _logger = logging.getLogger(__name__)
@@ -41,6 +41,19 @@ class KsefApiService:
             'Authorization': f'Bearer {token}',
             'Content-Type': 'application/json',
         }
+
+    @staticmethod
+    def _get_request_error_class(error):
+        """ Return the exception class matching a failed request: KSeFUnavailableError (or its
+        KSeFTimeoutError subclass) when KSeF could not be reached or failed on its side, UserError otherwise.
+        """
+        if isinstance(error, requests.exceptions.Timeout):
+            return KSeFTimeoutError
+        if isinstance(error, requests.exceptions.ConnectionError) or (
+            error.response is not None and error.response.status_code >= 500
+        ):
+            return KSeFUnavailableError
+        return UserError
 
     def _make_request(self, method, endpoint, is_auth_retry=False, **kwargs):
         """
@@ -71,7 +84,7 @@ class KsefApiService:
         except requests.exceptions.RequestException as e:
             error_text = e.response.text if e.response is not None else str(e)
             _logger.exception("KSeF API request failed: %s", error_text)
-            raise UserError(self.env._("KSeF API Error: %s", error_text))
+            raise self._get_request_error_class(e)(self.env._("KSeF API Error: %s", error_text))
 
     def _get_public_keys(self):
         """
@@ -115,7 +128,7 @@ class KsefApiService:
             return public_keys
 
         except requests.exceptions.RequestException as e:
-            raise UserError(self.env._("Could not fetch KSeF public keys: %s", e.response.text if e.response else e))
+            raise self._get_request_error_class(e)(self.env._("Could not fetch KSeF public keys: %s", e.response.text if e.response is not None else e))
 
     def open_ksef_session(self):
         """Builds the encrypted request and opens an interactive session, with one retry on token expiry."""
@@ -153,6 +166,12 @@ class KsefApiService:
                 'l10n_pl_edi_session_key': base64.b64encode(self.raw_symmetric_key),
                 'l10n_pl_edi_session_iv': base64.b64encode(self.raw_iv),
             })
+        except KSeFTimeoutError as e:
+            raise KSeFTimeoutError(self.env._("Failed to open KSeF session: %s", e))
+        except KSeFUnavailableError as e:
+            raise KSeFUnavailableError(self.env._("Failed to open KSeF session: %s", e))
+        except KSeFRateLimitError as e:
+            raise KSeFRateLimitError(self.env._("Failed to open KSeF session: %s", e), retry_after=e.retry_after)
         except UserError as e:
             raise UserError(self.env._("Failed to open KSeF session: %s", e))
 
@@ -179,12 +198,14 @@ class KsefApiService:
             return new_access_token
 
         except requests.exceptions.RequestException as e:
-            error_text = e.response.text if e.response else str(e)
+            error_text = e.response.text if e.response is not None else str(e)
             _logger.exception("Failed to refresh KSeF access token: %s", error_text)
             raise UserError(self.env._("Failed to refresh KSeF access token. You may need to re-authenticate manually. Error: %s", error_text))
 
-    def send_invoice(self, xml_content_bytes):
-        """Encrypts a single invoice and sends it within an open session."""
+    def send_invoice(self, xml_content_bytes, offline_mode=False):
+        """Encrypts a single invoice and sends it within an open session.
+        :param offline_mode: True for an invoice issued in an offline mode (e.g. Offline24) and submitted afterwards.
+        """
         padder = sym_padding.PKCS7(128).padder()
         padded_data = padder.update(xml_content_bytes) + padder.finalize()
         cipher = Cipher(algorithms.AES(self.raw_symmetric_key), modes.CBC(self.raw_iv))
@@ -198,6 +219,8 @@ class KsefApiService:
             'encryptedInvoiceSize': len(encrypted_data),
             'encryptedInvoiceContent': base64.b64encode(encrypted_data).decode('utf-8'),
         }
+        if offline_mode:
+            payload['offlineMode'] = True
 
         endpoint = f"{self.api_url}/sessions/online/{self.company.sudo().l10n_pl_edi_session_id}/invoices"
         headers = {'Content-Type': 'application/json'}
@@ -238,22 +261,47 @@ class KsefApiService:
         try:
             response = self._make_request('GET', endpoint)
             return response.json().get('status')
+        except KSeFTimeoutError as e:
+            raise KSeFTimeoutError(self.env._("Failed to check KSeF session: %s", e))
+        except KSeFUnavailableError as e:
+            raise KSeFUnavailableError(self.env._("Failed to check KSeF session: %s", e))
         except UserError as e:
             raise UserError(self.env._("Failed to check KSeF session: %s", e))
 
-    def get_invoices_status(self, page_size=100, page_offset=0):
+    def get_invoices_status(self, page_size=100, page_offset=0, session_id=None, continuation_token=None):
         """
-        Gets the status of all invoices sent within the current session (paginated).
-        Corresponds to: GET /api/v2/sessions/online/{referenceNumber}/invoices
+        Gets one page of the status of the invoices sent within a session (the current one by default).
+        Corresponds to: GET /api/v2/sessions/{referenceNumber}/invoices
+        The endpoint paginates with the continuation token of the previous page, page_offset is ignored.
         """
-        session_id = self.company.sudo().l10n_pl_edi_session_id
+        session_id = session_id or self.company.sudo().l10n_pl_edi_session_id
         if not session_id:
             raise UserError(self.env._("No active KSeF session found. Please open a session first."))
 
-        endpoint = f"{self.api_url}/sessions/online/{session_id}/invoices"
-        params = {'pageSize': page_size, 'pageOffset': page_offset}
-        response = self._make_request('GET', endpoint, params=params)
+        endpoint = f"{self.api_url}/sessions/{session_id}/invoices"
+        headers = {'x-continuation-token': continuation_token} if continuation_token else {}
+        response = self._make_request('GET', endpoint, params={'pageSize': page_size}, headers=headers)
         return response.json()
+
+    @staticmethod
+    def get_invoice_hash(xml_content_bytes):
+        return base64.b64encode(hashlib.sha256(xml_content_bytes).digest()).decode()
+
+    def find_invoice_in_session(self, invoice_hash, session_id):
+        """ Return the status of the invoice of the session whose hash is invoice_hash, None if there is none. """
+        continuation_token = None
+        while True:
+            response = self.get_invoices_status(
+                page_size=1000,
+                session_id=session_id,
+                continuation_token=continuation_token,
+            )
+            for invoice in response.get('invoices', []):
+                if invoice.get('invoiceHash') == invoice_hash:
+                    return invoice
+            continuation_token = response.get('continuationToken')
+            if not continuation_token:
+                return None
 
     def get_invoice_status(self, invoice_reference_number, session_id=None):
         """
@@ -280,7 +328,7 @@ class KsefApiService:
             response.raise_for_status()
             return response.json()
         except requests.exceptions.RequestException as e:
-            raise UserError(self.env._("Failed to get challenge code: %s", e.response.text if e.response else e))
+            raise UserError(self.env._("Failed to get challenge code: %s", e.response.text if e.response is not None else e))
 
     def authenticate_xades(self, signed_xml):
         """Sends a XAdES signed challenge to authenticate."""
@@ -291,7 +339,7 @@ class KsefApiService:
             response.raise_for_status()
             return response.json()
         except requests.exceptions.RequestException as e:
-            raise UserError(self.env._("Failed to authenticate with XAdES: %s", e.response.text if e.response else e))
+            raise UserError(self.env._("Failed to authenticate with XAdES: %s", e.response.text if e.response is not None else e))
 
     def authenticate_token(self, nip, challenge, encrypted_token_b64):
         """Starts authentication using a KSeF token."""
@@ -306,7 +354,7 @@ class KsefApiService:
             response.raise_for_status()
             return response.json()
         except requests.exceptions.RequestException as e:
-            raise UserError(self.env._("Failed to start token authentication: %s", e.response.text if e.response else e))
+            raise UserError(self.env._("Failed to start token authentication: %s", e.response.text if e.response is not None else e))
 
     def check_auth_status(self, ref_number, temp_token):
         """Checks auth status with a retry loop for pending statuses."""
@@ -333,7 +381,7 @@ class KsefApiService:
                     status_description=status_description
                 ))
             except requests.exceptions.RequestException as e:
-                raise UserError(self.env._("Failed to check KSeF auth status: %s", e.response.text if e.response else e))
+                raise UserError(self.env._("Failed to check KSeF auth status: %s", e.response.text if e.response is not None else e))
 
         raise UserError(self.env._("KSeF Authentication timed out. Please try again in a moment."))
 
@@ -346,7 +394,7 @@ class KsefApiService:
             response.raise_for_status()
             return response.json()
         except requests.exceptions.RequestException as e:
-            raise UserError(self.env._("Failed to redeem token: %s", e.response.text if e.response else e))
+            raise UserError(self.env._("Failed to redeem token: %s", e.response.text if e.response is not None else e))
 
     def query_invoice_metadata(self, query_criteria, page_size=100, page_offset=0):
         endpoint = f"{self.api_url}/invoices/query/metadata"
