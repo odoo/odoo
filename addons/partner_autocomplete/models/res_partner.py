@@ -96,6 +96,13 @@ class ResPartner(models.Model):
             case "duns":
                 return self.autocomplete_by_duns(query, query_country_id)
             case _:
+                # An enterprise number, like a SIRET, is no VAT number: it has its own check, then IAP gets it as it is
+                identifier_type = fieldName.upper()
+                if self._get_all_identifiers_metadata().get(identifier_type, {}).get('category') == 'EN':
+                    identifier = self._validate_identifier(identifier_type, query)
+                    if not identifier['valid']:
+                        return []
+                    return self._autocomplete_by_identifier(identifier['value'], query_country_id, include_branches=include_branches)
                 return self.autocomplete_by_vat(query, query_country_id, include_branches=include_branches)
 
     @api.model
@@ -163,6 +170,18 @@ class ResPartner(models.Model):
                         'country_code': vies_result['countryCode'],
                     })]
             return []
+
+    @api.model
+    def _autocomplete_by_identifier(self, identifier, query_country_id, timeout=15, include_branches=False):
+        """ Search companies by an identifier other than a VAT number, which IAP searches like one. """
+        response, _ = self.env['iap.autocomplete.api']._request_partner_autocomplete('search_by_vat', {
+            'query': identifier,
+            'query_country_code': self.env['res.country'].browse(query_country_id).code,
+            'include_branches': include_branches,
+        }, timeout=timeout)
+        if not response or response.get("error"):
+            return []
+        return [self._format_data_company(suggestion) for suggestion in response.get("data")]
 
     @api.model
     def autocomplete_by_duns(self, duns, query_country_id, timeout=15):

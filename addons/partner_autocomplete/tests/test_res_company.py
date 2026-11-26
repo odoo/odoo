@@ -171,6 +171,26 @@ class TestResCompany(common.TransactionCase, MockIAPPartnerAutocomplete):
                 suggestions = self.env['res.partner'].autocomplete_by_field('name', query, self.base_be.id)
                 self.assertEqual([suggestion['name'] for suggestion in suggestions], expected_names)
 
+    def test_autocomplete_by_field_enterprise_number(self):
+        """Ensure an enterprise number, like a SIRET, is searched as it is: it is not a VAT number."""
+        def contact_iap(local_endpoint, action, params, timeout=15):
+            return {'data': [{'name': f"{action}: {params['query']}"}]}
+
+        for field_name, query, expected_names in (
+            ('fr_siret', '54205118000017', ['search_by_vat: 54205118000017']),
+            ('fr_siren', '542 051 180', ['search_by_vat: 542051180']),
+            ('fr_siret', '54205118000018', []),  # invalid check digit
+        ):
+            with (
+                self.subTest(field_name=field_name, query=query),
+                patch(
+                    'odoo.addons.partner_autocomplete.models.iap_autocomplete_api.IapAutocompleteApi._contact_iap',
+                    side_effect=contact_iap,
+                ),
+            ):
+                suggestions = self.env['res.partner'].autocomplete_by_field(field_name, query, self.env.ref('base.fr').id)
+                self.assertEqual([suggestion['name'] for suggestion in suggestions], expected_names)
+
     def test_autocomplete_by_vat_vies(self):
         """Ensure VIES is only checked for the VAT numbers of the EU, when IAP does not find the company."""
         for country, vat, expected_vies_vat in (
