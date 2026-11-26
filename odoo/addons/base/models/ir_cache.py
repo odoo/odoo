@@ -12,6 +12,7 @@ from pathlib import Path
 from odoo import api, fields, models, release
 from odoo.tools import SQL, config
 from odoo.tools.misc import hkdf_expand
+from odoo.tools.sql import escape_like_value
 
 _logger = logging.getLogger(__name__)
 
@@ -69,8 +70,9 @@ class IrCache(models.Model):
     its source: its ``version`` is computed from its ``version_data`` by an SQL
     query given by the caller (specific to the ``kind``), when the entry is
     created and when it is read, or given as a constant string. The query
-    computes the versions of all the entries at once, e.g.
-    ``ir.qweb._get_template_cache_version_sql``.
+    computes the versions of all the entries at once. Or the caller deletes
+    its entries when their source changes, see :meth:`_clear` (e.g.
+    ``ir.qweb._clear_cache``).
 
     The entries do not depend on the version of python: a kind whose values
     do (e.g. code objects stored with :mod:`marshal`, loading those of
@@ -151,9 +153,8 @@ class IrCache(models.Model):
         :param str kind: the type of the entries, e.g. ``'qweb'``
         :param keys: the keys of the entries
         :param version: either the SQL query computing the versions of the
-            sources of the entries from their ``version_data`` (e.g.
-            ``ir.qweb._get_template_cache_version_sql``), or the version itself as a string (e.g. a
-            version of the source); with the default, the entries stored
+            sources of the entries from their ``version_data``, or the
+            version itself as a string (e.g. a version of the source); with the default, the entries stored
             without ``version`` are returned
         :return: the values (bytes) in the order of ``keys``, ``None`` for
             the keys without a valid entry
@@ -241,9 +242,9 @@ class IrCache(models.Model):
             value supported by ``json``, e.g. view ids; the query ``version``
             computes the version from it, so it requires ``version`` as ``SQL``
         :param version: either the SQL query computing the version of the source
-            of the entry from ``version_data`` (e.g. ``ir.qweb._get_template_cache_version_sql``), or the
-            version itself as a string; with the default, the entry is stored
-            with an empty version and never invalidated
+            of the entry from ``version_data``, or the version itself as a
+            string; with the default, the entry is stored
+            with an empty version, invalidated by :meth:`_clear` only
         """
         secret = _get_ir_cache_secret(self.env)
 
@@ -314,6 +315,28 @@ class IrCache(models.Model):
                     _logger.info("ir.cache: failed to store %s entries: %s", len(rows), e)
 
         rows.append(row)
+
+    @api.model
+    def _clear(self, kind: str, prefixes: Sequence[str] | None = None):
+        """ Delete the entries of ``kind`` whose key starts with one of
+        ``prefixes``, or all the entries of ``kind``. Their files expire like
+        the others, see :meth:`_gc_cache`.
+
+        :param str kind: the type of the entries, e.g. ``'qweb'``
+        :param prefixes: the beginnings of the keys of the entries to delete
+        """
+        if prefixes:
+            patterns = [f"{escape_like_value(prefix)}%" for prefix in prefixes or ['']]
+            self.env.cr.execute(SQL(
+                "DELETE FROM ir_cache WHERE kind = %s AND key LIKE ANY(%s)",
+                kind, patterns,
+            ))
+        else:
+            self.env.cr.execute(SQL(
+                "DELETE FROM ir_cache WHERE kind = %s",
+                kind,
+            ))
+        _logger.info("ir.cache: %s entries deleted", self.env.cr.rowcount)
 
     @api.model
     def _gc_cache(self):

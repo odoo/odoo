@@ -591,9 +591,9 @@ class TestQwebDataSnippet(TransactionCase):
         ):
             t_call_snippets += 1
         fetch_snippets = 0  # number of fetches (normally performed with the previous search)
-        ir_cache = 1 + t_call_snippets  # compiled code read from ir.cache, in batch for each level of t-calls
+        # the compiled code read from ir.cache does not read the views
 
-        all_ir_ui_view_queries = first_search + t_call_snippets + fetch_snippets + ir_cache
+        all_ir_ui_view_queries = first_search + t_call_snippets + fetch_snippets
         self.assertEqual(len(ir_ui_view_queries), all_ir_ui_view_queries, f'ir_ui_view queries: {all_ir_ui_view_queries}')
 
         re_sql = re.compile(r'\bwebsite\b', re.IGNORECASE)
@@ -631,3 +631,45 @@ class TestQwebCodeCacheWebsite(TransactionCase):
         website.write({'name': 'Other name'})
         self.assertTrue(render(), "the website changed, the code is generated again")
         self.assertFalse(render(), "the code is read from ir.cache")
+
+    def test_view_write_per_website(self):
+        """ A website-specific view only deletes the compiled code of its
+        website, a generic view the code of all the websites. """
+        website_1 = self.env['website'].search([], limit=1)
+        website_2 = self.env['website'].create({'name': 'Website 2'})
+        view = self.env['ir.ui.view'].create({
+            'name': 'test_ir_cache_website',
+            'type': 'qweb',
+            'key': 'website.test_ir_cache_website',
+            'arch_db': '<t t-name="test_ir_cache_website"><div>content</div></t>',
+        })
+
+        def generated():
+            """ Render like a new worker for each website, return the websites
+            for which the code is generated. """
+            result = []
+            for website in (website_1, website_2):
+                self.env.transaction.invalidate_ormcache('templates')
+                self.env.invalidate_all()
+                with patch.object(self.env.registry['ir.qweb'], '_generate_code', autospec=True, side_effect=self.env.registry['ir.qweb']._generate_code) as generate:
+                    self.env['ir.qweb'].with_context(website_id=website.id)._render(view.id)
+                if generate.called:
+                    result.append(website)
+            return result
+
+        self.assertEqual(generated(), [website_1, website_2])
+        self.assertEqual(generated(), [])
+
+        self.env['ir.ui.view'].create({
+            'name': 'extension website 1',
+            'type': 'qweb',
+            'mode': 'extension',
+            'inherit_id': view.id,
+            'website_id': website_1.id,
+            'arch_db': '<xpath expr="//div" position="inside"><b/></xpath>',
+        })
+        self.assertEqual(generated(), [website_1])
+        self.assertEqual(generated(), [])
+
+        view.with_context(no_cow=True).write({'arch_db': '<t t-name="test_ir_cache_website"><div>content 2</div></t>'})
+        self.assertEqual(generated(), [website_1, website_2])

@@ -391,7 +391,7 @@ from odoo import api, models, tools
 from odoo.fields import Domain
 from odoo.modules import Manifest
 from odoo.modules.registry import _REGISTRY_CACHES
-from odoo.tools import SQL, BinaryValue, config, safe_eval, OrderedSet, frozendict, json
+from odoo.tools import BinaryValue, config, safe_eval, OrderedSet, frozendict, json
 from odoo.tools.constants import SUPPORTED_DEBUGGER, EXTERNAL_ASSET
 from odoo.tools.safe_eval import (
     _BLACKLIST,
@@ -1007,51 +1007,44 @@ class IrQweb(models.AbstractModel):
         """ Return the list of context keys to use for caching ``_compile``. """
         return ['lang', 'inherit_branding', 'edit_translations', 'profile', 'preserve_comments']
 
-    def _get_cache_key(self, ref: int) -> str:
-        """ Key of the compiled code of the template in `ir.cache`. """
+    def _get_cache_website_ids(self, view) -> list[int | Literal[False]]:
+        """ Return the websites (``False`` for none) of the compiled code that
+        may combine ``view``, see `_clear_cache`. """
+        return [False, *self.env['website'].sudo().get_all().ids]
+
+    def _get_cache_key(self, ref: int) -> tuple:
+        """ Key of the compiled code of the template in `ir.cache`: the
+        website, the template, then the context, so that `_clear_cache`
+        deletes the entries of a template, or of a website, by prefix. """
         # the namespaces of the caller (t-call) change the compiled code too
         nsmap = tuple(sorted((self.env.context.get('nsmap') or {}).items(), key=lambda item: (item[0] or '', item[1])))
         # marshalled code objects are not portable between versions of
         # python: the entries of another version are simply not read (and
         # do not replace the entries of this version, e.g. two servers
         # sharing the database during a deployment)
-        return (ref, tuple(self.env.context.get(k) or False for k in self._get_template_cache_keys()), nsmap, MAGIC_NUMBER.hex())
+        return (
+            self.env.context.get('website_id') or False, ref,
+            *(self.env.context.get(k) or False for k in self._get_template_cache_keys()),
+            nsmap, MAGIC_NUMBER.hex(),
+        )
 
-    def _get_template_cache_version_sql(self):
-        IrUiView = self.env['ir.ui.view']
-        # version (hash) of the views of the `version_data` of each entry
-        # (`view_ids`: ids of the views of a template) and of the views
-        # inheriting from them, see `ir.cache._lookup_multi`; the entries share most of their views,
-        # each view is read and hashed only once
-        return SQL("""
-            WITH all_views AS MATERIALIZED (
-                SELECT id, inherit_id,
-                       concat_ws('|', id, inherit_id, active, write_date, md5(arch_db::text)) AS part
-                  FROM ir_ui_view
-                 WHERE id = ANY(ARRAY(SELECT jsonb_array_elements_text(version_data->'view_ids')::int FROM entry))
-                    OR inherit_id = ANY(ARRAY(SELECT jsonb_array_elements_text(version_data->'view_ids')::int FROM entry))
-            )
-            SELECT entry.key, md5(concat_ws('|', %s)) AS version
-              FROM entry
-        """, SQL(", ").join(self._get_template_cache_version_sql_parts()),
-        to_flush=[IrUiView._fields[f] for f in ('inherit_id', 'active', 'arch_db', 'write_date')])
-
-    def _get_template_cache_version_sql_parts(self):
-        """ Return the SQL expressions, on the row ``entry`` of `ir.cache`,
-        of the other sources of the compiled code, hashed with its views. """
-        return [
-            SQL("""(
-                SELECT string_agg(all_views.part, ',' ORDER BY all_views.id)
-                    FROM all_views
-                    WHERE all_views.id IN (SELECT jsonb_array_elements_text(entry.version_data->'view_ids')::int)
-                    OR all_views.inherit_id IN (SELECT jsonb_array_elements_text(entry.version_data->'view_ids')::int)
-            )""")
-        ]
-
-    def _get_template_cache_version_data(self, views):
-        """ Return the ``version_data`` of the `ir.cache` entry of a template,
-        given ``views``, the views combined in it. """
-        return {'view_ids': views.ids}
+    @api.model
+    def _clear_cache(self, views):
+        """ Delete from `ir.cache` the compiled code of the templates that
+        may combine ``views``: all the templates of their inheritance trees,
+        for the websites of each view. """
+        views = views.sudo().filtered(lambda view: view.type == 'qweb')
+        if not views:
+            return
+        family_ids = views._get_inheritance_family_ids()
+        prefixes = {
+            # '(website_id, ref, ' and not '(website_id, ref': ref 4 is not ref 42
+            f"({website_id!r}, {ref!r}, "
+            for view in views
+            for website_id in self._get_cache_website_ids(view)
+            for ref in family_ids[view.id]
+        }
+        self.env['ir.cache']._clear('qweb', sorted(prefixes))
 
     def _get_template_info(self, template):
         return self.env['ir.ui.view']._get_cached_template_info(template)
@@ -1109,7 +1102,7 @@ class IrQweb(models.AbstractModel):
         key = repr(self._get_cache_key(ref))
         if (result := cache.get(key)) is not None:
             return result
-        if data := self.env['ir.cache']._lookup('qweb', key, self._get_template_cache_version_sql()):
+        if data := self.env['ir.cache']._lookup('qweb', key):
             result = self.__load_code(*marshal.loads(data))
         else:
             result = self._generate_code_uncached(ref, store=True)
@@ -1137,7 +1130,7 @@ class IrQweb(models.AbstractModel):
             # cold worker, load it in batch
             if unknown := [call for call, _ref in calls if template_info_cache.get_value(IrUiView, call) is None]:
                 IrUiView._preload_views(unknown)
-            values = self.env['ir.cache']._lookup_multi('qweb', keys, version=self._get_template_cache_version_sql())
+            values = self.env['ir.cache']._lookup_multi('qweb', keys)
             missing_refs = [ref for ref, value in zip(keys.values(), values) if value is None]
             try:
                 self._preload_trees(missing_refs)
@@ -1185,12 +1178,9 @@ class IrQweb(models.AbstractModel):
         ])
         compiled = compile(wrap_code, f"<{ref}>", 'exec')
         if store and ref:
-            # the views combined in the template, loaded in batch with its tree
-            views = self.env['ir.ui.view'].sudo().browse(self._preload_trees([ref])[ref]['view_ids'])
+            # invalidated by the views, see `_clear_cache`
             self.env['ir.cache']._set__('qweb', repr(self._get_cache_key(ref)),
-                    marshal.dumps((code, options, def_name, compiled)),
-                    self._get_template_cache_version_data(views), self._get_template_cache_version_sql(),
-                )
+                    marshal.dumps((code, options, def_name, compiled)))
         return self.__load_code(code, options, def_name, compiled)
 
     def __load_code(self, code, options, def_name, compiled):
@@ -1429,15 +1419,14 @@ class IrQweb(models.AbstractModel):
         missing_refs_values = list(missing_refs.values())
         views = self.env['ir.ui.view'].sudo().union(data['view'] for data in missing_refs_values)
 
-        trees = views._get_view_etrees_and_views()
+        trees = views._get_view_etrees()
 
         # add in cache
-        for xmlid, view, (tree, combined_views) in zip(xmlids, views, trees):
+        for xmlid, view, tree in zip(xmlids, views, trees):
             data = {
                 'tree': tree,
                 'template': etree.tostring(tree, encoding='unicode'),
                 'calls': self._get_called_templates(tree),
-                'view_ids': combined_views.ids,
             }
             compile_batch[view.id].update(data)
             compile_batch[xmlid].update(data)

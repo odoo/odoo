@@ -655,6 +655,7 @@ actual arch.
 
         result = super().create(vals_list)
         result.with_context(ir_ui_view_partial_validation=True)._check_xml()
+        self.env['ir.qweb']._clear_cache(result)
         return result
 
     def write(self, vals):
@@ -672,7 +673,14 @@ actual arch.
         if 'arch_db' in vals and not self.env.context.get('no_save_prev'):
             vals['arch_prev'] = self.arch_db
 
+        # the templates combining the views before the write
+        self.env['ir.qweb']._clear_cache(self)
+
         res = super().write(self._compute_defaults(vals))
+
+        # the templates combining the views after the write
+        if {'inherit_id', 'type', 'website_id'}.intersection(vals):
+            self.env['ir.qweb']._clear_cache(self)
 
         # Check the xml of the view if it gets re-activated or changed.
         if 'active' in vals or 'arch_db' in vals or 'inherit_id' in vals:
@@ -688,10 +696,13 @@ actual arch.
             self.inherit_children_ids
         ):
             self.inherit_children_ids.unlink()
+        self.env['ir.qweb']._clear_cache(self)
         return super().unlink()
 
     def _update_field_translations(self, field_name, translations, digest=None, source_lang=''):
-        return super(IrUiView, self.with_context(no_save_prev=True))._update_field_translations(field_name, translations, digest=digest, source_lang=source_lang)
+        res = super(IrUiView, self.with_context(no_save_prev=True))._update_field_translations(field_name, translations, digest=digest, source_lang=source_lang)
+        self.env['ir.qweb']._clear_cache(self)
+        return res
 
     def copy_data(self, default=None):
         has_default_without_key = default and 'key' not in default
@@ -738,6 +749,27 @@ actual arch.
         return SQL("""SELECT res_id FROM ir_model_data
                   WHERE res_id IN %(res_ids)s AND model = 'ir.ui.view' AND module IN %(modules)s
                """, res_ids=self._ids, modules=tuple(modules))
+
+    def _get_inheritance_family_ids(self) -> dict[int, list[int]]:
+        """ Return, for each view, the ids of all the views of its inheritance
+        tree: its root, and all the views inheriting from it, active or not. """
+        rows = self.env.execute_query(SQL("""
+            WITH RECURSIVE ancestor AS (
+                SELECT id AS view_id, id, inherit_id FROM ir_ui_view WHERE id = ANY(%s)
+                UNION
+                SELECT ancestor.view_id, v.id, v.inherit_id
+                  FROM ir_ui_view v
+                  JOIN ancestor ON v.id = ancestor.inherit_id
+            ), family AS (
+                SELECT view_id, id FROM ancestor WHERE inherit_id IS NULL
+                UNION
+                SELECT family.view_id, v.id
+                  FROM ir_ui_view v
+                  JOIN family ON v.inherit_id = family.id
+            )
+            SELECT view_id, array_agg(id) FROM family GROUP BY view_id
+        """, self.ids, to_flush=self._fields['inherit_id']))
+        return dict(rows)
 
     def _get_inheriting_views(self):
         """
@@ -1068,12 +1100,6 @@ actual arch.
 
     def _get_combined_archs(self):
         """ Return the arch of ``self`` (as an etree) combined with its inherited views. """
-        return [arch for arch, _views in self._get_combined_archs_and_views()]
-
-    def _get_combined_archs_and_views(self):
-        """ Return the arch of ``self`` (as an etree) combined with its inherited
-        views, with the views it depends on: its ancestors and the views
-        combined in it (like ``_get_inheriting_views`` on its ancestors). """
         parented = []
         roots = self.env['ir.ui.view']
         for root in self:
@@ -1119,15 +1145,10 @@ actual arch.
 
         roots = roots.with_prefetch(all_tree_views._prefetch_ids)
 
-        result = []
-        for root, parented_ids in zip(roots, parented):
-            hierarchy = get_hierarchy(root, parented_ids)
-            combined_views = self.browse(sorted({
-                *parented_ids,
-                *(view.id for children in hierarchy.values() for view in children),
-            }))
-            result.append((root._combine(hierarchy), combined_views))
-        return result
+        return [
+            root._combine(get_hierarchy(root, parented_ids))
+            for root, parented_ids in zip(roots, parented)
+        ]
 
     def _get_view_refs(self, node):
         """ Extract the `[view_type]_view_ref` keys and values from the node context attribute,
@@ -2664,16 +2685,12 @@ actual arch.
         return ['lang', 'inherit_branding', 'edit_translations']
 
     def _get_view_etrees(self):
-        return [arch_tree for arch_tree, _views in self._get_view_etrees_and_views()]
-
-    def _get_view_etrees_and_views(self):
-        """ Like ``_get_view_etrees``, with the views combined in each tree. """
         if not self:
             return []
-        result = self._get_combined_archs_and_views()
-        for arch_tree, _views in result:
+        arch_trees = self._get_combined_archs()
+        for arch_tree in arch_trees:
             self.distribute_branding(arch_tree)
-        return result
+        return arch_trees
 
     def _contains_branded(self, node):
         return node.tag == 't'\

@@ -145,6 +145,24 @@ class TestIrCache(IrCacheCase):
         self.assertFalse(self.rows('control'))
         self.assertIsNone(IrCache._lookup('control', 'a', 'toto'))
 
+    def test_clear(self):
+        IrCache = self.env['ir.cache']
+        for key in ['(1, 2, x)', '(1, 22, x)', '(1, 3, x)', '(2, 2, x)', 'a_b', 'axb']:
+            IrCache._set__('test', key, b'value')
+        IrCache._set__('other', '(1, 2, x)', b'value')
+
+        IrCache._clear('test', [])
+        self.assertEqual(len(self.rows('test')), 6, "no prefix, nothing deleted")
+        IrCache._clear('test', ['(1, 2, '])
+        self.assertEqual([r['key'] for r in self.rows('test')], ['(1, 22, x)', '(1, 3, x)', '(2, 2, x)', 'a_b', 'axb'])
+        IrCache._clear('test', ['a_', '(1, '])
+        self.assertEqual([r['key'] for r in self.rows('test')], ['(2, 2, x)', 'axb'], "'_' is not a wildcard")
+        self.assertEqual(len(self.rows('other')), 1, "another kind")
+        IrCache._clear('test')
+        self.assertFalse(self.rows('test'))
+        self.assertEqual(len(self.rows('other')), 1, "another kind")
+        self.assertTrue(IrCache._check_secret())
+
     def test_gc_file_kind_with_dash(self):
         """ A file whose kind contains '-' expires from the date at the end of
         its name, not from the first '-': otherwise it would never be
@@ -210,7 +228,7 @@ class TestQWebCodeCache(IrCacheCase):
         # no ORM on `ir.cache` (`browse` is forbidden)
         return self.env.execute_query_dict(SQL(
             "SELECT id, key, version_data, create_date, signature FROM ir_cache WHERE kind = 'qweb' AND key LIKE %s ORDER BY id",
-            f'({template.id}, %',
+            f'(False, {template.id}, %',
         ))
 
     def path(self, row):
@@ -273,7 +291,8 @@ class TestQWebCodeCache(IrCacheCase):
         # the t-call is resolved when rendering: only the callee is generated
         self.callee.arch = '<span>callee 2</span>'
         self.render(self.caller, '<div><span>callee 2</span></div>', generated=self.callee)
-        self.assertEqual(len(self.rows(self.callee)), 2, "a new row, the old one is kept")
+        self.assertEqual(len(self.rows(self.callee)), 1, "the old row is deleted by the write")
+        self.assertEqual(len(self.rows(self.caller)), 1, "another inheritance tree, kept")
 
         # a new view inheriting from the template, even inactive
         extension = self.env['ir.ui.view'].create({
@@ -301,10 +320,10 @@ class TestQWebCodeCache(IrCacheCase):
         self.render(self.caller, '<div><span>callee</span></div>', generated=[], preserve_comments=True)
 
         # the garbage collector deletes the old rows only (e.g. the compiler
-        # was fixed in the meantime), not the replaced ones
-        self.assertEqual(len(self.rows(self.callee)), 4)
+        # was fixed in the meantime)
+        self.assertEqual(len(self.rows(self.callee)), 2)
         self.env['ir.cache']._gc_cache()
-        self.assertEqual(len(self.rows(self.callee)), 4)
+        self.assertEqual(len(self.rows(self.callee)), 2)
         old_rows = self.rows(self.callee)
         self.env.cr.execute(SQL("UPDATE ir_cache SET create_date = create_date - interval '8 days' WHERE id = ANY(%s)", [r['id'] for r in old_rows]))
         self.env['ir.cache']._gc_cache()
@@ -503,13 +522,13 @@ class TestQWebCodeCache(IrCacheCase):
                     self.render(self.caller, '<div><span>callee</span></div>', generated=generated)
                 savepoint.rollback()
 
-        # another version_data with the same views
-        same_views = json.dumps({**row['version_data'], 'x': 1})
+        # a version_data: not used by qweb, but signed
+        other_data = json.dumps({'x': 1})
 
-        # the payload, the version_data (same views, so same version), or the key (the
-        # row of another template)
+        # the payload, the version_data, or the key (the row of another
+        # template)
         check_forged(self.callee, data=evil)
-        check_forged(self.callee, version_data=same_views)
+        check_forged(self.callee, version_data=other_data)
         check_forged(self.caller, key=self.rows(self.caller)[0]['key'])
         # a row whose version does not match its source is not even read
         with self.env.cr.savepoint(flush=False) as savepoint:
@@ -519,7 +538,7 @@ class TestQWebCodeCache(IrCacheCase):
             savepoint.rollback()
         # the row itself modified, not a copy
         with self.assertLogs('odoo.addons.base.models.ir_cache', 'INFO'):
-            self.env.cr.execute(SQL("UPDATE ir_cache SET version_data = %s WHERE id = %s", same_views, row['id']))
+            self.env.cr.execute(SQL("UPDATE ir_cache SET version_data = %s WHERE id = %s", other_data, row['id']))
             self.render(self.caller, '<div><span>callee</span></div>', generated=self.callee)
 
         # a new signed row is added and used

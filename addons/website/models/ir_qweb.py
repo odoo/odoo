@@ -4,7 +4,6 @@ import re
 from collections import OrderedDict
 
 from odoo import models
-from odoo.tools import SQL
 from odoo.http import request
 from odoo.addons.website.tools import add_form_signature
 from odoo.exceptions import AccessError
@@ -51,17 +50,11 @@ class IrQweb(models.AbstractModel):
         """ Return the list of context keys to use for caching ``_compile``. """
         return super()._get_template_cache_keys() + ['website_id', 'cookies_allowed']
 
-    def _get_template_cache_version_data(self, views):
-        version_data = super()._get_template_cache_version_data(views)
-        version_data['website_id'] = self.env.context.get('website_id') or None
-        return version_data
-
-    def _get_template_cache_version_sql_parts(self):
-        # the compiled code also depends on the website of `version_data`
-        self.env['website'].flush_model()
-        return super()._get_template_cache_version_sql_parts() + [SQL(
-            "(SELECT write_date FROM website WHERE id = (entry.version_data->>'website_id')::int)",
-        )]
+    def _get_cache_website_ids(self, view):
+        # a website-specific view is only combined in the templates of its website
+        if view.website_id:
+            return [view.website_id.id]
+        return super()._get_cache_website_ids(view)
 
     def _pre_processing_att(self, attrib):
         self._copy_translate_attributes(attrib)
