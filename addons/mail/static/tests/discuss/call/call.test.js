@@ -22,15 +22,9 @@ import {
     triggerHotkey,
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
-<<<<<<< 5af964ec15611e513bb2590cc8dba26b703d4980
 import { Store } from "@mail/../tests/mock_server/store";
 import { CALL_GRID_LAYOUT } from "@mail/discuss/call/common/call_layout";
-||||||| bb55366856dea49e1407fceb0e18c760fa65be73
-import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
-=======
-import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 import { CallPreview } from "@mail/discuss/call/common/call_preview";
->>>>>>> b1c222fe9c661de48a0a3d3911f6bac64a58da81
 import {
     CROSS_TAB_CLIENT_MESSAGE,
     CROSS_TAB_HOST_MESSAGE,
@@ -1686,7 +1680,7 @@ test("turning the camera on twice while it starts keeps only the latest camera s
     await waitUntil(() => requests.video.length === 2);
     requests.video[0].resolve();
     requests.video[1].resolve();
-    await contains("[title='Stop camera']");
+    await contains("[title='Turn camera off']");
     expect(requests.video[0].stream.getVideoTracks()[0].readyState).toBe("ended");
     expect(requests.video[1].stream.getVideoTracks()[0].readyState).toBe("live");
 });
@@ -1703,10 +1697,10 @@ test("a camera request failing after the latest one keeps the camera on", async 
     await click("[title='Turn camera on']");
     await waitUntil(() => requests.video.length === 2);
     requests.video[1].resolve();
-    await contains("[title='Stop camera']");
+    await contains("[title='Turn camera off']");
     requests.video[0].reject(new Error("camera unavailable"));
     await animationFrame();
-    await contains("[title='Stop camera']");
+    await contains("[title='Turn camera off']");
     expect(requests.video[1].stream.getVideoTracks()[0].readyState).toBe("live");
 });
 
@@ -1737,7 +1731,7 @@ test("turning the camera on twice while its background blur starts keeps the blu
     requests.video[1].resolve();
     await waitUntil(() => blurredStreams.length === 2);
     blurredStreams[1].resolve(requests.video[1].stream);
-    await contains("[title='Stop camera']");
+    await contains("[title='Turn camera off']");
     expect(store.settings.useBlur).toBe(true);
     expect(requests.video[0].stream.getVideoTracks()[0].readyState).toBe("ended");
     expect(requests.video[1].stream.getVideoTracks()[0].readyState).toBe("live");
@@ -1809,7 +1803,7 @@ test("turning the call preview camera on twice while it starts keeps only the la
     await waitUntil(() => requests.video.length === 2);
     requests.video[0].resolve();
     requests.video[1].resolve();
-    await contains("[title='Stop camera']");
+    await contains("[title='Turn camera off']");
     expect(requests.video[0].stream.getVideoTracks()[0].readyState).toBe("ended");
     expect(requests.video[1].stream.getVideoTracks()[0].readyState).toBe("live");
 });
@@ -1837,10 +1831,10 @@ test("stopping the call preview camera while it switches device keeps it off", a
     await click("[title='Turn camera on']");
     await waitUntil(() => requests.video.length === 1);
     requests.video[0].resolve();
-    await contains("[title='Stop camera']");
+    await contains("[title='Turn camera off']");
     env.services["mail.store"].settings.cameraInputDeviceId = "other-camera";
     await waitUntil(() => requests.video.length > 1);
-    await click("[title='Stop camera']");
+    await click("[title='Turn camera off']");
     const switchRequests = requests.video.slice(1);
     switchRequests.forEach((request) => request.resolve());
     await waitUntil(() =>
@@ -1866,10 +1860,10 @@ test("stopping the call preview camera while its background blur starts keeps th
     await click("[title='Turn camera on']");
     await waitUntil(() => requests.video.length === 1);
     requests.video[0].resolve();
-    await contains("[title='Stop camera']");
+    await contains("[title='Turn camera off']");
     store.settings.useBlur = true;
     await waitUntil(() => blurredStreams.length > 0);
-    await click("[title='Stop camera']");
+    await click("[title='Turn camera off']");
     await contains("[title='Turn camera on']");
     expect(store.settings.useBlur).toBe(true);
 });

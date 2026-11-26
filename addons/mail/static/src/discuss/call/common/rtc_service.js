@@ -2071,30 +2071,16 @@ export class Rtc extends Record {
                 const track = this.cameraTrack;
                 const isSendingCamera = force ?? !this.isSendingCamera;
                 this.isSendingCamera = false;
-<<<<<<< 5af964ec15611e513bb2590cc8dba26b703d4980
-                await this.setVideo(track, type, {
-                    activateVideo: isSendingCamera,
-                    env,
-                    rootRef: options?.rootRef,
-                    refreshStream,
-                });
-||||||| bb55366856dea49e1407fceb0e18c760fa65be73
-                await this.setVideo(track, type, {
-                    activateVideo: isSendingCamera,
-                    env,
-                    refreshStream,
-                });
-=======
                 if (
                     (await this.setVideo(track, type, {
                         activateVideo: isSendingCamera,
                         env,
+                        rootRef: options?.rootRef,
                         refreshStream,
                     })) === false
                 ) {
                     return;
                 }
->>>>>>> b1c222fe9c661de48a0a3d3911f6bac64a58da81
                 break;
             }
             case "screen": {
@@ -2258,7 +2244,9 @@ export class Rtc extends Record {
                 this.soundEffectsService.play("screen-sharing");
             }
         } catch {
-<<<<<<< 5af964ec15611e513bb2590cc8dba26b703d4980
+            if (type === "camera" && cameraRequestId !== this.cameraRequestId) {
+                return false;
+            }
             this.showMediaUnavailableWarning(
                 {
                     camera: type === "camera",
@@ -2266,20 +2254,6 @@ export class Rtc extends Record {
                 },
                 options
             );
-||||||| bb55366856dea49e1407fceb0e18c760fa65be73
-            this.showMediaUnavailableWarning({
-                camera: type === "camera",
-                screen: type === "screen",
-            });
-=======
-            if (type === "camera" && cameraRequestId !== this.cameraRequestId) {
-                return false;
-            }
-            this.showMediaUnavailableWarning({
-                camera: type === "camera",
-                screen: type === "screen",
-            });
->>>>>>> b1c222fe9c661de48a0a3d3911f6bac64a58da81
             stopVideo();
             return;
         }
@@ -2389,20 +2363,14 @@ export class Rtc extends Record {
         await this.network?.updateUpload("audio", this.audioTrack);
     }
 
-<<<<<<< 5af964ec15611e513bb2590cc8dba26b703d4980
     /**
      * @param {Object} param0
      * @param {boolean} [param0.force]
      * @param {ContextOptions} [options]
      */
     async resetMicAudioTrack({ force = false }, options = {}) {
-        this.disconnectMicAudioTrackListeners?.();
-||||||| bb55366856dea49e1407fceb0e18c760fa65be73
-    async resetMicAudioTrack({ force = false }) {
-=======
-    async resetMicAudioTrack({ force = false }) {
         const micRequestId = ++this.micRequestId;
->>>>>>> b1c222fe9c661de48a0a3d3911f6bac64a58da81
+        this.disconnectMicAudioTrackListeners?.();
         this.micAudioTrack?.stop();
         this.micAudioTrack = undefined;
         this.isMicAudioTrackMuted = false;
@@ -2431,16 +2399,10 @@ export class Rtc extends Record {
                     this.setMute(false);
                 }
             } catch {
-<<<<<<< 5af964ec15611e513bb2590cc8dba26b703d4980
-                this.showMediaUnavailableWarning({ microphone: true }, options);
-||||||| bb55366856dea49e1407fceb0e18c760fa65be73
-                this.showMediaUnavailableWarning({ microphone: true });
-=======
                 if (micRequestId !== this.micRequestId) {
                     return;
                 }
-                this.showMediaUnavailableWarning({ microphone: true });
->>>>>>> b1c222fe9c661de48a0a3d3911f6bac64a58da81
+                this.showMediaUnavailableWarning({ microphone: true }, options);
                 this.updateAudioTrack();
                 return;
             }
