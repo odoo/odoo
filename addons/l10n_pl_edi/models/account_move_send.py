@@ -3,6 +3,7 @@ from time import sleep
 
 from odoo import fields, models
 
+from odoo.addons.l10n_pl_edi.exceptions import KSeFUnavailableError
 from odoo.addons.l10n_pl_edi.tools.ksef_api_service import KsefApiService
 
 _logger = logging.getLogger(__name__)
@@ -50,12 +51,28 @@ class AccountMoveSend(models.AbstractModel):
         def is_ksef(move):
             return 'pl_ksef' in invoices_data[move].get('extra_edis', []) and not move.l10n_pl_edi_status
 
+        def handle_ksef_unavailable(move, error, xml_content=None, session_id=None):
+            try:
+                with self.env.cr.savepoint():
+                    if move._l10n_pl_edi_handle_ksef_unavailable(error, xml_content=xml_content, session_id=session_id):
+                        return
+            except Exception as hook_error:  # noqa: BLE001
+                error = hook_error
+            set_error(move, str(error))
+
         moves_by_company = self.env['account.move'].union(*invoices_data).filtered(is_ksef).grouped('company_id')
         for company, moves in moves_by_company.items():
 
             service = KsefApiService(company)
             try:
                 service.open_ksef_session()
+            except KSeFUnavailableError as error:
+                for move in moves:
+                    if move.invoice_date > fields.Date.context_today(self) or not self.env['res.company']._with_locked_records(move, allow_raising=False):
+                        set_error(move, str(error))
+                    else:
+                        handle_ksef_unavailable(move, error)
+                continue
             except Exception as errors:  # noqa: BLE001
                 set_error(moves, str(errors))
                 continue
@@ -95,6 +112,13 @@ class AccountMoveSend(models.AbstractModel):
                     )
                     move.invalidate_recordset(fnames=['l10n_pl_edi_attachment_id', 'l10n_pl_edi_attachment_file'])
 
+                except KSeFUnavailableError as error:
+                    # KSeF may have received the invoice: keep the sent XML and its session to find it again.
+                    handle_ksef_unavailable(
+                        move, error,
+                        xml_content=xml_content,
+                        session_id=move.company_id.sudo().l10n_pl_edi_session_id,
+                    )
                 except Exception as errors:  # noqa: BLE001
                     set_error(move, str(errors))
 
