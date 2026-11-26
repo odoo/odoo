@@ -551,9 +551,14 @@ export function createVideoStream() {
 /**
  * Mocks the browser's `navigator.mediaDevices.getUserMedia` and `navigator.mediaDevices.getDisplayMedia`
  * Also mocks the permissions API to return "granted" for camera and microphone permissions by default.
+ *
+ * @param {{ holdUserMedia?: boolean }} [options] keep each `getUserMedia` request pending until
+ *   the test resolves it; the held requests are returned instead of the streams
  */
-export function mockGetMedia() {
+export function mockGetMedia({ holdUserMedia = false } = {}) {
     const streams = [];
+    /** @type {{ audio: Object[], video: Object[] }} */
+    const requests = { audio: [], video: [] };
     // Mock permissions API to return "granted" by default.
     patch(navigator.permissions, {
         async query() {
@@ -567,15 +572,15 @@ export function mockGetMedia() {
     });
     patch(navigator.mediaDevices, {
         getUserMedia(constraints) {
-            if (constraints.audio) {
-                const audioStream = createAudioStream();
-                streams.push(audioStream);
-                return audioStream;
-            } else {
-                const videoStream = createVideoStream();
-                streams.push(videoStream);
-                return videoStream;
+            const kind = constraints.audio ? "audio" : "video";
+            const stream = kind === "audio" ? createAudioStream() : createVideoStream();
+            streams.push(stream);
+            if (!holdUserMedia) {
+                return stream;
             }
+            const request = { ...Promise.withResolvers(), stream };
+            requests[kind].push(request);
+            return request.promise.then(() => stream);
         },
         getDisplayMedia: () => {
             const videoStream = createVideoStream();
@@ -583,7 +588,7 @@ export function mockGetMedia() {
             return videoStream;
         },
     });
-    return streams;
+    return holdUserMedia ? requests : streams;
 }
 
 /**
