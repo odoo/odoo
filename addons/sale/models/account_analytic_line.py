@@ -242,7 +242,7 @@ class AccountAnalyticLine(models.Model):
             return
 
         plan_id = self.env['account.analytic.plan'].browse(
-            self.env['ir.config_parameter'].get_int('sale.analytic_plan_sale_orders')
+            self.env['ir.config_parameter'].sudo().get_int('sale.analytic_plan_sale_orders')
         )
         if not plan_id:
             # This plan was available in 19.2 under which all of the AAs of sale orders were created
