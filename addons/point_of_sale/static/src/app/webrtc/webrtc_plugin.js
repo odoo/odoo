@@ -16,7 +16,7 @@ export function webrtcSignalType(configId) {
     return `WEBRTC_SIGNAL-${configId}`;
 }
 
-// Time given to the other terminal to answer an offer, or to send an offer
+// Time given to the other device to answer an offer, or to send an offer
 // after an announce sent to it.
 const ANSWER_TIMEOUT = 15000;
 // Time given to the gathering of the network candidates: after it, the offer
@@ -24,57 +24,57 @@ const ANSWER_TIMEOUT = 15000;
 const GATHERING_TIMEOUT = 5000;
 // Time given to a connection to get connected, once the offer is answered.
 const CONNECTION_TIMEOUT = 15000;
-// Delays before the next attempts to connect to a terminal; once all are
-// used, the terminal gives up until the other one announces itself again.
-// Also used to announce the terminal again when its announce fails.
+// Delays before the next attempts to connect to a device; once all are
+// used, the device gives up until the other one announces itself again.
+// Also used to announce the device again when its announce fails.
 const RETRY_DELAYS = [1000, 2000, 4000, 8000];
-// A terminal pings the other ones this often over the data channel...
+// A device pings the other ones this often over the data channel...
 const PING_INTERVAL = 10000;
 // ... and reconnects to one it heard nothing from for this long.
 const HEARTBEAT_TIMEOUT = 30000;
 
 /**
- * Peer-to-peer connections between the terminals of a PoS config.
+ * Peer-to-peer connections between the devices of a PoS config.
  *
  * The server only relays the signaling, on the bus channel of the config:
- * 1. a terminal that starts broadcasts an `announce`;
- * 2. for each pair of terminals, the one with the smaller id sends the `offer`
+ * 1. a device that starts broadcasts an `announce`;
+ * 2. for each pair of devices, the one with the smaller id sends the `offer`
  *    (the other one answers the announce with its own, sent to the newcomer
- *    only), so two terminals never send an offer to each other at the same time;
- * 3. the other terminal replies with an `answer`, and the data channel opens.
+ *    only), so two devices never send an offer to each other at the same time;
+ * 3. the other device replies with an `answer`, and the data channel opens.
  *
  * Each offer has an `attempt` number, that its answer repeats: an answer to an
  * offer that was replaced meanwhile is ignored, as it doesn't match the
  * connection in progress.
  *
- * A signaling message can be lost: the terminal waiting for the answer (or, on
+ * A signaling message can be lost: the device waiting for the answer (or, on
  * the side of the bigger id, for the offer) gives up the attempt after a
  * while, and tries again a few times, waiting longer each time (see
  * `failAttempt`). The smaller id retries with a new offer, the bigger id with
- * a new announce sent to the other terminal.
+ * a new announce sent to the other device.
  *
  * A connection that fails, whose data channel closes, or that doesn't get
  * connected in time once the offer is answered, is rebuilt with the same
- * retries. A terminal that leaves says "bye" to the other ones first, so
+ * retries. A device that leaves says "bye" to the other ones first, so
  * that they don't try to reconnect to it.
  *
- * A connection can also look fine while the other terminal is gone: its page
+ * A connection can also look fine while the other device is gone: its page
  * is frozen (its network still answers the checks of the browser), or it
- * crashed and the browser hasn't noticed yet. Each terminal pings the other
+ * crashed and the browser hasn't noticed yet. Each device pings the other
  * ones over the data channel, which answer at once: a connection that receives
  * nothing for too long is rebuilt the same way.
  *
- * A terminal announces itself again when the bus connects again: an announce
- * from a terminal already connected is ignored, the connection is kept. A
+ * A device announces itself again when the bus connects again: an announce
+ * from a device already connected is ignored, the connection is kept. A
  * failed announce is also tried again a few times, as the bus may stay
  * connected.
  *
- * In a browser without WebRTC, the terminal doesn't announce itself, so that
- * the other terminals don't try to connect to it.
+ * In a browser without WebRTC, the device doesn't announce itself, so that
+ * the other devices don't try to connect to it.
  *
  * The network candidates are gathered before sending the offer and the answer,
  * so that they are part of the session description and need no message of
- * their own. No STUN server is used: the terminals are expected to be on the
+ * their own. No STUN server is used: the devices are expected to be on the
  * same local network.
  */
 export class WebRtcPlugin extends Plugin {
@@ -98,12 +98,12 @@ export class WebRtcPlugin extends Plugin {
         // Number of the last offer sent, see `onAnswer`.
         this.lastAttempt = 0;
         /**
-         * Terminals not connected yet: failed attempts, and the timer of the
+         * Devices not connected yet: failed attempts, and the timer of the
          * attempt in progress or of the next one.
          * @type {Map<string, {failures: number, timer: number|null}>}
          */
         this.retries = new Map();
-        // Set when the bus disconnects or when an announce fails: the terminal
+        // Set when the bus disconnects or when an announce fails: the device
         // announces itself again once the bus is connected.
         this.shouldAnnounceAgain = false;
         // Failed announces in a row, and the timer of the next one.
@@ -124,7 +124,7 @@ export class WebRtcPlugin extends Plugin {
      * @param {Object} params
      * @param {number} params.configId
      */
-    async start({ configId }) {
+    start({ configId }) {
         if (!window.RTCPeerConnection) {
             this.logger.log("lifecycle", "WebRTC not supported by this browser");
             return;
@@ -132,47 +132,47 @@ export class WebRtcPlugin extends Plugin {
         this.configId = configId;
         // Not the access token channel of the config: the customer display and
         // the self order know it, and would see the network addresses of the
-        // terminals. The server only gives this one to the users of the config.
+        // devices. The server only gives this one to the users of the config.
         this.bus.addChannel(webrtcChannel(configId));
         this.bus.subscribe(webrtcSignalType(configId), (message) => this.onSignal(message));
-        await this.tryAnnounce();
+        this.tryAnnounce();
     }
 
     /**
-     * A new id for this terminal: the server only relays the messages of an
+     * A new id for this device: the server only relays the messages of an
      * id that ends with the tag of its session, so that another user can't
-     * send messages as this terminal.
+     * send messages as this device.
      */
     newId() {
         return `${uuidv4()}.${session.pos_webrtc_tag}`;
     }
 
-    async resume() {
+    resume() {
         if (!this.configId) {
             return;
         }
-        // Leaving the page closed the connections, but the other terminals may
-        // not have noticed it yet: they would ignore the announce of a terminal
-        // they still have a connection to. A new id makes it a new terminal.
+        // Leaving the page closed the connections, but the other devices may
+        // not have noticed it yet: they would ignore the announce of a device
+        // they still have a connection to. A new id makes it a new device.
         this.id = this.newId();
         this.logger.log(
             "lifecycle",
             `restored from the back/forward cache, new id ${this.logger.shortId(this.id)}`
         );
-        await this.tryAnnounce();
+        this.tryAnnounce();
     }
 
     /**
-     * Announces the terminal again once the bus is back: its announce may have
-     * failed while the server was unreachable, leaving it alone. The terminals
+     * Announces the device again once the bus is back: its announce may have
+     * failed while the server was unreachable, leaving it alone. The devices
      * already connected to it keep their connection (see `onAnnounce`).
      */
-    async onBusConnected() {
+    onBusConnected() {
         if (!this.shouldAnnounceAgain || !this.configId) {
             return;
         }
         this.logger.log("lifecycle", "bus connected again");
-        await this.tryAnnounce();
+        this.tryAnnounce();
     }
 
     announce() {
@@ -180,8 +180,8 @@ export class WebRtcPlugin extends Plugin {
     }
 
     /**
-     * Announces the terminal, and tries again later if it fails: unless the
-     * bus connects again meanwhile, nobody would know the terminal.
+     * Announces the device, and tries again later if it fails: unless the
+     * bus connects again meanwhile, nobody would know the device.
      */
     async tryAnnounce() {
         // An announce is on its way: the bus connecting again meanwhile
@@ -217,7 +217,7 @@ export class WebRtcPlugin extends Plugin {
     }
 
     /**
-     * Closes the connections to all the terminals.
+     * Closes the connections to all the devices.
      *
      * @param {string} reason - for the logs
      */
@@ -237,8 +237,8 @@ export class WebRtcPlugin extends Plugin {
     }
 
     /**
-     * Tells `peerId` that this terminal leaves: without it, the closed channel
-     * would look broken, and the other terminal would try to reconnect.
+     * Tells `peerId` that this device leaves: without it, the closed channel
+     * would look broken, and the other device would try to reconnect.
      */
     sendBye(peerId, channel) {
         try {
@@ -249,7 +249,7 @@ export class WebRtcPlugin extends Plugin {
     }
 
     /**
-     * Sends a text to every connected terminal. It isn't kept for the ones
+     * Sends a text to every connected device. It isn't kept for the ones
      * whose channel isn't open (yet): it would arrive late, maybe outdated.
      */
     broadcast(text) {
@@ -308,7 +308,7 @@ export class WebRtcPlugin extends Plugin {
     onAnnounce({ from, to }) {
         const pc = this.peers.get(from)?.pc;
         if (pc) {
-            // A terminal announces itself again, e.g. when its websocket
+            // A device announces itself again, e.g. when its websocket
             // reconnects: the connection to it doesn't use the server, keep it.
             // Failed and closed connections are already removed from the peers.
             const reason = `existing connection (${pc.connectionState})`;
@@ -376,7 +376,7 @@ export class WebRtcPlugin extends Plugin {
             if (!this.isCurrent(from, pc)) {
                 return;
             }
-            // Set before sending the answer, which the other terminal could
+            // Set before sending the answer, which the other device could
             // use to connect before the request returns.
             this.setConnectionTimer(from);
             const answer = pc.localDescription.toJSON();
@@ -386,7 +386,7 @@ export class WebRtcPlugin extends Plugin {
                 return;
             }
             this.logger.logError("Failed to send the answer", error, from);
-            // The other terminal retries, with a new offer: else this
+            // The other device retries, with a new offer: else this
             // connection would stay, and its next announce would be ignored.
             this.clearRetryTimer(from);
             this.closePeer(from, "answer failed");
@@ -401,7 +401,7 @@ export class WebRtcPlugin extends Plugin {
             reason = "no connection";
         } else if (attempt !== peer.attempt) {
             // The answer to an offer that was replaced: it describes the
-            // other terminal's side of a connection that no longer exists.
+            // other device's side of a connection that no longer exists.
             reason = `old attempt (${attempt}, current ${peer.attempt})`;
         } else if (pc.signalingState !== "have-local-offer") {
             reason = `no offer pending (${pc.signalingState})`;
@@ -452,8 +452,8 @@ export class WebRtcPlugin extends Plugin {
     /**
      * Gives the connection to `peerId` some time to get connected, now that
      * the offer is answered: else it could stay "connecting" forever, e.g.
-     * when the terminals can't reach each other, and the announces of the
-     * other terminal would be ignored. Cleared once connected.
+     * when the devices can't reach each other, and the announces of the
+     * other device would be ignored. Cleared once connected.
      */
     setConnectionTimer(peerId) {
         this.setRetryTimer(peerId, CONNECTION_TIMEOUT, () =>
@@ -496,7 +496,7 @@ export class WebRtcPlugin extends Plugin {
     resetRetries(peerId) {
         this.clearRetryTimer(peerId);
         this.retries.delete(peerId);
-        // No more "reconnecting" for a terminal without a connection.
+        // No more "reconnecting" for a device without a connection.
         if (!this.peers.has(peerId)) {
             this.peerStates().delete(peerId);
         }
@@ -580,7 +580,7 @@ export class WebRtcPlugin extends Plugin {
             if (this.peers.get(peerId)?.channel !== channel) {
                 return;
             }
-            // Even an invalid message shows that the other terminal is there.
+            // Even an invalid message shows that the other device is there.
             this.resetSilenceTimer(peerId, channel);
             const message = this.parseMessage(data);
             const from = this.logger.shortId(peerId);
@@ -614,7 +614,7 @@ export class WebRtcPlugin extends Plugin {
             this.logger.logError("Channel error", error, peerId);
         };
         // Without a "bye" first: the channel broke, e.g. it gave up sending a
-        // message that the other terminal never acknowledged.
+        // message that the other device never acknowledged.
         channel.onclose = () => this.failAttempt(peerId, "channel closed");
     }
 
@@ -721,3 +721,10 @@ export class WebRtcPlugin extends Plugin {
 }
 
 services.add(WebRtcPlugin);
+
+/**
+ * @returns {WebRtcPlugin}
+ */
+export function useWebRtc() {
+    return usePlugin(WebRtcPlugin);
+}

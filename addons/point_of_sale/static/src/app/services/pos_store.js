@@ -945,7 +945,6 @@ export class PosStore extends WithLazyGetterTrap {
         }
 
         await this.deviceSync.readDataFromServer();
-        // Not awaited: joining the WebRTC mesh must not delay the loading.
         this.webrtc.start({ configId: odoo.pos_config_id });
     }
 

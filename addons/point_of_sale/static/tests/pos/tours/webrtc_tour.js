@@ -18,7 +18,7 @@ import {
     patchWebrtcForTests,
     reconnectServer,
     reloadAs,
-    terminalTour,
+    deviceTour,
     waitAnnounceIgnored,
     waitMessageFrom,
     waitNoPeer,
@@ -33,7 +33,7 @@ const tours = registry.category("web_tour.tours");
 
 // ----- test_webrtc_smaller_first ----- //
 
-// The terminal with the smaller id is opened first: it sends the offer when it
+// The device with the smaller id is opened first: it sends the offer when it
 // receives the announce of the other one.
 const SMALLER_FIRST_SIGNALING = {
     [T1]: [
@@ -47,20 +47,20 @@ const SMALLER_FIRST_SIGNALING = {
 
 tours.add(
     "test_webrtc_smaller_first_t1",
-    terminalTour({ peers: [T2], hiAfter: [], signaling: SMALLER_FIRST_SIGNALING[T1] })
+    deviceTour({ peers: [T2], hiAfter: [], signaling: SMALLER_FIRST_SIGNALING[T1] })
 );
 tours.add(
     "test_webrtc_smaller_first_t2",
-    terminalTour({ peers: [T1], hiAfter: [T1], signaling: SMALLER_FIRST_SIGNALING[T2] })
+    deviceTour({ peers: [T1], hiAfter: [T1], signaling: SMALLER_FIRST_SIGNALING[T2] })
 );
 
 // ----- test_webrtc_bigger_first ----- //
 
-// The terminal with the bigger id is opened first: it answers the announce of
+// The device with the bigger id is opened first: it answers the announce of
 // the other one with its own, so that the newcomer sends the offer.
 tours.add(
     "test_webrtc_bigger_first_t2",
-    terminalTour({
+    deviceTour({
         peers: [T1],
         hiAfter: [],
         signaling: [
@@ -74,7 +74,7 @@ tours.add(
 );
 tours.add(
     "test_webrtc_bigger_first_t1",
-    terminalTour({
+    deviceTour({
         peers: [T2],
         hiAfter: [T2],
         signaling: [
@@ -86,9 +86,9 @@ tours.add(
     })
 );
 
-// ----- test_webrtc_three_terminals ----- //
+// ----- test_webrtc_three_devices ----- //
 
-// Three terminals opened in the order of their ids: each pair connects once.
+// Three devices opened in the order of their ids: each pair connects once.
 const THREE_SIGNALING = {
     [T1]: [
         "sent announce to all",
@@ -118,24 +118,24 @@ const THREE_SIGNALING = {
 
 tours.add(
     "test_webrtc_three_t1",
-    terminalTour({ peers: [T2, T3], hiAfter: [], signaling: THREE_SIGNALING[T1] })
+    deviceTour({ peers: [T2, T3], hiAfter: [], signaling: THREE_SIGNALING[T1] })
 );
 tours.add(
     "test_webrtc_three_t2",
-    terminalTour({ peers: [T1, T3], hiAfter: [T1], signaling: THREE_SIGNALING[T2] })
+    deviceTour({ peers: [T1, T3], hiAfter: [T1], signaling: THREE_SIGNALING[T2] })
 );
 tours.add(
     "test_webrtc_three_t3",
-    terminalTour({ peers: [T1, T2], hiAfter: [T1, T2], signaling: THREE_SIGNALING[T3] })
+    deviceTour({ peers: [T1, T2], hiAfter: [T1, T2], signaling: THREE_SIGNALING[T3] })
 );
 
 // ----- test_webrtc_leave ----- //
 
-// Three terminals say "Hi", then T2 leaves the PoS (as when its tab is closed):
+// Three devices say "Hi", then T2 leaves the PoS (as when its tab is closed):
 // T1 and T3 remove it from their peers, and keep talking to each other.
 // T1 and T3 say "Bye" once they received every "Hi", so that T2 only leaves
 // once nothing it sent is still on the way.
-function stayingTerminalTour({ self, other, hiAfter }) {
+function stayingDeviceTour({ self, other, hiAfter }) {
     return {
         steps: () =>
             [
@@ -145,13 +145,13 @@ function stayingTerminalTour({ self, other, hiAfter }) {
                 waitPeerLeft(T2, [other]),
                 broadcast("Still here"),
                 waitMessageFrom([other], "Still here"),
-                // Leaving triggers no signaling: same as three terminals that just connect.
+                // Leaving triggers no signaling: same as three devices that just connect.
                 checkSignaling(THREE_SIGNALING[self]),
             ].flat(),
     };
 }
 
-tours.add("test_webrtc_leave_t1", stayingTerminalTour({ self: T1, other: T3, hiAfter: [] }));
+tours.add("test_webrtc_leave_t1", stayingDeviceTour({ self: T1, other: T3, hiAfter: [] }));
 tours.add("test_webrtc_leave_t2", {
     steps: () =>
         [
@@ -171,16 +171,16 @@ tours.add("test_webrtc_leave_t2", {
             },
         ].flat(),
 });
-tours.add("test_webrtc_leave_t3", stayingTerminalTour({ self: T3, other: T1, hiAfter: [T1, T2] }));
+tours.add("test_webrtc_leave_t3", stayingDeviceTour({ self: T3, other: T1, hiAfter: [T1, T2] }));
 
 // ----- test_webrtc_reload ----- //
 
 // T2 says "Hi" to T1, then reloads the page: it comes back with a new id, as a
-// real terminal gets a new uuid on each load. T1 keeps a single peer, the new
+// real device gets a new uuid on each load. T1 keeps a single peer, the new
 // T2 (no ghost of the old one), and they say "Hi" again. The new id is still
 // bigger than T1, so T1 sends the offer again. T1 says "Bye" once it received
 // the "Hi", so that T2 only reloads once nothing it sent is still on the way.
-const T2_RELOADED = "terminal2b";
+const T2_RELOADED = "device2b";
 
 tours.add("test_webrtc_reload_t1", {
     steps: () =>
@@ -238,7 +238,7 @@ tours.add("test_webrtc_reload_t2", {
 // reconnects to T1, and they say "Hi again". The new id is still bigger than
 // T1, so T1 sends the offer again. T1 says "Bye" once it received the "Hi", so
 // that T2 only leaves once nothing it sent is still on the way.
-const T2_RESTORED = "terminal2b";
+const T2_RESTORED = "device2b";
 
 tours.add("test_webrtc_back_forward_cache_t1", {
     steps: () =>
@@ -303,7 +303,7 @@ tours.add("test_webrtc_back_forward_cache_t2", {
 // has a healthy connection to it, and keeps it: no new offer, no announce back,
 // no new data channel. They say "Hi again" over the kept connection.
 // `receiver` says "Ready" once it cleared its logs, so that the logs of both
-// terminals only show what follows the second announce.
+// devices only show what follows the second announce.
 function announceAgainTours({ announcer, receiver }) {
     const hiAfter = (self) => (self === T2 ? [T1] : []);
     const receiverSignaling = [
@@ -368,7 +368,7 @@ tours.add("test_webrtc_announce_again_smaller_t2", ANNOUNCE_AGAIN_SMALLER[T2]);
 // itself again and ignores the announce of the other, and they keep talking
 // over the same connection. T2 only gets the announce of T1 once back, from the
 // notifications that the bus missed meanwhile.
-// Each terminal clears its logs while the other one waits for it, so that no
+// Each device clears its logs while the other one waits for it, so that no
 // message of the other one gets cleared (see `announceAgainTours`).
 function serverBackSignaling(other) {
     return [
@@ -431,7 +431,7 @@ tours.add("test_webrtc_server_cut_t2", {
 
 // ----- test_webrtc_alone ----- //
 
-// A terminal alone: it announces itself, and has nobody to talk to.
+// A device alone: it announces itself, and has nobody to talk to.
 tours.add("test_webrtc_alone", {
     steps: () =>
         [

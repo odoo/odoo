@@ -37,16 +37,16 @@ class TestWebrtcSignal(TestPointOfSaleHttpCommon, BusCase):
         config = config or self.main_pos_config
         return BusResult((config, "webrtc"), f"WEBRTC_SIGNAL-{config.id}", message)
 
-    def terminal_id(self, name, session=None):
-        """ The id of a terminal `name` running in `session` (default: the current one). """
+    def device_id(self, name, session=None):
+        """ The id of a device `name` running in `session` (default: the current one). """
         session = session or self.session
         return f"{name}.{self.env['pos.config']._get_webrtc_session_tag(session.sid)}"
 
     def test_relay_valid_messages(self):
         """ Announce (broadcast and directed), offer and answer are relayed as is. """
         self.authenticate('pos_user', 'pos_user')
-        # Two terminals in the same browser (e.g. two tabs) share their session.
-        a, b = self.terminal_id('a'), self.terminal_id('b')
+        # Two devices in the same browser (e.g. two tabs) share their session.
+        a, b = self.device_id('a'), self.device_id('b')
         messages = [
             {'type': 'announce', 'from': a},
             {'type': 'announce', 'from': b, 'to': a},
@@ -90,7 +90,7 @@ class TestWebrtcSignal(TestPointOfSaleHttpCommon, BusCase):
             return {'type': 'answer', 'from': 'b', 'to': 'a', 'attempt': 1, 'sdp': self.answer_sdp, **values}
 
         invalid_messages = {
-            # Only an announce can be sent to every terminal.
+            # Only an announce can be sent to every device.
             'offer without to': {k: v for k, v in offer().items() if k != 'to'},
             'answer without to': {k: v for k, v in answer().items() if k != 'to'},
             # Ids.
@@ -130,7 +130,7 @@ class TestWebrtcSignal(TestPointOfSaleHttpCommon, BusCase):
         self.authenticate('pos_user', 'pos_user')
         # A real session description, with its candidates, is a few KB.
         message = {
-            'type': 'offer', 'from': self.terminal_id('a'), 'to': 'b', 'attempt': 1,
+            'type': 'offer', 'from': self.device_id('a'), 'to': 'b', 'attempt': 1,
             'sdp': {'type': 'offer', 'sdp': 'v' * 60_000},
         }
         with self.assertBus([self.expected(message)]):
@@ -143,16 +143,16 @@ class TestWebrtcSignal(TestPointOfSaleHttpCommon, BusCase):
 
     @mute_logger('odoo.http')
     def test_reject_forged_sender(self):
-        """ A terminal can only send messages from an id of its own session: another
+        """ A device can only send messages from an id of its own session: another
         user of the config can't pretend to be it, even with its id. """
         self.authenticate('pos_user', 'pos_user')
-        victim = self.terminal_id('victim')
+        victim = self.device_id('victim')
         cases = {
             # Seen on the channel of the config, used from another session.
             'id of another user': ('pos_admin', lambda: victim),
             'id of another session of the same user': ('pos_user', lambda: victim),
             'id without session tag': ('pos_user', lambda: 'victim'),
-            'own tag not at the end': ('pos_user', lambda: f"{self.terminal_id('x')}.victim"),
+            'own tag not at the end': ('pos_user', lambda: f"{self.device_id('x')}.victim"),
         }
         for case, (login, sender) in cases.items():
             with self.subTest(case=case):
@@ -163,9 +163,9 @@ class TestWebrtcSignal(TestPointOfSaleHttpCommon, BusCase):
 
     def test_sender_id_survives_session_rotation(self):
         """ The session id is rotated every few hours while the PoS stays open: the
-        terminal keeps its id, and can still send messages. """
+        device keeps its id, and can still send messages. """
         session = self.authenticate('pos_user', 'pos_user')
-        a = self.terminal_id('a')
+        a = self.device_id('a')
         old_sid = session.sid
         # What the server does to a session older than SESSION_ROTATION_INTERVAL.
         session_store().rotate(session, self.env, soft=True)
@@ -194,7 +194,7 @@ class TestWebrtcSignal(TestPointOfSaleHttpCommon, BusCase):
         other_config = self.env['pos.config'].create({'name': 'Other shop'})
         other_config._ensure_access_token()
         self.authenticate('pos_user', 'pos_user')
-        message = {'type': 'announce', 'from': self.terminal_id('a')}
+        message = {'type': 'announce', 'from': self.device_id('a')}
         with self.assertBus([self.expected(message)]):
             self.signal(message)
         with self.assertBus([self.expected(message, other_config)]):
@@ -203,7 +203,7 @@ class TestWebrtcSignal(TestPointOfSaleHttpCommon, BusCase):
 
 @tagged('post_install', '-at_install')
 class TestWebrtcChannel(TestPointOfSaleHttpCommon, WebsocketCase):
-    """ The signaling messages contain the network addresses of the terminals:
+    """ The signaling messages contain the network addresses of the devices:
     only the users of the config receive them, not the customer display nor the
     self order, which know the access token of the config. """
 
@@ -245,7 +245,7 @@ class TestWebrtcChannel(TestPointOfSaleHttpCommon, WebsocketCase):
         config._ensure_access_token()
         private_channel = f"pos.config_webrtc_{config.id}"
         new_test_user(self.env, login='no_pos', password='no_pos', groups='base.group_user')
-        terminal = self.connect('pos_user', [private_channel])
+        device = self.connect('pos_user', [private_channel])
         # The customer display and the self order subscribe to the access token.
         customer_display = self.connect(None, [config.access_token])
         public_asking = self.connect(None, [config.access_token, private_channel])
@@ -257,7 +257,7 @@ class TestWebrtcChannel(TestPointOfSaleHttpCommon, WebsocketCase):
         self.trigger_notification_dispatching()
 
         self.assertEqual(
-            self.received_signals(terminal, timeout=5),
+            self.received_signals(device, timeout=5),
             [{'type': f"WEBRTC_SIGNAL-{config.id}", 'payload': message}],
         )
         # The notification was dispatched to every websocket at once.
@@ -273,27 +273,27 @@ class TestWebrtcChannel(TestPointOfSaleHttpCommon, WebsocketCase):
     def test_other_config_channel(self):
         """ The WebRTC channel of a config doesn't receive the signals of another config. """
         other_config = self.env['pos.config'].create({'name': 'Other shop'})
-        terminal = self.connect('pos_user', [f"pos.config_webrtc_{other_config.id}"])
-        other_terminal = self.connect('pos_user', [f"pos.config_webrtc_{self.main_pos_config.id}"])
+        device = self.connect('pos_user', [f"pos.config_webrtc_{other_config.id}"])
+        other_device = self.connect('pos_user', [f"pos.config_webrtc_{self.main_pos_config.id}"])
 
         self.main_pos_config._webrtc_signal({'type': 'announce', 'from': 'a.tag'}, sender_tag='tag')
         self.trigger_notification_dispatching()
 
-        self.assertEqual(len(self.received_signals(other_terminal, timeout=5)), 1)
-        self.assertEqual(self.received_signals(terminal, timeout=0.5), [])
+        self.assertEqual(len(self.received_signals(other_device, timeout=5)), 1)
+        self.assertEqual(self.received_signals(device, timeout=0.5), [])
 
 
 @tagged('post_install', '-at_install')
 class TestWebrtcUi(TestPointOfSaleHttpCommon):
-    """ Terminals of the same PoS, each one in its own browser, connect to each
-    other and say "Hi". The ids of the terminals are fixed by the tests (see
+    """ Devices of the same PoS, each one in its own browser, connect to each
+    other and say "Hi". The ids of the devices are fixed by the tests (see
     `patchWebrtcForTests` in the tours), so that the tours know which one sends
     the offer. """
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        # A third cashier, for the tests with three terminals.
+        # A third cashier, for the tests with three devices.
         cls.pos_user_2 = cls.env['res.users'].create({
             'name': 'Another PoS man',
             'login': 'pos_user_2',
@@ -304,12 +304,12 @@ class TestWebrtcUi(TestPointOfSaleHttpCommon):
             ],
         })
 
-    def start_terminals(self, *terminals):
-        """ Open the terminals in the given order, and run their tours at the same time.
+    def start_devices(self, *devices):
+        """ Open the devices in the given order, and run their tours at the same time.
 
-        :param terminals: one `(tour_name, terminal_id, login)` tuple per terminal
+        :param devices: one `(tour_name, device_id, login)` tuple per device
         """
-        # Open the session beforehand, so that the terminals don't try to open it.
+        # Open the session beforehand, so that the devices don't try to open it.
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.main_pos_config.current_session_id.set_opening_control(0, "")
         url = f"{self._get_url()}?debug_webrtc=1"
@@ -318,101 +318,101 @@ class TestWebrtcUi(TestPointOfSaleHttpCommon):
                 'url_path': url,
                 'tour_name': tour_name,
                 'login': login,
-                'cookies': {'webrtc_test_id': terminal_id},
-                # Open the next terminal once this one has announced itself,
-                # so that the order of the announces is the order of the terminals.
+                'cookies': {'webrtc_test_id': device_id},
+                # Open the next device once this one has announced itself,
+                # so that the order of the announces is the order of the devices.
                 'ready': f"""odoo.isTourReady({tour_name!r}) && window.posmodel?.webrtc.logger.logs().some(
                     (log) => log.type === "signal" && log.text === "sent announce to all"
                 )""",
             }
-            for tour_name, terminal_id, login in terminals
+            for tour_name, device_id, login in devices
         ))
 
     def test_webrtc_smaller_first(self):
-        """ The terminal with the smaller id is already open when the other one
+        """ The device with the smaller id is already open when the other one
         announces itself: it sends the offer right away. """
-        self.start_terminals(
-            ('test_webrtc_smaller_first_t1', 'terminal1', 'pos_user'),
-            ('test_webrtc_smaller_first_t2', 'terminal2', 'pos_admin'),
+        self.start_devices(
+            ('test_webrtc_smaller_first_t1', 'device1', 'pos_user'),
+            ('test_webrtc_smaller_first_t2', 'device2', 'pos_admin'),
         )
 
     def test_webrtc_bigger_first(self):
-        """ The terminal with the bigger id is already open when the other one
+        """ The device with the bigger id is already open when the other one
         announces itself: it announces itself back to the newcomer, which sends
         the offer. """
-        self.start_terminals(
-            ('test_webrtc_bigger_first_t2', 'terminal2', 'pos_user'),
-            ('test_webrtc_bigger_first_t1', 'terminal1', 'pos_admin'),
+        self.start_devices(
+            ('test_webrtc_bigger_first_t2', 'device2', 'pos_user'),
+            ('test_webrtc_bigger_first_t1', 'device1', 'pos_admin'),
         )
 
-    def test_webrtc_three_terminals(self):
-        """ Three terminals: each pair connects once, and each terminal receives
+    def test_webrtc_three_devices(self):
+        """ Three devices: each pair connects once, and each device receives
         the "Hi" of the two other ones. """
-        self.start_terminals(
-            ('test_webrtc_three_t1', 'terminal1', 'pos_user'),
-            ('test_webrtc_three_t2', 'terminal2', 'pos_admin'),
-            ('test_webrtc_three_t3', 'terminal3', 'pos_user_2'),
+        self.start_devices(
+            ('test_webrtc_three_t1', 'device1', 'pos_user'),
+            ('test_webrtc_three_t2', 'device2', 'pos_admin'),
+            ('test_webrtc_three_t3', 'device3', 'pos_user_2'),
         )
 
     def test_webrtc_leave(self):
-        """ A terminal leaving the PoS (e.g. its tab is closed) says goodbye and
-        closes its connections: the other terminals remove it from their peers,
+        """ A device leaving the PoS (e.g. its tab is closed) says goodbye and
+        closes its connections: the other devices remove it from their peers,
         without any signaling nor trying to reconnect to it, and keep talking to
         each other. """
-        self.start_terminals(
-            ('test_webrtc_leave_t1', 'terminal1', 'pos_user'),
-            ('test_webrtc_leave_t2', 'terminal2', 'pos_admin'),
-            ('test_webrtc_leave_t3', 'terminal3', 'pos_user_2'),
+        self.start_devices(
+            ('test_webrtc_leave_t1', 'device1', 'pos_user'),
+            ('test_webrtc_leave_t2', 'device2', 'pos_admin'),
+            ('test_webrtc_leave_t3', 'device3', 'pos_user_2'),
         )
 
     def test_webrtc_reload(self):
-        """ A terminal reloading its page comes back with a new id: the other
-        terminal ends up with a single peer, the new one (no ghost of the old
+        """ A device reloading its page comes back with a new id: the other
+        device ends up with a single peer, the new one (no ghost of the old
         id), and they talk again. """
-        self.start_terminals(
-            ('test_webrtc_reload_t1', 'terminal1', 'pos_user'),
-            ('test_webrtc_reload_t2', 'terminal2', 'pos_admin'),
+        self.start_devices(
+            ('test_webrtc_reload_t1', 'device1', 'pos_user'),
+            ('test_webrtc_reload_t2', 'device2', 'pos_admin'),
         )
 
     def test_webrtc_back_forward_cache(self):
-        """ A terminal leaving its page and coming back to it from the
+        """ A device leaving its page and coming back to it from the
         back/forward cache closed its connections when leaving: it comes back
         with a new id, announces itself again, and reconnects to the other
-        terminal, which ends up with a single peer. The cache is simulated:
+        device, which ends up with a single peer. The cache is simulated:
         Chrome never caches the PoS, other browsers might. """
-        self.start_terminals(
-            ('test_webrtc_back_forward_cache_t1', 'terminal1', 'pos_user'),
-            ('test_webrtc_back_forward_cache_t2', 'terminal2', 'pos_admin'),
+        self.start_devices(
+            ('test_webrtc_back_forward_cache_t1', 'device1', 'pos_user'),
+            ('test_webrtc_back_forward_cache_t2', 'device2', 'pos_admin'),
         )
 
     def test_webrtc_announce_again_bigger(self):
-        """ A connected terminal with the bigger id announcing itself again
+        """ A connected device with the bigger id announcing itself again
         (e.g. when its websocket reconnects) keeps its connection: the other
-        terminal doesn't send a new offer. """
-        self.start_terminals(
-            ('test_webrtc_announce_again_bigger_t1', 'terminal1', 'pos_user'),
-            ('test_webrtc_announce_again_bigger_t2', 'terminal2', 'pos_admin'),
+        device doesn't send a new offer. """
+        self.start_devices(
+            ('test_webrtc_announce_again_bigger_t1', 'device1', 'pos_user'),
+            ('test_webrtc_announce_again_bigger_t2', 'device2', 'pos_admin'),
         )
 
     def test_webrtc_announce_again_smaller(self):
-        """ A connected terminal with the smaller id announcing itself again
-        keeps its connection: the other terminal doesn't announce itself back,
+        """ A connected device with the smaller id announcing itself again
+        keeps its connection: the other device doesn't announce itself back,
         which would make the first one send a new offer. """
-        self.start_terminals(
-            ('test_webrtc_announce_again_smaller_t1', 'terminal1', 'pos_user'),
-            ('test_webrtc_announce_again_smaller_t2', 'terminal2', 'pos_admin'),
+        self.start_devices(
+            ('test_webrtc_announce_again_smaller_t1', 'device1', 'pos_user'),
+            ('test_webrtc_announce_again_smaller_t2', 'device2', 'pos_admin'),
         )
 
     def test_webrtc_server_cut(self):
-        """ Connected terminals cut from the server keep talking to each other.
+        """ Connected devices cut from the server keep talking to each other.
         Once back, they announce themselves again, and keep their connection. """
-        self.start_terminals(
-            ('test_webrtc_server_cut_t1', 'terminal1', 'pos_user'),
-            ('test_webrtc_server_cut_t2', 'terminal2', 'pos_admin'),
+        self.start_devices(
+            ('test_webrtc_server_cut_t1', 'device1', 'pos_user'),
+            ('test_webrtc_server_cut_t2', 'device2', 'pos_admin'),
         )
 
     def test_webrtc_alone(self):
-        """ A terminal alone announces itself, and has nobody to talk to. """
-        self.start_terminals(
-            ('test_webrtc_alone', 'terminal1', 'pos_user'),
+        """ A device alone announces itself, and has nobody to talk to. """
+        self.start_devices(
+            ('test_webrtc_alone', 'device1', 'pos_user'),
         )

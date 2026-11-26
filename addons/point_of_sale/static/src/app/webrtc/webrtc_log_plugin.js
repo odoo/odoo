@@ -1,10 +1,7 @@
 import { Plugin, computed, proxy, signal } from "@odoo/owl";
 import { services } from "@web/core/services";
 
-// ----- Log types ----- //
-
-// Color of each type of logs: a Bootstrap color for the badge of the popup, a
-// CSS color for the console.
+// Color of each type of logs
 export const LOG_TYPES = {
     lifecycle: { badge: "dark", console: "#adb5bd" },
     signal: { badge: "info", console: "#17a2b8" },
@@ -15,19 +12,19 @@ export const LOG_TYPES = {
     error: { badge: "danger", console: "#dc3545" },
 };
 
-// Hiding a type of logs doesn't free them: keep the last ones only.
+// Storage of the logs and of their settings.
 const MAX_LOGS = 500;
 const SETTINGS_KEY = "point_of_sale.webrtc_log_settings";
-// Pads the type and the peer so that the logs are aligned in the console.
+
+// Column widths, so that the console logs are aligned.
 const TYPE_WIDTH = Math.max(...Object.keys(LOG_TYPES).map((type) => type.length));
-const PEER_WIDTH = 8; // length of `shortId` of a uuid
+const PEER_WIDTH = 8;
 
 // ----- Plugin ----- //
 
 /**
- * Logs of the WebRTC plugin, shown in the WebRTC debug popup and optionally
- * printed in the console. The settings (hidden types, console) are kept in the
- * local storage, so that they survive a reload.
+ * Keeps the logs of the WebRTC plugin, to show in the debug popup or in the
+ * console what happened between the devices.
  */
 export class WebRtcLogPlugin extends Plugin {
     logs = signal.Array([]);
@@ -35,11 +32,6 @@ export class WebRtcLogPlugin extends Plugin {
     settings = proxy(this.loadSettings());
     nextId = 1;
 
-    /**
-     * @param {string} type - a key of `LOG_TYPES`
-     * @param {string} text
-     * @param {string} [peer] - id of the other terminal, if any
-     */
     log(type, text, peer = null) {
         const log = this.add(type, text, peer);
         if (this.settings.toConsole && !this.isHidden(type)) {
@@ -47,9 +39,6 @@ export class WebRtcLogPlugin extends Plugin {
         }
     }
 
-    /**
-     * Always printed with `console.error`, whatever the settings.
-     */
     logError(text, error, peer = null) {
         this.add("error", `${text}: ${error?.message || error}`, peer);
         console.error(`[WebRTC] ${text}${peer ? ` (${peer})` : ""}`, error);
@@ -73,16 +62,12 @@ export class WebRtcLogPlugin extends Plugin {
 
     loadSettings() {
         const settings = { hiddenTypes: [], toConsole: false };
-        try {
-            const saved = JSON.parse(localStorage.getItem(SETTINGS_KEY));
-            if (Array.isArray(saved?.hiddenTypes)) {
-                settings.hiddenTypes = saved.hiddenTypes.filter((type) => type in LOG_TYPES);
-            }
-            if (typeof saved?.toConsole === "boolean") {
-                settings.toConsole = saved.toConsole;
-            }
-        } catch {
-            // Storage unavailable or invalid value: default settings.
+        const saved = JSON.parse(localStorage.getItem(SETTINGS_KEY));
+        if (Array.isArray(saved?.hiddenTypes)) {
+            settings.hiddenTypes = saved.hiddenTypes.filter((type) => type in LOG_TYPES);
+        }
+        if (typeof saved?.toConsole === "boolean") {
+            settings.toConsole = saved.toConsole;
         }
         return settings;
     }
@@ -91,9 +76,6 @@ export class WebRtcLogPlugin extends Plugin {
         return this.settings.hiddenTypes.includes(type);
     }
 
-    /**
-     * Shows or hides a type of logs, in the popup and in the console.
-     */
     toggleType(type) {
         const { hiddenTypes } = this.settings;
         if (this.isHidden(type)) {
@@ -110,22 +92,12 @@ export class WebRtcLogPlugin extends Plugin {
     }
 
     saveSettings() {
-        try {
-            localStorage.setItem(SETTINGS_KEY, JSON.stringify(this.settings));
-        } catch {
-            // Storage unavailable (e.g. private mode): the settings last until the reload.
-        }
+        localStorage.setItem(SETTINGS_KEY, JSON.stringify(this.settings));
     }
 
     // ----- Helpers ----- //
 
-    /**
-     * @param {string} id - id of a terminal, a uuid
-     * @returns {string} the first part of the id, enough to tell the terminals apart
-     */
     shortId(id) {
-        // The start of the uuid (or the name of a test terminal), without the
-        // tag of the session.
         return id.split(/[-.]/)[0];
     }
 

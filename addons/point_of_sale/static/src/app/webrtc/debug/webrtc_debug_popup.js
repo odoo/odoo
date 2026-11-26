@@ -1,7 +1,7 @@
-import { Component, onMounted, proxy, signal, t, useProps } from "@odoo/owl";
+import { Component, proxy, t, useProps } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
-import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { LOG_TYPES } from "@point_of_sale/app/webrtc/webrtc_log_plugin";
+import { useWebRtc } from "@point_of_sale/app/webrtc/webrtc_plugin";
 
 const STATE_BADGES = {
     connected: "text-bg-success",
@@ -20,15 +20,10 @@ export class WebrtcDebugPopup extends Component {
     });
 
     setup() {
-        this.pos = usePos();
-        this.webrtc = this.pos.webrtc;
+        this.webrtc = useWebRtc();
         this.logger = this.webrtc.logger;
         this.logTypes = Object.keys(LOG_TYPES);
         this.state = proxy({ tab: "actions" });
-
-        // Focus the dialog, not its first tab (which would show a focus ring).
-        this.modalRef = signal.ref();
-        onMounted(() => this.modalRef()?.focus());
     }
 
     get peers() {

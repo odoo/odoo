@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.WebrtcDebugPopup">
-        <Dialog bodyClass="'d-flex flex-column gap-3 pt-0'" footer="false" title.translate="WebRTC" backdrop="true" size="'md'" modalRef="this.modalRef">
+        <Dialog bodyClass="'d-flex flex-column gap-3 pt-0'" footer="false" title.translate="WebRTC" backdrop="true" size="'md'">
+            <!-- ===== Tabs ===== -->
             <ul class="nav nav-tabs">
                 <li class="nav-item">
                     <button class="nav-link" t-att-class="{ active: this.state.tab === 'actions' }"
@@ -23,7 +24,7 @@
                 </li>
             </ul>
 
-            <!-- Fixed grid: the shared control buttons CSS would make few buttons very large. -->
+            <!-- ===== Actions tab ===== -->
             <div t-if="this.state.tab === 'actions'" class="control-buttons control-buttons-modal d-grid gap-2"
                 style="--grid-columns: 3; --oi-font-size: 1.5rem;">
                 <t t-call="point_of_sale.controlButton"
@@ -39,12 +40,15 @@
                     onClick="() => this.announce()"/>
             </div>
 
+            <!-- ===== Peers tab ===== -->
             <div t-if="this.state.tab === 'peers'" class="d-flex flex-column gap-2">
+                <!-- This device -->
                 <div class="d-flex align-items-center gap-2 p-2 rounded bg-100">
                     <i class="oi text-info" data-icon="account_tree" aria-hidden="true"/>
-                    <span class="fw-bold">This terminal</span>
+                    <span class="fw-bold">This device</span>
                     <code class="ms-auto" t-out="this.webrtc.id"/>
                 </div>
+                <!-- Other devices -->
                 <div t-if="!this.peers.length" class="text-muted text-center py-3">No peer yet.</div>
                 <div t-foreach="this.peers" t-as="peer" t-key="peer.id"
                     class="o_webrtc_peer d-flex align-items-center gap-2 p-2 border rounded"
@@ -54,7 +58,9 @@
                 </div>
             </div>
 
+            <!-- ===== Logs tab ===== -->
             <div t-if="this.state.tab === 'logs'" class="d-flex flex-column gap-2">
+                <!-- Toolbar: print in the console, clear -->
                 <div class="d-flex align-items-center gap-2">
                     <div class="form-check form-switch mb-0">
                         <input id="o_webrtc_log_to_console" class="form-check-input" type="checkbox"
@@ -66,6 +72,7 @@
                         t-att-disabled="!this.logger.logs().length"
                         t-on-click="() => this.logger.clear()">Clear</button>
                 </div>
+                <!-- Filters by log type -->
                 <div class="d-flex flex-wrap gap-1">
                     <button t-foreach="this.logTypes" t-as="type" t-key="type"
                         t-attf-class="o_webrtc_log_type btn btn-sm {{ this.logger.isHidden(type) ? 'btn-outline-info' : 'btn-info' }}"
@@ -74,6 +81,7 @@
                         t-on-click="() => this.logger.toggleType(type)"
                         t-out="type"/>
                 </div>
+                <!-- Log list -->
                 <div t-if="!this.logger.visibleLogs().length" class="text-muted text-center py-3">No log yet.</div>
                 <div t-foreach="this.logger.visibleLogs()" t-as="log" t-key="log.id"
                     class="o_webrtc_log d-flex align-items-center gap-2 p-2 border rounded"

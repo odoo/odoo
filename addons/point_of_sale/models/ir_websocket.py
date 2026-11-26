@@ -3,7 +3,7 @@ import re
 
 from odoo import models
 
-# Asked by a PoS terminal to receive the WebRTC signaling of its config.
+# Channel requested by the PoS (`pos.config_webrtc_<id>`), replaced by `(config, "webrtc")` if allowed.
 WEBRTC_CHANNEL_PREFIX = "pos.config_webrtc_"
 WEBRTC_CHANNEL_REGEX = re.compile(rf"^{re.escape(WEBRTC_CHANNEL_PREFIX)}(\d+)$")
 
@@ -12,10 +12,9 @@ class IrWebsocket(models.AbstractModel):
     _inherit = 'ir.websocket'
 
     def _build_bus_channel_list(self, channels):
-        # The signaling messages contain the network addresses of the terminals:
-        # unlike the access token channel of the config, known by the customer
-        # display and the self order, this channel is only given to the users
-        # who can read the config.
+        # The signaling messages contain the network addresses of the devices,
+        # which are private data: `pos.config_webrtc_<id>` is only accepted if
+        # the user can read the config.
         config_ids = set()
         other_channels = []
         for channel in channels:

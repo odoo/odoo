@@ -12,13 +12,13 @@ import {
 import { WebRtcLogPlugin } from "@point_of_sale/app/webrtc/webrtc_log_plugin";
 import { setupPosEnv } from "../utils";
 
-// Helpers of the WebRTC unit tests. The terminal under test runs the real
+// Helpers of the WebRTC unit tests. The device under test runs the real
 // plugin, on the real bus (mock websocket), with a fake RTCPeerConnection. The
-// other terminals are simulated: their signaling messages are sent on the bus.
+// other devices are simulated: their signaling messages are sent on the bus.
 
-export const T1 = "terminal1";
-export const T2 = "terminal2";
-export const T3 = "terminal3";
+export const T1 = "device1";
+export const T2 = "device2";
+export const T3 = "device3";
 
 // ----- Fake WebRTC ----- //
 
@@ -31,8 +31,8 @@ export class FakeDataChannel {
     /** @type {Object[]} messages sent, parsed, heartbeat included */
     sent = [];
     /**
-     * Whether the other terminal answers the pings. Set it to false for a
-     * terminal that stopped answering (crashed, frozen, network down).
+     * Whether the other device answers the pings. Set it to false for a
+     * device that stopped answering (crashed, frozen, network down).
      */
     answerPings = true;
 
@@ -76,14 +76,14 @@ export class FakeDataChannel {
     }
 
     /**
-     * Simulates a message sent by the other terminal. Like a message already
+     * Simulates a message sent by the other device. Like a message already
      * on its way when the channel closes, it is received even once closed.
      */
     receive(message) {
         this.receiveRaw(JSON.stringify(message));
     }
 
-    /** Simulates data sent by the other terminal, valid or not. */
+    /** Simulates data sent by the other device, valid or not. */
     receiveRaw(data) {
         this.onmessage?.({ data });
     }
@@ -185,15 +185,15 @@ export class FakeRTCPeerConnection {
 
 // ----- Setup ----- //
 
-/** Signaling messages sent by the terminal under test, in order. */
+/** Signaling messages sent by the device under test, in order. */
 let sentMessages = [];
 
 /**
- * Prepares the terminal under test, before `setupPosEnv` starts it:
- * - its id is `id`, so that the tests know which terminal sends the offer;
+ * Prepares the device under test, before `setupPosEnv` starts it:
+ * - its id is `id`, so that the tests know which device sends the offer;
  * - `RTCPeerConnection` is fake;
  * - the signaling route relays the messages on the bus, like the server, and
- *   adds a step per message relayed (e.g. "offer to terminal2", "announce to
+ *   adds a step per message relayed (e.g. "offer to device2", "announce to
  *   all"), see also `lastSent`. While `server.reachable` is false, it fails and
  *   relays nothing. While `server.error` is set, it fails with this error.
  *   While `server.held` is a promise, it waits for it before answering
@@ -201,7 +201,7 @@ let sentMessages = [];
  * - the errors are only kept in the logs: `console.error` would fail the test.
  *
  * @param {Object} [params]
- * @param {string|null} [params.id] - id of the terminal under test (null: a real one)
+ * @param {string|null} [params.id] - id of the device under test (null: a real one)
  * @returns {{ server: {
  *  reachable: boolean,
  *  error: Error|null,
@@ -212,7 +212,7 @@ let sentMessages = [];
 export function setupWebrtc({ id = T1 } = {}) {
     const server = { reachable: true, error: null, held: null, waiting: 0 };
     sentMessages = [];
-    // `id: null`: the terminal builds its ids as in real life.
+    // `id: null`: the device builds its ids as in real life.
     if (id) {
         patch(WebRtcPlugin.prototype, {
             newId: () => id,
@@ -256,18 +256,18 @@ export function holdIceGathering() {
 /**
  * @param {string} type
  * @returns {Object|undefined} last signaling message of that type sent by the
- *  terminal under test
+ *  device under test
  */
 export function lastSent(type) {
     return sentMessages.findLast((message) => message.type === type);
 }
 
 /**
- * Starts the PoS, and waits for the terminal to listen to the bus: before, the
- * signaling messages of the other terminals don't reach it, and the websocket
+ * Starts the PoS, and waits for the device to listen to the bus: before, the
+ * signaling messages of the other devices don't reach it, and the websocket
  * can't be dropped.
  */
-export async function startTerminal() {
+export async function startDevice() {
     const store = await setupPosEnv();
     // Without WebRTC, the plugin doesn't listen to its channel.
     await waitForChannels(
@@ -278,7 +278,7 @@ export async function startTerminal() {
 
 /**
  * Sends a signaling message on the bus, like the server, without waiting for
- * the terminal under test to receive it (see `receiveSignal`).
+ * the device under test to receive it (see `receiveSignal`).
  */
 export function sendOnBus(message) {
     // The mock server gives the channel as asked: who may get it is tested
@@ -291,10 +291,10 @@ export function sendOnBus(message) {
     );
 }
 
-// ----- Other terminals ----- //
+// ----- Other devices ----- //
 
 /**
- * Sends a signaling message from another terminal, and waits for the terminal
+ * Sends a signaling message from another device, and waits for the device
  * under test to receive it.
  */
 export async function receiveSignal(webrtc, message) {
@@ -310,7 +310,7 @@ function countLogs(webrtc, text) {
 }
 
 /**
- * The other terminal answers `offer`, sent by the terminal under test.
+ * The other device answers `offer`, sent by the device under test.
  */
 export async function receiveAnswer(webrtc, offer, sdp = "fake answer") {
     await receiveSignal(webrtc, {
@@ -334,8 +334,8 @@ export function loggedErrors(webrtc) {
 }
 
 /**
- * Connects the terminal under test to `peerId`, a bigger id: the other terminal
- * announces itself, the terminal under test sends the offer, receives the
+ * Connects the device under test to `peerId`, a bigger id: the other device
+ * announces itself, the device under test sends the offer, receives the
  * answer, and the connection and its data channel open.
  *
  * @returns {Promise<FakeRTCPeerConnection>}
@@ -347,7 +347,7 @@ export async function connectTo(webrtc, peerId) {
 }
 
 /**
- * The other terminal answers the last offer sent to it, and the connection and
+ * The other device answers the last offer sent to it, and the connection and
  * its data channel open.
  *
  * @returns {Promise<FakeRTCPeerConnection>}
@@ -362,14 +362,14 @@ export async function acceptOffer(webrtc, peerId) {
 }
 
 /**
- * Connects the terminal under test to `peerId`, a smaller id: the other
- * terminal sends an offer, the terminal under test answers, and the connection
- * and the data channel created by the other terminal open.
+ * Connects the device under test to `peerId`, a smaller id: the other
+ * device sends an offer, the device under test answers, and the connection
+ * and the data channel created by the other device open.
  *
  * @param {Object} webrtc
  * @param {string} peerId
  * @param {Object} [params]
- * @param {number} [params.attempt] - number of the offer of the other terminal
+ * @param {number} [params.attempt] - number of the offer of the other device
  * @returns {Promise<FakeRTCPeerConnection>}
  */
 export async function connectFrom(webrtc, peerId, { attempt = 1 } = {}) {

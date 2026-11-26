@@ -8,31 +8,31 @@ import { session } from "@web/session";
 // browsers (see `test_webrtc.py`), on the same PoS opened with `debug=webrtc`,
 // and wait for each other through the WebRTC debug popup.
 
-// Names of the terminals, given by the tests (see `patchWebrtcForTests`). Their
+// Names of the devices, given by the tests (see `patchWebrtcForTests`). Their
 // ids are `<name>.<tag of their session>`: the tours, which don't know the tags
-// of the other terminals, use the names. No "-" nor "." in them: the logs only
+// of the other devices, use the names. No "-" nor "." in them: the logs only
 // show the part of the id before the first one.
-export const T1 = "terminal1";
-export const T2 = "terminal2";
-export const T3 = "terminal3";
+export const T1 = "device1";
+export const T2 = "device2";
+export const T3 = "device3";
 
-/** The name of a terminal, from its id. */
-function terminalName(id) {
+/** The name of a device, from its id. */
+function deviceName(id) {
     return id?.split(".")[0];
 }
 
 // ----- Patches ----- //
 
 // A reloaded page, or one restored from the back/forward cache, gets a new
-// terminal id, as a real one gets a new uuid: kept in the session storage of the
+// device id, as a real one gets a new uuid: kept in the session storage of the
 // tab (see `reloadAs` and `backFromCacheAs`), it wins over the cookie.
 const TEST_ID_KEY = "webrtc_test_id";
 
 /**
  * Patches the WebRTC plugins for the tests:
- * - the terminal id comes from the `webrtc_test_id` cookie (or from `reloadAs`
+ * - the device id comes from the `webrtc_test_id` cookie (or from `reloadAs`
  *   and `backFromCacheAs`),
- *   so that the tests know which terminal has the smaller id, i.e. sends the offer;
+ *   so that the tests know which device has the smaller id, i.e. sends the offer;
  * - the signaling messages being sent are kept, so that a tour can wait for them
  *   (see `waitSignalingSent`);
  * - the errors are only kept in the logs: `console.error` would fail the tour.
@@ -108,7 +108,7 @@ function connectedPeerSelector(peer) {
 /**
  * @param {Object} params
  * @param {string} params.type - type of the log (e.g. "signal", "message")
- * @param {string} [params.peer] - name of the other terminal
+ * @param {string} [params.peer] - name of the other device
  * @param {string} [params.text] - exact text of the log
  * @param {string} [params.textStart] - start of the text of the log
  */
@@ -159,7 +159,7 @@ export function broadcast(text) {
 }
 
 /**
- * Announces the terminal again, with the button of the popup.
+ * Announces the device again, with the button of the popup.
  */
 export function announceAgain() {
     return [
@@ -178,15 +178,15 @@ export function announceAgain() {
 }
 
 /**
- * Cuts the terminal from the server: the bus closes its websocket, as when the
+ * Cuts the device from the server: the bus closes its websocket, as when the
  * browser goes offline, and doesn't try to reconnect. The connections between
- * the terminals don't go through the server. Only the `offline` event is
- * simulated: the server stays up, so that the terminal can come back to it
+ * the devices don't go through the server. Only the `offline` event is
+ * simulated: the server stays up, so that the device can come back to it
  * (see `reconnectServer`).
  */
 export function cutServer() {
     return {
-        content: "Cut the terminal from the server",
+        content: "Cut the device from the server",
         trigger: ".modal",
         run: () =>
             new Promise((resolve) => {
@@ -197,19 +197,19 @@ export function cutServer() {
 }
 
 /**
- * Reconnects a terminal cut by `cutServer`, and waits for it to announce itself
+ * Reconnects a device cut by `cutServer`, and waits for it to announce itself
  * again. The logs must have been cleared before.
  */
 export function reconnectServer() {
     return [
         {
-            content: "Reconnect the terminal to the server",
+            content: "Reconnect the device to the server",
             trigger: ".modal",
             run: () => window.dispatchEvent(new Event("online")),
         },
         openTab("Logs"),
         {
-            content: "Wait for the terminal to announce itself again",
+            content: "Wait for the device to announce itself again",
             trigger: logSelector({ type: "signal", text: "sent announce to all" }),
             // The bus waits a few seconds before reconnecting once back online.
             timeout: 20000,
@@ -218,7 +218,7 @@ export function reconnectServer() {
 }
 
 /**
- * Reloads the page, which comes back with the terminal id `id`.
+ * Reloads the page, which comes back with the device id `id`.
  */
 export function reloadAs(id) {
     return {
@@ -248,7 +248,7 @@ export function leaveToCache() {
 
 /**
  * Simulates coming back to the page restored from the back/forward cache, which
- * comes back with the terminal id `id`.
+ * comes back with the device id `id`.
  */
 export function backFromCacheAs(id) {
     return {
@@ -306,7 +306,7 @@ export function waitPeersConnected(peers) {
 }
 
 /**
- * Waits for the announce of `peer` to be ignored, since this terminal is
+ * Waits for the announce of `peer` to be ignored, since this device is
  * already connected to it.
  */
 export function waitAnnounceIgnored(peer) {
@@ -374,7 +374,7 @@ export function waitPeerLeft(peer, remaining) {
 // ----- Checks ----- //
 
 /**
- * Checks that the peers are exactly `peers`, e.g. no ghost of a reloaded terminal.
+ * Checks that the peers are exactly `peers`, e.g. no ghost of a reloaded device.
  */
 export function checkPeers(peers) {
     return {
@@ -382,7 +382,7 @@ export function checkPeers(peers) {
         trigger: ".modal",
         run: () => {
             // Read from the plugin rather than from the popup, like `getLogs`.
-            const ids = [...posmodel.webrtc.peerStates().keys()].map(terminalName);
+            const ids = [...posmodel.webrtc.peerStates().keys()].map(deviceName);
             assertSameItems(ids, peers, "Peers");
         },
     };
@@ -426,7 +426,7 @@ function checkOneHiFromEachPeer(peers) {
             trigger: logSelector({ type: "message" }),
             run: () => {
                 const senders = getLogs("message")
-                    .map((log) => ({ ...log, peer: terminalName(log.peer) }))
+                    .map((log) => ({ ...log, peer: deviceName(log.peer) }))
                     .filter((log) => log.text === `received "Hi" from ${log.peer}`)
                     .map((log) => log.peer);
                 assertSameItems(senders, peers, '"Hi" senders');
@@ -436,8 +436,8 @@ function checkOneHiFromEachPeer(peers) {
 }
 
 /**
- * Checks the signaling messages sent and handled by this terminal, whatever
- * their order (e.g. "sent offer to terminal2").
+ * Checks the signaling messages sent and handled by this device, whatever
+ * their order (e.g. "sent offer to device2").
  */
 export function checkSignaling(expected) {
     return [
@@ -464,13 +464,13 @@ function assertSameItems(actual, expected, what) {
 // ----- Tours ----- //
 
 /**
- * Steps of one terminal connecting to the other ones, then saying "Hi". The
- * terminals say "Hi" one after the other: each one waits for the "Hi" of the
- * terminals in `hiAfter` before saying its own.
+ * Steps of one device connecting to the other ones, then saying "Hi". The
+ * devices say "Hi" one after the other: each one waits for the "Hi" of the
+ * devices in `hiAfter` before saying its own.
  *
  * @param {Object} params
- * @param {string[]} params.peers - names of the other terminals
- * @param {string[]} params.hiAfter - ids of the terminals saying "Hi" before this one
+ * @param {string[]} params.peers - names of the other devices
+ * @param {string[]} params.hiAfter - ids of the devices saying "Hi" before this one
  */
 export function connectAndSayHi({ peers, hiAfter }) {
     return [
@@ -483,13 +483,13 @@ export function connectAndSayHi({ peers, hiAfter }) {
 }
 
 /**
- * Tour of one terminal connecting to the other ones, saying "Hi", then checking
+ * Tour of one device connecting to the other ones, saying "Hi", then checking
  * its signaling.
  *
  * @param {Object} params - see `connectAndSayHi`, and:
  * @param {string[]} params.signaling - expected texts of the signaling logs
  */
-export function terminalTour({ peers, hiAfter, signaling }) {
+export function deviceTour({ peers, hiAfter, signaling }) {
     return {
         steps: () =>
             [
