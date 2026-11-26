@@ -341,9 +341,10 @@
                                         <div class="d-flex align-items-start justify-content-between" invisible="not has_multiple_bank_accounts">
                                                 <field name="bank_account_ids"
                                                         widget="many2many_tags_salary_bank"
+                                                        class="flex-grow-1 min-w-0"
                                                         context="{'default_partner_id': work_contact_id}"
                                                         options="{'color_field': 'color', 'no_quick_create': True, 'on_tag_click': 'open_form'}"/>
-                                            <div class="pt-0 ms-2">
+                                            <div class="pt-0 ms-2 flex-shrink-0">
                                                 <button name="action_open_allocation_wizard"
                                                         type="object"
                                                         string="Salary Allocation"
@@ -355,9 +356,10 @@
                                         <div class="o-row d-flex justify-content-between gap-2 align-items-start" invisible="has_multiple_bank_accounts">
                                             <field name="bank_account_ids"
                                                 widget="many2many_tags_salary_bank"
+                                                class="flex-grow-1 min-w-0"
                                                 context="{'default_partner_id': work_contact_id}"
                                                 options="{'color_field': 'color', 'no_quick_create': True, 'on_tag_click': 'open_form'}"/>
-                                            <div class="d-flex align-items-start" invisible="not bank_account_ids">
+                                            <div class="d-flex align-items-start flex-shrink-0" invisible="not bank_account_ids">
                                                 <span class="d-flex w-50">
                                                     <span invisible="is_trusted_bank_account" class="text-muted">Untrusted</span>
                                                     <span invisible="not is_trusted_bank_account" class="text-success">Trusted</span>
