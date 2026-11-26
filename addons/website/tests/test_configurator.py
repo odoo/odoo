@@ -9,9 +9,9 @@ from odoo.tests.common import new_test_user
 
 class TestConfiguratorCommon(odoo.tests.HttpCase):
 
-    def _theme_upgrade_upstream(self):
+    def _theme_upgrade_upstream(self, theme):
         # patch to prevent module install/upgrade during tests, but still generate the snippet templates the configurator needs.
-        self._generate_primary_snippet_templates()
+        self._generate_primary_snippet_templates(theme.ids)
 
     def setUp(self):
         super().setUp()
@@ -90,7 +90,7 @@ class TestConfiguratorCommon(odoo.tests.HttpCase):
         self.startPatcher(iap_patch)
 
         patcher = patch(
-            'odoo.addons.website.models.ir_module_module.IrModuleModule._theme_upgrade_upstream',
+            'odoo.addons.website.models.theme_utils.ThemeUtils._theme_upgrade_upstream',
             new=TestConfiguratorCommon._theme_upgrade_upstream,
         )
         self.startPatcher(patcher)
