@@ -1,8 +1,11 @@
 
+from datetime import UTC
+
 from odoo import api, fields, models
 from odoo.fields import Domain
 from odoo.exceptions import ValidationError
 from odoo.tools import SQL
+from odoo.tools.intervals import Intervals
 
 
 class ResourceCalendar(models.Model):
@@ -46,6 +49,30 @@ class ResourceCalendar(models.Model):
         if self.sudo().version_ids.company_id - self.env.companies:
             raise ValidationError(self.env._("You can't change this working schedule, it's used by employees from other companies you don't have access to. Contact your admin or create a new working schedule."))
         return super().write(vals)
+
+    def _unavailable_intervals_batch(self, start_dt, end_dt, resources_per_tz=None, domain=None):
+        """ Employees with a flexible calendar have no working hours: they are unavailable
+        the whole period, except during their leaves counted as working time (e.g. a
+        training). The other resources keep the ``resource`` behavior. """
+        result = super()._unavailable_intervals_batch(start_dt, end_dt, resources_per_tz, domain)
+        flexible_employees = {
+            resource
+            for resources in (resources_per_tz or {}).values()
+            for resource in resources
+            # sudo: resource.resource - hr.employee is restricted to HR officers
+            if resource.sudo().employee_id and resource._is_flexible()
+        }
+        if not flexible_employees:
+            return result
+        working_time_leaves = self._leave_intervals_batch(
+            start_dt, end_dt, resources_per_tz, [('count_as', '=', 'working_time')])
+        full_interval = Intervals([(start_dt.astimezone(UTC), end_dt.astimezone(UTC), self.env['resource.calendar'])])
+        for resource in flexible_employees:
+            result[resource.id] = full_interval - Intervals([
+                (start.astimezone(UTC), stop.astimezone(UTC), self.env['resource.calendar.attendance'])
+                for start, stop, _leave in working_time_leaves[resource.id]
+            ])
+        return result
 
     def _compute_employees_count(self):
         employees_per_calendar = dict(self.env['hr.version']._read_group(

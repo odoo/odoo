@@ -1593,5 +1593,5 @@ class TestAttendanceDefaultShift(TransactionCase):
 
         employee = self._employee(self.calendar_flexible)
         self.assertEqual(
-            self._working_hours(employee), [(day, '00:00', '24:00') for day in range(7)],
-            "A flexible employee may work at any time: nothing is shaded")
+            self._working_hours(employee), [],
+            "An undefined schedule has no working hours: everything is shaded")
