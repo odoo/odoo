@@ -151,7 +151,7 @@ class MrpProduction(models.Model):
         'Deadline', copy=False, store=True, readonly=False, compute='_compute_date_deadline',
         help="Informative date allowing to define when the manufacturing order should be processed at the latest to fulfill delivery on time.")
     date_start = fields.Datetime(
-        'Start', copy=False, default=_get_default_date_start,
+        'Start', default=_get_default_date_start,
         help="Date you plan to start production or date you actually started production.",
         index=True, required=True, tracking=True)
     previous_date_start = fields.Datetime()
