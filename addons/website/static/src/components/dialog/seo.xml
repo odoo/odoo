@@ -108,29 +108,27 @@
                 </div>
             </t>
         </div>
-        <t t-if="this.props.isDefaultLang">
-            <h5 id="seo_broken_links_check" class="mt-4 mb-2">
-                Broken Links
-            </h5>
-            <div class="mt-2" t-if="this.state.checkingLinks">
-                <div><i class="oi oi-spin text-info me-2" data-icon="autorenew" role="img" aria-hidden="true"></i>Checking hyperlinks...</div>
-                <div class="progress rounded mt-2" style="height: 10px;">
-                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-info" role="progressbar" t-att-aria-valuenow="this.state.counterLinks" aria-valuemin="0" t-att-aria-valuemax="this.state.totalLinks" t-attf-style="width:#{(this.state.counterLinks / this.state.totalLinks) * 100}%;" aria-label="Progress bar"/>
-                </div>
+        <h5 id="seo_broken_links_check" class="mt-4 mb-2">
+            Broken Links
+        </h5>
+        <div class="mt-2" t-if="this.state.checkingLinks">
+            <div><i class="oi oi-spin text-info me-2" data-icon="autorenew" role="img" aria-hidden="true"></i>Checking hyperlinks...</div>
+            <div class="progress rounded mt-2" style="height: 10px;">
+                <div class="progress-bar progress-bar-striped progress-bar-animated bg-info" role="progressbar" t-att-aria-valuenow="this.state.counterLinks" aria-valuemin="0" t-att-aria-valuemax="this.state.totalLinks" t-attf-style="width:#{(this.state.counterLinks / this.state.totalLinks) * 100}%;" aria-label="Progress bar"/>
             </div>
-            <div class="mt-2" t-elif="this.seoContext.checkedLinks">
-                <t t-if="this.seoContext.brokenLinks.some(link => !link.remove)">
-                    <t t-foreach="this.seoContext.brokenLinks" t-as="link" t-key="link_index">
-                        <div t-if="!link.remove" class="row align-items-center mb-2">
-                            <BrokenLink link="link"/>
-                        </div>
-                    </t>
+        </div>
+        <div class="mt-2" t-elif="this.seoContext.checkedLinks">
+            <t t-if="this.seoContext.brokenLinks.some(link => !link.remove)">
+                <t t-foreach="this.seoContext.brokenLinks" t-as="link" t-key="link_index">
+                    <div t-if="!link.remove" class="row align-items-center mb-2">
+                        <BrokenLink link="link"/>
+                    </div>
                 </t>
-                <t t-else="">
-                    <p><i class="oi d-inline-flex rounded-circle me-2 p-1 bg-success-subtle text-success-emphasis" data-icon="check" role="img" aria-hidden="true"/>No broken links</p>
-                </t>
-            </div>
-        </t>
+            </t>
+            <t t-else="">
+                <p><i class="oi d-inline-flex rounded-circle me-2 p-1 bg-success-subtle text-success-emphasis" data-icon="check" role="img" aria-hidden="true"/>No broken links</p>
+            </t>
+        </div>
     </section>
 </t>
 
