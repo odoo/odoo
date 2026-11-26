@@ -55,7 +55,12 @@ class SaleOrderLine(models.Model):
         return super()._get_order_date()
 
     def _get_displayed_unit_price(self):
-        return self._get_cart_display_price(without_discount=True)
+        # The displayed "unit" price is the price for a single unit of the product, before applying
+        # any discounts. The displayed "cart" price is the price for the SOL's quantity of the
+        # product, after applying any discounts. Both prices rely on the same computation, but we
+        # need to force the discount to 0, and the quantity to 1 in order to compute the "unit"
+        # price from the "cart" price.
+        return self._get_cart_display_price(discount=0.0, quantity=1.0)
 
     def _get_selected_combo_items(self):
         if self.product_id.type == "combo":
@@ -92,15 +97,19 @@ class SaleOrderLine(models.Model):
             and not self._is_custom_cart_line()
         )
 
-    def _get_cart_display_price(self, without_discount=False):
+    def _get_cart_display_price(self, **kwargs):
+        """Return the price to display in the cart for this line, depending on the tax display mode.
+
+        :param kwargs: Additional parameters to pass to the tax computation methods. They should
+            match the kwargs of `account.tax._prepare_base_line_for_taxes_computation()`.
+        :return: The price to display in the cart for this line.
+        """
         self.ensure_one()
 
         AccountTax = self.env["account.tax"]
         lines_with_price = self._get_lines_with_price()
-        extra_values = {"discount": 0.0} if without_discount else {}
         base_lines = [
-            line._prepare_base_line_for_taxes_computation(**extra_values)
-            for line in lines_with_price
+            line._prepare_base_line_for_taxes_computation(**kwargs) for line in lines_with_price
         ]
         AccountTax._add_tax_details_in_base_lines(base_lines, self.company_id)
         AccountTax._round_base_lines_tax_details(base_lines, self.company_id)
