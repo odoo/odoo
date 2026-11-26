@@ -54,7 +54,7 @@ class TestAccrualPerformance(TestHrHolidaysCommon):
 
     @warmup
     def test_update_accrual_daily_plan_queries(self):
-        expected_query_count = 1106
+        expected_query_count = 26
         # mail_tracking is not a dependency, but it is installed before this test in a full
         # build and then stores the tracked change of number_of_days
         if 'mail.tracking.value' in self.env:

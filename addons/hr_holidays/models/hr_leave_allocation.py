@@ -863,16 +863,24 @@ class HrLeaveAllocation(models.Model):
             ``type_request_unit``)
         :rtype: dict
         """
+        # the leaves taken are computed at every accrual date: search the records once per allocation
+        consumable_records_per_allocation = {}
+
         def _get_leaves_taken(allocation, allocation_data):
             if len(precomputed_allocations):
                 allocations = dict(precomputed_allocations)
                 allocations[allocation] = allocation_data
             else:
                 allocations = {allocation: allocation_data}
+            if allocation not in consumable_records_per_allocation:
+                consumable_records_per_allocation[allocation] = allocation.employee_id._get_leaves_and_allocations_to_consume(
+                    allocation.work_entry_type_id, allocation_data['nextcall'], ignore_future=False, same_year_only=False)
+            leaves, consumable_allocations = consumable_records_per_allocation[allocation]
+            leaves = leaves.filtered_domain([('date_from', '<=', allocation_data['nextcall'])])
             # By setting `precomputed_allocations`, avoid infinite loop (otherwise _get_consumed_leaves -> _get_additionnal_future_leaves_on -> _process_accrual_plans -> ...)
-            employee_days_per_allocation = allocation.employee_id._get_consumed_leaves(
-                allocation.work_entry_type_id, allocation_data['nextcall'], ignore_future=True,
-                precomputed_allocations=allocations)[0]
+            employee_days_per_allocation = allocation.employee_id._get_consumed_leaves_from_records(
+                allocation.work_entry_type_id, leaves, consumable_allocations, allocation_data['nextcall'],
+                ignore_future=True, precomputed_allocations=allocations)[0]
             primary_unit = 'hours' if allocation.work_entry_type_id.unit_of_measure == 'hour' else 'days'
             leaves_taken = employee_days_per_allocation[allocation.employee_id][allocation.work_entry_type_id][allocation][f'{primary_unit}_leaves_taken']
             return allocation._convert_to_type_request_unit(
