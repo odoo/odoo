@@ -5,9 +5,7 @@
     'depends': [
         'l10n_es_edi_sii',
         'point_of_sale',
-    ],
-    'data': [
-        'receipt/pos_order_receipt.xml'
+        'l10n_es_edi_pos'
     ],
     'assets': {
         'point_of_sale._assets_pos': [

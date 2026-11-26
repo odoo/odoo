@@ -7,6 +7,7 @@
     'depends': [
         'l10n_es_edi_verifactu',
         'point_of_sale',
+        'l10n_es_edi_pos'
     ],
     'data': [
         'views/pos_order_views.xml',

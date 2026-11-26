@@ -1,4 +1,5 @@
-from odoo import api, fields, models
+from odoo import fields, models
+from odoo.exceptions import UserError
 
 
 class PosOrder(models.Model):
@@ -6,24 +7,20 @@ class PosOrder(models.Model):
 
     l10n_es_sii_required = fields.Boolean(
         string="SII Required",
-        related="company_id.l10n_es_sii_required"
+        compute='_compute_l10n_es_sii_required',
     )
 
-    l10n_es_invoice_type = fields.Selection(
-        selection="_l10n_es_refund_reason_selection",
-        string="SII Refund Reason",
-        copy=False
-    )
-
-    @api.model
-    def _l10n_es_refund_reason_selection(self):
-        return self.env['account.move']._l10n_es_refund_reason_selection()
-
-    def _l10n_es_sii_get_ticket_name(self):
-        self.ensure_one()
-        return f"{self.config_id.id}/{str(self.sequence_number).zfill(6)}"
+    def _compute_l10n_es_sii_required(self):
+        for order in self:
+            order.l10n_es_sii_required = order.company_id._l10n_es_pos_get_fiscal_mode() == 'sii'
 
     def _l10n_es_sii_prepare_refund(self):
+        """SII only accepts refunds as invoices: refunds are always invoiced, by default
+        to the generic partner of the simplified invoices.
+
+        Called before the order is paid, so that `l10n_es_edi_pos` sees it as invoiced
+        and does not number it in the series of simplified invoices.
+        """
         simplified_partner = self.env.ref('l10n_es.partner_simplified', raise_if_not_found=False)
         for order in self:
             if order.l10n_es_sii_required and order.refunded_order_id:
@@ -47,19 +44,17 @@ class PosOrder(models.Model):
         if not any(self.mapped('l10n_es_sii_required')):
             return res
 
-        if self.l10n_es_invoice_type:
-            res['l10n_es_invoice_type'] = self.l10n_es_invoice_type
+        invoice_types = set(self.mapped('l10n_es_invoice_type')) - {False}
+        if len(invoice_types) == 1:
+            res['l10n_es_invoice_type'] = invoice_types.pop()
+        elif len(invoice_types) > 1:
+            # A corrective invoice carries a single refund reason.
+            raise UserError(self.env._("You cannot consolidate orders with different SII refund reasons."))
         elif self.refunded_order_id:
             simplified_partner = self.env.ref('l10n_es.partner_simplified', raise_if_not_found=False)
             if not self.partner_id or self.partner_id == simplified_partner:
                 res['l10n_es_invoice_type'] = 'R5'
-
         else:
             res['l10n_es_invoice_type'] = 'F1'
 
         return res
-
-    def _update_sequence_number(self, session, values):
-        """ Override: do not allow updating the sequence number for Spanish pos orders"""
-        if not session.config_id.l10n_es_sii_required or not values.get('to_invoice'):
-            super()._update_sequence_number(session, values)

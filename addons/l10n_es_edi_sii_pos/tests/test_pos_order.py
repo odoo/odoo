@@ -2,6 +2,7 @@ import datetime
 from contextlib import contextmanager
 
 from odoo.tests import tagged
+from odoo.exceptions import UserError
 
 from .common import TestL10nEsEdiSiiPosCommon
 
@@ -56,6 +57,7 @@ class TestL10nEsEdiSiiPosOrder(TestL10nEsEdiSiiPosCommon):
         self.assertEqual(credit_note.move_type, 'out_refund')
         self.assertEqual(credit_note.partner_id, self.env.ref('l10n_es.partner_simplified'))
         self.assertEqual(credit_note.l10n_es_invoice_type, 'R5')
+        self.assertFalse(refund.l10n_es_pos_refund_sequence_number)
 
     def test_refund_with_explicit_reason_keeps_it(self):
         with self.with_pos_session():
@@ -75,8 +77,8 @@ class TestL10nEsEdiSiiPosOrder(TestL10nEsEdiSiiPosCommon):
         self.assertEqual(len(closing_move), 1)
         self.assertEqual(closing_move.l10n_es_invoice_type, 'F4')
         ordered = orders.sorted('sequence_number')
-        self.assertEqual(closing_move.first_invoice, ordered[0]._l10n_es_sii_get_ticket_name())
-        self.assertEqual(closing_move.last_invoice, ordered[-1]._l10n_es_sii_get_ticket_name())
+        self.assertEqual(closing_move.first_invoice, ordered[0]._l10n_es_pos_get_simplified_invoice_name())
+        self.assertEqual(closing_move.last_invoice, ordered[-1]._l10n_es_pos_get_simplified_invoice_name())
 
     def test_closing_move_excludes_invoiced_orders(self):
         with self.with_pos_session():
@@ -85,8 +87,8 @@ class TestL10nEsEdiSiiPosOrder(TestL10nEsEdiSiiPosCommon):
             last = self._create_sale()
             self._create_sale(is_invoiced=True, customer=self.partner_b)
         closing_move = self.pos_session.sale_move_ids
-        self.assertEqual(closing_move.first_invoice, first._l10n_es_sii_get_ticket_name())
-        self.assertEqual(closing_move.last_invoice, last._l10n_es_sii_get_ticket_name())
+        self.assertEqual(closing_move.first_invoice, first._l10n_es_pos_get_simplified_invoice_name())
+        self.assertEqual(closing_move.last_invoice, last._l10n_es_pos_get_simplified_invoice_name())
 
     def test_closing_move_payload_f4(self):
         with self.with_pos_session():
@@ -100,3 +102,34 @@ class TestL10nEsEdiSiiPosOrder(TestL10nEsEdiSiiPosCommon):
         self.assertEqual(id_factura['NumSerieFacturaEmisorResumenFin'], closing_move.last_invoice[:60])
         self.assertEqual(info['FacturaExpedida']['TipoFactura'], 'F4')
         self.assertNotIn('Contraparte', info['FacturaExpedida'])
+
+    def test_fiscal_mode_sii(self):
+        """ The orders are handled by SII as soon as a tax agency is set on the company. """
+        self.assertEqual(self.company._l10n_es_pos_get_fiscal_mode(), 'sii')
+        self.company.l10n_es_sii_tax_agency = False
+        self.assertNotIn('sii', self.company._l10n_es_pos_get_available_fiscal_modes())
+
+    def test_closing_move_without_sii(self):
+        """ Without SII, the session closing entry is not a F4 summary of the simplified invoices. """
+        self.company.l10n_es_sii_tax_agency = False
+        with self.with_pos_session():
+            self._create_sale()
+
+        closing_move = self.pos_session.sale_move_ids
+        self.assertNotEqual(closing_move.l10n_es_invoice_type, 'F4')
+        self.assertFalse(closing_move.first_invoice)
+
+    def test_consolidated_invoice_refund_reasons(self):
+        """ Orders invoiced together must share their refund reason: the invoice can only have one. """
+        with self.with_pos_session():
+            refunds = self.env['pos.order']
+            for _ in range(2):
+                order = self._create_sale()
+                refunds |= self.env['pos.order'].browse(order.refund()['res_id'])
+
+            refunds.l10n_es_invoice_type = 'R1'
+            self.assertEqual(refunds._prepare_invoice_vals()['l10n_es_invoice_type'], 'R1')
+
+            refunds[1].l10n_es_invoice_type = 'R2'
+            with self.assertRaises(UserError):
+                refunds._prepare_invoice_vals()

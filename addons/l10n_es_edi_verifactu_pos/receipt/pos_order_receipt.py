@@ -12,5 +12,4 @@ class PosOrderReceipt(models.AbstractModel):
             qr_code_data = self._order_receipt_generate_qr_code(self.l10n_es_edi_verifactu_qr_code)
             data['image']['l10n_es_edi_verifactu_qr_code'] = qr_code_data
             data['conditions']['l10n_es_edi_verifactu_pos'] = True
-            data['extra_data']['invoice_name'] = self.account_move.name if self.account_move else ''
         return data

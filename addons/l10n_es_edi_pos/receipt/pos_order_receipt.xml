@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="pos_order_receipt" inherit_id="point_of_sale.pos_order_receipt">
+        <div name="before-footer" position="after">
+            <div t-if="conditions.get('l10n_es_pos_invoice_name')" class="w-100 text-center" name="l10n_es_pos_invoice_name">
+                <t t-if="conditions.get('l10n_es_pos_simplified_invoice')">Simplified Invoice: </t>
+                <t t-elif="conditions.get('l10n_es_pos_simplified_credit_note')">Simplified Credit Note: …</t>
+                <t t-else="">Invoice: </t>
+                <t t-out="extra_data['l10n_es_pos_invoice_name']"/>
+            </div>
+        </div>
+    </template>
+    <template id="pos_order_receipt_header" inherit_id="point_of_sale.pos_order_receipt_header">
+        <xpath expr="//div[@name='ticket_reference']/t[@t-if]" position="attributes">
+            <attribute name="t-if">conditions['display_vat'] and not conditions.get('l10n_es_pos_edi')</attribute>
+        </xpath>
+    </template>
+</odoo>

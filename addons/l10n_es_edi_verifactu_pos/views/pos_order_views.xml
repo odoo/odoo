@@ -38,9 +38,10 @@
             <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//header" position="inside">
+                    <field name="is_singly_invoiced" invisible="1"/> <!--Field to trigger appearance of button -->
                     <button name="l10n_es_edi_verifactu_button_send" type="object"
                             string="Send Veri*Factu"
-                            invisible="account_move or not l10n_es_edi_verifactu_required or l10n_es_edi_verifactu_state in ('registered_with_errors', 'accepted')"/>
+                            invisible="is_singly_invoiced or not l10n_es_edi_verifactu_required or l10n_es_edi_verifactu_state in ('registered_with_errors', 'accepted')"/>
                 </xpath>
                 <xpath expr="//header" position="after">
                     <div class="alert alert-info" role="alert"
@@ -60,7 +61,7 @@
                     <page
                         id="verifactu_tab"
                         string="Veri*Factu"
-                        invisible="account_move and not l10n_es_edi_verifactu_document_ids"
+                        invisible="(is_singly_invoiced or not l10n_es_edi_verifactu_required) and not l10n_es_edi_verifactu_document_ids"
                     >
                         <group>
                             <field name="l10n_es_invoice_type"
@@ -69,7 +70,7 @@
                                    string="Invoice Type"/>
                             <field name="l10n_es_edi_verifactu_state"
                                    invisible="   not l10n_es_edi_verifactu_required and not l10n_es_edi_verifactu_state
-                                              or account_move and not l10n_es_edi_verifactu_document_ids"/>
+                                              or is_singly_invoiced and not l10n_es_edi_verifactu_document_ids"/>
                         </group>
                         <group string="Veri*Factu Documents">
                             <field name="l10n_es_edi_verifactu_document_ids"

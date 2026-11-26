@@ -17,12 +17,10 @@ class PosOrder(models.Model):
         help="Invoice index in chain, set if and only if an in-chain XML was submitted and did not error",
         related='l10n_es_tbai_post_document_id.chain_index',
     )
-
     l10n_es_tbai_post_document_id = fields.Many2one(
         comodel_name='l10n_es_edi_tbai.document',
         copy=False,
     )
-
     l10n_es_tbai_post_file = fields.Binary(
         string="TicketBAI Post File",
         related='l10n_es_tbai_post_document_id.xml_attachment_id.raw',
@@ -31,36 +29,27 @@ class PosOrder(models.Model):
         string="TicketBAI Post Attachment Name",
         related="l10n_es_tbai_post_document_id.xml_attachment_id.name",
     )
-
     l10n_es_tbai_is_required = fields.Boolean(
         string="TicketBAI required",
-        related="company_id.l10n_es_tbai_is_enabled",
+        compute='_compute_l10n_es_tbai_is_required'
     )
-
-    l10n_es_invoice_type = fields.Selection(
-        selection="_l10n_es_refund_reason_selection",
-        string="Invoice Refund Reason Code (TicketBai)",
-        help="BOE-A-1992-28740. Law 37/1992, of 28 December, on Value Added Tax. Article "
-        "80. Modification of the taxable base.",
-        copy=False,
-    )
-
-    @api.model
-    def _l10n_es_refund_reason_selection(self):
-        return self.env['account.move']._l10n_es_refund_reason_selection()
 
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
+    def _compute_l10n_es_tbai_is_required(self):
+        for order in self:
+            order.l10n_es_tbai_is_required = order.company_id._l10n_es_pos_get_fiscal_mode() == 'tbai'
 
     @api.depends('l10n_es_tbai_post_document_id.state')
     def _compute_l10n_es_tbai_state(self):
         for order in self:
-            state = 'to_send' if order.l10n_es_tbai_is_required and not order.account_move else None
-            if order.l10n_es_tbai_post_document_id and order.l10n_es_tbai_post_document_id.state == 'accepted':
-                state = 'sent'
-
-            order.l10n_es_tbai_state = state
+            if order.l10n_es_tbai_post_document_id.state == 'accepted':
+                order.l10n_es_tbai_state = 'sent'
+            elif order.l10n_es_tbai_is_required and not order.is_singly_invoiced:
+                order.l10n_es_tbai_state = 'to_send'
+            else:
+                order.l10n_es_tbai_state = None
 
     # -------------------------------------------------------------------------
     # OVERRIDES
@@ -72,13 +61,10 @@ class PosOrder(models.Model):
 
         self.ensure_one()
 
-        if not self.to_invoice and self.amount_total > self.company_id.l10n_es_simplified_invoice_limit:
-            raise UserError(self.env._("Please create an invoice for an amount over %s.", self.company_id.l10n_es_simplified_invoice_limit))
-
         if self.refunded_order_id:
-            if self.to_invoice and not self.refunded_order_id.account_move:
+            if self.to_invoice and not self.refunded_order_id.is_singly_invoiced:
                 raise UserError(self.env._("You cannot invoice a refund whose linked order hasn't been invoiced."))
-            if not self.to_invoice and self.refunded_order_id.account_move:
+            if not self.to_invoice and self.refunded_order_id.is_singly_invoiced:
                 raise UserError(self.env._("Please invoice the refund as the linked order has been invoiced."))
 
         return super()._process_saved_order(draft)
@@ -122,7 +108,8 @@ class PosOrder(models.Model):
         """ Retrieve the QR Code from the related ticketbai document . """
         self.ensure_one()
 
-        edi_document = self.account_move.l10n_es_tbai_post_document_id or self.l10n_es_tbai_post_document_id
+        invoice = self.account_move if self.is_singly_invoiced else self.env['account.move']
+        edi_document = invoice.l10n_es_tbai_post_document_id or self.l10n_es_tbai_post_document_id
         if edi_document and edi_document.state == 'accepted':
             return edi_document._get_tbai_qr()
         return ''
@@ -157,13 +144,9 @@ class PosOrder(models.Model):
         # Return the error message if the xml document was not accepted
         return edi_document.response_message
 
-    def _l10n_es_tbai_get_document_name(self):
-        self.ensure_one()
-        return self.pos_reference
-
     def _l10n_es_tbai_create_edi_document(self, cancel=False):
         return self.sudo().env['l10n_es_edi_tbai.document'].create({
-            'name': self._l10n_es_tbai_get_document_name(),
+            'name': self._l10n_es_pos_get_simplified_invoice_name(),
             'company_id': self.company_id.id,
             'is_cancel': False,
             'date': self.date_order,
@@ -191,7 +174,7 @@ class PosOrder(models.Model):
 
         base_lines = self.lines._prepare_base_lines_for_taxes_computation()
         for base_line in base_lines:
-            base_line['name'] = base_line['record'].name
+            base_line['name'] = base_line['record'].full_product_name
         self.env['l10n_es_edi_tbai.document']._add_base_lines_tax_amounts(base_lines, self.company_id)
 
         for base_line in base_lines:
@@ -226,6 +209,6 @@ class PosOrder(models.Model):
             'is_refund': bool(self.refunded_order_id),
             'refund_reason': 'R5',
             'refunded_doc': self.refunded_order_id.l10n_es_tbai_post_document_id,
-            'refunded_doc_invoice_date': self.refunded_order_id.date_order if self.refunded_order_id else False,
-            'refunded_name': self.refunded_order_id._l10n_es_tbai_get_document_name() if self.refunded_order_id else False,
+            'refunded_doc_invoice_date': self.refunded_order_id.date_order,
+            'refunded_name': self.refunded_order_id._l10n_es_pos_get_simplified_invoice_name() if self.refunded_order_id else False,
         }

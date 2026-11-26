@@ -13,6 +13,7 @@ patch(GeneratePrinterData.prototype, {
             data.image.l10n_es_edi_verifactu_qr_code = this.generateQrCode(
                 `${baseUrl}${this.order.l10n_es_edi_verifactu_qr_code}`
             );
+            data.conditions.l10n_es_edi_verifactu_pos = true; //Keeps the same condition as the python code.
         }
 
         return data;
