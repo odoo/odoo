@@ -7,7 +7,16 @@ import {
     startServer,
     triggerEvents,
 } from "@mail/../tests/mail_test_helpers";
-import { advanceTime, describe, mockTouch, test, waitFor, waitForNone } from "@odoo/hoot";
+import {
+    advanceTime,
+    describe,
+    expect,
+    mockTouch,
+    queryAllValues,
+    test,
+    waitFor,
+    waitForNone,
+} from "@odoo/hoot";
 
 import { Command, contains } from "@web/../tests/web_test_helpers";
 
@@ -73,6 +82,36 @@ test("autofocus question on poll opening and user-added options", async () => {
     await waitFor("input[name='poll_question']:focus:count(1)");
     await contains("button:text('Add another option'):count(1)").click();
     await waitFor(".o-mail-CreatePollOptionDialog:eq(2) input:focus:count(1)");
+});
+
+test("poll options can be reordered", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Composer button[title='More Actions']:count(1)").click();
+    await contains(".o-dropdown-item:text('Create Poll'):count(1)").click();
+    await waitFor(".modal-header:text('Create Poll'):count(1)");
+    await contains(".o-mail-CreatePollOptionDialog:eq(0) input").edit("Red");
+    await contains(".o-mail-CreatePollOptionDialog:eq(1) input").edit("Green");
+    await contains("button:text('Add another option'):count(1)").click();
+    await contains(".o-mail-CreatePollOptionDialog:eq(2) input").edit("Blue");
+    const dragOption = (fromIndex, toIndex) =>
+        contains(
+            `.o-mail-CreatePollOptionDialog:eq(${fromIndex}) .o-mail-CreatePollOptionDialog-handle`
+        ).dragAndDrop(`.o-mail-CreatePollOptionDialog:eq(${toIndex})`);
+    const expectOptions = (labels) =>
+        expect(queryAllValues(".o-mail-CreatePollOptionDialog input")).toEqual(labels);
+    expectOptions(["Red", "Green", "Blue"]);
+    // first to last
+    await dragOption(0, 2);
+    expectOptions(["Green", "Blue", "Red"]);
+    // middle to first
+    await dragOption(1, 0);
+    expectOptions(["Blue", "Green", "Red"]);
+    // last to middle
+    await dragOption(2, 1);
+    expectOptions(["Blue", "Red", "Green"]);
 });
 
 test("full label of a truncated poll option is shown in a tooltip", async () => {
