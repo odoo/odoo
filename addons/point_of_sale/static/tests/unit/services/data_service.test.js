@@ -141,6 +141,52 @@ describe("data_service", () => {
         expect(allRequestedModels).toInclude("product.product");
     });
 
+    test("getModelsLoadedWith a product: its own models, not the customers and orders", async () => {
+        const store = await setupPosEnv();
+        const models = store.data.getModelsLoadedWith("product.template");
+        for (const model of [
+            "product.template",
+            "product.product",
+            "product.template.attribute.line",
+            "product.template.attribute.value",
+            "product.attribute",
+            "product.pricelist.item",
+            "product.pricelist",
+            "account.tax",
+        ]) {
+            expect(models).toInclude(model);
+        }
+        for (const model of ["pos.preset", "account.fiscal.position", "res.partner", "pos.order"]) {
+            expect(models).not.toInclude(model);
+        }
+    });
+
+    test("loading new products neither asks for nor sends the cached customers", async () => {
+        const store = await setupPosEnv();
+        const data = store.data;
+        const requests = [];
+        patch(data, {
+            async callRelated(model, method, args, kwargs, needSync, waitForResult) {
+                if (method === "load_data") {
+                    requests.push(args[1]);
+                }
+                return super.callRelated(...arguments);
+            },
+        });
+        const template = MockServer.env["product.template"].create({
+            list_price: 10,
+            name: "Not loaded yet",
+        });
+
+        await store.loadNewProducts([["id", "=", template.id]]);
+
+        expect(requests.length).toBe(1);
+        expect(requests[0].models).toInclude("product.product");
+        expect(requests[0].models).not.toInclude("res.partner");
+        expect(requests[0].models).not.toInclude("pos.order");
+        expect(Object.keys(requests[0].records)).not.toInclude("res.partner");
+    });
+
     test("indexedDB is not read again for the write dates of what is already known", async () => {
         const store = await setupPosEnv();
         const data = store.data;

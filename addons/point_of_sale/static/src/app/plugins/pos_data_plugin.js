@@ -1355,6 +1355,31 @@ export class PosDataPlugin extends Plugin {
 
         return Array.from(visited);
     }
+
+    getModelsLoadedWith(model) {
+        const graph = this.dependencies;
+        const models = new Set([model]);
+        let added = true;
+        while (added) {
+            added = false;
+            for (const [dependent, dependencies] of Object.entries(graph)) {
+                if (!models.has(dependent) && dependencies.some((dep) => models.has(dep))) {
+                    models.add(dependent);
+                    added = true;
+                }
+            }
+        }
+        const stack = [...models];
+        while (stack.length) {
+            for (const dependency of graph[stack.pop()] || []) {
+                if (!models.has(dependency)) {
+                    models.add(dependency);
+                    stack.push(dependency);
+                }
+            }
+        }
+        return Array.from(models);
+    }
 }
 
 services.add(PosDataPlugin);
