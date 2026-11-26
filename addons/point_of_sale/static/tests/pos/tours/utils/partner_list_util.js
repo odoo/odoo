@@ -173,6 +173,10 @@ export function searchCustomerValue(val, pressEnter = true) {
                     .dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: "Enter" }));
             },
         });
+        steps.push({
+            content: `Wait for the server search of "${val}" to finish`,
+            trigger: `.o_notification:contains('found for "${val}"')`,
+        });
     }
     steps.push(checkCustomerShown(val));
     return steps;
