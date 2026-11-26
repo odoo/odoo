@@ -552,3 +552,40 @@ test("group by category: cart is sorted by category", async () => {
         "Napkins",
     ]);
 });
+
+test("delivery line and service fee do not depend on each other", async () => {
+    const store = await setupSelfPosEnv("mobile");
+    const { variant: deliveryProduct } = createTestProduct(store, { name: "Delivery", price: 5 });
+    const { variant: feeProduct } = createTestProduct(store, { name: "Service Fee", price: 0 });
+    const { template: product } = createTestProduct(store, { name: "Pizza", price: 46 });
+    const preset = store.models["pos.preset"].get(24);
+    preset.update({
+        delivery_product_id: deliveryProduct,
+        delivery_product_price: 5,
+        free_delivery_min_amount: 50,
+        service_fee: true,
+        service_fee_product_id: feeProduct,
+        service_fee_type: "percent",
+        service_fee_amount: 0.1,
+        service_fee_based_on: "pre_discount",
+    });
+    await store.addToCart(product, 1);
+    const order = store.currentOrder;
+    order.preset_id = preset;
+
+    await mountWithCleanup(CartPage, {});
+    await animationFrame();
+
+    // 46 is below the free delivery threshold: the 10% service fee (4.6) would
+    // reach it, but it does not count toward it.
+    const deliveryLines = () => order.lines.filter((l) => l.isDeliveryLine);
+    expect(deliveryLines()).toHaveLength(1);
+    // The fee is computed on the pizza alone, not on the pizza and the delivery.
+    expect(order.serviceFeeLines).toHaveLength(1);
+    expect(order.serviceFeeLines[0].price_unit).toBeCloseTo(4.6);
+
+    // Nothing moves anymore: the delivery line and the fee settled.
+    await animationFrame();
+    expect(deliveryLines()).toHaveLength(1);
+    expect(order.serviceFeeLines[0].price_unit).toBeCloseTo(4.6);
+});

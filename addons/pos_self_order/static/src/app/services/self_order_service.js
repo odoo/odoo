@@ -298,11 +298,10 @@ export class SelfOrder {
         if (!freeDeliveryMin) {
             return false;
         }
-        const deliveryProductId = preset?.delivery_product_id?.id;
-        const nonDeliveryLines = this.currentOrder.lines.filter(
-            (line) => line.product_id?.id !== deliveryProductId
+        const thresholdLines = this.currentOrder.lines.filter(
+            (line) => !line.isDeliveryLine && !line.isServiceFeeLine()
         );
-        const totalData = this.currentOrder.getPriceWithOptions({ lines: nonDeliveryLines });
+        const totalData = this.currentOrder.getPriceWithOptions({ lines: thresholdLines });
         const td = totalData.taxDetails;
         const orderTotal = this.currency.round(
             this.isTaxesIncludedInPrice() ? td.total_amount_no_rounding : td.base_amount_currency

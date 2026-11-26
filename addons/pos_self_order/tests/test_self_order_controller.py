@@ -66,8 +66,8 @@ class TestSelfOrderController(SelfOrderCommonTest):
         data = attempt()
         self.assertIn('already been paid', data['error']['data']['message'])
 
-    def _setup_service_fee(self, **values):
-        """Configure a 10% service fee on the preset used by _create_order_data."""
+    def _setup_service_fee(self, preset=None, **values):
+        """Configure a 10% service fee on the preset (by default, the one used by _create_order_data)."""
         fee_product = self.env['product.product'].create({
             'name': 'Service Fee',
             'type': 'service',
@@ -75,7 +75,7 @@ class TestSelfOrderController(SelfOrderCommonTest):
             'taxes_id': False,
             'available_in_pos': True,
         })
-        self.in_preset.write({
+        (preset or self.in_preset).write({
             'service_fee': True,
             'service_fee_product_id': fee_product.id,
             'service_fee_type': 'percent',
@@ -83,6 +83,21 @@ class TestSelfOrderController(SelfOrderCommonTest):
             **values,
         })
         return fee_product
+
+    def _setup_delivery_fee(self, **values):
+        """Configure a delivery fee of 5.0 on the delivery preset, free from 50.0."""
+        delivery_product = self.env['product.product'].create({
+            'name': 'Delivery Fee',
+            'available_in_pos': True,
+            'taxes_id': False,
+        })
+        self.delivery_preset.write({
+            'delivery_product_id': delivery_product.id,
+            'delivery_product_price': 5.0,
+            'free_delivery_min_amount': 50.0,
+            **values,
+        })
+        return delivery_product
 
     def _self_order_line(self, product, qty=1, **values):
         price_unit = values.pop('price_unit', product.lst_price)
@@ -496,6 +511,49 @@ class TestSelfOrderController(SelfOrderCommonTest):
         )
         self.assertTrue(delivery_lines, "Delivery fee line should be added to the order")
         self.assertAlmostEqual(delivery_lines[0].price_unit, 5.0)
+
+    def test_service_fee_ignores_delivery_line(self):
+        """The service fee counts toward the free delivery threshold, so it is not
+        computed on the delivery line: they would otherwise depend on each other."""
+        self._open_self_order_session(self_ordering_mode='mobile')
+        self.cola.taxes_id = False
+        delivery_product = self._setup_delivery_fee()
+        fee_product = self._setup_service_fee(self.delivery_preset)
+
+        order = self.process_self_order([{'product': self.cola}], preset=self.delivery_preset)
+
+        self.assertTrue(order.lines.filtered(lambda l: l.product_id == delivery_product))
+        fee_line = order.lines.filtered(lambda l: l.product_id == fee_product)
+        # 10% of the cola (2.2) alone, not of the cola and the delivery (7.2).
+        self.assertAlmostEqual(fee_line.price_unit, 0.22, places=2)
+
+    def test_free_delivery_threshold(self):
+        """The free delivery threshold is checked against the server-side prices,
+        and the service fee does not count toward it."""
+        self._open_self_order_session(self_ordering_mode='mobile')
+        self.cola.taxes_id = False
+        # Above the cola (2.2), below the cola and its 10% fee (2.42).
+        delivery_product = self._setup_delivery_fee(free_delivery_min_amount=2.3)
+        fee_product = self._setup_service_fee(self.delivery_preset)
+
+        def process(qty):
+            return self.process_self_order([
+                {'product': self.cola, 'qty': qty, 'price_unit': 2.2},
+                {'product': fee_product, 'price_unit': 0.22 * qty},
+            ], preset=self.delivery_preset)
+
+        def delivery_lines(order):
+            return order.lines.filtered(lambda l: l.product_id == delivery_product)
+
+        # The fee would reach the threshold, but it does not count toward it.
+        order = process(1)
+        self.assertEqual(len(delivery_lines(order)), 1)
+        self.assertAlmostEqual(order.amount_total, 2.2 + 0.22 + 5.0, places=2)
+
+        # The cola alone reaches the threshold: the delivery is free.
+        order = process(2)
+        self.assertFalse(delivery_lines(order))
+        self.assertAlmostEqual(order.amount_total, 4.4 + 0.44, places=2)
 
     def test_service_fee_is_added_when_missing(self):
         """The fee is mandated by the preset: a payload that drops its line must not escape it."""
