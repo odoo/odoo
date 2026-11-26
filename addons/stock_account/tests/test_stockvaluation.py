@@ -3694,6 +3694,62 @@ class TestStockValuation(TestStockValuationCommon):
             {'account_id': self.product_avco_auto.categ_id.property_stock_valuation_account_id.id, 'debit': 10, 'credit': 0}
         ])
 
+    def test_update_accounting_entries_multi_company(self):
+        """Check that each company gets its own valuation correction in a mixed batch.
+
+        When the first company needs no correction, the second must still get one.
+        """
+        companies = self.company | self.other_company
+        product = self.product_standard_auto
+        product.with_company(self.other_company).categ_id.property_valuation = 'real_time'
+        moves = self.env['stock.move'].with_context(allowed_company_ids=companies.ids)
+
+        # Lock the original entries so changes have to be posted as separate corrections.
+        with freeze_time(Date.today() - timedelta(days=5)):
+            for company in companies:
+                inventory_location = moves.env['stock.location'].search([
+                    ('company_id', '=', company.id),
+                    ('usage', '=', 'inventory'),
+                ], limit=1)
+                inventory_location.valuation_account_id = company.account_stock_valuation_id.account_stock_variation_id
+                move = self._make_in_move(
+                    product,
+                    quantity=1,
+                    unit_cost=10,
+                    company=company,
+                    create_picking=True,
+                    location_id=inventory_location.id,
+                )
+                company.sudo().fiscalyear_lock_date = move.account_move_id.date
+                moves |= move
+
+        moves.value = 20
+        moves._update_accounting_entries()
+
+        journal_entries = moves.env['account.move']
+        correction_domain = [
+            ('line_ids.stock_move_id', 'in', moves.ids),
+            ('id', 'not in', moves.account_move_id.ids),
+        ]
+        corrections = journal_entries.search(correction_domain)
+        self.assertEqual(len(corrections), 2)
+        for move in moves:
+            correction = corrections.filtered(lambda entry: entry.company_id == move.company_id)
+            self.assertEqual(correction.state, 'posted')
+            self.assertEqual(correction.journal_id, move.company_id.account_stock_journal_id)
+            self.assertEqual(correction.line_ids.stock_move_id, move)
+            self.assertEqual(sorted(correction.line_ids.mapped('balance')), [-10, 10])
+            self.assertIn(move.reference, correction.ref)
+            self.assertNotIn((moves - move).reference, correction.ref)
+
+        _, other_company_move = moves
+        other_company_move.value = 30
+        moves._update_accounting_entries()
+        new_correction = journal_entries.search(correction_domain) - corrections
+        self.assertEqual(new_correction.company_id, self.other_company)
+        self.assertEqual(new_correction.line_ids.stock_move_id, other_company_move)
+        self.assertEqual(sorted(new_correction.line_ids.mapped('balance')), [-10, 10])
+
     def test_generate_entry_branch_correct_account(self):
         """ When generating entry on a branch and the main company is also selected, the account move is
         linked to the branch
