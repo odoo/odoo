@@ -13,6 +13,7 @@ from odoo.modules.db import FunctionStatus
 from odoo.tools import float_is_zero, float_round, is_html_empty, lazy
 from odoo.tools.sql import SQL, column_exists, create_column
 from odoo.tools.translate import adapt_translated_field_value, html_translate
+from odoo.tools.urls import urljoin as url_join
 
 from odoo.addons.website.models import ir_http
 from odoo.addons.website.tools import text_from_html
@@ -1417,7 +1418,7 @@ class ProductTemplate(models.Model):
                 "@type": "ProductGroup",
                 "name": self.name,
                 "image": f"{base_url}{website.image_url(self, 'image_1920')}",
-                "url": f"{base_url}{self.website_url}",
+                "url": url_join(base_url, self.env["ir.http"]._url_for(self.website_url)),
                 "hasVariant": [product._to_markup_data(website) for product in product_variant_ids],
             }
             if self.description_ecommerce:
