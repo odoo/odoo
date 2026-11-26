@@ -1053,9 +1053,15 @@ export class PosOrder extends PosOrderAccounting {
 
         const feeLines = this.serviceFeeLines || [];
         const serviceFeeLinesMap = {};
+        const duplicateFeeLines = [];
         feeLines.forEach((line) => {
             const key = taxKey(line.tax_ids);
-            serviceFeeLinesMap[key] = line;
+            // Two devices editing the same table can each add a fee line.
+            if (serviceFeeLinesMap[key]) {
+                duplicateFeeLines.push(line);
+            } else {
+                serviceFeeLinesMap[key] = line;
+            }
         });
 
         // The cashier can scale and price a fixed fee. Both are stamped into
@@ -1139,7 +1145,7 @@ export class PosOrder extends PosOrderAccounting {
             }
         }
 
-        Object.values(serviceFeeLinesMap).forEach((line) => {
+        [...Object.values(serviceFeeLinesMap), ...duplicateFeeLines].forEach((line) => {
             line.delete();
         });
     }

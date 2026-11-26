@@ -743,3 +743,30 @@ test("Ignore attribute always extra price with combo", async () => {
     order.setOrderPrices();
     expect(order.amount_total).toBe(comboProduct.lst_price);
 });
+
+test("recomputeServiceFees removes a duplicated fee line", async () => {
+    const store = await setupPosEnv();
+    const preset = store.models["pos.preset"].get(1);
+    preset.service_fee = true;
+    preset.service_fee_product_id = store.models["product.product"].get(8);
+    preset.service_fee_type = "percent";
+    preset.service_fee_amount = 0.125;
+    const order = await getFilledOrder(store);
+    order.setPreset(preset);
+    order.recomputeServiceFees();
+    const feeLines = order.serviceFeeLines;
+    expect(feeLines.length).toBeGreaterThan(0);
+    const feeLine = feeLines[0];
+    store.models["pos.order.line"].create({
+        order_id: order,
+        product_id: feeLine.product_id,
+        product_tmpl_id: feeLine.product_tmpl_id,
+        price_unit: feeLine.price_unit,
+        tax_ids: [["link", ...feeLine.tax_ids]],
+        qty: 1,
+        price_type: "automatic",
+    });
+    expect(order.serviceFeeLines.length).toBe(feeLines.length + 1);
+    order.recomputeServiceFees();
+    expect(order.serviceFeeLines.length).toBe(feeLines.length);
+});
