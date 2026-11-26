@@ -1,4 +1,5 @@
 import { registry } from "@web/core/registry";
+import { normalize } from "@web/core/l10n/utils";
 import { Base } from "./related_models";
 
 export class ResPartner extends Base {
@@ -24,7 +25,7 @@ export class ResPartner extends Base {
         }
 
         const fields = ["name", "barcode", "phone", "email", "vat", "parent_name", "address"];
-        this._searchString = fields
+        const raw = fields
             .map((field) => {
                 if (field === "phone" && this[field]) {
                     return this[field].replace(/[+\s()-]/g, "");
@@ -33,12 +34,13 @@ export class ResPartner extends Base {
             })
             .filter(Boolean)
             .join(" ");
+        this._searchString = normalize(raw);
         return this._searchString;
     }
 
     exactMatch(searchWord) {
         const fields = ["barcode"];
-        return fields.some((field) => this[field] && this[field].toLowerCase() === searchWord);
+        return fields.some((field) => this[field] && normalize(this[field]) === searchWord);
     }
 }
 registry.category("pos_available_models").add(ResPartner.pythonModel, ResPartner);
