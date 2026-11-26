@@ -18,6 +18,7 @@ from odoo.http.stream import content_disposition
 from odoo.tools import SQL, BinaryBytes, clean_context, float_round, lazy, str2bool
 from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.translate import LazyTranslate, _
+from odoo.tools.urls import urljoin as url_join
 
 from odoo.addons.html_editor.tools import get_video_thumbnail
 from odoo.addons.payment.controllers import portal as payment_portal
@@ -988,7 +989,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
                     "@type": "ListItem",
                     "position": i,
                     "name": cat.name,
-                    "item": f"{base_url}{self._get_shop_path(cat)}",
+                    "item": url_join(base_url, request.env["ir.http"]._url_for(self._get_shop_path(cat))),
                 }
                 for i, cat in enumerate(category.parents_and_self, start=1)
             ],

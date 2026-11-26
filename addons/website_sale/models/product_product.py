@@ -5,6 +5,7 @@ from collections import OrderedDict
 from odoo import api, fields, models
 from odoo.fields import Domain
 from odoo.http import request
+from odoo.tools.urls import urljoin as url_join
 
 
 class ProductProduct(models.Model):
@@ -142,7 +143,7 @@ class ProductProduct(models.Model):
             "@context": "https://schema.org",
             "@type": "Product",
             "name": self.with_context(display_default_code=False).display_name,
-            "url": f"{base_url}{self.website_url}",
+            "url": url_join(base_url, self.env["ir.http"]._url_for(self.website_url)),
             "image": f"{base_url}{website.image_url(self, 'image_1920')}",
             "offers": {"@type": "Offer", "price": price, "priceCurrency": website.currency_id.name},
         }
