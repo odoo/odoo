@@ -227,3 +227,77 @@ test("check only matching categories product data printed and reprinted", async 
         quantity: 1,
     });
 });
+
+test("preparation printers print in parallel, each printer in order", async () => {
+    const store = await setupPosEnv();
+    const order = await getFilledOrder(store);
+    const kitchen = store.models["pos.printer"].create({
+        name: "Kitchen",
+        printer_type: "epson_epos",
+        product_categories_ids: [store.models["pos.category"].get(1)],
+    });
+    kitchen.is_split_per_product = true; // 3 tickets: one per product unit
+    const bar = store.models["pos.printer"].create({
+        name: "Bar",
+        printer_type: "epson_epos",
+        product_categories_ids: [store.models["pos.category"].get(2)],
+    });
+    kitchen._instance = {};
+    bar._instance = {};
+
+    // Prints hang until finishPrints() is called
+    const { promise: printsDone, resolve: finishPrints } = Promise.withResolvers();
+    const printedBy = [];
+    store.ticketPrinter.generateIframe = async () => ({});
+    store.ticketPrinter.setIframeSizeFromPrinter = () => {};
+    store.ticketPrinter.generateImage = async () => "image";
+    store.ticketPrinter.print = async ({ printer }) => {
+        printedBy.push(printer.name);
+        await printsDone;
+        return { successful: true };
+    };
+
+    const printing = store.ticketPrinter.printOrderChanges({ order, printers: [kitchen, bar] });
+    // Bar doesn't wait for Kitchen; Kitchen waits for its 1st ticket before sending the next
+    await waitUntil(() => printedBy.length === 2);
+    expect(printedBy).toEqual(["Kitchen", "Bar"]);
+
+    finishPrints();
+    await printing;
+    expect(printedBy).toEqual(["Kitchen", "Bar", "Kitchen", "Kitchen"]);
+});
+
+test("identical preparation tickets are rendered once", async () => {
+    const store = await setupPosEnv();
+    const order = await getFilledOrder(store);
+    const createPrinter = (name) =>
+        store.models["pos.printer"].create({
+            name,
+            printer_type: "epson_epos",
+            product_categories_ids: [store.models["pos.category"].get(1)],
+        });
+    const kitchen = createPrinter("Kitchen");
+    const bar = createPrinter("Bar");
+    const smallKitchen = createPrinter("Small Kitchen");
+    smallKitchen.paper_size = 58; // same ticket, but a different image size
+    for (const printer of [kitchen, bar, smallKitchen]) {
+        printer._instance = {};
+    }
+
+    let renderCount = 0;
+    const printedBy = [];
+    store.ticketPrinter.generateIframe = async () => ({});
+    store.ticketPrinter.setIframeSizeFromPrinter = () => {};
+    store.ticketPrinter.generateImage = async () => `image ${++renderCount}`;
+    store.ticketPrinter.print = async ({ printer, image }) => {
+        printedBy.push([printer.name, image]);
+        return { successful: true };
+    };
+
+    await store.ticketPrinter.printOrderChanges({ order, printers: [kitchen, bar, smallKitchen] });
+    expect(printedBy).toEqual([
+        ["Kitchen", "image 1"],
+        ["Bar", "image 1"],
+        ["Small Kitchen", "image 2"],
+    ]);
+});
