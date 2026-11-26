@@ -2650,8 +2650,10 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         self.assertEqual(lot.with_user(user).sale_order_ids, sale_order_2)
 
     def test_validate_picking_creates_sale_line_for_so_with_no_sol(self):
-        """Test that validating a picking creates a sale order line for a sale order with no lines"""
+        """Test that validating a picking creates a sale order line for a sale order with no lines,
+        even when the user validating it has no access rights on Sales"""
         warehouse = self.company_data['default_warehouse']
+        stock_only_user = new_test_user(self.env, login='stock_only_user', groups='stock.group_stock_user', company_id=self.env.company.id)
         sale_order = self.env['sale.order'].create({
             'partner_id': self.partner_a.id
         })
@@ -2669,7 +2671,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
                 }),
             ],
         })
-        delivery.button_validate()
+        delivery.with_user(stock_only_user).button_validate()
 
         self.assertEqual(delivery.state, 'done')
         self.assertRecordValues(delivery.move_ids, [
