@@ -21,16 +21,6 @@
             <xpath expr="//div[@id='o_loyalty_program_availabilities']" position="after">
                 <field name="website_id" invisible="not ecommerce_ok" options="{'no_create': True}" groups="website.group_multi_website" placeholder="All websites"/>
             </xpath>
-            <div id="trigger_products" position="inside">
-                <div
-                    invisible="not show_non_published_product_warning"
-                    class="alert alert-warning mt-1"
-                    role="alert"
-                >
-                    To be able to top up eWallet from the portal, eWallet products must be
-                     published.
-                </div>
-            </div>
         </field>
     </record>
 
