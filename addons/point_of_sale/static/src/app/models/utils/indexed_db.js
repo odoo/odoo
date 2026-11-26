@@ -196,13 +196,6 @@ export default class IndexedDB {
                     }
                 }, TRANSACTION_TIMEOUT);
 
-                logPosMessage(
-                    "IndexedDB",
-                    method,
-                    `Processing ${batch.length} items in store ${storeName}`,
-                    CONSOLE_COLOR
-                );
-
                 for (const data of batch) {
                     try {
                         const deepCloned = JSON.parse(JSON.stringify(data));
