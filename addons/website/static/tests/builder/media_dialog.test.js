@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { click, dblclick, queryOne, waitFor } from "@odoo/hoot-dom";
+import { click, dblclick, queryOne, setInputFiles, waitFor } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { contains, defineModels, models, onRpc } from "@web/../tests/web_test_helpers";
 import {
@@ -62,6 +62,25 @@ function mockIconFontCustomization() {
     defineModels([WebsiteAssets]);
     onRpc("/website/theme_customize_bundle_reload", () => ({}));
 }
+
+test("Replace an icon by an image uploaded from the icon picker", async () => {
+    onRpc("/html_editor/attachment/add_data", () => ({
+        id: 1,
+        name: "image.png",
+        mimetype: "image/png",
+        image_src: "/web/static/img/logo.png",
+        public: true,
+    }));
+    await setupWebsiteBuilder(`<p><i class="oi rounded-circle shadow" data-icon="search"></i></p>`);
+    await dblclick(":iframe .oi");
+    await waitFor(".o-IconPicker-upload");
+    await click(".o-IconPicker-upload");
+    await setInputFiles([new File(["image"], "image.png", { type: "image/png" })]);
+    await waitFor(":iframe img[data-attachment-id='1']");
+    expect(":iframe .oi").toHaveCount(0);
+    expect(":iframe img").toHaveClass(["img", "img-fluid", "rounded-circle", "shadow"]);
+    await waitFor(".o_customize_tab [data-container-title='Image']");
+});
 
 describe("Icon styles", () => {
     test("Use the icon font selected in the theme options", async () => {

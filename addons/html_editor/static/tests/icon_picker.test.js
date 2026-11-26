@@ -35,6 +35,7 @@ describe("icon picker", () => {
         const { el, editor } = await setupEditor("<p>ab[]</p>");
         await openIconPicker(editor);
         expect(".o-IconPicker input").toBeFocused();
+        expect(".o-IconPicker-upload").toHaveCount(0, { message: "no image upload to insert" });
         expect(getContent(el)).toBe("<p>ab</p>");
 
         await click(".o-IconPicker-icon[data-icon='check']");

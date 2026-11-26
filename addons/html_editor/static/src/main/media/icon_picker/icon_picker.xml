@@ -14,8 +14,8 @@
         <t t-set="otherIcons" t-value="this.otherIcons()"/>
         <t t-set="hasIcons" t-value="frequentIcons.length or otherIcons.length"/>
         <t t-set="showSections" t-value="frequentIcons.length and !this.searchTerm()"/>
-        <div class="o-IconPicker-search mx-2 mt-2">
-            <span class="o-IconPicker-searchContour d-flex w-100 align-items-center rounded-pill border bg-view">
+        <div class="o-IconPicker-search d-flex align-items-center gap-2 mx-2 mt-2">
+            <span class="o-IconPicker-searchContour d-flex flex-grow-1 align-items-center rounded-pill border bg-view">
                 <i class="oi ps-2 py-1 fs-7 opacity-50" data-icon="search" aria-hidden="true"/>
                 <input
                     class="form-control border-0 flex-grow-1 rounded-pill lh-1"
@@ -41,6 +41,19 @@
                     <i class="oi oi-filled" data-icon="cancel" aria-hidden="true"/>
                 </button>
             </span>
+            <t t-if="this.props.onUploadImage">
+                <span class="text-muted">or</span>
+                <button
+                    type="button"
+                    class="o-IconPicker-upload btn btn-light btn-sm"
+                    title="Upload an image"
+                    aria-label="Upload an image"
+                    t-on-click="this.openFileSelector"
+                >
+                    <i class="oi" data-icon="upload" aria-hidden="true"/>
+                </button>
+                <input type="file" class="d-none" accept="image/*" t-ref="this.uploadInputRef" t-on-change="this.onFileSelected"/>
+            </t>
         </div>
         <span t-if="this.loadFailed" class="o-IconPicker-empty mt-5 text-center">Failed to load icons...</span>
         <span t-elif="!hasIcons" class="o-IconPicker-empty mt-5 text-center" role="status">No icons match your search</span>

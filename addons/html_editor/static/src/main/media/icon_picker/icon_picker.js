@@ -71,6 +71,7 @@ export class IconPicker extends Component {
         label: t.string().optional(),
         close: t.function().optional(),
         currentIcon: t.object({ name: t.string(), filled: t.boolean() }).optional(),
+        onUploadImage: t.function().optional(),
         document: t
             .customValidator(t.object(), (p) => p.nodeType === Node.DOCUMENT_NODE)
             .optional(),
@@ -82,6 +83,7 @@ export class IconPicker extends Component {
 
     gridRef = signal.ref();
     inputRef = signal.ref();
+    uploadInputRef = signal.ref();
 
     listboxId = uniqueId("o-we-icon-picker-listbox-");
 
@@ -185,6 +187,21 @@ export class IconPicker extends Component {
         this.searchTerm.set("");
         this.onInput();
         this.inputRef().focus();
+    }
+
+    openFileSelector() {
+        this.uploadInputRef().click();
+    }
+
+    /**
+     * @param {Event} ev
+     */
+    onFileSelected(ev) {
+        const [file] = ev.target.files;
+        if (file) {
+            this.props.onUploadImage(file);
+            this.props.close?.();
+        }
     }
 
     /**

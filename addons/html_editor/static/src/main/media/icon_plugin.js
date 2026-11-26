@@ -8,10 +8,22 @@ import {
     ICON_SELECTOR,
     ICON_SIZE_CLASS_REGEX,
     getIconType,
+    iconClasses,
     isElement,
     isIconElement,
 } from "@html_editor/utils/dom_info";
 import { closestElement } from "@html_editor/utils/dom_traversal";
+
+/**
+ * @typedef {((params: {
+ *      iconEl: HTMLElement,
+ *      file: File,
+ *      sourceEl: HTMLElement,
+ * }) => Promise<void>)[]} replace_icon_by_image_handlers
+ * Replace the given icon by an image uploaded from the given file, taking
+ * over the classes and style of `sourceEl`: a copy of the icon without what
+ * only applies to icons. Offered in the icon picker when there is one.
+ */
 import { rightPos } from "@html_editor/utils/position";
 
 export class IconPlugin extends Plugin {
@@ -203,6 +215,10 @@ export class IconPlugin extends Plugin {
                 id,
                 label: label || (iconEl ? _t("Replace icon") : _t("Insert an icon")),
                 document: this.document,
+                onUploadImage:
+                    iconEl && !onSelect && this.getResource("replace_icon_by_image_handlers").length
+                        ? (file) => this.replaceIconByImage(iconEl, file)
+                        : undefined,
                 currentIcon: iconEl?.dataset.icon
                     ? {
                           name: iconEl.dataset.icon,
@@ -271,6 +287,35 @@ export class IconPlugin extends Plugin {
         const [anchorNode, anchorOffset] = rightPos(iconEl);
         this.dependencies.selection.setSelection({ anchorNode, anchorOffset });
         this.dependencies.history.commit();
+    }
+
+    /**
+     * @param {HTMLElement} iconEl
+     * @param {File} file
+     */
+    async replaceIconByImage(iconEl, file) {
+        await this.triggerAsync("replace_icon_by_image_handlers", {
+            iconEl,
+            file,
+            sourceEl: this.getImageSourceElement(iconEl),
+        });
+    }
+
+    /**
+     * @param {HTMLElement} iconEl
+     * @returns {HTMLElement} a copy of the icon without the classes and the
+     *  style that only apply to icons (glyph, fill, size, spin, colors), so
+     *  that an image replacing it keeps the others (e.g. shape, alignment)
+     */
+    getImageSourceElement(iconEl) {
+        const sourceEl = iconEl.cloneNode(false);
+        const iconOnlyClasses = [...sourceEl.classList].filter(
+            (cls) => iconClasses.includes(cls) || /^(oi|fa|text|bg)-/.test(cls)
+        );
+        sourceEl.classList.remove(...iconOnlyClasses);
+        sourceEl.style.removeProperty("color");
+        sourceEl.style.removeProperty("background-color");
+        return sourceEl;
     }
 
     openReplaceIconPicker() {

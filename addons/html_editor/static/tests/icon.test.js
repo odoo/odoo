@@ -1,5 +1,13 @@
 import { describe, expect, press, test } from "@odoo/hoot";
-import { click, dblclick, queryAll, queryOne, waitFor, waitForNone } from "@odoo/hoot-dom";
+import {
+    click,
+    dblclick,
+    queryAll,
+    queryOne,
+    setInputFiles,
+    waitFor,
+    waitForNone,
+} from "@odoo/hoot-dom";
 import { setupEditor, testEditor } from "./_helpers/editor";
 import { animationFrame } from "@odoo/hoot-mock";
 import { getContent, setContent, setSelection } from "./_helpers/selection";
@@ -198,6 +206,75 @@ test("The Replace button references the icon picker it opens", async () => {
     expect(".o-IconPicker").toHaveCount(0);
     expect(button).toHaveAttribute("aria-expanded", "false");
     expect(button).not.toHaveAttribute("aria-controls");
+});
+
+describe("replace an icon by an uploaded image", () => {
+    function onUploadImage() {
+        onRpc("/html_editor/attachment/add_data", async (request) => {
+            const { params } = await request.json();
+            expect.step(`upload ${params.name} (is_image: ${params.is_image})`);
+            return {
+                id: 1,
+                name: params.name,
+                mimetype: "image/png",
+                image_src: "/web/static/img/logo.png",
+                public: true,
+            };
+        });
+    }
+
+    test("The icon picker offers to upload an image when replacing an icon", async () => {
+        await setupIcon("favorite");
+        await contains("button[name='icon_replace']").click();
+        // An icon-only button, next to the search field
+        expect(".o-IconPicker-search .o-IconPicker-upload").toHaveAttribute("type", "button");
+        expect(".o-IconPicker-upload").toHaveAttribute("aria-label", "Upload an image");
+        expect(".o-IconPicker-upload").toHaveAttribute("title", "Upload an image");
+        expect(".o-IconPicker-upload [data-icon='upload']").toHaveAttribute("aria-hidden", "true");
+        expect(".o-IconPicker-search input[type=file]").toHaveAttribute("accept", "image/*");
+    });
+
+    test("No image upload where images are not allowed", async () => {
+        const { editor } = await setupEditor(
+            `<p>[<span class="oi" data-icon="favorite"></span>]</p>`,
+            { config: { allowImage: false } }
+        );
+        execCommand(editor, "replaceIcon");
+        await waitFor(".o-IconPicker");
+        expect(".o-IconPicker-upload").toHaveCount(0);
+    });
+
+    test("Replace an icon by an uploaded image, keeping what images accept", async () => {
+        onUploadImage();
+        const { el, editor } = await setupIcon(
+            "favorite",
+            "oi-filled oi-3x oi-spin text-primary bg-black rounded-circle shadow mx-auto"
+        );
+        el.querySelector("span.oi").style.color = "red";
+        await contains("button[name='icon_replace']").click();
+        await click(".o-IconPicker-upload");
+        await setInputFiles([new File(["image"], "image.png", { type: "image/png" })]);
+        await expectElementCount(".o-IconPicker", 0);
+        await waitFor("img[data-attachment-id='1']");
+        expect.verifySteps(["upload image.png (is_image: true)"]);
+        expect(el.querySelectorAll("span.oi")).toHaveLength(0);
+        const imageEl = el.querySelector("img");
+        expect(imageEl).toHaveAttribute("src", "/web/static/img/logo.png");
+        expect(imageEl).toHaveClass(["img", "img-fluid", "rounded-circle", "shadow", "mx-auto"]);
+        expect(imageEl).not.toHaveClass([
+            "oi",
+            "oi-filled",
+            "oi-3x",
+            "oi-spin",
+            "text-primary",
+            "bg-black",
+        ]);
+        expect(imageEl.style.color).toBe("");
+
+        undo(editor);
+        expect(el.querySelectorAll("img")).toHaveLength(0);
+        expect(el.querySelectorAll("span.oi[data-icon='favorite']")).toHaveLength(1);
+    });
 });
 
 test("Styles should be preserved when replacing icon", async () => {
