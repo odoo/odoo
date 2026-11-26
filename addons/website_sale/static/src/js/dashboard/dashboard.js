@@ -1,4 +1,4 @@
-import { Dashboard as SaleDashboard } from "@sale/js/dashboard/dashboard";
+import { Dashboard as SaleDashboard } from "@sale/dashboard/dashboard";
 import { _t } from "@web/core/l10n/translation";
 
 export const CARD_FILTERS_MAPPING = {

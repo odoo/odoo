@@ -2,11 +2,11 @@ import { useMatrixConfigurator } from "@product_matrix/js/matrix_configurator_ho
 import {
     SaleOrderLineProductField,
     saleOrderLineProductField,
-} from "@sale/js/sale_product_field/sale_product_field";
+} from "@sale/views/fields/sale_product_field/sale_product_field";
 import {
     listSaleOrderLineLabelText,
     SaleLabelTextField,
-} from "@sale/js/sale_label_text/sale_label_text";
+} from "@sale/views/fields/sale_label_text/sale_label_text";
 import { patch } from "@web/core/utils/patch";
 
 const saleMatrixProductMixin = () => ({
