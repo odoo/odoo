@@ -85,10 +85,13 @@ class HrLeaveType(models.Model):
                              ('company_ids', 'in', self.env.company.id)],
         help="Choose the Time Off Officers who will be notified to approve allocation or Time Off Request. If empty, nobody will be notified")
     leave_validation_type = fields.Selection([
-        ('no_validation', 'None needed'),
-        ('hr', 'By Time Off Officer'),
-        ('manager', "By Employee's Approver"),
-        ('both', "By Employee's Approver and Time Off Officer")], default='hr', string='Time Off Validation')
+        ('no_validation', 'None'),
+        ('manager', "By Employee's Time Off Approver"),
+        ('hr', 'By a Time Off Officer'),
+        ('both', 'Both')], default='hr', string='Time Off Validation',
+        help="Who approves the time off requests:\n"
+             "-Time Off Officers and Administrators can always approve in one click.\n"
+             "-Two-step option: the employee's Time Off Approver first, then a Time Off Officer.")
     requires_allocation = fields.Boolean(default=True, required=True, string='Requires allocation')
     employee_requests = fields.Boolean(default=False, required=True, string="Allow Employee Requests",
         help="""Extra Days Requests Allowed: User can request an allocation for himself.\n

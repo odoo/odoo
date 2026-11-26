@@ -197,12 +197,12 @@
                                             <div class="col-2 o_hr_holidays_button flex-wrap d-flex pe-4 gap-2 justify-content-start">
                                                 <button
                                                     name="action_approve" type="object" class="btn btn-primary"
-                                                    t-if="record.can_approve.raw_value">
+                                                    t-if="record.can_approve.raw_value and !record.can_validate.raw_value">
                                                     Approve
                                                 </button>
                                                 <button
                                                     name="action_approve" type="object" class="btn btn-primary"
-                                                    t-if="record.can_validate.raw_value and !record.can_approve.raw_value">
+                                                    t-if="record.can_validate.raw_value">
                                                     Validate
                                                 </button>
                                                 <button
@@ -276,11 +276,11 @@
                                 </div>
                             </main>
                             <bottom class="d-flex justify-content-end gap-2 mt-0">
-                                <button t-if="record.can_approve.raw_value" name="action_approve" type="object" class="btn btn-sm btn-primary py-0"
+                                <button t-if="record.can_approve.raw_value and !record.can_validate.raw_value" name="action_approve" type="object" class="btn btn-sm btn-primary py-0"
                                     groups="hr_holidays.group_hr_holidays_user">
                                     Approve
                                 </button>
-                                <button t-if="record.can_validate.raw_value and !record.can_approve.raw_value" name="action_approve" type="object" class="btn btn-sm btn-primary py-0"
+                                <button t-if="record.can_validate.raw_value" name="action_approve" type="object" class="btn btn-sm btn-primary py-0"
                                     groups="hr_holidays.group_hr_holidays_manager">
                                     Validate
                                 </button>
@@ -333,8 +333,8 @@
             <field name="employee_id" invisible="1"/> <!-- for the employee's default value-->
             <field name="user_id" invisible="1"/> <!-- for conditional rendering of buttons on card -->
             <header>
-                <button string="Approve" name="action_approve" type="object" class="oe_highlight" invisible="not can_approve or not id"/>
-                <button string="Validate" name="action_approve" invisible="not can_validate or can_approve or not id" type="object" class="oe_highlight"/>
+                <button string="Approve" name="action_approve" type="object" class="oe_highlight" invisible="not can_approve or can_validate or not id"/>
+                <button string="Validate" name="action_approve" invisible="not can_validate or not id" type="object" class="oe_highlight"/>
                 <button string="Back to Approval" name="action_back_to_approval" type="object" invisible="not can_back_to_approve or not id"/>
                 <button string="Refuse" name="action_refuse" type="object" invisible="not can_refuse or not id"/>
                 <button string="Cancel" name="action_cancel" type="object" invisible="not can_cancel or not id" />

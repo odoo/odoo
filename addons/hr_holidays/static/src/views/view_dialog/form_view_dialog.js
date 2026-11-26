@@ -43,7 +43,7 @@ export class TimeOffDialogFormController extends FormController {
     }
 
     get canApprove() {
-        return this.hasNoWarning && this.record.data.can_approve && !this.record.isNew;
+        return this.hasNoWarning && this.record.data.can_approve && !this.record.data.can_validate && !this.record.isNew;
     }
 
     get canClose() {
@@ -51,7 +51,7 @@ export class TimeOffDialogFormController extends FormController {
     }
 
     get canValidate() {
-        return this.hasNoWarning && this.record.data.can_validate && !this.record.data.can_approve && !this.record.isNew;
+        return this.hasNoWarning && this.record.data.can_validate && !this.record.isNew;
     }
 
     get canRefuse() {
