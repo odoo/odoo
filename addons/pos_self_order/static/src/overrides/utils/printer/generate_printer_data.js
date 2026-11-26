@@ -28,7 +28,11 @@ patch(GeneratePrinterData.prototype, {
                     receipt.order.table_stand_number
                 );
             } else if (!receipt.order.table_id) {
-                receipt.extra_data.order_label = receipt.order.floating_order_name || false;
+                // Print only a customer name, not the generated table/tracking name repeated below
+                const identification = this.order.preset_id?.identification;
+                receipt.extra_data.order_label = ["name", "address"].includes(identification)
+                    ? receipt.order.floating_order_name || false
+                    : false;
             }
         }
         return receipts;

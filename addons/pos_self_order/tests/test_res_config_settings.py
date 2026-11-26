@@ -39,3 +39,14 @@ class TestSelfOrderSettings(SelfOrderCommonTest):
             validate_url(get_long_url_from_short_url(first_qr_url), has_table)
             validate_url(get_long_url_from_short_url(example_url), has_table)
             validate_qr_data(qr_data, has_table)
+
+    def test_kiosk_mode_resets_dynamic_qr_service(self):
+        """Dynamic QR only applies to mobile self ordering: switching to kiosk falls back to the counter"""
+        settings = self.env['res.config.settings'].new({
+            'pos_config_id': self.pos_config.id,
+            'pos_self_ordering_mode': 'mobile',
+            'pos_self_ordering_service_mode': 'dynamic_qr',
+        })
+        settings.pos_self_ordering_mode = 'kiosk'
+        settings._onchange_pos_self_order_kiosk()
+        self.assertEqual(settings.pos_self_ordering_service_mode, 'counter')
