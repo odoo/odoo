@@ -112,7 +112,7 @@ export class MailComposerFormRenderer extends formView.Renderer {
         this.attachmentUploadService = useService("mail.attachment_upload");
         this.operations = useX2ManyCrud(() => this.props.record.data["attachment_ids"], true);
 
-        const doUpload = useMailComposerAttachmentsUploader();
+        const doUpload = useMailComposerAttachmentsUploader(this.props.record.model);
         useCustomDropzone(this.rootRef, MailAttachmentDropzone, {
             /** @param {Event} event */
             onDrop: async (event) => {
