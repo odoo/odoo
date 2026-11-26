@@ -375,7 +375,11 @@ registerWebsitePreviewTour(
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(this.anchor.textContent, "text/html");
                 const lineEscapedText = doc.body.querySelector("p:last-child").textContent;
-                if (lineEscapedText !== "&lt;b&gt;&lt;/b&gt; is an HTML&nbsp;tag &amp; is empty") {
+                // ace shows a median point instead of a non-breaking space
+                if (
+                    lineEscapedText.replace("·", " ") !==
+                    "&lt;b&gt;&lt;/b&gt; is an HTML tag &amp; is empty"
+                ) {
                     console.error(
                         "The HTML editor should display the correct untranslated content"
                     );

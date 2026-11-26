@@ -707,6 +707,8 @@ class IrUiView(models.Model):
             # transform embedded field back to t-field
             el.getparent().replace(el, view.to_field_ref(el))
 
+        self._process_html_into_arch(arch_section)
+
         for el in view.extract_oe_structures(arch_section):
             if view.save_oe_structure(el):
                 # empty oe_structure in parent view
