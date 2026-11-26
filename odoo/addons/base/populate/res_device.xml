@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        Levels:
+            Users -> Sessions -> Devices -> Logs
+
+        Following the statistics (x1 scale), on average:
+        - 4 sessions per user
+        - 2 devices per session
+        - 1.1 logs per device (most devices have a single log, about 1 in 10
+          still has an older one, not yet cleaned up)
+        The median is 1 at each level: each level is heavy-tailed.
+
+        Every parent has one child for sure:
+        - a user has at least one session
+        - a session has at least one device
+        - a device has at least one log
+
+        Each additional child chooses its parent by its rank in the list of
+        candidates, with a skewed beta distribution.
+
+        Sessions are revoked after 7 days of inactivity (SESSION_LIFETIME).
+    -->
+    <record id="fake_device_logs" model="populate.blueprint">
+        <field name="name">Base - Device Logs</field>
+        <field name="definition_xml" type="xml">
+            <!--
+                100 users, each one with a first session.
+                This first session also counts as the first device and the first log of the session.
+            -->
+            <create model="res.device.log" count="100" id="first_sessions">
+                <value name="user_name" generator="fake.name"/>
+                <value name="user_login" generator="fake.user_name"/>
+                <value name="random_digits" generator="scalar.integer" start="10" end="99"/>
+                <value name="login" eval="f'{user_login}{random_digits}'" unique="True"/>
+                <field name="user_id" eval="env['res.users'].create({'name': user_name, 'login': login}).id"/>
+                <field name="session_identifier" generator="textual.char" length="42"/>
+                <field name="ip_address" generator="fake.ipv4_public"/>
+                <field name="user_agent" generator="fake.user_agent"/>
+                <!-- Unknown country for 2% of the users, unknown city for 10% -->
+                <field name="country" generator="fake.country" null_ratio="0.02"/>
+                <field name="city" generator="fake.city" null_ratio="0.1"/>
+                <!--
+                    Started during the last 840 days (72576000 s).
+                    More than half (55%) are a single visit, without duration; the others
+                    last from one hour to one year (31536000 s), usually a few days.
+                    Revoked when not used for 7 days.
+                -->
+                <value name="now" eval="int(env.cr.now().timestamp())"/>
+                <value name="start" generator="scalar.integer" start="0" end="72576000"/>
+                <!-- beta(0.4, 24): usually a couple of days, rarely more than a month -->
+                <value name="span" generator="scalar.integer" start="3600" end="31536000" distribution="beta(alpha=0.4, beta=24)" null_ratio="0.55"/>
+                <value name="last_ts" eval="min(now, now - start + span)"/>
+                <field name="first_activity" eval="env.cr.now().fromtimestamp(now - start)"/>
+                <field name="last_activity" eval="env.cr.now().fromtimestamp(last_ts)"/>
+                <field name="revoked" eval="last_ts &lt; now - 7 * 24 * 3600"/>
+            </create>
+
+            <!--
+                Other sessions: 4 sessions per user, the first one already exists
+                -> 3 more per user (300).
+                Each one is given to a user: a few users get many sessions, most get none.
+                Same browser and location as the first session of the user,
+                a new network 1 time out of 4.
+            -->
+            <create model="res.device.log" count="300" id="sessions">
+                <!-- beta(0.25, 3): favours the first users of the list, so a few of them get many sessions -->
+                <value name="parent" generator="relation.one" comodel_name="res.device.log" distribution="beta(alpha=0.25, beta=3)"/>
+                <value name="first_session" eval="model.browse(parent)"/>
+                <value name="new_ip" generator="fake.ipv4_public" null_ratio="0.75"/>
+                <field name="user_id" eval="first_session.user_id"/>
+                <field name="session_identifier" generator="textual.char" length="42"/>
+                <field name="ip_address" eval="new_ip or first_session.ip_address"/>
+                <field name="user_agent" eval="first_session.user_agent"/>
+                <field name="country" eval="first_session.country"/>
+                <field name="city" eval="first_session.city"/>
+                <!-- Same activity as the first sessions -->
+                <value name="now" eval="int(env.cr.now().timestamp())"/>
+                <value name="start" generator="scalar.integer" start="0" end="72576000"/>
+                <value name="span" generator="scalar.integer" start="3600" end="31536000" distribution="beta(alpha=0.4, beta=24)" null_ratio="0.55"/>
+                <value name="last_ts" eval="min(now, now - start + span)"/>
+                <field name="first_activity" eval="env.cr.now().fromtimestamp(now - start)"/>
+                <field name="last_activity" eval="env.cr.now().fromtimestamp(last_ts)"/>
+                <field name="revoked" eval="last_ts &lt; now - 7 * 24 * 3600"/>
+            </create>
+
+            <!--
+                Other devices: 2 devices per session, the first one already exists
+                -> 1 more per session (400).
+                A new device is a new network used during the session (same browser and location).
+                Each one is given to a session:
+                - a first session 1 time out of 4, as there is 1 first session for 3 other ones;
+                - a few sessions get many devices, most get none. For the first sessions, the
+                  order is reversed (alpha and beta swapped), so that the users with the most
+                  sessions don't also get the most devices;
+                - an active (not revoked) session 3 times out of 100, as active sessions have
+                  more devices; any session if there is no active one.
+            -->
+            <create model="res.device.log" count="400">
+                <value name="from_first_sessions" generator="choice.sample" values="{True: 1, False: 3}"/>
+                <value name="active" generator="choice.sample" values="{True: 3, False: 97}"/>
+                <!-- beta(3, 0.25): reversed, favours the last first sessions, i.e. the users with few sessions -->
+                <value name="parent_1" generator="relation.one" comodel_name="res.device.log" ref="first_sessions" domain="[('revoked', '!=', active)]" distribution="beta(alpha=3, beta=0.25)"/>
+                <!-- beta(0.25, 3): favours the first sessions of the list, so a few of them get many devices -->
+                <value name="parent_2" generator="relation.one" comodel_name="res.device.log" ref="sessions" domain="[('revoked', '!=', active)]" distribution="beta(alpha=0.25, beta=3)"/>
+                <value name="any_parent" generator="relation.one" comodel_name="res.device.log" ref="sessions"/>
+                <value name="session" eval="model.browse((parent_1 if from_first_sessions else parent_2) or any_parent)"/>
+                <field name="user_id" eval="session.user_id"/>
+                <field name="session_identifier" eval="session.session_identifier"/>
+                <field name="ip_address" generator="fake.ipv4_public"/>
+                <field name="user_agent" eval="session.user_agent"/>
+                <field name="country" eval="session.country"/>
+                <field name="city" eval="session.city"/>
+                <value name="start" generator="scalar.float" start="0" end="1"/>
+                <value name="end" generator="scalar.float" start="0" end="1"/>
+                <field name="first_activity" eval="session.first_activity + start * (session.last_activity - session.first_activity)"/>
+                <field name="last_activity" eval="session.first_activity + max(start, end) * (session.last_activity - session.first_activity)"/>
+                <field name="revoked" eval="session.revoked"/>
+            </create>
+
+            <!--
+                Other logs: 1.1 logs per device, the first one already exists
+                -> 0.1 more per device (80).
+                An older log is the log of the first visit of the device, not yet cleaned up:
+                same device, its last activity is its first activity.
+                Each one is given to a device:
+                - almost all devices keep a single log, a few get several;
+                - an active (not revoked) device 1 time out of 10, as active devices have
+                  more logs; any device if there is no active one.
+            -->
+            <create model="res.device.log" count="80">
+                <value name="active" generator="choice.sample" values="{True: 1, False: 9}"/>
+                <!-- beta(20, 0.6): strongly favours the last created devices, so a few of them get several logs -->
+                <value name="matching_parent" generator="relation.one" comodel_name="res.device.log" domain="[('revoked', '!=', active)]" distribution="beta(alpha=20, beta=0.6)"/>
+                <value name="any_parent" generator="relation.one" comodel_name="res.device.log" distribution="beta(alpha=20, beta=0.6)"/>
+                <value name="device" eval="model.browse(matching_parent or any_parent)"/>
+                <field name="user_id" eval="device.user_id"/>
+                <field name="session_identifier" eval="device.session_identifier"/>
+                <field name="ip_address" eval="device.ip_address"/>
+                <field name="user_agent" eval="device.user_agent"/>
+                <field name="country" eval="device.country"/>
+                <field name="city" eval="device.city"/>
+                <field name="first_activity" eval="device.first_activity"/>
+                <field name="last_activity" eval="device.first_activity"/>
+                <field name="revoked" eval="device.revoked"/>
+            </create>
+        </field>
+    </record>
+</odoo>
