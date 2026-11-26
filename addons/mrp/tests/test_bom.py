@@ -2838,6 +2838,47 @@ class TestBoM(TestMrpCommon):
         self.assertEqual(comp_line['availability_state'], 'unavailable')  # Reserved for the MO
         self.assertEqual(comp_line.get('status'), 'Not Available')
 
+    def test_bom_overview_quantity_to_replenish(self):
+        """The BoM overview suggests only what is missing, and the components' demand is based on
+        their parent's quantity to replenish. For 100 Tables:
+        Table: 100 needed - 2 forecasted = 98 to replenish
+            Table Top: 98 needed - 5 forecasted = 93 To Manufacture
+                Wood Panel: 93 * 2 = 186 needed - 48 forecasted = 138 To Manufacture
+                    Ply Layer: 138 * 3 = 414 needed, 414 in stock -> Available
+            Table Leg: 98 * 4 = 392 needed, 392 in stock -> Available
+        When the Table itself is available, its components' statuses are hidden.
+        """
+        table, table_top, wood_panel, ply_layer, table_leg = self.productA, self.productB, self.productC, self.productD, self.productE
+        table_bom = self.env['mrp.bom'].create([{
+            'product_tmpl_id': table.product_tmpl_id.id,
+            'bom_line_ids': [
+                Command.create({'product_id': table_top.id, 'product_qty': 1}),
+                Command.create({'product_id': table_leg.id, 'product_qty': 4}),
+            ],
+        }, {
+            'product_tmpl_id': table_top.product_tmpl_id.id,
+            'bom_line_ids': [Command.create({'product_id': wood_panel.id, 'product_qty': 2})],
+        }, {
+            'product_tmpl_id': wood_panel.product_tmpl_id.id,
+            'bom_line_ids': [Command.create({'product_id': ply_layer.id, 'product_qty': 3})],
+        }])[0]
+        for product, quantity in ((table, 2), (table_top, 5), (wood_panel, 48), (ply_layer, 414), (table_leg, 392)):
+            self.env['stock.quant']._update_available_quantity(product, self.stock_location, quantity)
+
+        report_line = self.env['report.mrp.report_bom_structure']._get_report_data(table_bom.id, searchQty=100)['lines']
+        table_top_line, table_leg_line = report_line['components']
+        wood_panel_line = table_top_line['components'][0]
+        self.assertEqual(table_top_line['status'], '93 To Manufacture')
+        self.assertEqual(wood_panel_line['status'], '138 To Manufacture')
+        self.assertEqual(wood_panel_line['components'][0]['status'], 'Available')
+        self.assertEqual(table_leg_line['status'], 'Available')
+
+        report_line = self.env['report.mrp.report_bom_structure']._get_report_data(table_bom.id, searchQty=2)['lines']
+        self.assertEqual(report_line['status'], 'Available')
+        wood_panel_line = report_line['components'][0]['components'][0]
+        for line in (*report_line['components'], wood_panel_line, wood_panel_line['components'][0]):
+            self.assertFalse(line['status'], "Components of an available product should have no status")
+
     def test_bom_with_operations_for_kit_variant(self):
         """
         Create a bom for a product P using a kit product as compnent. Check that the operations
