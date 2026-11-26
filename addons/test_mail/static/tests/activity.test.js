@@ -181,17 +181,16 @@ test("activity view: simple activity rendering", async () => {
             expect.step("doAction");
             expect(action).toEqual({
                 context: {
-                    default_res_id: mailTestActivityIds[1],
-                    default_res_model: "mail.test.activity",
+                    active_ids: [mailTestActivityIds[1]],
+                    active_id: mailTestActivityIds[1],
+                    active_model: "mail.test.activity",
                     default_activity_type_id: mailActivityTypeIds[2],
-                    dialog_size: "large",
                 },
-                res_id: false,
-                res_model: "mail.activity",
+                name: "Schedule Activity",
+                res_model: "mail.activity.schedule",
                 target: "new",
                 type: "ir.actions.act_window",
                 view_mode: "form",
-                view_type: "form",
                 views: [[false, "form"]],
             });
         },
@@ -760,10 +759,10 @@ test("activity view: 'scheduleActivity' does not add activity_ids condition as s
     await expect.waitForSteps([[], []]);
 });
 
-test("activity view: 'onClose' of 'openActivityFormView' does not add activity_ids condition as selectCreateDialog domain", async () => {
+test("activity view: 'onClose' of 'scheduleActivityOnCell' does not add activity_ids condition as selectCreateDialog domain", async () => {
     patch(ActivityController.prototype, {
-        openActivityFormView(resId, activityTypeId) {
-            super.openActivityFormView(resId, activityTypeId);
+        scheduleActivityOnCell(resId, activityTypeId) {
+            super.scheduleActivityOnCell(resId, activityTypeId);
             expect.step(this.getSearchProps().domain);
         },
     });

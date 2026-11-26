@@ -25,7 +25,7 @@ class MailActivityType(models.Model):
         ]
 
     name = fields.Char('Name', required=True, translate=True)
-    summary = fields.Char('Default Summary', translate=True)
+    summary = fields.Char('Summary', translate=True)
     sequence = fields.Integer('Sequence', default=10)
     active = fields.Boolean(default=True)
     create_uid = fields.Many2one('res.users', index=True)
