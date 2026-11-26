@@ -1294,7 +1294,7 @@ Please change the quantity done or the rounding precision in your settings.""",
         fields = [
             'product_id', 'price_unit', 'procure_method', 'location_id', 'location_dest_id', 'location_final_id',
             'product_uom', 'restrict_partner_id', 'origin_returned_move_id',
-            'propagate_cancel', 'description_picking', 'never_product_template_attribute_value_ids',
+            'propagate_cancel', 'description_picking', 'never_product_template_attribute_value_ids', 'picked',
         ]
         if self.env['ir.config_parameter'].sudo().get_param('stock.merge_only_same_date'):
             fields.append('date')
@@ -1306,7 +1306,7 @@ Please change the quantity done or the rounding precision in your settings.""",
 
     @api.model
     def _prepare_merge_negative_moves_excluded_distinct_fields(self):
-        return ['description_picking']
+        return ['description_picking', 'picked']
 
     def _clean_merged(self):
         """Cleanup hook used when merging moves"""

@@ -3343,6 +3343,32 @@ class TestRoutes(TestStockCommon):
         self.assertEqual(ship.location_dest_id, final_location)
         self.assertEqual(ship.move_ids.location_dest_id, final_location)
 
+    def test_pick_backorder_reserves_picked_ship(self):
+        """
+        Check that validating the backorder of a pick reserves its quantity on the ship
+        even when the ship is already picked.
+        """
+        self.warehouse_1.delivery_steps = 'pick_ship'
+        self.env['stock.quant']._update_available_quantity(self.product1, self.stock_location, 10)
+        reference = self.env['stock.reference'].create({'name': 'pick ship reference'})
+        self.env['stock.rule'].run([
+            self.env['stock.rule'].Procurement(
+                self.product1, 10.0, self.product1.uom_id, self.customer_location, self.product1.name, 'origin',
+                self.env.company, {'warehouse_id': self.warehouse_1, 'reference_ids': reference},
+            )
+        ])
+        pick = self.env['stock.picking'].search([('reference_ids', 'in', reference.ids)], limit=1)
+        pick.move_ids.write({'quantity': 2, 'picked': True})
+        Form.from_action(self.env, pick.button_validate()).save().process()
+        ship = pick.move_ids.move_dest_ids.picking_id
+        ship.move_ids.picked = True
+
+        pick.backorder_ids.button_validate()
+        self.assertRecordValues(ship.move_ids, [
+            {'product_uom_qty': 2.0, 'quantity': 2.0, 'picked': True},
+            {'product_uom_qty': 8.0, 'quantity': 8.0, 'picked': False},
+        ])
+
 
 class TestAutoAssign(TestStockCommon):
     def create_pick_ship(self):
