@@ -8,9 +8,17 @@
             <xpath expr="//sheet" position="inside">
                 <notebook invisible="payment_provider != 'mollie'">
                     <page name="settings" string="Mollie">
-                        <group>
-                            <field name="mollie_payment_provider_id" invisible="payment_provider != 'mollie'" required="payment_provider == 'mollie'"/>
-                            <field name="mollie_terminal_id" invisible="payment_provider != 'mollie'" required="payment_provider == 'mollie'"/>
+                        <group invisible="payment_provider != 'mollie'">
+                            <group>
+                                <field name="mollie_payment_provider_id" required="payment_provider == 'mollie'"/>
+                                <field name="mollie_api_key" password="True" groups="point_of_sale.group_pos_manager" invisible="not mollie_payment_provider_id"/>
+                                <field name="mollie_terminal_id" placeholder="Use 'Connect Terminal' button to find one"/>
+                            </group>
+                            <group>
+                                <div class="d-flex justify-content-end" colspan="2" groups="point_of_sale.group_pos_manager">
+                                    <button name="action_mollie_connect_terminal" type="object" string="Connect Terminal" class="btn-primary text-nowrap" invisible="not mollie_api_key"/>
+                                </div>
+                            </group>
                         </group>
                     </page>
                 </notebook>
