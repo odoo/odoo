@@ -5,6 +5,8 @@ import { getFilledOrder, setupPosEnv } from "../utils";
 import { definePosModels } from "../data/generate_model_definitions";
 import { getTemplate } from "@web/core/templates";
 import { ConnectionLostError } from "@web/core/network/rpc";
+import { deserializeDateTime } from "@web/core/l10n/dates";
+import { parseWriteDateTimestamp } from "@point_of_sale/app/plugins/pos_data_plugin";
 
 definePosModels();
 
@@ -305,6 +307,27 @@ describe("data_service", () => {
             localData
         );
         expect(written).toEqual([]);
+    });
+
+    test("parseWriteDateTimestamp matches deserializeDateTime", () => {
+        for (const value of [
+            "2026-11-24 10:15:30",
+            "2026-11-24 10:15:30.5",
+            "2026-11-24 10:15:30.12",
+            "2026-11-24 10:15:30.123456",
+            "2024-02-29 23:59:59.999999",
+            "2026-11-24 10:15:30+02:00",
+        ]) {
+            expect(parseWriteDateTimestamp(value)).toBe(
+                deserializeDateTime(value).toMillis() / 1000
+            );
+        }
+        for (const value of [false, null, undefined, ""]) {
+            const before = Date.now() / 1000;
+            const timestamp = parseWriteDateTimestamp(value);
+            expect(timestamp >= before && timestamp <= Date.now() / 1000).toBe(true);
+        }
+        expect(parseWriteDateTimestamp("invalid")).toBe(0);
     });
 
     test("websocket reconnections don't duplicate the notification listeners", async () => {

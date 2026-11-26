@@ -32,6 +32,24 @@ const HEARTBEAT_INTERVAL = 10000;
 const HEARTBEAT_RETRY_INTERVAL = 3000;
 const HEARTBEAT_TIMEOUT = 10000;
 const HEARTBEAT_MAX_FAILED_ATTEMPTS = 3;
+const SQL_DATETIME_RE = /^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})(?:\.(\d{1,3})\d*)?$/;
+
+export function parseWriteDateTimestamp(writeDate) {
+    if (!writeDate) {
+        return Date.now() / 1000;
+    }
+    if (typeof writeDate === "string") {
+        const match = SQL_DATETIME_RE.exec(writeDate);
+        if (match) {
+            const ms = match[7] ? Number(match[7].padEnd(3, "0")) : 0;
+            return (
+                Date.UTC(+match[1], +match[2] - 1, +match[3], +match[4], +match[5], +match[6], ms) /
+                1000
+            );
+        }
+    }
+    return deserializeDateTime(writeDate).toMillis() / 1000 || 0;
+}
 
 export class PosDataPlugin extends Plugin {
     // Must stay above LocalizationPlugin (10) since loading records needs translations.
@@ -469,12 +487,7 @@ export class PosDataPlugin extends Plugin {
             }
             results[name] = data[name].reduce((acc, item) => {
                 if (typeof item.id === "number") {
-                    // deserializeDateTime(item.write_date) is precise to the second,
-                    // we can divide by 1000 without losing precision.
-                    // Timestamp in Python is giving timestamp in seconds,
-                    // we will thus compare both in seconds.
-                    const date = deserializeDateTime(item.write_date).ts / 1000 || 0; // seconds since epoch
-                    acc[item.id] = date;
+                    acc[item.id] = parseWriteDateTimestamp(item.write_date);
                 }
                 return acc;
             }, {});
