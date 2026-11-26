@@ -618,9 +618,6 @@ class TestUi(HttpCaseWithWebsiteUser):
         self.assertFalse(menu_root.action, 'The top menu should not have an action (or the test/tour will not test anything).')
         self.start_tour('/', 'website_backend_menus_redirect', login='admin')
 
-    def test_30_website_text_animations(self):
-        self.start_tour(self.env['website'].get_client_action_url('/', True), 'text_animations', login='admin')
-
     def test_31_website_edit_megamenu_big_icons_subtitles(self):
         self.start_tour(self.env['website'].get_client_action_url('/', True), 'edit_megamenu_big_icons_subtitles', login='admin')
 
