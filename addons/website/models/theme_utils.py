@@ -3,8 +3,6 @@
 import logging
 from collections import OrderedDict
 
-import werkzeug
-
 from odoo import api, models
 from odoo.exceptions import AccessError, MissingError
 from odoo.modules import Manifest
@@ -291,6 +289,9 @@ class ThemeUtils(models.AbstractModel):
                             rec_data.pop('active')
                         if model_name == 'ir.ui.view' and (find.arch_updated or find.arch == rec_data['arch']):
                             rec_data.pop('arch')
+                        elif model_name == 'ir.ui.view':
+                            # The theme's arch is not a change made by the user
+                            rec_data['arch_updated'] = False
                         find.update(rec_data)
                         self._copy_theme_translations(rec, find)
                 else:
@@ -338,12 +339,7 @@ class ThemeUtils(models.AbstractModel):
             _logger.info('Load theme %s for website %s from template.', module.mapped('name'), website.id)
 
             for model_name in self._theme_model_names:
-                self._update_records(module, model_name, website)
-
-            if self.env.context.get('apply_new_theme'):
-                # TODO Kept for backward compatibility with design-themes tests
-                # and web_studio. This could become a parameter in master.
-                self.with_context(website_id=website.id)._apply_theme_config(module)
+                self.with_context(lang=None)._update_records(module, model_name, website)
 
     def _theme_unload(self, themes, website):
         """
@@ -451,21 +447,22 @@ class ThemeUtils(models.AbstractModel):
                 websites |= website
         return websites
 
-    def _theme_upgrade_upstream(self, theme):
-        """ Upgrade the upstream dependencies of a theme, and install it if necessary.
-
-            :param theme: theme ``ir.module.module``
+    @api.model
+    def _theme_apply(self, theme, website):
         """
-        if not self.env.user.has_group('website.group_website_restricted_editor'):
-            raise werkzeug.exceptions.Forbidden()
+            Apply ``theme`` on ``website``: remove its current theme, load the themes
+            in the stream of ``theme`` on it, then apply the theme configuration.
 
-        def install_or_upgrade(theme):
-            if theme.state != 'installed':
-                theme.button_install()
-            themes = theme + self._theme_get_upstream(theme)
-            themes.filtered(lambda m: m.state == 'installed').button_upgrade()
+            The theme must be installed: this is no module operation and never
+            reloads the registry.
 
-        theme.sudo()._button_immediate_function(install_or_upgrade)
+            :param theme: theme ``ir.module.module`` to apply
+            :param website: ``website`` model on which to apply the theme
+        """
+        self._theme_remove(website)
+        website.theme_id = theme
+        self._theme_load(self._theme_get_stream_themes(theme), website)
+        self.with_context(website_id=website.id)._apply_theme_config(theme)
 
     def _theme_remove(self, website):
         """
@@ -661,16 +658,16 @@ class ThemeUtils(models.AbstractModel):
         # as `website_sale` are already installed.
         add_addons_snippets(manifest.get('configurator_snippets_addons', {}))
 
-        website = self.env.website or self.env['website'].browse(self.env.context.get('host_id'))
-        theme = website.theme_id
-        if theme and theme.name != module.name:
-            # Another module is being installed after the theme was selected.
-            # Only include the theme addon snippets targeting this module.
-            theme_manifest = Manifest.for_addon(theme.name)
-            if theme_manifest:
-                theme_addons = theme_manifest.get('configurator_snippets_addons', {})
-                addons = {module.name: theme_addons.get(module.name, {})}
-                add_addons_snippets(addons)
+        themes = self.env['ir.module.module'].search(self.get_themes_domain())
+        if module not in themes:
+            # An addon module is being installed, and the themes declare which
+            # of its snippets they need. Which theme a website ends up using is
+            # unknown here, and applying one is not a module operation, so
+            # cover every installed theme.
+            for theme in themes.filtered(lambda t: t.state == 'installed'):
+                if theme_manifest := Manifest.for_addon(theme.name):
+                    theme_addons = theme_manifest.get('configurator_snippets_addons', {})
+                    add_addons_snippets({module.name: theme_addons.get(module.name, {})})
 
         # Generate general configurator snippet templates
         create_values = []
