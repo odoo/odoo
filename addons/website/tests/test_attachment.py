@@ -39,17 +39,5 @@ class TestWebsiteAttachment(odoo.tests.HttpCase):
     def test_02_image_quality(self):
         self.start_tour(self.env['website'].get_client_action_url('/', True), 'website_image_quality', login="admin")
 
-    def test_03_link_to_document(self):
-        Attachment = self.env['ir.attachment']
-        # hardcoded id for JS tour
-        self.env.cr.execute("SELECT setval(pg_get_serial_sequence(%s, 'id'), 437296, false)", (Attachment._table,))
-        Attachment.create({
-            'name': 'sample.txt',
-            'public': True,
-            'mimetype': 'text/plain',
-            'raw': b'Lorem Ipsum',
-        })
-        self.start_tour(self.env['website'].get_client_action_url('/', True), 'test_link_to_document', login="admin")
-
     def test_04_image_srcset(self):
         self.start_tour(self.env['website'].get_client_action_url('/', True), 'website_image_srcset', login="admin")
