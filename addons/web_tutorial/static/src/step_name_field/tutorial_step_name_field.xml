@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web_tutorial.TutorialStepNameField">
+        <FieldSelectorField t-if="this.type() === 'field'" t-props="this.selectorProps()"/>
+        <DynamicSelectionField t-elif="this.isSelection()" t-props="this.props" optionsField="'name_selection_options'"/>
+        <CharField t-else="" t-props="this.props"/>
+    </t>
+</templates>
