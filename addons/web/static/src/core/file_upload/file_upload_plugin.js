@@ -21,6 +21,7 @@ import { session } from "@web/session";
  * - `multiple`: allow to pick several files. Default: true.
  * - `max_size`: the upload limit, in bytes. Default: the one of the server.
  * They only help the user: the server validates the files itself.
+ * `sendFiles` also takes a `signal` (`AbortSignal`) cancelling the upload.
  */
 export class FileUploadPlugin extends Plugin {
     #notification = usePlugin(NotificationPlugin);
@@ -41,14 +42,14 @@ export class FileUploadPlugin extends Plugin {
      *
      * @param {string} route
      * @param {Object} params
-     * @param {Object|string} [options] `accept` and `max_size` (see above)
+     * @param {Object|string} [options] `accept`, `max_size` and `signal` (see above)
      * @returns {Promise<Object|null>} the JSON response, null if nothing was
      *      sent (all files left out, too large) or the upload was cancelled
      * @throws {Error} the error of the server: an RPC error if it answered one
      */
     async sendFiles(route, params, options) {
         const { ufile = [], ...fields } = params;
-        const { accept, max_size } = this.#getOptions(options);
+        const { accept, max_size, signal: abortSignal } = this.#getOptions(options);
         const maxSize = max_size || session.max_file_upload_size || DEFAULT_MAX_FILE_SIZE;
         const files = this.#filterFiles(ufile, accept, maxSize);
         if (ufile.length && !files.length) {
@@ -65,12 +66,13 @@ export class FileUploadPlugin extends Plugin {
             );
             return null;
         }
-        const upload = await this.#send(route, files, fields);
+        const upload = await this.#send(route, files, fields, abortSignal);
         if (upload.state === "abort") {
             return null;
         }
-        if (upload.response?.error) {
-            throw makeErrorFromResponse(upload.response.error);
+        const error = upload.response?.error;
+        if (error) {
+            throw typeof error === "string" ? new Error(error) : makeErrorFromResponse(error);
         }
         if (upload.state !== "loaded") {
             throw new Error(upload.error || _t("An error occurred while uploading."));
@@ -164,10 +166,10 @@ export class FileUploadPlugin extends Plugin {
      * Sends the request, shown in the progress card until it ends.
      *
      * @returns {Promise<Object>} once ended: `state` is "loaded", "error" or
-     *      "abort" (cancelled in the card), `response` the parsed JSON response
-     *      and `error` the text of a server error page
+     *      "abort" (cancelled in the card or by the signal), `response` the
+     *      parsed JSON response and `error` the text of a server error page
      */
-    #send(route, files, fields) {
+    #send(route, files, fields, abortSignal) {
         const xhr = new XMLHttpRequest();
         xhr.open("POST", route);
         const formData = new FormData();
@@ -224,6 +226,7 @@ export class FileUploadPlugin extends Plugin {
         });
         xhr.addEventListener("error", () => end({ state: "error" }));
         xhr.addEventListener("abort", () => end({ state: "abort" }));
+        abortSignal?.addEventListener("abort", () => xhr.abort());
         xhr.send(formData);
         return promise;
     }

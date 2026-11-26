@@ -155,10 +155,11 @@ export class Activity extends Component {
     async onFileUploaded(data) {
         const activity = this.props.activity();
         const thread = this.thread();
-        const { id: attachmentId } = await this.attachmentUploader.uploadData(data, {
-            activity,
-        });
-        await activity.markAsDone([attachmentId]);
+        const attachment = await this.attachmentUploader.uploadData(data, { activity });
+        if (!attachment) {
+            return;
+        }
+        await activity.markAsDone([attachment.id]);
         this.props.onActivityChanged(thread);
         await thread.fetchNewMessages();
     }

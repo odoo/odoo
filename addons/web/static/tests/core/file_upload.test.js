@@ -78,6 +78,32 @@ test("sendFiles: the upload can be cancelled from its card", async () => {
     expect(".o_upload_progress").toHaveCount(0);
 });
 
+test("sendFiles: the upload can be cancelled with a signal", async () => {
+    mockUpload(() => new Promise(() => {}));
+    await mountWithCleanup(UploadProgress);
+    const controller = new AbortController();
+    const done = getService(FileUploadPlugin).sendFiles(
+        "/test/",
+        { ufile: [file()] },
+        { signal: controller.signal }
+    );
+    await animationFrame();
+    expect(".o_upload_progress").toHaveText("Uploading a.txt");
+
+    controller.abort();
+    expect(await done).toBe(null);
+    await animationFrame();
+    expect(".o_upload_progress").toHaveCount(0);
+});
+
+test("sendFiles: an error message of the server is thrown", async () => {
+    await mountWithCleanup(UploadProgress);
+    onRpc("/test/", () => ({ error: "Not allowed" }));
+    await expect(
+        getService(FileUploadPlugin).sendFiles("/test/", { ufile: [file()] })
+    ).rejects.toThrow("Not allowed");
+});
+
 test("sendFiles: nothing is sent when the files together are too large", async () => {
     await mountWithCleanup(UploadProgress);
     patchWithCleanup(session, { max_file_upload_size: 1 });
