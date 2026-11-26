@@ -17,7 +17,7 @@
                         </group>
                     </group>
                     <field name="mo_ids" invisible="1"/> <!-- manufacturing orders the entry is posted for, filled from the active_ids of the context -->
-                    <field name="line_ids">
+                    <field name="line_ids" mode="list,kanban">
                         <list editable="bottom">
                             <field name="account_id"/>
                             <field name="label"/>
@@ -25,6 +25,31 @@
                             <field name="credit" sum="Total Credit"/>
                             <field name="currency_id" column_invisible="True"/> <!-- currency of the debit/credit monetary columns -->
                         </list>
+                        <form string="Accounting Line">
+                            <field name="wip_accounting_id" invisible="1"/>
+                            <field name="currency_id" invisible="1"/>
+                            <group>
+                                <field name="account_id"/>
+                                <field name="label"/>
+                                <field name="debit" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                <field name="credit" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            </group>
+                        </form>
+                        <kanban class="o_kanban_mobile">
+                            <field name="account_id"/>
+                            <field name="label"/>
+                            <field name="debit"/>
+                            <field name="credit"/>
+                            <field name="currency_id"/>
+                            <templates>
+                                <t t-name="card">
+                                    <field name="account_id" class="fw-bold"/>
+                                    <field name="label" class="text-muted" invisible="not label"/>
+                                    <div class="text-muted mt-2">Debit: <field name="debit" class="fw-bold"/></div>
+                                    <div class="text-muted">Credit: <field name="credit" class="fw-bold"/></div>
+                                </t>
+                            </templates>
+                        </kanban>
                     </field>
                     <footer>
                         <button name="confirm" string="Post WIP" data-hotkey="q" colspan="1" type="object" class="btn-primary"/>

@@ -45,7 +45,7 @@
                         </group>
                         <notebook>
                             <page string="Additional Costs" name="additional_costs">
-                                <field name="cost_lines" readonly="state == 'done'">
+                                <field name="cost_lines" mode="list,kanban" readonly="state == 'done'">
                                     <form string="Cost Lines">
                                         <group>
                                             <group>
@@ -78,6 +78,24 @@
                                         <field name="price_unit"/>
                                         <field name="currency_id" column_invisible="True"/> <!-- currency of the monetary fields of this form -->
                                     </list>
+                                    <kanban class="o_kanban_mobile">
+                                        <field name="currency_id"/>
+                                        <field name="apply_on_product_ids"/>
+                                        <templates>
+                                            <t t-name="card">
+                                                <field name="product_id" class="fw-bold"/>
+                                                <div class="text-muted" invisible="not name">Description: <field name="name"/></div>
+                                                <div class="text-muted">Cost: <field name="price_unit"/></div>
+                                                <div class="text-muted" invisible="apply_on_product_ids">Apply On: All Products</div>
+                                                <div class="d-flex align-items-center gap-1 text-muted" invisible="not apply_on_product_ids">
+                                                    <div class="text-nowrap">Apply On:</div>
+                                                    <field name="apply_on_product_ids" widget="many2many_tags"/>
+                                                </div>
+                                                <div class="text-muted">Split Method: <field name="split_method"/></div>
+                                                <div class="text-muted" invisible="not account_id">Account: <field name="account_id"/></div>
+                                            </t>
+                                        </templates>
+                                    </kanban>
                                 </field>
                                 <group class="oe_subtotal_footer">
                                     <field name="currency_id" invisible="1"/> <!-- currency of the monetary fields of this form -->
@@ -86,7 +104,7 @@
                                 </group>
                             </page>
                             <page string="Valuation Adjustments" name="valuation_adjustments">
-                                <field name="valuation_adjustment_lines" readonly="state == 'done'">
+                                <field name="valuation_adjustment_lines" mode="list,kanban" readonly="state == 'done'">
                                     <form string="Valuation Adjustments">
                                         <group>
                                             <group>
@@ -111,6 +129,19 @@
                                         <field name="final_cost" readonly="1"/>
                                         <field name="additional_landed_cost"/>
                                     </list>
+                                    <kanban class="o_kanban_mobile" create="0">
+                                        <field name="currency_id"/>
+                                        <templates>
+                                            <t t-name="card">
+                                                <field name="product_id" class="fw-bold"/>
+                                                <div class="text-muted">Cost Line: <field name="cost_line_id"/></div>
+                                                <div class="text-muted">Quantity: <field name="quantity"/></div>
+                                                <div class="text-muted">Original Value: <field name="former_cost"/></div>
+                                                <div class="text-muted">Additional Landed Cost: <field name="additional_landed_cost"/></div>
+                                                <div class="text-muted">New Value: <field name="final_cost" class="fw-bold"/></div>
+                                            </t>
+                                        </templates>
+                                    </kanban>
                                 </field>
                             </page>
                         </notebook>

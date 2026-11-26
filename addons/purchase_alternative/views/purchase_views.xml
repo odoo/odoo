@@ -1,5 +1,44 @@
 <?xml version="1.0"?>
 <odoo>
+    <record id="purchase_order_alternative_kanban_view" model="ir.ui.view">
+        <field name="name">purchase.order.alternative.kanban</field>
+        <field name="model">purchase.order</field>
+        <field name="mode">primary</field>
+        <field name="priority">100</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" default_order="amount_total_cc, date_planned, id">
+                <field name="currency_id"/>
+                <field name="partner_id"/>
+                <field name="name"/>
+                <field name="date_planned"/>
+                <field name="amount_total"/>
+                <field name="state"/>
+                <control>
+                    <create string="Link to Existing RfQ"/>
+                </control>
+                <templates>
+                    <t t-name="card">
+                        <div class="d-flex align-items-center gap-2">
+                            <field name="partner_id" class="fw-bold"/>
+                            <field name="state" widget="badge" class="ms-auto flex-shrink-0"
+                                decoration-danger="state == 'cancel'"
+                                decoration-info="state in ('draft', 'sent')"
+                                decoration-success="state == 'purchase'"
+                                decoration-warning="state == 'to approve'"/>
+                            <t t-if="widget.deletable">
+                                <a type="delete" role="button" class="oi btn btn-hover-danger flex-shrink-0 p-0" data-icon="close"
+                                    title="Unlink" aria-label="Unlink" invisible="id == parent.id"/>
+                            </t>
+                        </div>
+                        <div class="text-muted">Reference: <field name="name"/></div>
+                        <div class="text-muted" invisible="not date_planned">Expected: <field name="date_planned"/></div>
+                        <field name="amount_total" class="align-self-end fw-bold"/>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
     <record id="purchase_order_form" model="ir.ui.view">
         <field name="name">purchase.order.form.inherit.purchase.alternative</field>
         <field name="model">purchase.order</field>
@@ -15,7 +54,8 @@
                             <button name="action_compare_alternative_lines" type="object" class="btn-link d-block" string="Compare Product Lines" icon="bar_chart" invisible="not alternative_po_ids"/>
                         </div>
                     </group>
-                    <field name="alternative_po_ids" readonly="not id" widget="many2many_alt_pos" context="{'quotation_only': True}">
+                    <field name="alternative_po_ids" readonly="not id" widget="many2many_alt_pos" mode="list,kanban"
+                        context="{'quotation_only': True, 'kanban_view_ref': 'purchase_alternative.purchase_order_alternative_kanban_view'}">
                         <list string="Alternative Purchase Order" decoration-muted="state in ['cancel', 'purchase']" default_order="amount_total_cc, date_planned, id">
                             <control>
                                 <create string="Link to Existing RfQ"/>

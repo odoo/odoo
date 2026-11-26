@@ -161,7 +161,15 @@
                     <notebook>
                         <page name="pricing" string="Pricing" invisible="delivery_type != 'base_on_rule'">
                             <group name="general">
-                                <field name="price_rule_ids" nolabel="1"/>
+                                <field name="price_rule_ids" mode="list,kanban" nolabel="1">
+                                    <kanban class="o_kanban_mobile">
+                                        <templates>
+                                            <t t-name="card">
+                                                <field name="name"/>
+                                            </t>
+                                        </templates>
+                                    </kanban>
+                                </field>
                             </group>
                         </page>
                         <page string="Availability" name="destination">

@@ -51,7 +51,28 @@
                 </group>
                 <notebook>
                     <page string="Warehouses" name="page_warehouses" invisible="not warehouseinfo_ids">
-                        <field name="wh_replenishment_option_ids"/>
+                        <field name="wh_replenishment_option_ids" mode="list,kanban">
+                            <kanban class="o_kanban_mobile" create="0" delete="0">
+                                <field name="warehouse_id"/>
+                                <field name="location_id"/>
+                                <field name="free_qty"/>
+                                <field name="qty_to_order"/>
+                                <field name="uom"/>
+                                <field name="route_id"/>
+                                <field name="lead_time"/>
+                                <templates>
+                                    <t t-name="card">
+                                        <field name="warehouse_id" class="fw-bold"/>
+                                        <div class="text-danger" invisible="free_qty &gt;= qty_to_order">Available Quantity: <field name="free_qty"/> <field name="uom"/></div>
+                                        <div class="text-muted" invisible="free_qty &lt; qty_to_order">Available Quantity: <field name="free_qty"/> <field name="uom"/></div>
+                                        <div class="text-muted">Location: <field name="location_id"/></div>
+                                        <div class="text-muted">Route: <field name="route_id"/></div>
+                                        <div class="text-muted">Lead Time: <field name="lead_time"/></div>
+                                        <button name="select_route" string="Select Route" type="object" class="btn btn-secondary btn-sm mt-2"/>
+                                    </t>
+                                </templates>
+                            </kanban>
+                        </field>
                     </page>
                 </notebook>
                 <footer>

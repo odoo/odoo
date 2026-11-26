@@ -20,7 +20,7 @@
                 <div>
                     <br/>
                     <field name="quant_ids" invisible="1"/> <!-- kept for compute of quant_to_fix_ids -->
-                    <field name="quant_to_fix_ids" readonly="1" style="margin-top:10px;">
+                    <field name="quant_to_fix_ids" readonly="1" style="margin-top:10px;" mode="list,kanban">
                         <list editable="bottom" create="0" delete="0">
                             <field name="id" column_invisible="True"/> <!-- drives readonly on location_id, lot_id, package_id, owner_id in this list -->
                             <field name="product_id" readonly="context.get('single_product', False) or id" column_invisible="context.get('single_product', False)" force_save="1" options="{'no_create': True}"/>
@@ -34,6 +34,32 @@
                             <field name="uom_id" groups="uom.group_uom" widget="many2one_uom"/>
                             <field name='company_id' groups="base.group_multi_company" optional="show"/>
                         </list>
+                        <kanban class="o_kanban_mobile" create="0" delete="0">
+                            <field name="tracking"/>
+                            <field name="product_id"/>
+                            <field name="location_id"/>
+                            <field name="lot_id"/>
+                            <field name="package_id"/>
+                            <field name="owner_id"/>
+                            <field name="quantity"/>
+                            <field name="inventory_quantity"/>
+                            <field name="inventory_diff_quantity"/>
+                            <field name="uom_id"/>
+                            <field name="company_id"/>
+                            <templates>
+                                <t t-name="card">
+                                    <field name="product_id" class="fw-bold"/>
+                                    <div class="text-muted" groups="stock.group_stock_multi_locations">Location: <field name="location_id"/></div>
+                                    <div class="text-muted" groups="stock.group_production_lot" invisible="tracking not in ('serial', 'lot')">Lot/Serial Number: <field name="lot_id"/></div>
+                                    <div class="text-muted" groups="stock.group_tracking_lot" invisible="not package_id">Package: <field name="package_id"/></div>
+                                    <div class="text-muted" groups="stock.group_tracking_owner" invisible="not owner_id">Owner: <field name="owner_id"/></div>
+                                    <div class="text-muted" groups="base.group_multi_company">Company: <field name="company_id"/></div>
+                                    <div class="text-muted">On Hand: <field name="quantity"/> <field name="uom_id" groups="uom.group_uom"/></div>
+                                    <div class="text-muted">Counted Quantity: <field name="inventory_quantity"/> <field name="uom_id" groups="uom.group_uom"/></div>
+                                    <div class="text-danger">Difference: <field name="inventory_diff_quantity"/> <field name="uom_id" groups="uom.group_uom"/></div>
+                                </t>
+                            </templates>
+                        </kanban>
                     </field>
                 </div>
                 <footer>

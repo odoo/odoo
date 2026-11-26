@@ -1,6 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <record id="delivery_note_line_kanban_view" model="ir.ui.view">
+        <field name="name">delivery.note.wizard.line.kanban</field>
+        <field name="model">delivery.note.wizard.line</field>
+        <field name="priority">1000</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" create="0" delete="0">
+                <field name="sol_id"/>
+                <field name="product_image"/>
+                <field name="product_id"/>
+                <field name="product_uom_qty"/>
+                <field name="product_uom_id"/>
+                <templates>
+                    <t t-name="card" class="flex-row gap-2">
+                        <aside>
+                            <field name="product_image" widget="image" options="{'img_class': 'object-fit-contain w-100'}"/>
+                        </aside>
+                        <main>
+                            <field name="product_id" class="fw-bold"/>
+                            <div class="text-muted">Quantity: <field name="product_uom_qty"/> <field name="product_uom_id" groups="uom.group_uom"/></div>
+                        </main>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="delivery_note_line_form_view" model="ir.ui.view">
+        <field name="name">delivery.note.wizard.line.form</field>
+        <field name="model">delivery.note.wizard.line</field>
+        <field name="priority">1000</field>
+        <field name="arch" type="xml">
+            <form string="Delivery Note Line" create="0" delete="0">
+                <sheet>
+                    <group>
+                        <field name="product_image" widget="image" readonly="1"/>
+                        <field name="product_id" readonly="1"/>
+                        <field name="product_uom_qty"/>
+                        <field name="product_uom_id" groups="uom.group_uom" readonly="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
     <record id="delivery_note_list_view" model="ir.ui.view">
         <field name="name">delivery.note.wizard.line.list</field>
         <field name="model">delivery.note.wizard.line</field>

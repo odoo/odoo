@@ -215,28 +215,17 @@
                         <!-- needed for SMLX2ManyField -->
                         <field name="quant_id" invisible="1"/>
                         <field name="picking_id" invisible="1"/>
-                        <div class="row">
-                            <field name="reference" class="col-6"/>
-                            <field name="date" class="col-6 text-end"/>
+                        <div class="d-flex align-items-start gap-2">
+                            <field name="product_id" class="fw-bold"/>
+                            <field name="state" widget="label_selection" class="ms-auto flex-shrink-0"
+                                options="{'classes': {'draft': 'default', 'cancel': 'danger', 'waiting': 'warning', 'confirmed': 'warning', 'partially_available': 'warning', 'assigned': 'success', 'done': 'success'}}"/>
                         </div>
-                        <field name="product_id" class="fw-bolder"/>
-                        <div groups="stock.group_stock_multi_locations">
-                            <field name="location_id"/>
-                            →
-                            <field name="location_dest_id"/>
-                        </div>
-                        <div groups="stock.group_production_lot" invisible="not lot_id and not lot_name">
-                            Lot/SN:
-                            <field name="lot_id" invisible="not lot_id and lot_name"/>
-                            <field name="lot_name" invisible="lot_id or not lot_name"/>
-                        </div>
-                        <div class="row">
-                            <div class="col-6">
-                                <field name="quantity" string="Quantity"/>
-                                <field name="uom_id" groups="uom.group_uom" widget="many2one_uom"/>
-                            </div>
-                            <field class="col-6 text-end" name="state" widget="label_selection" options="{'classes': {'draft': 'default', 'cancel': 'danger', 'waiting': 'warning', 'confirmed': 'warning', 'done': 'success'}}"/>
-                        </div>
+                        <div class="text-muted" invisible="not reference">Reference: <field name="reference"/></div>
+                        <div class="text-muted" invisible="not date">Date: <field name="date"/></div>
+                        <div class="text-muted" groups="stock.group_stock_multi_locations">From: <field name="location_id"/></div>
+                        <div class="text-muted" groups="stock.group_stock_multi_locations">To: <field name="location_dest_id"/></div>
+                        <div class="text-muted" groups="stock.group_production_lot" invisible="not lot_id and not lot_name">Lot/Serial Number: <field name="lot_id" invisible="not lot_id and lot_name"/><field name="lot_name" invisible="lot_id or not lot_name"/></div>
+                        <div class="text-muted">Quantity: <field name="quantity"/> <field name="uom_id" groups="uom.group_uom"/></div>
                     </t>
                 </templates>
             </kanban>
