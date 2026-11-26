@@ -33,3 +33,8 @@ class IrHttp(models.AbstractModel):
                 value.with_context(show_attribute=False, show_parent_categories=False)
             )
         return super()._slug(value)
+
+    @classmethod
+    def _get_translation_frontend_modules_name(cls):
+        mods = super()._get_translation_frontend_modules_name()
+        return mods + ["sale"]
