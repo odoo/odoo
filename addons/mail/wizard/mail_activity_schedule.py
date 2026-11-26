@@ -4,6 +4,7 @@ import logging
 from markupsafe import Markup
 
 from odoo import api, fields, models, _
+from odoo.addons.mail.models.mail_message import _find_allowed_doc_ids
 from odoo.addons.mail.tools.parser import parse_res_ids
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
@@ -132,6 +133,26 @@ class MailActivitySchedule(models.TransientModel):
             warnings = set()
             if scheduler.res_model:
                 applied_on = scheduler._get_applied_on_records()
+                if applied_on:
+                    doc_ids = set(applied_on.ids)
+                    allowed_ids = _find_allowed_doc_ids(
+                        self.env,
+                        {applied_on._name: {doc_id: [doc_id] for doc_id in doc_ids}},
+                        'create',
+                    )
+                    if allowed_ids != doc_ids:
+                        errors.add(self.env._(
+                            "Can't schedule activities on the selected records.",
+                        ))
+                    elif (
+                        not scheduler.plan_id
+                        and scheduler.activity_user_id - self.env.user
+                        and not applied_on.has_access('write')
+                    ):
+                        errors.add(self.env._(
+                            "Can't assign activities to others "
+                            "without write access to the selected records.",
+                        ))
                 if applied_on and ('company_id' in scheduler.env[applied_on._name]._fields and
                                 len(applied_on.mapped('company_id')) > 1):
                     errors.add(_('The records must belong to the same company.'))
@@ -400,13 +421,30 @@ class MailActivitySchedule(models.TransientModel):
 
     def _check_plan_templates_error(self, applied_on):
         self.ensure_one()
-        return filter(
-            None, [
-                activity_template._determine_responsible(self.plan_on_demand_user_id, self.activity_user_id_fname, record, on_demand_role=self.plan_on_demand_role_id)['error']
-                for activity_template in self.plan_id.template_ids
-                for record in applied_on
-            ]
-        )
+        templates_to_schedule = self._plan_filter_activity_templates_to_schedule()
+        writable_records = applied_on._filtered_access('write')
+        errors = []
+        for activity_template in self.plan_id.template_ids:
+            for record in applied_on:
+                responsible_info = activity_template._determine_responsible(
+                    self.plan_on_demand_user_id,
+                    self.activity_user_id_fname,
+                    record,
+                    on_demand_role=self.plan_on_demand_role_id,
+                )
+                errors.append(responsible_info['error'])
+                responsible = responsible_info['responsible']
+                if (
+                    responsible
+                    and responsible != self.env.user
+                    and activity_template in templates_to_schedule
+                    and record not in writable_records
+                ):
+                    errors.append(self.env._(
+                        "Can't assign activities to others "
+                        "without write access to the selected records.",
+                    ))
+        return filter(None, errors)
 
     def _check_plan_templates_warning(self, applied_on):
         self.ensure_one()
