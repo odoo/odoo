@@ -703,7 +703,7 @@ class _RelationalMulti(_Relational):
             read_access = env._access_cache[Comodel._name]
             if all(map(read_access.get, corecords._ids)):
                 pass  # all records are accessible
-            elif all(map(read_access.__contains__, corecords._origin)):
+            elif all(map(read_access.__contains__, corecords._origin._ids)):
                 # we have a value for all origins in access
                 # consider inaccessible records as inaccessible
                 if not corecords.browse().has_access('read'):
