@@ -6,6 +6,7 @@ import re
 import zipfile
 from collections.abc import Buffer
 from io import BytesIO
+from itertools import chain
 
 from lxml import etree
 
@@ -339,3 +340,49 @@ def validate_xml_from_attachment(env, xml_content, xsd_name, reload_files_functi
 def find_xml_value(xpath, xml_element, namespaces=None):
     element = xml_element.xpath(xpath, namespaces=namespaces)
     return element[0].text if element else None
+
+
+def get_xml_embedded_attachment_nodes(tree: etree._Element):
+    """Yield leaf attachment nodes in `tree`.
+
+    Finds EmbeddedDocumentBinaryObject (UBL) and Attachment nodes.
+    :param tree: tree with comments and processing instructions removed.
+    """
+    for attachment_node in chain(
+        tree.iterfind('.//{*}EmbeddedDocumentBinaryObject'),
+        tree.iterfind('.//{*}Attachment'),
+    ):
+        if len(attachment_node):  # the node has children
+            continue
+        yield attachment_node
+
+
+def get_xml_file_tree(
+    name: str, content: Buffer, mimetype: str, with_embeddings_only: bool = False,
+) -> etree._Element | None:
+    """Return the parsed tree if the file is a valid XML file, None otherwise.
+
+    :param name: file name, used to detect XML files with a ``text/plain`` mimetype
+        (e.g. when created by users not allowed to upload XML-like files, see ``ir.attachment._check_contents``)
+    :param content: file content, as bytes or a lazy ``BinaryValue`` (e.g. an attachment's ``raw``),
+        only read for XML files
+    :param mimetype: file mimetype
+    :param with_embeddings_only: return None for XML files that cannot embed attachments,
+        without parsing them (see :func:`get_xml_embedded_attachment_nodes`)
+    """
+    if not (mimetype and content):
+        return None
+    if not (mimetype.endswith('/xml') or (mimetype == 'text/plain' and (name or '').lower().endswith('.xml'))):
+        return None
+    content = bytes(content)
+
+    # quick filters, to not parse the XML most of the cases
+    if with_embeddings_only and b"EmbeddedDocumentBinaryObject" not in content and b"Attachment" not in content:
+        return None
+
+    parser = etree.XMLParser(remove_comments=True, remove_pis=True, resolve_entities=False)
+    try:
+        # parse bytes: lxml reads the encoding from the XML declaration
+        return etree.fromstring(content, parser)
+    except etree.XMLSyntaxError:
+        return None
