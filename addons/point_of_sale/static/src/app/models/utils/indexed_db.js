@@ -198,8 +198,16 @@ export default class IndexedDB {
 
                 for (const data of batch) {
                     try {
-                        const deepCloned = JSON.parse(JSON.stringify(data));
-                        const request = store[method](deepCloned);
+                        let request;
+                        try {
+                            request = store[method](data);
+                        } catch (e) {
+                            if (e?.name === "DataCloneError") {
+                                request = store[method](JSON.parse(JSON.stringify(data)));
+                            } else {
+                                throw e;
+                            }
+                        }
 
                         request.onsuccess = () => {
                             completed++;

@@ -90,3 +90,24 @@ test("keeps unrelated stores untouched when dropping a stale one", async () => {
 
     second.db.close();
 });
+
+test("stores plain and proxied records and deletes them", async () => {
+    const dbName = uniqueDbName();
+    const db = await openDB(dbName, [["id", "pos.category"]]);
+
+    const plain = { id: 1, name: "Plain" };
+    const proxied = new Proxy({ id: 2, name: "Proxied", nested: { count: 3 } }, {});
+    await db.create("pos.category", [plain, proxied]);
+
+    const stored = await db.readAll(["pos.category"]);
+    expect(stored["pos.category"]).toEqual([
+        { id: 1, name: "Plain" },
+        { id: 2, name: "Proxied", nested: { count: 3 } },
+    ]);
+
+    await db.delete("pos.category", [1]);
+    const remaining = await db.readAll(["pos.category"]);
+    expect(remaining["pos.category"]).toEqual([{ id: 2, name: "Proxied", nested: { count: 3 } }]);
+
+    db.db.close();
+});
