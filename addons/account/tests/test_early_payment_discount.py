@@ -189,21 +189,15 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
         } for base_amount in (True, False) for tax_inc in ('tax_excluded', 'tax_included')])
         self.tax_sale_b.price_include = True
         self.early_pay_10_percents_10_days.early_pay_discount_computation = 'included'
-        invoices = self.env['account.move'].create([
-                {
-                'move_type': 'out_invoice',
-                'partner_id': self.partner_a.id,
-                'invoice_date': '2019-01-01',
-                'date': '2019-01-01',
-                'invoice_line_ids': [Command.create({
-                    'name': 'line',
-                    'price_unit': 100.0,
-                    'tax_ids': [Command.set(percent_tax.ids + fixed_tax.ids)],  # 15% tax + fixed 10
-                })],
-                'invoice_payment_term_id': self.early_pay_10_percents_10_days.id,
-            }
-            for percent_tax in [self.product_a.taxes_id, self.tax_sale_b]
-            for fixed_tax in fixed_taxes])
+
+        invoices = self.env['account.move']
+        for percent_tax in [self.product_a.taxes_id, self.tax_sale_b]:
+            for fixed_tax in fixed_taxes:
+                invoices |= self._create_invoice_one_line(
+                    price_unit=100.0,
+                    tax_ids=percent_tax.ids + fixed_tax.ids,  # 15% tax + fixed 10
+                    invoice_payment_term_id=self.early_pay_10_percents_10_days.id,
+                )
         invoices.action_post()
         results = {
             'tax excluded,     in base amount, 15%exc': [{'balance': 113.85}, {'balance': -126.50}, {'balance': 11.00}, {'balance': 1.65}],

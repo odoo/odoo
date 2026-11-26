@@ -5153,12 +5153,11 @@ class AccountMove(models.Model):
         ]
         AccountTax._add_tax_details_in_base_lines(base_lines, self.company_id)
         AccountTax._round_base_lines_tax_details(base_lines, self.company_id)
+        AccountTax._add_accounting_data_in_base_lines_tax_details(base_lines, self.company_id)
 
-        # Track the original amounts in both currencies before the discount.
         for base_line in base_lines:
-            tax_details = base_line['tax_details']
-            base_line['_source_total_excluded_currency'] = tax_details['total_excluded_currency'] + tax_details['delta_total_excluded_currency']
-            base_line['_source_total_excluded'] = tax_details['total_excluded'] + tax_details['delta_total_excluded']
+            base_line['_grouping_tax_ids'] = base_line['tax_ids']
+            base_line['_grouping_tax_tag_ids'] = base_line['tax_tag_ids']
 
         # Extract the taxes that are not discountable into separated base_lines.
         def exclude_function(base_line, tax_data):
@@ -5169,6 +5168,12 @@ class AccountMove(models.Model):
         for base_line in new_base_lines:
             base_lines.append(base_line)
             base_lines += base_line['removed_taxes_data_base_lines']
+
+        # Track the original amounts in both currencies before the discount
+        for base_line in base_lines:
+            tax_details = base_line['tax_details']
+            base_line['_source_total_excluded_currency'] = tax_details['total_excluded_currency'] + tax_details['delta_total_excluded_currency']
+            base_line['_source_total_excluded'] = tax_details['total_excluded'] + tax_details['delta_total_excluded']
 
         # Apply the early payment discount.
         for base_line in base_lines:
@@ -5209,8 +5214,8 @@ class AccountMove(models.Model):
 
             if tax_lines_needed:
                 grouping_dict.update({
-                    'tax_ids': [Command.set(base_line['tax_ids'].ids)],
-                    'tax_tag_ids': [Command.set(base_line['tax_tag_ids'].ids)],
+                    'tax_ids': [Command.set(base_line['_grouping_tax_ids'].ids)],
+                    'tax_tag_ids': [Command.set(base_line['_grouping_tax_tag_ids'].ids)],
                 })
             base_detail = resulting_delta_base_details.setdefault(frozendict(grouping_dict), {
                 'balance': 0.0,
@@ -5218,9 +5223,9 @@ class AccountMove(models.Model):
             })
 
             amount_currency = self.currency_id\
-                .round(self.direction_sign * tax_details['total_excluded_currency'] - base_line['_source_total_excluded_currency'])
+                .round(self.direction_sign * (tax_details['total_excluded_currency'] - base_line['_source_total_excluded_currency']))
             balance = self.company_currency_id\
-                .round(self.direction_sign * tax_details['total_excluded'] - base_line['_source_total_excluded'])
+                .round(self.direction_sign * (tax_details['total_excluded'] - base_line['_source_total_excluded']))
 
             base_detail['balance'] += balance
             base_detail['amount_currency'] += amount_currency
