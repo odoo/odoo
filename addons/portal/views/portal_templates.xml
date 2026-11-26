@@ -57,6 +57,7 @@
             </t>
         </xpath>
         <head position="inside">
+            <meta t-if="(is_portal or request.httprequest.args.get('access_token')) and not website" name="robots" content="noindex"/>
             <t t-if="not website">
                 <style>
                     :root {
