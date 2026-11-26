@@ -260,3 +260,42 @@ test("Pricelist: rule targeting a product missing from the PoS is not applied gl
     const product = productTmpl.product_variant_ids[0];
     expect(productTmpl.getPrice(pricelist, 1, 0, false, product)).toBe(productTmpl.list_price);
 });
+
+test("Pricelist: rules restricted to another UoM are ignored", async () => {
+    const store = await setupPosEnv();
+    const units = store.models["uom.uom"].get(1);
+    const packOf6 = store.models["uom.uom"].get(2);
+    const pricelist = store.models["product.pricelist"].create({ name: "UoM Pricelist" });
+    const productTemplate = store.models["product.template"].create({
+        name: "UoM Product",
+        list_price: 100,
+        uom_id: units,
+    });
+    const product = store.models["product.product"].create({
+        product_tmpl_id: productTemplate,
+        lst_price: 100,
+    });
+
+    const packRule = store.models["product.pricelist.item"].create({
+        pricelist_id: pricelist,
+        product_tmpl_id: productTemplate,
+        compute_price: "fixed",
+        fixed_price: 50,
+        min_quantity: 1,
+        uom_id: packOf6,
+    });
+    pricelist.update({ item_ids: [packRule] });
+    pricelist.computeRuleIndexes();
+    expect(product.getPrice(pricelist, 1, 0, false, product)).toBe(100);
+
+    const unitRule = store.models["product.pricelist.item"].create({
+        pricelist_id: pricelist,
+        product_tmpl_id: productTemplate,
+        compute_price: "fixed",
+        fixed_price: 80,
+        uom_id: units,
+    });
+    pricelist.update({ item_ids: [packRule, unitRule] });
+    pricelist.computeRuleIndexes();
+    expect(product.getPrice(pricelist, 1, 0, false, product)).toBe(80);
+});

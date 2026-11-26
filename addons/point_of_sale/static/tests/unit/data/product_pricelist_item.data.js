@@ -24,6 +24,7 @@ export class ProductPricelistItem extends models.ServerModel {
             "base",
             "categ_id",
             "min_quantity",
+            "uom_id",
         ];
     }
 
