@@ -4,6 +4,8 @@ from markupsafe import Markup
 from odoo.addons.mail.tools.discuss import Store
 
 from odoo import api, fields, models, _
+from odoo.models import TableSQL
+from odoo.tools.sql import SQL
 
 
 class DiscussChannel(models.Model):
@@ -17,12 +19,37 @@ class DiscussChannel(models.Model):
         help="The channel becomes accessible to sales users when leads are set.",
     )
     has_crm_lead = fields.Boolean(compute="_compute_has_crm_lead", store=True)
+    livechat_lead_count = fields.Integer(
+        "Leads created",
+        aggregator="sum",
+        compute="_compute_livechat_lead_count",
+        compute_sql="_compute_sql_livechat_lead_count",
+        compute_sudo=True,
+    )
     _has_crm_lead_index = models.Index("(has_crm_lead) WHERE has_crm_lead IS TRUE")
 
     @api.depends("lead_ids")
     def _compute_has_crm_lead(self):
         for channel in self:
             channel.has_crm_lead = bool(channel.lead_ids)
+
+    @api.depends("lead_ids")
+    def _compute_livechat_lead_count(self):
+        count_by_channel = dict(
+            self.env["crm.lead"].with_context(active_test=False)._read_group(
+                [("origin_channel_id", "in", self.ids)],
+                ["origin_channel_id"],
+                ["__count"],
+            ),
+        )
+        for channel in self:
+            channel.livechat_lead_count = count_by_channel.get(channel, 0)
+
+    def _compute_sql_livechat_lead_count(self, table: TableSQL) -> SQL:
+        return SQL(
+            "(SELECT COUNT(*) FROM crm_lead WHERE crm_lead.origin_channel_id = %s)",
+            table.id,
+        )
 
     def execute_command_lead(self, **kwargs):
         key = kwargs['body']

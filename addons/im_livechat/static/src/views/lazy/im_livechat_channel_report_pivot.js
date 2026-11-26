@@ -4,5 +4,5 @@ import { LivechatPivotRendererMixin } from "@im_livechat/views/lazy/im_livechat_
 
 registry.category("views").add("im_livechat.report_channel_pivot", {
     ...pivotView,
-    Renderer: LivechatPivotRendererMixin("im_livechat.report.channel"),
+    Renderer: LivechatPivotRendererMixin("discuss.channel"),
 });

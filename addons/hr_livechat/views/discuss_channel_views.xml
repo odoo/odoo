@@ -15,5 +15,20 @@
                 </xpath>
             </field>
         </record>
+
+        <record id="discuss_channel_view_search_livechat_report" model="ir.ui.view">
+            <field name="name">discuss.channel.search.livechat.report.inherit.hr.livechat</field>
+            <field name="model">discuss.channel</field>
+            <field name="inherit_id" ref="im_livechat.discuss_channel_view_search_livechat_report"/>
+            <field name="arch" type="xml">
+                <xpath expr="//*[@name='my_session']" position="after">
+                    <filter
+                        name="my_team"
+                        domain="['|', ('livechat_handler_partner_id.user_ids', '=', uid), ('livechat_handler_partner_id.employee_ids.parent_id.user_id', '=', uid)]"
+                        string="My Team"
+                    />
+                </xpath>
+            </field>
+        </record>
     </data>
 </odoo>

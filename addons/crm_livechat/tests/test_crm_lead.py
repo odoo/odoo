@@ -92,6 +92,22 @@ class TestLivechatLead(HttpCase, TestCrmCommon):
         )
         self.assertEqual(lead.partner_id, self.user_portal.partner_id)
 
+    @users('user_sales_leads')
+    def test_livechat_lead_count(self):
+        data = self.make_jsonrpc_request("/im_livechat/get_session", {
+            'channel_id': self.livechat_channel.id,
+            'persisted': True,
+        })
+        channel = self.env["discuss.channel"].browse(data["channel_id"])
+        channel._convert_visitor_to_lead(self.env.user.partner_id, '/lead TestLead command')
+        self.env.flush_all()
+        self.env.invalidate_all()
+        self.assertEqual(channel.livechat_lead_count, 1)
+        [(group_value,)] = self.env["discuss.channel"]._read_group(
+            [("id", "=", channel.id)], ["livechat_lead_count"]
+        )
+        self.assertEqual(group_value, 1)
+
     def test_create_lead_when_channel_has_deleted_message(self):
         bob_operator = mail_new_test_user(
             self.env, login="bob_user", groups="im_livechat.im_livechat_group_user,sales_team.group_sale_salesman"

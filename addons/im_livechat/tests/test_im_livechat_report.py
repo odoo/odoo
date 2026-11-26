@@ -10,6 +10,27 @@ from odoo.addons.im_livechat.tests.common import TestImLivechatCommon
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.tests.common import new_test_user
 
+REPORTING_FIELDS = [
+    "duration",
+    "livechat_call_duration_hour",
+    "livechat_call_count",
+    "livechat_call_percentage",
+    "livechat_chatbot_answers_path",
+    "livechat_chatbot_answers_path_str",
+    "livechat_chatbot_script_id",
+    "livechat_handled_by_agent",
+    "livechat_handled_by_bot",
+    "livechat_handler_partner_id",
+    "livechat_has_call",
+    "livechat_message_count",
+    "livechat_rating_percentage",
+    "livechat_response_time_hour",
+    "livechat_start_date_minutes",
+    "livechat_start_hour",
+    "livechat_visitor_partner_id",
+    "livechat_week_day",
+]
+
 
 class TestImLivechatReport(TestImLivechatCommon):
     def setUp(self):
@@ -21,7 +42,7 @@ class TestImLivechatReport(TestImLivechatCommon):
                 record.available_operator_ids = self.operators
         with (
             patch.object(
-                type(self.env["im_livechat.channel"]),
+                self.registry["im_livechat.channel"],
                 "_compute_available_operator_ids",
                 _compute_available_operator_ids,
             ),
@@ -32,20 +53,20 @@ class TestImLivechatReport(TestImLivechatCommon):
                 {"channel_id": self.livechat_channel.id},
             )["channel_id"]
 
-        channel = self.env['discuss.channel'].browse(channel_id)
+        self.channel = self.env['discuss.channel'].browse(channel_id)
         self.operator = self.env["im_livechat.channel.member.history"].search([
-            ("channel_id", "=", channel.id),
+            ("channel_id", "=", self.channel.id),
             ("livechat_member_type", "=", "agent"),
         ]).partner_id
 
-        self._create_message(channel, self.visitor_user.partner_id, '2023-03-17 06:06:59')
-        self._create_message(channel, self.operator, '2023-03-17 08:15:54')
-        self._create_message(channel, self.operator, '2023-03-17 08:45:54')
+        self._create_message(self.channel, self.visitor_user.partner_id, '2023-03-17 06:06:59')
+        self._create_message(self.channel, self.operator, '2023-03-17 08:15:54')
+        self._create_message(self.channel, self.operator, '2023-03-17 08:45:54')
 
         # message with the same record id, but with a different model
         # should not be taken into account for statistics
-        partner_message = self._create_message(channel, self.operator, '2023-03-17 05:05:54')
-        partner_message |= self._create_message(channel, self.operator, '2023-03-17 09:15:54')
+        partner_message = self._create_message(self.channel, self.operator, '2023-03-17 05:05:54')
+        partner_message |= self._create_message(self.channel, self.operator, '2023-03-17 09:15:54')
         partner_message.model = 'res.partner'
 
         with freeze_time("2023-03-17 09:20:54"):
@@ -55,9 +76,11 @@ class TestImLivechatReport(TestImLivechatCommon):
             )
         self.env['mail.message'].flush_model()
 
-    def test_im_livechat_report_channel(self):
-        report = self.env['im_livechat.report.channel'].search([('livechat_channel_id', '=', self.livechat_channel.id)])
-        self.assertEqual(len(report), 1, 'Should have one channel report for this live channel')
+    def test_livechat_session_measures(self):
+        sessions = self.env["discuss.channel"].search(
+            [("livechat_channel_id", "=", self.livechat_channel.id)],
+        )
+        self.assertEqual(len(sessions), 1, "Should have one session for this live chat channel")
         # We have those messages, ordered by creation;
         # 05:05:54: wrong model
         # 06:05:54: session create
@@ -65,18 +88,19 @@ class TestImLivechatReport(TestImLivechatCommon):
         # 08:15:54: operator first answer
         # 08:45:54: operator second answer
         # 09:15:54: wrong model
-        # So the duration of the session is: (09:20:54 - 06:05:54) = 3h15 = 195 minutes
-        # The time to answer of this session is: (08:15:54 - 06:05:54) = 2h10 = 7800 seconds
-        self.assertEqual(report.time_to_answer, 7800 / 3600)
-        self.assertEqual(int(report.duration), 195)
+        # So the duration of the session is: (09:20:54 - 06:05:54) = 3h15
+        # The response time of this session is: (08:15:54 - 06:05:54) = 2h10 = 7800 seconds
+        self.assertEqual(sessions.livechat_response_time_hour, 7800 / 3600)
+        self.assertEqual(sessions.duration, 11700 / 3600)
 
-    def test_im_livechat_report_operator(self):
-        result = self.env["im_livechat.report.channel"].formatted_read_group(
-            [], aggregates=["time_to_answer:avg", "duration:avg"]
+    def test_livechat_session_aggregates(self):
+        result = self.env["discuss.channel"].formatted_read_group(
+            [("channel_type", "=", "livechat")],
+            aggregates=["livechat_response_time_hour:avg", "duration:avg"],
         )
         self.assertEqual(len(result), 1)
-        self.assertEqual(result[0]["time_to_answer:avg"], 7800 / 3600)
-        self.assertEqual(int(result[0]['duration:avg']), 195)
+        self.assertEqual(result[0]["livechat_response_time_hour:avg"], 7800 / 3600)
+        self.assertEqual(result[0]["duration:avg"], 11700 / 3600)
         rated_channel_id = self.make_jsonrpc_request(
             "/im_livechat/get_session", {"channel_id": self.livechat_channel.id}
         )["channel_id"]
@@ -88,14 +112,32 @@ class TestImLivechatReport(TestImLivechatCommon):
             self.operator,
             "2023-03-18 11:00:00",
         )
-        result = self.env["im_livechat.report.channel"].formatted_read_group(
-            [], aggregates=["rating_percentage:avg"]
+        result = self.env["discuss.channel"].formatted_read_group(
+            [("channel_type", "=", "livechat")], aggregates=["livechat_rating_percentage:avg"]
         )
         self.assertEqual(
-            result[0]["rating_percentage:avg"],
+            result[0]["livechat_rating_percentage:avg"],
             100.0,
             "Rating percentage should be 100%, excluding unrated sessions",
         )
+
+    def test_reporting_fields_read_matches_read_group(self):
+        self.env["discuss.call.history"].create({
+            "channel_id": self.channel.id,
+            "start_dt": datetime(2023, 3, 17, 7, 0, 0),
+            "end_dt": datetime(2023, 3, 17, 7, 30, 0),
+        })
+        self.env.flush_all()
+        self.env.invalidate_all()
+        for field_name in REPORTING_FIELDS:
+            [(group_value,)] = self.env["discuss.channel"]._read_group(
+                [("id", "=", self.channel.id)], [field_name]
+            )
+            record_value = self.channel[field_name]
+            if isinstance(record_value, float):
+                self.assertAlmostEqual(record_value, group_value, msg=field_name)
+            else:
+                self.assertEqual(record_value, group_value, field_name)
 
     @classmethod
     def _create_message(cls, channel, author, date):
@@ -157,7 +199,7 @@ class TestImLivechatReport(TestImLivechatCommon):
             login="operator_1",
         )
 
-    def test_time_to_answer_does_not_count_messages_after_close(self):
+    def test_response_time_does_not_count_messages_after_close(self):
         with freeze_time("2025-05-20 06:00:00") as frozen_time:
             data = self.make_jsonrpc_request(
                     "/im_livechat/get_session",
@@ -174,8 +216,8 @@ class TestImLivechatReport(TestImLivechatCommon):
                 lambda m: m.livechat_member_type == "agent"
             ).partner_id
             self._create_message(chat, agent, datetime.now())
-            report = self.env["im_livechat.report.channel"].search([("channel_id", "=", chat.id)])
-            self.assertEqual(report.time_to_answer, 0.0)
+            chat.invalidate_recordset()
+            self.assertEqual(chat.livechat_response_time_hour, 0.0)
 
     def test_day_of_week_ordered_by_lang_week_start(self):
         agent = new_test_user(self.env, login="test_agent", groups="im_livechat.im_livechat_group_manager")
@@ -196,19 +238,20 @@ class TestImLivechatReport(TestImLivechatCommon):
                 ).partner_id
                 self._create_message(channel, channel_agent, date)
         en_lang = self.env["res.lang"]._activate_lang("en_US")
-        report_model = self.env["im_livechat.report.channel"].with_user(agent)
-        result = report_model.formatted_read_group(domain=[], groupby=["day_number"])
-        expected_order = ["0", "1", "2", "3", "4", "5", "6"]
-        actual_order = [group["day_number"] for group in result]
-        self.assertEqual(actual_order, expected_order)
-        en_lang.week_start = "6"
-        result = report_model.formatted_read_group(domain=[], groupby=["day_number"])
-        expected_order = ["6", "0", "1", "2", "3", "4", "5"]
-        actual_order = [group["day_number"] for group in result]
+        channel_model = self.env["discuss.channel"].with_user(agent)
+        domain = [("livechat_channel_id", "=", livechat_channel.id)]
+        result = channel_model.formatted_read_group(domain, groupby=["livechat_week_day"])
         self.assertEqual(
-            actual_order,
-            expected_order,
-            f"Days should be ordered starting from Saturday. Got {actual_order}, expected {expected_order}"
+            [group["livechat_week_day"] for group in result],
+            ["6", "0", "1", "2", "3", "4", "5"],
+            "Days should be ordered starting from Sunday",
+        )
+        en_lang.week_start = "6"
+        result = channel_model.formatted_read_group(domain, groupby=["livechat_week_day"])
+        self.assertEqual(
+            [group["livechat_week_day"] for group in result],
+            ["5", "6", "0", "1", "2", "3", "4"],
+            "Days should be ordered starting from Saturday",
         )
 
     def test_hour_and_day_of_week_in_user_timezone(self):
@@ -228,12 +271,16 @@ class TestImLivechatReport(TestImLivechatCommon):
                     "/im_livechat/get_session",
                     {"channel_id": livechat_channel.id},
                 )
-        report_model = self.env["im_livechat.report.channel"].with_user(alice_user)
+        channel_model = self.env["discuss.channel"].with_user(alice_user)
         domain = [("livechat_channel_id", "=", livechat_channel.id)]
-        result = report_model.formatted_read_group(domain, groupby=["start_hour"])
-        self.assertEqual([group["start_hour"] for group in result], ["00", "01"])
-        result = report_model.formatted_read_group(domain, groupby=["day_number"])
-        self.assertEqual([group["day_number"] for group in result], ["6"])
+        channels = channel_model.search(domain)
+        self.assertEqual(sorted(channels.mapped("livechat_start_hour")), [0.0, 1.0])
+        self.assertEqual(set(channels.mapped("livechat_week_day")), {"5"})
+        result = channel_model.formatted_read_group(domain, groupby=["livechat_start_hour"])
+        self.assertEqual([group["livechat_start_hour"] for group in result], [0.0, 1.0])
+        result = channel_model.formatted_read_group(domain, groupby=["livechat_week_day"])
+        self.assertEqual([group["livechat_week_day"] for group in result], ["5"])
+        self.assertEqual(channel_model.search_count(domain + [("livechat_start_hour", ">", 0)]), 1)
         history_model = self.env["im_livechat.channel.member.history"].with_user(alice_user)
         domain = [("session_livechat_channel_id", "=", livechat_channel.id)]
         histories = history_model.search(domain)

@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
+from collections import defaultdict
 from datetime import timedelta
 from zoneinfo import ZoneInfo
 
@@ -9,7 +10,8 @@ from markupsafe import Markup
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import UserError
 from odoo.fields import Domain
-from odoo.tools import email_split, format_list, html2plaintext, is_html_empty
+from odoo.models import TableSQL
+from odoo.tools import email_split, format_list, get_lang, html2plaintext, is_html_empty
 from odoo.tools.mimetypes import get_extension
 from odoo.tools.sql import SQL
 from odoo.tools.translate import LazyTranslate
@@ -39,7 +41,14 @@ class DiscussChannel(models.Model):
     _inherit = ['discuss.channel']
 
     channel_type = fields.Selection(selection_add=[("livechat", "Live Chat")], ondelete={"livechat": "cascade"})
-    duration = fields.Float('Duration', compute='_compute_duration', help='Duration of the session in hours')
+    duration = fields.Float(
+        "Duration",
+        aggregator="avg",
+        compute="_compute_duration",
+        compute_sql="_compute_sql_duration",
+        compute_sudo=True,
+        help="Duration of the session in hours",
+    )
     livechat_lang_id = fields.Many2one("res.lang", string="Language", help="Lang of the visitor of the channel.")
     livechat_end_dt = fields.Datetime(
         "Session end date",
@@ -145,8 +154,9 @@ class DiscussChannel(models.Model):
     )
     livechat_start_hour = fields.Float(
         "Session Start Hour",
-        compute="_compute_livechat_start_hour",
-        store=True,
+        compute="_compute_livechat_start",
+        compute_sql="_compute_sql_livechat_start_hour",
+        compute_sudo=True,
     )
     livechat_week_day = fields.Selection(
         [
@@ -159,8 +169,9 @@ class DiscussChannel(models.Model):
             ("6", "Sunday"),
         ],
         string="Day of the Week",
-        compute="_compute_livechat_week_day",
-        store=True,
+        compute="_compute_livechat_start",
+        compute_sql="_compute_sql_livechat_week_day",
+        compute_sudo=True,
     )
     livechat_matches_self_lang = fields.Boolean(
         compute="_compute_livechat_matches_self_lang",
@@ -196,6 +207,97 @@ class DiscussChannel(models.Model):
         aggregator="avg",
         compute="_compute_livechat_rating_percentage",
         compute_sql="_compute_sql_livechat_rating_percentage",
+        compute_sudo=True,
+    )
+
+    livechat_call_count = fields.Float(
+        "# of Sessions with calls", related="livechat_has_call", aggregator="sum"
+    )
+    livechat_call_duration_hour = fields.Float(
+        "Call Duration",
+        aggregator="avg",
+        compute="_compute_livechat_call_duration_hour",
+        compute_sql="_compute_sql_livechat_call_duration_hour",
+        compute_sudo=True,
+    )
+    livechat_call_percentage = fields.Float(
+        "Session with Calls (%)", related="livechat_has_call", aggregator="avg"
+    )
+    livechat_chatbot_answers_path = fields.Char(
+        "Chatbot Answers",
+        compute="_compute_livechat_chatbot_answers_path",
+        compute_sql="_compute_sql_livechat_chatbot_answers_path",
+        compute_sudo=True,
+        groups="im_livechat.im_livechat_group_manager",
+    )
+    livechat_chatbot_answers_path_str = fields.Char(
+        "Chatbot Answers (String)",
+        compute="_compute_livechat_chatbot_answers_path",
+        compute_sql="_compute_sql_livechat_chatbot_answers_path_str",
+        compute_sudo=True,
+        groups="im_livechat.im_livechat_group_manager",
+    )
+    livechat_chatbot_script_id = fields.Many2one(
+        "chatbot.script",
+        string="Chatbot",
+        compute="_compute_livechat_handler",
+        compute_sql="_compute_sql_livechat_chatbot_script_id",
+        compute_sudo=True,
+    )
+    livechat_handled_by_agent = fields.Integer(
+        "Handled by Agent",
+        aggregator="sum",
+        compute="_compute_livechat_handler",
+        compute_sql="_compute_sql_livechat_handled_by_agent",
+        compute_sudo=True,
+    )
+    livechat_handled_by_bot = fields.Integer(
+        "Handled by Bot",
+        aggregator="sum",
+        compute="_compute_livechat_handler",
+        compute_sql="_compute_sql_livechat_handled_by_bot",
+        compute_sudo=True,
+    )
+    livechat_handler_partner_id = fields.Many2one(
+        "res.partner",
+        string="Agent",
+        compute="_compute_livechat_handler",
+        compute_sql="_compute_sql_livechat_handler_partner_id",
+        compute_sudo=True,
+    )
+    livechat_has_call = fields.Float(
+        "Whether the session had a call",
+        compute="_compute_livechat_call_duration_hour",
+        compute_sql="_compute_sql_livechat_has_call",
+        compute_sudo=True,
+    )
+    livechat_message_count = fields.Integer(
+        "Messages per Session",
+        aggregator="avg",
+        compute="_compute_livechat_message_count",
+        compute_sql="_compute_sql_livechat_message_count",
+        compute_sudo=True,
+        help="Number of messages in the conversation",
+    )
+    livechat_response_time_hour = fields.Float(
+        "Response Time",
+        aggregator="avg",
+        compute="_compute_livechat_response_time_hour",
+        compute_sql="_compute_sql_livechat_response_time_hour",
+        compute_sudo=True,
+        help="Time in hours to give the first answer to the visitor",
+    )
+    livechat_start_date_minutes = fields.Char(
+        "Start Date of session, truncated to minutes",
+        compute="_compute_livechat_start",
+        compute_sql="_compute_sql_livechat_start_date_minutes",
+        compute_sudo=True,
+    )
+    livechat_visitor_partner_id = fields.Many2one(
+        "res.partner",
+        string="Customer",
+        compute="_compute_livechat_visitor_partner_id",
+        compute_sql="_compute_sql_livechat_visitor_partner_id",
         compute_sudo=True,
     )
 
@@ -277,6 +379,13 @@ class DiscussChannel(models.Model):
             end = record.livechat_end_dt or fields.Datetime.now()
             start = record.create_date or fields.Datetime.now()
             record.duration = (end - start).total_seconds() / 3600
+
+    def _compute_sql_duration(self, table: TableSQL) -> SQL:
+        return SQL(
+            "EXTRACT(EPOCH FROM COALESCE(%s, NOW() AT TIME ZONE 'utc') - %s) / 3600",
+            table.livechat_end_dt,
+            table.create_date,
+        )
 
     @api.depends("livechat_end_dt")
     def _compute_livechat_status(self):
@@ -439,7 +548,7 @@ class DiscussChannel(models.Model):
     @api.depends("livechat_is_escalated", "livechat_failure")
     def _compute_livechat_outcome(self):
         for channel in self:
-            self.livechat_outcome = (
+            channel.livechat_outcome = (
                 "escalated" if channel.livechat_is_escalated else channel.livechat_failure
             )
 
@@ -473,14 +582,31 @@ class DiscussChannel(models.Model):
         return [("livechat_expertise_ids", operator, self.env.user.livechat_expertise_ids.ids)]
 
     @api.depends("create_date")
-    def _compute_livechat_start_hour(self):
-        for channel in self:
-            channel.livechat_start_hour = channel.create_date.hour
+    @api.depends_context("tz", "uid")
+    def _compute_livechat_start(self):
+        self.livechat_start_date_minutes = False
+        self.livechat_start_hour = False
+        self.livechat_week_day = False
+        for channel in self.filtered("create_date"):
+            start_date = fields.Datetime.context_timestamp(channel, channel.create_date)
+            channel.livechat_start_date_minutes = start_date.strftime("%Y-%m-%d %I:%M:00")
+            channel.livechat_start_hour = start_date.hour
+            channel.livechat_week_day = str(start_date.weekday())
 
-    @api.depends("create_date")
-    def _compute_livechat_week_day(self):
-        for channel in self:
-            channel.livechat_week_day = str(channel.create_date.weekday())
+    def _livechat_start_to_sql(self, table: TableSQL) -> SQL:
+        return SQL("timezone(%s, timezone('UTC', %s))", str(self.env.tz), table.create_date)
+
+    def _compute_sql_livechat_start_date_minutes(self, table: TableSQL) -> SQL:
+        return SQL(
+            "to_char(date_trunc('minute', %s), 'YYYY-MM-DD HH:MI:SS')",
+            self._livechat_start_to_sql(table),
+        )
+
+    def _compute_sql_livechat_start_hour(self, table: TableSQL) -> SQL:
+        return SQL("date_part('hour', %s)", self._livechat_start_to_sql(table))
+
+    def _compute_sql_livechat_week_day(self, table: TableSQL) -> SQL:
+        return SQL("(date_part('isodow', %s)::int - 1)::text", self._livechat_start_to_sql(table))
 
     @api.depends("livechat_status")
     def _compute_livechat_looking_for_help_since_dt(self):
@@ -488,6 +614,372 @@ class DiscussChannel(models.Model):
             channel.livechat_looking_for_help_since_dt = (
                 fields.Datetime.now() if channel.livechat_status == "need_help" else None
             )
+
+    # ===================================================================
+    # REPORTING
+    # ===================================================================
+
+    @property
+    def _unknown_chatbot_answer_name(self):
+        return self.env._("Unknown")
+
+    def _livechat_first_history(self, member_type):
+        """Return the member that joined the session first among the given type.
+
+        :param str member_type: One of the ``livechat_member_type`` values.
+        """
+        self.ensure_one()
+        return self.livechat_channel_member_history_ids.filtered(
+            lambda h: h.livechat_member_type == member_type,
+        ).sorted(lambda h: (h.create_date, h.id))[:1]
+
+    def _livechat_first_history_sql(self, table: TableSQL, member_type: str, column: str) -> SQL:
+        """Return the SQL of a column of the member that joined the session first.
+
+        :param str member_type: One of the ``livechat_member_type`` values.
+        :param str column: Column of ``im_livechat_channel_member_history`` to read.
+        """
+        return SQL(
+            """(
+                SELECT H.%(column)s
+                  FROM im_livechat_channel_member_history H
+                 WHERE H.channel_id = %(channel_id)s
+                   AND H.livechat_member_type = %(member_type)s
+              ORDER BY H.create_date, H.id
+                 LIMIT 1
+            )""",
+            channel_id=table.id,
+            column=SQL.identifier(column),
+            member_type=member_type,
+        )
+
+    @api.depends("call_history_ids.end_dt", "call_history_ids.start_dt")
+    def _compute_livechat_call_duration_hour(self):
+        for channel in self:
+            durations = [
+                (history.end_dt - history.start_dt).total_seconds() / 3600
+                for history in channel.call_history_ids
+                if history.end_dt
+            ]
+            channel.livechat_call_duration_hour = sum(durations)
+            channel.livechat_has_call = 1 if durations else 0
+
+    def _compute_sql_livechat_call_duration_hour(self, table: TableSQL) -> SQL:
+        return SQL(
+            """(
+                SELECT SUM(
+                           CASE
+                               WHEN discuss_call_history.end_dt IS NOT NULL
+                               THEN EXTRACT(EPOCH FROM discuss_call_history.end_dt - discuss_call_history.start_dt) / 3600
+                           END
+                       )
+                  FROM discuss_call_history
+                 WHERE discuss_call_history.channel_id = %s
+            )""",
+            table.id,
+        )
+
+    def _compute_sql_livechat_has_call(self, table: TableSQL) -> SQL:
+        return SQL(
+            "CASE WHEN %s IS NOT NULL THEN 1 ELSE 0 END",
+            self._compute_sql_livechat_call_duration_hour(table),
+        )
+
+    @api.depends("chatbot_message_ids.user_raw_script_answer_id")
+    def _compute_livechat_chatbot_answers_path(self):
+        answers = self.env["chatbot.script.answer"].browse(
+            {
+                message.user_raw_script_answer_id
+                for message in self.chatbot_message_ids
+                if message.user_raw_script_answer_id
+            },
+        ).exists()
+        name_by_answer_id = {answer.id: answer.name for answer in answers}
+        for channel in self:
+            answer_ids = [
+                message.user_raw_script_answer_id
+                for message in channel.chatbot_message_ids.sorted("id")
+                if message.user_raw_script_answer_id
+            ]
+            channel.livechat_chatbot_answers_path = (
+                " - ".join(str(answer_id) for answer_id in answer_ids) or False
+            )
+            channel.livechat_chatbot_answers_path_str = (
+                " - ".join(
+                    name_by_answer_id.get(answer_id) or self._unknown_chatbot_answer_name
+                    for answer_id in answer_ids
+                )
+                or False
+            )
+
+    def _compute_sql_livechat_chatbot_answers_path(self, table: TableSQL) -> SQL:
+        return SQL(
+            """(
+                SELECT STRING_AGG(chatbot_message.user_raw_script_answer_id::TEXT, ' - ' ORDER BY chatbot_message.id)
+                  FROM chatbot_message
+                 WHERE chatbot_message.user_raw_script_answer_id IS NOT NULL
+                   AND chatbot_message.discuss_channel_id = %s
+            )""",
+            table.id,
+        )
+
+    def _compute_sql_livechat_chatbot_answers_path_str(self, table: TableSQL) -> SQL:
+        return SQL(
+            """(
+                SELECT STRING_AGG(
+                           COALESCE(
+                               chatbot_script_answer.name->>%(lang)s,
+                               chatbot_script_answer.name->>'en_US',
+                               fallback.value,
+                               %(unknown)s
+                           ),
+                           ' - ' ORDER BY chatbot_message.id
+                       )
+                  FROM chatbot_message
+             LEFT JOIN chatbot_script_answer
+                    ON chatbot_message.user_raw_script_answer_id = chatbot_script_answer.id
+             LEFT JOIN LATERAL
+                  (
+                      SELECT value
+                        FROM jsonb_each_text(chatbot_script_answer.name)
+                       LIMIT 1
+                  ) AS fallback ON TRUE
+                 WHERE chatbot_message.user_raw_script_answer_id IS NOT NULL
+                   AND chatbot_message.discuss_channel_id = %(channel_id)s
+            )""",
+            channel_id=table.id,
+            lang=self.env.lang,
+            unknown=self._unknown_chatbot_answer_name,
+        )
+
+    @api.depends(
+        "livechat_channel_member_history_ids.chatbot_script_id",
+        "livechat_channel_member_history_ids.livechat_member_type",
+        "livechat_channel_member_history_ids.partner_id",
+    )
+    def _compute_livechat_handler(self):
+        for channel in self:
+            agent_partner = channel._livechat_first_history("agent").partner_id
+            bot_history = channel._livechat_first_history("bot")
+            channel.livechat_chatbot_script_id = (
+                False if agent_partner else bot_history.chatbot_script_id
+            )
+            channel.livechat_handled_by_agent = 1 if agent_partner else 0
+            channel.livechat_handled_by_bot = (
+                1 if bot_history.partner_id and not agent_partner else 0
+            )
+            channel.livechat_handler_partner_id = agent_partner or bot_history.partner_id
+
+    def _compute_sql_livechat_chatbot_script_id(self, table: TableSQL) -> SQL:
+        return SQL(
+            "CASE WHEN %(script_id)s IS NOT NULL AND %(agent_partner_id)s IS NULL THEN %(script_id)s END",
+            agent_partner_id=self._livechat_first_history_sql(table, "agent", "partner_id"),
+            script_id=self._livechat_first_history_sql(table, "bot", "chatbot_script_id"),
+        )
+
+    def _compute_sql_livechat_handled_by_agent(self, table: TableSQL) -> SQL:
+        return SQL(
+            "CASE WHEN %s IS NOT NULL THEN 1 ELSE 0 END",
+            self._livechat_first_history_sql(table, "agent", "partner_id"),
+        )
+
+    def _compute_sql_livechat_handled_by_bot(self, table: TableSQL) -> SQL:
+        return SQL(
+            "CASE WHEN %s IS NOT NULL AND %s IS NULL THEN 1 ELSE 0 END",
+            self._livechat_first_history_sql(table, "bot", "partner_id"),
+            self._livechat_first_history_sql(table, "agent", "partner_id"),
+        )
+
+    def _compute_sql_livechat_handler_partner_id(self, table: TableSQL) -> SQL:
+        return SQL(
+            "COALESCE(%s, %s)",
+            self._livechat_first_history_sql(table, "agent", "partner_id"),
+            self._livechat_first_history_sql(table, "bot", "partner_id"),
+        )
+
+    @api.depends("message_ids")
+    def _compute_livechat_message_count(self):
+        count_by_channel_id = dict(
+            self.env["mail.message"]._read_group(
+                [("model", "=", self._name), ("res_id", "in", self.ids)],
+                ["res_id"],
+                ["__count"],
+            ),
+        )
+        for channel in self:
+            channel.livechat_message_count = count_by_channel_id.get(channel.id, 0)
+
+    def _compute_sql_livechat_message_count(self, table: TableSQL) -> SQL:
+        return SQL(
+            "(SELECT COUNT(*) FROM mail_message M WHERE %s)",
+            self._get_message_sql(SQL("M"), table.id),
+        )
+
+    @api.depends("create_date", "livechat_end_dt", "message_ids")
+    def _compute_livechat_response_time_hour(self):
+        message_dates_by_channel_id = defaultdict(list)
+        for channel_id, partner, guest, first_dt, last_dt in self.env["mail.message"]._read_group(
+            [("model", "=", self._name), ("res_id", "in", self.ids)],
+            ["res_id", "author_id", "author_guest_id"],
+            ["create_date:min", "create_date:max"],
+        ):
+            message_dates_by_channel_id[channel_id].append((partner, guest, first_dt, last_dt))
+        for channel in self:
+            channel.livechat_response_time_hour = False
+            histories = channel.livechat_channel_member_history_ids
+            type_by_partner_id = {
+                h.partner_id.id: h.livechat_member_type for h in histories if h.partner_id
+            }
+            type_by_guest_id = {
+                h.guest_id.id: h.livechat_member_type for h in histories if h.guest_id
+            }
+            first_agent_dt = last_bot_dt = None
+            for partner, guest, first_dt, last_dt in message_dates_by_channel_id[channel.id]:
+                member_type = type_by_partner_id.get(partner.id) or type_by_guest_id.get(guest.id)
+                if member_type == "agent" and (first_agent_dt is None or first_dt < first_agent_dt):
+                    first_agent_dt = first_dt
+                elif member_type == "bot" and (last_bot_dt is None or last_dt > last_bot_dt):
+                    last_bot_dt = last_dt
+            if not first_agent_dt or not channel._livechat_first_history("agent").partner_id:
+                continue
+            if channel.livechat_end_dt and first_agent_dt > channel.livechat_end_dt:
+                continue
+            start_dt = (
+                last_bot_dt
+                if channel._livechat_first_history("bot").partner_id
+                else channel.create_date
+            )
+            if start_dt:
+                channel.livechat_response_time_hour = (
+                    first_agent_dt - start_dt
+                ).total_seconds() / 3600
+
+    def _compute_sql_livechat_response_time_hour(self, table: TableSQL) -> SQL:
+        return SQL(
+            """(
+                SELECT CASE
+                           WHEN message_vals.first_agent_message_dt > %(end_dt)s THEN NULL
+                           WHEN %(agent_partner_id)s IS NOT NULL AND %(bot_partner_id)s IS NOT NULL
+                               THEN EXTRACT(EPOCH FROM message_vals.first_agent_message_dt - message_vals.last_bot_message_dt)
+                           WHEN %(agent_partner_id)s IS NOT NULL
+                               THEN EXTRACT(EPOCH FROM message_vals.first_agent_message_dt - %(create_date)s)
+                       END / 3600
+                  FROM (
+                        SELECT MIN(CASE WHEN H.livechat_member_type = 'agent' THEN M.create_date END) AS first_agent_message_dt,
+                               MAX(CASE WHEN H.livechat_member_type = 'bot' THEN M.create_date END) AS last_bot_message_dt
+                          FROM mail_message M
+                     LEFT JOIN im_livechat_channel_member_history H
+                            ON H.channel_id = %(channel_id)s
+                           AND (M.author_id = H.partner_id OR M.author_guest_id = H.guest_id)
+                         WHERE %(message_condition)s
+                       ) AS message_vals
+            )""",
+            agent_partner_id=self._livechat_first_history_sql(table, "agent", "partner_id"),
+            bot_partner_id=self._livechat_first_history_sql(table, "bot", "partner_id"),
+            channel_id=table.id,
+            create_date=table.create_date,
+            end_dt=table.livechat_end_dt,
+            message_condition=self._get_message_sql(SQL("M"), table.id),
+        )
+
+    @api.depends("livechat_channel_member_history_ids.livechat_member_type")
+    def _compute_livechat_visitor_partner_id(self):
+        for channel in self:
+            channel.livechat_visitor_partner_id = channel._livechat_first_history(
+                "visitor",
+            ).partner_id
+
+    def _compute_sql_livechat_visitor_partner_id(self, table: TableSQL) -> SQL:
+        return self._livechat_first_history_sql(table, "visitor", "partner_id")
+
+    @api.model
+    def formatted_read_group(self, domain, groupby=(), aggregates=(), having=(), offset=0, limit=None, order=None):
+        result = super().formatted_read_group(
+            domain, groupby, aggregates, having=having, offset=offset, limit=limit, order=order
+        )
+        if "livechat_chatbot_answers_path" not in groupby:
+            return result
+        # Answer ids are used for grouping but names should be displayed.
+        answer_ids = {
+            int(answer_id.strip())
+            for entry in result
+            if entry.get("livechat_chatbot_answers_path")
+            for answer_id in entry["livechat_chatbot_answers_path"].split("-")
+        }
+        answer_name_by_id = {
+            answer.id: answer.name
+            for answer in self.env["chatbot.script.answer"].search_fetch(
+                [("id", "in", answer_ids)],
+                ["name"],
+            )
+        }
+        for entry in result:
+            if not (path := entry.get("livechat_chatbot_answers_path")):
+                continue
+            id_list = [int(answer_id.strip()) for answer_id in path.split("-")]
+            entry["livechat_chatbot_answers_path"] = " - ".join(
+                answer_name_by_id.get(answer_id, self._unknown_chatbot_answer_name)
+                for answer_id in id_list
+            )
+        return result
+
+    def _read_group_orderby(self, table: TableSQL, order: str, groupby_terms: dict[str, SQL]) -> SQL:
+        if "livechat_week_day" not in groupby_terms:
+            return super()._read_group_orderby(table, order, groupby_terms)
+        if not order:
+            order = ",".join(groupby_terms)
+        order_parts = [part.strip() for part in order.split(",")]
+        week_day_part = next((part for part in order_parts if part.startswith("livechat_week_day")), None)
+        other_parts = [part for part in order_parts if not part.startswith("livechat_week_day")]
+        other_groupby_terms = {k: v for k, v in groupby_terms.items() if k != "livechat_week_day"}
+        other_order = ",".join(other_parts) if other_parts else None
+        other_orderby = None
+        if other_order or other_groupby_terms:
+            other_orderby = super()._read_group_orderby(table, other_order, other_groupby_terms)
+            groupby_terms.update(other_groupby_terms)
+            if table._query._order_groupby:
+                groupby_terms["livechat_week_day"] = SQL(", ").join([groupby_terms["livechat_week_day"], *table._query._order_groupby])
+                table._query._order_groupby.clear()
+        if not week_day_part:
+            return other_orderby
+        parts = [p.upper() for p in week_day_part.split()]
+        direction = next((p for p in parts if p in ("ASC", "DESC")), "ASC")
+        nulls_parts = [p for p in parts if p in ("NULLS", "FIRST", "LAST")]
+        sql_direction = SQL("ASC") if direction == "ASC" else SQL("DESC")
+        if "NULLS" in nulls_parts and "FIRST" in nulls_parts:
+            sql_nulls = SQL("NULLS FIRST")
+        elif "NULLS" in nulls_parts and "LAST" in nulls_parts:
+            sql_nulls = SQL("NULLS LAST")
+        else:
+            sql_nulls = SQL()
+        # Monday is 0 in livechat_week_day while res.lang.week_start starts at 1.
+        first_week_day = int(get_lang(self.env).week_start)
+        week_day_orderby = SQL(
+            "mod((%s)::int + 8 - %s, 7) %s %s",
+            groupby_terms["livechat_week_day"],
+            first_week_day,
+            sql_direction,
+            sql_nulls,
+        )
+        return SQL(", ").join([week_day_orderby, other_orderby]) if other_orderby else week_day_orderby
+
+    @api.model
+    def action_open_discuss_channel_view(self, domain=()):
+        return self.search(domain)._action_open_discuss_channel_view()
+
+    def _action_open_discuss_channel_view(self):
+        action = self.env["ir.actions.act_window"]._for_xml_id("im_livechat.discuss_channel_action")
+        if len(self) == 1:
+            action["res_id"] = self.id
+            action["view_mode"] = "form"
+            action["views"] = [view for view in action["views"] if view[1] == "form"]
+            return action
+        action["context"] = {}
+        action["domain"] = [("id", "in", self.ids)]
+        action["mobile_view_mode"] = "list"
+        action["view_mode"] = "list"
+        action["views"] = [view for view in action["views"] if view[1] in ("list", "form")]
+        return action
 
     def _sync_field_names(self, res):
         super()._sync_field_names(res)

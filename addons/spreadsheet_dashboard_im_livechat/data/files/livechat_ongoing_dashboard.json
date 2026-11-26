@@ -244,10 +244,10 @@
                   "type": "odoo",
                   "actionXmlId": "im_livechat.im_livechat_report_channel_action",
                   "metaData": {
-                    "groupBy": ["start_date_minutes"],
+                    "groupBy": ["livechat_start_date_minutes"],
                     "measure": "__count",
                     "order": null,
-                    "resModel": "im_livechat.report.channel",
+                    "resModel": "discuss.channel",
                     "mode": "bar"
                   },
                   "searchParams": {
@@ -258,13 +258,15 @@
                           { "action": 188 }
                         ]
                       },
-                      "pivot_measures": ["__count", "time_to_answer", "duration", "rating", "number_of_calls"],
+                      "pivot_measures": ["__count", "livechat_response_time_hour", "duration", "livechat_rating", "livechat_call_count"],
                       "im_livechat.hide_partner_company": true
                     },
                     "domain": [
-                      ["channel_id.livechat_end_dt", "=", false]
+                      "&",
+                      ["channel_type", "=", "livechat"],
+                      ["livechat_end_dt", "=", false]
                     ],
-                    "groupBy": ["start_date_minutes"],
+                    "groupBy": ["livechat_start_date_minutes"],
                     "orderBy": []
                   }
                 },
@@ -282,11 +284,11 @@
             ],
             "fieldMatching": {
               "1a9cd09d-78cb": {
-                "7bb2084a-2349": { "chain": "partner_id", "type": "many2one" },
+                "7bb2084a-2349": { "chain": "livechat_handler_partner_id", "type": "many2one" },
                 "951c09be-0626": { "chain": "country_id", "type": "many2one" },
-                "fbb1d9f0-d136": { "chain": "lang_id", "type": "many2one" },
+                "fbb1d9f0-d136": { "chain": "livechat_lang_id", "type": "many2one" },
                 "731ca145-d193": { "chain": "livechat_channel_id", "type": "many2one" },
-                "9dd855bf-83ea": { "chain": "session_expertise_ids", "type": "many2many" }
+                "9dd855bf-83ea": { "chain": "livechat_expertise_ids", "type": "many2many" }
               }
             }
           }
@@ -479,11 +481,11 @@
         "B2": "=PIVOT.VALUE(13,\"__count:sum\")",
         "B3": {
           "N": "=",
-          "S": ["handled_by_bot:sum"]
+          "S": ["livechat_handled_by_bot:sum"]
         },
         "B4": {
           "N": "=",
-          "S": ["handled_by_agent:sum"]
+          "S": ["livechat_handled_by_agent:sum"]
         },
         "B5": {
           "N": "+1",
@@ -1020,10 +1022,12 @@
   "pivots": {
     "4507cb5a-087b": {
       "type": "ODOO",
-      "model": "im_livechat.report.channel",
+      "model": "discuss.channel",
       "name": "Main aggregates",
       "domain": [
-        ["channel_id.livechat_end_dt", "=", false]
+        "&",
+        ["channel_type", "=", "livechat"],
+        ["livechat_end_dt", "=", false]
       ],
       "context": {},
       "columns": [],
@@ -1031,34 +1035,36 @@
       "measures": [
         { "id": "__count:sum", "fieldName": "__count", "aggregator": "sum" },
         {
-          "id": "handled_by_bot:sum",
-          "fieldName": "handled_by_bot",
+          "id": "livechat_handled_by_bot:sum",
+          "fieldName": "livechat_handled_by_bot",
           "aggregator": "sum"
         },
         {
-          "id": "handled_by_agent:sum",
-          "fieldName": "handled_by_agent",
+          "id": "livechat_handled_by_agent:sum",
+          "fieldName": "livechat_handled_by_agent",
           "aggregator": "sum"
         },
-        { "id": "has_call:sum", "fieldName": "has_call", "aggregator": "sum" }
+        { "id": "livechat_has_call:sum", "fieldName": "livechat_has_call", "aggregator": "sum" }
       ],
       "formulaId": "13",
       "fieldMatching": {
-        "7bb2084a-2349": { "chain": "partner_id", "type": "many2one" },
+        "7bb2084a-2349": { "chain": "livechat_handler_partner_id", "type": "many2one" },
         "951c09be-0626": { "chain": "country_id", "type": "many2one" },
-        "fbb1d9f0-d136": { "chain": "lang_id", "type": "many2one" },
+        "fbb1d9f0-d136": { "chain": "livechat_lang_id", "type": "many2one" },
         "731ca145-d193": { "chain": "livechat_channel_id", "type": "many2one" },
-        "9dd855bf-83ea": { "chain": "session_expertise_ids", "type": "many2many" }
+        "9dd855bf-83ea": { "chain": "livechat_expertise_ids", "type": "many2many" }
       }
     },
     "d9792e42-ac74": {
       "type": "ODOO",
-      "model": "im_livechat.report.channel",
+      "model": "discuss.channel",
       "name": "Session escalated aggregates",
       "domain": [
         "&",
-        ["channel_id.livechat_end_dt", "=", false],
-        ["channel_id.livechat_is_escalated", "!=", false]
+        ["channel_type", "=", "livechat"],
+        "&",
+        ["livechat_end_dt", "=", false],
+        ["livechat_is_escalated", "!=", false]
       ],
       "context": {},
       "columns": [],
@@ -1068,11 +1074,11 @@
       ],
       "formulaId": "14",
       "fieldMatching": {
-        "7bb2084a-2349": { "chain": "partner_id", "type": "many2one" },
+        "7bb2084a-2349": { "chain": "livechat_handler_partner_id", "type": "many2one" },
         "951c09be-0626": { "chain": "country_id", "type": "many2one" },
-        "fbb1d9f0-d136": { "chain": "lang_id", "type": "many2one" },
+        "fbb1d9f0-d136": { "chain": "livechat_lang_id", "type": "many2one" },
         "731ca145-d193": { "chain": "livechat_channel_id", "type": "many2one" },
-        "9dd855bf-83ea": { "chain": "session_expertise_ids", "type": "many2many" }
+        "9dd855bf-83ea": { "chain": "livechat_expertise_ids", "type": "many2many" }
       }
     },
     "a25aec01-9f5b": {
@@ -1182,7 +1188,7 @@
     },
     "ab4d6b08-4e9f": {
       "type": "ODOO",
-      "model": "im_livechat.report.channel",
+      "model": "discuss.channel",
       "name": "Country",
       "sortedColumn": {
         "domain": [],
@@ -1191,8 +1197,10 @@
       },
       "domain": [
         "&",
-        ["channel_id.livechat_end_dt", "=", false],
-        ["channel_id.country_id", "!=", false]
+        ["channel_type", "=", "livechat"],
+        "&",
+        ["livechat_end_dt", "=", false],
+        ["country_id", "!=", false]
       ],
       "context": {},
       "columns": [],
@@ -1209,16 +1217,16 @@
       ],
       "formulaId": "22",
       "fieldMatching": {
-        "7bb2084a-2349": { "chain": "partner_id", "type": "many2one" },
+        "7bb2084a-2349": { "chain": "livechat_handler_partner_id", "type": "many2one" },
         "951c09be-0626": { "chain": "country_id", "type": "many2one" },
-        "fbb1d9f0-d136": { "chain": "lang_id", "type": "many2one" },
+        "fbb1d9f0-d136": { "chain": "livechat_lang_id", "type": "many2one" },
         "731ca145-d193": { "chain": "livechat_channel_id", "type": "many2one" },
-        "9dd855bf-83ea": { "chain": "session_expertise_ids", "type": "many2many" }
+        "9dd855bf-83ea": { "chain": "livechat_expertise_ids", "type": "many2many" }
       }
     },
     "ddbd381c-cf18": {
       "type": "ODOO",
-      "model": "im_livechat.report.channel",
+      "model": "discuss.channel",
       "name": "Chatbot Answer",
       "sortedColumn": {
         "domain": [],
@@ -1227,13 +1235,15 @@
       },
       "domain": [
         "&",
-        ["chatbot_answers_path_str", "!=", false],
-        ["channel_id.livechat_end_dt", "=", false]
+        ["channel_type", "=", "livechat"],
+        "&",
+        ["livechat_chatbot_answers_path_str", "!=", false],
+        ["livechat_end_dt", "=", false]
       ],
       "context": {},
       "columns": [],
       "rows": [
-        { "fieldName": "chatbot_answers_path" }
+        { "fieldName": "livechat_chatbot_answers_path" }
       ],
       "measures": [
         {
@@ -1245,16 +1255,16 @@
       ],
       "formulaId": "24",
       "fieldMatching": {
-        "7bb2084a-2349": { "chain": "partner_id", "type": "many2one" },
+        "7bb2084a-2349": { "chain": "livechat_handler_partner_id", "type": "many2one" },
         "951c09be-0626": { "chain": "country_id", "type": "many2one" },
-        "fbb1d9f0-d136": { "chain": "lang_id", "type": "many2one" },
+        "fbb1d9f0-d136": { "chain": "livechat_lang_id", "type": "many2one" },
         "731ca145-d193": { "chain": "livechat_channel_id", "type": "many2one" },
-        "9dd855bf-83ea": { "chain": "session_expertise_ids", "type": "many2many" }
+        "9dd855bf-83ea": { "chain": "livechat_expertise_ids", "type": "many2many" }
       }
     },
     "1ccc42f7-9956": {
       "type": "ODOO",
-      "model": "im_livechat.report.channel",
+      "model": "discuss.channel",
       "name": "Language",
       "sortedColumn": {
         "domain": [],
@@ -1263,13 +1273,15 @@
       },
       "domain": [
         "&",
-        ["lang_id", "!=", false],
-        ["channel_id.livechat_end_dt", "=", false]
+        ["channel_type", "=", "livechat"],
+        "&",
+        ["livechat_lang_id", "!=", false],
+        ["livechat_end_dt", "=", false]
       ],
       "context": {},
       "columns": [],
       "rows": [
-        { "fieldName": "lang_id" }
+        { "fieldName": "livechat_lang_id" }
       ],
       "measures": [
         {
@@ -1281,11 +1293,11 @@
       ],
       "formulaId": "25",
       "fieldMatching": {
-        "7bb2084a-2349": { "chain": "partner_id", "type": "many2one" },
+        "7bb2084a-2349": { "chain": "livechat_handler_partner_id", "type": "many2one" },
         "951c09be-0626": { "chain": "country_id", "type": "many2one" },
-        "fbb1d9f0-d136": { "chain": "lang_id", "type": "many2one" },
+        "fbb1d9f0-d136": { "chain": "livechat_lang_id", "type": "many2one" },
         "731ca145-d193": { "chain": "livechat_channel_id", "type": "many2one" },
-        "9dd855bf-83ea": { "chain": "session_expertise_ids", "type": "many2many" }
+        "9dd855bf-83ea": { "chain": "livechat_expertise_ids", "type": "many2many" }
       }
     },
     "cd02255a-0a88": {

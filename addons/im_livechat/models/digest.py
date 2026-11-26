@@ -51,10 +51,11 @@ class DigestDigest(models.Model):
     def _compute_kpi_livechat_response_value(self):
         self._raise_if_not_member_of('im_livechat.im_livechat_group_manager')
         start, end, __ = self._get_kpi_compute_parameters()
-        response_time = self.env['im_livechat.report.channel'].sudo()._read_group([
-            ('start_date', '>=', start),
-            ('start_date', '<', end),
-        ], [], ['time_to_answer:avg'])
+        response_time = self.env["discuss.channel"].sudo()._read_group([
+            ("channel_type", "=", "livechat"),
+            ("create_date", ">=", start),
+            ("create_date", "<", end),
+        ], [], ["livechat_response_time_hour:avg"])
         self.kpi_livechat_response_value = response_time[0][0]
 
     def _get_kpi_custom_settings(self, company, user):
