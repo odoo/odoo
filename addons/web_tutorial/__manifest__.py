@@ -11,7 +11,7 @@ A tutorial describes the views an app is discovered through and, for each of
 them, the fields and buttons to use, with their help. The users are guided
 through them view by view, at their own pace and in their own order.
 """,
-    'depends': ['web'],
+    'depends': ['web', 'web_tour'],
     'data': [
         'security/ir.access.csv',
         'views/web_tutorial_views.xml',
