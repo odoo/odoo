@@ -13,7 +13,7 @@ class PaymentPortal(payment.PaymentPortal):
         for order in tx.sale_order_ids:
             if (
                 tx.provider_id.code == 'custom' and tx.provider_id.custom_mode == 'on_site' and
-                order.coupon_point_ids.filtered(lambda pe: pe.coupon_id.program_id.program_type in ['gift_card', 'ewallet']).coupon_id
+                order.coupon_point_ids.filtered(lambda pe: pe.points > 0 and pe.coupon_id.program_id.program_type in ['gift_card', 'ewallet']).coupon_id
             ):
                 raise ValidationError(
                     _("Cannot process payment: Gift cards and eWallets are not compatible with on site payment")
