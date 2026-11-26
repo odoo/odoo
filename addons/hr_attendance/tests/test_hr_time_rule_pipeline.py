@@ -232,18 +232,15 @@ class TestTimeRulePipeline(TransactionCase):
             msg="overtime net work = 2h gross - 0h break = 2h")
 
     def test_multiday_else_branch_break_prorated_over_source_type_slices(self):
-        """Scheduled employee spans midnight: break prorated over all source-type slices.
+        """Scheduled employee spans midnight: the attendance is split per day, break prorated over the days.
 
         Scheduled employee works Mon Jun 8 08:00 -> Tue Jun 9 02:00 (18h gross), break=2h.
-        The else-branch fires (overtime starts after attendance start).
-
-        The pipeline produces:
-          - source clip  [Mon 08:00 -> OT-start]   attendance type, pp={}   == matching
-          - overtime tail [OT-start -> Mon 24:00]   overtime type           == non-matching
-          - remainder    [Tue 00:00 -> 02:00]        attendance type, pp={}   == matching
-
-        Break is prorated proportionally across the two matching slices (source clip and
-        remainder); the overtime tail carries no break.
+        ``create`` splits it at midnight before the time rules run, the break prorated to the
+        length of each day (16/18 and 2/18 of 2h):
+          - Mon [08:00 -> 24:00]: the else-branch fires (overtime starts after attendance start)
+              - source clip   [Mon 08:00 -> OT-start]   attendance type, carries Monday's break
+              - overtime tail [OT-start -> Mon 24:00]   overtime type, no break
+          - Tue [00:00 -> 02:00]: a source of its own, under the schedule, left as it is
         """
         att = self.env['hr.attendance'].create({
             'employee_id': self.employee_scheduled.id,
@@ -257,20 +254,20 @@ class TestTimeRulePipeline(TransactionCase):
         ], order='check_in asc')
         self.assertEqual(len(overtime_records), 1, "exactly one overtime record for the Mon evening excess")
         ot = overtime_records[0]
+        self.assertEqual(ot.source_attendance_id, att)
 
-        # source is clipped at the OT start (break-adjusted, on Jun 8)
-        remainder_records = self.env['hr.attendance'].search([
-            ('source_attendance_id', '=', att.id),
-            ('time_rule_id', '=', False),
-        ])
-        self.assertEqual(len(remainder_records), 1, "exactly one remainder record for the Tue 00:00→02:00 tail")
-        rem = remainder_records[0]
+        tuesday = self.env['hr.attendance'].search([
+            ('employee_id', '=', self.employee_scheduled.id),
+            ('source_attendance_id', '=', False),
+        ], order='check_in asc') - att
+        self.assertEqual(len(tuesday), 1, "the Tue 00:00→02:00 part is an attendance of its own")
+        self.assertFalse(att.overtime_attendance_ids - ot, "no remainder: Monday's source stops at midnight")
 
         # source clip: starts at original check_in; ends on Jun 8 at break-adjusted OT start
         self.assertEqual(att.check_in, datetime(2026, 6, 8, 8, 0),
             msg="source check_in must not change")
         self.assertEqual(att.check_out, datetime(2026, 6, 8, 17, 46, 40),
-            msg="OT start: 16h gross x (1 - 2/18 break ratio) = 128/9h effective - 8h expected = 56/9h excess; time.max - 56/9h = 17:46:40")
+            msg="OT start: 16h gross - 16/9h Monday break = 128/9h effective - 8h expected = 56/9h excess; time.max - 56/9h = 17:46:40")
 
         # OT: immediately follows the clip, ends at end of Jun 8
         self.assertEqual(ot.check_in, att.check_out,
@@ -278,11 +275,10 @@ class TestTimeRulePipeline(TransactionCase):
         self.assertEqual(ot.check_out, datetime.combine(date(2026, 6, 8), time.max),
             msg="OT must end at end of Mon")
 
-        # remainder: pipeline snaps the 23:59:59.999999 boundary to midnight of the next day
-        self.assertEqual(rem.check_in, datetime(2026, 6, 9, 0, 0),
-            msg="remainder starts at midnight Jun 9 (snapped from pipeline day-boundary)")
-        self.assertEqual(rem.check_out, datetime(2026, 6, 9, 2, 0),
-            msg="remainder must end at the original check_out")
+        self.assertEqual(tuesday.check_in, datetime(2026, 6, 9, 0, 0),
+            msg="Tuesday starts at midnight Jun 9")
+        self.assertEqual(tuesday.check_out, datetime(2026, 6, 9, 2, 0),
+            msg="Tuesday must end at the original check_out")
 
         self.assertAlmostEqual(ot.break_duration, 0.0, places=4,
             msg="overtime record must carry no break")
@@ -290,14 +286,13 @@ class TestTimeRulePipeline(TransactionCase):
         self.assertAlmostEqual(ot.worked_hours, 56 / 9, places=3,
             msg="OT worked hours must equal the excess duration (56/9h)")
 
-        # break prorated across clip and remainder; OT carries none
-        self.assertAlmostEqual(
-            att.break_duration + rem.break_duration, 2.0, places=4,
-            msg="break must sum to the original 2h across clip and remainder")
+        # break prorated over the days by the split; OT carries none
+        self.assertAlmostEqual(att.break_duration, 16 / 9, places=4)
+        self.assertAlmostEqual(tuesday.break_duration, 2 / 9, places=4)
 
         # total net work = original gross - original break = 18h - 2h = 16h
         self.assertAlmostEqual(
-            att.worked_hours + ot.worked_hours + rem.worked_hours, 16.0, places=3,
+            att.worked_hours + ot.worked_hours + tuesday.worked_hours, 16.0, places=3,
             msg="net worked hours must be conserved across all three records")
 
     def test_single_day_two_rules_break_stays_on_source(self):
@@ -623,13 +618,18 @@ class TestAttendanceSplitPreview(TransactionCase):
         for check_in, check_out, break_duration in cases:
             with self.subTest(check_in=check_in, break_duration=break_duration):
                 preview = self._new(check_in, check_out, break_duration)._get_time_rule_split_preview()
-                source = self.env['hr.attendance'].create({
+                self.env['hr.attendance'].create({
                     'employee_id': self.employee.id,
                     'check_in': check_in,
                     'check_out': check_out,
                     'break_duration': break_duration,
                 })
-                result = (source | source.overtime_attendance_ids).sorted('check_in')
+                # the attendance crossing midnight is split per day, each day with its own time rule outputs
+                result = self.env['hr.attendance'].search([
+                    ('employee_id', '=', self.employee.id),
+                    ('check_in', '>=', check_in),
+                    ('check_in', '<', check_out),
+                ], order='check_in')
                 self.assertEqual(
                     self._as_tuples(preview),
                     [(att.work_entry_type_id, round(att.worked_hours, 4)) for att in result],

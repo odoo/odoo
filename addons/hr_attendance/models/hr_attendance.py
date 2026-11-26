@@ -503,6 +503,93 @@ class HrAttendance(models.Model):
     # the attendance needs a new review.
     _REVIEWED_FIELDS = frozenset({'check_in', 'check_out', 'break_duration', 'employee_id', 'work_entry_type_id'})
 
+    def _split_attendance_intervals(self, check_in, check_out, employee_tz):
+        """ Split the Attendance record if it crosses the employee's timezone local midnight and save in UTC. """
+        if check_out < check_in:
+            return
+        current_start_utc = check_in
+        while current_start_utc < check_out:
+            local_start = current_start_utc.replace(tzinfo=UTC).astimezone(employee_tz)
+            next_day_date = local_start.date() + timedelta(days=1)
+            local_midnight = datetime.combine(next_day_date, time.min, tzinfo=employee_tz)
+            midnight_utc = local_midnight.astimezone(UTC).replace(tzinfo=None)
+            current_end_utc = min(midnight_utc, check_out)
+            yield (current_start_utc, current_end_utc)
+            current_start_utc = current_end_utc
+
+    def _trigger_time_rules(self):
+        """
+        Skipped with defer_time_rules and run the time rules themselves once the
+        attendances crossing midnight are split per day
+        """
+        if self.env.context.get("defer_time_rules"):
+            return
+        super()._trigger_time_rules()
+
+    def _split_cross_day_shift(self):
+        """
+        Post-process of create() & write() methods,
+        split the attendances crossing the employee's local midnight into one attendance per day.
+
+        Each attendance of self is shrunk in place to its first day, so keeps the same records returned
+        from the create() & write() methods.
+        The other days are created as new attendances, with the break duration prorated to their length
+        and the time rule outputs follow their source attendance
+
+        :return: the new created attendances for the following days
+        """
+
+        new_attendances = self.env['hr.attendance']
+        for attendance in self.sudo():
+            if (
+                not attendance.check_in
+                or not attendance.check_out
+                or not attendance.employee_id
+                or attendance.time_rule_id
+                or attendance.source_attendance_id
+            ):
+                continue
+
+            tz = ZoneInfo(attendance.employee_id._get_tz())
+            local_in = attendance.check_in.replace(tzinfo=UTC).astimezone(tz).date()
+            local_out = attendance.check_out.replace(tzinfo=UTC).astimezone(tz).date()
+
+            if local_out <= local_in:
+                continue
+
+            intervals = list(self._split_attendance_intervals(
+                attendance.check_in,
+                attendance.check_out,
+                tz,
+            ))
+
+            total_seconds = (attendance.check_out - attendance.check_in).total_seconds()
+            total_break = attendance.break_duration or 0.0
+
+            if len(intervals) > 1 and total_seconds > 0:
+                # Update the original record in-place to cover only Day 1
+                attendance.write({
+                    'check_in': fields.Datetime.to_string(intervals[0][0]),
+                    'check_out': fields.Datetime.to_string(intervals[0][1]),
+                    'break_duration': total_break * ((intervals[0][1] - intervals[0][0]).total_seconds() / total_seconds)
+                })
+
+                # Create new records for other days with ensuring overtime calculations
+                vals_list = []
+                for start, end in intervals[1:]:
+                    vals_list.append({
+                        'employee_id': attendance.employee_id.id,
+                        'check_in': fields.Datetime.to_string(start),
+                        'check_out': fields.Datetime.to_string(end),
+                        'break_duration': total_break * ((end - start).total_seconds() / total_seconds),
+                        'in_mode': attendance.in_mode,
+                        'out_mode': attendance.out_mode,
+                        'state': attendance.state,
+                        'work_entry_type_id': attendance.work_entry_type_id.id,
+                    })
+                new_attendances |= attendance.create(vals_list)
+        return self.browse(new_attendances.ids)
+
     def write(self, vals):
         """Write the values on the attendances, and follow up on the changes of the reviewed fields
         (``_REVIEWED_FIELDS``).
@@ -549,8 +636,19 @@ class HrAttendance(models.Model):
             self.sudo().overtime_attendance_ids if changes_reviewed_fields else self.env["hr.attendance"]
         )
 
-        super(HrAttendance, edited_by_manager).write(manager_vals)
-        super(HrAttendance, edited_by_employee).write(employee_vals)
+        # A new check-in, check-out or employee (timezone) can make the attendance cross midnight.
+        # The time rules are deferred until the split, so that they process each day on its own.
+        split = bool({"check_in", "check_out", "employee_id"} & vals.keys())
+        defer_ctx = {"defer_time_rules": True} if split else {}
+        super(HrAttendance, edited_by_manager.with_context(**defer_ctx)).write(manager_vals)
+        super(HrAttendance, edited_by_employee.with_context(**defer_ctx)).write(employee_vals)
+
+        # The split shrinks the self to its first day before recomputing
+        # the next days are created, and recompute their own issues.
+        if split:
+            new_attendances = self.with_context(**defer_ctx)._split_cross_day_shift().with_env(self.env)
+            if not self.env.context.get("skip_time_rules"):
+                (self | new_attendances)._trigger_time_rules()
 
         if stale_time_rule_attendances:
             stale_time_rule_attendances.exists().with_context(skip_time_rules=True).write({"source_stale": True})
@@ -1072,11 +1170,12 @@ class HrAttendance(models.Model):
         ], keep_distinct=True)
         period_interval = Intervals([(start, stop, self.env['resource.calendar'])])
         break_duration = 0.0
-        for start, stop, attendance in attendance_intervals & period_interval:
+        for a_start, a_stop, attendance in attendance_intervals & period_interval:
             attendance_duration = time_to_float(attendance.check_out - attendance.check_in)
-            break_duration += (
-                time_to_float(stop - start) / attendance_duration
-            ) * attendance.break_duration
+            if attendance_duration > 0:
+                break_duration += (
+                    time_to_float(a_stop - a_start) / attendance_duration
+                ) * attendance.break_duration
         return break_duration
 
     def init(self):
@@ -1164,6 +1263,23 @@ class HrAttendance(models.Model):
             or self.overtime_attendance_ids
         ):
             return []
+        tz = ZoneInfo(self.employee_id.sudo()._get_tz())
+        day_spans = list(self._split_attendance_intervals(self.check_in, self.check_out, tz))
+        if len(day_spans) > 1:
+            # saved, the attendance is split per day (_split_cross_day_shift), and the rules process each day
+            span_secs = (self.check_out - self.check_in).total_seconds()
+            return [
+                part
+                for start, stop in day_spans
+                for part in self.new({
+                    'employee_id': self.employee_id.id,
+                    'check_in': start,
+                    'check_out': stop,
+                    'break_duration': (self.break_duration or 0.0) * (stop - start).total_seconds() / span_secs,
+                    'work_entry_type_id': self.work_entry_type_id.id,
+                    'state': self.state,
+                }, origin=self._origin or None)._get_time_rule_split_preview()
+            ]
         rules = self.env['hr.time.rule'].sudo().search([
             ('active', '=', True),
             ('threshold_operator', '=', 'exceed'),
@@ -1178,8 +1294,6 @@ class HrAttendance(models.Model):
         span_secs = (self.check_out - self.check_in).total_seconds()
         if not rules:
             return [(source_wet, span_secs / 3600 - break_hours)]
-
-        tz = ZoneInfo(self.employee_id.sudo()._get_tz())
 
         def to_local(dt):
             return dt.replace(tzinfo=UTC).astimezone(tz).replace(tzinfo=None)
@@ -1390,7 +1504,15 @@ class HrAttendance(models.Model):
                 raise AccessError(
                     self.env._("Only the attendance managers of the employees can review their attendances."),
                 )
-        attendances = super().create(vals_list)
+        # the time rules are deferred until the split, so that they process each day on its own
+        attendances = super(HrAttendance, self.with_context(defer_time_rules=True)).create(vals_list).with_env(self.env)
+
+        # Split the attendances crossing midnight.
+        # attendances shrink to the first day of each, so one record is still returned per vals
+        # the next days are created new records
+        new_attendances = attendances.with_context(defer_time_rules=True)._split_cross_day_shift().with_env(self.env)
+        if not self.env.context.get("skip_time_rules"):
+            (attendances | new_attendances)._trigger_time_rules()
         # the new attendances change the issues of the other attendances of their days
         had_issue = attendances.filtered_domain(self._get_worked_time_domain())._recompute_same_day_issues()
         (attendances | had_issue)._auto_review()

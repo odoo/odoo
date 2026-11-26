@@ -12,3 +12,4 @@ from . import test_hr_attendance_work_entry_type_domain
 from . import test_hr_time_rule_pipeline
 from . import test_update
 from . import test_hr_attendance_tours
+from . import test_hr_attendance_cross_day

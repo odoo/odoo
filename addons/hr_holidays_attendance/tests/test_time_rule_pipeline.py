@@ -2513,10 +2513,18 @@ class TestTimeRulePipeline(TransactionCase):
             'check_out': datetime(2022, 12, 13, 6),   # Tue 06:00
         })
 
+        # att2 is split at midnight: att2 keeps Mon 22:00-24:00, Tue 00:00-06:00 is an attendance of its own
+        att2_tuesday = self.env['hr.attendance'].search([
+            ('employee_id', '=', self.cal_emp.id),
+            ('source_attendance_id', '=', False),
+            ('check_in', '=', datetime(2022, 12, 13, 0)),
+        ])
+        self.assertEqual(att2_tuesday.check_out, datetime(2022, 12, 13, 6))
+
         att1_ot = att1.overtime_attendance_ids.filtered(
             lambda a: a.time_rule_id == self.time_rule
         )
-        att2_deficit = att2.overtime_attendance_ids.filtered(
+        att2_deficit = att2_tuesday.overtime_attendance_ids.filtered(
             lambda a: a.time_rule_id == deficit_rule
         )
 
@@ -2623,10 +2631,19 @@ class TestTimeRulePipeline(TransactionCase):
             'check_out': datetime(2026, 1, 24, 0, 29, 44),
         })
 
+        # split at Brussels midnight (23:00 UTC): Saturday 00:00-01:29:44 is an attendance of its own. On a day off,
+        # the weekend rule replaces it entirely with weekend overtime.
+        saturday = self.env['hr.attendance'].search([
+            ('employee_id', '=', emp.id),
+            ('source_attendance_id', '=', False),
+            ('check_in', '=', datetime(2026, 1, 23, 23, 0)),
+        ])
+        self.assertEqual(saturday.check_out, datetime(2026, 1, 24, 0, 29, 44))
+
         weekday_ot = att.overtime_attendance_ids.filtered(
             lambda a: a.work_entry_type_id == weekday_ot_type
         )
-        weekend_ot = att.overtime_attendance_ids.filtered(
+        weekend_ot = (saturday | saturday.overtime_attendance_ids).filtered(
             lambda a: a.work_entry_type_id == weekend_ot_type
         )
         self.assertAlmostEqual(
