@@ -281,6 +281,9 @@ class TestWithholdingAndPensionFundTaxes(TestItEdi):
             vat_taxes = line.tax_ids - withholding_taxes - pension_fund_taxes
             self.assertEqual([1, 1, 0], [len(x) for x in (vat_taxes, withholding_taxes, pension_fund_taxes)])
 
+        self.assertFalse(invoice.line_ids.filtered(lambda line: line.display_type == 'rounding'))
+        self.assertFalse(any('too large to be a rounding' in message.body for message in invoice.message_ids))
+
     ####################################################
     # PENSION FUND TAX
     ####################################################
