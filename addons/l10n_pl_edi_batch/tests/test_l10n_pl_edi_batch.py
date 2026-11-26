@@ -350,7 +350,7 @@ class TestL10nPlEdiBatch(AccountTestInvoicingCommon):
             ('res_field', '=', 'decrypted_file'),
             ('res_id', '=', parts[0].id),
         ])
-        self.assertRecordValues(attachment, [{'name': 'ready-001.zip', 'mimetype': 'application/zip'}])
+        self.assertRecordValues(attachment, [{'name': 'ready-001.zip', 'mimetype': 'application/zip', 'index_content': False}])
         self.assertEqual(ready_batch.state, 'downloaded')
 
     # Test import --------------------------------------------------------------

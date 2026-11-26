@@ -54,7 +54,7 @@ class BatchDownloadPart(models.Model):
             fails on a slice that isn't a whole ZIP and logs a warning.
         """
         self.ensure_one()
-        self.env['ir.attachment'].create({
+        self.env['ir.attachment'].with_context(skip_attachment_indexation=True).create({
             'name': self.part_name.removesuffix('.aes'),
             'res_model': self._name,
             'res_field': 'decrypted_file',
