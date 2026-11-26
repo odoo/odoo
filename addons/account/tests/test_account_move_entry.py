@@ -1583,6 +1583,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
                 'country_id': self.env.company.country_id.id,
             },
         ])
+        self.cr.precommit.run()  # load the CoA
         self.env.user.company_ids |= company_branch | company_b
         journal_branch, journal_b = self.env['account.journal'].create([
             {
