@@ -1,8 +1,8 @@
-import { Reactive, effect } from "@web/core/utils/reactive";
+import { Reactive } from "@web/core/utils/reactive";
 import { createRelatedModels } from "@point_of_sale/app/models/related_models";
 import { registry } from "@web/core/registry";
 import { Mutex } from "@web/core/utils/concurrency";
-import { markRaw } from "@odoo/owl";
+import { markRaw, reactive, toRaw } from "@odoo/owl";
 import { debounce } from "@web/core/utils/timing";
 import IndexedDB from "./utils/indexed_db";
 import { DataServiceOptions } from "./data_service_options";
@@ -46,11 +46,9 @@ export class PosData extends Reactive {
         this.initIndexedDB();
         await this.initData();
 
-        this._debouncedSync = debounce((records) => {
-            this.syncDataWithIndexedDB(records);
-        }, 200);
-
-        effect(this._debouncedSync, [this.records]);
+        const records = reactive(this.records, () => this._debouncedSync());
+        this._debouncedSync = debounce(() => this.syncDataWithIndexedDB(records), 200);
+        this._debouncedSync();
 
         browser.addEventListener("online", () => {
             if (this.network.offline) {
@@ -108,10 +106,22 @@ export class PosData extends Reactive {
 
     syncDataWithIndexedDB(records) {
         // This methods will add uiState to the serialized object
+        // Serialize through a per-record observer instead of the global one, so
+        // only records modified since the last sync are serialized again.
+        this.idbCleanRecords ??= new WeakSet();
         const dataFormatter = (record) => {
+            const raw = toRaw(record);
+            if (this.idbCleanRecords.has(raw)) {
+                return [];
+            }
+            this.idbCleanRecords.add(raw);
+            record = reactive(raw, () => {
+                this.idbCleanRecords.delete(raw);
+                this._debouncedSync();
+            });
             const serializedData = record.serialize();
             const uiState = typeof record.uiState === "object" ? record.serializeState() : "{}";
-            return { ...serializedData, JSONuiState: JSON.stringify(uiState), id: record.id };
+            return [{ ...serializedData, JSONuiState: JSON.stringify(uiState), id: record.id }];
         };
 
         const dataToKeep = {};
@@ -130,7 +140,7 @@ export class PosData extends Reactive {
                 }
 
                 if (recordsToPut.length) {
-                    this.indexedDB.create(model, recordsToPut.map(dataFormatter));
+                    this.indexedDB.create(model, recordsToPut.flatMap(dataFormatter));
                     dataToKeep[model] = recordsToPut.map((r) => r[params.key]);
                 }
             }
@@ -146,7 +156,7 @@ export class PosData extends Reactive {
                         ...new Map(recordsToPut.map((r) => [r[params.key], r])).values(),
                     ];
 
-                    this.indexedDB.create(model, uniqueRecords.map(dataFormatter));
+                    this.indexedDB.create(model, uniqueRecords.flatMap(dataFormatter));
                     dataToKeep[model] = uniqueRecords.map((r) => r[params.key]);
                 }
             }
@@ -173,6 +183,14 @@ export class PosData extends Reactive {
 
                 if (keysToDelete.length) {
                     this.indexedDB.delete(model, keysToDelete);
+                    // Deleted rows can belong to records that are kept, write them again
+                    for (const keyToDelete of keysToDelete) {
+                        const localRecord = this.models[model].getBy(key, keyToDelete);
+                        if (localRecord) {
+                            this.idbCleanRecords.delete(toRaw(localRecord));
+                            this._debouncedSync();
+                        }
+                    }
                 }
             }
         });

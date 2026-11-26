@@ -1158,6 +1158,7 @@ export class PosStore extends Reactive {
             zero_pad(this.getNextSequenceNumber(), 4)
         );
     }
+
     createNewOrder(data = {}) {
         const fiscalPosition = this.models["account.fiscal.position"].find(
             (fp) => fp.id === this.config.default_fiscal_position_id?.id

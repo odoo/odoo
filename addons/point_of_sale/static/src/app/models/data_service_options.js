@@ -9,7 +9,8 @@ export class DataServiceOptions {
             },
             "pos.order.line": {
                 key: "uuid",
-                condition: (record) => record.order_id?.canBeRemovedFromIndexedDB,
+                condition: (record) =>
+                    record.order_id?.canBeRemovedFromIndexedDB || !record.order_id,
             },
             "pos.payment": {
                 key: "uuid",
