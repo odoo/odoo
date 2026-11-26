@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from datetime import datetime, date, UTC
 
+from odoo.tests import Form
 from odoo.tests.common import tagged, TransactionCase
 
 
@@ -402,3 +403,27 @@ class TestFlexibleResourceCalendar(TransactionCase):
         self.assertEqual(intervals[0][:2],
             (datetime(2026, 8, 15, 17, 0, tzinfo=UTC), datetime(2026, 8, 15, 23, 59, 59, 999999, tzinfo=UTC))
         )
+
+    def test_day_off_in_hours_longer_than_the_average_day(self):
+        """On a flexible schedule, a single day of time off in hours lasts the hours asked, even
+        above the average day, and its work entry counts them."""
+        leave_type = self.env['hr.work.entry.type'].create({
+            'name': 'Hours',
+            'code': 'FLEXHOURS',
+            'count_as': 'absence',
+            'requires_allocation': False,
+            'request_unit': 'hour',
+        })
+        form = Form(self.env['hr.leave'].with_context(
+            default_request_date_from=date(2025, 2, 4), default_request_date_to=date(2025, 2, 4)))
+        form.employee_id = self.flex_employee
+        form.work_entry_type_id = leave_type
+        self.assertEqual(form.number_of_hours, 8, "premise: the average day")
+        form.number_of_hours = 10
+        leave = form.save()
+
+        self.assertEqual((leave.date_from, leave.date_to), (datetime(2025, 2, 4, 8), datetime(2025, 2, 4, 18)))
+        self.assertEqual(leave.number_of_hours, 10)
+        self.assertEqual(leave.state, 'validate')
+        work_entries = self.flex_employee.version_id.generate_work_entries(date(2025, 2, 4), date(2025, 2, 4))
+        self.assertEqual([(vals['work_entry_type_id'], vals['duration']) for vals in work_entries], [(leave_type, 10)])

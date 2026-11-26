@@ -1301,8 +1301,8 @@ class HrLeave(models.Model):
         """Move the end of the requests to give them the ``number_of_hours`` set.
 
         Only for requests to approve: the end is planned on the version's schedule from
-        ``date_from`` (or on the clock, see :meth:`_plans_hours_on_the_clock`) and written on
-        ``request_date_to``/``request_hour_to``.
+        ``date_from`` (or on the clock, see :meth:`_plans_hours_on_the_clock`, and for a single
+        day on a flexible schedule) and written on ``request_date_to``/``request_hour_to``.
 
         :raise ValidationError: if the hours do not fit in the working time of the request days
         """
@@ -1320,7 +1320,10 @@ class HrLeave(models.Model):
             days_start = leave._to_utc(leave.request_date_from, 0, leave.employee_id).replace(tzinfo=UTC)
             days_end = leave._to_utc(leave.request_date_to + timedelta(days=1), 0, leave.employee_id).replace(tzinfo=UTC)
             worked_hours = calendar.get_work_hours_count(days_start, days_end, compute_leaves=compute_leaves)
-            if leave._plans_hours_on_the_clock(worked_hours):
+            # a flexible schedule plans no hours of its own on a day: a single day request lasts
+            # the hours asked, as _get_durations counts it, not its average day
+            if leave._plans_hours_on_the_clock(worked_hours) or (
+                    calendar._is_flexible() and leave.request_date_from == leave.request_date_to):
                 request_date_hour_to = leave.date_from + relativedelta(hours=leave.number_of_hours)
             else:
                 request_date_hour_to = calendar.plan_hours(
