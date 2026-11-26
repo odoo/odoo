@@ -7,6 +7,13 @@ from odoo.fields import Domain
 class ResourceCalendarLeaves(models.Model):
     _inherit = 'resource.calendar.leaves'
 
+    @api.model
+    def _get_leave_intervals_domain(self):
+        """Not the time off of the attendances: it is the attended time itself. Whatever the
+        access rights on the time off (``not any!``): the users without them read the leaves
+        too, e.g. to plan shifts."""
+        return super()._get_leave_intervals_domain() + [Domain('holiday_id', 'not any!', [('attendance_id', '!=', False)])]
+
     def _get_time_rule_affected(self):
         """Return the employees affected by the public holidays of ``self``.
 

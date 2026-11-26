@@ -4,6 +4,7 @@ from datetime import timedelta
 
 from odoo import api, fields, models
 from odoo.fields import Domain
+from odoo.tools.intervals import Intervals
 
 # the fields of a version that change the hours expected from its employee
 _EXPECTED_HOURS_FIELDS = frozenset({'resource_calendar_id', 'date_version'})
@@ -13,13 +14,26 @@ class HrVersion(models.Model):
     _name = 'hr.version'
     _inherit = 'hr.version'
 
-    attendance_based = fields.Boolean(
-        string="Attendance Based",
-        help="When enabled, payslips are computed from badge records rather than "
-             "the employee's work schedule. Time off is always accounted for.",
-        groups="hr.group_hr_user",
-        default=lambda self: self.env.company.sudo().attendance_based,
-    )
+    work_entry_source = fields.Selection(
+        selection_add=[('attendance', 'Attendances')])
+
+    def has_static_work_entries(self):
+        """Attendance based versions with a flexible schedule have no static work entries:
+        their worked time comes from the working time leaves of their attendances. With another
+        schedule, the schedule gives the worked time and the leaves only the difference.
+
+        :rtype: bool
+        """
+        return (self.work_entry_source != 'attendance' or not self._is_flexible()) and super().has_static_work_entries()
+
+    def _get_attendance_intervals(self, start_dt, end_dt):
+        """Attendance based versions with a flexible schedule have no expected schedule: only
+        their leaves give entries."""
+        based = self.filtered(lambda v: not v.has_static_work_entries())
+        result = super(HrVersion, self - based)._get_attendance_intervals(start_dt, end_dt)
+        for version in based:
+            result[version.employee_id.resource_id.id] = Intervals()
+        return result
 
     def _get_attendance_manager_domain(self):
         return "[('share', '=', False), ('company_ids', 'in', company_id), ('role', 'in', ['regular_user', 'group_system']), ('all_group_ids', 'in', %s)]" % self.env.ref('hr_attendance.group_hr_attendance_own').id
@@ -58,10 +72,12 @@ class HrVersion(models.Model):
 
     @api.model
     def _recompute_attendance_issues(self, attendances):
-        """Recompute the issues of the days of the attendances after a change of schedule. The days left without
-        issue get reviewed, as after any change of their day, see ``hr.attendance._auto_review``."""
+        """Recompute the expected hours and the issues of the days of the attendances after a change of schedule. The
+        days left without issue get reviewed, as after any change of their day, see ``hr.attendance._auto_review``."""
         if attendances:
-            attendances.with_context(skip_time_rules=False)._recompute_same_day_issues()._auto_review()
+            had_issue = attendances.with_context(skip_time_rules=False)._recompute_same_day_issues()
+            attendances._search_same_day_attendances()._recompute_expected_hours()
+            had_issue._auto_review()
 
     def _get_attendances_with_expected_hours(self):
         """Return the attendances whose issues depend on the schedule of these versions: the attendances of their
@@ -81,11 +97,6 @@ class HrVersion(models.Model):
             )
             & attendances._get_worked_time_domain()
         )
-
-    @api.model
-    def _get_whitelist_fields_from_template(self):
-        """Also copy ``attendance_based`` from contract templates."""
-        return super()._get_whitelist_fields_from_template() + ['attendance_based']
 
     @api.model
     def _get_versions_by_employee_and_date(self, employee_dates):

@@ -89,7 +89,7 @@ class TestPayrollFieldsAccess(TransactionCase):
             'originated_offer_id',
             'is_non_resident',
             'structure_id',
-            'attendance_based',
+            'work_entry_source',
         ]
         if self.env['ir.module.module']._get('hr_payroll').state != 'installed':
             # payroll is not installed, payroll-specific fields are not there

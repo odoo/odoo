@@ -33,7 +33,6 @@ class ResCompany(models.Model):
     auto_check_out_mode = fields.Selection([('tolerance', 'Tolerance'), ('specific_time', 'Specific Time')], default='tolerance')
     auto_check_out_tolerance = fields.Float(default=2, export_string_translation=False)
     auto_check_out_specific_time = fields.Float(default=20.0, export_string_translation=False)
-    absence_management = fields.Boolean(string="Absence Management", default=False)
     attendance_validation = fields.Selection([
         ('manual_validation', 'Review everything'),
         ('exception_validation', 'Review exceptions only'),
@@ -41,16 +40,6 @@ class ResCompany(models.Model):
     attendance_validation_tolerance = fields.Integer(
         string="Validation Tolerance (Minutes)",
         default=15,
-    )
-    attendance_work_entry_type_id = fields.Many2one(
-        'hr.work.entry.type',
-        string="Attendance Time Type",
-        domain=[('count_as', '=', 'working_time')],
-        store=True,
-        compute='_compute_attendance_work_entry_type_id',
-        readonly=False,
-        groups="hr.group_hr_user",
-        help="Work entry type assigned to attendances and read by the time rule engine.",
     )
 
     attendance_tolerance = fields.Boolean(
@@ -68,7 +57,6 @@ class ResCompany(models.Model):
         string="Break Management on Checkout",
         help="If enabled, employees can record their total break duration after checking out.",
     )
-    attendance_based = fields.Boolean(default=False, groups="hr.group_hr_user")
 
     _check_auto_check_out_specific_time_range = models.Constraint(
         "CHECK (NOT (auto_check_out = true AND auto_check_out_mode = 'specific_time') OR (auto_check_out_specific_time >= 0 AND auto_check_out_specific_time < 24))",
@@ -79,20 +67,6 @@ class ResCompany(models.Model):
     def _compute_attendance_kiosk_url(self):
         for company in self:
             company.attendance_kiosk_url = url_join(self.env['res.company'].get_base_url(), '/hr_attendance/%s' % company.attendance_kiosk_key)
-
-    @api.depends('country_id')
-    def _compute_attendance_work_entry_type_id(self):
-        work_entry_types_by_country = dict(self.env['hr.work.entry.type'].sudo()._read_group(
-            domain=[
-                ('count_as', '=', 'working_time'),
-                ('code', '=', '002.00'),
-                ('country_id', 'in', self.country_id.ids + [False]),
-            ],
-            groupby=['country_id'],
-            aggregates=['id:recordset'],
-        ))
-        for company in self:
-            company.attendance_work_entry_type_id = work_entry_types_by_country.get(company.country_id, self.env['hr.work.entry.type'])[:1]
 
     # ---------------------------------------------------------
     # ORM Overrides

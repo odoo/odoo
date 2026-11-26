@@ -13,9 +13,6 @@
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="priority">110</field>
         <field name="arch" type="xml">
-            <field name="resource_calendar_id" position="after">
-                <field name="attendance_based"/>
-            </field>
             <button name="action_open_versions" position="before">
                 <field name="display_attendances" invisible="1"/> <!-- drives invisible of the worked hours stat button -->
                 <button name="action_open_last_month_attendances"
@@ -117,7 +114,6 @@
                 mode="month"
                 color="color">
                 <field name="color" invisible="1"/>
-                <field name="work_entry_type_id" groups="hr.group_hr_user"/>
             </calendar>
         </field>
     </record>

@@ -753,7 +753,7 @@ class HrLeave(models.Model):
             return
 
         # rule-managed leaves carry exact rule-assigned dates; don't recompute from request fields
-        for leave in self.filtered('source_leave_id'):
+        for leave in self.filtered(lambda l: l.source_leave_id or l.time_rule_id):
             leave.date_from = leave._origin.date_from
             leave.date_to = leave._origin.date_to
 
@@ -770,7 +770,7 @@ class HrLeave(models.Model):
                 leave.date_to = leave._origin.date_to or leave.date_to
             # inside an engine write: dates are already in cache from the write; leave them
 
-        for holiday in self.filtered(lambda l: not l.source_leave_id and l not in trimmed_sources):
+        for holiday in self.filtered(lambda l: not l.source_leave_id and not l.time_rule_id and l not in trimmed_sources):
             is_calendar_leave = holiday.work_entry_type_id.count_days_as == 'calendar'
             if not holiday.request_date_from or not holiday.request_date_to:
                 holiday.date_from = False

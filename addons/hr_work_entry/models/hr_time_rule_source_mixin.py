@@ -28,20 +28,20 @@ def _to_local_date(employee, value):
 class HrTimeRuleSourceMixin(models.AbstractModel):
     """Make a model a source of the time rule pipeline (``hr.time.rule``).
 
-    Inherited by ``hr.attendance`` and ``hr.leave``. Creating a source, or writing its employee,
-    span or the fields of :meth:`_get_write_source_extra_source_fields`, triggers the rules
+    Inherited by ``hr.leave`` and ``hr.attendance`` (in ``hr_holidays_attendance``, where the
+    outputs are written as time off). Creating a source, or writing its employee, span or the
+    fields of :meth:`_get_write_source_extra_source_fields`, triggers the rules
     (:meth:`_trigger_time_rules`) unless the context has ``skip_time_rules``. The rules then
     reclassify the source in place and/or create output records of the same model, linked to
     the source.
 
-    The inheriting model must have ``employee_id``, ``work_entry_type_id`` and ``time_rule_id``
-    fields, set the class attributes below and implement the hooks raising
-    ``NotImplementedError``:
+    The inheriting model must have ``employee_id`` and ``time_rule_id`` fields, and
+    ``work_entry_type_id`` unless it overrides :meth:`_get_time_rule_work_entry_type`, set the
+    class attributes below and implement the hooks raising ``NotImplementedError``:
 
     - ``_time_rule_source_field``: many2one from an output record to its source
-      (``source_attendance_id``, ``source_leave_id``);
-    - ``_time_rule_output_field``: the inverse one2many (``overtime_attendance_ids``,
-      ``output_leave_ids``);
+      (``source_leave_id``);
+    - ``_time_rule_output_field``: the inverse one2many (``output_leave_ids``);
     - ``_time_rule_span_start_field`` / ``_time_rule_span_end_field``: datetime fields (UTC)
       holding the span (``check_in``/``check_out``, ``date_from``/``date_to``);
     - ``_time_rule_write_ctx``: context used for the pipeline's own writes.
@@ -60,9 +60,9 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
     def _apply_record_output(self, rules, excess, deficit, active_iv=None):
         """Write the pipeline result on the records; must be implemented.
 
-        Implementations delegate to a ``hr.time.rule`` method built on
-        ``hr.time.rule._apply_output`` (``_apply_attendance_output``, ``_apply_leave_output``),
-        adding model specific effects such as allocations.
+        Implementations delegate to a ``hr.time.rule`` method (``_apply_leave_output``, built on
+        ``hr.time.rule._apply_output``, or ``_apply_attendance_output``), adding model specific
+        effects such as allocations.
 
         :param rules: the ``hr.time.rule`` records that were evaluated
         :param dict excess: ``{employee: {source: [_Iv]}}``
@@ -111,6 +111,13 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
         :rtype: set[str]
         """
         return set()
+
+    def _get_time_rule_work_entry_type(self):
+        """Return the type the rules see the record as: its ``work_entry_type_id``.
+
+        :rtype: hr.work.entry.type
+        """
+        return self.work_entry_type_id
 
     def _get_time_rule_break_hours(self):
         """Return the break hours of the record, not counted as worked time by the rules.

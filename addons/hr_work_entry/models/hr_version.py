@@ -17,6 +17,18 @@ from odoo.tools.intervals import Intervals
 class HrVersion(models.Model):
     _inherit = 'hr.version'
 
+    work_entry_source = fields.Selection(
+        [],
+        string="Based on",
+        groups="hr.group_hr_user",
+        help="Synchronize attendances or planning shifts into time off through automatic rules in order to compute payslips.",
+    )
+
+    @api.model
+    def _get_whitelist_fields_from_template(self):
+        """Also copy ``work_entry_source`` from contract templates."""
+        return super()._get_whitelist_fields_from_template() + ['work_entry_source']
+
     def _get_default_work_entry_type_id(self):
         """Return the id of the work entry type used for worked time without explicit type.
 
@@ -186,7 +198,7 @@ class HrVersion(models.Model):
 
         A module making versions non-static must override this method to still put an (empty)
         entry for their resources, as :meth:`_get_version_work_entries_values` indexes the result
-        directly (see ``hr_holidays_attendance``).
+        directly (see ``hr_attendance``).
 
         :param datetime start_dt: period start, tz-aware (asserted)
         :param datetime end_dt: period end, tz-aware (asserted)
@@ -492,7 +504,7 @@ class HrVersion(models.Model):
         return expected_attendances & leaves
 
     def _get_real_leaves_static_attendance(self, leaves, static_attendances):
-        """Return the absence intervals to generate for a non-static (attendance based) version.
+        """Return the absence intervals to generate for a non-static version.
 
         The expected attendances are empty for such a version, so leaves are intersected with the
         intervals of its working schedule instead.
@@ -544,9 +556,10 @@ class HrVersion(models.Model):
         """Tell whether the work entries of this version come from its working schedule.
 
         ``True`` (default): worked time is generated from the calendar attendances.
-        ``False``: worked time comes from another source; ``hr_holidays_attendance`` returns
-        ``not attendance_based``, worked time then coming from validated ``hr.attendance``
-        records. See :meth:`_get_attendance_intervals` for what an override must also do.
+        ``False``: worked time comes from the working time leaves of another source (see
+        ``work_entry_source``), e.g. the validated ``hr.attendance`` records of the attendance
+        based versions with a flexible schedule (``hr_attendance``). See
+        :meth:`_get_attendance_intervals` for what an override must also do.
 
         :rtype: bool
         """

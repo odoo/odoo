@@ -14,8 +14,6 @@ from odoo.tools.date_utils import sum_intervals
 class HrEmployee(models.Model):
     _inherit = "hr.employee"
 
-    attendance_based = fields.Boolean(readonly=False, related="version_id.attendance_based", inherited=True, groups="hr.group_hr_user")
-
     attendance_manager_id = fields.Many2one(readonly=False, related='version_id.attendance_manager_id', inherited=True,
         groups="hr_attendance.group_hr_attendance_own,hr_attendance.group_hr_attendance_officer")
     attendance_ids = fields.One2many(
@@ -66,13 +64,13 @@ class HrEmployee(models.Model):
         """Return the hours of the attendances overlapping a period, per employee.
 
         Hours are the full ``worked_hours`` of the overlapping attendances (not clipped to the
-        period); ``overtime_hours`` sums the attendances produced by a time rule.
+        period).
 
         :param datetime date_start: naive UTC
         :param datetime date_stop: naive UTC
         :return: ``{employee_id: {'worked_hours': float, 'overtime_hours': float,
-            'entries': [{'name': str, 'worked_hours': float, 'color': int}]}}``, one entry per
-            work entry type
+            'entries': [{'name': str, 'worked_hours': float}]}}``, one entry with the worked
+            hours for the overview card
         :rtype: dict
         """
         attendance_data = {
@@ -89,30 +87,15 @@ class HrEmployee(models.Model):
                 ('check_in', '<', date_stop),
                 ('check_out', '>', date_start),
             ],
-            groupby=['employee_id', 'time_rule_id'],
-            aggregates=['worked_hours:sum'],
+            groupby=['employee_id'],
+            aggregates=['worked_hours:sum', 'overtime_hours:sum'],
         )
-        for employee, time_rule, worked_hours in all_attendances:
-            data = attendance_data[employee.id]
-            data['worked_hours'] += worked_hours
-            if time_rule:
-                data['overtime_hours'] += worked_hours
-
-        # per work entry type aggregation for the overview cards
-        by_wet = self.env['hr.attendance']._read_group(
-            domain=[
-                ('employee_id', 'in', self.ids),
-                ('check_in', '<', date_stop),
-                ('check_out', '>', date_start),
-            ],
-            groupby=['employee_id', 'work_entry_type_id'],
-            aggregates=['worked_hours:sum'],
-        )
-        for employee, wet, worked_hours in by_wet:
+        for employee, worked_hours, overtime_hours in all_attendances:
+            attendance_data[employee.id]['worked_hours'] += worked_hours
+            attendance_data[employee.id]['overtime_hours'] += overtime_hours
             attendance_data[employee.id]['entries'].append({
-                'name': wet.name if wet else self.env._('Attendance'),
+                'name': self.env._('Attendance'),
                 'worked_hours': worked_hours,
-                'color': wet.color if wet else 0,
             })
 
         return attendance_data
@@ -180,27 +163,26 @@ class HrEmployee(models.Model):
             is_users_employee = has_attendance_own_reader_group and employee in current_user.employee_ids
             employee.display_attendances = has_attendance_user_group or is_approver or is_users_employee
 
-    @api.depends('attendance_ids.worked_hours', 'attendance_ids.time_rule_id', 'attendance_ids.state')
+    @api.depends('attendance_ids.overtime_hours', 'attendance_ids.state')
     def _compute_total_overtime(self):
         overtime_by_employee = dict(self.env['hr.attendance']._read_group(
             domain=[
                 ('employee_id', 'in', self.ids),
-                ('time_rule_id', '!=', False),
                 ('state', '=', 'validated'),
             ],
             groupby=['employee_id'],
-            aggregates=['worked_hours:sum'],
+            aggregates=['overtime_hours:sum'],
         ))
         for employee in self:
             employee.total_overtime = overtime_by_employee.get(employee, 0.0)
 
-    @api.depends('attendance_ids', 'attendance_ids.check_in', 'attendance_ids.check_out', 'attendance_ids.worked_hours', 'attendance_ids.time_rule_id')
+    @api.depends('attendance_ids', 'attendance_ids.check_in', 'attendance_ids.check_out', 'attendance_ids.worked_hours', 'attendance_ids.overtime_hours')
     def _compute_hours_last_month(self):
         """Compute the hours of the **current** month (despite the field names), in the
         employee's timezone.
 
-        Only the closed attendances within the month count: ``hours_last_month`` sums those not
-        produced by a time rule, ``hours_last_month_overtime`` those produced by one.
+        Only the closed attendances within the month count: ``hours_last_month`` sums their
+        worked hours, ``hours_last_month_overtime`` their overtime hours.
         """
         now = fields.Datetime.now()
         now_utc = now.replace(tzinfo=datetime.UTC)
@@ -216,8 +198,8 @@ class HrEmployee(models.Model):
                 current_month_attendances = employee.attendance_ids.filtered(
                     lambda att: att.check_in >= start_naive and att.check_out and att.check_out <= end_naive
                 )
-                hours = sum(att.worked_hours or 0 for att in current_month_attendances if not att.time_rule_id)
-                overtime_hours = sum(att.worked_hours or 0 for att in current_month_attendances if att.time_rule_id)
+                hours = sum(current_month_attendances.mapped('worked_hours'))
+                overtime_hours = sum(current_month_attendances.mapped('overtime_hours'))
                 employee.hours_last_month = round(hours, 2)
                 employee.hours_last_month_display = self.env._("%(hours)g h in %(month)s") % {'hours': employee.hours_last_month, 'month': now_tz.strftime('%b')}
                 employee.hours_last_month_overtime = round(overtime_hours, 2)
@@ -378,10 +360,6 @@ class HrEmployee(models.Model):
             # An early arrival is only moved to the planned time at the check-out: the attendance is open until then
             if check_in < action_date:
                 vals['check_in'] = check_in
-            # the time type of the company of the employee, not the one of the current company
-            # (e.g. the kiosk of another company)
-            if work_entry_type := self.company_id.sudo().attendance_work_entry_type_id:
-                vals['work_entry_type_id'] = work_entry_type.id
             if geo_information:
                 vals.update({'in_%s' % key: geo_information[key] for key in geo_information})
 
@@ -458,7 +436,6 @@ class HrEmployee(models.Model):
             "views": [[False, "list"], [False, "kanban"], [False, "form"], [False, "calendar"]],
             "domain": [('employee_id', '=', self.id), ('check_in', '>=', month_start), ('check_in', '<', month_end)],
             "context": {
-                "group_by": ["check_in:week"],
                 "default_employee_id": self.id,
                 "create": can_edit,
                 "edit": can_edit,

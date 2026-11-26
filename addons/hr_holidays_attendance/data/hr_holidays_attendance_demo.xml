@@ -2,7 +2,7 @@
 <odoo>
     <function model="hr.version" name="write">
         <value model="hr.version" search="[('employee_id', '=', ref('hr.employee_hne'))]"/>
-        <value eval="{'attendance_based': True}"/>
+        <value eval="{'work_entry_source': 'attendance'}"/>
     </function>
 
     <data noupdate="1">

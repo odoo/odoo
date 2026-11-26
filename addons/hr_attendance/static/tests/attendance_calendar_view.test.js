@@ -194,7 +194,6 @@ test("smart button on the employee profile opens a calendar with that employee's
             [false, "calendar"],
         ],
         domain: [["employee_id", "=", 4]],
-        context: { group_by: ["check_in:week"] },
     }));
     onRpc("hr.attendance", "get_working_hours_for_calendar", ({ args, kwargs }) => {
         requestedEmployees.push(args[0]);
@@ -215,10 +214,10 @@ test("smart button on the employee profile opens a calendar with that employee's
         views: [[false, "form"]],
     });
 
-    // 1. the smart button opens the list, grouped by week
+    // 1. the smart button opens the list, not grouped
     await contains(".oe_stat_button").click();
     expect(".o_list_view").toHaveCount(1);
-    expect(".o_group_header").toHaveCount(1);
+    expect(".o_group_header").toHaveCount(0);
 
     // 2. switch to the calendar
     await contains(".o_switch_view.o_calendar").click();

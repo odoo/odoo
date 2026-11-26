@@ -45,7 +45,9 @@ class ResourceCalendarLeaves(models.Model):
         :rtype: hr.attendance
         """
         domains = []
-        for leave in self.filtered(lambda leave: leave.date_from and leave.date_to):
+        # sudo: the domain may read the time off of the leaves
+        leaves = self.sudo().filtered_domain(self._get_leave_intervals_domain())
+        for leave in leaves.filtered(lambda leave: leave.date_from and leave.date_to):
             if leave.resource_id:
                 employee_domain = Domain('employee_id.resource_id', '=', leave.resource_id.id)
             elif leave.company_id:
@@ -63,9 +65,11 @@ class ResourceCalendarLeaves(models.Model):
         return attendances.search(Domain.OR(domains) & attendances._get_worked_time_domain())
 
     def _recompute_attendance_issues(self, attendances):
-        """Recompute the issues of the days of the attendances. The ones that no longer have an issue may be reviewed,
-        as after any change of their day, see ``hr.attendance._auto_review``."""
+        """Recompute the expected hours and the issues of the days of the attendances. The ones that no longer have an
+        issue may be reviewed, as after any change of their day, see ``hr.attendance._auto_review``."""
         if attendances:
             # Approving or refusing a time off runs with skip_time_rules, which is meant for the time off. The
             # attendances that get reviewed here still need their time rules.
-            attendances.with_context(skip_time_rules=False)._recompute_same_day_issues()._auto_review()
+            had_issue = attendances.with_context(skip_time_rules=False)._recompute_same_day_issues()
+            attendances._search_same_day_attendances()._recompute_expected_hours()
+            had_issue._auto_review()

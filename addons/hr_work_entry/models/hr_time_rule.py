@@ -111,11 +111,16 @@ def _split_by_window(intervals, window):
 
     Returns (inside, outside): portions that fall within / outside window.
     The window is an Intervals object (sorted, non-overlapping segments).
+    An interval without duration (e.g. the technical attendance of an absence) is inside when
+    the window contains its start, so that the rules still evaluate its day.
     """
     inside = []
     outside = []
     win_segs = [(ws, we) for ws, we, _ in window]
     for iv in intervals:
+        if iv.start == iv.end:
+            (inside if any(ws <= iv.start < we for ws, we in win_segs) else outside).append(iv)
+            continue
         prev = iv.start
         for ws, we in win_segs:
             cs = max(iv.start, ws)
@@ -494,7 +499,12 @@ class HrTimeRule(models.Model):
                 key = (sched_cal.id, tz, p_dt_start, p_dt_end)
                 if key not in sched_cache:
                     tz_empty = {tz: empty_resource}
-                    att_batch = sched_cal._attendance_intervals_batch(p_dt_start, p_dt_end, resources_per_tz=tz_empty)
+                    att_start = p_dt_start
+                    if sched_cal._is_flexible():
+                        # the average days of a flexible schedule fill each 7 days from the start: start on a
+                        # Monday, so that they are the first days of the week, whatever the days evaluated
+                        att_start = datetime.combine(p_start - timedelta(days=p_start.weekday()), time.min, tzinfo=tz)
+                    att_batch = sched_cal._attendance_intervals_batch(att_start, p_dt_end, resources_per_tz=tz_empty)
                     ph_batch = sched_cal._leave_intervals_batch(
                         p_dt_start, p_dt_end, resources_per_tz=tz_empty,
                         domain=[('resource_id', '=', False)],
@@ -695,8 +705,7 @@ class HrTimeRule(models.Model):
     def _apply_output(self, excess, deficit, active_iv=None):
         """Write the result of :meth:`_evaluate_rules` on the source records.
 
-        Shared by attendances and leaves (called by ``_apply_attendance_output`` /
-        ``_apply_leave_output``). Writes use the source's ``_time_rule_write_ctx``, so they do not
+        Used by leaves (called by ``_apply_leave_output``). Writes use the source's ``_time_rule_write_ctx``, so they do not
         trigger the rules again.
 
         - Excess: if the first output interval starts with the source, the source itself is
@@ -1018,13 +1027,15 @@ class HrTimeRule(models.Model):
             tolerance = self.employee_tolerance
             if float_compare(deficit_amount, tolerance, 5) != 1:
                 return {}, {}
+            # a source without duration has no interval left, e.g. the technical attendance of an absence
             last_source = max(
                 intervals_by_source.keys(),
-                key=lambda r: max(e for _, e, _ in intervals_by_source[r]),
+                key=lambda r: max((e for _, e, _ in intervals_by_source[r]), default=datetime.min),
             )
             dummy = self.env['resource.calendar']
             sched_cal = next((att.calendar_id for _s, _e, att in schedule), dummy)
-            if self.calendar_source and sched_cal._is_duration_based() and total_worked:
+            # the average days of a flexible schedule have no calendar and no hours either: as a duration
+            if self.calendar_source and (not sched_cal or sched_cal._is_duration_based()) and total_worked:
                 # place deficit after checkout, or before checkin if the day is too short
                 last_end = max(e for _s, e, _ in total_worked)
                 first_start = min(s for s, _e, _ in total_worked)
@@ -1066,7 +1077,7 @@ class HrTimeRule(models.Model):
         remaining_excess = excess_amount
         sorted_sources = sorted(
             intervals_by_source.keys(),
-            key=lambda r: min(s for s, _, _ in intervals_by_source[r]),
+            key=lambda r: min((s for s, _, _ in intervals_by_source[r]), default=datetime.max),
         )
         for source in sorted_sources:
             break_hours = source._get_time_rule_break_hours()
@@ -1102,9 +1113,10 @@ class HrTimeRule(models.Model):
         """Run the rules of ``self`` in sequence on source records; nothing is written.
 
         The sources are turned into a pipeline of ``_Iv`` intervals (naive local datetimes, see
-        ``_get_pipeline_intervals_local``). Each applicable rule, in ``sequence, id`` order,
-        takes the intervals whose current type is in its ``condition_work_entry_type_ids`` and
-        inside its timing window, evaluates each period (:meth:`_evaluate_period`) and
+        ``_get_pipeline_intervals_local``, typed by ``_get_time_rule_work_entry_type``). Each
+        applicable rule, in ``sequence, id`` order, takes the intervals whose current type is in
+        its ``condition_work_entry_type_ids`` (a Work type, code ``002.00``, standing for the Work
+        of every country) and inside its timing window, evaluates each period (:meth:`_evaluate_period`) and
         reclassifies the excess in the pipeline, so later rules see the output of earlier ones
         (e.g. a ``> 9h`` rule then a ``> 8h`` rule on the remaining attendance type). Rules
         without output type and without threshold just tag the matching intervals. Pass the
@@ -1154,20 +1166,24 @@ class HrTimeRule(models.Model):
         for record in records.sorted(start_field):
             # include_public_holidays_in_duration=True: PH hours are part of leave duration → use raw schedule
             # default (False): PH not counted in duration → subtract them (compute_leaves=True equivalent)
-            wet = record.work_entry_type_id
+            wet = record._get_time_rule_work_entry_type()
             include_ph = wet._fields.get('include_public_holidays_in_duration') and wet.include_public_holidays_in_duration
             emp_schedule = base_raw_sched[record.employee_id] if include_ph else base_sched_no_ph[record.employee_id]
             segs = record._get_pipeline_intervals_local(emp_schedule)
             for seg_start, seg_stop in segs:
                 active_iv[record.employee_id][record] |= Intervals([(seg_start, seg_stop, dummy)])
                 pipeline_by_emp[record.employee_id].append(
-                    _Iv(seg_start, seg_stop, record.work_entry_type_id, record, None, frozenset())
+                    _Iv(seg_start, seg_stop, wet, record, None, frozenset())
                 )
 
+        # Work is Work whatever its country: a rule on the Work of a country takes them all
+        work_wets = self.env['hr.work.entry.type'].search([('code', '=', '002.00')])
         for rule in applicable_rules:
             work_intervals = work_intervals_by_calendar[rule._get_schedule_calendar().id or False]
             rule_window_by_emp = rule._build_rule_day_intervals(start_dt, end_dt, employees, work_intervals)
             condition_wets = rule.condition_work_entry_type_ids
+            if condition_wets & work_wets:
+                condition_wets |= work_wets
             # true when threshold evaluation requires schedule data (calendar_source set or
             # explicit expected_hours > 0); false means any matching interval is implicitly
             # "excess" and we can skip _evaluate_period entirely for pp/alloc-only rules.

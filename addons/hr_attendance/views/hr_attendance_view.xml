@@ -123,7 +123,6 @@
                 js_class="attendance_list_view"
                 help_id="%(hr_attendance.hr_attendance_view_help)d"
                 string="Employee attendances"
-                decoration-it="time_rule_id"
                 duplicate="false">
                 <header>
                     <button name="action_validate" string="Approve" type="object" class="btn-primary"
@@ -138,9 +137,9 @@
                 <field name="check_in" decoration-danger="state == 'draft' and in_mode == 'manual'"/>
                 <field name="check_out" options="{}" decoration-danger="state == 'draft' and out_mode == 'manual'"/>
                 <field name="break_duration" widget="float_time" optional="show"/>
-                <field name="worked_hours" string="Hours" widget="float_time" decoration-danger="is_overtime or is_undertime"/>
-                <field name="work_entry_type_id" widget="many2one_work_entry_type" optional="show"
-                       groups="hr.group_hr_user"/>
+                <field name="worked_hours" string="Hours" widget="float_time" decoration-danger="overtime_hours != 0"/>
+                <field name="expected_hours" widget="float_time" optional="show"/>
+                <field name="overtime_hours" widget="float_time" optional="show"/>
                 <field name="state" widget="badge" invisible="not check_out"
                        decoration-success="state == 'validated'"
                        decoration-warning="state == 'draft'"
@@ -153,16 +152,6 @@
                 <field name="create_uid" optional="hidden"/>
                 <field name="write_uid" optional="hidden"/>
                 <field name="write_date" optional="hidden"/>
-                <field name="is_overtime" column_invisible="1"/> <!-- drives decoration-danger of worked_hours -->
-                <field name="is_undertime" column_invisible="1"/> <!-- drives decoration-danger of worked_hours -->
-                <field name="time_rule_id" column_invisible="1"/> <!-- drives decoration-it of the list and invisible of the Mark as Reviewed button -->
-                <field name="source_stale" column_invisible="1"/> <!-- drives invisible of the Mark as Reviewed button -->
-                <button name="action_mark_reviewed" type="object"
-                        icon="warning"
-                        title="Source changed — click to mark as reviewed"
-                        class="text-warning p-0"
-                        invisible="not source_stale or not time_rule_id"
-                        groups="hr_attendance.group_hr_attendance_officer"/>
                 <button name="action_validate" string="Approve" type="object"
                         icon="check"
                         invisible="state != 'draft' or not check_out or not is_manager"
@@ -192,10 +181,7 @@
                 <field name="check_out"/>
                 <field name="is_late_check_in"/>
                 <field name="is_early_check_out"/>
-                <field name="is_overtime"/>
-                <field name="is_undertime"/>
-                <field name="source_stale"/>
-                <field name="time_rule_id"/>
+                <field name="overtime_hours"/>
                 <templates>
                     <t t-name="card">
                         <div class="d-flex align-items-center gap-2 mb-1">
@@ -227,11 +213,7 @@
                                 </div>
                             </div>
                             <field name="worked_hours" widget="float_time" invisible="not check_out"
-                                   decoration-danger="is_overtime or is_undertime"/>
-                        </div>
-                        <div t-if="record.source_stale.raw_value and record.time_rule_id.raw_value"
-                             class="text-warning small mt-1">
-                            <i class="oi me-1" data-icon="warning" role="img" aria-label="Warning" title="Warning"/>Source changed
+                                   decoration-danger="overtime_hours != 0"/>
                         </div>
                     </t>
                 </templates>
@@ -257,29 +239,7 @@
                            options="{'clickable': '1'}" readonly="not is_manager or not id"/>
                 </header>
                 <sheet>
-                    <!-- invisible fields needed for the stale-source warning -->
-                    <field name="source_stale" invisible="1"/> <!-- drives invisible of the stale source warning below -->
-                    <field name="source_attendance_id" invisible="1"/> <!-- drives invisible of the deleted/modified wording of the stale source warning -->
-                    <field name="time_rule_id" invisible="1"/> <!-- drives invisible of the stale source warning below -->
-                    <div class="alert alert-warning mb-3 d-flex align-items-center gap-3" role="alert"
-                         invisible="not source_stale or not time_rule_id">
-                        <div class="flex-grow-1">
-                            <i class="oi me-1" data-icon="warning" role="img" aria-label="Warning" title="Warning"/>
-                            <strong invisible="source_attendance_id">Source attendance deleted -</strong>
-                            <strong invisible="not source_attendance_id">Source attendance modified -</strong>
-                            this record may be outdated and should be reviewed.
-                        </div>
-                        <button name="action_mark_reviewed" type="object"
-                                icon="check" title="Mark as Reviewed"
-                                class="btn btn-success btn-sm"
-                                groups="hr_attendance.group_hr_attendance_officer"/>
-                    </div>
                     <field name="employee_tz" widget="attendance_tz_warning" class="d-block"/>
-                    <div class="alert alert-info mb-3 d-flex gap-2" role="status"
-                         invisible="not time_rule_split_preview">
-                        <i class="oi mt-1" data-icon="info" role="img" aria-label="Info" title="Info"/>
-                        <field name="time_rule_split_preview" readonly="1" nolabel="1"/>
-                    </div>
                     <group>
                         <group colspan="2">
                             <group col="1" name="group_employee">
@@ -318,8 +278,10 @@
                             <group col="2" name="group_worked_hours">
                                 <field name="worked_hours" string="Worked Time" widget="float_time"
                                        groups="hr_attendance.group_hr_attendance_officer"/>
-                                <field name="work_entry_type_id" widget="many2one_work_entry_type"
-                                       groups="hr.group_hr_user" readonly="not can_edit"/>
+                                <field name="expected_hours" widget="float_time"
+                                       groups="hr_attendance.group_hr_attendance_officer"/>
+                                <field name="overtime_hours" widget="float_time"
+                                       groups="hr_attendance.group_hr_attendance_officer"/>
                                 <field name="break_duration" widget="float_time" readonly="not can_edit"/>
                             </group>
                         </group>
@@ -483,7 +445,6 @@
                 color="color"
                 form_view_id="%(hr_attendance.hr_attendance_my_form_view)d">
                 <field name="color" invisible="1"/>
-                <field name="work_entry_type_id" groups="hr.group_hr_user"/>
             </calendar>
         </field>
     </record>
@@ -548,8 +509,8 @@
                 <filter string="Late Clock In" name="late_check_in" domain="[('is_late_check_in', '=', True)]"/>
                 <filter string="Early Clock Out" name="early_check_out" domain="[('is_early_check_out', '=', True)]"/>
                 <filter string="No Check-Out" name="auto_check" domain="[('out_mode', '=', 'auto_check_out')]"/>
-                <filter string="Overtime" name="overtime" domain="[('is_overtime', '=', True)]"/>
-                <filter string="Undertime" name="undertime" domain="[('is_undertime', '=', True)]"/>
+                <filter string="Overtime" name="overtime" domain="[('overtime_hours', '>', 0)]"/>
+                <filter string="Undertime" name="undertime" domain="[('overtime_hours', '&lt;', 0)]"/>
                 <filter string="Exceeds Daily Limit" name="exceeds_daily_limit"
                         domain="['|', ('worked_hours', '&gt;=', 16), '&amp;', ('check_out', '=', False), ('check_in', '&lt;=', '-1d')]"/>
                 <separator/>
@@ -698,11 +659,6 @@
         sequence="10"/>
 
     <menuitem id="menu_hr_attendance_configuration" name="Configuration" parent="menu_hr_attendance_root" sequence="99" groups="hr_attendance.group_hr_attendance_user"/>
-
-    <menuitem id="menu_hr_attendance_config" name="Config" parent="menu_hr_attendance_configuration" sequence="20" groups="hr_attendance.group_hr_attendance_manager">
-        <menuitem id="menu_hr_attendance_work_entry_type" name="Time Types" action="hr_work_entry.hr_work_entry_type_action" sequence="10"/>
-        <menuitem id="menu_hr_attendance_time_rules" name="Automatic Rules" action="hr_work_entry.hr_time_rule_action" sequence="20"/>
-    </menuitem>
 
     <menuitem id="menu_hr_attendance_kiosk" name="Kiosk" parent="menu_hr_attendance_configuration" sequence="30" groups="hr_attendance.group_hr_attendance_user">
         <menuitem id="menu_hr_attendance_onboarding" name="Onboarding" action="action_try_kiosk" sequence="10" groups="hr.group_hr_user"/>

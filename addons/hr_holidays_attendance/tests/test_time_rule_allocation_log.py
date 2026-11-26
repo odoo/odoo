@@ -24,8 +24,8 @@ class TestTimeRuleAllocationLog(TransactionCase):
             ],
         })
         cls.env.company.resource_calendar_id = cls.calendar
-        cls.att_type = cls.env.company._get_default_attendance_work_entry_type()
-        cls.env.company.attendance_work_entry_type_id = cls.att_type
+        # the time rules see the attendances as Work
+        cls.att_type = cls.env.ref('hr_work_entry.generic_work_entry_type_attendance')
         cls.overtime_type = cls.env.ref('hr_work_entry.be_work_entry_type_overtime')
 
         cls.env['hr.time.rule'].search([]).write({'active': False})
@@ -42,7 +42,7 @@ class TestTimeRuleAllocationLog(TransactionCase):
         cls.emp = cls.env['hr.employee'].create({
             'name': 'Log Employee',
             'tz': 'UTC',
-            'attendance_based': False,
+            'work_entry_source': 'attendance',
             'date_version': '2020-01-01',
             'contract_date_start': '2020-01-01',
             'wage': 3000,
@@ -83,51 +83,51 @@ class TestTimeRuleAllocationLog(TransactionCase):
 
     # log source routing
     def test_log_source_inplace(self):
-        """In-place case: source IS the overtime record -> log must reference the source att."""
+        """Whole attendance is excess: the output time off covers it -> log must reference the source att."""
         self._make_rule()
-        # Saturday: 0h scheduled -> all 4h excess -> in-place (source becomes OT record)
+        # Saturday: 0h scheduled -> all 4h excess
         att = self._make_att(datetime(2022, 12, 10, 8), datetime(2022, 12, 10, 12))
         att.invalidate_recordset()
 
-        # no child output: source was repurposed in-place
-        self.assertFalse(att.overtime_attendance_ids,
-                         "In-place scenario must not produce child output records")
+        output = att.related_leave_ids
+        self.assertEqual((output.date_from, output.date_to), (att.check_in, att.check_out),
+                         "The output time off covers the whole attendance")
 
         logs = self._logs()
         self.assertEqual(len(logs), 1, "Exactly one log entry expected")
         self.assertEqual(logs.res_model, 'hr.attendance')
         self.assertEqual(logs.res_id, att.id,
-                         "Log source must point to the (in-place) source record itself")
+                         "Log source must point to the source attendance")
         self.assertAlmostEqual(logs.days, 0.5, places=5,
                                msg="4h * 100% / 8h = 0.5 days")
 
     def test_log_source_subsequent_output(self):
-        """Subsequent-output case: child att created -> log must reference the OUTPUT child, not source."""
+        """Output over part of the attendance: the log references the source attendance, not the output."""
         self._make_rule()
         # Monday 08:00-19:00: schedule is 08:00-17:00 (8h) -> engine sees 11h worked, 8h expected,
         # 3h excess (lunch gap 12:00-13:00 + post-17:00 both counted as excess).
-        # Child att created for the excess portion; source trimmed to scheduled span.
+        # The output time off is 16:00-19:00, the attendance is unchanged.
         att = self._make_att(datetime(2022, 12, 12, 8), datetime(2022, 12, 12, 19))
         att.invalidate_recordset()
 
-        children = att.overtime_attendance_ids
-        self.assertEqual(len(children), 1, "Subsequent case must produce one child output (prerequisite)")
+        outputs = att.related_leave_ids
+        self.assertEqual(len(outputs), 1, "Subsequent case must produce one output (prerequisite)")
 
         logs = self._logs()
         self.assertEqual(len(logs), 1, "Exactly one log entry expected")
         self.assertEqual(logs.res_model, 'hr.attendance')
-        self.assertEqual(logs.res_id, children.id,
-                         "Log source must point to the OUTPUT child, not the source att")
+        self.assertEqual(logs.res_id, att.id,
+                         "Log source must point to the source attendance, not the output")
         self.assertAlmostEqual(logs.days, 3 / 8, places=5,
                                msg="3h excess (11h worked - 8h expected) * 100% / 8h = 0.375 days")
 
     def test_log_source_pponly(self):
-        """PP-only rule (no output WET): no child att created -> log references the source."""
+        """PP-only rule (no output WET): no output time off created -> log references the source."""
         self._make_rule(work_entry_type_id=False)
-        # Saturday: 0h scheduled -> 4h excess, all pp-only (source annotated, no child)
+        # Saturday: 0h scheduled -> 4h excess, all pp-only (no output)
         att = self._make_att(datetime(2022, 12, 10, 8), datetime(2022, 12, 10, 12))
         att.invalidate_recordset()
-        self.assertFalse(att.overtime_attendance_ids, "PP-only must not create child records")
+        self.assertFalse(att.related_leave_ids, "PP-only must not create output time off")
 
         logs = self._logs()
         self.assertEqual(len(logs), 1)
@@ -184,32 +184,11 @@ class TestTimeRuleAllocationLog(TransactionCase):
         r1.unlink()
         r2.unlink()
 
-    # reversal on output delete
-    def test_output_unlink_reverses_allocation(self):
-        """Deleting the output attendance child reverses its credited allocation days."""
-        self._make_rule()
-        # Monday 08:00-19:00 -> 3h excess (11h worked - 8h expected), child output created
-        att = self._make_att(datetime(2022, 12, 12, 8), datetime(2022, 12, 12, 19))
-        att.invalidate_recordset()
-        child = att.overtime_attendance_ids
-        self.assertEqual(len(child), 1, "Prerequisite: subsequent output child must exist")
-
-        alloc = self._alloc()
-        self.assertAlmostEqual(alloc.number_of_days, 3 / 8, places=5,
-                               msg="3h * 100% / 8h = 0.375d allocated before delete")
-
-        child.unlink()
-
-        alloc.invalidate_recordset()
-        self.assertAlmostEqual(alloc.number_of_days, 0.0, places=5,
-                               msg="Deleting the output child must reverse its allocation credit")
-        self.assertFalse(self._logs(), "Log entries must be cleaned up after reversal")
-
     # reversal on source delete
     def test_source_unlink_inplace_reverses_allocation(self):
-        """Deleting an in-place source (log against source) reverses its credit."""
+        """Deleting an attendance whose whole span is excess reverses its credit."""
         self._make_rule()
-        # Saturday: in-place -> log against source
+        # Saturday: all excess -> log against source
         att = self._make_att(datetime(2022, 12, 10, 8), datetime(2022, 12, 10, 12))
         alloc = self._alloc()
         self.assertAlmostEqual(alloc.number_of_days, 0.5, places=5,
@@ -221,52 +200,44 @@ class TestTimeRuleAllocationLog(TransactionCase):
         self.assertAlmostEqual(alloc.number_of_days, 0.0, places=5,
                                msg="Deleting in-place source must reverse its allocation credit")
 
-    def test_source_unlink_does_not_reverse_output_logged_credit(self):
-        """Deleting the SOURCE leaves output-logged credits intact (outputs remain valid).
-
-        Design choice: when a source is deleted without cascading output deletion,
-        the output records are still valid overtime records. Their allocation credits stay.
-        """
+    def test_source_unlink_reverses_output_credit(self):
+        """Deleting the SOURCE deletes its outputs and reverses their credits (the log is against the source)."""
         self._make_rule()
-        # Monday 08:00-19:00 -> 3h excess (11h worked - 8h expected), child output created
+        # Monday 08:00-19:00 -> 3h excess (11h worked - 8h expected), output time off created
         att = self._make_att(datetime(2022, 12, 12, 8), datetime(2022, 12, 12, 19))
         att.invalidate_recordset()
-        child = att.overtime_attendance_ids
+        child = att.related_leave_ids
         self.assertEqual(len(child), 1, "Prerequisite")
 
-        expected_days = 3 / 8
         alloc = self._alloc()
-        self.assertAlmostEqual(alloc.number_of_days, expected_days, places=5)
+        self.assertAlmostEqual(alloc.number_of_days, 3 / 8, places=5)
 
-        # delete source (NOT output); output and its credit should survive
-        att.with_context(skip_time_rules=True).unlink()
+        att.unlink()
 
         alloc.invalidate_recordset()
+        self.assertFalse(child.exists(), "The output time off follows the attendance")
         self.assertAlmostEqual(
-            alloc.number_of_days, expected_days, places=5,
-            msg="Output-logged credit must survive source deletion (output record still valid)",
+            alloc.number_of_days, 0.0, places=5,
+            msg="The credit must be reversed with the source deletion",
         )
-        self.assertTrue(self._logs(), "Log entry for output must still exist")
+        self.assertFalse(self._logs(), "Log entries must be cleaned up after reversal")
 
     # reversal on source write
     def test_source_write_reverses_inplace_credit(self):
         self._make_rule()
-        # Saturday (in-place case): all 4h is overtime, no output children created.
-        # Log is against the source itself; source credit = 0.5d.
+        # Saturday: all 4h is overtime. Log is against the source; source credit = 0.5d.
         att = self._make_att(datetime(2022, 12, 10, 8), datetime(2022, 12, 10, 12))
         alloc = self._alloc()
         self.assertAlmostEqual(alloc.number_of_days, 0.5, places=5,
                                msg="Before write: 4h * 1.0 / 8h = 0.5d")
-        self.assertFalse(att.overtime_attendance_ids,
-                         "In-place case: no output children exist")
 
-        # shorten check_out: source credit reversed -> allocation drops to 0
+        # shorten check_out: source credit reversed, then credited again for the 2h left
         att.write({'check_out': datetime(2022, 12, 10, 10)})
 
         alloc.invalidate_recordset()
         self.assertAlmostEqual(
-            alloc.number_of_days, 0.0, places=5,
-            msg="After write: source credit reversed; engine skips (WET mismatch) -> 0d",
+            alloc.number_of_days, 0.25, places=5,
+            msg="After write: 2h * 1.0 / 8h = 0.25d, the previous credit is reversed",
         )
 
     def test_employee_break_edit_reverses_credit(self):
@@ -279,7 +250,7 @@ class TestTimeRuleAllocationLog(TransactionCase):
         att = self._make_att(datetime(2022, 12, 10, 8), datetime(2022, 12, 10, 12))
         alloc = self._alloc()
         self.assertAlmostEqual(alloc.number_of_days, 0.5, places=5)
-        # the whole Saturday is reclassified in place, the attendance holds the credit
+        # the attendance holds the credit
         att.with_user(self.emp.user_id).write({'break_duration': 1})
 
         self.assertEqual(att.state, 'draft')
@@ -310,7 +281,7 @@ class TestTimeRuleAllocationLog(TransactionCase):
         self._make_att(datetime(2022, 12, 17, 8), datetime(2022, 12, 17, 16))  # 8h next Sat
 
         alloc = self._alloc()
-        # 4h + 8h excess, all in-place -> 0.5d + 1.0d = 1.5d total
+        # 4h + 8h excess -> 0.5d + 1.0d = 1.5d total
         self.assertAlmostEqual(alloc.number_of_days, 1.5, places=5,
                                msg="Both attendances must credit the same allocation")
 
@@ -408,7 +379,7 @@ class TestTimeRuleAllocationLog(TransactionCase):
         })
         return alloc
 
-    def test_deficit_output_log_keyed_to_output_record(self):
+    def test_deficit_output_log_keyed_to_source_attendance(self):
         undertime_type = self.env['hr.work.entry.type'].create({
             'name': 'Undertime', 'code': 'ULMLOG',
             'requires_allocation': False,
@@ -421,20 +392,20 @@ class TestTimeRuleAllocationLog(TransactionCase):
         att = self._make_att(datetime(2022, 12, 12, 8), datetime(2022, 12, 12, 14))
         att.invalidate_recordset()
 
-        output = att.overtime_attendance_ids
-        self.assertEqual(len(output), 1, "Deficit rule must create one output attendance")
+        output = att.related_leave_ids
+        self.assertEqual(len(output), 1, "Deficit rule must create one output time off")
 
         logs = self.env['hr.time.rule.allocation.log'].sudo().search([
             ('allocation_id', '=', alloc.id),
         ])
         self.assertEqual(len(logs), 1, "Exactly one log entry for the deficit output")
         self.assertEqual(logs.res_model, 'hr.attendance')
-        self.assertEqual(logs.res_id, output.id,
-                         "Deficit log source must point to the OUTPUT attendance, not the source")
+        self.assertEqual(logs.res_id, att.id,
+                         "Deficit log source must point to the source attendance")
         self.assertAlmostEqual(logs.days, -2 / 8, places=5,
                                msg="2h deficit * 100% / 8h = -0.25 days (deduction)")
 
-    def test_deficit_output_unlink_restores_allocation(self):
+    def test_deficit_source_unlink_restores_allocation(self):
         undertime_type = self.env['hr.work.entry.type'].create({
             'name': 'Undertime', 'code': 'ULMREV',
             'requires_allocation': False,
@@ -447,19 +418,20 @@ class TestTimeRuleAllocationLog(TransactionCase):
         att = self._make_att(datetime(2022, 12, 12, 8), datetime(2022, 12, 12, 14))
         att.invalidate_recordset()
 
-        output = att.overtime_attendance_ids
+        output = att.related_leave_ids
         self.assertEqual(len(output), 1, "Prerequisite: deficit output must be created")
 
         alloc.invalidate_recordset()
         self.assertAlmostEqual(alloc.number_of_days, days_before - 2 / 8, places=5,
                                msg="Allocation must be reduced by 0.25d after deficit output creation")
 
-        # delete the output -> allocation must be restored
-        output.unlink()
+        # delete the source attendance (it deletes the output) -> allocation must be restored
+        att.unlink()
 
         alloc.invalidate_recordset()
+        self.assertFalse(output.exists())
         self.assertAlmostEqual(alloc.number_of_days, days_before, places=5,
-                               msg="Deleting the deficit output must restore the deducted days")
+                               msg="Deleting the source of the deficit output must restore the deducted days")
         logs = self.env['hr.time.rule.allocation.log'].sudo().search([
             ('allocation_id', '=', alloc.id),
         ])

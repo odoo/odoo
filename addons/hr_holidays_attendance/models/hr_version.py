@@ -2,6 +2,7 @@
 
 from collections import defaultdict
 from datetime import datetime, time, timedelta, UTC
+from itertools import pairwise
 from zoneinfo import ZoneInfo
 
 from odoo import api, models
@@ -12,39 +13,18 @@ from odoo.tools.intervals import Intervals
 class HrVersion(models.Model):
     _inherit = 'hr.version'
 
-    def has_static_work_entries(self):
-        """Attendance-based versions have no static work entries.
-
-        :rtype: bool
-        """
-        return not self.attendance_based
-
-    def _get_attendance_intervals(self, start_dt, end_dt):
-        """Return empty intervals for the resources of attendance-based versions, the
-        schedule intervals for the others.
-
-        :return: ``{resource_id: Intervals}``
-        :rtype: dict
-        """
-        result = {}
-        calendar_versions = self.filtered(lambda v: v.has_static_work_entries())
-        for v in self - calendar_versions:
-            result[v.employee_id.resource_id.id] = Intervals()
-        if calendar_versions:
-            result.update(super(HrVersion, calendar_versions)._get_attendance_intervals(start_dt, end_dt))
-        return result
-
     @api.model
     def _get_work_entry_source_fields(self):
-        """Also merge ``attendance_ids`` (and track ``attendance_based``)."""
-        return super()._get_work_entry_source_fields() + ['attendance_based', 'attendance_ids']
+        """Also merge ``attendance_ids``."""
+        return super()._get_work_entry_source_fields() + ['attendance_ids']
 
     def _resolve_attendance_intervals(self, intervals):
         """Split overlapping intervals and pick the winner by work_entry_type.sequence."""
         return resolve_intervals_by_sequence(intervals)
 
     def _get_version_work_entries_values(self, date_start, date_stop):
-        """Add the raw values of the validated, closed attendances of the period.
+        """Add the raw values of the validated, closed attendances of the period, except for the
+        attendance based versions.
 
         Each attendance gives a value of its own type, from ``check_in`` to ``check_out`` minus
         the break, with the key ``attendance_ids``; where an attendance and a working time
@@ -97,7 +77,23 @@ class HrVersion(models.Model):
                 time_on_raw[rid].append((ci, co, dummy))
                 wt_iv_by_rid[rid].append((ci, co, leave.work_entry_type_id))
 
+        # attendance based with a schedule: the worked hours of each local day, see _get_real_attendances
+        worked_hours_raw = defaultdict(lambda: defaultdict(float))
+        based_employees = self.filtered(lambda v: v.work_entry_source == 'attendance' and not v._is_flexible()).employee_id
+        for att in attendances.filtered(lambda a: a.employee_id in based_employees):
+            tz = ZoneInfo(att.employee_id._get_tz())
+            rid = att.employee_id.resource_id.id
+            start, stop = (moment.replace(tzinfo=UTC).astimezone(tz) for moment in (att.check_in, att.check_out))
+            worked_hours_raw[rid][start.date()] -= att.break_duration
+            while start < stop:
+                day_stop = min(stop, datetime.combine(start.date() + timedelta(days=1), time.min, tzinfo=tz))
+                worked_hours_raw[rid][start.date()] += (day_stop - start).total_seconds() / 3600
+                start = day_stop
+
         for version in self:
+            # attendance based: the schedule and the time off of the attendances give the entries
+            if not version.has_static_work_entries() or version._is_flexible() or version.work_entry_source == 'attendance':
+                continue
             tz = ZoneInfo(version._get_tz())
             rid = version.employee_id.resource_id.id
             default_wet_id = version._get_default_work_entry_type_id()
@@ -108,21 +104,18 @@ class HrVersion(models.Model):
             for att in emp_atts:
                 check_in = att.check_in.replace(tzinfo=UTC)
                 check_out = att.check_out.replace(tzinfo=UTC)
-                # deficit outputs start after source check_out (unworked time); exclude from time_on
-                if not att.source_attendance_id or att.check_in < att.source_attendance_id.check_out:
-                    time_on_raw[rid].append((check_in, check_out, dummy))
-                if version.has_static_work_entries():
-                    start_day = check_in.astimezone(tz).date()
-                    end_day = check_out.astimezone(tz).date()
-                    knocked_raw[rid].append((
-                        datetime.combine(start_day, time.min, tzinfo=tz).astimezone(UTC),
-                        datetime.combine(end_day, time.max, tzinfo=tz).astimezone(UTC),
-                        dummy,
-                    ))
+                time_on_raw[rid].append((check_in, check_out, dummy))
+                start_day = check_in.astimezone(tz).date()
+                end_day = check_out.astimezone(tz).date()
+                knocked_raw[rid].append((
+                    datetime.combine(start_day, time.min, tzinfo=tz).astimezone(UTC),
+                    datetime.combine(end_day, time.max, tzinfo=tz).astimezone(UTC),
+                    dummy,
+                ))
                 # exclude break from worked time
                 work_check_out = check_out - timedelta(hours=att.break_duration) if att.break_duration else check_out
                 if work_check_out > check_in:
-                    wet = att.work_entry_type_id or self.env['hr.work.entry.type'].browse(default_wet_id)
+                    wet = self.env['hr.work.entry.type'].browse(default_wet_id)
                     raw_att.append((check_in, work_check_out, wet))
                     att_by_range[check_in, work_check_out] = att
 
@@ -167,20 +160,109 @@ class HrVersion(models.Model):
                 rid: Intervals(items, keep_distinct=True)
                 for rid, items in att_coverage_raw.items()
             },
+            attendance_worked_hours={
+                employee.resource_id.id: worked_hours_raw[employee.resource_id.id] for employee in based_employees
+            },
         ))._get_version_work_entries_values(date_start, date_stop)
 
         return base_vals + attendance_vals
 
     def _get_real_attendances(self, attendances, leaves, worked_leaves):
-        """Also remove the days with an attendance (context ``knocked_day_intervals``)."""
-        knocked = self.env.context.get('knocked_day_intervals', {}).get(
-            self.employee_id.resource_id.id, Intervals()
-        )
-        return (attendances - knocked) - leaves - worked_leaves
+        """Also remove the days with an attendance (context ``knocked_day_intervals``).
+
+        For the attendance based versions with a schedule (context ``attendance_worked_hours``,
+        the worked hours of each local day), the time rule outputs of the attendances count by
+        duration, not by time: on top of the schedule for the hours worked beyond it, else in
+        place of scheduled hours, removed from the end of the day."""
+        rid = self.employee_id.resource_id.id
+        knocked = self.env.context.get('knocked_day_intervals', {}).get(rid, Intervals())
+        worked_hours = self.env.context.get('attendance_worked_hours', {}).get(rid)
+        if worked_hours is None:
+            return (attendances - knocked) - leaves - worked_leaves
+        outputs, others = [], []
+        for part in self._split_worked_leaves(worked_leaves):
+            (outputs if part[2].holiday_id.time_rule_id and part[2].holiday_id.attendance_id else others).append(part)
+        output_hours = defaultdict(float)
+        for start, stop, _leave in outputs:
+            output_hours[start.date()] += (stop - start).total_seconds() / 3600
+        schedule_by_day = defaultdict(list)
+        for interval in (attendances - knocked) - leaves - Intervals(others, keep_distinct=True):
+            schedule_by_day[interval[0].date()].append(interval)
+        result = []
+        for day, intervals in schedule_by_day.items():
+            scheduled = sum((stop - start).total_seconds() / 3600 for start, stop, _payload in intervals)
+            to_remove = max(0.0, output_hours[day] - max(0.0, worked_hours.get(day, 0.0) - scheduled))
+            for start, stop, payload in reversed(intervals):
+                hours = (stop - start).total_seconds() / 3600
+                if to_remove >= hours:
+                    to_remove -= hours
+                    continue
+                result.append((start, stop - timedelta(hours=to_remove), payload))
+                to_remove = 0.0
+        return Intervals(result, keep_distinct=True)
+
+    def _split_worked_leaves(self, worked_leaves):
+        """Return the worked leaves with one leave per interval, clipped to its own span: the
+        intervals merge the overlapping leaves.
+
+        :rtype: list
+        """
+        return [
+            (
+                max(start, leave.date_from.replace(tzinfo=UTC).astimezone(start.tzinfo)),
+                min(stop, leave.date_to.replace(tzinfo=UTC).astimezone(start.tzinfo)),
+                leave,
+            )
+            for start, stop, calendar_leaves in worked_leaves
+            for leave in calendar_leaves
+        ]
+
+    def _get_real_worked_leaves(self, worked_leaves, real_leaves):
+        """Where worked leaves overlap (e.g. the time off of an attendance and a time off
+        request), the type with the lowest sequence wins: each leave only keeps its own span."""
+        worked_leaves = super()._get_real_worked_leaves(worked_leaves, real_leaves)
+        if all(len(calendar_leaves) <= 1 for _start, _stop, calendar_leaves in worked_leaves):
+            return worked_leaves
+        parts = self._split_worked_leaves(worked_leaves)
+        times = sorted({moment for start, stop, _leave in parts for moment in (start, stop)})
+        resolved = []
+        for slice_start, slice_stop in pairwise(times):
+            covering = [leave for start, stop, leave in parts if start <= slice_start and slice_stop <= stop]
+            if covering:
+                resolved.append((slice_start, slice_stop, min(
+                    covering, key=lambda leave: self._get_interval_work_entry_type((slice_start, slice_stop, leave)).sequence)))
+        return Intervals(resolved, keep_distinct=True)
+
+    def _get_interval_own_leaves(self, interval, leaves):
+        """Return the leaves to consider for ``interval``: only its own leave when several worked
+        leaves cover it, merged in one interval of ``leaves`` or not, resolved by
+        :meth:`_get_real_worked_leaves`. An interval of the schedule (the absences) has no leave
+        of its own.
+
+        :rtype: list
+        """
+        if interval[2] and interval[2]._name == 'resource.calendar.leaves' and len(interval[2]) == 1 and sum(
+            len(leave[2]) for leave in leaves if leave[2] and leave[0] <= interval[0] and interval[1] <= leave[1]
+        ) > 1:
+            return [interval]
+        return leaves
+
+    def _get_more_vals_leave_interval(self, interval, leaves):
+        """Only the own leave of an interval of overlapping worked leaves, see
+        :meth:`_get_interval_own_leaves`."""
+        return super()._get_more_vals_leave_interval(interval, self._get_interval_own_leaves(interval, leaves))
+
+    def _get_interval_leave_work_entry_type(self, interval, leaves, bypassing_codes):
+        """Only the own leave of an interval of overlapping worked leaves, see
+        :meth:`_get_interval_own_leaves`."""
+        return super()._get_interval_leave_work_entry_type(interval, self._get_interval_own_leaves(interval, leaves), bypassing_codes)
 
     def _generate_work_entries_postprocess_adapt_to_calendar(self, vals):
-        """Values from attendances and from fully flexible versions keep their real duration."""
+        """Values from attendances, from their working time leaves and from fully flexible
+        versions keep their real duration."""
         if vals.pop('_from_attendance', False):
+            return False
+        if vals.get('leave_ids') and vals['leave_ids'].attendance_id:
             return False
         # fully-flexible employees have no calendar; compute duration from actual time span
         version = vals.get('version_id')

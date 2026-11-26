@@ -29,7 +29,7 @@ class HrWorkEntryAttendanceCommon(TransactionCase):
             'name': 'Billy Pointer',
             'tz': 'UTC',
             'wage': 3500,
-            'attendance_based': True,
+            'work_entry_source': 'attendance',
             'date_version': '2020-01-01',
             'contract_date_start': '2020-01-01',
         })
