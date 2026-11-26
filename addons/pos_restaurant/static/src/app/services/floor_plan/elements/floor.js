@@ -287,7 +287,6 @@ export class Floor {
         let maxH = 0;
         let minLeft = Infinity;
         let minTop = Infinity;
-        let firstVisibleTable = null;
 
         for (const floorElem of this.getAllElements()) {
             const bounds = floorElem.getBounds();
@@ -295,18 +294,12 @@ export class Floor {
             const elementBottom = Math.ceil(bounds.top + bounds.height);
             maxW = Math.max(maxW, elementRight);
             maxH = Math.max(maxH, elementBottom);
-
-            // Track the topmost-leftmost element (first visible)
-            if (
-                floorElem.isTable &&
-                (bounds.left < minLeft || (bounds.left === minLeft && bounds.top < minTop))
-            ) {
-                minLeft = bounds.left;
-                minTop = bounds.top;
-                firstVisibleTable = floorElem;
-            }
+            minLeft = Math.min(minLeft, Math.floor(bounds.left));
+            minTop = Math.min(minTop, Math.floor(bounds.top));
         }
 
+        const contentRight = maxW;
+        const contentBottom = maxH;
         const bgImage = this.bgImage;
         if (bgImage) {
             maxW = Math.max(maxW, bgImage.width || 0);
@@ -316,16 +309,12 @@ export class Floor {
         this.cachedSize = {
             width: maxW,
             height: maxH,
-            firstVisibleTable,
+            contentRight,
+            contentBottom,
             minLeft: minLeft === Infinity ? 0 : minLeft,
             minTop: minTop === Infinity ? 0 : minTop,
         };
         return this.cachedSize;
-    }
-
-    getFirstVisibleTable() {
-        const size = this.getSize();
-        return size.firstVisibleTable;
     }
 
     get table_ids() {

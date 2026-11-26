@@ -141,6 +141,7 @@ export class FloorPlanStore extends Reactive {
         this.pos.models.connectNewData(records);
         this.pos.config.update(config);
         this.pos.data.synchronizeServerDataInIndexedDB(records);
+        this.floorScrollPositions = {};
         this.init(this.pos);
     }
 
