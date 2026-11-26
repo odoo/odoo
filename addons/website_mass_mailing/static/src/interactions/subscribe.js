@@ -34,6 +34,7 @@ export class Subscribe extends Interaction {
 
     destroy() {
         this._updateView({ is_subscriber: false, warn_missing_list: false });
+        this.el.classList.remove('o_subscribe_ready');
     }
 
     /**
@@ -50,6 +51,11 @@ export class Subscribe extends Interaction {
             });
         }
 
+        if (data.can_subscribe === false) {
+            this.el.classList.add('d-none');
+            return;
+        }
+
         this._updateSubscribeControlsStatus(!!data.is_subscriber);
 
         // js_subscribe_email is kept for compatibility (old name of js_subscribe_value)
@@ -58,6 +64,7 @@ export class Subscribe extends Interaction {
 
         // Compat: remove d-none for DBs that have the button saved with it.
         this.el.classList.remove('d-none');
+        this.el.classList.add('o_subscribe_ready');
     }
 
     /**
