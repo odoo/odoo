@@ -40,11 +40,11 @@ class TestWorldlinePosPaymentMethod(TestPointOfSaleHttpCommon):
 
     def test_payment(self):
         with patch(
-            "odoo.addons.pos_worldline.models.worldline_api_request.requests.post",
+            "odoo.addons.pos_worldline.models.worldline_api_request.requests.request",
             return_value=self._mock_response(),
         ) as mock_post:
             self.worldline_payment_method.worldline_create_transaction("CardPayment", 5.00, "uuid", 1)
-            url = mock_post.call_args.args[0]
+            url = mock_post.call_args.args[1]
             headers = mock_post.call_args.kwargs.get("headers")
             payload = mock_post.call_args.kwargs.get("json")
 
@@ -74,7 +74,7 @@ class TestWorldlinePosPaymentMethod(TestPointOfSaleHttpCommon):
 
     def test_refund(self):
         with patch(
-            "odoo.addons.pos_worldline.models.worldline_api_request.requests.post",
+            "odoo.addons.pos_worldline.models.worldline_api_request.requests.request",
             return_value=self._mock_response(),
         ) as mock_post:
             self.worldline_payment_method.worldline_create_transaction("Refund", 5.00, "uuid", 1)
@@ -88,7 +88,7 @@ class TestWorldlinePosPaymentMethod(TestPointOfSaleHttpCommon):
     @mute_logger('odoo.addons.pos_worldline.models.worldline_api_request')
     def test_payment_error(self):
         with patch(
-            "odoo.addons.pos_worldline.models.worldline_api_request.requests.post",
+            "odoo.addons.pos_worldline.models.worldline_api_request.requests.request",
             return_value=self._mock_response(status_code=400, json_data={"message": "Invalid terminal"}),
         ):
             result = self.worldline_payment_method.worldline_create_transaction("CardPayment", 5.00, "uuid", 1)
@@ -98,7 +98,7 @@ class TestWorldlinePosPaymentMethod(TestPointOfSaleHttpCommon):
     @mute_logger('odoo.addons.pos_worldline.models.worldline_api_request')
     def test_payment_request_exception(self):
         with patch(
-            "odoo.addons.pos_worldline.models.worldline_api_request.requests.post",
+            "odoo.addons.pos_worldline.models.worldline_api_request.requests.request",
             side_effect=RequestException("Connection failed"),
         ):
             result = self.worldline_payment_method.worldline_create_transaction("CardPayment", 5.00, "uuid", 1)
@@ -108,7 +108,7 @@ class TestWorldlinePosPaymentMethod(TestPointOfSaleHttpCommon):
     @mute_logger('odoo.addons.pos_worldline.models.worldline_api_request')
     def test_payment_request_timeout(self):
         with patch(
-            "odoo.addons.pos_worldline.models.worldline_api_request.requests.post",
+            "odoo.addons.pos_worldline.models.worldline_api_request.requests.request",
             side_effect=Timeout(),
         ):
             result = self.worldline_payment_method.worldline_create_transaction("CardPayment", 5.00, "uuid", 1)
@@ -142,11 +142,11 @@ class TestWorldlinePosPaymentMethod(TestPointOfSaleHttpCommon):
             },
         }
         with patch(
-            "odoo.addons.pos_worldline.models.worldline_api_request.requests.post",
+            "odoo.addons.pos_worldline.models.worldline_api_request.requests.request",
             return_value=self._mock_response(status_code=200, json_data=approved_response),
         ) as mock_post:
             result = self.worldline_payment_method.worldline_get_transaction_status("exchange-id")
-            url = mock_post.call_args.args[0]
+            url = mock_post.call_args.args[1]
             payload = mock_post.call_args.kwargs.get("json")
 
         self.assertTrue(url.endswith("/status/sync"))
@@ -194,7 +194,7 @@ class TestWorldlinePosPaymentMethod(TestPointOfSaleHttpCommon):
             (400, {"message": "Invalid terminal"}, {"status": "pending", "error": "Invalid terminal"}),
         ]:
             with self.subTest(status_code=status_code), patch(
-                "odoo.addons.pos_worldline.models.worldline_api_request.requests.post",
+                "odoo.addons.pos_worldline.models.worldline_api_request.requests.request",
                 return_value=self._mock_response(status_code=status_code, json_data=json_data),
             ):
                 result = self.worldline_payment_method.worldline_get_transaction_status("exchange-id")
@@ -226,7 +226,7 @@ class TestWorldlinePosPaymentMethod(TestPointOfSaleHttpCommon):
             },
         }
         with patch(
-            "odoo.addons.pos_worldline.models.worldline_api_request.requests.post",
+            "odoo.addons.pos_worldline.models.worldline_api_request.requests.request",
             return_value=self._mock_response(status_code=200, json_data=failed_response),
         ):
             result = self.worldline_payment_method.worldline_get_transaction_status("exchange-id")
@@ -243,7 +243,7 @@ class TestWorldlinePosPaymentMethod(TestPointOfSaleHttpCommon):
     def test_transaction_status_timeout(self):
         # The transaction may still complete on the terminal: it stays pending, but the error is reported.
         with patch(
-            "odoo.addons.pos_worldline.models.worldline_api_request.requests.post",
+            "odoo.addons.pos_worldline.models.worldline_api_request.requests.request",
             side_effect=Timeout(),
         ):
             result = self.worldline_payment_method.worldline_get_transaction_status("exchange-id")
@@ -275,11 +275,11 @@ class TestWorldlinePosPaymentMethod(TestPointOfSaleHttpCommon):
 
     def test_action_worldline_test(self):
         with patch(
-            "odoo.addons.pos_worldline.models.worldline_api_request.requests.post",
+            "odoo.addons.pos_worldline.models.worldline_api_request.requests.request",
             return_value=self._mock_response(),
         ) as mock_post:
             action = self.worldline_payment_method.action_worldline_test()
-            url = mock_post.call_args.args[0]
+            url = mock_post.call_args.args[1]
             payload = mock_post.call_args.kwargs.get("json")
 
         self.assertTrue(url.endswith(f"/terminals/{self.worldline_payment_method.worldline_terminal_id}/device"))

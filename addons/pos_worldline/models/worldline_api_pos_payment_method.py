@@ -1,7 +1,7 @@
 import base64
 import logging
 
-from odoo import _, fields, models
+from odoo import Command, _, api, fields, models
 from odoo.tools import file_open
 from odoo.exceptions import AccessError
 
@@ -139,15 +139,19 @@ class PosPaymentMethod(models.Model):
             result["error"] = error
         return result
 
-    def _display_notification(self, level, message):
+    def _display_notification(self, level, message, reload=False):
         self.ensure_one()
+        params = {
+            "type": level,
+            "message": message,
+        }
+        if reload:
+            # reload the fields to show auto-completed terminal id
+            params["next"] = {"type": "ir.actions.client", "tag": "soft_reload"}
         return {
             "type": "ir.actions.client",
             "tag": "display_notification",
-            "params": {
-                "type": level,
-                "message": message,
-            },
+            "params": params,
         }
 
     def action_worldline_test(self):
@@ -159,3 +163,48 @@ class PosPaymentMethod(models.Model):
         if "error" in result:
             return self._display_notification("danger", _("Worldline request failed: %s", result["error"]))
         return self._display_notification("success", _("Worldline request sent successfully. Check the terminal to see if the image is displayed."))
+
+    def action_worldline_connect_terminal(self):
+        self.ensure_one()
+        result = WorldlineApiRequest(self).connect_terminal()
+        data = result.get("data")
+        if not data or result.get("error"):
+            return self._display_notification("danger", _("Failed to auto-connect a Worldline terminal: %s", result.get("error", "Could not retrieve connected terminals")))
+        connected_terminals = data.get("connectedTerminals")
+        if not connected_terminals:
+            return self._display_notification("danger", _("No Worldline terminals found. Please make sure the terminal is turned on and connected to the internet."))
+        # If only 1 terminal is found, set it to the current terminal_id
+        if len(connected_terminals) == 1:
+            found_terminal = connected_terminals[0]
+            if self.worldline_terminal_id == found_terminal:
+                return self._display_notification("warning", _("Detected Worldline terminal %s is already set as the current terminal.", connected_terminals[0]), reload=True)
+            if not self.worldline_terminal_id:
+                self.worldline_terminal_id = found_terminal
+                return self._display_notification("success", _("Found Worldline terminal %s and set it as the current terminal.", connected_terminals[0]), reload=True)
+        # If multiple terminals are found, let the user choose which one to connect
+        wizard = self.env["pos.worldline.terminal.wizard"].create({
+            "payment_method_id": self.id,
+            "line_ids": [Command.create({"name": terminal}) for terminal in connected_terminals],
+        })
+        return {
+            "type": "ir.actions.act_window",
+            "name": _("Discovered Worldline terminals."),
+            "res_model": "pos.worldline.terminal.wizard",
+            "res_id": wizard.id,
+            "view_mode": "form",
+            "views": [(False, "form")],
+            "target": "new",
+        }
+
+    @api.onchange("worldline_merchant_id", "worldline_api_key", "worldline_test_mode")
+    def _onchange_worldline_detect_terminal(self):
+        """
+        When completing worldline_merchant_id and worldline_api_key, try to detect the terminal automatically and prefill the field for the user.
+        """
+        if self.payment_provider != "worldline_api" or self.worldline_terminal_id or not (self.worldline_merchant_id and self.worldline_api_key):
+            return
+        result = WorldlineApiRequest(self).connect_terminal()
+        terminals = (result.get("data", {})).get("connectedTerminals")
+        # Only prefill the field if exactly 1 terminal is found and none is set, otherwise user has to use the 'Connect Terminal' button or fill the terminal ID manually
+        if terminals and len(terminals) == 1:
+            self.worldline_terminal_id = terminals[0]

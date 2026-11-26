@@ -97,15 +97,17 @@ class WorldlineApiRequest:
             "NumberOfRetries": NUMBER_OF_RETRIES,
         }
 
-    def _send_request(self, json_body, endpoint="payments"):
-        url = f"{self.base_url}/api/v2/merchants/{self.merchant_id}/terminals/{self.terminal_id}/{endpoint}"
+    def _send_request(self, json_body, endpoint="payments", method="POST"):
+        url = f"{self.base_url}/api/v2/merchants/{self.merchant_id}"
+        if endpoint != "connected terminals":
+            url += f"/terminals/{self.terminal_id}/{endpoint}"
         headers = {
             "Content-Type": "application/json",
             "Authorization": f"Bearer {self.api_key}",
         }
         _logger.debug("Sending json to Worldline endpoint %s: %s", endpoint, json_body)
         try:
-            resp = requests.post(url, json=json_body, headers=headers, timeout=TIMEOUT)
+            resp = requests.request(method, url, json=json_body, headers=headers, timeout=TIMEOUT)
         except requests.exceptions.Timeout:
             _logger.warning("Request to Worldline endpoint %s timed out", endpoint)
             return {"error": self.env._("Worldline request to terminal %s timed out. Please make sure the terminal is connected to internet and try again.", self.terminal_id)}
@@ -264,3 +266,6 @@ class WorldlineApiRequest:
     def display_image(self, image_base64):
         """Display pos_worldline/static/img/pos_logo_connected.png image on the terminal screen."""
         return self._send_request(self._get_image_screen_json(image_base64), endpoint="device")
+
+    def connect_terminal(self):
+        return self._send_request({}, endpoint="connected terminals", method="GET")

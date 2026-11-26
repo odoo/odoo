@@ -4,7 +4,9 @@
     'sequence': 6,
     'summary': 'Integrate your POS with a Worldline Terminal API compatible payment terminal',
     'data': [
+        'security/ir.access.csv',
         'views/pos_payment_method_views.xml',
+        'wizard/pos_worldline_terminal_wizard_views.xml',
     ],
     'depends': ['point_of_sale'],
     'assets': {
