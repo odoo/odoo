@@ -486,9 +486,9 @@ class Website(models.Model):
         if website_settings:
             website.write(website_settings)
         for xml_id in views_to_disable:
-            ThemeUtils.disable_view(xml_id)
+            ThemeUtils._disable_view(xml_id)
         for xml_id in views_to_enable:
-            ThemeUtils.enable_view(xml_id)
+            ThemeUtils._enable_view(xml_id)
 
         return res
 

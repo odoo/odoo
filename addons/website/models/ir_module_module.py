@@ -73,7 +73,7 @@ class IrModuleModule(models.Model):
 
         if not self.env.user.has_group('website.group_website_designer'):
             raise AccessError(self.env._("You don't have the necessary access rights to manage website themes."))
-        if not self.sudo().filtered_domain(self.env['theme.utils'].get_themes_domain()):
+        if not self.sudo().filtered_domain(self.env['theme.utils']._get_themes_domain()):
             raise ValueError(f"{self.name} is not a website theme")
 
         theme = self
@@ -107,7 +107,7 @@ class IrModuleModule(models.Model):
     @api.model
     def update_list(self):
         res = super(IrModuleModule, self).update_list()
-        self.env['theme.utils'].update_theme_images()
+        self.env['theme.utils']._update_theme_images()
         return res
 
     def _check(self):

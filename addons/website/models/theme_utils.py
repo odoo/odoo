@@ -101,34 +101,34 @@ class ThemeUtils(models.AbstractModel):
         )
 
         # Reinitialize effets
-        self.disable_asset("website.ripple_effect_scss")
-        self.disable_asset("website.ripple_effect_js")
+        self._disable_asset("website.ripple_effect_scss")
+        self._disable_asset("website.ripple_effect_js")
 
         # Reinitialize header templates
         for view in self._header_templates[:-1]:
-            self.disable_view(view)
-        self.enable_view(self._header_templates[-1])
+            self._disable_view(view)
+        self._enable_view(self._header_templates[-1])
 
         # Reinitialize footer templates
         for view in self._footer_templates[:-1]:
-            self.disable_view(view)
-        self.enable_view(self._footer_templates[-1])
+            self._disable_view(view)
+        self._enable_view(self._footer_templates[-1])
 
         # Reinitialize footer scrolltop template
-        self.disable_view('website.option_footer_scrolltop')
+        self._disable_view('website.option_footer_scrolltop')
 
         # Reinitialize the header content width
         for view in self._header_width_templates:
-            self.disable_view(view)
+            self._disable_view(view)
 
         # Reinitialize some header and footer options.
         for view in self._header_footer_active_option_templates:
-            self.enable_view(view)
+            self._enable_view(view)
         for view in self._header_footer_unactive_option_templates:
-            self.disable_view(view)
+            self._disable_view(view)
 
         # Reinitialize some page options
-        self.set_page_option("header_overlay", False)
+        self._set_page_option("header_overlay", False)
 
     def _toggle_asset(self, key, active):
         ThemeIrAsset = self.env['theme.ir.asset'].sudo().with_context(active_test=False)
@@ -166,28 +166,28 @@ class ThemeUtils(models.AbstractModel):
                 return
         obj.write({'active': active})
 
-    def enable_asset(self, name):
+    def _enable_asset(self, name):
         self._toggle_asset(name, True)
 
-    def disable_asset(self, name):
+    def _disable_asset(self, name):
         self._toggle_asset(name, False)
 
-    def enable_view(self, xml_id):
+    def _enable_view(self, xml_id):
         if xml_id in self._header_templates:
             for view in self._header_templates:
-                self.disable_view(view)
+                self._disable_view(view)
         elif xml_id in self._footer_templates:
             for view in self._footer_templates:
-                self.disable_view(view)
+                self._disable_view(view)
         elif xml_id in self._header_width_templates:
             for view in self._header_width_templates:
-                self.disable_view(view)
+                self._disable_view(view)
         self._toggle_view(xml_id, True)
 
-    def disable_view(self, xml_id):
+    def _disable_view(self, xml_id):
         self._toggle_view(xml_id, False)
 
-    def set_page_option(self, page_option, value):
+    def _set_page_option(self, page_option, value):
         # Only for the homepage and if it is a simple page, as it could break
         # technical pages.
         homepage_url = self.env.website.homepage_url or '/'
@@ -484,7 +484,7 @@ class ThemeUtils(models.AbstractModel):
             self._theme_unload(theme, website)
         website.theme_id = False
 
-    def get_themes_domain(self):
+    def _get_themes_domain(self):
         """Returns the 'ir.module.module' search domain matching all available themes."""
         def get_id(model_id):
             return self.env['ir.model.data']._xmlid_to_res_id(model_id)
@@ -500,7 +500,7 @@ class ThemeUtils(models.AbstractModel):
         ]
 
     @api.model
-    def update_theme_images(self):
+    def _update_theme_images(self):
         IrModule = self.env['ir.module.module']
         IrAttachment = self.env['ir.attachment']
         existing_urls = IrAttachment.search_read([['res_model', '=', IrModule._name], ['type', '=', 'url']], ['url'])
@@ -658,7 +658,7 @@ class ThemeUtils(models.AbstractModel):
         # as `website_sale` are already installed.
         add_addons_snippets(manifest.get('configurator_snippets_addons', {}))
 
-        themes = self.env['ir.module.module'].search(self.get_themes_domain())
+        themes = self.env['ir.module.module'].search(self._get_themes_domain())
         if module not in themes:
             # An addon module is being installed, and the themes declare which
             # of its snippets they need. Which theme a website ends up using is
