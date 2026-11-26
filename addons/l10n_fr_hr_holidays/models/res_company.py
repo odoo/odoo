@@ -9,7 +9,7 @@ class ResCompany(models.Model):
     _inherit = 'res.company'
 
     def _default_work_entry_type_id(self):
-        return self.env.ref('hr_holidays.l10n_fr_work_entry_type_paid_time_off', raise_if_not_found=False)
+        return self.env.ref('hr_work_entry.fr_work_entry_type_legal_leave', raise_if_not_found=False)
 
     l10n_fr_reference_work_entry_type = fields.Many2one(
         'hr.work.entry.type',
