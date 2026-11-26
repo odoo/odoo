@@ -154,7 +154,7 @@ class HrAttendance(models.Model):
     def _compute_display_name(self):
         for attendance in self:
             if not attendance.check_out:
-                name = self.env._("In Progress")
+                name = self.env._("At Work")
             else:
                 hours, minutes = divmod(round(attendance.worked_hours * 60), 60)
                 if minutes:
