@@ -28,7 +28,7 @@ class EventTypeTicket(models.Model):
         string="Price Reduce", compute="_compute_price_reduce",
         compute_sudo=True, min_display_digits='Product Price')
     additional_product_ids = fields.Many2many('product.product', string='Additional Products',
-            domain=[('service_tracking', '!=', 'event')],
+            domain=[('service_tracking', '!=', 'event'), ('type', '!=', 'combo')],
             help="Select products to include with each registration. They will also show up separately on Sale Orders.")
     total_price = fields.Float(string='Total Price', compute='_compute_total_price', min_display_digits='Product Price',
         help="Price at which this ticket will be sold, which takes into account the Ticket Price and the price of every Additional Product")
