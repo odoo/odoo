@@ -4,7 +4,7 @@ import { PaymentPage } from "@pos_self_order/app/pages/payment_page/payment_page
 import { setupSelfPosEnv, getFilledSelfOrder } from "../utils";
 import { definePosSelfModels } from "../data/generate_model_definitions";
 import { PaymentInterface } from "@point_of_sale/app/utils/payment/payment_interface";
-import { advanceTime } from "@odoo/hoot-mock";
+import { advanceTime, animationFrame } from "@odoo/hoot-mock";
 
 definePosSelfModels();
 
@@ -230,4 +230,17 @@ describe("startPayment", () => {
         expect(store.paymentError).toBe(false);
         expect(sentOrder.partner_id).toBe(signedPartnerId);
     });
+});
+
+test("shows Back on method selection and Back with Retry below the instructions after a failure", async () => {
+    const { paymentExternalQrWithError } = await setupPaymentPage();
+
+    expect(".o_self_footer button:text(Back)").toHaveCount(1);
+    expect(".o_self_footer button:text(Retry)").toHaveCount(0);
+
+    await clickPaymentMethod(paymentExternalQrWithError);
+    await animationFrame();
+
+    expect(".payment-state-container + .o_self_footer button:text(Back)").toHaveCount(1);
+    expect(".payment-state-container + .o_self_footer button:text(Retry)").toHaveCount(1);
 });
