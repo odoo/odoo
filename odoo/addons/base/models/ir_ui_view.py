@@ -1290,6 +1290,7 @@ actual arch.
         """ Invalidate the local cache when the orm cache is cleared
         """
         self.env.cr.cache.pop('_compile_batch_', None)
+        self.env.cr.cache.pop('_qweb_code_', None)
 
     def _preload_views(self, refs: Sequence[int | str]) -> dict[int | str, dict]:
         """

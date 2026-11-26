@@ -354,8 +354,9 @@ class TestQWebCodeCache(IrCacheCase):
         self.render(self.callee, '<span>callee 2</span>', generated=self.callee)
 
     def test_query_count_hot(self):
-        """ A new transaction in a warm worker: the ormcaches are filled (the
-        compiled code of the template and of its t-calls), no query. """
+        """ A new transaction in a warm worker: the ormcaches are filled, the
+        compiled code (of the template and of its t-calls) is read from
+        `ir.cache`. """
         IrQweb = self.env['ir.qweb']
         self.render(self.caller, '<div><span>callee</span></div>', generated=self.caller + self.callee)
         IrQweb._render(self.caller.id)
@@ -364,7 +365,20 @@ class TestQWebCodeCache(IrCacheCase):
         # of the records
         self.env.cr.cache.clear()
         self.env.invalidate_all()
-        with self.assertQueries([]):
+        ir_cache_lookup = """
+            WITH entry AS MATERIALIZED (
+                SELECT DISTINCT ON (key) key, version_data, version, create_date, signature
+                FROM ir_cache
+                WHERE kind = %s AND key = ANY(%s)
+                ORDER BY key, id DESC
+            ), ...
+        """
+        with self.assertQueries([
+            # the code of the template
+            ir_cache_lookup,
+            # the code of the t-calls, in batch (their ids are in the ormcache)
+            ir_cache_lookup,
+        ]):
             self.assertEqual(str(IrQweb._render(self.caller.id)), '<div><span>callee</span></div>')
 
     def test_query_count_cold(self):

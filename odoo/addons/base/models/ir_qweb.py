@@ -1095,28 +1095,35 @@ class IrQweb(models.AbstractModel):
 
         return (template_functions, def_name, options, code)
 
-    @tools.conditional(
-        'xml' not in tools.config['dev_mode'],
-        api.ormcache('self._get_cache_key(ref)', cache='templates'),
-    )
+    def _get_code_transaction_cache(self) -> dict:
+        """ The compiled code loaded by the transaction, by key of
+        `_get_cache_key`: `ir.cache` is the cache shared by the workers. """
+        # cleared with the ormcache 'templates', i.e. when a view changes
+        self.env['ir.ui.view']._clear_preload_views_cache_if_needed()
+        return self.env.cr.cache.setdefault('_qweb_code_', {})
+
     def _generate_code_cached(self, ref: int):
         if 'xml' in tools.config['dev_mode']:
             return self._generate_code_uncached(ref)
+        cache = self._get_code_transaction_cache()
         key = repr(self._get_cache_key(ref))
+        if (result := cache.get(key)) is not None:
+            return result
         if data := self.env['ir.cache']._lookup('qweb', key, self._get_template_cache_version_sql()):
             result = self.__load_code(*marshal.loads(data))
         else:
             result = self._generate_code_uncached(ref, store=True)
+        cache[key] = result
         self._preload_code_cached(result[2].get('calls', ()))
         return result
 
     def _preload_code_cached(self, calls):
         """ Load in batch the compiled code of the called templates (and of
-        the templates they call) from `ir.cache` in the cache of
+        the templates they call) from `ir.cache` in the transaction cache of
         `_generate_code_cached`. The missing ones are compiled, with their
         trees loaded in batch, even if they are not rendered (e.g. a `t-call`
         in a `t-if`): they are then in `ir.cache` for the next workers. """
-        ormcache = IrQweb._generate_code_cached.__cache__
+        cache = self._get_code_transaction_cache()
         IrUiView = self.env['ir.ui.view']
         template_info_cache = type(IrUiView)._get_cached_template_info.__cache__
         while calls:
@@ -1124,8 +1131,7 @@ class IrQweb(models.AbstractModel):
             # compiled code: the code is read without resolving the t-calls
             keys = {
                 key: ref for _call, ref in calls
-                if ormcache.get_value(self, ref) is None
-                and (key := repr(self._get_cache_key(ref)))
+                if (key := repr(self._get_cache_key(ref))) not in cache
             }
             # the t-calls are resolved when rendering, from the ormcache: in a
             # cold worker, load it in batch
@@ -1148,7 +1154,7 @@ class IrQweb(models.AbstractModel):
                     result = self._generate_code_uncached(ref, store=True)
                 else:
                     result = self.__load_code(*marshal.loads(value))
-                ormcache.add_value(self, ref, cache_value=result)
+                cache[key] = result
                 calls.update(result[2].get('calls', ()))
 
     def _generate_code_uncached(self, template: int | str | etree._Element, store=False):
