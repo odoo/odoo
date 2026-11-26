@@ -750,9 +750,7 @@ export class Composer extends Component {
                 }
             }
         }
-        const attachmentIds = isEditing
-            ? message.attachment_ids.map((a) => a.id)
-            : this.props.composer.attachments.map((attachment) => attachment.id);
+        const attachmentIds = this.props.composer.attachments.map((attachment) => attachment.id);
         let default_body = this.props.composer.composerHtml;
         if (!isEditing) {
             if (isHtmlEmpty(default_body)) {
@@ -851,6 +849,12 @@ export class Composer extends Component {
     }
 
     async onClickFullComposer(ev) {
+        if (this.props.composer.attachments.some(({ uploading }) => uploading)) {
+            this.notification.add(_t("Please wait while the file is uploading."), {
+                type: "warning",
+            });
+            return;
+        }
         const { action, options } = await this.onClickFullComposerGetAction();
         await this.env.services.action.doAction(action, options);
         this.state.isFullComposerOpen = true;
