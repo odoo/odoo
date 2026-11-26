@@ -11,7 +11,7 @@ class AccountEdiCommon(models.AbstractModel):
 
     def _l10n_fr_pdp_get_company_tax_unit(self, company):
         if 'account_tax_unit_ids' in company._fields:
-            return company.account_tax_unit_ids
+            return company.account_tax_unit_ids.filtered(lambda unit: unit.country_id.code == 'FR')
         return False
 
     def _l10n_fr_pdp_get_siren_from_vat(self, vat):

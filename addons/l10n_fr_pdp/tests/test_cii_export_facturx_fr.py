@@ -92,6 +92,37 @@ class TestL10nFrPdpXmlCii(TestL10nFrPdpCommon):
         self._generate_invoice_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'facturx_fr_out_invoice_tax_unit')
 
+    def test_export_invoice_partner_fr_foreign_tax_units(self):
+        self.ensure_installed('account_reports')
+        other_company = self.env['res.company'].create({
+            'name': 'Company 2',
+            'country_id': self.env.ref('base.fr').id,
+            'currency_id': self.env.company.currency_id.id,
+        })
+        self.env['account.tax.unit'].create([  # noqa: OLS03001
+            {
+                'name': f'Unit {country_code}',
+                'country_id': self.env.ref(f'base.{country_code.lower()}').id,
+                'vat': vat,
+                'company_ids': [Command.set((self.env.company + other_company).ids)],
+                'main_company_id': self.env.company.id,
+            }
+            for country_code, vat in (('DE', 'DE123456788'), ('ES', 'ESA12345674'))
+        ])
+
+        tax_20 = self.percent_tax(20.0)
+        invoice = self._create_invoice_one_line(
+            partner_id=self.partner_a,
+            product_id=self.product,
+            tax_ids=tax_20,
+            partner_bank_id=self.recipient_bank,
+            narration="Test narration",
+            post=True,
+        )
+
+        self._generate_invoice_ubl_file(invoice)
+        self._assert_invoice_ubl_file(invoice, 'test_invoice_narration')
+
     def test_invoice_profile_id(self):
         tax_goods = self.percent_tax(20.0, tax_scope='consu')
         tax_services = self.percent_tax(20.0, tax_scope='service')
