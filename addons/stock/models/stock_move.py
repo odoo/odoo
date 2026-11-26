@@ -685,7 +685,7 @@ Please change the quantity done or the rounding precision in your settings.""",
                         if move.product_id.tracking == 'lot' and product.uom_id.compare(extra_uom_qty, 0.0) > 0:
                             quantity_to_reserve += extra_uom_qty
                             extra_uom_qty = 0
-                        move_line_vals = self._prepare_move_line_vals(quantity=quantity_to_reserve)
+                        move_line_vals = move._prepare_move_line_vals(quantity=quantity_to_reserve)
                         move_line_vals.update({'lot_id': lot.id, 'lot_name': lot.name})
                         if move.product_id.tracking == 'serial':
                             move_line_vals.update({'quantity': 1.0, 'product_uom_id': product.uom_id.id})
@@ -700,7 +700,7 @@ Please change the quantity done or the rounding precision in your settings.""",
                             continue
                         quantity_to_reserve = min(quant.available_quantity, max(extra_uom_qty if reserved else extra_uom_qty + 1, 1))
                         if product.uom_id.compare(quantity_to_reserve, 0.0) > 0:
-                            move_line_vals = self._prepare_move_line_vals(quantity=quantity_to_reserve, reserved_quant=quant)
+                            move_line_vals = move._prepare_move_line_vals(quantity=quantity_to_reserve, reserved_quant=quant)
                             move_line_vals.update({'lot_id': lot.id, 'lot_name': lot.name})
                             if move.product_id.tracking == 'serial':
                                 quantity_to_reserve = 1
@@ -710,7 +710,7 @@ Please change the quantity done or the rounding precision in your settings.""",
                             reserved = True
                     # If no reservation has been made from existing quant reserve a qty of 1 product.uom_id
                     if not reserved:
-                        move_line_vals = self._prepare_move_line_vals(quantity=1.0)
+                        move_line_vals = move._prepare_move_line_vals(quantity=1.0)
                         move_line_vals.update({'lot_id': lot.id, 'lot_name': lot.name})
                         if move.product_id.tracking == 'serial':
                             move_line_vals.update({'quantity': 1.0, 'product_uom_id': product.uom_id.id})
