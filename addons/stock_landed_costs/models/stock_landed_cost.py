@@ -183,9 +183,9 @@ class StockLandedCost(models.Model):
                 # in stock.
                 qty_out = 0
                 if line.move_id._is_in():
-                    qty_out = line.move_id.quantity - remaining_qty
+                    qty_out = move_qty - remaining_qty
                 elif line.move_id._is_out():
-                    qty_out = line.move_id.quantity
+                    qty_out = move_qty
                 move_vals['line_ids'] += line._create_accounting_entries(move, qty_out)
 
             # batch standard price computation avoid recompute quantity_svl at each iteration

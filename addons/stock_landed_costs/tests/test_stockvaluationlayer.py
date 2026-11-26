@@ -271,6 +271,22 @@ class TestStockValuationLCFIFO(TestStockValuationLCCommon):
         self._make_lc(move1, 250)
         self.assertEqual(move1.stock_valuation_layer_ids[0].remaining_value, 10250)
 
+    def test_landed_cost_already_out_different_uom(self):
+        """
+        Check that the landed cost of the goods already delivered leaves the stock valuation
+        account when the receipt is not done in the product UoM.
+        """
+        uom_dozen = self.env.ref('uom.product_uom_dozen')
+        move1 = self._make_in_move(self.product1, 2, unit_cost=10, create_picking=True, product_uom=uom_dozen)
+        self._make_out_move(self.product1, 12)
+        lc = self._make_lc(move1, 100)
+
+        self.assertEqual(self.product1.quantity_svl, 12)
+        self.assertEqual(self.product1.value_svl, 170)
+        stock_valuation_amls = lc.account_move_id.line_ids.filtered(
+            lambda aml: aml.account_id == self.company_data['default_account_stock_valuation'])
+        self.assertEqual(sum(stock_valuation_amls.mapped('balance')), 50)
+
 
 @tagged('-at_install', 'post_install')
 class TestStockValuationLCAVCO(TestStockValuationLCCommon):
