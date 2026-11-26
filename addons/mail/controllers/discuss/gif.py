@@ -29,7 +29,7 @@ class DiscussGifController(Controller):
             raise BadRequest()
         return response
 
-    @route("/discuss/gif/search", type="jsonrpc", auth="user")
+    @route("/discuss/gif/search", type="jsonrpc", auth="user", readonly=True)
     def search(self, search_term, locale="en", country="US", position=None, readonly=True):
         # sudo: ir.config_parameter - read keys are hard-coded and values are only used for server requests
         ir_config = request.env["ir.config_parameter"].sudo()
