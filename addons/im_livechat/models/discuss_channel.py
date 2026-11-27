@@ -361,7 +361,7 @@ class DiscussChannel(models.Model):
     @api.depends("livechat_is_escalated", "livechat_failure")
     def _compute_livechat_outcome(self):
         for channel in self:
-            self.livechat_outcome = (
+            channel.livechat_outcome = (
                 "escalated" if channel.livechat_is_escalated else channel.livechat_failure
             )
 
