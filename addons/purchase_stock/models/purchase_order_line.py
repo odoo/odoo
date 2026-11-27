@@ -164,6 +164,10 @@ class PurchaseOrderLine(models.Model):
         for move in moves_to_update:
             move.date_deadline = new_date
 
+    @api.model
+    def _get_possible_pickings(self, pickings):
+        return pickings.filtered(lambda p: p.state not in ('done', 'cancel') and p.location_dest_id.usage != "supplier")
+
     def _create_or_update_picking(self):
         for line in self:
             if line.product_id and line.product_id.type == 'consu':
@@ -182,11 +186,11 @@ class PurchaseOrderLine(models.Model):
 
                 # If the user increased quantity of existing line or created a new line
                 # Give priority to the pickings related to the line
-                line_pickings = line.move_ids.picking_id.filtered(lambda p: p.state not in ('done', 'cancel') and p.location_dest_id.usage in ('internal', 'transit', 'customer'))
+                line_pickings = line._get_possible_pickings(line.move_ids.picking_id)
                 if line_pickings:
                     picking = line_pickings[0]
                 else:
-                    pickings = line.order_id.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel') and x.location_dest_id.usage in ('internal', 'transit', 'customer'))
+                    pickings = line._get_possible_pickings(line.order_id.picking_ids)
                     picking = pickings and pickings[0] or False
                 if not picking:
                     if not line.product_qty > line.qty_received:
