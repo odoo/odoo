@@ -477,8 +477,6 @@ class ResourceCalendar(models.Model):
                     if leave_resource.id not in [False, resource.id]:
                         continue
                     if not leave_resource and resource:
-                        if resource.calendar_id and leave.calendar_id and resource.calendar_id != leave.calendar_id:
-                            continue
                         if resource.company_id and leave_company and resource.company_id != leave_company:
                             continue
                     if (tz, start_dt) in tz_dates:
