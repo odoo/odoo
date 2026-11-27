@@ -964,3 +964,29 @@ class TestAllocations(TestHrHolidaysCommon):
         self.assertEqual(
             self.work_entry_type.with_context(context, ignored_leave_ids=leave.ids).virtual_remaining_leaves, 2)
         self.assertFalse(leave.allocation_display_warning)
+
+    @freeze_time('2025-03-10')
+    def test_tied_allocations_consumed_oldest_first(self):
+        """ Among allocations equally valid (no end date, or the same end date), a time off is
+            deducted from the oldest one first, not from the last one created. """
+        for date_to in (False, date(2025, 12, 31)):
+            with self.subTest(date_to=date_to):
+                employee = self.env['hr.employee'].create({
+                    'name': 'Employee With Monthly Allocations',
+                    'company_id': self.company.id,
+                })
+                allocations = self.env['hr.leave.allocation']
+                for date_from in (date(2025, 1, 3), date(2025, 2, 3), date(2025, 3, 3)):
+                    allocations += self._create_validated_allocation(
+                        self.work_entry_type_paid, employee, date_from, date_to, days=1)
+                # Granted month after month: the March allocation is the last one created
+                self.env.flush_all()
+                self.env.cr.execute(
+                    "UPDATE hr_leave_allocation SET create_date = date_from WHERE id IN %s",
+                    [tuple(allocations.ids)],
+                )
+                allocations.invalidate_recordset(['create_date'])
+
+                self._create_leave(
+                    employee, self.work_entry_type_paid, date(2025, 3, 10), date(2025, 3, 10), validate=True)
+                self.assertEqual(allocations.mapped('leaves_taken'), [1, 0, 0])
