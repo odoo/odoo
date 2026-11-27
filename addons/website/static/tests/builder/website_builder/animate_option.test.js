@@ -1,6 +1,10 @@
-import { expandToolbar } from "@html_editor/../tests/_helpers/toolbar";
+import {
+    expandToolbar,
+    expectAccessibleLabels,
+    expectConsistentAriaStates,
+} from "@html_editor/../tests/_helpers/toolbar";
 import { describe, expect, press, test, waitFor, waitForNone } from "@odoo/hoot";
-import { queryAll, queryFirst, queryOne } from "@odoo/hoot-dom";
+import { queryFirst, queryOne } from "@odoo/hoot-dom";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import {
     defineWebsiteModels,
@@ -446,21 +450,27 @@ describe("animate text in toolbar", () => {
         const textNode = editable.querySelector(".test").childNodes[0];
         selection.setBaseAndExtent(textNode, 1, textNode, 3);
 
+        // The `active` class of these buttons means that a text effect is applied,
+        // so the popup state is read from `aria-expanded`, checked here
+        const isPopupOpen = (el) => el.getAttribute("aria-expanded") === "true";
+        const expectAccessibleToolbar = () => {
+            expectConsistentAriaStates(websiteBuilder.getEditor(), { isPopupOpen });
+            expectAccessibleLabels();
+        };
+
         await expandToolbar();
-        for (const button of queryAll(".o-we-toolbar button")) {
-            expect(button).toHaveAttribute("type", "button", {
-                message: `"${button.title || button.className}" should have the button type`,
-            });
-        }
         expect("button[title='Animate Text']").toHaveAttribute("aria-haspopup", "dialog");
         expect("button[title='Animate Text']").toHaveAttribute("aria-expanded", "false");
+        expectAccessibleToolbar();
         await contains("button[title='Animate Text']").click();
         await waitFor(".o_animate_text_popover");
         expect("button[title='Animate Text']").toHaveAttribute("aria-expanded", "true");
+        expectAccessibleToolbar();
 
         await press("Escape");
         await waitForNone(".o_animate_text_popover");
         expect("button[title='Animate Text']").toHaveAttribute("aria-expanded", "false");
+        expectAccessibleToolbar();
     });
 
     test("create one animated span per selected block", async () => {

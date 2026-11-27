@@ -1,7 +1,8 @@
 <templates xml:space="preserve">
     <t t-name="website_builder.AnimateText">
         <button type="button" t-ref="this.root" class="btn btn-light" t-att-class="{ active: this.state.isActive }" t-att-title="this.props.title" t-att-aria-label="this.props.title" t-att="{ disabled: this.props.isDisabled }"
-                aria-haspopup="dialog" t-att-aria-expanded="this.state.isOpen ? 'true' : 'false'" t-on-click="this.onClick">
+                aria-haspopup="dialog" t-att-aria-expanded="this.state.isOpen ? 'true' : 'false'"
+                t-att-aria-controls="this.state.isOpen ? this.popoverId : false" t-on-click="this.onClick">
             <span class="oi oi-fw" data-icon="play_arrow" role="img" aria-hidden="true"></span>
         </button>
     </t>

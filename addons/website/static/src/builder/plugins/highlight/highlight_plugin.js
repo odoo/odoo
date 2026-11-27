@@ -4,11 +4,12 @@ import { isTextNode } from "@html_editor/utils/dom_info";
 import { closestElement, descendants } from "@html_editor/utils/dom_traversal";
 import { nodeSize } from "@html_editor/utils/position";
 import { withSequence } from "@html_editor/utils/resource";
-import { Component, proxy, signal, xml, useProps, t } from "@odoo/owl";
+import { Component, proxy, signal, xml, useEffect, useProps, t } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { registry } from "@web/core/registry";
 import { isCSSColor, rgbaToHex } from "@web/core/utils/colors";
+import { uniqueId } from "@web/core/utils/functions";
 import { getCurrentTextHighlight } from "@website/js/highlight_utils";
 import { HighlightConfigurator } from "./highlight_configurator";
 import { StackingComponent, useStackingComponentState } from "./stacking_component";
@@ -295,11 +296,14 @@ class HighlightToolbarButton extends Component {
     });
     static template = xml`
         <button type="button" t-ref="this.root" t-attf-class="btn btn-light o_hb_select_highlight {{this.highlightState.highlightId ? 'active' : ''}}" t-on-click="this.openHighlightConfigurator" t-att-title="this.props.title" t-att-aria-label="this.props.title"
-                aria-haspopup="dialog" t-att-aria-expanded="this.state.isOpen ? 'true' : 'false'">
+                aria-haspopup="dialog" t-att-aria-expanded="this.state.isOpen ? 'true' : 'false'"
+                t-att-aria-controls="this.state.isOpen ? this.configuratorId : false">
             <i class="oi oi-fw py-1" data-icon="stylus_laser_pointer" role="img" aria-hidden="true"/>
         </button>
     `;
     root = signal.ref();
+    configuratorRef = signal.ref();
+    configuratorId = uniqueId("o_highlight_configurator_");
 
     setup() {
         this.highlightState = proxy(this.props.highlightConfiguratorProps.getHighlightState());
@@ -316,7 +320,16 @@ class HighlightToolbarButton extends Component {
                     this.componentStack.pop();
                 }
             },
+            ref: this.configuratorRef,
+            role: "dialog",
             withScope: true,
+        });
+        useEffect(() => {
+            const configuratorEl = this.configuratorRef();
+            if (configuratorEl) {
+                configuratorEl.id = this.configuratorId;
+                configuratorEl.ariaLabel = this.root()?.ariaLabel;
+            }
         });
     }
     openHighlightConfigurator() {

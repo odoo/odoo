@@ -1,8 +1,18 @@
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { DependencyManager } from "@html_builder/core/dependency_manager";
-import { Component, onMounted, onWillDestroy, proxy, signal, useProps, t } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    onWillDestroy,
+    proxy,
+    signal,
+    useEffect,
+    useProps,
+    t,
+} from "@odoo/owl";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { POSITION_BUS } from "@web/core/position/position_hook";
+import { uniqueId } from "@web/core/utils/functions";
 import { useSubEnv } from "@web/owl2/utils";
 import { AnimateOption, animateOptionProps } from "./animate_option";
 
@@ -46,6 +56,8 @@ export class AnimateText extends Component {
     });
 
     root = signal.ref();
+    popoverRef = signal.ref();
+    popoverId = uniqueId("o_animate_text_popover_");
 
     setup() {
         this.state = proxy({ isOpen: false });
@@ -67,7 +79,16 @@ export class AnimateText extends Component {
                     this.updateState();
                 }
             },
+            ref: this.popoverRef,
+            role: "dialog",
             withScope: true,
+        });
+        useEffect(() => {
+            const popoverEl = this.popoverRef();
+            if (popoverEl) {
+                popoverEl.id = this.popoverId;
+                popoverEl.ariaLabel = this.root()?.ariaLabel;
+            }
         });
     }
 
