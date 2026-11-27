@@ -1358,20 +1358,24 @@ class Website(models.Model):
             style_variables.append(f"--form-label-width: {self.address_form_label_width}")
         return "; ".join(style_variables)
 
-    def _get_product_image_ratio_classes(self):
-        """Return the classes defining the product image aspect ratio from the website's design
-        classes.
+    def _get_product_image_ratio_style(self):
+        """Return the custom properties giving the product image aspect ratios from the website's
+        design classes, the mobile one only for the designs that have one.
         """
         if design_classes := self.shop_opt_products_design_classes:
-            image_ratio_class_regex = r"o_wsale_products_opt_thumb_\d+_\d+(?:_mobile)?\b"
-            ratio_classes = re.findall(image_ratio_class_regex, design_classes)
+            image_ratio_class_regex = r"o_wsale_products_opt_thumb_(\d+)_(\d+)(_mobile)?\b"
+            ratios = {
+                mobile: f"calc({width} / {height})"
+                for width, height, mobile in re.findall(image_ratio_class_regex, design_classes)
+            }
+            style = f"--o-wsale-shop-thumb-ratio: {ratios.get('', 1)};"
             has_mobile_ratio = (
                 "o_wsale_products_opt_design_list_large" in design_classes
                 or "o_wsale_products_opt_design_showcase" in design_classes
             )
             if has_mobile_ratio:
-                ratio_classes.append("o_wsale_has_mobile_ratio")
-            return " ".join(ratio_classes)
+                style += f" --o-wsale-shop-thumb-ratio-mobile: {ratios.get('_mobile', 1)};"
+            return style
         return ""
 
     def _get_product_image_ratio_height(self):

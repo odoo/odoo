@@ -1856,27 +1856,12 @@ $-product-radius-map: (
     aspect-ratio: var(--o-wsale-shop-thumb-aspect-ratio, 1);
 }
 
-@each $name, $ratio in $o-wsale-shop-ratios {
-    body.o_wsale_products_opt_thumb_#{$name} {
-        --o-wsale-shop-thumb-aspect-ratio: #{$ratio};
-    }
-}
+/* The layout gives the ratios in the style of the body */
+body {
+    --o-wsale-shop-thumb-aspect-ratio: var(--o-wsale-shop-thumb-ratio, 1);
 
-@each $name, $ratio in $o-wsale-shop-ratios {
-    body.o_wsale_has_mobile_ratio.o_wsale_products_opt_thumb_#{$name} {
-        --o-wsale-shop-thumb-aspect-ratio: 1;
-
-        @media (min-width: 768px) {
-            --o-wsale-shop-thumb-aspect-ratio: #{$ratio};
-        }
-    }
-}
-
-@each $name, $ratio in $o-wsale-shop-ratios {
-    body.o_wsale_has_mobile_ratio.o_wsale_products_opt_thumb_#{$name}_mobile {
-        @media (max-width: 767.98px) {
-            --o-wsale-shop-thumb-aspect-ratio: #{$ratio};
-        }
+    @media (max-width: 767.98px) {
+        --o-wsale-shop-thumb-aspect-ratio: var(--o-wsale-shop-thumb-ratio-mobile, var(--o-wsale-shop-thumb-ratio, 1));
     }
 }
 
