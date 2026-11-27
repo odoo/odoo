@@ -7,6 +7,7 @@ from odoo import Command
 from odoo.tests import tagged
 
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
+from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 from odoo.addons.point_of_sale.tests.common_setup_methods import setup_product_combo_items
 
 
@@ -3555,3 +3556,71 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('PosLoyaltyPartnerListAfterCouponRemoval')
+
+
+@tagged('post_install', '-at_install')
+class TestClosingEntryTaxTags(TestPoSCommon):
+
+    def test_reward_line_reduces_base_grid(self):
+        """A reward must reduce the closing entry's base and cancel on reversal."""
+        invoice_base, invoice_tax, refund_base, refund_tax = self.env['account.account.tag'].create([
+            {'name': name, 'applicability': 'taxes', 'tax_negate': negate,
+             'country_id': self.env.company.account_fiscal_country_id.id}
+            for name, negate in (
+                ('Invoice base', False), ('Invoice tax', False),
+                ('Refund base', True), ('Refund tax', True),
+            )
+        ])
+        tax_account = self.tax_received_account
+        tax = self.percent_tax(
+            7,
+            type_tax_use='sale',
+            price_include_override='tax_excluded',
+            invoice_repartition_line_ids=[
+                Command.create({'repartition_type': 'base', 'tag_ids': [Command.set(invoice_base.ids)]}),
+                Command.create({'repartition_type': 'tax', 'account_id': tax_account.id,
+                                'tag_ids': [Command.set(invoice_tax.ids)]}),
+            ],
+            refund_repartition_line_ids=[
+                Command.create({'repartition_type': 'base', 'tag_ids': [Command.set(refund_base.ids)]}),
+                Command.create({'repartition_type': 'tax', 'account_id': tax_account.id,
+                                'tag_ids': [Command.set(refund_tax.ids)]}),
+            ],
+        )
+        self.config = self.basic_config
+        self.config.is_closing_entry_by_product = True
+        product = self.create_product('Product', self.categ_basic, 100, tax_ids=tax.ids)
+        reward = self.create_product('Reward', self.categ_basic, -10, tax_ids=tax.ids)
+        session = self._start_pos_session(self.cash_pm1, 0)
+        self._create_orders([{
+            'pos_order_lines_ui_args': [
+                (product, 1),
+                {'product': reward, 'quantity': 1, 'is_reward_line': True},
+            ],
+            'payments': [(self.cash_pm1, 96.3)],
+        }])
+        session.post_closing_cash_details(96.3)
+        session.close_session_from_ui()
+        self.assertEqual(session.state, 'closed')
+        closing = session.move_id
+        self.assertRecordValues(closing.line_ids.sorted('balance'), [
+            {'balance': -100, 'account_id': self.sales_account.id,
+             'tax_ids': tax.ids, 'tax_tag_ids': invoice_base.ids, 'tax_tag_invert': True},
+            {'balance': -6.3, 'account_id': tax_account.id,
+             'tax_ids': [], 'tax_tag_ids': invoice_tax.ids, 'tax_tag_invert': True},
+            {'balance': 10, 'account_id': self.sales_account.id,
+             'tax_ids': tax.ids, 'tax_tag_ids': invoice_base.ids, 'tax_tag_invert': True},
+            {'balance': 96.3, 'account_id': self.cash_pm1.receivable_account_id.id,
+             'tax_ids': [], 'tax_tag_ids': [], 'tax_tag_invert': False},
+        ])
+
+        def base_grid_amount(moves):
+            return sum(
+                line.balance * (-1 if tag.tax_negate else 1) * (-1 if line.tax_tag_invert else 1)
+                for line in moves.line_ids for tag in line.tax_tag_ids & (invoice_base | refund_base)
+            )
+
+        self.assertAlmostEqual(base_grid_amount(closing), 90)
+        reversal = closing._reverse_moves()
+        self.assertAlmostEqual(base_grid_amount(reversal), -90)
+        self.assertAlmostEqual(base_grid_amount(closing | reversal), 0)
