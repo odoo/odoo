@@ -1,0 +1,76 @@
+<odoo>
+
+<!--
+    The signup form is a form snippet, so that all its fields, the standard
+    ones included, are edited with the form builder. The editor saves it as
+    static content: the values of the standard fields are given through
+    `data-for` and the attributes depending on the request are set by the
+    `website.signup_form` interaction.
+-->
+<template id="signup" inherit_id="auth_signup.signup" name="Website Sign Up">
+    <xpath expr="//t[@t-call='auth_signup.signup_form']" position="attributes">
+        <attribute name="t-call">website.signup_form</attribute>
+    </xpath>
+    <xpath expr="//input[@name='csrf_token']" position="before">
+        <span class="d-none" data-for="o_signup_form"
+            t-att-data-values="json.dumps({'name': name or '', 'login': login or ''})"
+            t-att-data-password-minlength="password_minimum_length"/>
+    </xpath>
+</template>
+
+<template id="signup_form" name="Sign Up Form">
+    <section class="s_website_form o_signup_form_snippet o_no_save" data-vcss="001" data-snippet="s_website_form" data-name="Sign Up Form">
+        <div class="container">
+            <form id="o_signup_form" class="oe_signup_form s_website_form_no_recaptcha" role="form" method="post" enctype="multipart/form-data"
+                data-captcha="signup" data-model_name="res.partner" hide-change-model="true">
+                <div class="s_website_form_rows row s_col_no_bgcolor">
+                    <div class="s_website_form_field mb-3 col-12 s_website_form_model_required" data-type="char" data-name="Field">
+                        <label class="s_website_form_label" style="width: 200px" for="name">
+                            <span class="s_website_form_label_content">Name</span>
+                        </label>
+                        <input type="text" class="form-control s_website_form_input" name="name" required="1" placeholder="John Doe" id="name"/>
+                    </div>
+                    <div class="s_website_form_field mb-3 col-12 s_website_form_model_required" data-type="email" data-name="Field">
+                        <label class="s_website_form_label" style="width: 200px" for="login">
+                            <span class="s_website_form_label_content">Email</span>
+                        </label>
+                        <input type="email" class="form-control s_website_form_input" name="login" required="1" placeholder="name@example.com" id="login"/>
+                    </div>
+                    <div class="s_website_form_field mb-3 col-12 s_website_form_model_required" data-type="password" data-name="Field">
+                        <label class="s_website_form_label" style="width: 200px" for="password">
+                            <span class="s_website_form_label_content">Password</span>
+                        </label>
+                        <div class="o_caps_lock_warning">
+                            <div class="input-group mb-1">
+                                <input type="password" class="form-control s_website_form_input" name="password" required="1" placeholder="••••••••••" id="password" autocomplete="new-password"/>
+                                <button type="button" class="btn btn-sm border border-start-0 o_show_password">
+                                    <i class="oi" data-icon="visibility"/>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="s_website_form_field mb-3 col-12 s_website_form_model_required" data-type="password" data-name="Field">
+                        <label class="s_website_form_label" style="width: 200px" for="confirm_password">
+                            <span class="s_website_form_label_content">Confirm Password</span>
+                        </label>
+                        <div class="o_caps_lock_warning">
+                            <div class="input-group mb-1">
+                                <input type="password" class="form-control s_website_form_input" name="confirm_password" required="1" placeholder="••••••••••" id="confirm_password" autocomplete="new-password"/>
+                                <button type="button" class="btn btn-sm border border-start-0 o_show_password">
+                                    <i class="oi" data-icon="visibility"/>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="s_website_form_submit oe_login_buttons mb-0 col-12 d-grid pt-3 text-center s_website_form_no_submit_label" data-name="Submit Button">
+                        <div class="s_website_form_label" style="width: 200px"/>
+                        <span id="s_website_form_result"/>
+                        <button type="submit" class="btn btn-primary mb-1 s_website_form_send">Sign up</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+</template>
+
+</odoo>
