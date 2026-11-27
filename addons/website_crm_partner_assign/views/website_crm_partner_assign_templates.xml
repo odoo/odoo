@@ -82,12 +82,6 @@
     </xpath>
 </template>
 
-<template id="categories_setting" inherit_id="website_partnership.categories_setting">
-    <xpath expr="//t[@t-foreach='grades']/a" position="attributes">
-        <attribute name="t-att-href">keep_partners_url(grade=grade['grade_id'][0])</attribute>
-    </xpath>
-</template>
-
 <template id='industries_setting' customize_show="True" active='False' name="Filter Industries" inherit_id="index_content">
     <xpath expr="//t[@t-set='all_categories_label']" position="before">
         <div class="dropdown d-none d-lg-block">
@@ -169,20 +163,6 @@
     </xpath>
 </template>
 
-<template id="partner" inherit_id="website_partnership.partner_page">
-    <xpath expr="//t[@t-call='website_partnership.partner_detail']" position="inside">
-        <t t-set="right_column">
-            <div id="right_column"><t t-call="website_crm_partner_assign.references_block"/></div>
-        </t>
-    </xpath>
-</template>
-
-<template id="contact_details" inherit_id="website_crm_partner_assign.partner" name="Contact Details">
-    <xpath expr="//t[@t-call='website_partnership.partner_detail']" position="attributes">
-        <attribute name="contact_details">True</attribute>
-    </xpath>
-</template>
-
 <template id="partner_detail" inherit_id="website_partnership.partner_detail">
     <xpath expr="//a[@id='link_back_to_partners']" position="replace">
         <a t-attf-href="/partners#{ current_grade and '/grade/%s' % slug(current_grade) or '' }#{ current_country and '/country/%s' % slug(current_country) or '' }" aria-label="Back to resellers list">
@@ -208,23 +188,6 @@
     <xpath expr="//a[@id='partner_link_card']" position="attributes">
         <attribute name="t-attf-href">/partners/#{slug(partner)}?#{current_grade and 'grade_id=%s&amp;' % current_grade.id}#{current_country and 'country_id=%s' % current_country.id}</attribute>
     </xpath>
-</template>
-
-<template id="references_block" name="Partner References Block">
-    <t t-if="any(p.website_published for p in partner.implemented_partner_ids)">
-        <h4 id="references">References</h4>
-        <div t-foreach="partner.implemented_partner_ids" t-if="reference.website_published" t-as="reference" class="card mt-3 border-0">
-            <div class="row">
-                <div class="col-md-2">
-                    <span t-field="reference.avatar_128" class="d-flex justify-content-center" t-options='{"widget": "image", "qweb_img_responsive": False, "class": "img-fluid rounded mw-100"}'/>
-                </div>
-                <div class="card-body col-md-10">
-                    <span t-field="reference.self"/>
-                    <div t-field='reference.website_short_description'/>
-                </div>
-            </div>
-        </div>
-    </t>
 </template>
 
 <!-- Portal -->
