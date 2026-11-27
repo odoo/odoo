@@ -12,6 +12,9 @@ export class HrHolidaysShareTargetItem extends ShareTargetItem {
 
     async process() {
         const attachments = await this.uploadAttachments();
+        if (!attachments) {
+            return;
+        }
         await this.action.doAction({
             title: _t("New Time Off"),
             type: "ir.actions.act_window",

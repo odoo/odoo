@@ -253,3 +253,25 @@ class TestHrFleetDriver(common.TransactionCase):
         self.assertEqual(vehicle.driver_id, driver_b)
         self.assertEqual(log_b.date_start, date(2026, 1, 14))
         self.assertEqual(log_a.date_end, date(2026, 1, 14))
+
+
+class TestHrFleetUpload(common.TransactionCase):
+
+    def test_upload_attached_to_assignation_log(self):
+        employee = self.env['hr.employee'].create({'name': 'Test Employee'})
+        car = self.env['fleet.vehicle'].create({
+            'model_id': self.env['fleet.vehicle.model'].create({
+                'brand_id': self.env['fleet.vehicle.model.brand'].create({'name': 'Audi'}).id,
+                'name': 'A3',
+            }).id,
+        })
+        log = self.env['fleet.vehicle.assignation.log'].create({
+            'vehicle_id': car.id,
+            'driver_id': employee.work_contact_id.id,
+            'date_start': date.today(),
+        })
+        attachment = self.env['ir.attachment'].create({'name': 'contract.txt', 'raw': b'content'})
+        self.env['ir.attachment'].with_context(
+            default_res_model=log._name, default_res_id=log.id,
+        ).action_attach_uploads([attachment.id])
+        self.assertEqual((attachment.res_model, attachment.res_id), (log._name, log.id))

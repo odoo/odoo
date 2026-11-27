@@ -13,11 +13,6 @@
     'demo': [
         'data/hr_fleet_demo.xml',
     ],
-    'assets': {
-        'web.assets_backend': [
-            'hr_fleet/static/src/views/**/*',
-        ],
-    },
     'auto_install': True,
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

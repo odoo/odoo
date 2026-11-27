@@ -72,7 +72,7 @@ def retrying[T](func: Callable[[], T], env: Environment, *, close_on_commit: boo
                 from .router import _set_session_and_dbname  # noqa: PLC0415
                 _set_session_and_dbname(request)
                 # Rewind files in case of failure
-                for filename, file in request.httprequest.files.items():
+                for filename, file in request.httprequest.files.items(multi=True):
                     if hasattr(file, "seekable") and file.seekable():
                         file.seek(0)
                     else:

@@ -6,7 +6,7 @@ declare module "services" {
     import { dialogService } from "@web/core/dialog/dialog_plugin";
     import { effectService } from "@web/core/effects/effect_plugin";
     import { fieldService } from "@web/core/field_service";
-    import { fileUploadService } from "@web/core/file_upload/file_upload_service";
+    import { fileUploadService } from "@web/core/file_upload/file_upload_plugin";
     import { hotkeyService } from "@web/core/hotkeys/hotkey_plugin";
     import { nameService } from "@web/core/name_plugin";
     import { httpService } from "@web/core/network/http_service";

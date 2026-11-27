@@ -6,7 +6,7 @@ import {
     defineModels,
     fields,
     MockServer,
-    mockService,
+    mockUpload,
     models,
     mountView,
 } from "@web/../tests/web_test_helpers";
@@ -30,19 +30,17 @@ defineModels([IrAttachment, Turtle]);
 test("widget many2one_binary", async () => {
     expect.assertions(7);
 
-    // Mock the http service to handle the upload
-    mockService("http", {
-        post(route, { ufile }) {
-            expect(route).toBe("/web/binary/upload_attachment");
-            expect(ufile[0].name).toBe("Marley&Me.jpg", {
-                message: "the correct file is sent to the server",
-            });
-            const ids = MockServer.env["ir.attachment"].create({
-                name: ufile[0].name,
-                mimetype: "image/jpeg",
-            });
-            return JSON.stringify(MockServer.env["ir.attachment"].read(ids));
-        },
+    // Mock the upload
+    mockUpload((route, { ufile }) => {
+        expect(route).toBe("/web/binary/upload_attachment");
+        expect(ufile[0].name).toBe("Marley&Me.jpg", {
+            message: "the correct file is sent to the server",
+        });
+        const ids = MockServer.env["ir.attachment"].create({
+            name: ufile[0].name,
+            mimetype: "image/jpeg",
+        });
+        return JSON.stringify(MockServer.env["ir.attachment"].read(ids));
     });
 
     // Mount form view with many2one_binary field
@@ -88,21 +86,19 @@ test("widget many2one_binary", async () => {
 test("widget many2one_binary displays notification on error", async () => {
     expect.assertions(7);
 
-    // Mock the http service to simulate an upload error
-    mockService("http", {
-        post(route, { ufile }) {
-            expect(route).toBe("/web/binary/upload_attachment");
-            expect(ufile[0].name).toBe("bad_file.txt", {
-                message: "the correct file is sent to the server",
-            });
-            return JSON.stringify([
-                {
-                    name: ufile[0].name,
-                    mimetype: "text/plain",
-                    error: `Error on file: ${ufile[0].name}`,
-                },
-            ]);
-        },
+    // Mock an upload error
+    mockUpload((route, { ufile }) => {
+        expect(route).toBe("/web/binary/upload_attachment");
+        expect(ufile[0].name).toBe("bad_file.txt", {
+            message: "the correct file is sent to the server",
+        });
+        return JSON.stringify([
+            {
+                name: ufile[0].name,
+                mimetype: "text/plain",
+                error: `Error on file: ${ufile[0].name}`,
+            },
+        ]);
     });
 
     // Mount form view with many2one_binary field

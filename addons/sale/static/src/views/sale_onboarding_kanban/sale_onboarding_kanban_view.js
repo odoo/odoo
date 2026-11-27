@@ -1,8 +1,8 @@
 import { registry } from "@web/core/registry";
-import { saleFileUploadKanbanView } from "../sale_file_upload_kanban/sale_file_upload_kanban_view";
+import { saleOrderKanbanView } from "../sale_order_kanban/sale_order_kanban_view";
 
 export const saleKanbanView = {
-    ...saleFileUploadKanbanView,
+    ...saleOrderKanbanView,
 };
 
 registry.category("views").add("sale_onboarding_kanban", saleKanbanView);

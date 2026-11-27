@@ -1,5 +1,5 @@
-import { Component, onMounted, proxy, signal, t, useProps, useScope } from "@odoo/owl";
-import { useFileUploader } from "@web/core/utils/files";
+import { Component, onMounted, proxy, signal, t, usePlugin, useProps, useScope } from "@odoo/owl";
+import { FileUploadPlugin } from "@web/core/file_upload/file_upload_plugin";
 
 /**
  * Custom file input
@@ -37,9 +37,9 @@ export class FileInput extends Component {
     fileInputRef = signal.ref();
 
     scope = useScope();
+    fileUpload = usePlugin(FileUploadPlugin);
 
     setup() {
-        this.uploadFiles = useFileUploader();
         this.state = proxy({
             // Disables upload button if currently uploading.
             isDisable: false,
@@ -90,7 +90,7 @@ export class FileInput extends Component {
                 throw e;
             }
         }
-        const parsedFileData = await this.uploadFiles(this.props.route, httpParams);
+        const parsedFileData = await this.fileUpload.sendFiles(this.props.route, httpParams);
         if (this.scope.isDestroyed()) {
             // The component was destroyed while the upload was in flight (its
             // dialog was closed, or the user navigated away). Nobody is left to

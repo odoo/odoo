@@ -4,7 +4,6 @@ import { AttachmentDeleteDialog } from "@mail/core/common/attachment_delete_dial
 import { AttachmentList } from "@mail/core/common/attachment_list";
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
 import { usePopoutAttachment } from "@mail/core/common/attachment_view";
-import { MailAttachmentDropzone } from "@mail/core/common/mail_attachment_dropzone";
 import { MessageCardList } from "@mail/core/common/message_card_list";
 import { MessageSearchPlugin } from "@mail/core/common/message_search_plugin";
 import { SearchMessageInput } from "@mail/core/common/search_message_input";
@@ -13,9 +12,10 @@ import { Activity } from "@mail/core/web/activity";
 import { FollowerList } from "@mail/core/web/follower_list";
 import { groupAttachments } from "@mail/utils/common/attachments";
 import { mergeProps } from "@mail/utils/common/hooks";
-import { assignGetter, isDragSourceExternalFile } from "@mail/utils/common/misc";
+import { assignGetter } from "@mail/utils/common/misc";
 
 import {
+    onWillDestroy,
     providePlugins,
     t,
     untrack,
@@ -28,7 +28,7 @@ import {
 
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
-import { useCustomDropzone } from "@web/core/dropzone/dropzone_hook";
+import { DropzonePlugin } from "@web/core/dropzone/dropzone_plugin";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { KeepLast } from "@web/core/utils/concurrency";
@@ -121,41 +121,34 @@ const chatterPatch = {
         /** @type {Map<string, Function>} */
         this.uploadHandlers = new Map();
         this.isMobileOS = isMobileOS();
-        useCustomDropzone(
-            this.rootRef,
-            MailAttachmentDropzone,
-            {
-                extraClass: "o-mail-Chatter-dropzone",
-                /** @param {Event} ev */
-                onDrop: async (ev) => {
-                    if (this.state.composerType) {
+        const removeDropzone = usePlugin(DropzonePlugin).add(this.rootRef, {
+            extraClass: "o-mail-Chatter-dropzone",
+            onDrop: async (files) => {
+                if (this.state.composerType) {
+                    return;
+                }
+                if (!this.state.thread.id) {
+                    const saved = await this.props.saveRecord?.();
+                    if (!saved) {
                         return;
                     }
-                    if (isDragSourceExternalFile(ev.dataTransfer)) {
-                        const files = [...ev.dataTransfer.files];
-                        if (!this.state.thread.id) {
-                            const saved = await this.props.saveRecord?.();
-                            if (!saved) {
-                                return;
-                            }
+                }
+                Promise.all(files.map((file) => this.attachmentUploader.uploadFile(file))).then(
+                    () => {
+                        if (this.hasParentReloadOnAttachmentsChanged) {
+                            this.reloadParentView();
                         }
-                        Promise.all(
-                            files.map((file) => this.attachmentUploader.uploadFile(file))
-                        ).then(() => {
-                            if (this.hasParentReloadOnAttachmentsChanged) {
-                                this.reloadParentView();
-                            }
-                        });
-                        this.closeSearch();
-                        this.state.activePanel = CHATTER_PANEL.ATTACHMENT;
                     }
-                },
+                );
+                this.closeSearch();
+                this.state.activePanel = CHATTER_PANEL.ATTACHMENT;
             },
-            () =>
+            isEnabled: () =>
                 (!this.store.meetingViewOpened || this.ancestors.inMeetingView) &&
                 (this.thread()?.isTransient || this.thread()?.canPostMessage) &&
-                !this.thread()?.messageInEdition?.composer?.isEditComposerVisible
-        );
+                !this.thread()?.messageInEdition?.composer?.isEditComposerVisible,
+        });
+        onWillDestroy(removeDropzone);
         useOnChange(
             () => [this.thread(), this.thread()?.isLoadingAttachments],
             (thread) => {

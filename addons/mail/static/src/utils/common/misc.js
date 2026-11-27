@@ -55,18 +55,6 @@ export const mailGlobal = {
     isInTest: false,
 };
 
-// todo: move this some other place in the future
-export function isDragSourceExternalFile(dataTransfer) {
-    const dragDataType = dataTransfer.types;
-    if (dragDataType.constructor === window.DOMStringList) {
-        return dragDataType.contains("Files");
-    }
-    if (dragDataType.constructor === Array) {
-        return dragDataType.includes("Files");
-    }
-    return false;
-}
-
 /**
  * @param {MediaStream} [stream]
  */

@@ -1,11 +1,14 @@
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
+import { DropzonePlugin } from "@web/core/dropzone/dropzone_plugin";
+import { checkFileSize } from "@web/core/utils/files";
+import { getDataURLFromFile } from "@web/core/utils/urls";
 import { download } from "@web/core/network/download";
 import { standardFieldProps } from "../standard_field_props";
 import { FileUploader } from "../file_handler";
 import { _t } from "@web/core/l10n/translation";
 
-import { Component, t, useProps } from "@odoo/owl";
+import { Component, onWillDestroy, signal, t, useProps, usePlugin } from "@odoo/owl";
 
 export const MAX_FILENAME_SIZE_BYTES = 0xff; // filenames do not exceed 255 bytes on Linux/Windows/MacOS
 
@@ -17,6 +20,7 @@ export const binaryFieldProps = {
     fileNameField: t.string().optional(),
     // Show a button instead of file size when there is no file name
     useReplaceButton: t.boolean().optional(),
+    dropzone: t.boolean().optional(),
 };
 
 export class BinaryField extends Component {
@@ -26,8 +30,34 @@ export class BinaryField extends Component {
     };
     props = useProps(binaryFieldProps);
 
+    root = signal.ref();
+
     setup() {
         this.notification = useService("notification");
+        if (this.props.dropzone) {
+            const removeDropzone = usePlugin(DropzonePlugin).add(this.root, {
+                onDrop: (files) => this.onDrop(files),
+                isEnabled: () => !this.props.readonly,
+            });
+            onWillDestroy(removeDropzone);
+        }
+    }
+
+    async onDrop([file]) {
+        if (!file || !checkFileSize(file.size, this.notification)) {
+            return;
+        }
+        if (this.props.allowedMIMETypes && !this.props.allowedMIMETypes.includes(file.type)) {
+            this.notification.add(
+                _t("Oops! '%(fileName)s' didn’t upload since its format isn’t allowed.", {
+                    fileName: file.name,
+                }),
+                { type: "danger" }
+            );
+            return;
+        }
+        const data = await getDataURLFromFile(file);
+        await this.update({ name: file.name, data: data.split(",")[1] });
     }
 
     get fileName() {
@@ -44,10 +74,12 @@ export class BinaryField extends Component {
 
     update({ data, name }) {
         const { fileNameField, record } = this.props;
-        const payload = data ? {
-            filename: name,
-            content: data,
-        } : false;
+        const payload = data
+            ? {
+                  filename: name,
+                  content: data,
+              }
+            : false;
         const changes = { [this.props.name]: payload };
 
         if (fileNameField in record.fields && record.data[fileNameField] !== name) {
@@ -94,6 +126,11 @@ export const binaryField = {
             name: "allowed_mime_type",
             type: "string",
         },
+        {
+            label: _t("Drop a file on the field"),
+            name: "dropzone",
+            type: "boolean",
+        },
     ],
     supportedTypes: ["binary"],
     extractProps: ({ attrs, options }) => ({
@@ -101,6 +138,7 @@ export const binaryField = {
         allowedMIMETypes: options.allowed_mime_type,
         fileNameField: attrs.filename,
         useReplaceButton: options.use_replace_button,
+        dropzone: options.dropzone,
     }),
 };
 

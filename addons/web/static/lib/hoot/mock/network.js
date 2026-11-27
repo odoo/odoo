@@ -1115,7 +1115,7 @@ export class MockWorker extends MockEventTarget {
 }
 
 export class MockXMLHttpRequest extends MockEventTarget {
-    static publicListeners = ["error", "load"];
+    static publicListeners = ["abort", "error", "load"];
     static {
         // Assign status codes
         Object.assign(this, XMLHttpRequest);
@@ -1193,6 +1193,7 @@ export class MockXMLHttpRequest extends MockEventTarget {
 
     abort() {
         this._setReadyState(XMLHttpRequest.DONE);
+        this.dispatchEvent(new ProgressEvent("abort"));
         markClosed(this);
     }
 

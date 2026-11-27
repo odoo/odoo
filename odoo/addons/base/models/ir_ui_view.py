@@ -2190,11 +2190,9 @@ actual arch.
             if special not in ('cancel', 'save', 'add'):
                 self._raise_view_error(_("Invalid special '%(value)s' in button", value=special), node)
         elif type_:
-            if type_ != 'action' and type_ != 'object':
+            if type_ not in ('action', 'object', 'upload') or not name:
                 return
-            elif not name:
-                return
-            elif type_ == 'object':
+            if type_ in ('object', 'upload'):
                 func = getattr(name_manager.model, name, None)
                 if not func:
                     msg = _(
@@ -2209,7 +2207,7 @@ actual arch.
                         method=name, model=name_manager.model._name,
                     )
                     self._raise_view_error(msg, node)
-                if getattr(func, '_api_model', False):
+                if type_ == 'object' and hasattr(func, '_api_model'):
                     # buttons always pass record ids (possibly an empty list) as first argument
                     msg = _(
                         "%(method)s on %(model)s is decorated with @api.model and cannot be called from a button",
@@ -2218,8 +2216,8 @@ actual arch.
                     self._raise_view_error(msg, node)
                 try:
                     # buttons may pass additional positional arguments with the 'args' attribute
-                    nb_args = len(ast.literal_eval(node.get('args') or '[]'))
-                    inspect.signature(func).bind(*range(nb_args))
+                    args = [] if type_ == 'upload' else range(len(ast.literal_eval(node.get('args') or '[]')))
+                    inspect.signature(func).bind(*args, **({'attachment_ids': []} if type_ == 'upload' else {}))
                 except (TypeError, ValueError, SyntaxError):
                     msg = "%s on %s has parameters and cannot be called from a button"
                     self._log_view_warning(msg % (name, name_manager.model._name), node)
