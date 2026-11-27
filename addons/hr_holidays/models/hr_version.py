@@ -25,7 +25,9 @@ class HrVersion(models.Model):
     allocation_from_working_schedule_id = fields.Many2one('hr.leave.allocation', string="Allocation from working schedule", copy=False, groups="hr.group_hr_user")
 
     def _get_leave_manager_domain(self):
-        return "[('share', '=', False), ('company_ids', 'in', company_id), ('role', 'in', ['regular_user', 'group_system']), ('all_group_ids', 'in', %s)]" % self.env.ref('hr_holidays.group_hr_holidays_employee').id
+        # any internal user can approve: the approver group is granted on assignment
+        # (see hr.employee._grant_approver_groups), making a light user a regular one
+        return "[('share', '=', False), ('company_ids', 'in', company_id)]"
     leave_manager_id = fields.Many2one(
         'res.users', string='Time Off Approver',
         compute='_compute_leave_manager', store=True, readonly=False, index='btree_not_null',

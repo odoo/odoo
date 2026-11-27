@@ -294,7 +294,11 @@
                                     name="employee_id"
                                     widget="many2one_avatar_employee"
                                     domain="[
-                                        ('attendance_manager_id', '=', uid),
+                                        '|',
+                                            ('attendance_manager_id', '=', uid),
+                                            '&amp;',
+                                                ('attendance_manager_id.approval_backups', 'in', [uid]),
+                                                ('user_id', '!=', uid),
                                         ('company_id', 'in', allowed_company_ids),
                                     ]"
                                     readonly="id and not can_edit"

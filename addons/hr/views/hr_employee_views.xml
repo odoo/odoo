@@ -528,6 +528,7 @@
                                                 options="{'no_open': True}"/>
                                         </div>
                                         <field name="tz" required="id" placeholder="User Timezone"/>
+                                        <field name="approval_backups" widget="many2many_avatar_user" invisible="not is_approver"/>
                                     </group>
                                     <group name="managers" string="Approvers">
                                         <field name="hr_responsible_id" widget="many2one_avatar_user"/>

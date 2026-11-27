@@ -21,14 +21,11 @@ class HrVersion(models.Model):
         default=lambda self: self.env.company.sudo().attendance_based,
     )
 
-    def _get_attendance_manager_domain(self):
-        return "[('share', '=', False), ('company_ids', 'in', company_id), ('role', 'in', ['regular_user', 'group_system']), ('all_group_ids', 'in', %s)]" % self.env.ref('hr_attendance.group_hr_attendance_own').id
-
     attendance_manager_id = fields.Many2one(
         'res.users', store=True, readonly=False, index='btree_not_null',
         string="Attendance Approver",
         compute='_compute_attendance_manager',
-        ui_domain=_get_attendance_manager_domain,
+        ui_domain="[('share', '=', False), ('company_ids', 'in', company_id)]",
         groups="hr_attendance.group_hr_attendance_own,hr_attendance.group_hr_attendance_officer,hr.group_hr_user",
         help="The user set in Attendance will access the attendance of the employee through the dedicated app and will be able to edit them.")
 
