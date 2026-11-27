@@ -834,14 +834,15 @@ class HrExpense(models.Model):
 
     @api.depends('company_id')
     def _compute_selectable_payment_method_line_ids(self):
-        for expense in self:
-            allowed_method_line_ids = expense.company_id.company_expense_allowed_payment_method_line_ids
+        # the lines only depend on the company: one search per company, not per expense
+        for company, expenses in self.grouped('company_id').items():
+            allowed_method_line_ids = company.company_expense_allowed_payment_method_line_ids
             if allowed_method_line_ids:
-                expense.selectable_payment_method_line_ids = allowed_method_line_ids
+                expenses.selectable_payment_method_line_ids = allowed_method_line_ids
             else:
-                expense.selectable_payment_method_line_ids = self.env['account.payment.method.line'].search([
+                expenses.selectable_payment_method_line_ids = self.env['account.payment.method.line'].search([
                     # The journal is the source of the payment method line company
-                    *self.env['account.journal']._check_company_domain(expense.company_id),
+                    *self.env['account.journal']._check_company_domain(company),
                     ('payment_type', '=', 'outbound'),
                     ('journal_id.active', '=', True),
                     ('payment_method_id.code', 'in', ['manual', 'check_printing']),  # 'check_printing' comes from account_check_printing (not a dependency)
