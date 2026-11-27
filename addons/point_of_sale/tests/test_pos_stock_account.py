@@ -311,6 +311,29 @@ class TestPoSStock(TestPoSCommon):
         self.pos_session.action_pos_session_validate()
         self._assert_cogs_booked_once(orders, invoice, 10.0)
 
+    def test_08_uninvoiced_refund_of_order_invoiced_from_ui(self):
+        """ The sale is documented by a posted customer invoice, so its refund must be documented by a
+        credit note reversing that invoice, even when the refund is saved without invoicing. """
+        self.open_new_session()
+        order = self._sync_ui_orders([
+            self.create_ui_order_data([(self.product1, 1)], customer=self.customer, is_invoiced=True),
+        ])
+        invoice = order.account_move
+        self.assertEqual(invoice.state, 'posted', "The order should be invoiced from the POS UI")
+        refund = self._sync_uninvoiced_refund(order)
+        self._assert_refund_documented_by_credit_note(refund, invoice)
+
+    def test_09_uninvoiced_refund_of_order_invoiced_with_wizard(self):
+        """ Same as test_08 for an order invoiced with the `pos.make.invoice` wizard. """
+        self.open_new_session()
+        order = self._sync_ui_orders([
+            self.create_ui_order_data([(self.product1, 1)], customer=self.customer),
+        ])
+        invoice = self._invoice_with_wizard(order)
+        self.assertEqual(invoice.state, 'posted', "The order should be invoiced with the wizard")
+        refund = self._sync_uninvoiced_refund(order)
+        self._assert_refund_documented_by_credit_note(refund, invoice)
+
     def test_10_cogs_invoice_wizard_single_order_after_closing_update_stock_at_closing(self):
         """ Invoicing one order of a closed session: the invoice books its COGS again, so the automatic
         reversal of the closing entry must neutralise the share the closing entry booked for that order. """
@@ -371,3 +394,18 @@ class TestPoSStock(TestPoSCommon):
             self._get_cogs_balance(invoice | self.pos_session.move_id | closing_reversals), cogs,
             "The COGS must be booked once over the invoice, the session closing entry and its reversals",
         )
+
+    def _sync_uninvoiced_refund(self, order):
+        """ Refund one unit of `order` from the POS UI without ticking "Invoice". `sync_from_ui` also
+        returns the refunded order, so only the refund is kept. """
+        refund_data = self.create_ui_order_data(
+            [{'product': self.product1, 'quantity': -1, 'refunded_orderline_id': order.lines.id}],
+            pos_order_ui_args={'is_refund': True},
+            customer=self.customer,
+        )
+        return self._sync_ui_orders([refund_data]).filtered(lambda o: o.refunded_order_id == order)
+
+    def _assert_refund_documented_by_credit_note(self, refund, invoice):
+        self.assertEqual(len(refund), 1, "The refund should be saved")
+        self.assertEqual(refund.account_move.move_type, 'out_refund', "The refund must be documented by a credit note")
+        self.assertEqual(refund.account_move.reversed_entry_id, invoice, "The credit note must reverse the invoice")

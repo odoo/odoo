@@ -155,6 +155,11 @@ class PosOrder(models.Model):
 
     def _process_saved_order(self, draft):
         self.ensure_one()
+        if not self.to_invoice and self.refunded_order_id.account_move:
+            self.write({
+                'to_invoice': True,
+                'partner_id': self.partner_id.id or self.refunded_order_id.partner_id.id,
+            })
         if not draft and self.state != 'cancel':
             self.action_pos_order_paid()
             self._create_order_picking()
