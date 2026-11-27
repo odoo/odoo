@@ -1,3 +1,5 @@
+import "./mock_server/calendar_mock_server";
+
 import { CalendarEvent } from "./mock_server/mock_models/calendar_event";
 import { CalendarAttendee } from "./mock_server/mock_models/calendar_attendee";
 import { ResUsers } from "./mock_server/mock_models/res_users";
