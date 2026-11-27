@@ -21,7 +21,26 @@ class TimesheetAttendance(models.Model):
 
     def init(self):
         tools.drop_view_if_exists(self.env.cr, self._table)
-        self._cr.execute("""CREATE OR REPLACE VIEW %s AS (
+
+    @property
+    def _table_query(self):
+        time_off_where = ""
+        if 'holiday_id' in self.env['account.analytic.line']._fields:
+            time_off_where = """
+                AND NOT EXISTS (
+                    SELECT 1
+                      FROM hr_leave
+                      JOIN hr_leave_type ON hr_leave_type.id = hr_leave.holiday_status_id
+                     WHERE hr_leave.id = ts.holiday_id
+                       AND hr_leave_type.time_type = 'leave'
+                )
+                AND NOT EXISTS (
+                    SELECT 1
+                      FROM resource_calendar_leaves
+                     WHERE resource_calendar_leaves.id = ts.global_leave_id
+                       AND resource_calendar_leaves.time_type = 'leave'
+                )"""
+        return """
             SELECT
                 max(id) AS id,
                 t.employee_id,
@@ -61,12 +80,11 @@ class TimesheetAttendance(models.Model):
                     ts.company_id AS company_id
                 FROM account_analytic_line AS ts
                 LEFT JOIN hr_employee ON hr_employee.id = ts.employee_id
-                WHERE ts.project_id IS NOT NULL
+                WHERE ts.project_id IS NOT NULL%s
             ) AS t
             GROUP BY t.employee_id, t.date, t.company_id, t.emp_cost
             ORDER BY t.date
-        )
-        """ % self._table)
+        """ % time_off_where
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
