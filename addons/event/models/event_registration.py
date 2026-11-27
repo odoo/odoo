@@ -101,7 +101,11 @@ class EventRegistration(models.Model):
 
     @api.constrains('active', 'state', 'event_id', 'event_slot_id', 'event_ticket_id')
     def _check_seats_availability(self):
-        tocheck = self.filtered(lambda registration: registration.state in ('open', 'done') and registration.active)
+        # entries of a multi-entry ticket (sub-registrations) do not take a seat
+        tocheck = self.filtered(
+            lambda registration: registration.state in ('open', 'done') and registration.active
+            and not registration.main_registration_id
+        )
         for event, registrations in tocheck.grouped('event_id').items():
             event._verify_seats_availability([
                 (slot, ticket, 0)
