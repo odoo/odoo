@@ -549,6 +549,15 @@ test("many components can register same hotkeys (call order matters)", async () 
         };
         return Comp;
     };
+
+    patchWithCleanup(console, {
+        warn: (msg) => {
+            expect(msg).toEqual(
+                `The hotkey "z" is being shadowed by a global hotkey, no overlay will be displayed.`
+            );
+        },
+    });
+
     await mountWithCleanup(getComp("comp1"));
     await press("a");
     await press("b");
@@ -1093,4 +1102,114 @@ test("useHotkey can display an overlay over a DOM element ", async () => {
 
     await press("a");
     expect.verifySteps(["hotkey alt+a has been triggered"]);
+});
+
+test("useHotkey overlay is not displayed when the UI active element is different", async () => {
+    class UIOwnershipTakerComponent extends Component {
+        static template = xml`
+            <div class="owner" t-ref="owner">
+                <button data-hotkey="b">b</button>
+            </div>
+        `;
+        static props = ["*"];
+        setup() {
+            useActiveElement("owner");
+        }
+    }
+    class A extends Component {
+        static components = { UIOwnershipTakerComponent };
+        static template = xml`
+            <div>
+                <button class="target">Should be overlayed</button>
+                <UIOwnershipTakerComponent t-if="state.showOwner"/>
+            </div>
+        `;
+        static props = ["*"];
+        setup() {
+            this.state = useState({ showOwner: false });
+            useHotkey("alt+a", () => expect.step("alt+a"), {
+                withOverlay: () => queryOne(".target"),
+            });
+        }
+    }
+
+    const comp = await mountWithCleanup(A);
+    expect(getService("ui").activeElement).toBe(document);
+
+    await keyDown("alt");
+    expect(getOverlays()).toEqual(["A"]);
+    await keyUp("alt");
+
+    // Other element takes the UI ownership
+    comp.state.showOwner = true;
+    await animationFrame();
+    expect(getService("ui").activeElement).toHaveClass("owner");
+
+    // Only the hotkeys of the new UI active element are displayed
+    await keyDown("alt");
+    expect(getOverlays()).toEqual(["B"]);
+    await press("a");
+    expect.verifySteps([]);
+    await keyUp("alt");
+
+    // Give the UI ownership back
+    comp.state.showOwner = false;
+    await animationFrame();
+    expect(getService("ui").activeElement).toBe(document);
+
+    await keyDown("alt");
+    expect(getOverlays()).toEqual(["A"]);
+    await press("a");
+    expect.verifySteps(["alt+a"]);
+});
+
+test("disable hotkey overlay if overridden by available global hotkey", async () => {
+    class MyComponent extends Component {
+        static template = xml`
+            <button data-hotkey="a">a</button>
+            <button data-hotkey="b">b</button>
+            <button data-hotkey="control+c">c</button>
+        `;
+        static props = ["*"];
+    }
+
+    await mountWithCleanup(MyComponent);
+    await animationFrame();
+
+    await keyDown("alt");
+    // All hotkeys displayed
+    expect(".o_web_hotkey_overlay").toHaveCount(3);
+    await keyUp("alt");
+
+    const hotkey = getService("hotkey");
+    hotkey.add("alt+a", () => expect.step("global alt+a"), { global: true });
+    hotkey.add("alt+b", () => expect.step("global alt+b"), {
+        global: true,
+        isAvailable: () => false,
+    });
+    hotkey.add("alt+control+c", () => expect.step("global control+b"), {
+        global: true,
+        isAvailable: () => true,
+    });
+
+    patchWithCleanup(console, {
+        warn: (msg) => expect.step(msg),
+    });
+
+    await keyDown("alt");
+    // Only the non-overridden hotkeys are displayed
+    expect(".o_web_hotkey_overlay").toHaveCount(1);
+    expect.verifySteps([
+        `The hotkey "a" is being shadowed by a global hotkey, no overlay will be displayed.`,
+        `The hotkey "control+c" is being shadowed by a global hotkey, no overlay will be displayed.`,
+    ]);
+    await keyUp("alt");
+
+    patchWithCleanup(console, {
+        warn: () => {},
+    });
+
+    await keyDown(["alt", "a"]);
+    // Only the global hotkey is called
+    expect.verifySteps(["global alt+a"]);
 });
