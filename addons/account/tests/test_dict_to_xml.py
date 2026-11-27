@@ -48,6 +48,22 @@ class TestDictToXml(TransactionCase):
             'content</ns1:Node>'
         ))
 
+    def test_23_default_namespace(self):
+        namespace = 'urn:example'
+        element = dict_to_xml({
+            '_tag': 'Root',
+            'id': 'root',
+            'Child': {
+                '_text': 'content',
+                'id': 'child',
+            },
+        }, nsmap={None: namespace})
+
+        self.assertEqual(etree.QName(element).namespace, namespace)
+        self.assertEqual(etree.QName(element[0]).namespace, namespace)
+        self.assertEqual(element.attrib, {'id': 'root'})
+        self.assertEqual(element[0].attrib, {'id': 'child'})
+
     def test_31_compound_node(self):
         node = {
             '_tag': 'Parent',
