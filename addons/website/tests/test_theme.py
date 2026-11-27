@@ -106,3 +106,11 @@ class TestThemeApply(common.TransactionCase):
         self.theme.with_user(self.designer).with_context(website_id=self.website.id).button_choose_theme()
         self.assertEqual(self.website.theme_id, self.theme)
         self.assertTrue(self._get_view_copy())
+
+    def test_uninstall_theme_removes_it_from_websites(self):
+        self.env['theme.utils']._theme_apply(self.theme, self.website)
+
+        self.theme.module_uninstall()
+
+        self.assertFalse(self.website.theme_id)
+        self.assertFalse(self._get_view_copy())

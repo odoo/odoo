@@ -106,6 +106,12 @@ class IrModuleModule(models.Model):
         self.env['theme.utils']._update_theme_images()
         return res
 
+    def module_uninstall(self):
+        # A website must not keep using a theme that is no longer installed
+        for website in self.env['website'].search([('theme_id', 'in', self.ids)]):
+            self.env['theme.utils']._theme_remove(website)
+        return super().module_uninstall()
+
     def _check(self):
         super()._check()
         View = self.env['ir.ui.view']
