@@ -126,7 +126,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         self.env.cr.flush()  # if token refreshed & commited in another transaction, crash before doing API call
         try:
             self._make_request(
-                f'{self._get_server_url()}/api/peppol/1/mark_connection_out_of_sync',
+                f'{self._get_server_url()}{self._get_peppol_proxy_endpoint("1/mark_connection_out_of_sync")}',
                 params={'token_desync_counter': self.token_sync_version},
                 auth_type='asymmetric'
             )
@@ -142,16 +142,20 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         self.ensure_one()
         assert self.is_token_out_of_sync
         self.token_sync_version += 1
-        response = self._make_request(
-            f'{self._get_server_url()}/api/peppol/1/resync_connection',
-            params={'token_desync_counter': self.token_sync_version},
-            auth_type='asymmetric'
-        )
-        if response.get('error'):
-            if response['error'].get('code') == 'connection_superseded':
+        try:
+            response = self._make_request(
+                f'{self._get_server_url()}{self._get_peppol_proxy_endpoint("1/resync_connection")}',
+                params={'token_desync_counter': self.token_sync_version},
+                auth_type='asymmetric'
+            )
+        except AccountEdiProxyError as e:
+            if e.code == 'connection_superseded':
                 self._peppol_out_of_sync_disconnect_this_database()
                 if not tools.config['test_enable'] and not modules.module.current_test:
                     self.env.cr.commit()
+                raise UserError(_('This connection has been superseded by another database. Register again.'))
+            raise UserError(e.message)
+        if response.get('error'):
             raise AccountEdiProxyError(
                 response['error'].get('code', 'unknown_error'),
                 response['error'].get('message', "An unknown error occurred while authenticating with IAP server.")
