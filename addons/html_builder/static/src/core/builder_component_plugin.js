@@ -25,6 +25,8 @@ import { Plugin, shared } from "@html_editor/plugin";
 import { Image } from "./img";
 import { BuilderUrlPicker } from "./building_blocks/builder_urlpicker";
 import { BuilderFontFamilyPicker } from "./building_blocks/builder_fontfamilypicker";
+import { BuilderInputSelectNumber } from "./building_blocks/builder_input_select_number";
+import { BuilderInputSelectText } from "./building_blocks/builder_input_select_text";
 
 /** @typedef {import("@odoo/owl").ComponentConstructor} ComponentConstructor */
 
@@ -49,6 +51,8 @@ export class BuilderComponentPlugin extends Plugin {
             BuilderButton,
             BuilderTextInput,
             BuilderNumberInput,
+            BuilderInputSelectNumber,
+            BuilderInputSelectText,
             BuilderRange,
             BuilderColorPicker,
             BuilderSelect,
