@@ -809,6 +809,7 @@ class TestEventNotifications(CalendarMailCommon):
         wizard = self.env['calendar.event.archive.or.unlink.wizard'].create({'calendar_event_id': event.id})
         form = Form(wizard)
         form.body = f'{form.body} (edited)'
+        form.recipient_ids.remove(id=self.user_employee_2.partner_id.id)
         form.recipient_ids.add(self.user_admin.partner_id)
         form.recurrence_choice = 'future_events'
         form.subject = f'{form.subject} (edited)'
@@ -822,7 +823,14 @@ class TestEventNotifications(CalendarMailCommon):
         self.assertIn('Event canceled', self._new_mails.body)
         self.assertIn('(edited)', self._new_mails.body)
         self.assertEqual(self._new_mails.subject, 'Canceled event: Test Event Delete Notification (edited)')
-        self.assertEqual(self._new_mails.partner_ids, self.user_admin.partner_id + self.user_employee_2.partner_id)
+        # Check that the mail is sent only to the recipients set in the wizard.
+        self.assertMailMail(
+            self.user_admin.partner_id, 'outgoing',
+            fields_values={
+                'partner_ids': self.user_admin.partner_id,
+                'recipient_ids': self.user_admin.partner_id,
+            },
+        )
 
     def test_get_next_potential_limit_alarm(self):
         """
