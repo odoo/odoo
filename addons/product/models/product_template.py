@@ -1141,17 +1141,16 @@ class ProductTemplate(models.Model):
             single_value_lines = lines_without_no_variants.filtered(lambda ptal: len(ptal.product_template_value_ids._only_active()) == 1)
             if single_value_lines:
                 # Writing product_template_attribute_value_ids below invalidates
-                # price_extra, which triggers recompute of the stored company_price_ids
-                # and wipes user-set overrides. Protect company_price_ids on variants
+                # price_extra, which triggers recompute of the stored lst_price
+                # and wipes user-set overrides. Protect lst_price on variants
                 # whose value diverges from the computed one (= manual override);
                 # non-overridden variants are left to the recompute so they
                 # correctly pick up the new ptav's price_extra.
-                overridden = all_variants.filtered(lambda v: any(
-                    company_price.lst_price != company_price.computed_lst_price
-                    for company_price in v.company_price_ids
-                ))
-                company_prices_field = self.env['product.product']._fields['company_price_ids']
-                with self.env.protecting([company_prices_field], overridden):
+                overridden = all_variants.filtered(
+                    lambda v: v.lst_price != v.list_price + v.price_extra,
+                )
+                lst_price_field = self.env['product.product']._fields['lst_price']
+                with self.env.protecting([lst_price_field], overridden):
                     for variant in all_variants:
                         combination = variant.product_template_attribute_value_ids | single_value_lines.product_template_value_ids._only_active()
                         # Do not add single value if the resulting combination would

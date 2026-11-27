@@ -5,7 +5,7 @@ from collections import defaultdict
 
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import UserError, ValidationError
-from odoo.fields import Command, Domain
+from odoo.fields import Domain
 from odoo.tools import float_compare, groupby, OrderedSet
 from odoo.tools.image import is_image_size_above
 from odoo.tools.misc import unique
@@ -46,17 +46,12 @@ class ProductProduct(models.Model):
         'Sales Price',
         compute='_compute_product_lst_price',
         inverse='_inverse_product_lst_price',
-        compute_sudo=True,
         min_display_digits='Product Price',
         readonly=False,
-        help="The sale price can be set manually or computed from the product template. Click on the 'Configure Variants' button to set the extra attribute prices.")
-    company_price_ids = fields.One2many(
-        string="Sales Price per Company",
-        comodel_name='product.product.company.price',
-        inverse_name='product_id',
-        compute='_compute_company_price_ids',
         store=True,
-    )
+        company_dependent=True,
+        prefetch=True,  # read with the variant
+        help="The sale price can be set manually or computed from the product template. Click on the 'Configure Variants' button to set the extra attribute prices.")
 
     default_code = fields.Char('Internal Reference', index=True)
     code = fields.Char('Reference', compute='_compute_product_code')
@@ -481,53 +476,18 @@ class ProductProduct(models.Model):
             product.price_extra = sum(product.product_template_attribute_value_ids.mapped('price_extra'))
 
     @api.depends('list_price', 'price_extra')
-    def _compute_company_price_ids(self):
-        # all companies at once, as a stored compute is only done in the company triggering it
-        companies = self.env['res.company'].search([])
-        for product in self:
-            company_prices = product.company_price_ids.grouped('company_id')
-            commands = []
-            for company in companies:
-                lst_price = product.with_company(company).list_price + product.price_extra
-                values = {'lst_price': lst_price, 'computed_lst_price': lst_price}
-                company_price = company_prices.get(company)
-                if not company_price:
-                    commands.append(Command.create({'company_id': company.id, **values}))
-                elif company_price.computed_lst_price != lst_price:  # else keep the manual price
-                    commands.append(Command.update(company_price.id, values))
-            product.company_price_ids = commands
-
-    @api.depends('list_price', 'price_extra', 'company_price_ids.lst_price')
-    @api.depends_context('company')
     def _compute_product_lst_price(self):
-        for product in self:
-            if company_price := product._get_company_price():
-                product.lst_price = company_price.lst_price
-            else:  # company created after the product
+        # all companies at once, as a stored compute is only done in the company triggering it
+        for company in self.env['res.company'].search([]):
+            for product in self.with_company(company):
                 product.lst_price = product.list_price + product.price_extra
 
     def _inverse_product_lst_price(self):
         for product in self:
-            if company_price := product._get_company_price():
-                company_price.lst_price = product.lst_price
-            else:  # company created after the product
-                self.env['product.product.company.price'].create({
-                    'product_id': product.id,
-                    'company_id': self.env.company.id,
-                    'lst_price': product.lst_price,
-                    'computed_lst_price': product.list_price + product.price_extra,
-                })
             template = product.product_tmpl_id
             if len(template.with_context(active_test=False).product_variant_ids) == 1 and not template.has_configurable_attributes:
                 template.list_price = product.lst_price
                 product.invalidate_recordset(['list_price'])
-
-    def _get_company_price(self):
-        """Return the sales price of the variant in the current company."""
-        self.ensure_one()
-        return self.company_price_ids.filtered(
-            lambda company_price: company_price.company_id == self.env.company
-        )
 
     @api.depends_context('partner_id')
     def _compute_product_code(self):

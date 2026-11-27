@@ -109,7 +109,6 @@ class TestWebsiteSalePerformanceNoPricelist(WebsiteSaleCommon, UtilPerf, Product
             "product_document": 2,
             "product_image": 2,
             "product_product": 2,
-            "product_product_company_price": 2,
             "product_public_category": 2,
             "product_ribbon": 1,
             "product_tag": 2,
@@ -251,7 +250,6 @@ class TestWebsiteSalePerformanceWithPricelist(TestWebsiteSalePerformanceWithPric
             # FIXME VFE magic comeback when sub is installed makes no **** sense
             # Seems to come from the `website_sale` template, not the sub override strangely
             del res["account_account"]
-        del res["product_product_company_price"]  # fixed prices, the sales price is not read
         return res
 
     def test_product_page_generation(self):

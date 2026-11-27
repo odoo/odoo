@@ -55,11 +55,6 @@ class TestSalesPriceMultiCompany(ProductVariantsCommon):
         ):
             self.assertEqual(self.variant_m.with_company(company).lst_price, price)
 
-    def test_other_company_price_change_keeps_manual_variant_price(self):
-        self.variant_m.with_company(self.company_a).lst_price = 200.0
-        self.template.with_company(self.company_b).list_price = 140.0
-        self.assertEqual(self.variant_m.with_company(self.company_a).lst_price, 200.0)
-
     def test_extra_price_applies_in_all_companies(self):
         ptav = self.template.attribute_line_ids.product_template_value_ids.filtered(
             lambda ptav: ptav.product_attribute_value_id == self.size_attribute_m
