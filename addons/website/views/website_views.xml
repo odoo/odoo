@@ -262,7 +262,7 @@
                                 <div t-if="record.is_installed_on_current_website.raw_value or !record.url.value" class="o_button_area position-absolute top-50 start-50 translate-middle d-flex align-items-center justify-content-center w-100 h-100 bg-dark bg-opacity-50 rounded opacity-0 opacity-100-hover transition-fade">
                                     <div class="d-flex flex-column gap-2 w-50">
                                         <t t-if="record.is_installed_on_current_website.raw_value">
-                                            <button type="object" name="button_refresh_theme" class="btn btn-primary">Update theme</button>
+                                            <!-- TODO DUAU: should we add a reset button here instead? -->
                                             <button type="object" name="button_remove_theme" class="btn btn-secondary">Remove theme</button>
                                         </t>
                                         <t t-else="">

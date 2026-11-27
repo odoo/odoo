@@ -1,14 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import logging
-
 from odoo import api, fields, models
 from odoo.exceptions import AccessError
 from odoo.tools import SQL, split_every
 from odoo.tools.constants import IN_MAX
 from odoo.tools.translate import StoredTranslations
-
-_logger = logging.getLogger(__name__)
 
 
 class IrModuleModule(models.Model):
@@ -34,26 +30,6 @@ class IrModuleModule(models.Model):
         website = self.env.website or self.env['website'].browse(self.env.context.get('host_id'))
         for module in self:
             module.is_installed_on_current_website = module == website.theme_id
-
-    def write(self, vals):
-        """
-            Override to load a theme on the websites using it after it is installed
-            or upgraded.
-
-            Upgrading a theme reloads it on every website using it. Applying a theme on
-            a website is not a module operation, see ``theme.utils._theme_apply``.
-        """
-        ThemeUtils = self.env['theme.utils']
-        for module in self:
-            if module.name.startswith('theme_') and vals.get('state') == 'installed':
-                _logger.info('Module %s has been loaded as theme template (%s)' % (module.name, module.state))
-
-                if module.state in ['to install', 'to upgrade']:
-                    websites_to_update = self.env['website'].search([('theme_id', '=', module.id)])
-                    for website in websites_to_update:
-                        ThemeUtils._theme_load(module, website)
-
-        return super(IrModuleModule, self).write(vals)
 
     def button_choose_theme(self):
         """
@@ -89,16 +65,6 @@ class IrModuleModule(models.Model):
         """Remove the current theme of the current website."""
         website = self.env.website or self.env['website'].browse(self.env.context.get('host_id'))
         self.env['theme.utils']._theme_remove(website)
-
-    def button_refresh_theme(self):
-        """
-            Reload the templates of the current website's theme on the current website.
-
-            The theme module is not upgraded: a module upgrade is what loads a new
-            version of the theme, on every website using it.
-        """
-        website = self.env.website or self.env['website'].browse(self.env.context.get('host_id'))
-        self.env['theme.utils']._theme_load(website.theme_id, website)
 
     @api.model
     def update_list(self):

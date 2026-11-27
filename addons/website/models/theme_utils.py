@@ -1,10 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-from collections import OrderedDict
 
 from odoo import api, models
-from odoo.exceptions import AccessError, MissingError
 from odoo.modules import Manifest
 
 _logger = logging.getLogger(__name__)
@@ -14,9 +12,6 @@ class ThemeUtils(models.AbstractModel):
     _name = 'theme.utils'
     _description = 'Theme Utils'
     _auto = False
-
-    _theme_model_names = OrderedDict()
-    _theme_translated_fields = {}
 
     _header_templates = [
         'website.template_header_hamburger',
@@ -186,194 +181,14 @@ class ThemeUtils(models.AbstractModel):
             homepage.write({page_option: value})
 
     # ----------------------------------------------------------------
-    # Theme templates
+    # Themes
     # ----------------------------------------------------------------
-
-    def _get_module_data(self, themes, model_name):
-        """
-            Return every theme template model of type ``model_name`` for every theme in ``themes``.
-
-            :param themes: recordset of themes ``ir.module.module``
-            :param model_name: string with the technical name of the model for which to get data.
-                (the name must be one of the keys present in ``_theme_model_names``)
-            :return: recordset of theme template models (of type defined by ``model_name``)
-        """
-        if not self.env.user.has_group('website.group_website_restricted_editor'):
-            raise AccessError(self.env._("You don't have the necessary access rights to manage website themes."))
-
-        self_sudo = self.sudo()
-
-        theme_model_name = self_sudo._theme_model_names[model_name]
-        IrModelData = self_sudo.env['ir.model.data']
-        records = self_sudo.env[theme_model_name]
-
-        for module in themes.sudo():
-            imd_ids = IrModelData.search([
-                ('module', '=', module.name),
-                ('model', '=', theme_model_name),
-                ('res_id', '!=', False),
-            ]).mapped('res_id')
-            records |= self_sudo.env[theme_model_name].with_context(active_test=False).browse(imd_ids)
-        return records
-
-    def _update_records(self, theme, model_name, website):
-        """
-            This method:
-
-            - Find and update existing records.
-
-                For each model, overwrite the fields that are defined in the template (except few
-                cases such as active) but keep inherited models to not lose customizations.
-
-            - Create new records from templates for those that didn't exist.
-
-            - Remove the models that existed before but are not in the template anymore.
-
-                See _theme_cleanup for more information.
-
-
-            There is a special 'while' loop around the 'for' to be able queue back models at the end
-            of the iteration when they have unmet dependencies. Hopefully the dependency will be
-            found after all models have been processed, but if it's not the case an error message will be shown.
-
-
-            :param theme: theme ``ir.module.module`` whose templates are copied
-            :param model_name: string with the technical name of the model to handle
-                (the name must be one of the keys present in ``_theme_model_names``)
-            :param website: ``website`` model for which the records have to be updated
-
-            :raise MissingError: if there is a missing dependency.
-        """
-        theme.ensure_one()
-
-        remaining = self._get_module_data(theme, model_name)
-        last_len = -1
-        while (len(remaining) != last_len):
-            last_len = len(remaining)
-            for rec in remaining:
-                rec_data = rec._convert_to_base_model(website)
-                if not rec_data:
-                    _logger.info('Record queued: %s', rec.display_name)
-                    continue
-                rec_data['theme_id'] = theme.id
-
-                find = rec.with_context(active_test=False).mapped('copy_ids').filtered(lambda m: m.website_id == website)
-
-                if find:
-                    imd = self.env['ir.model.data'].search([('model', '=', find._name), ('res_id', '=', find.id)])
-                    if imd and imd.noupdate:
-                        _logger.info('Noupdate set for %s (%s)', find, imd)
-                    else:
-                        # at update, ignore active field
-                        if 'active' in rec_data:
-                            rec_data.pop('active')
-                        if model_name == 'ir.ui.view' and (find.arch_updated or find.arch == rec_data['arch']):
-                            rec_data.pop('arch')
-                        elif model_name == 'ir.ui.view':
-                            # The theme's arch is not a change made by the user
-                            rec_data['arch_updated'] = False
-                        find.update(rec_data)
-                        self._copy_theme_translations(rec, find)
-                else:
-                    new_rec = self.env[model_name].create(rec_data)
-                    self._copy_theme_translations(rec, new_rec)
-
-                remaining -= rec
-
-        if len(remaining):
-            error = 'Error - Remaining: %s' % remaining.mapped('display_name')
-            _logger.error(error)
-            raise MissingError(error)
-
-        self._theme_cleanup(theme, model_name, website)
-
-    def _copy_theme_translations(self, old_rec, new_rec):
-        translated_fields = self._theme_translated_fields.get(old_rec._name, [])
-        old_rec.flush_recordset()
-        for (src_field, dst_field) in translated_fields:
-            __, src_fname = src_field.split(',')
-            dst_mname, dst_fname = dst_field.split(',')
-            if dst_mname != new_rec._name:
-                continue
-            old_field = old_rec._fields[src_fname]
-            old_stored_translations = old_rec._get_stored_translations(src_fname)
-            if not old_stored_translations:
-                continue
-            # {lang: {old_term: new_term}}
-            translations = old_stored_translations.extract_term_translations(
-                self.env, old_field, 'en_US',
-            )
-            new_rec.with_context(install_filename='dummy').update_field_translations(
-                dst_fname, translations, source_lang='en_US',
-            )
-
-    def _theme_load(self, themes, website):
-        """
-            For every type of model in ``self._theme_model_names``, and for every theme in ``themes``:
-            create/update real models for the website ``website`` based on the theme template models.
-
-            :param themes: recordset of themes ``ir.module.module`` to load
-            :param website: ``website`` model on which to load the themes
-        """
-        for module in themes:
-            _logger.info('Load theme %s for website %s from template.', module.mapped('name'), website.id)
-
-            for model_name in self._theme_model_names:
-                self.with_context(lang=None)._update_records(module, model_name, website)
-
-    def _theme_unload(self, themes, website):
-        """
-            For every type of model in ``self._theme_model_names``, and for every theme in ``themes``:
-            remove real models that were generated based on the theme template models
-            for the website ``website``.
-
-            :param themes: recordset of themes ``ir.module.module`` to unload
-            :param website: ``website`` model on which to unload the themes
-        """
-        for module in themes:
-            _logger.info('Unload theme %s for website %s from template.', themes.mapped('name'), website.id)
-
-            for model_name in self._theme_model_names:
-                template = self._get_module_data(module, model_name)
-                models_ = template.with_context(active_test=False, force_delete=True).mapped('copy_ids').filtered(lambda m: m.website_id == website)
-                models_.unlink()
-                self._theme_cleanup(module, model_name, website)
-
-    def _theme_cleanup(self, theme, model_name, website):
-        """
-            Remove orphan models of type ``model_name`` from the theme ``theme`` and
-            for the website ``website``.
-
-            When the upgrade (or deletion) of a theme module removes a model template, its
-            copies lose their ``theme_template_id`` but keep their ``theme_id``, which is how
-            the orphans of the theme are found.
-
-            :param theme: theme ``ir.module.module`` whose orphans are removed
-            :param model_name: string with the technical name of the model to cleanup
-                (the name must be one of the keys present in ``_theme_model_names``)
-            :param website: ``website`` model for which the models have to be cleaned
-
-        """
-        if not self.env.user.has_group('website.group_website_restricted_editor'):
-            raise AccessError(self.env._("You don't have the necessary access rights to manage website themes."))
-
-        theme.ensure_one()
-        model_sudo = self.env[model_name].sudo()
-
-        # use active_test to also unlink archived models
-        # and use 'force_delete' to also unlink inherited models
-        orphans = model_sudo.with_context(active_test=False, force_delete=True).search([
-            ('theme_id', '=', theme.id),
-            ('website_id', '=', website.id),
-            ('theme_template_id', '=', False),
-        ])
-        orphans.unlink()
 
     @api.model
     def _theme_apply(self, theme, website):
         """
-            Apply ``theme`` on ``website``: remove its current theme, load ``theme``
-            on it, then apply the theme configuration.
+            Apply ``theme`` on ``website``: remove its current theme, then set ``theme``
+            and apply its configuration.
 
             The theme must be installed: this is no module operation and never
             reloads the registry.
@@ -383,7 +198,6 @@ class ThemeUtils(models.AbstractModel):
         """
         self._theme_remove(website)
         website.theme_id = theme
-        self._theme_load(theme, website)
         # The theme's views must also apply to the views the website edited
         self.env['ir.ui.view']._create_all_specific_views([theme.name])
         self.with_context(website_id=website.id)._apply_theme_config(theme)
@@ -398,11 +212,6 @@ class ThemeUtils(models.AbstractModel):
         # (either removal or installation of a theme and its dependencies). In
         # either case, we need to reset some default configuration before.
         self.with_context(website_id=website.id)._reset_default_config()
-
-        if not website.theme_id:
-            return
-
-        self._theme_unload(website.theme_id, website)
         website.theme_id = False
 
     def _get_themes_domain(self):

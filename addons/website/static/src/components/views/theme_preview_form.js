@@ -23,7 +23,7 @@ export function useLoaderOnClick() {
     const previousOnClickViewButton = useViewButtonHandler();
     provideViewButtonHandler(async function onClickViewButton(params) {
         const name = params.clickParams.name;
-        if (["button_refresh_theme", "button_choose_theme"].includes(name)) {
+        if (name === "button_choose_theme") {
             website.invalidateSnippetCache = true;
             website.showLoader({
                 title: _t("Switch themes, stay on trend."),
@@ -33,8 +33,7 @@ export function useLoaderOnClick() {
                         flag: "colors",
                     },
                 ],
-                bottomMessageTemplate:
-                    name !== "button_refresh_theme" && "website.website_loader.tour_tip",
+                bottomMessageTemplate: "website.website_loader.tour_tip",
             });
             try {
                 const resParams = params.getResParams();
