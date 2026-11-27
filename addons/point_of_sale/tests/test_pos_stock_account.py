@@ -278,3 +278,56 @@ class TestPoSStock(TestPoSCommon):
         wh_copy = wh.copy()
         self.assertTrue(wh_copy.pos_type_id)
         self.assertNotEqual(wh.pos_type_id, wh_copy.pos_type_id)
+
+    def test_05_cogs_invoice_wizard_before_closing_update_stock_at_closing(self):
+        """ `action_pos_order_invoice` flags the order `to_invoice` and creates its own picking so
+        that the closing entry skips it; the `pos.make.invoice` wizard must do the same, otherwise
+        with "update quantities at session closing" the units are costed again by the closing entry. """
+        self.env.company.point_of_sale_update_stock_quantities = 'closing'
+        self.open_new_session()
+        orders = self._create_two_customer_orders()
+        invoice = self._invoice_with_wizard(orders)
+        self.pos_session.action_pos_session_validate()
+        self._assert_cogs_booked_once(orders, invoice, 10.0)
+
+    def test_07_cogs_invoice_wizard_before_closing_update_stock_in_real_time(self):
+        """ Control: with the default real-time stock update each order owns its picking and the COGS
+        is booked once. """
+        self.env.company.point_of_sale_update_stock_quantities = 'real'
+        self.open_new_session()
+        orders = self._create_two_customer_orders()
+        invoice = self._invoice_with_wizard(orders)
+        self.pos_session.action_pos_session_validate()
+        self._assert_cogs_booked_once(orders, invoice, 10.0)
+
+    def _sync_ui_orders(self, orders_data):
+        """ Save orders through the same entry point as the POS UI and return them as a recordset. """
+        result = self.env['pos.order'].sync_from_ui(orders_data)
+        return self.env['pos.order'].browse([order['id'] for order in result['pos.order']])
+
+    def _invoice_with_wizard(self, orders):
+        """ Backend flow: Orders list > Action > Create invoice(s), i.e. the `pos.make.invoice` wizard. """
+        wizard = self.env['pos.make.invoice'].with_context(active_ids=orders.ids)
+        wizard.create({'consolidated_billing': True}).action_create_invoices()
+        return orders.account_move
+
+    def _get_cogs_balance(self, moves):
+        return sum(moves.line_ids.filtered(lambda line: line.account_id == self.expense_account).mapped('balance'))
+
+    def _create_two_customer_orders(self):
+        """ Two orders of one product1 unit each for the same customer (FIFO cost 5.0 per unit). """
+        return self._sync_ui_orders([
+            self.create_ui_order_data([(self.product1, 1)], customer=self.customer),
+            self.create_ui_order_data([(self.product1, 1)], customer=self.customer),
+        ])
+
+    def _assert_cogs_booked_once(self, orders, invoice, cogs):
+        """ The COGS of the invoiced units must be booked exactly once over the invoice, the session
+        closing entry and its per-order reversals. """
+        self.assertEqual(len(invoice), 1, "The orders of the same customer should be invoiced in one invoice")
+        self.assertEqual(self._get_cogs_balance(invoice), cogs, "The invoice should book the COGS of the units")
+        closing_reversals = self.env['account.move'].search([('reversed_pos_order_id', 'in', orders.ids)])
+        self.assertEqual(
+            self._get_cogs_balance(invoice | self.pos_session.move_id | closing_reversals), cogs,
+            "The COGS must be booked once over the invoice, the session closing entry and its reversals",
+        )
