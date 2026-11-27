@@ -1987,6 +1987,13 @@ class Website(Home):
             'font_urls': self.env.website._get_font_urls(),
         }
 
+    @http.route(['/website/theme_preview_css'], type='jsonrpc', auth='user', website=True, replica=True)
+    def theme_preview_css(self, values_by_url):
+        """ The editor's preview of SCSS customizations, see `_get_theme_preview_css`. """
+        if not request.env.user.has_group('website.group_website_designer'):
+            raise werkzeug.exceptions.Forbidden()
+        return request.env['website.assets']._get_theme_preview_css(values_by_url)
+
     @http.route(['/website/update_footer_template'], type='jsonrpc', auth='user', website=True)
     def update_footer_template(self, template_key, possible_values):
         """ Enables the footer template and its corresponding copyright template

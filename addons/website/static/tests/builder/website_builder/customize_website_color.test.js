@@ -2,30 +2,18 @@ import { expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { addBuilderOption } from "@html_builder/../tests/helpers";
-import { contains, defineModels, models, onRpc } from "@web/../tests/web_test_helpers";
+import { contains } from "@web/../tests/web_test_helpers";
 import { getIframeInput } from "@html_editor/../tests/_helpers/iframe_input";
 import {
     defineWebsiteModels,
+    mockThemeRpcs,
     setupWebsiteBuilder,
 } from "@website/../tests/builder/website_helpers";
 
 defineWebsiteModels();
 
 test("BuilderColorPicker with action “customizeWebsiteColor” is correctly displayed", async () => {
-    class WebsiteAssets extends models.Model {
-        _name = "website.assets";
-        make_scss_customization(location, changes) {
-            expect.step(`${location} ${JSON.stringify(changes)}`);
-        }
-    }
-    defineModels([WebsiteAssets]);
-
-    let def = Promise.withResolvers();
-    onRpc("/website/theme_customize_bundle_reload", async (request) => {
-        expect.step("asset reload");
-        def.resolve();
-        return "";
-    });
+    mockThemeRpcs();
     addBuilderOption({
         selector: ".test-options-target",
         template: xml`
@@ -45,6 +33,9 @@ test("BuilderColorPicker with action “customizeWebsiteColor” is correctly di
     });
     await setupWebsiteBuilder(`<div class="test-options-target">b</div>`, {
         loadIframeBundles: true,
+        // The gray picked below, as the bundle prints it: the mocked preview
+        // CSS replaces the bundle's.
+        styleContent: ":root { --400: #CED4DA; }",
     });
     await contains(":iframe .test-options-target").click();
     await animationFrame();
@@ -53,87 +44,58 @@ test("BuilderColorPicker with action “customizeWebsiteColor” is correctly di
     expect.step("set preset");
     await contains("button.o_we_color_preview").click();
     await contains("button[data-color='o_cc4'").click();
-    // Should wait for 2 ticks (debounced): customizeWebsiteColors, reloadBundles
-    await def.promise;
-    expect.verifySteps([
+    await expect.waitForSteps([
         "set preset",
-        '/website/static/src/scss/options/colors/user_color_palette.scss {"test-custom":"NULL","test":4}',
-        '/website/static/src/scss/options/user_values.scss {"test-gradient":"NULL"}',
-        "asset reload",
+        `preview user_values.scss {"test-gradient":"NULL"} user_color_palette.scss {"test-custom":"NULL","test":4}`,
     ]);
 
-    def = Promise.withResolvers();
     // Setting solid color does not impact preset
     expect.step("set solid color");
     await contains("button.o_we_color_preview").click();
     await contains("button.custom-tab").click();
     await contains("button[data-color='400']").click();
-    // Should wait for 2 ticks (debounced): customizeWebsiteColors, reloadBundles
-    await def.promise;
-    expect.verifySteps([
+    await expect.waitForSteps([
         "set solid color",
-        '/website/static/src/scss/options/colors/user_color_palette.scss {"test-custom":"#CED4DA"}',
-        '/website/static/src/scss/options/user_values.scss {"test-gradient":"NULL"}',
-        "asset reload",
+        `preview user_values.scss {"test-gradient":"NULL"} user_color_palette.scss {"test-custom":"#CED4DA","test":4}`,
     ]);
 
-    def = Promise.withResolvers();
     // Setting preset does not impact solid color
     expect.step("set preset on solid color");
     await contains("button.o_we_color_preview").click();
     await contains("button.theme-tab").click();
     await contains("button[data-color='o_cc3'").click();
-    // Should wait for 2 ticks (debounced): customizeWebsiteColors, reloadBundles
-    await def.promise;
-    expect.verifySteps([
+    await expect.waitForSteps([
         "set preset on solid color",
-        '/website/static/src/scss/options/colors/user_color_palette.scss {"test-custom":"NULL","test":3}',
-        '/website/static/src/scss/options/user_values.scss {"test-gradient":"NULL"}',
-        "asset reload",
+        `preview user_values.scss {"test-gradient":"NULL"} user_color_palette.scss {"test-custom":"NULL","test":3}`,
     ]);
 
-    def = Promise.withResolvers();
     // Setting gradient does not impact preset
     expect.step("set gradient");
     await contains("button.o_we_color_preview").click();
     await contains("button.gradient-tab").click();
     await contains("button.o_gradient_color_button").click();
-    // Should wait for 3 ticks (debounced): customizeWebsiteColors, customizeWebsiteVariables, reloadBundles
-    await def.promise;
-    expect.verifySteps([
+    await expect.waitForSteps([
         "set gradient",
-        '/website/static/src/scss/options/colors/user_color_palette.scss {"test-custom":"NULL"}',
-        '/website/static/src/scss/options/user_values.scss {"test-gradient":"linear-gradient(135deg, rgb(255, 204, 51) 0%, rgb(226, 51, 255) 100%)"}',
-        "asset reload",
+        `preview user_values.scss {"test-gradient":"linear-gradient(135deg, rgb(255, 204, 51) 0%, rgb(226, 51, 255) 100%)"} user_color_palette.scss {"test-custom":"NULL","test":3}`,
     ]);
 
-    def = Promise.withResolvers();
     // Setting preset does not impact gradient
     expect.step("set preset on gradient");
     await contains("button.o_we_color_preview").click();
     await contains("button.theme-tab").click();
     await contains("button[data-color='o_cc4'").click();
-    // Should wait for 2 ticks (debounced): customizeWebsiteColors, reloadBundles
-    await def.promise;
-    expect.verifySteps([
+    await expect.waitForSteps([
         "set preset on gradient",
-        '/website/static/src/scss/options/colors/user_color_palette.scss {"test-custom":"NULL","test":4}',
-        '/website/static/src/scss/options/user_values.scss {"test-gradient":"NULL"}',
-        "asset reload",
+        `preview user_values.scss {"test-gradient":"NULL"} user_color_palette.scss {"test-custom":"NULL","test":4}`,
     ]);
 
-    def = Promise.withResolvers();
     // Clear clears everything
     expect.step("reset");
     await contains("button.o_we_color_preview").click();
     await contains(".o_font_color_selector [data-icon='delete'].oi-filled").click();
-    // Should wait for 3 ticks (debounced): customizeWebsiteColors, customizeWebsiteVariables, reloadBundles
-    await def.promise;
-    expect.verifySteps([
+    await expect.waitForSteps([
         "reset",
-        '/website/static/src/scss/options/colors/user_color_palette.scss {"test-custom":"NULL","test":"NULL"}',
-        '/website/static/src/scss/options/user_values.scss {"test-gradient":"NULL"}',
-        "asset reload",
+        `preview user_values.scss {"test-gradient":"NULL"} user_color_palette.scss {"test-custom":"NULL","test":"NULL"}`,
     ]);
 
     await contains('.o_hb_snippets_tabs button[data-name="theme"]').click();
@@ -151,9 +113,7 @@ test("BuilderColorPicker with action “customizeWebsiteColor” is correctly di
     );
     await contains(hexInputEl).edit("#77FF006E");
     await expect.waitForSteps([
-        '/website/static/src/scss/options/colors/user_color_palette.scss {"o-cc1-bg":"#77FF006E"}',
-        '/website/static/src/scss/options/user_values.scss {"o-cc1-bg-gradient":"null"}',
-        "asset reload",
+        `preview user_values.scss {"test-gradient":"NULL","o-cc1-bg-gradient":"null"} user_color_palette.scss {"test-custom":"NULL","test":"NULL","o-cc1-bg":"#77FF006E"}`,
     ]);
     const colorPresetEl = document.querySelector("div .o_cc_preview_wrapper div");
     const presetElStyles = window.getComputedStyle(colorPresetEl, "::before");

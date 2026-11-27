@@ -12,6 +12,8 @@ import {
 import { patch } from "@web/core/utils/patch";
 import {
     defineWebsiteModels,
+    mockThemeRpcs,
+    saveWebsite,
     setupWebsiteBuilder,
 } from "@website/../tests/builder/website_helpers";
 import { redo, undo } from "@html_editor/../tests/_helpers/user_actions";
@@ -443,10 +445,7 @@ test("theme background image is properly set", async () => {
 
     patch(ToggleBodyBgImageAction.prototype, {
         async apply(params) {
-            const { type: currentType, image: currentImage } = this.getCurrentConfig();
-            const oldConfig = { type: currentType, image: currentImage };
-            const newConfig = { type: "image", image: base64Image };
-            await this.applyConfig(oldConfig, newConfig);
+            await this.setBodyBgConfig({ type: "image", image: base64Image });
         },
     });
 
@@ -462,9 +461,9 @@ test("theme background image is properly set", async () => {
     }
     defineModels([WebsiteAssets]);
 
-    onRpc("/website/theme_customize_bundle_reload", async (request) => {
-        expect.step("bundle_reload");
-        return { success: true };
+    onRpc("/website/theme_preview_css", () => {
+        expect.step("preview_css");
+        return { css: "", font_urls: [] };
     });
 
     await setupWebsiteBuilder(`<div class="test-options-target">b</div>`, {
@@ -475,27 +474,14 @@ test("theme background image is properly set", async () => {
     await animationFrame();
     expect(".o_theme_tab button[data-action-id='toggleBodyBgImage']").toHaveCount(1);
     await contains(".o_theme_tab button[data-action-id='toggleBodyBgImage']").click();
-    await animationFrame();
-    await expect.verifySteps(["scss_customization", "bundle_reload"]);
+    await expect.waitForSteps(["preview_css"]);
+    await saveWebsite();
+    expect.verifySteps(["scss_customization"]);
 });
 
 test("undo/redo website theme variables", async () => {
     const variable = "test-size";
-    class WebsiteAssets extends models.Model {
-        _name = "website.assets";
-        make_scss_customization(location, changes) {
-            const value = changes[variable];
-            // Simulate the CSS variable change.
-            queryOne(":iframe").documentElement.style.setProperty(`--${variable}`, value);
-            expect.step(value);
-        }
-    }
-    defineModels([WebsiteAssets]);
-
-    onRpc("/website/theme_customize_bundle_reload", () => {
-        expect.step("bundle_reload");
-        return { success: true };
-    });
+    mockThemeRpcs();
     addBuilderOption({
         selector: ".test-options-target",
         template: xml`
@@ -524,44 +510,26 @@ test("undo/redo website theme variables", async () => {
     // Change font size to 20px.
     const changedSize = "20px";
     await contains(`[data-action-value="${changedSize}"]`).click();
-    await expect.waitForSteps([changedSize, "bundle_reload"]);
+    await expect.waitForSteps([`preview user_values.scss {"${variable}":"${changedSize}"}`]);
     await animationFrame(); // Wait for action completion so there is a commit to undo.
     expect(target).toHaveStyle({ fontSize: changedSize });
 
-    // Undo -> back to 10px.
+    // Undo -> back to 10px: nothing pending, the saved CSS is back.
     undo(editor);
-    await expect.waitForSteps([initialSize, "bundle_reload"]);
+    await animationFrame();
     expect(target).toHaveStyle({ fontSize: initialSize });
 
     // Redo -> back to 20px.
     redo(editor);
-    await expect.waitForSteps([changedSize, "bundle_reload"]);
+    await expect.waitForSteps([`preview user_values.scss {"${variable}":"${changedSize}"}`]);
+    await animationFrame();
     expect(target).toHaveStyle({ fontSize: changedSize });
 });
 
 test("undo/redo body background image removal", async () => {
     const variable = "body-image";
     const typeVariable = "body-image-type";
-    class WebsiteAssets extends models.Model {
-        _name = "website.assets";
-        make_scss_customization(location, changes) {
-            // Simulate the CSS variable change.
-            const style = queryOne(":iframe").documentElement.style;
-            for (const [key, value] of Object.entries(changes)) {
-                // The server treats "null" as an SCSS reset. Model the
-                // resulting empty CSS string explicitly.
-                style.setProperty(`--${key}`, value === "null" ? "''" : value);
-            }
-            expect(changes[typeVariable]).toBe("'image'");
-            expect.step(changes[variable]);
-        }
-    }
-    defineModels([WebsiteAssets]);
-
-    onRpc("/website/theme_customize_bundle_reload", () => {
-        expect.step("bundle_reload");
-        return { success: true };
-    });
+    mockThemeRpcs();
     addBuilderOption({
         selector: ".test-options-target",
         template: xml`<BuilderButton action="'removeBodyBgImage'" preview="false">Remove image</BuilderButton>`,
@@ -577,6 +545,10 @@ test("undo/redo body background image removal", async () => {
         }
     );
     const editor = getEditor();
+    const removed =
+        `preview user_values.scss {"${typeVariable}":"'image'","${variable}":"null",` +
+        `"body-image-background-position":"null","body-image-pattern-width":"null",` +
+        `"body-image-pattern-height":"null"}`;
     const getImage = () => editor.shared.customizeWebsite.getWebsiteVariableValue(variable);
 
     // Select the target.
@@ -587,38 +559,25 @@ test("undo/redo body background image removal", async () => {
 
     // Remove the body background image.
     await contains("button[data-action-id='removeBodyBgImage']").click();
-    await expect.waitForSteps(["null", "bundle_reload"]);
+    await expect.waitForSteps([removed]);
     await animationFrame(); // Wait for action completion so there is a commit to undo.
     expect(getImage()).toBe("");
 
     // Undo -> restore the body background image.
     undo(editor);
-    await expect.waitForSteps([`'${dummyBase64Img}'`, "bundle_reload"]);
+    await animationFrame();
     expect(getImage()).toBe(dummyBase64Img);
 
     // Redo -> remove the body background image again.
     redo(editor);
-    await expect.waitForSteps(["null", "bundle_reload"]);
+    await expect.waitForSteps([removed]);
+    await animationFrame();
     expect(getImage()).toBe("");
 });
 
 test("preview/undo/redo body background position", async () => {
     const variable = "body-image-background-position";
-    class WebsiteAssets extends models.Model {
-        _name = "website.assets";
-        make_scss_customization(location, changes) {
-            const value = changes[variable];
-            // Simulate the CSS variable change.
-            queryOne(":iframe").documentElement.style.setProperty(`--${variable}`, value);
-            expect.step(value);
-        }
-    }
-    defineModels([WebsiteAssets]);
-
-    onRpc("/website/theme_customize_bundle_reload", () => {
-        expect.step("bundle_reload");
-        return { success: true };
-    });
+    mockThemeRpcs();
     addBuilderOption({
         selector: ".test-options-target",
         template: xml`<BuilderButton action="'bodyBgPositionOverlay'">Position image</BuilderButton>`,
@@ -673,7 +632,7 @@ test("preview/undo/redo body background position", async () => {
 
     // Apply the change: (40%, 60%).
     await contains(".o_we_image_position_overlay .o_btn_apply").click();
-    await expect.waitForSteps([changedValue, "bundle_reload"]);
+    await expect.waitForSteps([`preview user_values.scss {"${variable}":"${changedValue}"}`]);
     await animationFrame(); // Wait for action completion so there is a commit to undo.
     // The inline style preview is removed when the change is applied.
     expect(target.style.backgroundPosition).toBe("");
@@ -681,13 +640,14 @@ test("preview/undo/redo body background position", async () => {
 
     // Undo -> back to (10%, 20%).
     undo(editor);
-    await expect.waitForSteps([initialValue, "bundle_reload"]);
+    await animationFrame();
     expect(target.style.backgroundPosition).toBe("");
     expect(target).toHaveStyle({ backgroundPosition: initialValue });
 
     // Redo -> restore the applied position: (40%, 60%).
     redo(editor);
-    await expect.waitForSteps([changedValue, "bundle_reload"]);
+    await expect.waitForSteps([`preview user_values.scss {"${variable}":"${changedValue}"}`]);
+    await animationFrame();
     expect(target.style.backgroundPosition).toBe("");
     expect(target).toHaveStyle({ backgroundPosition: changedValue });
 });

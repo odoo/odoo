@@ -1471,9 +1471,12 @@ class Website(models.CachedModel):
             logger.warning("Scss export bundle compilation failed: %s", e)
             raise
 
-    def _get_font_urls(self):
-        """Return the list of font URLs to emit as <link> tags in <head>."""
-        return re.findall(r'--o-font-url-\d+:\s*"([^"]*)"', self._get_scss_exports())
+    def _get_font_urls(self, scss_exports=None):
+        """Return the list of font URLs to emit as <link> tags in <head>, read
+        from the given export CSS (the saved one by default)."""
+        if scss_exports is None:
+            scss_exports = self._get_scss_exports()
+        return re.findall(r'--o-font-url-\d+:\s*"([^"]*)"', scss_exports)
 
     def _get_icon_font_family(self):
         """Return the icon font the website renders with, empty if the default

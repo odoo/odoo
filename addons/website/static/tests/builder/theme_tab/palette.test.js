@@ -1,73 +1,91 @@
 import { expect, test } from "@odoo/hoot";
 import {
     defineWebsiteModels,
+    mockThemeRpcs,
+    PALETTE_URL,
+    saveWebsite,
+    setPrimaryColor,
     setupWebsiteBuilder,
+    switchPalette,
+    USER_VALUES_URL,
 } from "@website/../tests/builder/website_helpers";
-import { contains, defineModels, models, onRpc } from "@web/../tests/web_test_helpers";
+import { contains } from "@web/../tests/web_test_helpers";
 
 defineWebsiteModels();
 
-test("theme tab: warning on palette change", async () => {
-    class WebsiteAssets extends models.Model {
-        _name = "website.assets";
-        make_scss_customization(location, changes) {
-            expect.step(`${location} ${JSON.stringify(changes)}`);
-        }
-    }
-    defineModels([WebsiteAssets]);
-    const def = Promise.withResolvers();
-    onRpc("/website/theme_customize_bundle_reload", async (request) => {
-        expect.step("asset reload");
-        def.resolve();
-        return "";
-    });
+// A palette switch is previewed and written on save.
+const PALETTE_PREVIEW = `preview user_values.scss {"color-palettes-name":"'default-light-1'"}`;
+const PALETTE_SAVED = `${USER_VALUES_URL} {"color-palettes-name":"'default-light-1'"}`;
+const COLOR_PREVIEW = 'preview user_color_palette.scss {"o-color-1":"#FF0000"}';
 
-    await setupWebsiteBuilder("", {
-        styleContent: 'body { --has-customized-colors: "true"; }',
-    });
+async function openColors(options) {
+    await setupWebsiteBuilder("", options);
     await contains(".o_hb_snippets_tabs button[data-name=theme]").click();
     await contains(".o_hb_tab_content .o_hb_theme_color_slider_btn").click();
-    await contains(".o_theme_tab [data-icon='palette']").click();
-    await contains(`[data-action-value="'default-light-1'"] .o_hb_color_palette_card span`).click();
+}
+
+test("theme tab: warning on palette change", async () => {
+    mockThemeRpcs();
+    await openColors({ styleContent: 'body { --has-customized-colors: "true"; }' });
+    await switchPalette();
     expect(".o_dialog").toHaveCount(1);
     await contains(".o_dialog .btn-secondary").click();
     expect(".o_dialog").toHaveCount(0);
-    expect.verifySteps([]);
-    await contains(".o_theme_tab [data-icon='palette']").click();
-    await contains(`[data-action-value="'default-light-1'"] .o_hb_color_palette_card span`).click();
+    await switchPalette();
     expect(".o_dialog").toHaveCount(1);
     await contains(".o_dialog .btn-primary").click();
-    await def.promise;
-    expect.verifySteps([
-        `/website/static/src/scss/options/user_values.scss {"color-palettes-name":"'default-light-1'"}`,
-        "asset reload",
-    ]);
+    await expect.waitForSteps([PALETTE_PREVIEW]);
+    await saveWebsite();
+    expect.verifySteps([PALETTE_SAVED]);
 });
 
-test("theme tab: no warning on palette change", async () => {
-    class WebsiteAssets extends models.Model {
-        _name = "website.assets";
-        make_scss_customization(location, changes) {
-            expect.step(`${location} ${JSON.stringify(changes)}`);
-        }
-    }
-    defineModels([WebsiteAssets]);
-    const def = Promise.withResolvers();
-    onRpc("/website/theme_customize_bundle_reload", async (request) => {
-        expect.step("asset reload");
-        def.resolve();
-        return "";
-    });
-
-    await setupWebsiteBuilder("");
-    await contains(".o_hb_snippets_tabs button[data-name=theme]").click();
-    await contains(".o_hb_tab_content .o_hb_theme_color_slider_btn").click();
-    await contains(".o_theme_tab [data-icon='palette']").click();
-    await contains(`[data-action-value="'default-light-1'"] .o_hb_color_palette_card span`).click();
-    await def.promise;
+test("theme tab: no warning on palette change, the palette is previewed", async () => {
+    mockThemeRpcs();
+    await openColors();
+    await switchPalette();
     expect(".o_dialog").toHaveCount(0);
-    expect.verifySteps([
-        `/website/static/src/scss/options/user_values.scss {"color-palettes-name":"'default-light-1'"}`,
-        "asset reload",
+    await expect.waitForSteps([PALETTE_PREVIEW]);
+    await saveWebsite();
+    expect.verifySteps([PALETTE_SAVED]);
+});
+
+test("theme tab: a palette switch drops the pending colors it resets", async () => {
+    mockThemeRpcs();
+    await openColors();
+    await setPrimaryColor();
+    await expect.waitForSteps([COLOR_PREVIEW]);
+    await switchPalette();
+    // The server resets the colors with the palette: none is left to write.
+    await expect.waitForSteps([PALETTE_PREVIEW]);
+    await saveWebsite();
+    expect.verifySteps([PALETTE_SAVED]);
+});
+
+test("theme tab: a palette switch is undone and redone as one step", async () => {
+    mockThemeRpcs();
+    await openColors();
+    await setPrimaryColor();
+    await expect.waitForSteps([COLOR_PREVIEW]);
+    await switchPalette();
+    await expect.waitForSteps([PALETTE_PREVIEW]);
+
+    await contains(".o_hb_snippets_top_actions button[data-icon='undo']").click();
+    await expect.waitForSteps([COLOR_PREVIEW]);
+    await contains(".o_hb_snippets_top_actions button[data-icon='redo']").click();
+    await expect.waitForSteps([PALETTE_PREVIEW]);
+    await saveWebsite();
+    expect.verifySteps([PALETTE_SAVED]);
+});
+
+test("theme tab: a color changed after a palette switch is written after it", async () => {
+    mockThemeRpcs();
+    await openColors();
+    await switchPalette();
+    await expect.waitForSteps([PALETTE_PREVIEW]);
+    await setPrimaryColor();
+    await expect.waitForSteps([
+        `${PALETTE_PREVIEW} user_color_palette.scss {"o-color-1":"#FF0000"}`,
     ]);
+    await saveWebsite();
+    expect.verifySteps([PALETTE_SAVED, `${PALETTE_URL} {"o-color-1":"#FF0000"}`]);
 });
