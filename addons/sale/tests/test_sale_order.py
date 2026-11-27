@@ -842,12 +842,20 @@ class TestSaleOrder(SaleCommon):
         line_c.sequence = 5
         order.invalidate_recordset(['order_line'])
 
+        expected_values = [
+            {"sequence": 5, "x_note": "C"},
+            {"sequence": 10, "x_note": "A"},
+            {"sequence": 10, "x_note": "B"},
+        ]
+        self.assertRecordValues(order.order_line, expected_values)
+
         for line, note_FR in ((line_a, '1'), (line_b, '2'), (line_c, '3')):
             line.with_context(lang='fr_FR').x_note = note_FR
 
         copy = order.copy()
+        copy.invalidate_recordset(['order_line'])
 
-        self.assertEqual(copy.order_line.mapped('x_note'), ['C', 'A', 'B'])
+        self.assertRecordValues(copy.order_line, expected_values)
         self.assertEqual(
             copy.with_context(lang='fr_FR').order_line.mapped('x_note'),
             ['3', '1', '2'],
