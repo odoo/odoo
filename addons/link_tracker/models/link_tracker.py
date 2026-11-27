@@ -229,7 +229,7 @@ class LinkTracker(models.Model):
     def search_or_create(self, vals_list):
         """Get existing or newly created records matching vals_list items in preserved order supporting duplicates."""
         if not isinstance(vals_list, list):
-            _logger.warning("Deprecated usage of LinkTracker.search_or_create which now expects a list of dictionaries as input.")
+            _logger.warning("Since 18.0, deprecated usage of LinkTracker.search_or_create which now expects a list of dictionaries as input.")
             vals_list = [vals_list]
 
         def _format_key(obj):

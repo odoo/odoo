@@ -1677,6 +1677,7 @@ class Crawler(HttpCase):
             'arch': '<body>Arch is not relevant for this test</body>',
             'key': '_website_sale.products',
         }).with_context(load_all_views=True)
+        main_view_ref = f'{main_view._name},{main_view.id}'
 
         View.with_context(load_all_views=True).create({
             'name': 'Child View W1',
@@ -1693,7 +1694,7 @@ class Crawler(HttpCase):
         theme_view = self.env['theme.ir.ui.view'].with_context(install_filename='/testviews').create({
             'name': 'Products Theme Kea',
             'mode': 'extension',
-            'inherit_id': main_view,
+            'inherit_id': main_view_ref,
             'arch': '<xpath expr="//p" position="replace"><span>C</span></xpath>',
             'key': '_theme_kea_sale.products',
         })
