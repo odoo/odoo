@@ -105,6 +105,7 @@ class IrActionsReport(models.Model):
                 extra_args += ['--width', f'{paperformat.page_width}mm']
                 extra_args += ['--height', f'{paperformat.page_height}mm']
 
+        extra_args += ['--sandboxed']
         extra_args += ['--debug', 'http-client']
         os_env = os.environ.copy()
         # Disable ANSI color codes in subprocess logs to prevent parsing errors.
