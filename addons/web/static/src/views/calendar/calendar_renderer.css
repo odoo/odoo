@@ -124,10 +124,12 @@
 
 .o_calendar_color {
     --o-calendar-event-bg: var(--o-calendar-color, var(--o-colorlist-color));
-    --o-calendar-event-bg-subtle: color-mix(in srgb, var(--o-white) 55%, var(--o-calendar-event-bg));
+    --o-calendar-event-bg-subtle: var(--o-colorlist-bg-subtle, color-mix(in srgb, var(--o-white) 55%, var(--o-calendar-event-bg)));
     --fc-event-color: var(--o-calendar-event-bg-subtle);
-    --fc-event-contrast-color: var(--o-black);
-    --o-calendar-event-border-color: color-mix(in srgb, var(--o-white) 50%, var(--o-calendar-event-bg));
+    --fc-event-contrast-color: var(--o-colorlist-text-emphasis, var(--o-black));
+    /* Undefined without a badge color, the border then takes the fallback below */
+    --o-calendar-event-border-badge: color-mix(in srgb, var(--o-colorlist-border) 50%, transparent);
+    --o-calendar-event-border-color: var(--o-calendar-event-border-badge, color-mix(in srgb, var(--o-white) 50%, var(--o-calendar-event-bg)));
 
     &.o_event_hatched:has(.o_calendar_event_bg), &.o_attendee_status_tentative:has(.o_calendar_event_bg) {
         --fc-event-color: var(--o-view-background-color);
@@ -159,14 +161,15 @@
 }
 
 .o_calendar_filter_color {
-    --o-calendar-filter-color-subtle: color-mix(in srgb, var(--o-white) 55%, var(--o-calendar-filter-color));
+    --o-calendar-filter-color-subtle: var(--o-colorlist-bg-subtle, color-mix(in srgb, var(--o-white) 55%, var(--o-calendar-filter-color)));
+    --o-calendar-filter-color-border: var(--o-colorlist-border, var(--o-calendar-filter-color-subtle));
 
     &.form-check:hover .o_calendar_filter_input_bg:not(.no_filter_color) {
-        border-color: color-mix(in srgb, var(--o-black) 20%, var(--o-calendar-filter-color-subtle));
+        border-color: color-mix(in srgb, var(--o-black) 20%, var(--o-calendar-filter-color-border));
     }
 
     .o_calendar_filter_input_bg {
-        border-color: var(--o-calendar-filter-color-subtle);
+        border-color: var(--o-calendar-filter-color-border);
 
         &:checked {
             --form-check-bg-image: var(--o-check-mark-black-image);

@@ -4,6 +4,7 @@ import { rpc } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { CalendarModel } from "@web/views/calendar/calendar_model";
+import { getBadgeColorClass } from "@web/views/calendar/utils";
 import { askRecurrenceUpdatePolicy } from "@calendar/views/ask_recurrence_update_policy_hook";
 import { unique } from "@web/core/utils/arrays";
 
@@ -268,6 +269,8 @@ export class AttendeeCalendarModel extends CalendarModel {
                     if (eventAttendeeId !== user.partnerId) {
                         // If a color doesn't belong to the user's calendar, it is instead based on the attendeeId
                         record.colorIndex = eventAttendeeId;
+                        // An id is no index of the color list: no badge tones
+                        record.badgeColorClass = "";
                     }
                     if (attendeeInfo) {
                         record.attendeeStatus = attendeeInfo.status;
@@ -333,8 +336,13 @@ export class AttendeeCalendarModel extends CalendarModel {
         const colorValue = rawRecord[colorFieldName]
         if (colorValue) {
             filterRecord.colorIndex = colorValue;
+            filterRecord.badgeColorClass = this.hasBadgeColors
+                ? getBadgeColorClass(colorValue)
+                : "";
         } else if (rawRecord.partner_id) {
             filterRecord.colorIndex = rawRecord.partner_id[0];
+            // An id is no index of the color list: no badge tones
+            filterRecord.badgeColorClass = "";
         }
         // Add flags to calendar filters
         if (rawRecord['access_role']) {

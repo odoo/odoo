@@ -450,3 +450,27 @@ test("Attendee filters: 'Meet with' calendar filters + 'My calendar' filter", as
     expect(filter2.active).toBe(true);
     expect(".o_calendar_event:not(.o_activity_event)").toHaveCount(1);
 });
+
+test.tags("desktop");
+test("Attendee filters: events of a 'Meet with' partner take the partner's color", async () => {
+    onRpc("res.users", "has_group", () => true);
+    onRpc("res.partner", "get_attendee_detail", () => []);
+    onRpc("res.users", "get_calendar_model_data", () => ({
+        credential_status: {},
+        sync_status: {},
+        sync_email: false,
+        default_duration: 1,
+    }));
+    await mountView({
+        type: "calendar",
+        resModel: "calendar.event",
+        arch: arch.replace('color="partner_ids"', 'color="calendar_color"'),
+    });
+    await toggleFilter("calendar_id", serverData.calendarIds[0]);
+    await toggleFilter("calendar_id", serverData.calendarIds[1]);
+    await togglePartnerFilter("partner_ids", "Partner 1");
+    await waitFor(".o_calendar_filter[data-name=partner_ids] .o_tag");
+    expect(".o_calendar_event:not(.o_activity_event)").toHaveCount(2);
+    // The color comes from the id of the partner, not from the badge of the calendar color
+    expect(".o_calendar_event:not(.o_activity_event).o_badge_color_0").toHaveCount(0);
+});
