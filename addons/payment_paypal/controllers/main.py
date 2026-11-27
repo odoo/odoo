@@ -23,7 +23,7 @@ class PaypalController(http.Controller):
     def paypal_complete_order(self, reference):
         """Make a capture request and process the payment data.
 
-        This is used by the Card, Venmo, and PayPal Pay Later payment methods.
+        This is used by the Card, Google Pay, Venmo, and PayPal Pay Later payment methods.
 
         :param str reference: The reference of the transaction whose order must be captured
         :return: None
