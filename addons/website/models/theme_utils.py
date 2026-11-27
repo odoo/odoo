@@ -15,12 +15,8 @@ class ThemeUtils(models.AbstractModel):
     _description = 'Theme Utils'
     _auto = False
 
-    _theme_model_names = OrderedDict([
-        ('ir.ui.view', 'theme.ir.ui.view'),
-    ])
-    _theme_translated_fields = {
-        'theme.ir.ui.view': [('theme.ir.ui.view,arch', 'ir.ui.view,arch_db')],
-    }
+    _theme_model_names = OrderedDict()
+    _theme_translated_fields = {}
 
     _header_templates = [
         'website.template_header_hamburger',
@@ -142,22 +138,18 @@ class ThemeUtils(models.AbstractModel):
 
     def _toggle_view(self, xml_id, active):
         obj = self.env.ref(xml_id)
-        if obj._name == 'theme.ir.ui.view':
-            obj = obj.with_context(active_test=False)
-            obj = obj.copy_ids.filtered(lambda x: x.website_id == self.env.website)
-        else:
-            # If a theme configuration wants to enable/disable a view, this is to
-            # enable/disable a given functionality which is disabled/enabled
-            # by default. So if a configuration asks to enable/disable a view which
-            # is already enabled/disabled, we would not consider it otherwise it
-            # would COW the view for nothing.
-            View = self.env['ir.ui.view'].with_context(active_test=False)
-            has_specific = obj.key and View.search_count([
-                ('key', '=', obj.key),
-                ('website_id', '=', self.env.website.id)
-            ]) >= 1
-            if not has_specific and active == obj.active:
-                return
+        # If a theme configuration wants to enable/disable a view, this is to
+        # enable/disable a given functionality which is disabled/enabled
+        # by default. So if a configuration asks to enable/disable a view which
+        # is already enabled/disabled, we would not consider it otherwise it
+        # would COW the view for nothing.
+        View = self.env['ir.ui.view'].with_context(active_test=False)
+        has_specific = obj.key and View.search_count([
+            ('key', '=', obj.key),
+            ('website_id', '=', self.env.website.id)
+        ]) >= 1
+        if not has_specific and active == obj.active:
+            return
         obj.write({'active': active})
 
     def _enable_asset(self, name):
@@ -392,6 +384,8 @@ class ThemeUtils(models.AbstractModel):
         self._theme_remove(website)
         website.theme_id = theme
         self._theme_load(theme, website)
+        # The theme's views must also apply to the views the website edited
+        self.env['ir.ui.view']._create_all_specific_views([theme.name])
         self.with_context(website_id=website.id)._apply_theme_config(theme)
 
     def _theme_remove(self, website):

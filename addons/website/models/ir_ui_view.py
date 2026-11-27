@@ -170,6 +170,10 @@ class IrUiView(models.Model):
                                                          view.env['website'].browse(current_website_id))
 
             for inherit_child in view.inherit_children_ids.filter_duplicate().sorted(key=lambda v: (v.priority, v.id)):
+                if not inherit_child.website_id and inherit_child.theme_id and inherit_child.theme_id != self.env.website.theme_id:
+                    # The views of another theme are attached when the website
+                    # uses that theme (see `theme.utils._theme_apply`)
+                    continue
                 if inherit_child.website_id.id == current_website_id:
                     # In the case the child was already specific to the current
                     # website, we cannot just reattach it to the new specific
@@ -212,14 +216,18 @@ class IrUiView(models.Model):
               FROM ir_ui_view generic
         INNER JOIN ir_ui_view generic_parent ON generic_parent.id = generic.inherit_id
         INNER JOIN ir_ui_view spec_parent ON spec_parent.key = generic_parent.key
+        INNER JOIN website ON website.id = spec_parent.website_id
          LEFT JOIN ir_ui_view specific ON specific.key = generic.key AND specific.website_id = spec_parent.website_id
              WHERE generic.type='qweb'
                AND generic.website_id IS NULL
                AND generic.key ~ %s
                AND spec_parent.website_id IS NOT NULL
+               AND (generic.theme_id IS NULL OR generic.theme_id = website.theme_id)
                AND specific.id IS NULL
           GROUP BY generic.id
         """
+        self.flush_model(['key', 'type', 'website_id', 'theme_id', 'inherit_id'])
+        self.env['website'].flush_model(['theme_id'])
         self.env.cr.execute(query, (regex, ))
         result = dict(self.env.cr.fetchall())
 
@@ -333,7 +341,7 @@ class IrUiView(models.Model):
     @api.model
     def _view_get_inherited_children(self, view):
         extensions = super()._view_get_inherited_children(view)
-        return extensions.filter_duplicate()
+        return extensions.filter_duplicate().filtered_domain(self.env.website._theme_domain())
 
     @api.model
     def _get_inheriting_views_domain(self):
@@ -344,7 +352,7 @@ class IrUiView(models.Model):
         # we will prefer inactive website-specific views over active generic ones
         if current_website:
             domain = domain.map_conditions(lambda cond: cond if cond.field_expr != 'active' else Domain.TRUE)
-        return website_views_domain & domain
+        return website_views_domain & domain & current_website._theme_domain()
 
     @api.model
     def _get_inheriting_views(self):
@@ -402,7 +410,8 @@ class IrUiView(models.Model):
             then the ormcache will not work as expected).
         """
         domain = super()._get_template_domain(xmlids)
-        return domain & Domain('website_id', 'in', (False, self.env.context.get('website_id', False)))
+        website = self.env['website'].browse(self.env.context.get('website_id'))
+        return domain & Domain('website_id', 'in', (False, website.id)) & website._theme_domain()
 
     @api.model
     def _raise_error(self, error):

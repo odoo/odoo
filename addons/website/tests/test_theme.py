@@ -73,24 +73,7 @@ class TestThemeApply(common.TransactionCase):
             'state': 'installed',
             'category_id': cls.env.ref('base.module_category_theme').id,
         })
-        cls.theme_view = cls.env['theme.ir.ui.view'].create({
-            'name': 'Test Theme View',
-            'key': 'test_theme.test_view',
-            'arch': '<div>Hello</div>',
-        })
-        cls.env['ir.model.data'].create({
-            'module': 'test_theme',
-            'name': 'test_view',
-            'model': 'theme.ir.ui.view',
-            'res_id': cls.theme_view.id,
-        })
         cls.designer = new_test_user(cls.env, 'test_theme_designer', groups='base.group_user,website.group_website_designer')
-
-    def _get_view_copy(self):
-        return self.env['ir.ui.view'].search([
-            ('theme_template_id', '=', self.theme_view.id),
-            ('website_id', '=', self.website.id),
-        ])
 
     def test_choose_theme_access(self):
         """Only designers can choose a theme, and only a theme can be chosen."""
@@ -105,7 +88,6 @@ class TestThemeApply(common.TransactionCase):
 
         self.theme.with_user(self.designer).with_context(website_id=self.website.id).button_choose_theme()
         self.assertEqual(self.website.theme_id, self.theme)
-        self.assertTrue(self._get_view_copy())
 
     def test_uninstall_theme_removes_it_from_websites(self):
         self.env['theme.utils']._theme_apply(self.theme, self.website)
@@ -113,7 +95,6 @@ class TestThemeApply(common.TransactionCase):
         self.theme.module_uninstall()
 
         self.assertFalse(self.website.theme_id)
-        self.assertFalse(self._get_view_copy())
 
     def test_theme_assets_only_apply_to_their_websites(self):
         self.env['ir.asset']._load_records([{
@@ -158,3 +139,103 @@ class TestThemeApply(common.TransactionCase):
         self.assertEqual(IrBinary.with_context(website_id=self.website.id)._find_record(xmlid='website.test_theme_image'), image)
         with self.assertRaises(MissingError):
             IrBinary.with_context(website_id=other_website.id)._find_record(xmlid='website.test_theme_image')
+
+    def test_theme_views_only_apply_to_their_websites(self):
+        base_view = self.env['ir.ui.view'].create({
+            'name': 'Test Base View',
+            'type': 'qweb',
+            'key': 'website.test_theme_base_view',
+            'arch': '<div>Base</div>',
+        })
+        theme_view = self.env['ir.ui.view']._load_records([{
+            'xml_id': 'test_theme.test_view',
+            'values': {
+                'name': 'Test Theme View',
+                'type': 'qweb',
+                'key': 'test_theme.test_view',
+                'inherit_id': base_view.id,
+                'arch': '<div position="inside">From the theme</div>',
+            },
+        }])
+        self.assertEqual(theme_view.theme_id, self.theme)
+        other_website = self.env['website'].create({'name': 'Other Website'})
+        self.website.theme_id = self.theme
+
+        def render(website):
+            return str(self.env['ir.qweb'].with_context(website_id=website.id)._render(base_view.key))
+
+        self.assertIn('From the theme', render(self.website))
+        self.assertNotIn('From the theme', render(other_website))
+
+        # Edits made on a website are kept when it stops using the theme, and
+        # come back if it uses it again
+        theme_view.with_context(website_id=self.website.id).write({'arch': '<div position="inside">Edited</div>'})
+        self.assertIn('Edited', render(self.website))
+        self.website.theme_id = False
+        self.assertNotIn('Edited', render(self.website))
+        self.website.theme_id = self.theme
+        self.assertIn('Edited', render(self.website))
+
+    def test_theme_views_follow_edited_views_on_theme_switch(self):
+        other_theme = self.env['ir.module.module'].create({
+            'name': 'test_other_theme',
+            'state': 'installed',
+            'category_id': self.env.ref('base.module_category_theme').id,
+        })
+        base_view = self.env['ir.ui.view'].create({
+            'name': 'Test Base View',
+            'type': 'qweb',
+            'key': 'website.test_theme_base_view',
+            'arch': '<div>Base</div>',
+        })
+        self.env['ir.ui.view']._load_records([{
+            'xml_id': 'test_other_theme.test_view',
+            'values': {
+                'name': 'Test Other Theme View',
+                'type': 'qweb',
+                'key': 'test_other_theme.test_view',
+                'inherit_id': base_view.id,
+                'arch': '<div position="inside">From the other theme</div>',
+            },
+        }])
+        self.env['theme.utils']._theme_apply(self.theme, self.website)
+
+        # Editing a view does not copy the views of a theme the website does not use
+        base_view.with_context(website_id=self.website.id).write({'arch': '<div>Edited</div>'})
+        self.assertFalse(self.env['ir.ui.view'].search([
+            ('key', '=', 'test_other_theme.test_view'),
+            ('website_id', '=', self.website.id),
+        ]))
+
+        # They are attached to the edited view once the website uses that theme
+        self.env['theme.utils']._theme_apply(other_theme, self.website)
+        html = str(self.env['ir.qweb'].with_context(website_id=self.website.id)._render(base_view.key))
+        self.assertIn('Edited', html)
+        self.assertIn('From the other theme', html)
+
+    def test_installed_theme_views_follow_edited_views_of_its_websites(self):
+        base_view = self.env['ir.ui.view'].create({
+            'name': 'Test Base View',
+            'type': 'qweb',
+            'key': 'website.test_theme_base_view',
+            'arch': '<div>Base</div>',
+        })
+        other_website = self.env['website'].create({'name': 'Other Website'})
+        self.website.theme_id = self.theme
+        for website in self.website + other_website:
+            base_view.with_context(website_id=website.id).write({'arch': '<div>Edited</div>'})
+
+        # A theme installed after the edits only reaches the websites using it
+        self.env['ir.ui.view']._load_records([{
+            'xml_id': 'test_theme.test_view',
+            'values': {
+                'name': 'Test Theme View',
+                'type': 'qweb',
+                'key': 'test_theme.test_view',
+                'inherit_id': base_view.id,
+                'arch': '<div position="inside">From the theme</div>',
+            },
+        }])
+        self.env['ir.ui.view']._create_all_specific_views(['test_theme'])
+        copies = self.env['ir.ui.view'].search([('key', '=', 'test_theme.test_view'), ('website_id', '!=', False)])
+        self.assertEqual(copies.website_id, self.website)

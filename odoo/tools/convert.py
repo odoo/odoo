@@ -503,10 +503,7 @@ form: module.record_id""" % (xml_id,)
             el.tag = 'data'
         attrib.pop('id', None)
 
-        if self.module.startswith('theme_'):
-            model = 'theme.ir.ui.view'
-        else:
-            model = 'ir.ui.view'
+        model = 'ir.ui.view'
 
         record_attrs = {
             'id': tpl_id,

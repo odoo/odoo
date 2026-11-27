@@ -369,8 +369,9 @@ class Website(models.CachedModel):
             self._ensure_logo_media_attachment()
 
         if 'theme_id' in values:
-            # Which theme assets apply depends on the website's theme
+            # Which theme views and assets apply depends on the website's theme
             self.env.transaction.invalidate_ormcache('assets')
+            self.env.transaction.invalidate_ormcache('templates')
 
         if any(key in values for key in ["cdn_activated", "cdn_url", "cdn_filters", "domain"]):
             # invalidate the caches from static node at compile time
