@@ -39,12 +39,20 @@ class GoogleGmailMixin(models.AbstractModel):
     google_gmail_access_token_expiration = fields.Integer(string='Access Token Expiration Timestamp', groups='base.group_system', copy=False)
     google_gmail_uri = fields.Char(compute='_compute_gmail_uri', string='URI', help='The URL to generate the authorization code from Google', groups='base.group_system')
 
+    def _get_gmail_base_url(self):
+        """Return the base URL used to build the OAuth redirect URI.
+
+        The redirect URI must match the one registered on the Google side,
+        so it must not depend on the website in the context.
+        """
+        return self.with_context(website_id=False).get_base_url()
+
     def _compute_gmail_uri(self):
         Config = self.env['ir.config_parameter'].sudo()
         google_gmail_client_id = Config.get_param('google_gmail_client_id')
         google_gmail_client_secret = Config.get_param('google_gmail_client_secret')
         is_configured = google_gmail_client_id and google_gmail_client_secret
-        base_url = self.get_base_url()
+        base_url = self._get_gmail_base_url()
 
         if not is_configured:
             self.google_gmail_uri = False
@@ -103,7 +111,7 @@ class GoogleGmailMixin(models.AbstractModel):
                 'rec_id': self.id,
                 'csrf_token': self._get_gmail_csrf_token(),
             })
-            callback_url = url_join(self.get_base_url(), f'/google_gmail/iap_confirm?{callback_params}')
+            callback_url = url_join(self._get_gmail_base_url(), f'/google_gmail/iap_confirm?{callback_params}')
 
             iap_url = url_join(gmail_iap_endpoint, '/api/mail_oauth/1/gmail')
             try:
@@ -179,7 +187,7 @@ class GoogleGmailMixin(models.AbstractModel):
         Config = self.env['ir.config_parameter'].sudo()
         google_gmail_client_id = Config.get_param('google_gmail_client_id')
         google_gmail_client_secret = Config.get_param('google_gmail_client_secret')
-        base_url = self.get_base_url()
+        base_url = self._get_gmail_base_url()
         redirect_uri = url_join(base_url, '/google_gmail/confirm')
 
         response = requests.post(
