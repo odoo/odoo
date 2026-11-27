@@ -40,9 +40,6 @@ class IrModuleModule(models.Model):
             Override to load a theme on the websites using it after it is installed
             or upgraded.
 
-            eg. If a website uses theme_A and we install sale, then theme_A_sale will be
-                autoinstalled, and in this case we need to load theme_A_sale for the website.
-
             Upgrading a theme reloads it on every website using it. Applying a theme on
             a website is not a module operation, see ``theme.utils._theme_apply``.
         """
@@ -52,7 +49,7 @@ class IrModuleModule(models.Model):
                 _logger.info('Module %s has been loaded as theme template (%s)' % (module.name, module.state))
 
                 if module.state in ['to install', 'to upgrade']:
-                    websites_to_update = ThemeUtils._theme_get_stream_website_ids(module)
+                    websites_to_update = self.env['website'].search([('theme_id', '=', module.id)])
                     for website in websites_to_update:
                         ThemeUtils._theme_load(module, website)
 
@@ -101,8 +98,7 @@ class IrModuleModule(models.Model):
             version of the theme, on every website using it.
         """
         website = self.env.website or self.env['website'].browse(self.env.context.get('host_id'))
-        ThemeUtils = self.env['theme.utils']
-        ThemeUtils._theme_load(ThemeUtils._theme_get_stream_themes(website.theme_id), website)
+        self.env['theme.utils']._theme_load(website.theme_id, website)
 
     @api.model
     def update_list(self):

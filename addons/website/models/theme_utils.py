@@ -393,65 +393,11 @@ class ThemeUtils(models.AbstractModel):
         ])
         orphans.unlink()
 
-    def _theme_get_upstream(self, theme):
-        """
-            Return installed upstream themes.
-
-            :param theme: theme ``ir.module.module``
-            :return: recordset of themes ``ir.module.module``
-        """
-        theme.ensure_one()
-        return theme.upstream_dependencies(exclude_states=()).filtered(lambda x: x.name.startswith('theme_'))
-
-    def _theme_get_downstream(self, theme):
-        """
-            Return installed downstream themes that starts with the same name.
-
-            eg. For theme_A, this will return theme_A_sale, but not theme_B even if theme B
-                depends on theme_A.
-
-            :param theme: theme ``ir.module.module``
-            :return: recordset of themes ``ir.module.module``
-        """
-        theme.ensure_one()
-        return theme.downstream_dependencies().filtered(lambda x: x.name.startswith(theme.name))
-
-    def _theme_get_stream_themes(self, theme):
-        """
-            Returns all the themes in the stream of the theme ``theme``.
-
-            First find all its downstream themes, and all of the upstream themes of both
-            sorted by their level in hierarchy, up first.
-
-            :param theme: theme ``ir.module.module``
-            :return: recordset of themes ``ir.module.module``
-        """
-        theme.ensure_one()
-        all_mods = theme + self._theme_get_downstream(theme)
-        for down_mod in self._theme_get_downstream(theme) + theme:
-            for up_mod in self._theme_get_upstream(down_mod):
-                all_mods = up_mod | all_mods
-        return all_mods
-
-    def _theme_get_stream_website_ids(self, theme):
-        """
-            Websites for which the theme ``theme`` is in the stream (up or down) of their theme.
-
-            :param theme: theme ``ir.module.module``
-            :return: recordset of websites ``website``
-        """
-        theme.ensure_one()
-        websites = self.env['website']
-        for website in websites.search([('theme_id', '!=', False)]):
-            if theme in self._theme_get_stream_themes(website.theme_id):
-                websites |= website
-        return websites
-
     @api.model
     def _theme_apply(self, theme, website):
         """
-            Apply ``theme`` on ``website``: remove its current theme, load the themes
-            in the stream of ``theme`` on it, then apply the theme configuration.
+            Apply ``theme`` on ``website``: remove its current theme, load ``theme``
+            on it, then apply the theme configuration.
 
             The theme must be installed: this is no module operation and never
             reloads the registry.
@@ -461,16 +407,14 @@ class ThemeUtils(models.AbstractModel):
         """
         self._theme_remove(website)
         website.theme_id = theme
-        self._theme_load(self._theme_get_stream_themes(theme), website)
+        self._theme_load(theme, website)
         self.with_context(website_id=website.id)._apply_theme_config(theme)
 
     def _theme_remove(self, website):
         """
-            Remove from ``website`` its current theme, including all the themes in the stream.
+            Remove from ``website`` its current theme.
 
-            The order of removal will be reverse of installation to handle dependencies correctly.
-
-            :param website: ``website`` model for which the themes have to be removed
+            :param website: ``website`` model for which the theme has to be removed
         """
         # _theme_remove is the entry point of any change of theme for a website
         # (either removal or installation of a theme and its dependencies). In
@@ -480,8 +424,7 @@ class ThemeUtils(models.AbstractModel):
         if not website.theme_id:
             return
 
-        for theme in reversed(self._theme_get_stream_themes(website.theme_id)):
-            self._theme_unload(theme, website)
+        self._theme_unload(website.theme_id, website)
         website.theme_id = False
 
     def _get_themes_domain(self):
