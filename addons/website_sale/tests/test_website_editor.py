@@ -7,7 +7,6 @@ import logging
 from unittest.mock import Mock, patch
 
 import requests
-
 from PIL import Image
 
 from odoo.exceptions import ValidationError
@@ -308,6 +307,11 @@ class TestWebsiteSaleEditor(HttpCaseWithWebsiteUser):
             "website_sale.restricted_editor_ui",
             login="website_user",
         )
+
+    def test_write_shop_config_empty_shop_ppg_stores_one(self):
+        website = self.env.ref("base.default_website")
+        website._write_shop_config({"shop_ppg": ""})
+        self.assertEqual(website.shop_ppg, 1)
 
 
 @tagged("post_install", "-at_install")

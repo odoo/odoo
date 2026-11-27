@@ -206,6 +206,32 @@ class TestCustomizeView(common.HttpCase):
         self.assertEqual('Test name (3)', name)
 
 
+class TestToggleCustomizeData(common.TransactionCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.website = cls.env['website'].create({'name': "Test Website"})
+        cls.generic_view = cls.env['ir.ui.view'].create({
+            'name': 'test_view',
+            'type': 'qweb',
+            'key': 'website.test_view',
+            'arch_db': '<span>Default</span>',
+        })
+
+    def test_toggle_customize_data_disables_view_on_website(self):
+        self.website._toggle_customize_data(disable=['website.test_view'])
+        self.assertFalse(self.website._get_customize_data(['website.test_view']).active)
+
+    def test_toggle_customize_data_keeps_generic_view_active_for_other_websites(self):
+        self.website._toggle_customize_data(disable=['website.test_view'])
+        self.assertTrue(self.generic_view.active)
+
+    def test_toggle_customize_data_enables_view_on_website(self):
+        self.website._toggle_customize_data(disable=['website.test_view'])
+        self.website._toggle_customize_data(enable=['website.test_view'])
+        self.assertTrue(self.website._get_customize_data(['website.test_view']).active)
+
+
 class TestViewSaving(TestViewSavingCommon):
 
     def eq(self, a, b):

@@ -1432,6 +1432,39 @@ class Website(models.CachedModel):
         match = re.search(r'--o-icon-font-family:\s*"([^"]*)"', self._get_scss_exports())
         return match[1] if match else ''
 
+    def _get_customize_data(self, keys, is_view_data=True):
+        """Return the views (or assets) of the given keys as this website sees them,
+        archived ones included, so the builder options can read and toggle them.
+
+        :param keys: list of views/assets keys
+        :param is_view_data: True = "ir.ui.view", False = "ir.asset"
+        """
+        self.ensure_one()
+        model = 'ir.ui.view' if is_view_data else 'ir.asset'
+        Model = self.env[model].with_context(active_test=False, website_id=self.id)
+        domain = Domain('key', 'in', keys) & self.website_domain()
+        return Model.search(domain).filter_duplicate()
+
+    def _toggle_customize_data(
+        self, enable=None, disable=None, is_view_data=True, reset_view_arch=False,
+    ):
+        """Enable and/or disable views/assets on this website, as the builder options do.
+
+        :param enable: list of views/assets keys to enable
+        :param disable: list of views/assets keys to disable
+        :param is_view_data: True = "ir.ui.view", False = "ir.asset"
+        :param reset_view_arch: restore the default template after disabling
+        """
+        if disable:
+            records = self._get_customize_data(disable, is_view_data).filtered('active')
+            if reset_view_arch:
+                records.reset_arch(mode='hard')
+            records.write({'active': False})
+
+        if enable:
+            records = self._get_customize_data(enable, is_view_data)
+            records.filtered(lambda x: not x.active).write({'active': True})
+
     @api.model
     def new_page(self, name=False, add_menu=False, template='website.default_page', ispage=True, namespace=None, page_values=None, menu_values=None, sections_arch=None, page_title=None):
         """ Create a new website page, and assign it a xmlid based on the given one

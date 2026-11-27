@@ -1946,15 +1946,9 @@ class Website(Home):
                 metadata['url'] = f"/web/font/{metadata.id}/{metadata['name']}"
         return json.loads(metadata.raw.content)
 
-    def _get_customize_data(self, keys, is_view_data):
-        model = 'ir.ui.view' if is_view_data else 'ir.asset'
-        Model = request.env[model].with_context(active_test=False)
-        domain = Domain("key", "in", keys) & self.env.website.website_domain()
-        return Model.search(domain).filter_duplicate()
-
     @http.route(['/website/theme_customize_data_get'], type='jsonrpc', auth='user', website=True, replica=True)
     def theme_customize_data_get(self, keys, is_view_data):
-        records = self._get_customize_data(keys, is_view_data)
+        records = self.env.website._get_customize_data(keys, is_view_data)
         return records.filtered('active').mapped('key')
 
     @http.route(['/website/theme_customize_data'], type='jsonrpc', auth='user', website=True)
@@ -1967,15 +1961,12 @@ class Website(Home):
         :param disable: list of views/assets keys to disable
         :param reset_view_arch: restore the default template after disabling
         """
-        if disable:
-            records = self._get_customize_data(disable, is_view_data).filtered('active')
-            if reset_view_arch:
-                records.reset_arch(mode='hard')
-            records.write({'active': False})
-
-        if enable:
-            records = self._get_customize_data(enable, is_view_data)
-            records.filtered(lambda x: not x.active).write({'active': True})
+        self.env.website._toggle_customize_data(
+            enable=enable,
+            disable=disable,
+            is_view_data=is_view_data,
+            reset_view_arch=reset_view_arch,
+        )
 
     @http.route(['/website/theme_customize_bundle_reload'], type='jsonrpc', auth='user', website=True, replica=True)
     def theme_customize_bundle_reload(self):
@@ -2005,7 +1996,7 @@ class Website(Home):
         }
 
         # Parse new footer template and get the content width
-        new_template = self._get_customize_data([template_key], is_view_data=True)
+        new_template = self.env.website._get_customize_data([template_key], is_view_data=True)
         if not new_template or not new_template[0].arch:
             return
 

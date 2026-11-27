@@ -395,7 +395,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
         IN_MAX = 10_000
         if search_term and product_count <= IN_MAX:
             filters_ids = (
-                self.env["product.template"]
+                self
+                .env["product.template"]
                 ._search(filters_domain, limit=IN_MAX + 1)
                 .get_result_ids()
             )
@@ -1901,40 +1902,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if not self.env.user.has_group("website.group_website_restricted_editor"):
             raise NotFound
 
-        # Restrict options we can write to.
-        writable_fields = {
-            "shop_page_container",
-            "shop_ppg",
-            "shop_ppr",
-            "shop_default_sort",
-            "shop_gap",
-            "shop_opt_products_design_classes",
-            "product_page_container",
-            "product_page_image_layout",
-            "product_page_image_width",
-            "product_page_grid_columns",
-            "product_page_image_spacing",
-            "product_page_image_ratio",
-            "product_page_image_ratio_mobile",
-            "product_page_cols_order",
-            "product_page_image_roundness",
-            "product_page_cta_design",
-            # category
-            "align_category_content",
-            "show_category_title",
-            "show_category_description",
-            # wishlist
-            "wishlist_opt_products_design_classes",
-            "wishlist_grid_columns",
-            "wishlist_mobile_columns",
-            "wishlist_gap",
-        }
-        # Default ppg to 1.
-        if "ppg" in options and not options["ppg"]:
-            options["ppg"] = 1
-        if "product_page_grid_columns" in options:
-            options["product_page_grid_columns"] = int(options["product_page_grid_columns"])
-
         # Checkout Extra Step
         if "extra_step" in options:
             extra_step_view = self.env.website.viewref("website_sale.extra_info")
@@ -1947,9 +1914,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 self.env["product.public.category"].browse(category_ids).exists()
             )
 
-        write_vals = {k: v for k, v in options.items() if k in writable_fields}
-        if write_vals:
-            self.env.website.write(write_vals)
+        self.env.website._write_shop_config(options)
 
     @route(["/shop/config/tag"], type="jsonrpc", auth="user")
     def _change_tag_config(self, tag_id, **options):

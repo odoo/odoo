@@ -1,5 +1,4 @@
 import { Plugin } from "@html_editor/plugin";
-import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { BuilderAction } from "@html_builder/core/builder_action";
 
@@ -14,24 +13,31 @@ export class ProductHeaderCategoryOptionPlugin extends Plugin {
             ToggleCategoryAlignContentAction,
         },
 
-        on_ready_to_save_document_handlers: this.onSave.bind(this),
+        // Send these settings only when the user toggled one of them. The header classes reflect
+        // the settings as they were when the editor loaded, so sending them on every save would
+        // overwrite changes made since then (e.g. by the AI).
+        dirty_trackers: {
+            selector: "#o_wsale_products_header",
+            dirtyClass: "o_dirty_product_design_list",
+            match: "self",
+        },
+        product_design_list_to_save: {
+            selector: "#o_wsale_products_header",
+            getData(el) {
+                return {
+                    show_category_title: el.classList.contains(
+                        "o_wsale_products_header_show_category_title"
+                    ),
+                    show_category_description: el.classList.contains(
+                        "o_wsale_products_header_show_category_description"
+                    ),
+                    align_category_content: el.classList.contains(
+                        "o_wsale_products_header_category_center_content"
+                    ),
+                };
+            },
+        },
     };
-
-    async onSave() {
-        const headerEl = this.editable.querySelector("#o_wsale_products_header");
-        if (!headerEl) return;
-
-        const showTitle = headerEl.classList.contains("o_wsale_products_header_show_category_title");
-        const showDescription = headerEl.classList.contains("o_wsale_products_header_show_category_description");
-        const alignCategoryContent = headerEl.classList.contains("o_wsale_products_header_category_center_content");
-
-        return rpc("/shop/config/website", {
-            show_category_title: showTitle,
-            show_category_description: showDescription,
-            align_category_content: alignCategoryContent,
-        });
-
-    }
 }
 
 export class BaseCategoryToggleAction extends BuilderAction {
