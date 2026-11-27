@@ -4,22 +4,24 @@
 
 .o-website-font-urls {
     $-i: 1;
-    $-seen-urls: ();
+    $-seen-links: ();
     @each $alias, $key in $o-font-aliases-to-keys {
         $-url: o-get-font-info($alias, 'url');
-        @if $-url and index($-seen-urls, $-url) == null {
-            $-seen-urls: append($-seen-urls, $-url);
-            --o-font-url-#{$-i}: "https://fonts.googleapis.com/css?family=#{unquote($-url)}&display=swap&subset=latin,latin-ext,vietnamese";
-            $-i: $-i + 1;
-        } @else {
+        $-attachment: o-get-font-info($alias, 'attachment');
+        $-link: null;
+        @if $-url {
+            $-link: "https://fonts.googleapis.com/css?family=#{unquote($-url)}&display=swap&subset=latin,latin-ext,vietnamese";
+        } @else if $-attachment {
             $-name: o-get-font-info($alias, 'name');
-            $-attachment: o-get-font-info($alias, 'attachment');
-            @if $-attachment {
-                --o-font-url-#{$-i}: "/web/content/#{$-attachment}/google-font-#{unquote($-name)}";
-                $-i: $-i + 1;
-            }
+            $-link: "/web/content/#{$-attachment}/google-font-#{unquote($-name)}";
+        }
+        @if $-link and index($-seen-links, $-link) == null {
+            $-seen-links: append($-seen-links, $-link);
+            --o-font-url-#{$-i}: "#{$-link}";
+            $-i: $-i + 1;
         }
     }
+
 }
 
 .o-website-font-preloads {

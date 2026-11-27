@@ -90,11 +90,12 @@ class TestWebsiteFontUrls(odoo.tests.HttpCase):
         attachment = self._create_font_attachment('Roboto')
         self._set_fonts({
             'font': "'Roboto'",
-            'headings-font': "'SYSTEM_FONTS'",
+            'headings-font': "'Roboto'",
             'google-local-fonts': f"('Roboto': {attachment.id})",
         })
         self.assertEqual(
             self._get_font_urls(),
+            # Font definitions are deduplicated
             [f'/web/content/{attachment.id}/google-font-Roboto?unique={attachment.checksum}'],
         )
 
