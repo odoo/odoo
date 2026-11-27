@@ -6,7 +6,7 @@
         <field name="arch" type="xml">
             <form string="Point of Sale Orders" create="0">
                 <header>
-                    <button name="%(action_pos_payment)d" string="Payment" class="oe_highlight" type="action" invisible="state != 'draft'" />
+                    <button name="%(action_pos_payment)d" string="Payment" class="oe_highlight" type="action" invisible="state != 'draft'" groups="point_of_sale.group_pos_manager" />
                     <button name="action_pos_order_invoice" string="Invoice" type="object"
                             invisible="state != 'paid'"/>
                     <button name="refund" string="Return Products" type="object"
