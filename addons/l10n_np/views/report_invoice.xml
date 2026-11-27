@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_invoice_document" inherit_id="account.report_invoice_document">
+        <xpath expr="//div[@t-field='o.invoice_date']" position="attributes">
+            <attribute name="t-if">o.country_code != 'NP'</attribute>
+        </xpath>
+        <xpath expr="//div[@t-field='o.invoice_date']" position="after">
+            <div t-if="o.country_code == 'NP' and o.l10n_np_fiscal_date" t-out="o.l10n_np_fiscal_date"/>
+        </xpath>
+
+        <xpath expr="//div[@t-field='o.invoice_date_due']" position="attributes">
+            <attribute name="t-if">o.country_code != 'NP'</attribute>
+        </xpath>
+        <xpath expr="//div[@t-field='o.invoice_date_due']" position="after">
+            <div t-if="o.country_code == 'NP'" t-out="o._l10n_np_format_date(o.invoice_date_due)"/>
+        </xpath>
+
+        <xpath expr="//div[@t-field='o.delivery_date']" position="attributes">
+            <attribute name="t-if">o.country_code != 'NP'</attribute>
+        </xpath>
+        <xpath expr="//div[@t-field='o.delivery_date']" position="after">
+            <div t-if="o.country_code == 'NP'" t-out="o._l10n_np_format_date(o.delivery_date)"/>
+        </xpath>
+    </template>
+</odoo>
+
