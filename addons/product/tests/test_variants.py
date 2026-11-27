@@ -89,7 +89,7 @@ class TestVariants(ProductVariantsCommon):
     #   mrp.bom.line without sudo (mrp/models/product.py) -> test_archive_*/test_template_barcode.
     # - 'point_of_sale.group_pos_user': product.template.copy() carries over the
     #   urbanpiper_pos_config_ids field (pos.config m2m), whose write triggers a
-    #   pos.config read check (enterprise pos_urban_piper) -> test_variants_copy.
+    #   pos.config read check (enterprise pos_food_delivery_urbanpiper) -> test_variants_copy.
     # To be fixed by the respective teams.
     _test_user_groups = (
         'base.group_partner_manager',  # FIXME: use base.group_user
@@ -673,8 +673,8 @@ class TestVariantsNoCreate(ProductVariantsCommon):
     # FIXME cross-module regression (group ignored when its module is absent):
     # 'point_of_sale.group_pos_user' is only required because (un)archiving writes the
     # urbanpiper_pos_config_ids field (pos.config m2m), whose write triggers a pos.config
-    # read check (enterprise pos_urban_piper) -> test_unarchive_multiple_products_with_variants.
-    # To be fixed by the pos_urban_piper team.
+    # read check (enterprise pos_food_delivery_urbanpiper) -> test_unarchive_multiple_products_with_variants.
+    # To be fixed by the pos_food_delivery_urbanpiper team.
     _test_user_groups = (
         'product.group_product_manager',
         'point_of_sale.group_pos_user',

@@ -280,7 +280,7 @@ class TestProductAttributeValueConfig(TestProductAttributeValueCommon):
     # FIXME cross-module regressions (groups ignored when their module is absent):
     # - 'point_of_sale.group_pos_user': product.template.copy() carries the
     #   urbanpiper_pos_config_ids field (pos.config m2m), whose write triggers a
-    #   pos.config read check (enterprise pos_urban_piper) -> test_copy_extra_prices_of_product_attribute_values.
+    #   pos.config read check (enterprise pos_food_delivery_urbanpiper) -> test_copy_extra_prices_of_product_attribute_values.
     # - 'stock.group_stock_user': archiving reads mrp.bom.line without sudo
     #   (mrp/models/product.py) -> test_inactive_related_product_update.
     # To be fixed by the respective teams.
