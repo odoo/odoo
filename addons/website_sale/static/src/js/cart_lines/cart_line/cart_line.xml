@@ -228,7 +228,7 @@
         <t t-set="showQuantitySelector" t-value="this.cartService.state.is_quantity_view_active"/>
         <t t-set="minusButtonTitle">
             <t
-                t-if="this.props.line.min_qunantity and this.state.quantity &lt;= this.props.line.min_qunantity"
+                t-if="this.props.line.min_quantity and this.state.quantity &lt;= this.props.line.min_quantity"
                 t-out="this.props.line.min_qty_message"
             />
             <t t-else="">Remove one</t>
@@ -254,11 +254,11 @@
                 <input
                     type="text"
                     class="js_quantity quantity form-control border border-start-0 border-end-0"
-                    t-att-class="this.state.quantity == this.props.line.min_qunantity ? 'opacity-0 pe-none' : ''"
+                    t-att-class="this.state.quantity == this.props.line.min_quantity ? 'opacity-0 pe-none' : ''"
                     t-att-value="this.state.quantity"
                     t-on-input="(event) => this.updateQuantity(event.target.value)"
                     t-attf-name="cart-quantity-{{this.props.line.id}}{{ isMobile ? '-mobile' : ''}}"
-                    t-att-min="this.props.line.min_qunantity"
+                    t-att-min="this.props.line.min_quantity"
                     aria-label="Quantity"
                 />
                 <button

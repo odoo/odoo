@@ -31,12 +31,12 @@ export class CartLine extends Component {
             !Number.isNaN(effectiveQuantity)
             && effectiveQuantity !== this.state.quantity
             && (
-                this.props.line.max_qunantity === undefined
-                || effectiveQuantity <= this.props.line.max_qunantity
+                this.props.line.max_quantity === undefined
+                || effectiveQuantity <= this.props.line.max_quantity
             )
             && (
-                !this.props.line.min_qunantity
-                || effectiveQuantity >= this.props.line.min_qunantity
+                !this.props.line.min_quantity
+                || effectiveQuantity >= this.props.line.min_quantity
             )
         ) {
             this.state.quantity = effectiveQuantity;
