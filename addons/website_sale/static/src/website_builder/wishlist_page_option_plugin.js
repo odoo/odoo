@@ -28,6 +28,8 @@ export class WishlistPageOptionPlugin extends Plugin {
                     wishlist_gap:
                         el.style.getPropertyValue("--o-wsale-wishlist-grid-gap") || "16px",
                     wishlist_opt_products_design_classes: productOptClasses.join(" "),
+                    shop_opt_products_thumb_bg:
+                        el.style.getPropertyValue("--wsale-product-thumb-bg") || false,
                 };
             },
         },
