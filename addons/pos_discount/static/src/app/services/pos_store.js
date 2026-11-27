@@ -25,9 +25,9 @@ patch(PosStore.prototype, {
 
         this.models["pos.order.line"].addEventListener("update", (data) => {
             const line = this.models["pos.order.line"].get(data.id);
-            const order = line.order_id;
 
-            if (!line.isDiscountLine && !line.isServiceFeeLine()) {
+            if (line && !line.isDiscountLine && !line.isServiceFeeLine()) {
+                const order = line.order_id;
                 updateOrderDiscount(order);
             }
         });
@@ -41,6 +41,13 @@ patch(PosStore.prototype, {
                 updateOrderDiscount(this.models["pos.order"].get(id));
             }
         });
+    },
+    getLinesToMerge(sourceOrder, destinationOrder) {
+        const res = super.getLinesToMerge(...arguments);
+        if (destinationOrder.globalDiscountPc.value) {
+            return res.filter((line) => !line.isDiscountLine);
+        }
+        return res;
     },
     async applyDiscount(value, type = "percent", order = this.getOrder()) {
         const taxKey = (taxIds) =>

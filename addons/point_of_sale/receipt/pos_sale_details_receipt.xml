@@ -12,7 +12,7 @@
                         <div class="w-100 text-center mb-3" name="logo">
                             <img t-if="image.get('logo')" t-att-src="image['logo']" style="max-height: 75px" />
                         </div>
-                        <div class="text-large text-center text-bold">
+                        <div class="text-large text-center text-bold" name="report_title">
                             <t t-if="extra_data['session_state'] == 'opened'">
                                 X Report
                             </t>

@@ -73,6 +73,7 @@
                 />
                 <t t-if="this.pos.ticketPrinter.hasReceiptPrinters and this.pos.accessRight.canPrintReport"
                    t-call="point_of_sale.BurgerDialogMenuButton"
+                   t-name="print_report"
                    dataIcon="'picture_as_pdf'"
                    onClick="() => this.showSaleDetails()"
                    btnLabel.translate="Print Report"
