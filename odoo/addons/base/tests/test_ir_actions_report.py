@@ -7,6 +7,7 @@ import odoo.tests
 from odoo import tools
 from odoo.exceptions import UserError
 
+from odoo.addons.base.models.ir_actions_report import ReportDocument, ReportPageSetup
 from odoo.addons.base.tests.files import PDF_RAW
 
 try:
@@ -169,6 +170,116 @@ PAPER_SIZES = {
     (612, 1008): 'Legal',
     (792, 1224): 'Ledger',
 }
+
+
+class TestReportPageSetup(odoo.tests.TransactionCase):
+    def test_report_specific_paperformat_args(self):
+        """ The values defined in `specific_paperformat_args` take precedence
+        over those of the paperformat. """
+        page_setup = ReportPageSetup.resolve(
+            self.env['report.paperformat'].new({
+                'format': 'A4',
+                'margin_top': 25,
+                'margin_left': 50,
+                'margin_bottom': 75,
+                'margin_right': 100,
+                'dpi': 90,
+                'header_spacing': 125,
+                'orientation': 'Portrait',
+            }),
+            landscape=None,
+            specific_paperformat_args={
+                'data-report-landscape': 'True',
+                'data-report-margin-top': '0',
+                'data-report-margin-bottom': 0,
+                'data-report-margin-right': '12.5',
+                'data-report-header-spacing': 0,
+                'data-report-dpi': '96',
+                'data-report-unknown': 42,
+            })
+        self.assertEqual(page_setup, ReportPageSetup(
+            paper_format='A4',
+            landscape=True,
+            margin_top=0.0,
+            margin_bottom=0.0,
+            margin_left=50.0,
+            margin_right=12.5,
+            header_spacing=0.0,
+            dpi=96,
+        ))
+
+    def test_report_page_setup_landscape(self):
+        """ Landscape as soon as the flag, the override or the paperformat asks for it. """
+        portrait = self.env['report.paperformat'].new({'format': 'A4', 'orientation': 'Portrait', 'dpi': 90})
+        landscape = self.env['report.paperformat'].new({'format': 'A4', 'orientation': 'Landscape', 'dpi': 90})
+        resolve = ReportPageSetup.resolve
+        self.assertFalse(resolve(portrait).landscape)
+        self.assertFalse(resolve(portrait, False, {'data-report-landscape': 'False'}).landscape)
+        self.assertTrue(resolve(portrait, True).landscape)
+        self.assertTrue(resolve(portrait, None, {'data-report-landscape': 'True'}).landscape)
+        self.assertTrue(resolve(landscape, False).landscape)
+
+    def test_report_page_setup_custom_size(self):
+        page_setup = ReportPageSetup.resolve(self.env['report.paperformat'].new({
+            'format': 'custom', 'page_width': 100, 'page_height': 50, 'dpi': 90,
+        }))
+        self.assertIsNone(page_setup.paper_format)
+        self.assertEqual((page_setup.page_width, page_setup.page_height), (100.0, 50.0))
+
+
+class TestReportDocuments(odoo.tests.TransactionCase):
+    HEADERS = (
+        '<!DOCTYPE html><html><body onload="subst()">'
+        '<div id="minimal_layout_report_headers"><div>A</div><div>B</div></div>'
+        '</body></html>'
+    )
+
+    def test_split_report_decoration(self):
+        split = self.env['ir.actions.report']._split_report_decoration
+        headers = split(self.HEADERS, 'minimal_layout_report_headers', 2)
+        self.assertEqual(len(headers), 2)
+        for header, name, other in zip(headers, 'AB', 'BA'):
+            self.assertIn(f'<div>{name}</div>', header)
+            self.assertNotIn(f'<div>{other}</div>', header)
+            # subst() must not pick a decoration by index anymore
+            self.assertNotIn('minimal_layout_report_headers', header)
+        self.assertIsNone(split(self.HEADERS, 'minimal_layout_report_headers', 3))
+        self.assertIsNone(split(self.HEADERS, 'minimal_layout_report_footers', 2))
+        self.assertIsNone(split(None, 'minimal_layout_report_headers', 2))
+
+    def test_make_report_documents(self):
+        Report = self.env['ir.actions.report']
+        split = Report._make_report_documents(['a', 'b'], header=self.HEADERS, footer='footer')
+        self.assertEqual([document.body for document in split], ['a', 'b'])
+        self.assertIn('<div>A</div>', split[0].header)
+        self.assertIn('<div>B</div>', split[1].header)
+        self.assertEqual([document.footer for document in split], ['footer', 'footer'])
+
+        shared = Report._make_report_documents(['a', 'b', 'c'], header=self.HEADERS)
+        self.assertEqual([document.header for document in shared], [self.HEADERS] * 3)
+        self.assertEqual([document.footer for document in shared], [None] * 3)
+
+    def test_run_pdf_engine_without_processing(self):
+        """ The engines receive the documents and their resolved page setup. """
+        Report = self.env['ir.actions.report']
+        calls = []
+
+        def _run_pdf_engine_with_documents(self, engine_name, documents, page_setup, **kwargs):
+            calls.append((engine_name, documents, page_setup, kwargs))
+            return b'pdf'
+
+        self.patch(type(Report), '_run_pdf_engine_with_documents', _run_pdf_engine_with_documents)
+
+        self.assertEqual(Report._run_pdf_engine_without_processing(
+            'engine', ['a', 'b'], footer='footer', landscape=True,
+            specific_paperformat_args={'data-report-margin-top': '5'}, set_viewport_size=True,
+        ), b'pdf')
+        engine_name, documents, page_setup, kwargs = calls.pop()
+        self.assertEqual(engine_name, 'engine')
+        self.assertEqual(documents, [ReportDocument(body='a', footer='footer'), ReportDocument(body='b', footer='footer')])
+        self.assertEqual(page_setup, Report._get_page_setup(False, True, {'data-report-margin-top': '5'}))
+        self.assertEqual(page_setup.margin_top, 5.0)
+        self.assertEqual(kwargs, {'set_viewport_size': True})
 
 class Box:
     """
@@ -600,46 +711,6 @@ class TestReportsRendering(TestReportsRenderingCommon):
 
         pages_contents = [[elem[1] for elem in page] for page in pages]
         self.assertEqual(pages_contents, expected_pages_contents)
-
-    def test_report_specific_paperformat_args(self):
-        """
-            Verify that the values defined in `specific_paperformat_args` take
-            precedence over those in the paperformat when building the wkhtmltopdf
-            command arguments.
-        """
-        command_args = self.env['ir.actions.report']._build_wkhtmltopdf_args(
-            self.env['report.paperformat'].new({
-                'format': 'A4',
-                'margin_top': 25,
-                'margin_left': 50,
-                'margin_bottom': 75,
-                'margin_right': 100,
-                'dpi': 90,
-                'header_spacing': 125,
-                'orientation': 'portrait'
-            }),
-            landscape=None,
-            specific_paperformat_args={
-                'data-report-landscape': True,
-                'data-report-margin-top': 0,
-                'data-report-margin-bottom': 0,
-                'data-report-header-spacing': 0,
-                'data-report-dpi': 96
-            })
-        self.assertEqual(command_args, [
-            '--disable-local-file-access',
-            '--quiet',
-            '--page-size', 'A4',
-            '--margin-top', '0',
-            '--dpi', '96',
-            '--zoom', '1.0',
-            '--header-spacing', '0',
-            '--margin-left', '50.0',
-            '--margin-bottom', '0',
-            '--margin-right', '100.0',
-            '--javascript-delay', '1000',
-            '--orientation', 'landscape',
-        ])
 
 
 @odoo.tests.tagged('post_install', '-at_install', '-standard', 'pdf_rendering')

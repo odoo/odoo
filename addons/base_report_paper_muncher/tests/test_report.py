@@ -1,10 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import io
+
 import odoo.tests
 from odoo.tests import patch
 from odoo.tests.common import TEST_CURSOR_COOKIE_NAME, release_test_lock
 from odoo.tools import parse_version
+from odoo.tools.pdf import PdfFileReader
 
+from odoo.addons.base.models.ir_actions_report import ReportDocument
 from odoo.addons.base_report_paper_muncher.paper_muncher import (
     SERVE_TIMEOUT,
     PaperMuncherInfo,
@@ -138,8 +142,9 @@ class TestPaperMuncherReport(odoo.tests.HttpCase):
         legacy = info._replace(capabilities=info.capabilities - {'per-input-decoration'})
         with patch('odoo.addons.base_report_paper_muncher.models.ir_actions_report.paper_muncher', return_value=legacy):
             served = self._render_pdf_with_headers()
-        self.assertIsInstance(served['header'], str)
-        self.assertIsInstance(served['footer'], str)
+        # one subprocess per record, each with a single header and footer
+        self.assertEqual(len(served['header']), 1)
+        self.assertEqual(len(served['footer']), 1)
 
     def test_capabilities(self):
         self.assertEqual(_capabilities(parse_version('0.5')), frozenset())
@@ -207,10 +212,29 @@ class TestPaperMuncherReport(odoo.tests.HttpCase):
     def test_sandboxed(self):
         self.assertIn('--sandboxed', self._render_pdf_args())
 
-    def test_split_decoration_mismatch(self):
-        html = '<!DOCTYPE html><html><body><div id="minimal_layout_report_headers"><div>A</div><div>B</div></div></body></html>'
-        split = self.env['ir.actions.report']._split_paper_muncher_decoration
-        self.assertEqual(len(split(html, 'minimal_layout_report_headers', 2)), 2)
-        self.assertIsNone(split(html, 'minimal_layout_report_headers', 3))
-        self.assertIsNone(split(html, 'minimal_layout_report_footers', 2))
-        self.assertIsNone(split(None, 'minimal_layout_report_headers', 2))
+    def test_render_documents_with_shared_footer(self):
+        """ Documents with the same footer share the served footer. """
+        if not paper_muncher().has_capability('per-input-decoration'):
+            self.skipTest("paper-muncher does not support per-input headers and footers")
+        Report = self.env['ir.actions.report']
+        footer = '<!DOCTYPE html><html><body><p>Shared footer</p></body></html>'
+        documents = [
+            ReportDocument(body=f'<html><body><p>{name}</p></body></html>', footer=footer)
+            for name in 'AB'
+        ]
+        runs = []
+        init = PaperMuncherServer.__init__
+
+        def spy_init(self_server, args, *a, **kw):
+            runs.append([str(arg) for arg in args])
+            init(self_server, args, *a, **kw)
+
+        with patch.object(PaperMuncherServer, '__init__', spy_init):
+            pdf = Report._run_pdf_engine_with_documents(
+                'paper-muncher', documents, Report._get_page_setup(self.report.report_name))
+        self.assertEqual(len(runs), 1)
+        args = runs[0]
+        self.assertEqual(args.count('--footer'), 2)
+        self.assertEqual(args.count('pipe:/paper-muncher/footer-0.html'), 2)
+        pages = PdfFileReader(io.BytesIO(pdf)).pages
+        self.assertEqual(len(pages), 2)

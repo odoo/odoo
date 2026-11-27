@@ -13,13 +13,14 @@ from urllib.parse import urlparse
 
 import lxml.html
 from lxml import etree
-from markupsafe import Markup
 
 from odoo import api, fields, models, modules
 from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.http.session import session_store, update_session_token
 from odoo.tools import config, find_in_path, parse_version, split_every
+
+from odoo.addons.base.models.ir_actions_report import ReportPageSetup
 
 _logger = logging.getLogger(__name__)
 
@@ -154,167 +155,53 @@ class IrActionsReport(models.Model):
         return _wkhtml().state
 
     @api.model
-    def _prepare_wkhtmltopdf_html(self, html, report_model=False):
-        '''Divide and recreate the header/footer html by merging all found in html.
-        The bodies are extracted and added to a list. Then, extract the specific_paperformat_args.
-        The idea is to put all headers/footers together. Then, we will use a javascript trick
-        (see minimal_layout template) to set the right header/footer during the processing of wkhtmltopdf.
-        This allows the computation of multiple reports in a single call to wkhtmltopdf.
-        '''
+    def _build_wkhtmltopdf_args(self, page_setup: ReportPageSetup, set_viewport_size=False):
+        '''Build arguments understandable by wkhtmltopdf bin, but for the decorations.
 
-        # Return empty dictionary if 'web.minimal_layout' not found.
-        layout = self._get_layout()
-        if not layout:
-            return {}
-        base_url = self._get_report_url(layout=layout)
-
-        root = lxml.html.fromstring(html, parser=lxml.html.HTMLParser(encoding='utf-8'))
-        match_klass = "//div[contains(concat(' ', normalize-space(@class), ' '), ' {} ')]"
-
-        header_node = etree.Element('div', id='minimal_layout_report_headers')
-        footer_node = etree.Element('div', id='minimal_layout_report_footers')
-        bodies = []
-        res_ids = []
-
-        body_parent = root.xpath('//main')[0]
-        # Retrieve headers
-        for node in root.xpath(match_klass.format('header')):
-            body_parent = node.getparent()
-            node.getparent().remove(node)
-            header_node.append(node)
-
-        # Retrieve footers
-        for node in root.xpath(match_klass.format('footer')):
-            body_parent = node.getparent()
-            node.getparent().remove(node)
-            footer_node.append(node)
-
-        # Retrieve bodies
-        for node in root.xpath(match_klass.format('article')):
-            # set context language to body language
-            IrQweb = self.env['ir.qweb']
-            if node.get('data-oe-lang'):
-                IrQweb = IrQweb.with_context(lang=node.get('data-oe-lang'))
-            body = IrQweb._render(layout.id, {
-                'subst': False,
-                'body': Markup(lxml.html.tostring(node, encoding='unicode')),
-                'base_url': base_url,
-                'report_xml_id': self.xml_id,
-                'debug': self.env.context.get("debug"),
-            }, raise_if_not_found=False)
-            bodies.append(body)
-            if node.get('data-oe-model') == report_model:
-                res_ids.append(int(node.get('data-oe-id', 0)))
-            else:
-                res_ids.append(None)
-
-        if not bodies:
-            body = ''.join(lxml.html.tostring(c, encoding='unicode') for c in body_parent.getchildren())
-            bodies.append(body)
-
-        # Get paperformat arguments set in the root html tag. They are prioritized over
-        # paperformat-record arguments.
-        specific_paperformat_args = {}
-        for attribute in root.items():
-            if attribute[0].startswith('data-report-'):
-                specific_paperformat_args[attribute[0]] = attribute[1]
-
-        header = self.env['ir.qweb']._render(layout.id, {
-            'subst': True,
-            'body': Markup(lxml.html.tostring(header_node, encoding='unicode')),
-            'base_url': base_url,
-            'report_xml_id': self.xml_id,
-            'debug': self.env.context.get("debug"),
-        })
-        footer = self.env['ir.qweb']._render(layout.id, {
-            'subst': True,
-            'body': Markup(lxml.html.tostring(footer_node, encoding='unicode')),
-            'base_url': base_url,
-            'report_xml_id': self.xml_id,
-            'debug': self.env.context.get("debug"),
-        })
-
-        return bodies, res_ids, header, footer, specific_paperformat_args
-
-    @api.model
-    def _build_wkhtmltopdf_args(
-        self,
-        paperformat_id,
-        landscape,
-        specific_paperformat_args=None,
-        set_viewport_size=False):
-        '''Build arguments understandable by wkhtmltopdf bin.
-
-        :param paperformat_id: A report.paperformat record.
-        :param landscape: Force the report orientation to be landscape.
-        :param specific_paperformat_args: A dictionary containing prioritized wkhtmltopdf arguments.
-        :param set_viewport_size: Enable a viewport sized '1024x1280' or '1280x1024' depending of landscape arg.
+        :param page_setup: The resolved page setup of the documents.
+        :param set_viewport_size: Enable a viewport sized '1024x1280' or '1280x1024' depending on the orientation.
         :return: A list of string representing the wkhtmltopdf process command args.
         '''
-        if landscape is None and specific_paperformat_args and specific_paperformat_args.get('data-report-landscape'):
-            landscape = specific_paperformat_args.get('data-report-landscape')
-
         command_args = ['--disable-local-file-access']
         if set_viewport_size:
-            command_args.extend(['--viewport-size', '1024x1280' if landscape else '1280x1024'])
+            command_args.extend(['--viewport-size', '1024x1280' if page_setup.landscape else '1280x1024'])
 
         # Less verbose error messages
         command_args.extend(['--quiet'])
 
-        # Build paperformat args
-        if paperformat_id:
-            if paperformat_id.format and paperformat_id.format != 'custom':
-                command_args.extend(['--page-size', paperformat_id.format])
+        if page_setup.paper_format:
+            command_args.extend(['--page-size', page_setup.paper_format])
+        elif page_setup.page_width and page_setup.page_height:
+            command_args.extend(['--page-width', f'{page_setup.page_width:g}mm'])
+            command_args.extend(['--page-height', f'{page_setup.page_height:g}mm'])
 
-            if paperformat_id.page_height and paperformat_id.page_width and paperformat_id.format == 'custom':
-                command_args.extend(['--page-width', str(paperformat_id.page_width) + 'mm'])
-                command_args.extend(['--page-height', str(paperformat_id.page_height) + 'mm'])
+        command_args.extend([
+            '--margin-top', f'{page_setup.margin_top:g}',
+            '--margin-bottom', f'{page_setup.margin_bottom:g}',
+            '--margin-left', f'{page_setup.margin_left:g}',
+            '--margin-right', f'{page_setup.margin_right:g}',
+        ])
+        if page_setup.header_spacing is not None:
+            command_args.extend(['--header-spacing', f'{page_setup.header_spacing:g}'])
 
-            if specific_paperformat_args and 'data-report-margin-top' in specific_paperformat_args:
-                command_args.extend(['--margin-top', str(specific_paperformat_args['data-report-margin-top'])])
-            else:
-                command_args.extend(['--margin-top', str(paperformat_id.margin_top)])
+        dpi = page_setup.dpi
+        if dpi and os.name == 'nt' and dpi <= 95:
+            _logger.info("Generating PDF on Windows platform require DPI >= 96. Using 96 instead.")
+            dpi = 96
+        if dpi:
+            command_args.extend(['--dpi', str(dpi)])
+            if _wkhtml().dpi_zoom_ratio:
+                command_args.extend(['--zoom', str(96.0 / dpi)])
 
-            dpi = None
-            if specific_paperformat_args and specific_paperformat_args.get('data-report-dpi'):
-                dpi = int(specific_paperformat_args['data-report-dpi'])
-            elif paperformat_id.dpi:
-                if os.name == 'nt' and int(paperformat_id.dpi) <= 95:
-                    _logger.info("Generating PDF on Windows platform require DPI >= 96. Using 96 instead.")
-                    dpi = 96
-                else:
-                    dpi = paperformat_id.dpi
-            if dpi:
-                command_args.extend(['--dpi', str(dpi)])
-                if _wkhtml().dpi_zoom_ratio:
-                    command_args.extend(['--zoom', str(96.0 / dpi)])
-
-            if specific_paperformat_args and 'data-report-header-spacing' in specific_paperformat_args:
-                command_args.extend(['--header-spacing', str(specific_paperformat_args['data-report-header-spacing'])])
-            elif paperformat_id.header_spacing:
-                command_args.extend(['--header-spacing', str(paperformat_id.header_spacing)])
-
-            command_args.extend(['--margin-left', str(paperformat_id.margin_left)])
-
-            if specific_paperformat_args and 'data-report-margin-bottom' in specific_paperformat_args:
-                command_args.extend(['--margin-bottom', str(specific_paperformat_args['data-report-margin-bottom'])])
-            else:
-                command_args.extend(['--margin-bottom', str(paperformat_id.margin_bottom)])
-
-            command_args.extend(['--margin-right', str(paperformat_id.margin_right)])
-            if not landscape and paperformat_id.orientation:
-                command_args.extend(['--orientation', str(paperformat_id.orientation)])
-            if paperformat_id.header_line:
-                command_args.extend(['--header-line'])
-            if paperformat_id.disable_shrinking:
-                command_args.extend(['--disable-smart-shrinking'])
+        command_args.extend(['--orientation', 'landscape' if page_setup.landscape else 'portrait'])
+        if page_setup.header_line:
+            command_args.extend(['--header-line'])
+        if page_setup.disable_shrinking:
+            command_args.extend(['--disable-smart-shrinking'])
 
         # Add extra time to allow the page to render
         delay = self.env['ir.config_parameter'].sudo().get_int('report.print_delay') or 1000
         command_args.extend(['--javascript-delay', str(delay)])
-
-        if landscape:
-            command_args.extend(['--orientation', 'landscape'])
 
         return command_args
 
@@ -361,38 +248,17 @@ class IrActionsReport(models.Model):
                         output_images.append(output_file.read())
         return output_images
 
-    @api.model
-    def _run_pdf_engine_without_processing(
-        self,
-        engine_name,
-        bodies,
-        report_ref=False,
-        *,
-        header=None,
-        footer=None,
-        landscape=False,
-        specific_paperformat_args=None,
-        **kwargs,
-    ):
+    def _run_pdf_engine_with_documents(self, engine_name, documents, page_setup, **kwargs):
         if engine_name != 'wkhtmltopdf':
-            return super()._run_pdf_engine_without_processing(
-                engine_name, bodies, report_ref,
-                header=header, footer=footer, landscape=landscape,
-                specific_paperformat_args=specific_paperformat_args,
-                **kwargs)
+            return super()._run_pdf_engine_with_documents(engine_name, documents, page_setup, **kwargs)
 
         assert isinstance(self, IrActionsReport)
-        paperformat_id = self._get_report(report_ref).get_paperformat() if report_ref else self.get_paperformat()
 
         # Build the base command args for wkhtmltopdf bin
         command_args = self._build_wkhtmltopdf_args(
-            paperformat_id,
-            landscape,
-            specific_paperformat_args=specific_paperformat_args,
+            page_setup,
             set_viewport_size=kwargs.get('set_viewport_size', False),
         )
-
-        files_command_args = []
 
         with ExitStack() as stack:
 
@@ -418,20 +284,21 @@ class IrActionsReport(models.Model):
                     cookie_jar_file.write(cookie.encode())
                 command_args.extend(['--cookie-jar', cookie_jar_file.name])
 
-            if header:
-                head_file = stack.enter_context(tempfile.NamedTemporaryFile(suffix='.html', prefix='report.header.tmp.', delete_on_close=False))
-                with closing(head_file):
-                    head_file.write(header.encode())
-                files_command_args.extend(['--header-html', head_file.name])
-            if footer:
-                foot_file = stack.enter_context(tempfile.NamedTemporaryFile(suffix='.html', prefix='report.footer.tmp.', delete_on_close=False))
-                with closing(foot_file):
-                    foot_file.write(footer.encode())
-                files_command_args.extend(['--footer-html', foot_file.name])
+            decoration_paths = {}
 
-            paths = []
+            def decoration_path(kind, html):
+                # documents sharing a decoration share its file
+                if (kind, html) not in decoration_paths:
+                    decoration_file = stack.enter_context(tempfile.NamedTemporaryFile(suffix='.html', prefix=f'report.{kind}.tmp.', delete_on_close=False))
+                    with closing(decoration_file):
+                        decoration_file.write(html.encode())
+                    decoration_paths[kind, html] = decoration_file.name
+                return decoration_paths[kind, html]
+
+            pages_command_args = []
             body_idx = 0
-            for body_idx, body in enumerate(bodies):
+            for body_idx, document in enumerate(documents):
+                body = document.body
                 prefix = f'report.body.tmp.{body_idx}.'
                 body_file = stack.enter_context(tempfile.NamedTemporaryFile(suffix='.html', prefix=prefix, delete_on_close=False))
                 with closing(body_file):
@@ -448,13 +315,18 @@ class IrActionsReport(models.Model):
                         tree = lxml.html.fromstring(body)
                         _split_table(tree, 500)
                         body_file.write(lxml.html.tostring(tree))
-                paths.append(body_file.name)
+                # the decorations following a page only apply to it
+                pages_command_args += ['page', body_file.name]
+                if document.header:
+                    pages_command_args += ['--header-html', decoration_path('header', document.header)]
+                if document.footer:
+                    pages_command_args += ['--footer-html', decoration_path('footer', document.footer)]
 
             pdf_report = stack.enter_context(tempfile.NamedTemporaryFile(suffix='.pdf', prefix='report.tmp.', delete_on_close=False))
             pdf_report.close()
             pdf_report_path = pdf_report.name
 
-            process = self._run_wkhtmltopdf__(command_args + files_command_args + paths + [pdf_report_path])
+            process = self._run_wkhtmltopdf__(command_args + pages_command_args + [pdf_report_path])
             err = process.stderr or '(no stderr)'
 
             match process.returncode:
@@ -487,23 +359,3 @@ class IrActionsReport(models.Model):
                 pdf_content = pdf_document.read()
 
         return pdf_content
-
-    def _run_pdf_engine(self, engine_name, html, report_ref=False, landscape=False, **kwargs):
-        if engine_name != 'wkhtmltopdf':
-            return super()._run_pdf_engine(engine_name, html, report_ref, landscape, **kwargs)
-        report_sudo = self._get_report(report_ref)
-        bodies, html_ids, header, footer, specific_paperformat_args = report_sudo\
-            .with_context(debug=False)._prepare_wkhtmltopdf_html(html, report_model=report_sudo.model)
-        kwargs.update({
-            'header': header,
-            'footer': footer,
-            'specific_paperformat_args': specific_paperformat_args,
-        })
-        content = self._run_pdf_engine_without_processing(
-            engine_name,
-            bodies,
-            report_ref=report_ref,
-            landscape=landscape,
-            **kwargs,
-        )
-        return content, html_ids
