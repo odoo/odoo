@@ -2994,6 +2994,39 @@ class TestStockUOM(TestStockCommon):
         # check that we reserve the same quantity in the ml and the quant
         self.assertEqual(move_line.quantity_product_uom, quant.reserved_quantity)
 
+    def test_move_line_uom_coarser_than_product_uom(self):
+        """ Product in kg (rounding 0.000001), moved in g (rounding 1.0): the
+        quantities in product UoM (e.g. 0.26 kg) must be compared with the kg
+        rounding, not the g one, otherwise they are considered as zero and the
+        quants are never updated.
+        """
+        self.uom_gm.rounding = 1.0
+        stock_location = self.env['stock.location'].browse(self.stock_location)
+        self.env['stock.quant']._update_available_quantity(self.kgB, stock_location, 2)
+        quant = self.kgB.stock_quant_ids
+
+        move = self.env['stock.move'].create({
+            'name': 'test_move_line_uom_coarser_than_product_uom',
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location,
+            'product_id': self.kgB.id,
+            'product_uom': self.uom_gm.id,
+            'product_uom_qty': 260,
+        })
+        move._action_confirm()
+        move._action_assign()
+        self.assertEqual(quant.reserved_quantity, 0.26)
+
+        # Updating the move line must release its previous reservation
+        move.move_line_ids.quantity = 250
+        self.assertEqual(quant.reserved_quantity, 0.25)
+
+        move.picked = True
+        move._action_done()
+        self.assertEqual(move.state, 'done')
+        self.assertEqual(quant.quantity, 1.75)
+        self.assertEqual(quant.reserved_quantity, 0)
+
     def test_update_product_move_line_with_different_uom(self):
         """ Check that when the move line and corresponding
         product have different UOM with possibly conflicting

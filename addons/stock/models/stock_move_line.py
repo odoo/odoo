@@ -487,7 +487,7 @@ class StockMoveLine(models.Model):
                     new_reserved_qty = ml.quantity_product_uom
 
                 # Unreserve the old charateristics of the move line.
-                if not float_is_zero(ml.quantity_product_uom, precision_rounding=ml.product_uom_id.rounding):
+                if not float_is_zero(ml.quantity_product_uom, precision_rounding=ml.product_id.uom_id.rounding):
                     ml._synchronize_quant(-ml.quantity_product_uom, ml.location_id, action="reserved")
 
                 # Reserve the maximum available of the new charateristics of the move line.
@@ -534,7 +534,7 @@ class StockMoveLine(models.Model):
                 if ('quantity' in vals or 'product_uom_id' in vals) and ml.picked:
                     new_qty = updates.get('product_uom_id', ml.product_uom_id)._compute_quantity(vals.get('quantity', ml.quantity), ml.product_id.uom_id, rounding_method='HALF-UP')
                     old_qty = ml.product_uom_id._compute_quantity(ml.quantity, ml.product_id.uom_id, rounding_method='HALF-UP')
-                    if float_compare(old_qty, new_qty, precision_rounding=ml.product_uom_id.rounding) < 0:
+                    if float_compare(old_qty, new_qty, precision_rounding=ml.product_id.uom_id.rounding) < 0:
                         updated_ml_ids.add(ml.id)
             self.env['stock.move.line'].browse(updated_ml_ids).date = fields.Datetime.now()
 
@@ -719,7 +719,7 @@ class StockMoveLine(models.Model):
         package = quants_value.get('package', self.package_id)
         owner = quants_value.get('owner', self.owner_id)
         available_qty = 0
-        if not self.product_id.is_storable or float_is_zero(quantity, precision_rounding=self.product_uom_id.rounding):
+        if not self.product_id.is_storable or float_is_zero(quantity, precision_rounding=self.product_id.uom_id.rounding):
             return 0, False
         if action == "available":
             available_qty, in_date = self.env['stock.quant']._update_available_quantity(self.product_id, location, quantity, lot_id=lot, package_id=package, owner_id=owner, in_date=in_date)
@@ -836,7 +836,7 @@ class StockMoveLine(models.Model):
         move_to_reassign = self.env['stock.move']
         to_unlink_candidate_ids = set()
 
-        rounding = self.product_uom_id.rounding
+        rounding = self.product_id.uom_id.rounding
         for candidate in outdated_candidates:
             move_to_reassign |= candidate.move_id
             if float_compare(candidate.quantity_product_uom, quantity, precision_rounding=rounding) <= 0:
