@@ -174,28 +174,13 @@
                                 </div>
                             </page>
                             <page name="certification" string="Certifications">
-                                <field name="certification_ids" mode="list" nolabel="1" readonly="1" invisible="not certification_ids">
-                                    <list
-                                        no_open="1"
-                                        decoration-muted="valid_to and valid_to &lt; context_today().strftime('%Y-%m-%d')">
-                                        <field name="skill_id" width="300" string="Certification"/>
-                                        <field name="valid_from" string="From" widget="formatted_date" options="{
-                                            'month_format': 'short',
-                                        }"/>
-                                        <field name="valid_to" string="To" widget="formatted_date" options="{
-                                            'month_format': 'short',
-                                            'color': {
-                                                'danger': 'valid_to and valid_to &lt;= (context_today() + relativedelta(days=7)).strftime(\'%Y-%m-%d\') and valid_to &gt; context_today().strftime(\'%Y-%m-%d\')',
-                                                'warning': 'valid_to and valid_to &lt;= (context_today() + relativedelta(months=3)).strftime(\'%Y-%m-%d\') and valid_to &gt; (context_today() + relativedelta(days=7)).strftime(\'%Y-%m-%d\')'
-                                            }
-                                        }"/>
-                                    </list>
-                                </field>
                                 <div class="o_view_nocontent position-relative" invisible="certification_ids">
                                     <div class="o_nocontent_help">
-                                        <p class="o_view_nocontent_empty_folder fs-4 fw-normal">No certifications found.</p>
+                                        <p class="o_view_nocontent_empty_folder fs-4 fw-normal">No Certifications yet.</p>
                                     </div>
                                 </div>
+                                <field name="certification_ids" mode="kanban" nolabel="1" readonly="1" invisible="not certification_ids"
+                                    context="{'kanban_view_ref': 'hr.hr_employee_skill_view_kanban_certification_public'}"/>
                             </page>
                         </notebook>
                     </sheet>

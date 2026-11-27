@@ -671,3 +671,38 @@ class TestEmployeeSkills(TransactionCase):
         self.assertTrue(EmployeeSkill.get_help_data([])['has_certification_skill_type'])
         self.env['hr.skill.type'].search([('is_certification', '=', True)]).is_certification = False
         self.assertFalse(EmployeeSkill.get_help_data([])['has_certification_skill_type'])
+
+    def test_certification_credential_url(self):
+        """ The credential link of a certification is kept when the certification is replaced by
+        a new version. Only web links are accepted as it is opened from the employee form, and the
+        missing scheme of a link typed as in a browser is added. """
+        url = 'https://www.credly.com/badges/odoo'
+        self.employee.write({'certification_ids': [Command.update(self.line1.id, {'credential_url': url})]})
+        self.assertEqual(self.line1.credential_url, url)
+
+        previous_employee_skills = self.employee.employee_skill_ids
+        self.employee.write({'certification_ids': [
+            Command.update(self.line1.id, {'skill_level_id': self.certification.skill_level_ids[2].id}),
+        ]})
+        new_certification = self.employee.employee_skill_ids - previous_employee_skills
+        self.assertEqual(new_certification.skill_level_id, self.certification.skill_level_ids[2])
+        self.assertEqual(new_certification.credential_url, url)
+
+        new_certification.credential_url = ' www.credly.com/badges/odoo-17 '
+        self.assertEqual(new_certification.credential_url, 'https://www.credly.com/badges/odoo-17')
+        new_certification.credential_url = '  '
+        self.assertIs(new_certification.credential_url, False)
+        for invalid_url in ('javascript:alert(1)', ' JavaScript:alert(1)', 'data:text/html,test', '[credly', 'https://[credly'):
+            with self.assertRaises(ValidationError):
+                new_certification.credential_url = invalid_url
+
+    def test_certification_ids_expired_last(self):
+        expired_100 = self.env['hr.employee.skill'].create({
+            'employee_id': self.employee.id,
+            'skill_type_id': self.certification.id,
+            'skill_id': self.certification.skill_ids[1].id,
+            'skill_level_id': self.certification.skill_level_ids[3].id,
+            'valid_from': datetime.date(2024, 1, 1),
+            'valid_to': datetime.date(2024, 6, 30),
+        })
+        self.assertEqual(self.employee.certification_ids.ids, [self.line1.id, expired_100.id, self.line2.id])

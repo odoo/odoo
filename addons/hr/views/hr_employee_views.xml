@@ -308,23 +308,18 @@
                                 </div>
                             </page>
                             <page name="certification" string="Certifications" invisible="not display_certification_page">
-                                <field name="certification_ids" mode="list" widget="one2many" nolabel="1" context="{'form_view_ref': 'hr.employee_skill_view_inherit_certificate_form', 'dialog_size': 'large', 'default_employee_id': id, 'certificate_skill': True}">
-                                    <list
-                                        decoration-muted="valid_to and valid_to &lt; context_today().strftime('%Y-%m-%d')">
-                                        <field name="skill_id" width="300" string="Certification"/>
-                                        <field name="valid_from" string="From" widget="formatted_date" options="{
-                                            'month_format': 'short',
-                                        }"/>
-                                        <field name="valid_to" string="To" widget="formatted_date" options="{
-                                            'month_format': 'short',
-                                            'color': {
-                                                'danger': 'valid_to and valid_to &lt;= (context_today() + relativedelta(days=7)).strftime(\'%Y-%m-%d\') and valid_to &gt; context_today().strftime(\'%Y-%m-%d\')',
-                                                'warning': 'valid_to and valid_to &lt;= (context_today() + relativedelta(months=3)).strftime(\'%Y-%m-%d\') and valid_to &gt; (context_today() + relativedelta(days=7)).strftime(\'%Y-%m-%d\')'
-                                            }
-                                        }"/>
-                                        <field name="certificate_file" widget="binary"/>
-                                    </list>
-                                </field>
+                                <div class="o_view_nocontent position-relative" invisible="certification_ids">
+                                    <div class="o_nocontent_help">
+                                        <p class="o_view_nocontent_empty_folder fs-4 fw-normal">No Certifications yet.</p>
+                                    </div>
+                                </div>
+                                <field name="certification_ids" mode="kanban" nolabel="1" add-label="Add a Certification" context="{
+                                    'kanban_view_ref': 'hr.hr_employee_skill_view_kanban_certification',
+                                    'form_view_ref': 'hr.employee_skill_view_inherit_certificate_form',
+                                    'dialog_size': 'large',
+                                    'default_employee_id': id,
+                                    'certificate_skill': True,
+                                }"/>
                             </page>
                             <page name="personal_information" string="Personal" groups="hr.group_hr_user">
                                 <group>

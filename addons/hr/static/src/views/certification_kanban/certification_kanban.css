@@ -1,0 +1,68 @@
+.o_hr_certification_kanban .o_kanban_renderer {
+    --KanbanRecord-width: calc((100% - 2 * var(--Kanban-gap)) / 3);
+    --HrCertificationKanban__add-width: min(18rem, 100%);
+
+    .o-kanban-button-new {
+        flex: 0 0 var(--HrCertificationKanban__add-width);
+        order: 1;
+        margin-inline: calc((100% - var(--HrCertificationKanban__add-width)) / 2);
+        border-radius: 0.5rem;
+    }
+}
+
+.o_hr_certification_kanban_certificate {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 4rem;
+    height: 4rem;
+    font-size: 3rem;
+}
+
+.o_hr_certification_kanban_image {
+    --HrCertificationKanban__medal-color: var(--o-main-favorite-color);
+    --HrCertificationKanban__medal-color--dark: color-mix(in srgb, var(--o-main-favorite-color), black 30%);
+
+    width: 100%;
+    height: 100%;
+}
+
+.o_hr_certification_kanban_paper {
+    fill: var(--o-view-background-color);
+    stroke: var(--gray-400);
+    stroke-width: 2;
+}
+
+.o_hr_certification_kanban_frame {
+    fill: none;
+    stroke: var(--gray-300);
+    stroke-width: 1.5;
+}
+
+.o_hr_certification_kanban_lines {
+    stroke: var(--gray-400);
+    stroke-width: 2;
+    stroke-linecap: round;
+}
+
+.o_hr_certification_kanban_ribbon {
+    fill: var(--HrCertificationKanban__medal-color--dark);
+}
+
+.o_hr_certification_kanban_medal {
+    fill: var(--HrCertificationKanban__medal-color);
+    stroke: var(--HrCertificationKanban__medal-color--dark);
+    stroke-width: 2;
+}
+
+.o_hr_certification_kanban_medal_center {
+    fill: none;
+    stroke: var(--o-view-background-color);
+    stroke-width: 1.5;
+}
+
+.o_hr_certification_kanban_placeholder {
+    border: var(--o-bs-border-width) dashed var(--o-bs-border-color);
+    border-radius: var(--o-bs-border-radius);
+    font-size: 1.5rem;
+}
