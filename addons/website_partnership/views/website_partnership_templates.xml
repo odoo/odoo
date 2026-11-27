@@ -112,20 +112,6 @@
     </div>
 </template>
 
-<template id="partner_page" name="Partner Page">
-    <t t-call="website.layout">
-        <div id="wrap">
-            <div class="oe_structure oe_empty" id="oe_structure_website_partnership_partner_1" data-editor-message.translate="Drag blocks here to add them on all partners"/>
-            <div class="container">
-                <div class="row">
-                    <t t-call="website_partnership.partner_detail"/>
-                </div>
-            </div>
-            <div class="oe_structure oe_empty" id="oe_structure_website_partnership_partner_2" data-editor-message.translate="Drag blocks here to add them on all partners"/>
-        </div>
-    </t>
-</template>
-
 <template id="partner_detail" inherit_id="website_partner.partner_detail" name="Partner Details">
     <xpath expr="//div" position="before">
         <t t-set="contact_details" t-value="contact_details if is_customer_page else False"/>
