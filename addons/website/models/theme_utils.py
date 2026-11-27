@@ -17,7 +17,6 @@ class ThemeUtils(models.AbstractModel):
 
     _theme_model_names = OrderedDict([
         ('ir.ui.view', 'theme.ir.ui.view'),
-        ('ir.attachment', 'theme.ir.attachment'),
     ])
     _theme_translated_fields = {
         'theme.ir.ui.view': [('theme.ir.ui.view,arch', 'ir.ui.view,arch_db')],
@@ -267,13 +266,6 @@ class ThemeUtils(models.AbstractModel):
                 rec_data['theme_id'] = theme.id
 
                 find = rec.with_context(active_test=False).mapped('copy_ids').filtered(lambda m: m.website_id == website)
-
-                # special case for attachment
-                # if module B override attachment from dependence A, we update it
-                if not find and model_name == 'ir.attachment':
-                    # In master, a unique constraint over (theme_template_id, website_id)
-                    # will be introduced, thus ensuring unicity of 'find'
-                    find = rec.copy_ids.search([('key', '=', rec.key), ('website_id', '=', website.id), ("original_id", "=", False)])
 
                 if find:
                     imd = self.env['ir.model.data'].search([('model', '=', find._name), ('res_id', '=', find.id)])

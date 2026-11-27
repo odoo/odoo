@@ -1,4 +1,4 @@
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, MissingError
 from odoo.tests import common, new_test_user, tagged
 
 
@@ -135,3 +135,26 @@ class TestThemeApply(common.TransactionCase):
 
         self.website.theme_id = False
         self.assertEqual(get_paths(self.website), [])
+
+    def test_theme_images_only_apply_to_their_websites(self):
+        image = self.env['ir.attachment']._load_records([{
+            'xml_id': 'test_theme.test_image',
+            'values': {
+                'name': 'Test Theme Image',
+                'key': 'website.test_theme_image',
+                'url': '/test_theme/static/src/img/test.webp',
+            },
+        }])
+        self.assertRecordValues(image, [{
+            'theme_id': self.theme.id,
+            'type': 'url',
+            'public': True,
+            'res_model': 'ir.ui.view',
+        }])
+        other_website = self.env['website'].create({'name': 'Other Website'})
+        self.website.theme_id = self.theme
+
+        IrBinary = self.env['ir.binary']
+        self.assertEqual(IrBinary.with_context(website_id=self.website.id)._find_record(xmlid='website.test_theme_image'), image)
+        with self.assertRaises(MissingError):
+            IrBinary.with_context(website_id=other_website.id)._find_record(xmlid='website.test_theme_image')

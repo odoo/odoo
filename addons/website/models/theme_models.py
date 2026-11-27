@@ -67,35 +67,14 @@ class ThemeIrUiView(models.Model):
         return new_view
 
 
-class ThemeIrAttachment(models.Model):
-    _name = 'theme.ir.attachment'
-    _description = 'Theme Attachment'
-
-    name = fields.Char(required=True)
-    key = fields.Char(required=True)
-    url = fields.Char()
-    copy_ids = fields.One2many('ir.attachment', 'theme_template_id', 'Attachment using a copy of me', copy=False, readonly=True)
-
-    def _convert_to_base_model(self, website, **kwargs):
-        self.ensure_one()
-        new_attach = {
-            'key': self.key,
-            'public': True,
-            'res_model': 'ir.ui.view',
-            'type': 'url',
-            'name': self.name,
-            'url': self.url,
-            'website_id': website.id,
-            'theme_template_id': self.id,
-        }
-        return new_attach
-
-
 class WebsiteThemeMixin(models.AbstractModel):
     _name = 'website.theme.mixin'
     _description = 'Record installed by a website theme'
 
     theme_id = fields.Many2one('ir.module.module', index='btree_not_null')
+
+    # Values the records of a theme get when they are loaded, unless the theme sets them
+    _theme_defaults = {}
 
     def _load_records(self, data_list, update=False):
         # The records of a theme module belong to that theme
@@ -103,7 +82,7 @@ class WebsiteThemeMixin(models.AbstractModel):
         for data in data_list:
             module = self.env['ir.module.module']._get((data.get('xml_id') or '').split('.')[0])
             if theme_category in (module.category_id, module.category_id.parent_id):
-                data['values']['theme_id'] = module.id
+                data['values'] = {**self._theme_defaults, **data['values'], 'theme_id': module.id}
         return super()._load_records(data_list, update)
 
 
@@ -143,6 +122,7 @@ class IrAsset(models.Model):
 class IrAttachment(models.Model):
     _name = 'ir.attachment'
     _inherit = ['ir.attachment', 'website.theme.mixin']
+    # Theme images are served from their url, to every visitor
+    _theme_defaults = {'type': 'url', 'public': True, 'res_model': 'ir.ui.view'}
 
     key = fields.Char(copy=False)
-    theme_template_id = fields.Many2one('theme.ir.attachment', copy=False, index='btree_not_null')
