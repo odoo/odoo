@@ -15,6 +15,7 @@ class BankAccountAllocationLineWizard(models.TransientModel):
     amount_type = fields.Selection(selection='_get_amount_type_selection_vals', readonly=False)
     symbol = fields.Char(compute="_compute_symbol", readonly=True)
     trusted = fields.Boolean(string="Trusted")
+    can_trust = fields.Boolean(compute="_compute_can_trust")
     sequence = fields.Integer(default=10)
 
     @api.depends('amount_type', 'bank_account_id.currency_symbol')
@@ -24,6 +25,12 @@ class BankAccountAllocationLineWizard(models.TransientModel):
                 line.symbol = line.bank_account_id.currency_symbol
             else:
                 line.symbol = '%'
+
+    @api.depends('bank_account_id')
+    @api.depends_context('uid')
+    def _compute_can_trust(self):
+        for line in self:
+            line.can_trust = bool(line.bank_account_id) and line.bank_account_id._user_can_trust()
 
     def _get_amount_type_selection_vals(self):
         return [('percentage', 'Percentage'), ('fixed', 'Fixed')]
