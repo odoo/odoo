@@ -203,6 +203,15 @@ class MicrosoftSync(models.AbstractModel):
             # ownership will be lost in Outlook and it will block the future event sync for the original owner.
             if record.user_id and record.user_id != self.env.user and sender_user == self.env.user:
                 continue
+            # An occurrence of an Outlook recurrence is owned by Outlook: inserting it
+            # would create a new meeting organized by the syncing user and Outlook
+            # would send invitations to every attendee.
+            if record._name == 'calendar.event' and record.microsoft_recurrence_master_id:
+                _logger.warning(
+                    "Event %s not inserted in Outlook: it belongs to the Outlook recurrence %s but has no Outlook id",
+                    record.id, record.microsoft_recurrence_master_id,
+                )
+                continue
             if isinstance(values, dict):
                 record._microsoft_insert(values)
             else:
@@ -247,7 +256,7 @@ class MicrosoftSync(models.AbstractModel):
                 if recurrent_event.type == 'occurrence':
                     value = self.env['calendar.event']._microsoft_to_odoo_recurrence_values(recurrent_event, base_values)
                 else:
-                    value = self.env['calendar.event']._microsoft_to_odoo_values(recurrent_event, default_values)
+                    value = self.env['calendar.event']._microsoft_to_odoo_values(recurrent_event, default_values, with_ids=True)
 
                 to_create_values += [dict(value, need_sync_m=False)]
 
@@ -283,6 +292,9 @@ class MicrosoftSync(models.AbstractModel):
             recurrence_id = recurrences.filtered(
                 lambda ev: ev.ms_universal_event_id == ms_recurrence_uids[recurrent_master_id]
             )
+            # Outlook ids are specific to each user calendar: only keep the ids of an
+            # exception if they come from the calendar the recurrence was synced from.
+            same_calendar = recurrent_master_id in recurrence_id.mapped('ms_organizer_event_id')
             to_update = recurrents.filter(lambda e: e.seriesMasterId == recurrent_master_id)
             for recurrent_event in to_update:
                 if recurrent_event.type == 'occurrence':
@@ -290,7 +302,9 @@ class MicrosoftSync(models.AbstractModel):
                         recurrent_event, {'need_sync_m': False}
                     )
                 else:
-                    value = self.env['calendar.event']._microsoft_to_odoo_values(recurrent_event, default_values)
+                    value = self.env['calendar.event']._microsoft_to_odoo_values(
+                        recurrent_event, default_values={'need_sync_m': False}, with_ids=same_calendar
+                    )
                 existing_event = recurrence_id.calendar_event_ids.filtered(
                     lambda e: e._is_matching_timeslot(value['start'], value['stop'], recurrent_event.isAllDay)
                 )
@@ -317,7 +331,10 @@ class MicrosoftSync(models.AbstractModel):
         update_events = self.env['calendar.event']
         for e in events_to_update:
             if e.type == "exception":
-                event_values = self.env['calendar.event']._microsoft_to_odoo_values(e)
+                # Keep the Outlook ids: when the exception does not match an existing
+                # occurrence (e.g. its time slot changed), `_apply_recurrence` creates it
+                # from these values and the new event must stay linked to Outlook.
+                event_values = self.env['calendar.event']._microsoft_to_odoo_values(e, with_ids=True)
             elif e.type == "occurrence":
                 event_values = self.env['calendar.event']._microsoft_to_odoo_recurrence_values(e)
             else:

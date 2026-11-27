@@ -360,7 +360,8 @@ class Meeting(models.Model):
         if with_ids:
             values['microsoft_id'] = combine_ids(microsoft_event.id, microsoft_event.iCalUId)
 
-        if microsoft_event.is_recurrent():
+        # seriesMasterId is always unset on the series master itself
+        if microsoft_event.is_recurrent_not_master():
             values['microsoft_recurrence_master_id'] = microsoft_event.seriesMasterId
 
         alarm_commands = self._odoo_reminders_commands_m(microsoft_event)
