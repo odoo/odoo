@@ -152,6 +152,29 @@ class One2manyCase(TransactionExpressionCase):
         res_movies_not_of_edition_name = self._search(self.Movie, [('editions', '!=', one_movie_edition.name)])
         self.assertItemsEqual(t(res_movies_not_of_edition_name), t(movies.filtered(lambda r: one_movie_edition not in r.editions)))
 
+    def test_many2one_reference_inverse_cache(self):
+        """Writing on a many2one_reference updates the cache of its inverses."""
+        gold_rush = self.Movie.search([('name', '=', 'The Gold Rush')])
+        other = self.Movie.search([('name', '=', 'Imaginary movie')])
+        edition = gold_rush.editions[0]
+        self.assertEqual(len(gold_rush.editions), 2)
+        self.assertFalse(other.editions)
+
+        edition.res_id = other.id
+        with self.assertQueryCount(0):
+            self.assertNotIn(edition, gold_rush.editions)
+            self.assertEqual(other.editions, edition)
+
+        edition.res_id = False
+        with self.assertQueryCount(0):
+            self.assertFalse(other.editions)
+            self.assertEqual(len(gold_rush.editions), 1)
+
+        # check that the cache is consistent with the database
+        cached = (gold_rush.editions, other.editions)
+        self.env.invalidate_all()
+        self.assertEqual((gold_rush.editions, other.editions), cached)
+
     def test_merge_partner(self):
         model = self.env['test_orm.field_with_caps']
         partner = self.env['res.partner']

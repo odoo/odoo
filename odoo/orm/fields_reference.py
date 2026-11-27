@@ -131,6 +131,47 @@ class Many2oneReference(Integer):
     def _update_inverse(self, records: BaseModel, value: BaseModel):
         self._update_cache(records, self.convert_to_cache(value, records))
 
+    def write(self, records, value):
+        # discard recomputation of self on records
+        records.env.remove_to_compute(self, records)
+
+        # discard the records that are not modified
+        cache_value = self.convert_to_cache(value, records)
+        records = self._filter_not_equal(records, cache_value)
+        if not records:
+            return
+
+        # remove records from the cache of one2many fields of old corecords
+        self._remove_inverses(records)
+
+        # update the cache of self
+        self._update_cache(records, cache_value, dirty=True)
+
+        # update the cache of one2many fields of new corecord
+        self._update_inverses(records, cache_value)
+
+    def _remove_inverses(self, records: BaseModel):
+        """ Remove `records` from the cached values of the inverse fields of `self`. """
+        inverse_fields = records.pool.field_inverses[self]
+        if not inverse_fields:
+            return
+        field_cache = self._get_cache(records.env)
+        records = records.browse(
+            record_id for record_id in records._ids if field_cache.get(record_id)
+        )
+        if not records:
+            return
+        record_ids = set(records._ids)
+        model_ids = self._record_ids_per_res_model(records)
+
+        for invf in inverse_fields:
+            inv_cache = invf._get_cache(records.env)
+            for coid in OrderedSet(field_cache[record_id] for record_id in model_ids[invf.model_name]):
+                ids0 = inv_cache.get(coid)
+                if ids0 is not None:
+                    ids1 = tuple(id_ for id_ in ids0 if id_ not in record_ids)
+                    invf._update_cache(records.env[invf.model_name].browse(coid), ids1)
+
     def _update_inverses(self, records: BaseModel, value):
         """ Add `records` to the cached values of the inverse fields of `self`. """
         if not value:
