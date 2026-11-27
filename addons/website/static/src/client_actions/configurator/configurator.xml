@@ -104,14 +104,14 @@
     <div class="o_configurator_background position-absolute top-0 start-0 end-0 bottom-0">
         <span class="o_configurator_background_inner position-absolute top-0 start-0 end-0 bottom-0 pe-none"/>
     </div>
-    <div class="o_configurator_screen overflow-x-hidden h-100 d-flex flex-row-reverse justify-content-around position-relative px-3 px-xxl-0">
+    <div class="o_configurator_screen overflow-x-hidden h-100 d-flex flex-row-reverse justify-content-around position-relative px-3">
         <div class="o_description_screen_image_preview position-relative d-none d-lg-flex flex-column w-50 h-100">
             <div class="d-flex flex-grow-1 align-items-center justify-content-center">
                 <t t-if="this.previewImages.length" t-call="website.Configurator.IndustryImageShowcase"/>
             </div>
             <SkipButton skip="this.props.skip" className="'py-2 pb-md-3 text-end mt-auto z-1'"/>
         </div>
-        <div class="d-flex flex-column o_configurator_screen o_description_screen px-2 position-relative"
+        <div class="d-flex flex-column o_configurator_screen o_description_screen mw-lg-50 px-2 position-relative"
             t-on-focusin="this.onConfiguratorScreenFocusin">
             <div class="o_configurator_screen_content position-relative d-flex h-100 flex-grow-1">
                 <div class="container align-self-center p-0">
@@ -120,7 +120,7 @@
                         <div t-attf-class="dropdown o_configurator_type_dd d-inline-block {{this.state.selectedType ? 'o_step_completed' : 'o_step_todo show'}}"
                             t-on-focusout="this.onDropdownFocusout">
                             <button id="selectTypeToggle"
-                                    class="o_btn_reset w-100 px-2"
+                                    class="o_btn_reset w-100 px-2 text-start"
                                     data-bs-toggle="dropdown"
                                     aria-haspopup="true"
                                     aria-expanded="true"
@@ -152,7 +152,7 @@
                     </div>
                     <div t-att-class="this.state.selectedType ? '' : 'invisible'" class="o_configurator_typing_text d-inline d-md-flex align-items-center o_configurator_industry mb-md-2 mb-lg-4 o_configurator_show">
                         <!-- Use t-set in order to be able to translate, if put in the attribute directly then export POT file will not exist this text-->
-                        <label class="o_configurator_industry_wrapper me-2" t-custom-ref="industrySelection">
+                        <label class="o_configurator_industry_wrapper me-2" t-custom-ref="industrySelection" t-att-data-value="this.state.selectedIndustry?.label">
                             <AutoComplete
                                 placeholder.translate="Restaurant, Hair Salon, Clothing Store,..."
                                 value="this.state.selectedIndustry?.label ?? ''"
@@ -174,7 +174,7 @@
                             t-on-focusout="this.onDropdownFocusout">
                             <button id="selectPurposeToggle"
                                     t-custom-ref="positioningDropdown"
-                                    class="o_btn_reset w-100 px-2"
+                                    class="o_btn_reset w-100 px-2 text-start"
                                     data-bs-toggle="dropdown"
                                     aria-haspopup="true"
                                     aria-expanded="true"
