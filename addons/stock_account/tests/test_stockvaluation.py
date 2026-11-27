@@ -4059,6 +4059,24 @@ class TestStockValuation(TestStockValuationCommon):
             }],
         )
 
+    def test_avco_full_recompute_counts_stock_outside_warehouse(self):
+        product = self.product_avco
+        outside_location = self.env['stock.location'].create({
+            'name': 'Outside WH',
+            'usage': 'internal',
+            'company_id': self.company.id,
+        })
+        with freeze_time('2026-11-02 10:00:00'):
+            self._make_in_move(product, 50, unit_cost=10)
+            self._make_out_move(product, 50, location_dest_id=outside_location.id)
+        with freeze_time('2026-11-03 10:00:00'):
+            product.standard_price = 14
+        with freeze_time('2026-11-04 10:00:00'):
+            self._make_in_move(product, 50, unit_cost=20)
+            self.assertEqual(product.standard_price, 17)
+            product._update_standard_price()
+            self.assertEqual(product.standard_price, 17)
+
     def test_avco_valuation_multicompany(self):
         """
         Test that changing values manually for an AVCO product in different companies results
