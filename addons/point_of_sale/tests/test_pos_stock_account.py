@@ -382,3 +382,32 @@ class TestPoSStock(TestPoSCommon):
         self.assertEqual(invoice.state, 'posted')
         refund = self._sync_uninvoiced_refund(order)
         self._assert_refund_documented_by_credit_note(refund, invoice)
+
+    def test_10_cogs_invoice_wizard_single_order_after_closing_update_stock_at_closing(self):
+        """ Invoicing one order of a closed session: the invoice books its COGS again, so the automatic
+        reversal of the closing entry must neutralise the share the closing entry booked for that order. """
+        self.env.company.point_of_sale_update_stock_quantities = 'closing'
+        self.open_new_session()
+        order = self._sync_ui_orders([self.create_ui_order_data([(self.product1, 1)], customer=self.customer)])
+        self.pos_session.action_pos_session_validate()
+        invoice = self._invoice_with_wizard(order)
+        closing_reversal = self.env['account.move'].search([('reversed_pos_order_id', '=', order.id)])
+        self.assertEqual(
+            self._get_cogs_balance(invoice), 5.0,
+            "Single order invoiced after closing: the invoice should book the COGS of its unit",
+        )
+        self.assertEqual(
+            self._get_cogs_balance(invoice | self.pos_session.move_id | closing_reversal), 5.0,
+            "Single order invoiced after closing: the COGS must be booked once over the invoice, "
+            "the session closing entry and its reversal",
+        )
+
+    def test_11_cogs_invoice_wizard_after_closing_update_stock_in_real_time(self):
+        """ Control: with the default real-time stock update each order owns its picking, so the reversal
+        of each order neutralises only its own COGS and a consolidated invoice books the COGS once. """
+        self.env.company.point_of_sale_update_stock_quantities = 'real'
+        self.open_new_session()
+        orders = self._create_two_customer_orders()
+        self.pos_session.action_pos_session_validate()
+        invoice = self._invoice_with_wizard(orders)
+        self._assert_cogs_booked_once(orders, invoice)
