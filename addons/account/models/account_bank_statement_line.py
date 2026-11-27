@@ -82,7 +82,7 @@ class AccountBankStatementLine(models.Model):
     currency_id = fields.Many2one(
         comodel_name='res.currency',
         string='Journal Currency',
-        compute='_compute_currency_id', store=True,
+        compute='_compute_currency_id', store=True, precompute=True,
     )
     amount = fields.Monetary()
 
