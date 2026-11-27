@@ -2090,6 +2090,8 @@ class StockPicking(models.Model):
             domain.append(('location_id', '=', self.location_id.id))
         if self.picking_type_id.batch_group_by_dest_loc:
             domain.append(('location_dest_id', '=', self.location_dest_id.id))
+        if self.picking_type_id.batch_group_by_prev_batch:
+            domain.append(('move_ids.move_orig_ids.picking_id.batch_id', '=', self.move_ids._get_prev_batch().id))
 
         return Domain(domain)
 
@@ -2109,6 +2111,8 @@ class StockPicking(models.Model):
             domain.append(('picking_ids.location_id', '=', self.location_id.id))
         if self.picking_type_id.batch_group_by_dest_loc:
             domain.append(('picking_ids.location_dest_id', '=', self.location_dest_id.id))
+        if self.picking_type_id.batch_group_by_prev_batch:
+            domain.append(('prev_batch_id', '=', self.move_ids._get_prev_batch().id))
         if self.env.context.get('batches_to_validate'):
             domain.append(('id', 'not in', self.env.context.get('batches_to_validate')))
 
@@ -2126,6 +2130,8 @@ class StockPicking(models.Model):
             description_items.append(self.location_id.display_name)
         if self.picking_type_id.batch_group_by_dest_loc and self.location_dest_id:
             description_items.append(self.location_dest_id.display_name)
+        if self.picking_type_id.batch_group_by_prev_batch and (batch := self.move_ids._get_prev_batch()):
+            description_items.append(batch.display_name)
         return ', '.join(description_items)
 
     @api.model
@@ -2160,6 +2166,7 @@ class StockPicking(models.Model):
             'picking_type_id': self.picking_type_id.id,
             'description': self._get_auto_batch_description(),
             'user_id': self.user_id.id,
+            'prev_batch_id': self.move_ids._get_prev_batch().id,
         }
         new_batch = self.env['stock.picking.batch'].sudo().create(new_batch_data)
         possible_pickings = self.env['stock.picking'].search(self._get_possible_pickings_domain())

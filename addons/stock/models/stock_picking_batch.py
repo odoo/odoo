@@ -40,6 +40,7 @@ class StockPickingBatch(models.Model):
     move_line_ids = fields.One2many(
         'stock.move.line', string='Stock move lines',
         compute='_compute_move_line_ids', inverse='_set_move_line_ids', search='_search_move_line_ids')
+    prev_batch_id = fields.Many2one('stock.picking.batch', string="Previous batch")
     state = fields.Selection([
         ('draft', 'Draft'),
         ('in_progress', 'In progress'),

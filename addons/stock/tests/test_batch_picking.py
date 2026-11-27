@@ -683,6 +683,108 @@ class TestBatchPicking(TestStockBatchCommon):
         delivery_2.move_ids.quantity = 1
         self.assertEqual(len(delivery_2.batch_id.picking_ids), 1)
 
+    def test_batch_group_by_prev_batch(self):
+        """
+        Test the 'propagation' of automatic batches on multi-step route. The batches created on
+        the Receipt should be carried on Quality Control and Storage steps, without merging.
+        """
+        warehouse = self.env['stock.warehouse'].create({
+            'name': 'Warehouse Propagate',
+            'code': 'WHP',
+            'company_id': self.env.company.id,
+            'reception_steps': 'three_steps',
+        })
+        (warehouse.qc_type_id | warehouse.store_type_id).write({
+            'batch_creation_type': 'auto',
+            'batch_group_by_prev_batch': True,
+        })
+        moves = self.env['stock.move'].create([{
+            'product_id': product.id,
+            'uom_id': product.uom_id.id,
+            'product_uom_qty': 1,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': warehouse.wh_input_stock_loc_id.id,
+        } for product in [self.productA, self.productB] * 2])
+        receive_pickings = self.env['stock.picking'].create([{
+            'picking_type_id': warehouse.in_type_id.id,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': warehouse.wh_input_stock_loc_id.id,
+            'move_ids': [Command.set([move.id])],
+        } for move in moves])
+        receive_batch_1 = self.env['stock.picking.batch'].create({'picking_ids': receive_pickings[:2]})
+        receive_batch_2 = self.env['stock.picking.batch'].create({'picking_ids': receive_pickings[2:]})
+        receive_batch_1.action_confirm()
+        receive_batch_2.action_confirm()
+        receive_batch_1.action_done()
+        receive_batch_2.action_done()
+
+        qc_pickings = receive_pickings[:2].move_ids.move_dest_ids.picking_id
+        qc_batches = self.env['stock.picking.batch'].search([('picking_type_id', '=', warehouse.qc_type_id.id)])
+        self.assertEqual(len(qc_batches), 2)
+        qc_batch = qc_batches.filtered(lambda batch: batch.picking_ids == qc_pickings)
+        self.assertEqual(qc_batch.description, receive_batch_1.display_name)
+        self.assertEqual(qc_batch.picking_ids, qc_pickings)
+        qc_batch.action_confirm()
+        qc_batch.action_done()
+
+        store_pickings = qc_pickings.move_ids.move_dest_ids.picking_id
+        store_batch = self.env['stock.picking.batch'].search([('picking_type_id', '=', warehouse.store_type_id.id)])
+        self.assertEqual(len(store_batch), 1)
+        self.assertEqual(store_batch.description, qc_batch.display_name)
+        self.assertEqual(store_batch.picking_ids, store_pickings)
+
+    def test_batch_group_by_prev_batch_and_product(self):
+        """
+        Test the 'propagation' of automatic batches on multi-steps routes while grouping by product. The second wave
+        should not merge with the first, as their previous batch differ.
+        """
+        warehouse = self.env['stock.warehouse'].create({
+            'name': 'Warehouse Propagate',
+            'code': 'WHP',
+            'company_id': self.env.company.id,
+            'reception_steps': 'three_steps',
+        })
+        warehouse.qc_type_id.write({
+            'batch_creation_type': 'auto',
+            'batch_group_by_prev_batch': True,
+            'wave_group_by_product': True,
+        })
+        moves = self.env['stock.move'].create([{
+            'product_id': product.id,
+            'uom_id': product.uom_id.id,
+            'product_uom_qty': 1,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': warehouse.wh_input_stock_loc_id.id,
+        } for product in [self.productA, self.productB] * 3])
+        receive_pickings = self.env['stock.picking'].create([{
+            'picking_type_id': warehouse.in_type_id.id,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': warehouse.wh_input_stock_loc_id.id,
+            'move_ids': [Command.set([move.id])],
+        } for move in moves])
+        receive_batch_1 = self.env['stock.picking.batch'].create({'picking_ids': receive_pickings[:4]})
+        receive_batch_2 = self.env['stock.picking.batch'].create({'picking_ids': receive_pickings[4:]})
+
+        receive_batch_1.action_confirm()
+        receive_batch_1.action_done()
+        qc_batches_1 = self.env['stock.picking.batch'].search([('picking_type_id', '=', warehouse.qc_type_id.id)])
+        self.assertEqual(len(qc_batches_1), 2)
+        for qc_batch in qc_batches_1:
+            self.assertEqual(len(qc_batch.move_line_ids), 2)
+            self.assertEqual(len(qc_batch.move_line_ids.product_id), 1)
+            self.assertIn(receive_batch_1.display_name, qc_batch.description)
+
+        receive_batch_2.action_confirm()
+        receive_batch_2.action_done()
+        qc_batches = self.env['stock.picking.batch'].search([('picking_type_id', '=', warehouse.qc_type_id.id)])
+        self.assertEqual(len(qc_batches), 4)
+        qc_batches_2 = qc_batches - qc_batches_1
+        self.assertEqual(len(qc_batches_2), 2)
+        for qc_batch in qc_batches_2:
+            self.assertEqual(len(qc_batch.move_line_ids), 1)
+            self.assertEqual(len(qc_batch.move_line_ids.product_id), 1)
+            self.assertIn(receive_batch_2.display_name, qc_batch.description)
+
     def test_remove_all_transfers_from_confirmed_batch(self):
         """
             Check that the batch is canceled when all transfers are deleted
