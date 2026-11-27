@@ -14,6 +14,8 @@
     ],
     'auto_install': ['l10n_fr'],
     'data': [
+        'data/legal_notes_studio_fields.xml',
+        'data/legal_notes_templates.xml',
         'data/ir_cron.xml',
         'security/ir.model.access.csv',
         'views/account_journal_dashboard_views.xml',
@@ -22,6 +24,7 @@
         'views/l10n_fr_account_inherit.xml',
         'views/pdp_flow_views.xml',
         'views/pdp_send_wizard_views.xml',
+        'views/res_company_views.xml',
         'views/res_config_settings_views.xml',
         'views/res_partner_views.xml',
         'wizard/account_move_send_views.xml',

@@ -3,6 +3,8 @@ from types import MappingProxyType
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
+from odoo.addons.l10n_fr_pdp.models.res_company import STUDIO_LEGAL_FORM, STUDIO_RCS_CITY, STUDIO_SHARE_CAPITAL
+
 PEPPOL_PROXY_STATE_17_TO_18 = MappingProxyType({
     'not_registered': 'not_registered',
     'not_verified': 'in_verification',
@@ -49,6 +51,27 @@ class ResConfigSettings(models.TransientModel):
         Franchised VAT Regime (Bimonthly) : transactions reported bimonthly, payments reported bimonthly
         """,
     )
+    l10n_fr_pdp_legal_form = fields.Char(
+        string='Legal Form',
+        compute='_compute_l10n_fr_pdp_legal_notes',
+        inverse='_inverse_l10n_fr_pdp_legal_form',
+        readonly=False,
+        help='Legal form for the #REG# note and BT-33 (for example SARL, SAS).',
+    )
+    l10n_fr_pdp_share_capital = fields.Float(
+        string='Share Capital',
+        compute='_compute_l10n_fr_pdp_legal_notes',
+        inverse='_inverse_l10n_fr_pdp_share_capital',
+        readonly=False,
+        help='Share capital in company currency for the #REG# note and BT-33.',
+    )
+    l10n_fr_pdp_rcs_city = fields.Char(
+        string='RCS City',
+        compute='_compute_l10n_fr_pdp_legal_notes',
+        inverse='_inverse_l10n_fr_pdp_rcs_city',
+        readonly=False,
+        help='City of the commercial court (greffe) for the #ABL# note.',
+    )
     l10n_fr_pdp_peppol_proxy_display_state = fields.Selection(
         selection=[
             ('not_registered', 'Not registered'),
@@ -79,6 +102,38 @@ class ResConfigSettings(models.TransientModel):
 
     def _inverse_l10n_fr_pdp_pilot_phase(self):
         pass
+
+    @api.depends('company_id')
+    def _compute_l10n_fr_pdp_legal_notes(self):
+        for settings in self:
+            company = settings.company_id
+            settings.l10n_fr_pdp_legal_form = company._l10n_fr_pdp_studio_char(STUDIO_LEGAL_FORM)
+            settings.l10n_fr_pdp_share_capital = company._l10n_fr_pdp_studio_float(STUDIO_SHARE_CAPITAL)
+            settings.l10n_fr_pdp_rcs_city = company._l10n_fr_pdp_studio_char(STUDIO_RCS_CITY)
+
+    def _inverse_l10n_fr_pdp_legal_form(self):
+        for settings in self:
+            settings.company_id._l10n_fr_pdp_set_studio_value(
+                STUDIO_LEGAL_FORM,
+                settings.l10n_fr_pdp_legal_form or False,
+                ('char', 'text'),
+            )
+
+    def _inverse_l10n_fr_pdp_share_capital(self):
+        for settings in self:
+            settings.company_id._l10n_fr_pdp_set_studio_value(
+                STUDIO_SHARE_CAPITAL,
+                settings.l10n_fr_pdp_share_capital or 0.0,
+                ('float', 'monetary'),
+            )
+
+    def _inverse_l10n_fr_pdp_rcs_city(self):
+        for settings in self:
+            settings.company_id._l10n_fr_pdp_set_studio_value(
+                STUDIO_RCS_CITY,
+                settings.l10n_fr_pdp_rcs_city or False,
+                ('char', 'text'),
+            )
 
     @api.depends('account_peppol_proxy_state')
     def _compute_l10n_fr_pdp_peppol_proxy_display_state(self):
