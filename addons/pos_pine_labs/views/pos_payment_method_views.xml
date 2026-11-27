@@ -9,12 +9,19 @@
                 <notebook invisible="payment_provider != 'pine_labs'">
                     <page name="settings" string="Pine Labs">
                         <group>
-                            <field name="pine_labs_merchant" invisible="payment_provider != 'pine_labs'" required="payment_provider == 'pine_labs'"/>
-                            <field name="pine_labs_store" invisible="payment_provider != 'pine_labs'" required="payment_provider == 'pine_labs'"/>
-                            <field name="pine_labs_client" invisible="payment_provider != 'pine_labs'" required="payment_provider == 'pine_labs'"/>
-                            <field name="pine_labs_security_token" invisible="payment_provider != 'pine_labs'" required="payment_provider == 'pine_labs'" password="True"/>
-                            <field name="pine_labs_allowed_payment_mode" invisible="payment_provider != 'pine_labs'" required="payment_provider == 'pine_labs'"/>
-                            <field name="pine_labs_test_mode" invisible="payment_provider != 'pine_labs'" required="payment_provider == 'pine_labs'"/>
+                            <group>
+                                <field name="pine_labs_merchant" required="payment_provider == 'pine_labs'"/>
+                                <field name="pine_labs_store" required="payment_provider == 'pine_labs'"/>
+                                <field name="pine_labs_client" required="payment_provider == 'pine_labs'"/>
+                                <field name="pine_labs_security_token" required="payment_provider == 'pine_labs'" password="True"/>
+                                <field name="pine_labs_allowed_payment_mode" required="payment_provider == 'pine_labs'"/>
+                                <field name="pine_labs_test_mode"/>
+                            </group>
+                            <group>
+                                <div class="d-flex justify-content-end" colspan="2">
+                                    <button name="action_pine_labs_test_creds" type="object" string="Test" class="btn-primary text-nowrap" groups="point_of_sale.group_pos_manager"/>
+                                </div>
+                            </group>
                         </group>
                     </page>
                 </notebook>

@@ -1,3 +1,6 @@
+import time
+import uuid
+
 from odoo import api, fields, models,  _
 from odoo.exceptions import UserError
 
@@ -91,6 +94,66 @@ class PosPaymentMethod(models.Model):
         default_error = _('The expected error code for the Pine Labs POS status request was not included in the response.')
         error = response.get('ResponseMessage') or response.get('errorMessage') or default_error
         return { 'error': error }
+
+    def action_pine_labs_test_creds(self):
+        """Test the merchant ID, store ID, security token and client ID.
+
+        The credentials are checked with the status of a dummy transaction, but only a
+        real request reaches the terminal, so push a 1 INR payment request to it and cancel it.
+        """
+        self.ensure_one()
+        response = call_pine_labs(
+            payment_method=self, endpoint='GetCloudBasedTxnStatus', payload={'PlutusTransactionReferenceID': 1},
+        )
+        if 'errorMessage' in response:
+            raise UserError(self.env._('Could not reach Pine Labs: %(error)s', error=response['errorMessage']))
+        # Valid credentials: Pine Labs answers 1001 or a "PLUTUS TXN REF" error for the unknown dummy reference
+        status_message = response.get('ResponseMessage') or ''
+        if response.get('ResponseCode') not in (0, 1001) and 'PLUTUS TXN REF' not in status_message:
+            raise UserError(self.env._(
+                'Pine Labs rejected the merchant ID, store ID or security token: %(error)s', error=status_message,
+            ))
+
+        # 1 INR, Pine Labs amounts are in paisa
+        test_amount = 100
+        payment = self.pine_labs_make_payment_request({
+            'amount': test_amount,
+            'transactionNumber': f'odoo-test-{uuid.uuid4().hex[:16]}',
+            'sequenceNumber': 1,
+        })
+        if 'error' in payment:
+            raise UserError(self.env._(
+                'Pine Labs could not send the test request to the terminal %(client)s: %(error)s',
+                client=self.pine_labs_client, error=payment['error'],
+            ))
+
+        # Let the terminal receive the request first: a cancel sent earlier never shows on it
+        time.sleep(5)
+        cancel_result = self.pine_labs_cancel_payment_request({
+            'amount': test_amount,
+            'plutusTransactionReferenceID': payment['plutusTransactionReferenceID'],
+        })
+        has_cancel_error = 'error' in cancel_result
+        message = (
+            self.env._(
+                'Credentials are valid, but the 1 INR test request could not be cancelled automatically. '
+                'Please cancel it on the terminal %(client)s, otherwise Pine Labs cancels it after a few minutes.',
+                client=self.pine_labs_client,
+            )
+            if has_cancel_error
+            else self.env._(
+                'Credentials are valid. A test request was sent to the terminal %(client)s and cancelled.',
+                client=self.pine_labs_client,
+            )
+        )
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'type': 'warning' if has_cancel_error else 'success',
+                'message': message,
+            },
+        }
 
     @api.constrains('payment_provider')
     def _check_pine_labs_terminal(self):
