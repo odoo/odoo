@@ -162,18 +162,14 @@
 
 .o_calendar_filter_color {
     --o-calendar-filter-color-subtle: var(--o-colorlist-bg-subtle, color-mix(in srgb, var(--o-white) 55%, var(--o-calendar-filter-color)));
-    --o-calendar-filter-color-border: var(--o-colorlist-border, var(--o-calendar-filter-color-subtle));
 
-    &.form-check:hover .o_calendar_filter_input_bg:not(.no_filter_color) {
-        border-color: color-mix(in srgb, var(--o-black) 20%, var(--o-calendar-filter-color-border));
+    &.form-check:hover .o_calendar_filter_input_bg:not(.no_filter_color),
+    .o_calendar_filter_input_bg:not(.no_filter_color):checked {
+        border-color: var(--o-calendar-filter-color-subtle);
     }
 
-    .o_calendar_filter_input_bg {
-        border-color: var(--o-calendar-filter-color-border);
-
-        &:checked {
-            --form-check-bg-image: var(--o-check-mark-black-image);
-            background-color: var(--o-calendar-filter-color-subtle);
-        }
+    .o_calendar_filter_input_bg:checked {
+        --form-check-bg-image: var(--o-check-mark-black-image), var(--gradient);
+        background-color: var(--o-calendar-filter-color-subtle);
     }
 }
