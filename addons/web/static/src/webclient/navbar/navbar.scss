@@ -6,7 +6,6 @@
     /* The Community navbar is the color of the focus ring: the ring takes the */
     /* color of its entries instead. */
     --o-focus-ring-color: var(--o-navbar-focus-ring-color);
-    --o-focus-ring: var(--o-focus-ring-width) solid var(--o-focus-ring-color);
 
     display: flex;
     height: var(--o-navbar-height);
@@ -25,6 +24,11 @@
         padding: 0;
         margin: 0;
         list-style: none;
+    }
+
+    /* Its links have padding and fill its height: their ring stays inside. */
+    a {
+        --o-focus-ring-offset: var(--o-focus-ring-inside);
     }
 
     /* = General components & behaviours */

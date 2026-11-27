@@ -355,7 +355,7 @@
 
         /* The color input is transparent: its swatch shows the ring. */
         &:has(> input:focus-visible) {
-            outline: var(--o-focus-ring);
+            outline: var(--o-focus-ring-width) solid var(--o-focus-ring-color);
             outline-offset: var(--o-focus-ring-outside);
         }
     }

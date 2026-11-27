@@ -94,6 +94,9 @@ body:not(.o_touch_device) .o_settings_container .o_field_selection {
            .tab {
                display: flex;
                padding: 0 calc(var(--o-horizontal-padding) * 2) 0 var(--o-horizontal-padding);
+               /* A link with padding, in a column that scrolls: its ring */
+               /* stays inside. */
+               --o-focus-ring-offset: var(--o-focus-ring-inside);
                height: 40px;
                color: var(--settings__tab-color);
                font-size: 13px;
