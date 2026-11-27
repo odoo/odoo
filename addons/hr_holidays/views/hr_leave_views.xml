@@ -412,7 +412,7 @@
                                         ]"
                                         context="{'employee_id': employee_id, 'default_date_from': date_from, 'default_date_to': date_to, 'leave_date_from': date_from, 'ignored_leave_ids': id and [id] or []}"
                                         readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"
-                                        options="{'no_create': True, 'request_type': 'leave'}"
+                                        options="{'no_create': True, 'request_type': 'leave', 'no_save_on_open': True}"
                                         placeholder="eg. Sickness, Paid time off, Unpaid, ..."
                                         class="mt-1 mt-sm-0"
                                     />
@@ -609,7 +609,8 @@
                 </div>
                 <div groups="hr_holidays.group_hr_holidays_responsible">
                     <field name="employee_id" groups="hr_holidays.group_hr_holidays_responsible"
-                        readonly="state != 'confirm'" widget="many2one_avatar_employee"/>
+                        readonly="state != 'confirm'" widget="many2one_avatar_employee"
+                        options="{'no_save_on_open': True}"/>
                 </div>
             </xpath>
             <field name="work_entry_type_id" position="attributes">
