@@ -36,7 +36,7 @@ class AccountMove(models.Model):
 
         # the orm_cache does not contain the new selections added in stable: clear the cache once
         peppol_move_state_field = self._fields['peppol_move_state']
-        if ('skipped', "Skipped") not in peppol_move_state_field.get_description(self.env)['selection']:
+        if 'skipped' not in {value for value, _label in peppol_move_state_field.get_description(self.env)['selection']}:
             self.env['ir.model.fields'].invalidate_model(['selection_ids'])
             self.env['ir.model.fields.selection']._update_selection(
                 'account.move', 'peppol_move_state', peppol_move_state_field.selection)

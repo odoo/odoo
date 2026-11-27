@@ -64,8 +64,7 @@ class ResPartner(models.Model):
         if existing_selection is None:
             return res
 
-        not_valid_format_label = next(x for x in self._fields['account_peppol_verification_label'].selection if x[0] == 'not_valid_format')
-        need_update = not_valid_format_label not in existing_selection
+        need_update = 'not_valid_format' not in {value for value, _label in existing_selection}
 
         if need_update:
             self.env['ir.model.fields'].invalidate_model(['selection_ids'])
