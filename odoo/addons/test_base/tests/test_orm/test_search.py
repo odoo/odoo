@@ -1774,6 +1774,88 @@ class TestSearchAny(TransactionCase):
         """]):
             model.search(Domain('foo_ids', 'any', Domain('bar_id', 'any', Domain('name', '=', 'a'))))
 
+    def test_x2many_any_id_query(self):
+        model = self.env['test_orm.related'].with_user(self.env.ref('base.user_admin'))
+        foo_query = model.env['test_orm.related_foo']._search(Domain('name', '=', 'a'), bypass_access=True)
+
+        # warmup
+        model.search(Domain('foo_ids', 'any', Domain('id', 'any!', foo_query)))
+
+        # access rules on the comodel must be applied: comodel._search() is used
+        with self.assertQueries(["""
+            SELECT "test_orm_related"."id"
+            FROM "test_orm_related"
+            WHERE EXISTS (
+                SELECT 1
+                FROM "test_orm_related_test_orm_related_foo_rel" AS "test_orm_related__foo_ids"
+                WHERE "test_orm_related__foo_ids"."test_orm_related_id" = "test_orm_related"."id"
+                AND "test_orm_related__foo_ids"."test_orm_related_foo_id" IN (
+                    SELECT "test_orm_related_foo"."id"
+                    FROM "test_orm_related_foo"
+                    WHERE "test_orm_related_foo"."id" IN (
+                        SELECT "test_orm_related_foo"."id"
+                        FROM "test_orm_related_foo"
+                        WHERE "test_orm_related_foo"."name" IN %s
+                    ) AND "test_orm_related_foo"."id" < %s
+                )
+            ) AND "test_orm_related"."id" < %s
+            ORDER BY "test_orm_related"."id"
+        """]):
+            model.search(Domain('foo_ids', 'any', Domain('id', 'any!', foo_query)))
+
+        # no access rules, no active field, no override: the query is used as is
+        with self.assertQueries(["""
+            SELECT "test_orm_related"."id"
+            FROM "test_orm_related"
+            WHERE EXISTS (
+                SELECT 1
+                FROM "test_orm_related_test_orm_related_foo_rel" AS "test_orm_related__foo_ids"
+                WHERE "test_orm_related__foo_ids"."test_orm_related_id" = "test_orm_related"."id"
+                AND "test_orm_related__foo_ids"."test_orm_related_foo_id" IN (
+                    SELECT "test_orm_related_foo"."id"
+                    FROM "test_orm_related_foo"
+                    WHERE "test_orm_related_foo"."name" IN %s
+                )
+            ) AND "test_orm_related"."id" < %s
+            ORDER BY "test_orm_related"."id"
+        """]):
+            model.search(Domain('foo_ids', 'any!', Domain('id', 'any!', foo_query)))
+
+        # the comodel has an active field: comodel._search() must filter on it
+        model = self.env['test_orm.related_foo'].with_user(self.env.ref('base.user_admin'))
+        bar_query = model.env['test_orm.related_bar']._search(Domain('name', '=', 'a'), active_test=False, bypass_access=True)
+        model.search(Domain('bar_ids', 'any!', Domain('id', 'any!', bar_query)))
+        with self.assertQueries(["""
+            SELECT "test_orm_related_foo"."id"
+            FROM "test_orm_related_foo"
+            WHERE EXISTS (
+                SELECT 1
+                FROM "test_orm_related_bar_test_orm_related_foo_rel" AS "test_orm_related_foo__bar_ids"
+                WHERE "test_orm_related_foo__bar_ids"."test_orm_related_foo_id" = "test_orm_related_foo"."id"
+                AND "test_orm_related_foo__bar_ids"."test_orm_related_bar_id" IN (
+                    SELECT "test_orm_related_bar"."id"
+                    FROM "test_orm_related_bar"
+                    WHERE (
+                        "test_orm_related_bar"."active" IS TRUE
+                        AND "test_orm_related_bar"."id" IN (
+                            SELECT "test_orm_related_bar"."id"
+                            FROM "test_orm_related_bar"
+                            WHERE "test_orm_related_bar"."name" IN %s
+                        )
+                    )
+                )
+            ) AND "test_orm_related_foo"."id" < %s
+            ORDER BY "test_orm_related_foo"."id"
+        """]):
+            model.search(Domain('bar_ids', 'any!', Domain('id', 'any!', bar_query)))
+
+        # the comodel overrides _search(): comodel._search() must be called
+        model = self.env['test_orm.related'].with_user(self.env.ref('base.user_admin'))
+        Foo = model.env.registry['test_orm.related_foo']
+        with patch.object(Foo, '_search', autospec=True, side_effect=Foo._search) as search:
+            model.search(Domain('foo_ids', 'any!', Domain('id', 'any!', foo_query)))
+            search.assert_called_once()
+
 
 @tagged('at_install', '-post_install')
 class TestAnyDomainSearchContext(TransactionCase):
