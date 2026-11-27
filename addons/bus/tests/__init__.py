@@ -1,6 +1,7 @@
 from . import (
     common,
     test_assetsbundle,
+    test_bus_fetch_limit,
     test_bus_gc,
     test_close_websocket_after_tour,
     test_health,
