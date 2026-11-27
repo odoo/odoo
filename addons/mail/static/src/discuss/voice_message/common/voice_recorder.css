@@ -6,10 +6,54 @@
         font-variant-numeric: tabular-nums;
     }
 
+    .o-mail-VoiceRecorder-visualizer {
+        /* Same bars and gaps as the voice player's waveform, so the recording
+           looks like the message it becomes: keep in sync with BAR_WIDTH and
+           BAR_GAP of voice_player.js.
+           The loudest bar is 1.25rem, below the height of the buttons. */
+        --VoiceRecorder__bar-width: 3px;
+        --VoiceRecorder__bar-gap: 2px;
+        --VoiceRecorder__bar-maxHeight: 1.25rem;
+
+        /* The oldest bars fade out over the first 25%, so they leave smoothly. */
+        mask-image: linear-gradient(to right, transparent, black 25%);
+    }
+
+    .o-mail-VoiceRecorder-bars {
+        gap: var(--VoiceRecorder__bar-gap);
+    }
+
     .o-mail-VoiceRecorder-bar {
-        width: 2px;
-        transform-origin: center;
-        will-change: transform;
-        transition: transform 0.05s linear;
+        width: var(--VoiceRecorder__bar-width);
+        height: calc(
+            var(--VoiceRecorder__bar-width) +
+            (var(--VoiceRecorder__bar-maxHeight) - var(--VoiceRecorder__bar-width)) *
+            var(--VoiceRecorder__bar-level)
+        );
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .o-mail-VoiceRecorder-dot {
+            animation: o-mail-VoiceRecorder-dotPulse 1.5s ease-in-out infinite;
+        }
+
+        .o-mail-VoiceRecorder-bars {
+            animation: o-mail-VoiceRecorder-scroll 80ms linear;
+        }
+    }
+}
+
+@keyframes o-mail-VoiceRecorder-dotPulse {
+    /* Dims to 30%, so the dot pulses without disappearing. */
+    50% {
+        opacity: 0.3;
+    }
+}
+
+@keyframes o-mail-VoiceRecorder-scroll {
+    from {
+        transform: translateX(
+            calc(var(--VoiceRecorder__bar-width) + var(--VoiceRecorder__bar-gap))
+        );
     }
 }

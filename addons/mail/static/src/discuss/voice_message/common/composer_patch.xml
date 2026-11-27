@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.Composer" t-inherit-mode="extension">
+        <xpath expr="//*[hasclass('o-mail-Composer-coreHeader')]" position="inside">
+            <div t-if="this.voiceRecorder?.recording and this.showVoiceRecorderAbove()" class="d-flex mb-1">
+                <VoiceRecorder composer="this.props.composer()" state="this.voiceRecorder"/>
+            </div>
+        </xpath>
+    </t>
+</templates>

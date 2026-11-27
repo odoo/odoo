@@ -1,14 +1,29 @@
 import {
     defineMailModels,
+    focus,
+    inputFiles,
     mockGetMedia,
+    onRpcBefore,
     openDiscuss,
     patchVoiceMessageAudio,
     patchVoicePlayerFile,
+    setupChatHub,
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, expect, mockDate, queryOne, test, waitFor, waitForNone } from "@odoo/hoot";
-import { Command, contains, serverState } from "@web/../tests/web_test_helpers";
+import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer";
+import {
+    animationFrame,
+    describe,
+    expect,
+    mockDate,
+    press,
+    queryOne,
+    test,
+    waitFor,
+    waitForNone,
+} from "@odoo/hoot";
+import { Command, contains, getService, serverState } from "@web/../tests/web_test_helpers";
 
 import { Mp3Encoder } from "@mail/discuss/voice_message/common/mp3_encoder";
 import { loadLamejs } from "@mail/discuss/voice_message/common/voice_message_service";
@@ -90,6 +105,182 @@ test("make voice message in chat", async () => {
     await contains(".o-mail-Composer button[title='More Actions']:count(1)").click();
     await waitFor(".dropdown-item:contains('Attach Files'):count(1)"); // check menu loaded
     await waitForNone(".dropdown-item:contains('Voice Message')"); // only 1 voice message at a time
+});
+
+function mockVoiceRecording() {
+    mockGetMedia();
+    patchVoiceMessageAudio();
+    patch(Mp3Encoder.prototype, {
+        encode() {},
+        finish() {
+            return Array(500).map(() => new Int8Array());
+        },
+    });
+    const file = new File([new Uint8Array(25000)], "test.mp3", { type: "audio/mp3" });
+    patch(patchable, { makeFile: () => file });
+}
+
+async function startVoiceRecording(composerSelector = ".o-mail-Composer") {
+    await contains(`${composerSelector} button[title='More Actions']:count(1)`).click();
+    await contains(".dropdown-item:contains('Voice Message'):count(1)").click();
+    await waitFor(".o-mail-VoiceRecorder button[title='Stop Recording']:enabled:count(1)");
+    await focus(`${composerSelector} .o-mail-Composer-html`);
+}
+
+test("pressing Enter while recording sends the voice message with the text", async () => {
+    mockVoiceRecording();
+    patchVoicePlayerFile("/mail/static/src/audio/call-invitation.mp3");
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    await insertTextInComposer(".o-mail-Composer", "Hello");
+    await startVoiceRecording();
+    await press("Enter");
+    await waitFor(".o-mail-Message:contains(Hello):has(.o-mail-VoicePlayer):count(1)");
+    await waitForNone(".o-mail-VoiceRecorder");
+});
+
+test("recording in a chat window shows the recorder above the input", async () => {
+    mockVoiceRecording();
+    patchVoicePlayerFile("/mail/static/src/audio/call-invitation.mp3");
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    setupChatHub({ opened: [channelId] });
+    await start();
+    await insertTextInComposer(".o-mail-ChatWindow .o-mail-Composer", "Hello");
+    await startVoiceRecording(".o-mail-ChatWindow .o-mail-Composer");
+    await waitFor(".o-mail-Composer-coreHeader .o-mail-VoiceRecorder:count(1)");
+    await press("Enter");
+    await waitFor(
+        ".o-mail-ChatWindow .o-mail-Message:contains(Hello):has(.o-mail-VoicePlayer):count(1)"
+    );
+    await waitForNone(".o-mail-VoiceRecorder");
+});
+
+test("pressing Escape while recording discards the recording", async () => {
+    mockVoiceRecording();
+    onRpcBefore("/mail/attachment/upload", () => expect.step("upload"));
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    await startVoiceRecording();
+    await press("Escape");
+    await waitForNone(".o-mail-VoiceRecorder");
+    await animationFrame();
+    expect.verifySteps([]);
+});
+
+test.tags("html composer");
+test("pressing Escape with emoji suggestions open keeps the recording", async () => {
+    mockVoiceRecording();
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    getService("mail.composer").setHtmlComposer();
+    await openDiscuss(channelId);
+    await startVoiceRecording();
+    await insertTextInComposer(".o-mail-Composer", ":smil");
+    await waitFor(".o-we-SuggestionList .o-navigable:has(:text('😃')):count(1)");
+    await press("Escape");
+    await waitForNone(".o-we-SuggestionList");
+    await waitFor(".o-mail-VoiceRecorder:count(1)");
+});
+
+test("sending while recording keeps the text when the voice message fails to upload", async () => {
+    mockVoiceRecording();
+    onRpcBefore("/mail/attachment/upload", () => {
+        expect.step("upload");
+        return { error: "Upload failed" };
+    });
+    onRpcBefore("/mail/message/post", () => expect.step("message_post"));
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    await insertTextInComposer(".o-mail-Composer", "Hello");
+    await startVoiceRecording();
+    await press("Enter");
+    await waitForNone(".o-mail-VoiceRecorder");
+    await expect.waitForSteps(["upload"]);
+    await animationFrame();
+    expect.verifySteps([]);
+    await waitFor(".o-mail-Composer-html:text('Hello'):count(1)");
+});
+
+test("pressing Enter while recording in an edited message saves the voice message with it", async () => {
+    mockVoiceRecording();
+    patchVoicePlayerFile("/mail/static/src/audio/call-invitation.mp3");
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    pyEnv["mail.message"].create({
+        author_id: serverState.partnerId,
+        body: "Hello",
+        message_type: "comment",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Message").hover();
+    await contains(".o-mail-Message [title='Expand']").click();
+    await contains(".o-dropdown-item:contains('Edit'):count(1)").click();
+    await startVoiceRecording(".o-mail-Message .o-mail-Composer");
+    await press("Enter");
+    await waitFor(
+        ".o-mail-Message:not(.o-editing):contains(Hello):has(.o-mail-VoicePlayer):count(1)"
+    );
+    await waitForNone(".o-mail-VoiceRecorder");
+});
+
+test("pressing Enter while recording waits until the other attachments are uploaded", async () => {
+    const { promise: uploaded, resolve: resolveUploaded } = Promise.withResolvers();
+    mockVoiceRecording();
+    patchVoicePlayerFile("/mail/static/src/audio/call-invitation.mp3");
+    onRpcBefore("/mail/attachment/upload", async () => await uploaded);
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    await inputFiles(".o-mail-Composer .o_input_file", [
+        new File(["hello, world"], "text.txt", { type: "text/plain" }),
+    ]);
+    await waitFor(".o-mail-AttachmentContainer.o-isUploading:contains(text.txt):count(1)");
+    await startVoiceRecording();
+    await press("Enter");
+    await animationFrame();
+    expect(".o-mail-VoiceRecorder").toHaveCount(1);
+    resolveUploaded();
+    await waitForNone(".o-mail-AttachmentContainer.o-isUploading");
+    await press("Enter");
+    await waitFor(".o-mail-Message:contains(text.txt):has(.o-mail-VoicePlayer):count(1)");
+});
+
+test("sending and discarding are ignored while the recorder is still starting", async () => {
+    const { promise: workletLoaded, resolve: resolveWorkletLoaded } = Promise.withResolvers();
+    mockVoiceRecording();
+    patch(window, {
+        AudioContext: class extends window.AudioContext {
+            audioWorklet = { addModule: () => workletLoaded };
+        },
+    });
+    onRpcBefore("/mail/message/post", () => expect.step("message_post"));
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    await insertTextInComposer(".o-mail-Composer", "Hello");
+    await contains(".o-mail-Composer button[title='More Actions']:count(1)").click();
+    await contains(".dropdown-item:contains('Voice Message'):count(1)").click();
+    await waitFor(".o-mail-Composer button[title='Send']:disabled:count(1)");
+    await focus(".o-mail-Composer-html");
+    await press("Enter");
+    await press("Escape");
+    await animationFrame();
+    expect.verifySteps([]);
+    resolveWorkletLoaded();
+    await waitFor(".o-mail-VoiceRecorder button[title='Stop Recording']:enabled:count(1)");
 });
 
 test("playback rate control is only shown on voice messages", async () => {

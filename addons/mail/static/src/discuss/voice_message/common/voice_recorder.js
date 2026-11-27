@@ -12,14 +12,24 @@ import {
 import { BaseAction } from "@mail/core/common/action_list";
 
 import { CallPermissionDeniedDialog } from "@mail/discuss/call/common/call_permission_denied_dialog";
-import { loadLamejs } from "@mail/discuss/voice_message/common/voice_message_service";
-import { monitorAudio } from "@mail/utils/common/media_monitoring";
+import {
+    formatVoiceTime,
+    getVolumeLevel,
+    getVolumePeak,
+    loadLamejs,
+} from "@mail/discuss/voice_message/common/voice_message_service";
 import { _t } from "@web/core/l10n/translation";
 import { NotificationPlugin } from "@web/core/notifications/notification_plugin";
 import { useService } from "@web/core/utils/hooks";
 import { Mp3Encoder } from "./mp3_encoder";
 
 /** @typedef {import("@mail/discuss/call/common/rtc_service").ContextOptions} ContextOptions */
+
+// Used to draw the live waveform while recording, kept in sync with the CSS scroll duration.
+// A bar every 80ms gives 2-3 bars per syllable (speech is ~4-5 syllables/s),
+// and 16 bars of 3px with 2px gaps take 78px, which fits the pill next to the timer.
+const VOLUME_LEVEL_HISTORY_SIZE = 16;
+const BAR_DURATION_MS = 80;
 
 export class VoiceRecorder extends Component {
     static template = "mail.VoiceRecorder";
@@ -32,9 +42,12 @@ export class VoiceRecorder extends Component {
             state: types.object({
                 cancelRecording: types.function([]),
                 elapsed: types.string(),
+                isActionPending: types.boolean(),
+                limit: types.string(),
                 limitWarning: types.boolean(),
                 onClick: types.function([]),
-                volumes: types.array(types.number()),
+                volumeLevels: types.array(types.number()),
+                volumeLevelsOffset: types.number(),
             }),
         });
     }
@@ -43,7 +56,7 @@ export class VoiceRecorder extends Component {
         return _t("Stop Recording");
     }
     get cancelTitle() {
-        return _t("Cancel");
+        return _t("Discard (%(keyboard_command)s)", { keyboard_command: "Esc" });
     }
 }
 
@@ -83,15 +96,19 @@ export function useVoiceRecorder(params = {}, options = {}) {
     let processor;
     /** @type {Mp3Encoder} */
     let encoder;
-    /** @type {Function} */
-    let disconnectAudioMonitor;
+    /** @type {number} */
+    let barVolumePeak;
+    /** @type {number} */
+    let lastBarTimeStamp;
 
     const state = proxy({
         limitWarning: false,
         isActionPending: false,
         recording: false,
-        elapsed: "00 : 00",
-        volumes: new Array(3).fill(0),
+        elapsed: formatVoiceTime(0),
+        limit: formatVoiceTime(maxDuration),
+        volumeLevels: [],
+        volumeLevelsOffset: 0,
         onClick() {
             if (state.recording) {
                 return stopRecording();
@@ -99,11 +116,12 @@ export function useVoiceRecorder(params = {}, options = {}) {
                 return startRecording();
             }
         },
+        stopRecording,
         /**
          * Stops the recording without uploading the file
          */
         cancelRecording() {
-            if (state.recording) {
+            if (state.recording && !state.isActionPending) {
                 cleanUp();
             }
         },
@@ -156,8 +174,12 @@ export function useVoiceRecorder(params = {}, options = {}) {
                 return;
             }
         }
-        state.elapsed = "00 : 00";
+        state.elapsed = formatVoiceTime(0);
         state.recording = true;
+        state.volumeLevels = Array.from({ length: VOLUME_LEVEL_HISTORY_SIZE }, () => 0);
+        state.volumeLevelsOffset = 0;
+        barVolumePeak = 0;
+        lastBarTimeStamp = 0;
         audioContext = new window.AudioContext();
 
         await loadLamejs();
@@ -171,12 +193,7 @@ export function useVoiceRecorder(params = {}, options = {}) {
                 return;
             }
             const elapsedSeconds = Math.floor((e.timeStamp - startTimeStamp) / 1000);
-            const second = elapsedSeconds % 60;
-            const minute = Math.floor(elapsedSeconds / 60);
-            state.elapsed =
-                (minute < 10 ? "0" + minute : minute) +
-                " : " +
-                (second < 10 ? "0" + second : second);
+            state.elapsed = formatVoiceTime(elapsedSeconds);
             if (elapsedSeconds > maxDuration - 5 && elapsedSeconds < maxDuration) {
                 state.limitWarning = true;
             }
@@ -191,11 +208,22 @@ export function useVoiceRecorder(params = {}, options = {}) {
                     }
                 );
                 stopRecording();
+                return;
             }
             if (!e.data) {
                 return;
             }
             _encode(e.data);
+            barVolumePeak = Math.max(barVolumePeak, getVolumePeak(e.data));
+            if (e.timeStamp - lastBarTimeStamp >= BAR_DURATION_MS) {
+                lastBarTimeStamp = e.timeStamp;
+                state.volumeLevels = [
+                    ...state.volumeLevels.slice(1),
+                    getVolumeLevel(barVolumePeak),
+                ];
+                state.volumeLevelsOffset++;
+                barVolumePeak = 0;
+            }
         };
         streamSource = audioContext.createMediaStreamSource(microphone);
 
@@ -205,25 +233,6 @@ export function useVoiceRecorder(params = {}, options = {}) {
         config.sampleRate = audioContext.sampleRate;
         encoder = new Mp3Encoder(config);
         state.isActionPending = false;
-
-        // Live waveform audio feedback
-        let lastTic = 0;
-        const track = microphone.getAudioTracks()[0];
-        const monitorPromise = monitorAudio(track, {
-            onTic: (volume) => {
-                const now = Date.now();
-                if (now - lastTic < 80) {
-                    return;
-                }
-                lastTic = now;
-                state.volumes = [...state.volumes.slice(1), volume];
-            },
-        });
-        disconnectAudioMonitor = await monitorPromise;
-        if (!state.recording) {
-            disconnectAudioMonitor();
-            disconnectAudioMonitor = undefined;
-        }
     }
 
     function _encode(data) {
@@ -269,9 +278,6 @@ export function useVoiceRecorder(params = {}, options = {}) {
             }
         }
 
-        disconnectAudioMonitor?.();
-        disconnectAudioMonitor = undefined;
-        state.volumes = new Array(3).fill(0);
         startTimeStamp = false;
         microphone?.getTracks().forEach((track) => track.stop());
         microphone = null;
