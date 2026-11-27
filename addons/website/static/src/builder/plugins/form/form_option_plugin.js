@@ -19,6 +19,7 @@ import {
     getFieldName,
     getFieldType,
     getLabelPosition,
+    canSetFloatingLabel,
     getMark,
     getModelName,
     getMultipleInputs,
@@ -1512,6 +1513,9 @@ export class SelectLabelsPositionAction extends BuilderAction {
             const field = getActiveField(fieldEl, { fields });
             field.formatInfo.labelPosition = value;
             field.formatInfo.labelInvisible = value === "none";
+            if (field.formatInfo.labelInvisible && canSetFloatingLabel(field.type)) {
+                field.formatInfo.labelPosition = "floating";
+            }
             // Reset label width for the "top" position.
             if (value === "top") {
                 delete field.formatInfo.labelWidth;
