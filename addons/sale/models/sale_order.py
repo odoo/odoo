@@ -846,6 +846,11 @@ class SaleOrder(models.Model):
                 raise UserError(_(
                     "You can not delete a sent quotation or a confirmed sales order."
                     " You must first cancel it."))
+            if order.invoice_ids.filtered(lambda inv: inv.state != 'cancel'):
+                raise UserError(_(
+                    "You cannot delete sales order %s because it is linked to"
+                    " invoices. You must cancel or delete those invoices first.",
+                    order.name))
 
     #=== ACTION METHODS ===#
 
