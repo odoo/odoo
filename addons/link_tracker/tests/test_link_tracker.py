@@ -154,7 +154,7 @@ class TestLinkTracker(common.TransactionCase, MockLinkTracker):
             'campaign_id': utm_campaign.id,
             'medium_id': utm_medium.id,
             'source_id': utm_source.id,
-            'utm_reference': utm_reference,
+            'utm_reference': f'{utm_reference._name},{utm_reference.id}',
         }
         link_trackers_utm = self.env['link.tracker'].search_or_create([values_6, values_6])
         link_tracker_utm = link_trackers_utm[0]
@@ -242,7 +242,7 @@ class TestLinkTracker(common.TransactionCase, MockLinkTracker):
             'campaign_id': campaign.id,
             'source_id': source.id,
             'medium_id': medium.id,
-            'utm_reference': utm_reference,
+            'utm_reference': f'{utm_reference._name},{utm_reference.id}',
             'title': 'Title',
         })
         self.assertLinkParams(
@@ -301,7 +301,7 @@ class TestLinkTracker(common.TransactionCase, MockLinkTracker):
             'campaign_id': campaign.id,
             'source_id': source.id,
             'medium_id': medium.id,
-            'utm_reference': user_reference,
+            'utm_reference': f'{user_reference._name},{user_reference.id}',
         })
         self.assertIn('utm_campaign=campai.gn%2E%2E%2E', link.redirected_url)
         self.assertIn('utm_source=source%2E%2E%2E', link.redirected_url)

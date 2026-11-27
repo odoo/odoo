@@ -72,7 +72,7 @@ class TestMailTemplateTools(TestMailTemplateCommon):
             'force_report_rendering': False, # this also invalidates the test records...
             }).create({
             'mail_template_id': self.test_template.id,
-            'resource_ref': test_record,
+            'resource_ref': f'{test_record._name},{test_record.id}',
         })
 
         self.assertIn(f'<p>EnglishBody for {test_record.name}</p>', preview.body_html)
@@ -86,7 +86,7 @@ class TestMailTemplateTools(TestMailTemplateCommon):
         test_template = self.env['mail.template'].browse(self.test_template.ids)
         preview = self.env['mail.template.preview'].create({
             'mail_template_id': test_template.id,
-            'resource_ref': test_record,
+            'resource_ref': f'{test_record._name},{test_record.id}',
             'lang': 'es_ES',
         })
         self.assertEqual(preview.body_html, '<p>SpanishBody for %s</p>' % test_record.name)

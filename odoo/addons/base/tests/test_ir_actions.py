@@ -206,7 +206,7 @@ ZeroDivisionError: division by zero""" % self.test_server_action.id
         self.action.write({
             'state': 'object_copy',
             'crud_model_id': self.res_partner_model.id,
-            'resource_ref': self.test_partner,
+            'resource_ref': f'{self.test_partner._name},{self.test_partner.id}',
         })
         partner = self.env['res.partner'].search([('name', 'ilike', self.test_partner.name)])
         self.assertEqual(len(partner), 1)
@@ -219,7 +219,7 @@ ZeroDivisionError: division by zero""" % self.test_server_action.id
         self.action.write({
             'state': 'object_copy',
             'crud_model_id': self.res_partner_model.id,
-            'resource_ref': self.test_partner,
+            'resource_ref': f'{self.test_partner._name},{self.test_partner.id}',
             'link_field_id': self.res_partner_parent_field.id,
         })
         run_res = self.action.with_context(self.context).run()
@@ -232,7 +232,7 @@ ZeroDivisionError: division by zero""" % self.test_server_action.id
         self.action.write({
             'state': 'object_copy',
             'crud_model_id': self.res_partner_model.id,
-            'resource_ref': self.test_partner,
+            'resource_ref': f'{self.test_partner._name},{self.test_partner.id}',
             'link_field_id': self.res_partner_children_field.id,
         })
         run_res = self.action.with_context(self.context).run()
@@ -330,7 +330,7 @@ ZeroDivisionError: division by zero""" % self.test_server_action.id
             'state': 'object_write',
             'update_path': 'category_id',
             'update_m2m_operation': 'set',
-            'resource_ref': categ_1,
+            'resource_ref': f'{categ_1._name},{categ_1.id}',
         })
         run_res = self.action.with_context(self.context).run()
         self.assertFalse(run_res, 'ir_actions_server: update record action correctly finished should return False')
@@ -342,7 +342,7 @@ ZeroDivisionError: division by zero""" % self.test_server_action.id
             'state': 'object_write',
             'update_path': 'category_id',
             'update_m2m_operation': 'add',
-            'resource_ref': categ_2,
+            'resource_ref': f'{categ_2._name},{categ_2.id}',
         })
         run_res = self.action.with_context(self.context).run()
         self.assertFalse(run_res, 'ir_actions_server: update record action correctly finished should return False')
@@ -355,7 +355,7 @@ ZeroDivisionError: division by zero""" % self.test_server_action.id
             'state': 'object_write',
             'update_path': 'category_id',
             'update_m2m_operation': 'remove',
-            'resource_ref': categ_1,
+            'resource_ref': f'{categ_1._name},{categ_1.id}',
         })
         run_res = self.action.with_context(self.context).run()
         self.assertFalse(run_res, 'ir_actions_server: update record action correctly finished should return False')
