@@ -281,7 +281,9 @@ class RecurrenceRule(models.Model):
         detached_events = self._detach_events(events)
         context = {
             **clean_context(self.env.context),
-            **{'no_mail_to_attendees': True, 'mail_create_nolog': True},
+            'no_mail_to_attendees': True,
+            'mail_create_nolog': True,
+            'mail_notrack': True,
         }
         self.env['calendar.event'].with_context(context).create(event_vals)
         return detached_events
@@ -381,7 +383,9 @@ class RecurrenceRule(models.Model):
         :param dstart: if provided, only write events starting from this point in time
         """
         events = self._get_events_from(dtstart) if dtstart else self.calendar_event_ids
-        return events.with_context(no_mail_to_attendees=True, dont_notify=True).write(dict(values, recurrence_update='self_only'))
+        return events.with_context(
+            no_mail_to_attendees=True, dont_notify=True, mail_notrack=True,
+        ).write(dict(values, recurrence_update='self_only'))
 
     def _rrule_serialize(self):
         """
