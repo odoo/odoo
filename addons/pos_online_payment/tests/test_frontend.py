@@ -442,6 +442,87 @@ class TestUi(TestPointOfSaleHttpCommon, OnlinePaymentCommon):
         self.assertEqual(current_session.state, 'closed', 'Session was not properly closed')
         self.assertEqual(order.state, 'done')
 
+    def _sync_draft_order_paid_online(self, session, order_uid, cash_amount=0.0):
+        """ Sync a draft order of 4.8, paid `cash_amount` in cash and the rest online. """
+        create_result = self.env['pos.order'].with_user(self.pos_user).sync_from_ui([{
+            'uuid': order_uid,
+            'name': 'Order ' + order_uid,
+            'session_id': session.id,
+            'user_id': self.pos_user.id,
+            'partner_id': False,
+            'access_token': str(uuid.uuid4()),
+            'amount_paid': cash_amount,
+            'amount_return': 0,
+            'state': 'draft',
+            'amount_tax': 0,
+            'amount_total': 4.8,
+            'date_order': fields.Datetime.to_string(fields.Datetime.now()),
+            'fiscal_position_id': False,
+            'lines': [[0, 0, {
+                'product_id': self.letter_tray.id,
+                'qty': 1,
+                'discount': 0,
+                'tax_ids': [],
+                'price_unit': 4.8,
+                'price_subtotal': 4.8,
+                'price_subtotal_incl': 4.8,
+            }]],
+            'payment_ids': [[0, 0, {
+                'amount': cash_amount,
+                'payment_method_id': self.cash_payment_method.id,
+            }]] if cash_amount else [],
+        }])
+        order_id = next(data for data in create_result['pos.order'] if data['uuid'] == order_uid)['id']
+        order = self.env['pos.order'].browse(order_id)
+        order.with_user(self.pos_user).get_and_set_online_payments_data(4.8 - cash_amount)
+        self._fake_online_payment(order.id, order.access_token, self.payment_provider.id)
+        self.assertEqual(order.state, 'paid')
+        return order
+
+    def _assert_online_transfers(self, session, expected_balances):
+        pos_receivable = session._get_receivable_account()
+        transfer_lines = self.env['account.move.line'].search([
+            ('account_id', '=', pos_receivable.id),
+            ('move_id.ref', 'like', 'Transfer Online payment'),
+        ], order='id')
+        self.assertRecordValues(transfer_lines, [
+            {'balance': balance, 'reconciled': True} for balance in expected_balances
+        ])
+        open_pos_receivable_lines = self.env['account.move.line'].search([
+            ('account_id', '=', pos_receivable.id),
+            ('parent_state', '=', 'posted'),
+            ('reconciled', '=', False),
+        ])
+        self.assertFalse(open_pos_receivable_lines)
+
+    def test_online_payment_split_with_cash_closing_transfer(self):
+        """ Only the online part of an order paid partly in cash and partly
+            online is transferred to the PoS receivable at the closing.
+        """
+        self.pos_config.with_user(self.pos_user).open_ui()
+        session = self.pos_config.current_session_id
+        session.set_opening_control(0, None)
+        self._sync_draft_order_paid_online(session, '00078-001-0001', cash_amount=2.0)
+
+        session.close_session_from_ui({self.cash_payment_method.id: 2.0})
+        self.assertEqual(session.state, 'closed')
+        self._assert_online_transfers(session, [-2.8])
+
+    def test_online_payment_periodic_closing_transfer(self):
+        """ The online payments of a periodic closing entry are not
+            transferred again at the next closing of the session.
+        """
+        self.pos_config.with_user(self.pos_user).open_ui()
+        session = self.pos_config.current_session_id
+        session.set_opening_control(0, None)
+        self._sync_draft_order_paid_online(session, '00079-001-0001')
+        session._validate_session_accounting()
+
+        self._sync_draft_order_paid_online(session, '00079-001-0002')
+        session.close_session_from_ui({self.cash_payment_method.id: 0})
+        self.assertEqual(session.state, 'closed')
+        self._assert_online_transfers(session, [-4.8, -4.8])
+
     def test_no_second_online_payment_before_post_processing(self):
         order = self._open_session_fake_cashier_unpaid_order()
         payment_context = self._fake_open_pos_order_pay_page(order.id, order.access_token)
