@@ -2136,10 +2136,11 @@
     </record>
 
     <record id="fr_work_entry_type_overtime" model="hr.work.entry.type">
-        <field name="name">Overtime hours non recoverable - 150%</field>
+        <field name="name">Overtime 25%</field>
         <field name="color">4</field>
         <field name="display_code">OT</field>
         <field name="code">040.00</field>
+        <field name="count_as">working_time</field>
         <field name="country_id" ref="base.fr"/>
     </record>
 
@@ -2190,16 +2191,17 @@
     </record>
 
     <record id="fr_work_entry_type_sick_leave" model="hr.work.entry.type">
-        <field name="name">Guaranteed monthly wage illness</field>
+        <field name="name">Non-professional Sickness</field>
         <field name="display_code">STO</field>
         <field name="code">013.00</field>
         <field name="color">5</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.fr"/>
+        <field name="amount_rate">0.0</field>
     </record>
 
     <record id="fr_work_entry_type_legal_leave" model="hr.work.entry.type">
-        <field name="name">Legal leave employee</field>
+        <field name="name">Paid Leave</field>
         <field name="display_code">PTO</field>
         <field name="code">016.00</field>
         <field name="color">5</field>
@@ -2214,6 +2216,171 @@
         <field name="color">3</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.fr"/>
+    </record>
+
+    <record id="l10n_fr_work_entry_type_overtime_50" model="hr.work.entry.type">
+        <field name="name">Overtime 50%</field>
+        <field name="color">4</field>
+        <field name="display_code">O50</field>
+        <field name="code">FRHS50</field>
+        <field name="count_as">working_time</field>
+        <field name="country_id" ref="base.fr"/>
+        <field name="description">Overtime hours beyond the eighth overtime hour of the week (C. trav. L3121-36).</field>
+    </record>
+
+    <record id="l10n_fr_work_entry_type_work_accident" model="hr.work.entry.type">
+        <field name="name">Work Accident</field>
+        <field name="color">5</field>
+        <field name="display_code">AT</field>
+        <field name="code">FRLEAVE200</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.fr"/>
+        <field name="amount_rate">0.0</field>
+        <field name="description">Absence following a work accident, compensated by the CPAM daily allowances and the employer complement.</field>
+    </record>
+
+    <record id="l10n_fr_work_entry_type_occupational_disease" model="hr.work.entry.type">
+        <field name="name">Occupational Disease</field>
+        <field name="color">5</field>
+        <field name="display_code">MP</field>
+        <field name="code">FRLEAVE201</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.fr"/>
+        <field name="amount_rate">0.0</field>
+    </record>
+
+    <record id="l10n_fr_work_entry_type_commuting_accident" model="hr.work.entry.type">
+        <field name="name">Commuting Accident</field>
+        <field name="color">5</field>
+        <field name="display_code">ATR</field>
+        <field name="code">FRLEAVE202</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.fr"/>
+        <field name="amount_rate">0.0</field>
+    </record>
+
+    <record id="l10n_fr_work_entry_type_therapeutic_part_time" model="hr.work.entry.type">
+        <field name="name">Therapeutic Part Time</field>
+        <field name="color">5</field>
+        <field name="display_code">TPT</field>
+        <field name="code">FRLEAVE210</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.fr"/>
+        <field name="amount_rate">0.0</field>
+        <field name="description">Hours not worked during a therapeutic part time, compensated by the CPAM daily allowances.</field>
+    </record>
+
+    <record id="l10n_fr_work_entry_type_maternity" model="hr.work.entry.type">
+        <field name="name">Maternity Leave</field>
+        <field name="color">5</field>
+        <field name="display_code">MAT</field>
+        <field name="code">FRLEAVE300</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.fr"/>
+        <field name="amount_rate">0.0</field>
+    </record>
+
+    <record id="l10n_fr_work_entry_type_paternity" model="hr.work.entry.type">
+        <field name="name">Paternity and Childcare Leave</field>
+        <field name="color">5</field>
+        <field name="display_code">PAT</field>
+        <field name="code">FRLEAVE301</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.fr"/>
+        <field name="amount_rate">0.0</field>
+    </record>
+
+    <record id="l10n_fr_work_entry_type_adoption" model="hr.work.entry.type">
+        <field name="name">Adoption Leave</field>
+        <field name="color">5</field>
+        <field name="display_code">ADO</field>
+        <field name="code">FRLEAVE302</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.fr"/>
+        <field name="amount_rate">0.0</field>
+    </record>
+
+    <record id="l10n_fr_work_entry_type_birth_leave_additional" model="hr.work.entry.type">
+        <field name="name">Additional Birth Leave</field>
+        <field name="color">5</field>
+        <field name="display_code">CSN</field>
+        <field name="code">FRLEAVE303</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.fr"/>
+        <field name="amount_rate">0.0</field>
+        <field name="description">Congé supplémentaire de naissance (from 1 July 2026), compensated by the CPAM, without employer complement.</field>
+    </record>
+
+    <record id="l10n_fr_work_entry_type_parental_leave" model="hr.work.entry.type">
+        <field name="name">Parental Leave</field>
+        <field name="color">5</field>
+        <field name="display_code">PAR</field>
+        <field name="code">FRLEAVE310</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.fr"/>
+        <field name="amount_rate">0.0</field>
+    </record>
+
+    <record id="l10n_fr_work_entry_type_unjustified_absence" model="hr.work.entry.type">
+        <field name="name">Unjustified Absence</field>
+        <field name="color">5</field>
+        <field name="display_code">ABS</field>
+        <field name="code">FRLEAVE320</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.fr"/>
+        <field name="amount_rate">0.0</field>
+    </record>
+
+    <record id="l10n_fr_work_entry_type_strike" model="hr.work.entry.type">
+        <field name="name">Collective Work Stoppage</field>
+        <field name="color">5</field>
+        <field name="display_code">CWS</field>
+        <field name="code">FRLEAVE330</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.fr"/>
+        <field name="amount_rate">0.0</field>
+        <field name="description">Unpaid absence for a collective work stoppage. It is never named on the payslip (C. trav. R3243-4).</field>
+    </record>
+
+    <record id="l10n_fr_work_entry_type_family_event" model="hr.work.entry.type">
+        <field name="name">Family Event Leave</field>
+        <field name="color">3</field>
+        <field name="display_code">FAM</field>
+        <field name="code">FRLEAVE400</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.fr"/>
+        <field name="description">Paid leave for family events: marriage or PACS, birth or adoption (3 days), death, disability of a child.</field>
+    </record>
+
+    <record id="l10n_fr_work_entry_type_rest_day" model="hr.work.entry.type">
+        <field name="name">Rest Day (RTT / Forfait Jours)</field>
+        <field name="color">3</field>
+        <field name="display_code">RTT</field>
+        <field name="code">FRLEAVE410</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.fr"/>
+        <field name="description">Paid rest days of a working time reduction agreement or of an annual forfait in days.</field>
+    </record>
+
+    <record id="l10n_fr_work_entry_type_partial_activity" model="hr.work.entry.type">
+        <field name="name">Partial Activity</field>
+        <field name="color">5</field>
+        <field name="display_code">APA</field>
+        <field name="code">FRLEAVE500</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.fr"/>
+        <field name="amount_rate">0.0</field>
+        <field name="description">Hours not worked during a period of activite partielle, compensated by the partial activity allowance.</field>
+    </record>
+
+    <record id="l10n_fr_work_entry_type_solidarity_day" model="hr.work.entry.type">
+        <field name="name">Solidarity Day</field>
+        <field name="color">0</field>
+        <field name="display_code">JSD</field>
+        <field name="code">FRWORK510</field>
+        <field name="count_as">working_time</field>
+        <field name="country_id" ref="base.fr"/>
+        <field name="description">Journee de solidarite: day worked without additional pay for the monthly paid employees.</field>
     </record>
 
 <!-- GE : Georgia -->

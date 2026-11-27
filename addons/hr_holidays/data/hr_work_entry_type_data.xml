@@ -974,6 +974,157 @@
         <field name="count_days_as">calendar</field>
     </record>
 
+<!-- FR : France -->
+    <!-- Overtime is computed weekly from the time entries and encoded by HR, not requested by the employees: hours 36 to 43 at 25%, the next ones at 50% (C. trav. L3121-36) -->
+    <record id="hr_work_entry.fr_work_entry_type_overtime" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">hour</field>
+        <field name="time_off_selectable">False</field>
+        <field name="include_public_holidays_in_duration">True</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_fr_work_entry_type_overtime_50" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">hour</field>
+        <field name="time_off_selectable">False</field>
+        <field name="include_public_holidays_in_duration">True</field>
+        <field name="country_id" ref="base.fr"/>
+    </record>
+
+    <!-- Paid leave (conges payes): 2.5 working days (jours ouvrables) acquired per month of work, granted by the payroll (C. trav. L3141-3) -->
+    <record id="hr_work_entry.fr_work_entry_type_legal_leave" model="hr.work.entry.type">
+        <field name="requires_allocation">True</field>
+        <field name="request_unit">half_day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="country_id" ref="base.fr"/>
+    </record>
+
+    <!-- Sickness and work accidents: compensated by the CPAM daily allowances (IJSS) and the employer complement, on a medical certificate -->
+    <record id="hr_work_entry.fr_work_entry_type_sick_leave" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="support_document">True</field>
+        <field name="country_id" ref="base.fr"/>
+    </record>
+
+    <record id="hr_work_entry.l10n_fr_work_entry_type_work_accident" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="support_document">True</field>
+        <field name="country_id" ref="base.fr"/>
+    </record>
+
+    <record id="hr_work_entry.l10n_fr_work_entry_type_occupational_disease" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="support_document">True</field>
+        <field name="country_id" ref="base.fr"/>
+    </record>
+
+    <record id="hr_work_entry.l10n_fr_work_entry_type_commuting_accident" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="support_document">True</field>
+        <field name="country_id" ref="base.fr"/>
+    </record>
+
+    <record id="hr_work_entry.l10n_fr_work_entry_type_therapeutic_part_time" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="support_document">True</field>
+        <field name="country_id" ref="base.fr"/>
+    </record>
+
+    <!-- Maternity, paternity, adoption and birth leaves: compensated by the CPAM, with a complement under some collective agreements -->
+    <record id="hr_work_entry.l10n_fr_work_entry_type_maternity" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="support_document">True</field>
+        <field name="country_id" ref="base.fr"/>
+    </record>
+
+    <record id="hr_work_entry.l10n_fr_work_entry_type_paternity" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="support_document">True</field>
+        <field name="country_id" ref="base.fr"/>
+    </record>
+
+    <record id="hr_work_entry.l10n_fr_work_entry_type_adoption" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="support_document">True</field>
+        <field name="country_id" ref="base.fr"/>
+    </record>
+
+    <record id="hr_work_entry.l10n_fr_work_entry_type_birth_leave_additional" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="support_document">True</field>
+        <field name="country_id" ref="base.fr"/>
+    </record>
+
+    <!-- Absences without pay -->
+    <record id="hr_work_entry.l10n_fr_work_entry_type_parental_leave" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="unpaid">True</field>
+        <field name="country_id" ref="base.fr"/>
+    </record>
+
+    <record id="hr_work_entry.l10n_fr_work_entry_type_unjustified_absence" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">hour</field>
+        <field name="unit_of_measure">hour</field>
+        <field name="unpaid">True</field>
+        <field name="employee_requests">False</field>
+        <field name="country_id" ref="base.fr"/>
+    </record>
+
+    <record id="hr_work_entry.l10n_fr_work_entry_type_strike" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">hour</field>
+        <field name="unit_of_measure">hour</field>
+        <field name="unpaid">True</field>
+        <field name="employee_requests">False</field>
+        <field name="country_id" ref="base.fr"/>
+    </record>
+
+    <record id="hr_work_entry.l10n_fr_work_entry_type_partial_activity" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">hour</field>
+        <field name="unit_of_measure">hour</field>
+        <field name="time_off_selectable">False</field>
+        <field name="country_id" ref="base.fr"/>
+    </record>
+
+    <!-- Paid family event leaves (C. trav. L3142-4, or the collective agreement when more favourable) -->
+    <record id="hr_work_entry.l10n_fr_work_entry_type_family_event" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="support_document">True</field>
+        <field name="country_id" ref="base.fr"/>
+    </record>
+
+    <!-- Rest days of a working time reduction agreement (RTT) or of an annual forfait in days, allocated yearly -->
+    <record id="hr_work_entry.l10n_fr_work_entry_type_rest_day" model="hr.work.entry.type">
+        <field name="requires_allocation">True</field>
+        <field name="request_unit">half_day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="country_id" ref="base.fr"/>
+    </record>
+
 <!-- GE : Georgia -->
     <!-- Overtime is encoded by HR, not requested by the employees: work beyond the standard time and on the
          public holidays, paid at the increased rate agreed in the contract (Labour Code, art. 27 and 30(4)) -->
