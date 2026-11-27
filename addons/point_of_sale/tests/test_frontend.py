@@ -8,7 +8,7 @@ from PIL import Image
 from contextlib import contextmanager
 from unittest.mock import patch
 from unittest import skip
-from odoo import Command, api
+from odoo import Command, api, fields
 
 from odoo.tools import BinaryBytes, DEFAULT_SERVER_DATE_FORMAT
 from odoo.tests import tagged, loaded_demo_data
@@ -737,6 +737,41 @@ class TestUi(TestPointOfSaleHttpCommon):
         """The search field suggestions must stay above the order list, on mobile too."""
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_ticket_screen_search_suggestions')
+
+    def test_ticket_screen_paid_pages_and_filters(self):
+        """Paid orders are filtered and paginated by the server: the rows and the count follow the filters."""
+        eat_in, takeaway = self.env['pos.preset'].create([{'name': 'Eat in'}, {'name': 'Takeaway'}])
+        self.main_pos_config.write({
+            'use_presets': True,
+            'default_preset_id': eat_in.id,
+            'available_preset_ids': [Command.set(takeaway.ids)],
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        now = fields.Datetime.now()
+        no_partner = self.env['res.partner']
+        self.env['pos.order'].create([{
+            'session_id': self.main_pos_config.current_session_id.id,
+            'company_id': self.env.company.id,
+            'pos_reference': reference,
+            'tracking_number': tracking_number,
+            'date_order': date_order,
+            'partner_id': partner.id,
+            'preset_id': preset.id,
+            'state': state,
+            'amount_tax': 0.0,
+            'amount_total': 0.0,
+            'amount_paid': 0.0,
+            'amount_return': 0.0,
+        } for reference, tracking_number, date_order, partner, preset, state in [
+            # Same date: the most recent id first.
+            ('PAID-0002', '702', now, self.partner_test_1, eat_in, 'paid'),
+            ('PAID-0001', '701', now, self.partner_test_1, eat_in, 'paid'),
+            ('PAID-0003', '703', now - timedelta(days=2), self.partner_test_2, takeaway, 'paid'),
+            ('PAID-0004', '704', now - timedelta(days=2, hours=1), self.partner_test_2, takeaway, 'paid'),
+            ('PAID-0005', '705', now - timedelta(days=2, hours=2), no_partner, eat_in, 'paid'),
+            ('CANCEL-0001', '706', now, no_partner, eat_in, 'cancel'),
+        ]])
+        self.start_pos_tour('test_ticket_screen_paid_pages_and_filters')
 
     def test_product_information_screen_admin(self):
         '''Consider this test method to contain a test tour with miscellaneous tests/checks that require admin access.
