@@ -382,7 +382,7 @@ class StockMove(models.Model):
 
             if not correction_line_vals:
                 return
-            correction_move = self.env['account.move'].with_context(clean_context(self.env.context)).with_company(company).create({
+            correction_move = self.env['account.move'].sudo().with_context(clean_context(self.env.context)).with_company(company).create({
                 'journal_id': company.account_stock_journal_id.id,
                 'date': fields.Date.context_today(self),
                 'ref': justification,

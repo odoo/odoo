@@ -174,7 +174,14 @@ class TestMrpAccount(TestBomPriceCommon, TestMrpCommon):
     def test_mrp_user_without_account_permissions_can_create_bom(self):
         mrp_user = new_test_user(self.env['res.users'].sudo().env, 'temp_mrp_user', 'mrp.group_mrp_user')  # setup master-data: user creation
         mo_1 = self._create_mo(self.bom_1, 1)
-        mo_1.with_user(mrp_user).button_mark_done()
+        with freeze_time(fields.Datetime.now() - timedelta(days=2), auto_tick_seconds=1):
+            mo_1.with_user(mrp_user).button_mark_done()
+
+        # Value change on a locked entry by a non-accounting user creates a correction entry
+        self.env.company.sudo().fiscalyear_lock_date = fields.Date.today() - timedelta(days=1)  # setup master-data
+        mo_1.move_finished_ids.value += 10
+        mo_1.move_finished_ids.with_user(mrp_user)._update_accounting_entries()
+        self.assertEqual(sum(mo_1.move_finished_ids.sudo().invoice_line_ids.mapped('debit')), mo_1.move_finished_ids.value)
 
     def test_delivery_validate_after_product_converted_to_kit(self):
         """
