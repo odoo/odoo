@@ -2,7 +2,7 @@
 
 from collections import defaultdict
 from odoo import _, api, Command, fields, models
-from odoo.tools import OrderedSet, float_is_zero
+from odoo.tools import OrderedSet
 from odoo.exceptions import ValidationError
 
 
