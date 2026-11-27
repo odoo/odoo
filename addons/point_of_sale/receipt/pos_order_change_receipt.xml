@@ -79,10 +79,12 @@
         </template>
 
         <template id="point_of_sale.pos_order_change_receipt_line">
-            <t t-if="line['combo_parent_uuid']" t-set="extraComboLineClass" t-value="'ps-5'"/>
+            <t t-if="line['combo_parent_uuid']" t-set="extraComboLineClass" t-value="'ps-5 ms-4'"/>
             <t t-else="" t-set="extraComboLineClass" t-value="''"/>
+            <t t-if="len(line['combo_line_ids'])" t-set="extraComboProductClass" t-value="'text-bold text-italic'"/>
+            <t t-else="" t-set="extraComboProductClass" t-value="''"/>
             <div t-attf-class="orderline text-large {{extraComboLineClass}}">
-                <div class="text-huge">
+                <div t-attf-class="text-huge {{extraComboProductClass}}">
                     <span class="me-3 font-monospace" t-out="line['quantity']"/>
                     <span class="product-name text-break" t-out="line['basic_name']"/>
                 </div>
