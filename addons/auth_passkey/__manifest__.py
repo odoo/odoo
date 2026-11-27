@@ -11,6 +11,9 @@ When a user logs in with a Passkey, MFA will not be required.
 """,
     'category': 'Hidden/Tools',
     'depends': ['base_setup', 'web'],
+    'external_dependencies': [
+        {'pypi': 'cbor2', 'apt': 'python3-cbor2'},
+    ],
     'auto_install': True,
     'data': [
         'views/auth_passkey_key_views.xml',

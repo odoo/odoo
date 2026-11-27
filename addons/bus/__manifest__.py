@@ -4,6 +4,10 @@
     'description': "Instant Messaging Bus allow you to send messages to users, in live.",
     'depends': ['base', 'web'],
     'auto_install': True,
+    'external_dependencies': [
+        {'pypi': 'orjson', 'optional': True},
+        {'pypi': 'websocket-client', 'modules': ['websocket'], 'test': True, 'apt': 'python3-websocket'},
+    ],
     'assets': {
         'web.assets_backend': [
             'bus/static/src/*.js',

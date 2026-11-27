@@ -7,6 +7,9 @@
     'license': 'LGPL-3',
     'category': 'Hidden/Tools',
     'depends': ['base'],
+    'external_dependencies': [
+        {'pypi': 'faker', 'apt': 'faker', 'optional': True},
+    ],
     'data': [
         'security/ir.access.csv',
     ],
