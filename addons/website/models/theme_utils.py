@@ -17,7 +17,6 @@ class ThemeUtils(models.AbstractModel):
 
     _theme_model_names = OrderedDict([
         ('ir.ui.view', 'theme.ir.ui.view'),
-        ('ir.asset', 'theme.ir.asset'),
         ('ir.attachment', 'theme.ir.attachment'),
     ])
     _theme_translated_fields = {
@@ -131,19 +130,15 @@ class ThemeUtils(models.AbstractModel):
         self._set_page_option("header_overlay", False)
 
     def _toggle_asset(self, key, active):
-        ThemeIrAsset = self.env['theme.ir.asset'].sudo().with_context(active_test=False)
-        obj = ThemeIrAsset.search([('key', '=', key)])
-        if obj:
-            obj = obj.copy_ids.filtered(lambda x: x.website_id == self.env.website)
-        else:
-            Asset = self.env['ir.asset'].sudo().with_context(active_test=False)
-            obj = Asset.search([('key', '=', key)], limit=1)
-            has_specific = obj.key and Asset.search_count([
-                ('key', '=', obj.key),
-                ('website_id', '=', self.env.website.id)
-            ]) >= 1
-            if not has_specific and active == obj.active:
-                return
+        Asset = self.env['ir.asset']
+        obj = Asset.search([('key', '=', key), ('active', 'in', [True, False])], limit=1)
+        has_specific = obj.key and Asset.search_count([
+            ('key', '=', obj.key),
+            ('website_id', '=', self.env.website.id),
+            ('active', 'in', [True, False]),
+        ]) >= 1
+        if not has_specific and active == obj.active:
+            return
         obj.write({'active': active})
 
     def _toggle_view(self, xml_id, active):

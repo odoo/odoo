@@ -24,8 +24,10 @@ class IrAsset(models.Model):
         return f'{route_prefix}/{unique}/{filename}'
 
     def _get_related_assets(self, domain, *, website_id=None, **params):
+        website = self.env['website'].browse(website_id)
         if website_id:
-            domain = Domain(domain) & self.env['website'].browse(website_id).website_domain()
+            domain = Domain(domain) & website.website_domain()
+        domain = Domain(domain) & website._theme_domain()
         assets = super()._get_related_assets(domain, **params)
         return assets.filter_duplicate(website_id)
 

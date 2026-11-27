@@ -110,6 +110,13 @@ class IrModuleModule(models.Model):
         # A website must not keep using a theme that is no longer installed
         for website in self.env['website'].search([('theme_id', 'in', self.ids)]):
             self.env['theme.utils']._theme_remove(website)
+        # The websites' copies of the theme's assets have no xmlid, so the
+        # uninstall would leave them behind
+        self.env['ir.asset'].search([
+            ('theme_id', 'in', self.ids),
+            ('website_id', '!=', False),
+            ('active', 'in', [True, False]),
+        ]).unlink()
         return super().module_uninstall()
 
     def _check(self):

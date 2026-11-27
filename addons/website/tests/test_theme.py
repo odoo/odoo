@@ -114,3 +114,24 @@ class TestThemeApply(common.TransactionCase):
 
         self.assertFalse(self.website.theme_id)
         self.assertFalse(self._get_view_copy())
+
+    def test_theme_assets_only_apply_to_their_websites(self):
+        self.env['ir.asset']._load_records([{
+            'xml_id': 'test_theme.test_asset',
+            'values': {
+                'name': 'Test Theme Asset',
+                'bundle': 'test_theme.assets',
+                'path': 'website/static/src/scss/website.scss',
+            },
+        }])
+        other_website = self.env['website'].create({'name': 'Other Website'})
+        self.website.theme_id = self.theme
+
+        def get_paths(website):
+            return [path for path, *_ in self.env['ir.asset']._get_asset_paths('test_theme.assets', {'website_id': website.id})]
+
+        self.assertEqual(get_paths(self.website), ['/website/static/src/scss/website.scss'])
+        self.assertEqual(get_paths(other_website), [])
+
+        self.website.theme_id = False
+        self.assertEqual(get_paths(self.website), [])

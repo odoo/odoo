@@ -4,45 +4,7 @@ from odoo import fields, models, modules
 from odoo.tools.translate import xml_translate
 from odoo.modules.module import get_resource_from_path
 
-from odoo.addons.base.models.ir_asset import AFTER_DIRECTIVE, APPEND_DIRECTIVE, BEFORE_DIRECTIVE, DEFAULT_SEQUENCE, INCLUDE_DIRECTIVE, PREPEND_DIRECTIVE, REMOVE_DIRECTIVE, REPLACE_DIRECTIVE
-
-
-class ThemeIrAsset(models.Model):
-    _name = 'theme.ir.asset'
-    _description = 'Theme Asset'
-
-    key = fields.Char()
-    name = fields.Char(required=True)
-    bundle = fields.Char(required=True)
-    directive = fields.Selection(selection=[
-        (APPEND_DIRECTIVE, 'Append'),
-        (PREPEND_DIRECTIVE, 'Prepend'),
-        (AFTER_DIRECTIVE, 'After'),
-        (BEFORE_DIRECTIVE, 'Before'),
-        (REMOVE_DIRECTIVE, 'Remove'),
-        (REPLACE_DIRECTIVE, 'Replace'),
-        (INCLUDE_DIRECTIVE, 'Include')], default=APPEND_DIRECTIVE)
-    path = fields.Char(required=True)
-    target = fields.Char()
-    active = fields.Boolean(default=True)
-    sequence = fields.Integer(default=DEFAULT_SEQUENCE, required=True)
-    copy_ids = fields.One2many('ir.asset', 'theme_template_id', 'Assets using a copy of me', copy=False, readonly=True)
-
-    def _convert_to_base_model(self, website, **kwargs):
-        self.ensure_one()
-        new_asset = {
-            'name': self.name,
-            'key': self.key,
-            'bundle': self.bundle,
-            'directive': self.directive,
-            'path': self.path,
-            'target': self.target,
-            'active': self.active,
-            'sequence': self.sequence,
-            'website_id': website.id,
-            'theme_template_id': self.id,
-        }
-        return new_asset
+from odoo.addons.base.models.ir_asset import DEFAULT_SEQUENCE
 
 
 class ThemeIrUiView(models.Model):
@@ -135,6 +97,15 @@ class WebsiteThemeMixin(models.AbstractModel):
 
     theme_id = fields.Many2one('ir.module.module', index='btree_not_null')
 
+    def _load_records(self, data_list, update=False):
+        # The records of a theme module belong to that theme
+        theme_category = self.env.ref('base.module_category_theme')
+        for data in data_list:
+            module = self.env['ir.module.module']._get((data.get('xml_id') or '').split('.')[0])
+            if theme_category in (module.category_id, module.category_id.parent_id):
+                data['values']['theme_id'] = module.id
+        return super()._load_records(data_list, update)
+
 
 class IrUiView(models.Model):
     _name = 'ir.ui.view'
@@ -167,8 +138,6 @@ class IrUiView(models.Model):
 class IrAsset(models.Model):
     _name = 'ir.asset'
     _inherit = ['ir.asset', 'website.theme.mixin']
-
-    theme_template_id = fields.Many2one('theme.ir.asset', copy=False, index='btree_not_null')
 
 
 class IrAttachment(models.Model):

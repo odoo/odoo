@@ -576,7 +576,7 @@ form: module.record_id""" % (xml_id,)
 
         record = etree.Element('record', attrib={
             'id': asset_id,
-            'model': 'theme.ir.asset' if self.module.startswith('theme_') else 'ir.asset',
+            'model': 'ir.asset',
         })
 
         name = el.get('name', asset_id)

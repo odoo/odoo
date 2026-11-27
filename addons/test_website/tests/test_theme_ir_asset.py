@@ -27,7 +27,8 @@ class TestThemeAsset(TransactionCase):
         asset_with_extra_field = self.env.ref('theme_default.test_asset_tag_extra')
 
         # Verify initial load
-        self.assertEqual(prepend_asset._name, 'theme.ir.asset', 'Model should be theme.ir.asset')
+        self.assertEqual(prepend_asset._name, 'ir.asset', 'Model should be ir.asset')
+        self.assertEqual(prepend_asset.theme_id.name, 'theme_default', 'Asset should belong to its theme')
         self.assertEqual(prepend_asset.name, 'Test asset tag with directive', 'Name not loaded')
         self.assertEqual(prepend_asset.directive, 'prepend', 'Directive not loaded')
         self.assertEqual(prepend_asset.bundle, 'test_asset_bundle', 'Bundle not loaded')

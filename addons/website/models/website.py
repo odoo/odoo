@@ -119,6 +119,9 @@ class Website(models.CachedModel):
     def website_domain(self):
         return Domain('website_id', 'in', [False, *self.ids])
 
+    def _theme_domain(self):
+        return Domain('theme_id', 'in', [False, *self.theme_id.ids])
+
     def _active_languages(self):
         return self.env['res.lang'].search([]).ids
 
@@ -364,6 +367,10 @@ class Website(models.CachedModel):
 
         if 'logo' in values:
             self._ensure_logo_media_attachment()
+
+        if 'theme_id' in values:
+            # Which theme assets apply depends on the website's theme
+            self.env.transaction.invalidate_ormcache('assets')
 
         if any(key in values for key in ["cdn_activated", "cdn_url", "cdn_filters", "domain"]):
             # invalidate the caches from static node at compile time
