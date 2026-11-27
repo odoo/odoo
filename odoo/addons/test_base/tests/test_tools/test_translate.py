@@ -307,6 +307,30 @@ class TranslationToolsTestCase(BaseCase):
         result = xml_translate(lambda term: term, source)
         self.assertEqual(result, source)
 
+    def test_translate_xml_svg(self):
+        """ Test xml_translate() on the texts of an inline SVG, with or without
+            a xmlns declaration: the term is the content of each <text>, and a
+            <tspan> is translated inline.
+        """
+        for xmlns in ('', ' xmlns="http://www.w3.org/2000/svg"'):
+            with self.subTest(xmlns=xmlns):
+                terms = []
+                source = f"""<div><svg{xmlns} viewBox="0 0 100 40">
+                                <circle cx="5" cy="5" r="5"/>
+                                <text x="0" y="15">Pay <tspan font-weight="bold">now</tspan></text>
+                                <text x="0" y="35">Receive</text>
+                            </svg></div>"""
+                result = xml_translate(terms.append, source)
+                self.assertEqual(result, source)
+                self.assertItemsEqual(terms, ['Pay <tspan font-weight="bold">now</tspan>', 'Receive'])
+
+                translations = {
+                    'Pay <tspan font-weight="bold">now</tspan>': 'Payer <tspan font-weight="bold">vite</tspan>',
+                    'Receive': 'Recevoir',
+                }
+                result = xml_translate(translations.get, source)
+                self.assertEqual(result, source.replace('Pay <', 'Payer <').replace('>now<', '>vite<').replace('Receive', 'Recevoir'))
+
     def test_translate_xml_invalid_translations(self):
         """ Test xml_translate() with invalid translations. """
         source = """<form string="Form stuff">
@@ -430,6 +454,14 @@ class TranslationToolsTestCase(BaseCase):
         source = """<blockquote>A <h2>B</h2> C</blockquote>"""
         result = html_translate(lambda term: term, source)
         self.assertEqual(result, source)
+
+    def test_translate_html_svg(self):
+        """ Test html_translate() on the texts of an inline SVG. """
+        terms = []
+        source = """<p>A <svg width="100" height="40"><text x="0" y="15">Pay <tspan font-weight="bold">now</tspan></text><text x="0" y="35">Receive</text></svg> B</p>"""
+        result = html_translate(terms.append, source)
+        self.assertEqual(result, source)
+        self.assertItemsEqual(terms, ['A', 'Pay <tspan font-weight="bold">now</tspan>', 'Receive', 'B'])
 
     def test_translate_html_nbsp(self):
         """ Test html_translate(). """
@@ -1260,6 +1292,40 @@ class TestXMLTranslation(TransactionCase):
         self.assertEqual(view.with_env(env_en).arch_db, archf % terms_en)
         self.assertEqual(view.with_env(env_fr).arch_db, archf % new_terms_fr)
         self.assertEqual(view.with_env(env_nl).arch_db, archf % terms_nl)
+
+    def test_sync_svg(self):
+        """ Check that the existing translations of the texts of an SVG are
+            kept: the translation of an arch is stored as a whole, so it does
+            not depend on how its terms are extracted.
+        """
+        for xmlns in ('', ' xmlns="http://www.w3.org/2000/svg"'):
+            with self.subTest(xmlns=xmlns):
+                archf = (
+                    f'<form string="X"><div><svg{xmlns}>'
+                    '<text x="0" y="15">%s</text><text x="0" y="35">%s</text>'
+                    '</svg></div><div>%s</div></form>'
+                )
+                terms_en = ('Pay <tspan font-weight="bold">now</tspan>', 'Receive', 'Bread and cheeze')
+                terms_fr = ('Payer <tspan font-weight="bold">vite</tspan>', 'Recevoir', 'Pain et fromage')
+                view = self.create_view(archf, terms_en, fr_FR=terms_fr)
+                env_en = self.env(context={'lang': 'en_US'})
+                env_fr = self.env(context={'lang': 'fr_FR'})
+
+                # the terms of the SVG are paired with their translations
+                translations = {
+                    t['source']: t['value']
+                    for t in view.get_field_translations('arch_db', langs=['fr_FR'])[0]
+                }
+                self.assertEqual(
+                    {term: translations[term] for term in terms_en},
+                    dict(zip(terms_en, terms_fr)),
+                )
+
+                # modify another source term: the translations are synchronized
+                terms_en = ('Pay <tspan font-weight="bold">now</tspan>', 'Receive', 'Bread and cheese')
+                view.with_env(env_en).write({'arch_db': archf % terms_en})
+                self.assertEqual(view.with_env(env_en).arch_db, archf % terms_en)
+                self.assertEqual(view.with_env(env_fr).arch_db, archf % terms_fr)
 
     def test_sync_xml(self):
         """ Check translations of 'arch' after xml tags changes in source terms. """
