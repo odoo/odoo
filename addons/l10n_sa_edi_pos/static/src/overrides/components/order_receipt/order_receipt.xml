@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-inherit="point_of_sale.ReceiptHeader" t-name="l10n_sa_edi_pos.ReceiptHeader" t-inherit-mode="extension">
+        <xpath expr="//img[hasclass('pos-receipt-qrcode')]" position="after">
+            <div t-if="props.data.not_legal" class="text-center mt-3">
+                <p>THIS IS NOT A LEGAL DOCUMENT</p>
+                <p>هذا المستند ليس مستنداً قانونياً</p>
+            </div>
+        </xpath>
+    </t>
+</templates>

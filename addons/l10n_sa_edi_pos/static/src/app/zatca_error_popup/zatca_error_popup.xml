@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="l10n_sa_edi_pos.ZatcaErrorPopup" t-inherit="point_of_sale.ConfirmPopup" t-inherit-mode="primary">
+        <xpath expr="//main[hasclass('modal-body')]/t" position="replace">
+            <t t-out="props.body"/>
+        </xpath>
+        <xpath expr="//div[hasclass('cancel')]" position="replace"/>
+    </t>
+
+</templates>

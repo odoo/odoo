@@ -6,7 +6,11 @@ import { PosStore } from "@point_of_sale/app/store/pos_store";
 patch(PosStore.prototype, {
     getReceiptHeaderData(order) {
         const result = super.getReceiptHeaderData(...arguments);
-        if (order && this.company?.country?.code === "SA") {
+        const company = this.company;
+        result.is_simplified =
+            (order?.get_partner()?.company_type === "person" || !order?.get_partner()) &&
+            company.country?.code === "SA";
+        if (order && company?.country?.code === "SA") {
             result.is_settlement = order.is_settlement();
             if (!result.is_settlement) {
                 const codeWriter = new window.ZXing.BrowserQRCodeSvgWriter();
