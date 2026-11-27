@@ -14,7 +14,7 @@ ResCompany._records = [
         currency_id: 125,
         email: false,
         website: false,
-        company_registry: false,
+        additional_identifiers: false,
         vat: false,
         name: "My ES Company",
         phone: "",
