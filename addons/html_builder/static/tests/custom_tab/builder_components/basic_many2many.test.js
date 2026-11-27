@@ -61,7 +61,7 @@ test("basic many2many: find tag, select tag, unselect tag", async () => {
     await animationFrame();
     expect("span.o-dropdown-item").toHaveCount(3);
     await contains("span.o-dropdown-item").click();
-    expect(selection).toEqual([{ id: 1, name: "First", display_name: "First" }]);
+    expect(selection).toEqual([{ id: 1, display_name: "First" }]);
     expect("table tr").toHaveCount(1);
 
     await contains(".btn.o-dropdown").click();
@@ -70,13 +70,13 @@ test("basic many2many: find tag, select tag, unselect tag", async () => {
     expect("span.o-dropdown-item").toHaveCount(2);
     await contains("span.o-dropdown-item").click();
     expect(selection).toEqual([
-        { id: 1, name: "First", display_name: "First" },
-        { id: 2, name: "Second", display_name: "Second" },
+        { id: 1, display_name: "First" },
+        { id: 2, display_name: "Second" },
     ]);
     expect("table tr").toHaveCount(2);
 
     await contains("button[data-icon='remove']").click();
-    expect(selection).toEqual([{ id: 2, name: "Second", display_name: "Second" }]);
+    expect(selection).toEqual([{ id: 2, display_name: "Second" }]);
     expect("table tr").toHaveCount(1);
     expect("table input").toHaveValue("Second");
     expect.verifySteps(["name_search", "name_search"]);
@@ -142,7 +142,7 @@ test("basic many2many: toggle dropdown without changing search term or selection
     await delay(300); // debounce
     await animationFrame();
     expect("span.o-dropdown-item").toHaveCount(1);
-    expect(selection).toEqual([{ id: 1, name: "First", display_name: "First" }]);
+    expect(selection).toEqual([{ id: 1, display_name: "First" }]);
     expect(executeCount).toBe(2);
     expect.verifySteps(["name_search", "name_search"]);
 });

@@ -82,6 +82,7 @@ export class SelectMany2X extends Component {
 
     setup() {
         this.orm = useService("orm");
+        this.fieldService = useService("field");
         this.cachedModel = useCachedModel();
         this.prevSelectedIds = undefined;
         this.prevSearchValue = undefined;
@@ -130,7 +131,7 @@ export class SelectMany2X extends Component {
         const results = await this.cachedModel.ormRead(
             this.props.model,
             tuples.map(([id, _name]) => id),
-            [...new Set(this.props.fields).add(this.props.displayNameField).add("name")]
+            [...new Set(this.props.fields).add(this.props.displayNameField)]
         );
         if (this.props.nullText && (!results.length || results[0].id)) {
             results.unshift({
@@ -149,6 +150,12 @@ export class SelectMany2X extends Component {
     }
     async canCreate(name) {
         if (!this.props.create || !name.length) {
+            return false;
+        }
+        const fields = await this.fieldService.loadFields(this.props.model, {
+            fieldNames: ["name"],
+        });
+        if (!("name" in fields)) {
             return false;
         }
         const allRecords = await this.cachedModel.ormSearchRead(

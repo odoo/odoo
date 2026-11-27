@@ -68,7 +68,7 @@ test("model many2many: find tag, select tag, unselect tag", async () => {
     await animationFrame();
     expect("span.o-dropdown-item").toHaveCount(3);
     await contains("span.o-dropdown-item").click();
-    expect(modelEdit.get("rel")).toEqual([{ id: 1, name: "First", display_name: "First" }]);
+    expect(modelEdit.get("rel")).toEqual([{ id: 1, display_name: "First" }]);
     expect("table tr").toHaveCount(1);
 
     await contains(".btn.o-dropdown").click();
@@ -78,8 +78,8 @@ test("model many2many: find tag, select tag, unselect tag", async () => {
     await contains("span.o-dropdown-item").click();
     const assertStateBeforeRemove = () => {
         expect(modelEdit.get("rel")).toEqual([
-            { id: 1, name: "First", display_name: "First" },
-            { id: 2, name: "Second", display_name: "Second" },
+            { id: 1, display_name: "First" },
+            { id: 2, display_name: "Second" },
         ]);
         expect("table tr").toHaveCount(2);
     };
@@ -87,7 +87,7 @@ test("model many2many: find tag, select tag, unselect tag", async () => {
 
     await contains("button[data-icon='remove']").click();
     const assertStateAfterRemove = () => {
-        expect(modelEdit.get("rel")).toEqual([{ id: 2, name: "Second", display_name: "Second" }]);
+        expect(modelEdit.get("rel")).toEqual([{ id: 2, display_name: "Second" }]);
         expect("table tr").toHaveCount(1);
         expect("table input").toHaveValue("Second");
     };
