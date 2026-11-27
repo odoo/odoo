@@ -81,12 +81,14 @@ export class HistoryPlugin extends Plugin {
         user_commands: [
             {
                 id: "historyUndo",
+                title: _t("Undo"),
                 description: _t("Undo"),
                 icon: "undo",
                 run: this.undo.bind(this),
             },
             {
                 id: "historyRedo",
+                title: _t("Redo"),
                 description: _t("Redo"),
                 icon: "redo",
                 run: this.redo.bind(this),
@@ -112,9 +114,24 @@ export class HistoryPlugin extends Plugin {
             ],
         }),
         shortcuts: [
-            { hotkey: "control+z", commandId: "historyUndo", global: true },
-            { hotkey: "control+y", commandId: "historyRedo", global: true },
-            { hotkey: "control+shift+z", commandId: "historyRedo", global: true },
+            {
+                categoryId: "general",
+                hotkey: "control+z",
+                commandId: "historyUndo",
+                global: true,
+            },
+            {
+                categoryId: "general",
+                hotkey: "control+y",
+                commandId: "historyRedo",
+                global: true,
+            },
+            {
+                categoryId: "general",
+                hotkey: "control+shift+z",
+                commandId: "historyRedo",
+                global: true,
+            },
         ],
         history_commit_data_properties: [
             "authorTimestamp",

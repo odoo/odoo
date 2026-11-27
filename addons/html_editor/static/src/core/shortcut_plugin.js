@@ -1,13 +1,24 @@
+import { _t } from "@web/core/l10n/translation";
 import { Plugin, isValidTargetForDomListener } from "../plugin";
 import { leftLeafOnlyNotBlockPath } from "@html_editor/utils/dom_state";
 import { omit } from "@web/core/utils/objects";
 import { escapeRegExp } from "@web/core/utils/strings";
+import { withSequence } from "@html_editor/utils/resource";
+
+/**
+ * @typedef {Object} ShortcutCategory
+ * @property {string} id
+ * @property {TranslatedString} name
+ *
+ * @typedef {ShortcutCategory[]} shortcut_categories
+ */
 
 /**
  * @typedef {Object} Shortcut
  * @property {string} hotkey
  * @property {string} commandId
  * @property {Object} [commandParams]
+ * @property {string} [categoryId]
  * @property {boolean} [global]
  *
  * @typedef {Shortcut[]} shortcuts
@@ -19,9 +30,14 @@ import { escapeRegExp } from "@web/core/utils/strings";
  *         user_commands: [
  *             { id: "myCommands", run: myCommandFunction },
  *         ],
+ *         // See ShortcutCategory
+ *         shortcut_categories: withSequence(50, {
+ *             id: "myCategory",
+ *             name: _t("My Category"),
+ *         }),
  *         // See Shortcut
  *         shortcuts: [
- *             { hotkey: "control+shift+q", commandId: "myCommands" },
+ *             { hotkey: "control+shift+q", commandId: "myCommands", categoryId: "myCategory" },
  *         ],
  *     }
  */
@@ -30,10 +46,11 @@ import { escapeRegExp } from "@web/core/utils/strings";
  * @typedef {{
  *     literals: string[];
  *     commandId: string;
+ *     title?: TranslatedString;
  *     commandParams?: object;
+ *     inline?: boolean,
  * }[]} shorthands
  */
-
 export class ShortCutPlugin extends Plugin {
     static id = "shortcut";
     static dependencies = [
@@ -55,20 +72,29 @@ export class ShortCutPlugin extends Plugin {
                 run: ({ symbol }) => this.replaceSymbol(symbol),
             },
         ],
+        shortcut_categories: [
+            withSequence(10, { id: "general", name: _t("General") }),
+            withSequence(20, { id: "format", name: _t("Text formatting") }),
+            withSequence(30, { id: "list", name: _t("Lists") }),
+            withSequence(40, { id: "tabulation", name: _t("Tabulation") }),
+        ],
         shorthands: [
             {
+                title: _t("Right arrow"),
                 literals: ["->"],
                 commandId: "replaceSymbol",
                 commandParams: { symbol: "\u2192" }, //→
                 inline: true,
             },
             {
+                title: _t("Left arrow"),
                 literals: ["<-"],
                 commandId: "replaceSymbol",
                 commandParams: { symbol: "\u2190" }, //←
                 inline: true,
             },
             {
+                title: _t("Heavy right arrow"),
                 literals: ["=>"],
                 commandId: "replaceSymbol",
                 commandParams: { symbol: "\u2B95" }, //⮕

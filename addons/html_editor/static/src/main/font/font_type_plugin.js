@@ -170,31 +170,37 @@ export class FontTypePlugin extends Plugin {
         ],
         shorthands: [
             {
+                title: _t("Heading 1"),
                 literals: ["#"],
                 commandId: "setTagHeading",
                 commandParams: { level: 1 },
             },
             {
+                title: _t("Heading 2"),
                 literals: ["##"],
                 commandId: "setTagHeading",
                 commandParams: { level: 2 },
             },
             {
+                title: _t("Heading 3"),
                 literals: ["###"],
                 commandId: "setTagHeading",
                 commandParams: { level: 3 },
             },
             {
+                title: _t("Heading 4"),
                 literals: ["####"],
                 commandId: "setTagHeading",
                 commandParams: { level: 4 },
             },
             {
+                title: _t("Heading 5"),
                 literals: ["#####"],
                 commandId: "setTagHeading",
                 commandParams: { level: 5 },
             },
             {
+                title: _t("Heading 6"),
                 literals: ["######"],
                 commandId: "setTagHeading",
                 commandParams: { level: 6 },

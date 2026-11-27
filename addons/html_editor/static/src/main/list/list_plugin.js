@@ -117,9 +117,23 @@ export class ListPlugin extends Plugin {
             },
         ],
         shortcuts: [
-            { hotkey: "control+shift+7", commandId: "toggleListOL" },
-            { hotkey: "control+shift+8", commandId: "toggleListUL" },
-            { hotkey: "control+shift+9", commandId: "toggleListCL" },
+            {
+                categoryId: "list",
+                hotkey: "control+shift+8",
+                commandId: "toggleListUL",
+            },
+            ...(this.config.allowChecklist ? [
+                {
+                    categoryId: "list",
+                    hotkey: "control+shift+9",
+                    commandId: "toggleListCL",
+                },
+            ] : []),
+            {
+                categoryId: "list",
+                hotkey: "control+shift+7",
+                commandId: "toggleListOL",
+            },
         ],
         shorthands: [
             {
@@ -127,11 +141,13 @@ export class ListPlugin extends Plugin {
                 commandId: "toggleListOL",
             },
             {
+                title: _t("Alphabetical list (lowercase)"),
                 literals: ["a.", "a)"],
                 commandId: "toggleListOL",
                 commandParams: { listStyle: "lower-alpha" },
             },
             {
+                title: _t("Alphabetical list (uppercase)"),
                 literals: ["A.", "A)"],
                 commandId: "toggleListOL",
                 commandParams: { listStyle: "upper-alpha" },
@@ -140,10 +156,12 @@ export class ListPlugin extends Plugin {
                 literals: ["*", "-"],
                 commandId: "toggleListUL",
             },
-            {
-                literals: ["[]"],
-                commandId: "toggleListCL",
-            },
+            ...(this.config.allowChecklist ? [
+                {
+                    literals: ["[]"],
+                    commandId: "toggleListCL",
+                },
+            ] : []),
         ],
         toolbar_items: [
             withSequence(5, {

@@ -46,7 +46,13 @@ export class ToggleBlockPlugin extends Plugin {
                 categoryId: "structure",
             },
         ],
-        shortcuts: [{ hotkey: "control+enter", commandId: "switchToggleBlockState" }],
+        shortcuts: [
+            {
+                categoryId: "list",
+                hotkey: "control+enter",
+                commandId: "switchToggleBlockState",
+            },
+        ],
         user_commands: [
             {
                 id: "insertToggleBlock",
@@ -62,6 +68,7 @@ export class ToggleBlockPlugin extends Plugin {
             },
             {
                 id: "switchToggleBlockState",
+                title: _t("Expand or collapse toggle block"),
                 run: this.manageToggleFromTitle.bind(this),
             },
         ],

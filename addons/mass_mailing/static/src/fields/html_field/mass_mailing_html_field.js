@@ -2,6 +2,7 @@ import { DYNAMIC_FIELD_PLUGINS } from "@html_editor/backend/dynamic_field/dynami
 import { htmlField, HtmlField, htmlFieldProps } from "@html_editor/fields/html_field";
 import { LocalOverlayContainer } from "@html_editor/local_overlay_container";
 import { MAIN_PLUGINS as MAIN_EDITOR_PLUGINS } from "@html_editor/plugin_sets";
+import { AccessibilityPlugin } from "@html_editor/main/accessibility/accessibility_plugin";
 import { normalizeHTML, parseHTML } from "@html_editor/utils/html";
 import { fixInvalidHTML } from "@html_editor/utils/sanitize";
 import { useEmailHtmlConverter } from "@mail/convert_inline/hooks";
@@ -303,7 +304,7 @@ export class MassMailingHtmlField extends HtmlField {
             ...config,
             onEditorReady: () => this.commitChanges(),
             mediaModalParams: { ...config.mediaModalParams, validateUrl },
-            Plugins: [...MAIN_EDITOR_PLUGINS, ...DYNAMIC_FIELD_PLUGINS]
+            Plugins: [...MAIN_EDITOR_PLUGINS, ...DYNAMIC_FIELD_PLUGINS, AccessibilityPlugin]
                 .filter((P) => !["banner", "prompt", "link"].includes(P.id))
                 .concat(registry.category("basic-editor-plugins").getAll()),
         };

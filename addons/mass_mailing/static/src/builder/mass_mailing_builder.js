@@ -1,5 +1,6 @@
 import { Builder } from "@html_builder/builder";
 import { CORE_PLUGINS } from "@html_builder/core/core_plugins";
+import { AccessibilityPlugin } from "@html_editor/main/accessibility/accessibility_plugin";
 import { CustomizeTab } from "@html_builder/sidebar/customize_tab";
 import { removePlugins } from "@html_builder/utils/utils";
 import { DYNAMIC_FIELD_PLUGINS } from "@html_editor/backend/dynamic_field/dynamic_field_plugin";
@@ -57,7 +58,7 @@ export class MassMailingBuilder extends Component {
             pluginsToRemove
         );
         const builderEditorPlugins = removePlugins(
-            [...CORE_PLUGINS, PowerButtonsPlugin],
+            [...CORE_PLUGINS, PowerButtonsPlugin, AccessibilityPlugin],
             pluginsToRemove
         );
         const optionalPlugins = [

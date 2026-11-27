@@ -21,7 +21,7 @@ declare module "plugins" {
     import { ProtectedNodePlugin } from "@html_editor/core/protected_node_plugin";
     import { SanitizePlugin } from "@html_editor/core/sanitize_plugin";
     import { double_click_overrides, fix_selection_on_no_inline_root_overrides, is_node_fully_selected_predicates, is_char_tangible_for_keyboard_navigation_predicates, is_no_inline_root_predicates, on_selection_leave_handlers, on_selectionchange_handlers, SelectionPlugin, targeted_nodes_processors, triple_click_overrides } from "@html_editor/core/selection_plugin";
-    import { shortcuts, shorthands } from "@html_editor/core/shortcut_plugin";
+    import { shortcut_categories, shortcuts, shorthands } from "@html_editor/core/shortcut_plugin";
     import { on_element_split_handlers, on_will_split_block_handlers, split_element_block_overrides, SplitPlugin } from "@html_editor/core/split_plugin";
     import { StylePlugin } from "@html_editor/core/style_plugin";
     import { user_commands, UserCommandPlugin } from "@html_editor/core/user_command_plugin";
@@ -291,6 +291,7 @@ declare module "plugins" {
         powerbox_categories: powerbox_categories;
         powerbox_items: powerbox_items;
         properties: properties;
+        shortcut_categories: shortcut_categories;
         shortcuts: shortcuts;
         shorthands: shorthands;
         system_attributes: system_attributes;

@@ -1,5 +1,6 @@
 import { Builder } from "@html_builder/builder";
 import { CORE_PLUGINS, MAIN_PLUGINS } from "@html_builder/core/core_plugins";
+import { AccessibilityPlugin } from "@html_editor/main/accessibility/accessibility_plugin";
 import { removePlugins } from "@html_builder/utils/utils";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { Component, onMounted, onWillStart, useProps, t } from "@odoo/owl";
@@ -204,7 +205,7 @@ export class WebsiteBuilder extends Component {
             this.props.translation ? MAIN_PLUGINS : CORE_PLUGINS,
             pluginsToRemove
         );
-        const Plugins = [...coreBuilderPlugins, ...(websitePlugins || [])];
+        const Plugins = [...coreBuilderPlugins, AccessibilityPlugin, ...(websitePlugins || [])];
         builderProps.Plugins = Plugins;
         builderProps.onEditorLoad = (editor) => {
             this.editor = editor;
