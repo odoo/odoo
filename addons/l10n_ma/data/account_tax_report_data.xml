@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo auto_sequence="1">
+    <!-- Official template: https://www.tax.gov.ma/wps/wcm/connect/2aabc75b-959e-4753-a152-3441104acaf7/adc_080b_26i.pdf -->
     <record id="tax_report_vat" model="account.report">
         <field name="name">VAT Report</field>
         <field name="root_report_id" ref="account.generic_tax_report"/>
@@ -90,32 +91,6 @@
                                     </record>
                                 </field>
                             </record>
-                            <record id="tax_report_line_55" model="account.report.line">
-                                <field name="hierarchy_level">5</field>
-                                <field name="name">55 - Taxable operations made by mobile payment (Article 247 ter of the CGI)</field>
-                                <field name="code">l10n_ma_vat_55</field>
-                                <field name="expression_ids">
-                                    <record id="tax_report_line_55_base" model="account.report.expression">
-                                        <field name="label">base</field>
-                                        <field name="engine">external</field>
-                                        <field name="formula">most_recent</field>
-                                        <field name="subformula">editable;rounding=2</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="tax_report_line_56" model="account.report.line">
-                                <field name="hierarchy_level">5</field>
-                                <field name="name">56 - Exempt, out-of-scope or suspended operations by mobile payment</field>
-                                <field name="code">l10n_ma_vat_56</field>
-                                <field name="expression_ids">
-                                    <record id="tax_report_line_56_base" model="account.report.expression">
-                                        <field name="label">base</field>
-                                        <field name="engine">external</field>
-                                        <field name="formula">most_recent</field>
-                                        <field name="subformula">editable;rounding=2</field>
-                                    </record>
-                                </field>
-                            </record>
                         </field>
                     </record>
                     <record id="tax_report_line_60" model="account.report.line">
@@ -140,12 +115,12 @@
                     <record id="tax_report_part_b_base_sum" model="account.report.expression">
                         <field name="label">base_sum</field>
                         <field name="engine">aggregation</field>
-                        <field name="formula">l10n_ma_vat_b_20.base_sum + l10n_ma_vat_b_14.base_sum + l10n_ma_vat_b_10.base_sum + l10n_ma_vat_b_7.base_sum</field>
+                        <field name="formula">l10n_ma_vat_b_20.base_sum + l10n_ma_vat_b_18.base_sum + l10n_ma_vat_b_16.base_sum + l10n_ma_vat_b_15.base_sum + l10n_ma_vat_b_14.base_sum + l10n_ma_vat_b_13.base_sum + l10n_ma_vat_b_12.base_sum + l10n_ma_vat_b_11.base_sum + l10n_ma_vat_b_10.base_sum + l10n_ma_vat_b_9.base_sum + l10n_ma_vat_b_8.base_sum + l10n_ma_vat_b_7.base_sum</field>
                     </record>
                     <record id="tax_report_part_b_tax_sum" model="account.report.expression">
                         <field name="label">tax_sum</field>
                         <field name="engine">aggregation</field>
-                        <field name="formula">l10n_ma_vat_b_20.tax_sum + l10n_ma_vat_b_14.tax_sum + l10n_ma_vat_b_10.tax_sum + l10n_ma_vat_b_7.tax_sum</field>
+                        <field name="formula">l10n_ma_vat_b_20.tax_sum + l10n_ma_vat_b_18.tax_sum + l10n_ma_vat_b_16.tax_sum + l10n_ma_vat_b_15.tax_sum + l10n_ma_vat_b_14.tax_sum + l10n_ma_vat_b_13.tax_sum + l10n_ma_vat_b_12.tax_sum + l10n_ma_vat_b_11.tax_sum + l10n_ma_vat_b_10.tax_sum + l10n_ma_vat_b_9.tax_sum + l10n_ma_vat_b_8.tax_sum + l10n_ma_vat_b_7.tax_sum + l10n_ma_vat_120.tax + l10n_ma_vat_121.tax + l10n_ma_vat_122.tax + l10n_ma_vat_123.tax + l10n_ma_vat_124.tax</field>
                     </record>
                 </field>
                 <field name="children_ids">
@@ -166,6 +141,23 @@
                             </record>
                         </field>
                         <field name="children_ids">
+                            <record id="tax_report_line_74" model="account.report.line">
+                                <field name="hierarchy_level">3</field>
+                                <field name="name">74 - Rental of electricity meters</field>
+                                <field name="code">l10n_ma_vat_74</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_74_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">74B</field>
+                                    </record>
+                                    <record id="tax_report_line_74_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">74T</field>
+                                    </record>
+                                </field>
+                            </record>
                             <record id="tax_report_line_80" model="account.report.line">
                                 <field name="hierarchy_level">3</field>
                                 <field name="name">80 - Production and distribution operations</field>
@@ -251,6 +243,40 @@
                                     </record>
                                 </field>
                             </record>
+                            <record id="tax_report_line_88" model="account.report.line">
+                                <field name="hierarchy_level">3</field>
+                                <field name="name">88 - Passenger and freight transport operations, excluding urban transport operations and road transport of passengers and goods</field>
+                                <field name="code">l10n_ma_vat_88</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_88_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">88B</field>
+                                    </record>
+                                    <record id="tax_report_line_88_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">88T</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line_90" model="account.report.line">
+                                <field name="hierarchy_level">3</field>
+                                <field name="name">90 - Electrical energy</field>
+                                <field name="code">l10n_ma_vat_90</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_90_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">90B</field>
+                                    </record>
+                                    <record id="tax_report_line_90_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">90T</field>
+                                    </record>
+                                </field>
+                            </record>
                             <record id="tax_report_line_93" model="account.report.line">
                                 <field name="hierarchy_level">3</field>
                                 <field name="name">93 - Sales and delivery of used movable property</field>
@@ -321,6 +347,114 @@
                             </record>
                         </field>
                     </record>
+                    <record id="tax_report_part_b_18" model="account.report.line">
+                        <field name="hierarchy_level">1</field>
+                        <field name="name">Reduced rate of 18%</field>
+                        <field name="code">l10n_ma_vat_b_18</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_part_b_18_base_sum" model="account.report.expression">
+                                <field name="label">base_sum</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">l10n_ma_vat_68.base</field>
+                            </record>
+                            <record id="tax_report_part_b_18_tax_sum" model="account.report.expression">
+                                <field name="label">tax_sum</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">l10n_ma_vat_68.tax</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="tax_report_line_68" model="account.report.line">
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="name">68 - Operations carried out during the year 2025</field>
+                                        <field name="code">l10n_ma_vat_68</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_68_base" model="account.report.expression">
+                                                <field name="label">base</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">68B</field>
+                                            </record>
+                                            <record id="tax_report_line_68_tax" model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">68T</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_part_b_16" model="account.report.line">
+                        <field name="hierarchy_level">1</field>
+                        <field name="name">Reduced rate of 16%</field>
+                        <field name="code">l10n_ma_vat_b_16</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_part_b_16_base_sum" model="account.report.expression">
+                                <field name="label">base_sum</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">l10n_ma_vat_72.base</field>
+                            </record>
+                            <record id="tax_report_part_b_16_tax_sum" model="account.report.expression">
+                                <field name="label">tax_sum</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">l10n_ma_vat_72.tax</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="tax_report_line_72" model="account.report.line">
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="name">72 - Operations carried out during the year 2024</field>
+                                        <field name="code">l10n_ma_vat_72</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_72_base" model="account.report.expression">
+                                                <field name="label">base</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">72B</field>
+                                            </record>
+                                            <record id="tax_report_line_72_tax" model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">72T</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_part_b_15" model="account.report.line">
+                        <field name="hierarchy_level">1</field>
+                        <field name="name">Reduced rate of 15%</field>
+                        <field name="code">l10n_ma_vat_b_15</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_part_b_15_base_sum" model="account.report.expression">
+                                <field name="label">base_sum</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">l10n_ma_vat_67.base</field>
+                            </record>
+                            <record id="tax_report_part_b_15_tax_sum" model="account.report.expression">
+                                <field name="label">tax_sum</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">l10n_ma_vat_67.tax</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="tax_report_line_67" model="account.report.line">
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="name">67 - Operations carried out during the year 2025</field>
+                                        <field name="code">l10n_ma_vat_67</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_67_base" model="account.report.expression">
+                                                <field name="label">base</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">67B</field>
+                                            </record>
+                                            <record id="tax_report_line_67_tax" model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">67T</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                        </field>
+                    </record>
                     <record id="tax_report_part_b_14" model="account.report.line">
                         <field name="hierarchy_level">1</field>
                         <field name="name">Reduced rate of 14%</field>
@@ -329,86 +463,18 @@
                             <record id="tax_report_part_b_14_base_sum" model="account.report.expression">
                                 <field name="label">base_sum</field>
                                 <field name="engine">aggregation</field>
-                                <field name="formula">l10n_ma_vat_b_14_d.base_sum + l10n_ma_vat_b_14_nd.base_sum</field>
+                                <field name="formula">l10n_ma_vat_104.base</field>
                             </record>
                             <record id="tax_report_part_b_14_tax_sum" model="account.report.expression">
                                 <field name="label">tax_sum</field>
                                 <field name="engine">aggregation</field>
-                                <field name="formula">l10n_ma_vat_b_14_d.tax_sum + l10n_ma_vat_b_14_nd.tax_sum</field>
+                                <field name="formula">l10n_ma_vat_104.tax</field>
                             </record>
                         </field>
                         <field name="children_ids">
-                            <record id="tax_report_part_b_14_d" model="account.report.line">
-                                <field name="hierarchy_level">2</field>
-                                <field name="name">With right to deduct</field>
-                                <field name="code">l10n_ma_vat_b_14_d</field>
-                                <field name="expression_ids">
-                                    <record id="tax_report_part_b_14_d_base_sum" model="account.report.expression">
-                                        <field name="label">base_sum</field>
-                                        <field name="engine">aggregation</field>
-                                        <field name="formula">l10n_ma_vat_84.base + l10n_ma_vat_88.base + l10n_ma_vat_90.base + l10n_ma_vat_104.base</field>
-                                    </record>
-                                    <record id="tax_report_part_b_14_d_tax_sum" model="account.report.expression">
-                                        <field name="label">tax_sum</field>
-                                        <field name="engine">aggregation</field>
-                                        <field name="formula">l10n_ma_vat_84.tax + l10n_ma_vat_88.tax + l10n_ma_vat_90.tax + l10n_ma_vat_104.tax</field>
-                                    </record>
-                                </field>
-                                <field name="children_ids">
-                                    <record id="tax_report_line_84" model="account.report.line">
+                            <record id="tax_report_line_104" model="account.report.line">
                                         <field name="hierarchy_level">3</field>
-                                        <field name="name">84 - Butter, excluding home-made butter referred to in Article 91 (I-A. 2°)</field>
-                                        <field name="code">l10n_ma_vat_84</field>
-                                        <field name="expression_ids">
-                                            <record id="tax_report_line_84_base" model="account.report.expression">
-                                                <field name="label">base</field>
-                                                <field name="engine">tax_tags</field>
-                                                <field name="formula">84B</field>
-                                            </record>
-                                            <record id="tax_report_line_84_tax" model="account.report.expression">
-                                                <field name="label">tax</field>
-                                                <field name="engine">tax_tags</field>
-                                                <field name="formula">84T</field>
-                                            </record>
-                                        </field>
-                                    </record>
-                                    <record id="tax_report_line_88" model="account.report.line">
-                                        <field name="hierarchy_level">3</field>
-                                        <field name="name">88 - Passenger and freight transport operations, excluding rail transport</field>
-                                        <field name="code">l10n_ma_vat_88</field>
-                                        <field name="expression_ids">
-                                            <record id="tax_report_line_88_base" model="account.report.expression">
-                                                <field name="label">base</field>
-                                                <field name="engine">tax_tags</field>
-                                                <field name="formula">88B</field>
-                                            </record>
-                                            <record id="tax_report_line_88_tax" model="account.report.expression">
-                                                <field name="label">tax</field>
-                                                <field name="engine">tax_tags</field>
-                                                <field name="formula">88T</field>
-                                            </record>
-                                        </field>
-                                    </record>
-                                    <record id="tax_report_line_90" model="account.report.line">
-                                        <field name="hierarchy_level">3</field>
-                                        <field name="name">90 - Electrical energy</field>
-                                        <field name="code">l10n_ma_vat_90</field>
-                                        <field name="expression_ids">
-                                            <record id="tax_report_line_90_base" model="account.report.expression">
-                                                <field name="label">base</field>
-                                                <field name="engine">tax_tags</field>
-                                                <field name="formula">90B</field>
-                                            </record>
-                                            <record id="tax_report_line_90_tax" model="account.report.expression">
-                                                <field name="label">tax</field>
-                                                <field name="engine">tax_tags</field>
-                                                <field name="formula">90T</field>
-                                            </record>
-                                        </field>
-                                    </record>
-                                    <record id="tax_report_line_104" model="account.report.line">
-                                        <field name="hierarchy_level">3</field>
-                                        <field name="name">104 - Other</field>
+                                        <field name="name">104 - Operations carried out before January 1 2024</field>
                                         <field name="code">l10n_ma_vat_104</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_line_104_base" model="account.report.expression">
@@ -423,19 +489,605 @@
                                             </record>
                                         </field>
                                     </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_part_b_13" model="account.report.line">
+                        <field name="hierarchy_level">1</field>
+                        <field name="name">Reduced rate of 13%</field>
+                        <field name="code">l10n_ma_vat_b_13</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_part_b_13_base_sum" model="account.report.expression">
+                                <field name="label">base_sum</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">l10n_ma_vat_64.base</field>
+                            </record>
+                            <record id="tax_report_part_b_13_tax_sum" model="account.report.expression">
+                                <field name="label">tax_sum</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">l10n_ma_vat_64.tax</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="tax_report_line_64" model="account.report.line">
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="name">64 - Operations carried out during the year 2024</field>
+                                        <field name="code">l10n_ma_vat_64</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_64_base" model="account.report.expression">
+                                                <field name="label">base</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">64B</field>
+                                            </record>
+                                            <record id="tax_report_line_64_tax" model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">64T</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_part_b_12" model="account.report.line">
+                        <field name="hierarchy_level">1</field>
+                        <field name="name">Reduced rate of 12%</field>
+                        <field name="code">l10n_ma_vat_b_12</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_part_b_12_base_sum" model="account.report.expression">
+                                <field name="label">base_sum</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">l10n_ma_vat_71.base</field>
+                            </record>
+                            <record id="tax_report_part_b_12_tax_sum" model="account.report.expression">
+                                <field name="label">tax_sum</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">l10n_ma_vat_71.tax</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="tax_report_line_71" model="account.report.line">
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="name">71 - Operations carried out during the year 2024 or 2025</field>
+                                        <field name="code">l10n_ma_vat_71</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_71_base" model="account.report.expression">
+                                                <field name="label">base</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">71B</field>
+                                            </record>
+                                            <record id="tax_report_line_71_tax" model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">71T</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_part_b_11" model="account.report.line">
+                        <field name="hierarchy_level">1</field>
+                        <field name="name">Reduced rate of 11%</field>
+                        <field name="code">l10n_ma_vat_b_11</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_part_b_11_base_sum" model="account.report.expression">
+                                <field name="label">base_sum</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">l10n_ma_vat_70.base</field>
+                            </record>
+                            <record id="tax_report_part_b_11_tax_sum" model="account.report.expression">
+                                <field name="label">tax_sum</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">l10n_ma_vat_70.tax</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="tax_report_line_70" model="account.report.line">
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="name">70 - Operations carried out during the year 2024</field>
+                                        <field name="code">l10n_ma_vat_70</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_70_base" model="account.report.expression">
+                                                <field name="label">base</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">70B</field>
+                                            </record>
+                                            <record id="tax_report_line_70_tax" model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">70T</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_part_b_10" model="account.report.line">
+                        <field name="hierarchy_level">1</field>
+                        <field name="name">Reduced rate of 10%</field>
+                        <field name="code">l10n_ma_vat_b_10</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_part_b_10_base_sum" model="account.report.expression">
+                                <field name="label">base_sum</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">l10n_ma_vat_b_10_d.base_sum + l10n_ma_vat_b_10_nd.base_sum</field>
+                            </record>
+                            <record id="tax_report_part_b_10_tax_sum" model="account.report.expression">
+                                <field name="label">tax_sum</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">l10n_ma_vat_b_10_d.tax_sum + l10n_ma_vat_b_10_nd.tax_sum</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="tax_report_part_b_10_d" model="account.report.line">
+                                <field name="hierarchy_level">2</field>
+                                <field name="name">With right to deduct</field>
+                                <field name="code">l10n_ma_vat_b_10_d</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_part_b_10_d_base_sum" model="account.report.expression">
+                                        <field name="label">base_sum</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">l10n_ma_vat_63.base + l10n_ma_vat_65.base + l10n_ma_vat_73.base + l10n_ma_vat_75.base + l10n_ma_vat_76.base + l10n_ma_vat_77.base + l10n_ma_vat_78.base + l10n_ma_vat_79.base + l10n_ma_vat_85.base + l10n_ma_vat_86.base + l10n_ma_vat_89.base + l10n_ma_vat_92.base + l10n_ma_vat_96.base + l10n_ma_vat_97.base + l10n_ma_vat_98.base + l10n_ma_vat_99.base + l10n_ma_vat_100.base + l10n_ma_vat_101.base + l10n_ma_vat_103.base + l10n_ma_vat_106.base + l10n_ma_vat_108.base + l10n_ma_vat_109.base + l10n_ma_vat_112.base + l10n_ma_vat_113.base + l10n_ma_vat_117.base + l10n_ma_vat_118.base</field>
+                                    </record>
+                                    <record id="tax_report_part_b_10_d_tax_sum" model="account.report.expression">
+                                        <field name="label">tax_sum</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">l10n_ma_vat_63.tax + l10n_ma_vat_65.tax + l10n_ma_vat_73.tax + l10n_ma_vat_75.tax + l10n_ma_vat_76.tax + l10n_ma_vat_77.tax + l10n_ma_vat_78.tax + l10n_ma_vat_79.tax + l10n_ma_vat_85.tax + l10n_ma_vat_86.tax + l10n_ma_vat_89.tax + l10n_ma_vat_92.tax + l10n_ma_vat_96.tax + l10n_ma_vat_97.tax + l10n_ma_vat_98.tax + l10n_ma_vat_99.tax + l10n_ma_vat_100.tax + l10n_ma_vat_101.tax + l10n_ma_vat_103.tax + l10n_ma_vat_106.tax + l10n_ma_vat_108.tax + l10n_ma_vat_109.tax + l10n_ma_vat_112.tax + l10n_ma_vat_113.tax + l10n_ma_vat_117.tax + l10n_ma_vat_118.tax</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="tax_report_line_63" model="account.report.line">
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="name">63 - Food pasta other than uncooked, non-stuffed short-shape pasta</field>
+                                        <field name="code">l10n_ma_vat_63</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_63_base" model="account.report.expression">
+                                                <field name="label">base</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">63B</field>
+                                            </record>
+                                            <record id="tax_report_line_63_tax" model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">63T</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="tax_report_line_65" model="account.report.line">
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="name">65 - Urban transport operations and road transport of passengers and goods</field>
+                                        <field name="code">l10n_ma_vat_65</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_65_base" model="account.report.expression">
+                                                <field name="label">base</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">65B</field>
+                                            </record>
+                                            <record id="tax_report_line_65_tax" model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">65T</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="tax_report_line_73" model="account.report.line">
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="name">73 - Rental of water meters for non-domestic use</field>
+                                        <field name="code">l10n_ma_vat_73</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_73_base" model="account.report.expression">
+                                                <field name="label">base</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">73B</field>
+                                            </record>
+                                            <record id="tax_report_line_73_tax" model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">73T</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="tax_report_line_75" model="account.report.line">
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="name">75 - Sales operations carried out by producers of electricity generated from renewable energy sources</field>
+                                        <field name="code">l10n_ma_vat_75</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_75_base" model="account.report.expression">
+                                                <field name="label">base</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">75B</field>
+                                            </record>
+                                            <record id="tax_report_line_75_tax" model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">75T</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="tax_report_line_76" model="account.report.line">
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="name">76 - Photovoltaic panels</field>
+                                        <field name="code">l10n_ma_vat_76</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_76_base" model="account.report.expression">
+                                                <field name="label">base</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">76B</field>
+                                            </record>
+                                            <record id="tax_report_line_76_tax" model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">76T</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="tax_report_line_77" model="account.report.line">
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="name">77 - Solar water heaters</field>
+                                        <field name="code">l10n_ma_vat_77</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_77_base" model="account.report.expression">
+                                                <field name="label">base</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">77B</field>
+                                            </record>
+                                            <record id="tax_report_line_77_tax" model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">77T</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="tax_report_line_78" model="account.report.line">
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="name">78 - Feed for livestock and farmyard animals as well as oil cakes used in their manufacture, excluding other simple feed</field>
+                                        <field name="code">l10n_ma_vat_78</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_78_base" model="account.report.expression">
+                                                <field name="label">base</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">78B</field>
+                                            </record>
+                                            <record id="tax_report_line_78_tax" model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">78T</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="tax_report_line_79" model="account.report.line">
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="name">79 - Equipment for exclusive agricultural use</field>
+                                        <field name="code">l10n_ma_vat_79</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_79_base" model="account.report.expression">
+                                                <field name="label">base</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">79B</field>
+                                            </record>
+                                            <record id="tax_report_line_79_tax" model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">79T</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="tax_report_line_85" model="account.report.line">
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="name">85 - Wood in logs, debarked or simply squared, cork in its natural state, firewood in bundles or sawn to short lengths and charcoal</field>
+                                        <field name="code">l10n_ma_vat_85</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_85_base" model="account.report.expression">
+                                                <field name="label">base</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">85B</field>
+                                            </record>
+                                            <record id="tax_report_line_85_tax" model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">85T</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="tax_report_line_86" model="account.report.line">
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="name">86 - Fishing gear and nets for professional marine fishermen</field>
+                                        <field name="code">l10n_ma_vat_86</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_86_base" model="account.report.expression">
+                                                <field name="label">base</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">86B</field>
+                                            </record>
+                                            <record id="tax_report_line_86_tax" model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">86T</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="tax_report_line_89" model="account.report.line">
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="name">89 - Accommodation and catering operations as well as services provided by cafés</field>
+                                        <field name="code">l10n_ma_vat_89</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_89_base" model="account.report.expression">
+                                                <field name="label">base</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">89B</field>
+                                            </record>
+                                            <record id="tax_report_line_89_tax" model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">89T</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="tax_report_line_92" model="account.report.line">
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="name">92 - Rental operations of buildings used as hotels</field>
+                                        <field name="code">l10n_ma_vat_92</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_92_base" model="account.report.expression">
+                                                <field name="label">base</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">92B</field>
+                                            </record>
+                                            <record id="tax_report_line_92_tax" model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">92T</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="tax_report_line_96" model="account.report.line">
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="name">96 - Cooking salt (rock or sea salt)</field>
+                                        <field name="code">l10n_ma_vat_96</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_96_base" model="account.report.expression">
+                                                <field name="label">base</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">96B</field>
+                                            </record>
+                                            <record id="tax_report_line_96_tax" model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">96T</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="tax_report_line_97" model="account.report.line">
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="name">97 - Milled rice and pasta</field>
+                                        <field name="code">l10n_ma_vat_97</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_97_base" model="account.report.expression">
+                                                <field name="label">base</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">97B</field>
+                                            </record>
+                                            <record id="tax_report_line_97_tax" model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">97T</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="tax_report_line_98" model="account.report.line">
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="name">98 - Food fluid oils excluding palm oil</field>
+                                        <field name="code">l10n_ma_vat_98</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_98_base" model="account.report.expression">
+                                                <field name="label">base</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">98B</field>
+                                            </record>
+                                            <record id="tax_report_line_98_tax" model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">98T</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="tax_report_line_99" model="account.report.line">
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="name">99 - Securities transactions</field>
+                                        <field name="code">l10n_ma_vat_99</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_99_base" model="account.report.expression">
+                                                <field name="label">base</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">99B</field>
+                                            </record>
+                                            <record id="tax_report_line_99_tax" model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">99T</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="tax_report_line_100" model="account.report.line">
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="name">100 - Banking and credit transactions and exchange commissions</field>
+                                        <field name="code">l10n_ma_vat_100</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_100_base" model="account.report.expression">
+                                                <field name="label">base</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">100B</field>
+                                            </record>
+                                            <record id="tax_report_line_100_tax" model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">100T</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="tax_report_line_101" model="account.report.line">
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="name">101 - Transactions involving shares and units shares</field>
+                                        <field name="code">l10n_ma_vat_101</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_101_base" model="account.report.expression">
+                                                <field name="label">base</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">101B</field>
+                                            </record>
+                                            <record id="tax_report_line_101_tax" model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">101T</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="tax_report_line_103" model="account.report.line">
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="name">103 - Operations of sale and delivery of works and objects of art</field>
+                                        <field name="code">l10n_ma_vat_103</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_103_base" model="account.report.expression">
+                                                <field name="label">base</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">103B</field>
+                                            </record>
+                                            <record id="tax_report_line_103_tax" model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">103T</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="tax_report_line_106" model="account.report.line">
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="name">106 - Water delivered to the public distribution networks and sanitation services</field>
+                                        <field name="code">l10n_ma_vat_106</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_106_base" model="account.report.expression">
+                                                <field name="label">base</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">106B</field>
+                                            </record>
+                                            <record id="tax_report_line_106_tax" model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">106T</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="tax_report_line_108" model="account.report.line">
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="name">108 - Petroleum gas and other gaseous hydrocarbons</field>
+                                        <field name="code">l10n_ma_vat_108</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_108_base" model="account.report.expression">
+                                                <field name="label">base</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">108B</field>
+                                            </record>
+                                            <record id="tax_report_line_108_tax" model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">108T</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="tax_report_line_109" model="account.report.line">
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="name">109 - Petroleum or shale oils, crude or refined</field>
+                                        <field name="code">l10n_ma_vat_109</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_109_base" model="account.report.expression">
+                                                <field name="label">base</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">109B</field>
+                                            </record>
+                                            <record id="tax_report_line_109_tax" model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">109T</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="tax_report_line_112" model="account.report.line">
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="name">112 - Ticket sales operations for museums, cinema and theater</field>
+                                        <field name="code">l10n_ma_vat_112</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_112_base" model="account.report.expression">
+                                                <field name="label">base</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">112B</field>
+                                            </record>
+                                            <record id="tax_report_line_112_tax" model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">112T</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="tax_report_line_113" model="account.report.line">
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="name">113 - Refined or agglomerated sugar</field>
+                                        <field name="code">l10n_ma_vat_113</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_113_base" model="account.report.expression">
+                                                <field name="label">base</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">113B</field>
+                                            </record>
+                                            <record id="tax_report_line_113_tax" model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">113T</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="tax_report_line_117" model="account.report.line">
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="name">117 - Economy car and products and materials used in its in its manufacture</field>
+                                        <field name="code">l10n_ma_vat_117</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_117_base" model="account.report.expression">
+                                                <field name="label">base</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">117B</field>
+                                            </record>
+                                            <record id="tax_report_line_117_tax" model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">117T</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="tax_report_line_118" model="account.report.line">
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="name">118 - Other</field>
+                                        <field name="code">l10n_ma_vat_118</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_118_base" model="account.report.expression">
+                                                <field name="label">base</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">118B</field>
+                                            </record>
+                                            <record id="tax_report_line_118_tax" model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">118T</field>
+                                            </record>
+                                        </field>
+                                    </record>
                                 </field>
                             </record>
-                            <record id="tax_report_part_b_14_nd" model="account.report.line">
+                            <record id="tax_report_part_b_10_nd" model="account.report.line">
                                 <field name="hierarchy_level">2</field>
                                 <field name="name">Without right to deduct</field>
-                                <field name="code">l10n_ma_vat_b_14_nd</field>
+                                <field name="code">l10n_ma_vat_b_10_nd</field>
                                 <field name="expression_ids">
-                                    <record id="tax_report_part_b_14_nd_base_sum" model="account.report.expression">
+                                    <record id="tax_report_part_b_10_nd_base_sum" model="account.report.expression">
                                         <field name="label">base_sum</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">l10n_ma_vat_91.base</field>
                                     </record>
-                                    <record id="tax_report_part_b_14_nd_tax_sum" model="account.report.expression">
+                                    <record id="tax_report_part_b_10_nd_tax_sum" model="account.report.expression">
                                         <field name="label">tax_sum</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">l10n_ma_vat_91.tax</field>
@@ -463,538 +1115,98 @@
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_part_b_10" model="account.report.line">
+                    <record id="tax_report_part_b_9" model="account.report.line">
                         <field name="hierarchy_level">1</field>
-                        <field name="name">Reduced rate of 10% with right to deduct</field>
-                        <field name="code">l10n_ma_vat_b_10</field>
+                        <field name="name">Reduced rate of 9%</field>
+                        <field name="code">l10n_ma_vat_b_9</field>
                         <field name="expression_ids">
-                            <record id="tax_report_part_b_10_base_sum" model="account.report.expression">
+                            <record id="tax_report_part_b_9_base_sum" model="account.report.expression">
                                 <field name="label">base_sum</field>
                                 <field name="engine">aggregation</field>
-                                <field name="formula">l10n_ma_vat_76.base + l10n_ma_vat_77.base + l10n_ma_vat_78.base + l10n_ma_vat_79.base + l10n_ma_vat_85.base + l10n_ma_vat_86.base + l10n_ma_vat_89.base + l10n_ma_vat_92.base + l10n_ma_vat_96.base + l10n_ma_vat_97.base + l10n_ma_vat_98.base + l10n_ma_vat_99.base + l10n_ma_vat_100.base + l10n_ma_vat_101.base + l10n_ma_vat_103.base + l10n_ma_vat_105.base + l10n_ma_vat_108.base + l10n_ma_vat_109.base + l10n_ma_vat_112.base + l10n_ma_vat_118.base</field>
+                                <field name="formula">l10n_ma_vat_66.base</field>
                             </record>
-                            <record id="tax_report_part_b_10_tax_sum" model="account.report.expression">
+                            <record id="tax_report_part_b_9_tax_sum" model="account.report.expression">
                                 <field name="label">tax_sum</field>
                                 <field name="engine">aggregation</field>
-                                <field name="formula">l10n_ma_vat_76.tax + l10n_ma_vat_77.tax + l10n_ma_vat_78.tax + l10n_ma_vat_79.tax + l10n_ma_vat_85.tax + l10n_ma_vat_86.tax + l10n_ma_vat_89.tax + l10n_ma_vat_92.tax + l10n_ma_vat_96.tax + l10n_ma_vat_97.tax + l10n_ma_vat_98.tax + l10n_ma_vat_99.tax + l10n_ma_vat_100.tax + l10n_ma_vat_101.tax + l10n_ma_vat_103.tax + l10n_ma_vat_105.tax + l10n_ma_vat_108.tax + l10n_ma_vat_109.tax + l10n_ma_vat_112.tax + l10n_ma_vat_118.tax</field>
+                                <field name="formula">l10n_ma_vat_66.tax</field>
                             </record>
                         </field>
                         <field name="children_ids">
-                            <record id="tax_report_line_76" model="account.report.line">
-                                <field name="hierarchy_level">3</field>
-                                <field name="name">76 - Photovoltaic panels</field>
-                                <field name="code">l10n_ma_vat_76</field>
-                                <field name="expression_ids">
-                                    <record id="tax_report_line_76_base" model="account.report.expression">
-                                        <field name="label">base</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">76B</field>
+                            <record id="tax_report_line_66" model="account.report.line">
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="name">66 - Operations carried out during the year 2025</field>
+                                        <field name="code">l10n_ma_vat_66</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_66_base" model="account.report.expression">
+                                                <field name="label">base</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">66B</field>
+                                            </record>
+                                            <record id="tax_report_line_66_tax" model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">66T</field>
+                                            </record>
+                                        </field>
                                     </record>
-                                    <record id="tax_report_line_76_tax" model="account.report.expression">
-                                        <field name="label">tax</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">76T</field>
-                                    </record>
-                                </field>
+                        </field>
+                    </record>
+                    <record id="tax_report_part_b_8" model="account.report.line">
+                        <field name="hierarchy_level">1</field>
+                        <field name="name">Reduced rate of 8%</field>
+                        <field name="code">l10n_ma_vat_b_8</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_part_b_8_base_sum" model="account.report.expression">
+                                <field name="label">base_sum</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">l10n_ma_vat_69.base</field>
                             </record>
-                            <record id="tax_report_line_77" model="account.report.line">
-                                <field name="hierarchy_level">3</field>
-                                <field name="name">77 - Solar water heaters</field>
-                                <field name="code">l10n_ma_vat_77</field>
-                                <field name="expression_ids">
-                                    <record id="tax_report_line_77_base" model="account.report.expression">
-                                        <field name="label">base</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">77B</field>
-                                    </record>
-                                    <record id="tax_report_line_77_tax" model="account.report.expression">
-                                        <field name="label">tax</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">77T</field>
-                                    </record>
-                                </field>
+                            <record id="tax_report_part_b_8_tax_sum" model="account.report.expression">
+                                <field name="label">tax_sum</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">l10n_ma_vat_69.tax</field>
                             </record>
-                            <record id="tax_report_line_78" model="account.report.line">
-                                <field name="hierarchy_level">3</field>
-                                <field name="name">78 - Feed for livestock and farmyard animals as well as oil cakes used in their manufacture, excluding other simple feed</field>
-                                <field name="code">l10n_ma_vat_78</field>
-                                <field name="expression_ids">
-                                    <record id="tax_report_line_78_base" model="account.report.expression">
-                                        <field name="label">base</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">78B</field>
+                        </field>
+                        <field name="children_ids">
+                            <record id="tax_report_line_69" model="account.report.line">
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="name">69 - Operations carried out during the year 2024</field>
+                                        <field name="code">l10n_ma_vat_69</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_69_base" model="account.report.expression">
+                                                <field name="label">base</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">69B</field>
+                                            </record>
+                                            <record id="tax_report_line_69_tax" model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">69T</field>
+                                            </record>
+                                        </field>
                                     </record>
-                                    <record id="tax_report_line_78_tax" model="account.report.expression">
-                                        <field name="label">tax</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">78T</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="tax_report_line_79" model="account.report.line">
-                                <field name="hierarchy_level">3</field>
-                                <field name="name">79 - Equipment for exclusive agricultural use</field>
-                                <field name="code">l10n_ma_vat_79</field>
-                                <field name="expression_ids">
-                                    <record id="tax_report_line_79_base" model="account.report.expression">
-                                        <field name="label">base</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">79B</field>
-                                    </record>
-                                    <record id="tax_report_line_79_tax" model="account.report.expression">
-                                        <field name="label">tax</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">79T</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="tax_report_line_85" model="account.report.line">
-                                <field name="hierarchy_level">3</field>
-                                <field name="name">85 - Wood in logs, debarked or simply squared, cork in its natural state, firewood in bundles or sawn to short lengths and charcoal</field>
-                                <field name="code">l10n_ma_vat_85</field>
-                                <field name="expression_ids">
-                                    <record id="tax_report_line_85_base" model="account.report.expression">
-                                        <field name="label">base</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">85B</field>
-                                    </record>
-                                    <record id="tax_report_line_85_tax" model="account.report.expression">
-                                        <field name="label">tax</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">85T</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="tax_report_line_86" model="account.report.line">
-                                <field name="hierarchy_level">3</field>
-                                <field name="name">86 - Fishing gear and nets for professional marine fishermen</field>
-                                <field name="code">l10n_ma_vat_86</field>
-                                <field name="expression_ids">
-                                    <record id="tax_report_line_86_base" model="account.report.expression">
-                                        <field name="label">base</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">86B</field>
-                                    </record>
-                                    <record id="tax_report_line_86_tax" model="account.report.expression">
-                                        <field name="label">tax</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">86T</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="tax_report_line_89" model="account.report.line">
-                                <field name="hierarchy_level">3</field>
-                                <field name="name">89 - Accommodation and catering operations as well as services provided by cafés</field>
-                                <field name="code">l10n_ma_vat_89</field>
-                                <field name="expression_ids">
-                                    <record id="tax_report_line_89_base" model="account.report.expression">
-                                        <field name="label">base</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">89B</field>
-                                    </record>
-                                    <record id="tax_report_line_89_tax" model="account.report.expression">
-                                        <field name="label">tax</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">89T</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="tax_report_line_92" model="account.report.line">
-                                <field name="hierarchy_level">3</field>
-                                <field name="name">92 - Rental operations of buildings used as hotels</field>
-                                <field name="code">l10n_ma_vat_92</field>
-                                <field name="expression_ids">
-                                    <record id="tax_report_line_92_base" model="account.report.expression">
-                                        <field name="label">base</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">92B</field>
-                                    </record>
-                                    <record id="tax_report_line_92_tax" model="account.report.expression">
-                                        <field name="label">tax</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">92T</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="tax_report_line_96" model="account.report.line">
-                                <field name="hierarchy_level">3</field>
-                                <field name="name">96 - Cooking salt (rock or sea salt)</field>
-                                <field name="code">l10n_ma_vat_96</field>
-                                <field name="expression_ids">
-                                    <record id="tax_report_line_96_base" model="account.report.expression">
-                                        <field name="label">base</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">96B</field>
-                                    </record>
-                                    <record id="tax_report_line_96_tax" model="account.report.expression">
-                                        <field name="label">tax</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">96T</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="tax_report_line_97" model="account.report.line">
-                                <field name="hierarchy_level">3</field>
-                                <field name="name">97 - Milled rice and pasta</field>
-                                <field name="code">l10n_ma_vat_97</field>
-                                <field name="expression_ids">
-                                    <record id="tax_report_line_97_base" model="account.report.expression">
-                                        <field name="label">base</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">97B</field>
-                                    </record>
-                                    <record id="tax_report_line_97_tax" model="account.report.expression">
-                                        <field name="label">tax</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">97T</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="tax_report_line_98" model="account.report.line">
-                                <field name="hierarchy_level">3</field>
-                                <field name="name">98 - Food fluid oils excluding palm oil</field>
-                                <field name="code">l10n_ma_vat_98</field>
-                                <field name="expression_ids">
-                                    <record id="tax_report_line_98_base" model="account.report.expression">
-                                        <field name="label">base</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">98B</field>
-                                    </record>
-                                    <record id="tax_report_line_98_tax" model="account.report.expression">
-                                        <field name="label">tax</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">98T</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="tax_report_line_99" model="account.report.line">
-                                <field name="hierarchy_level">3</field>
-                                <field name="name">99 - Securities transactions</field>
-                                <field name="code">l10n_ma_vat_99</field>
-                                <field name="expression_ids">
-                                    <record id="tax_report_line_99_base" model="account.report.expression">
-                                        <field name="label">base</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">99B</field>
-                                    </record>
-                                    <record id="tax_report_line_99_tax" model="account.report.expression">
-                                        <field name="label">tax</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">99T</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="tax_report_line_100" model="account.report.line">
-                                <field name="hierarchy_level">3</field>
-                                <field name="name">100 - Banking and credit transactions and exchange commissions</field>
-                                <field name="code">l10n_ma_vat_100</field>
-                                <field name="expression_ids">
-                                    <record id="tax_report_line_100_base" model="account.report.expression">
-                                        <field name="label">base</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">100B</field>
-                                    </record>
-                                    <record id="tax_report_line_100_tax" model="account.report.expression">
-                                        <field name="label">tax</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">100T</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="tax_report_line_101" model="account.report.line">
-                                <field name="hierarchy_level">3</field>
-                                <field name="name">101 - Transactions involving shares and units shares</field>
-                                <field name="code">l10n_ma_vat_101</field>
-                                <field name="expression_ids">
-                                    <record id="tax_report_line_101_base" model="account.report.expression">
-                                        <field name="label">base</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">101B</field>
-                                    </record>
-                                    <record id="tax_report_line_101_tax" model="account.report.expression">
-                                        <field name="label">tax</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">101T</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="tax_report_line_103" model="account.report.line">
-                                <field name="hierarchy_level">3</field>
-                                <field name="name">103 - Operations of sale and delivery of works and objects of art</field>
-                                <field name="code">l10n_ma_vat_103</field>
-                                <field name="expression_ids">
-                                    <record id="tax_report_line_103_base" model="account.report.expression">
-                                        <field name="label">base</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">103B</field>
-                                    </record>
-                                    <record id="tax_report_line_103_tax" model="account.report.expression">
-                                        <field name="label">tax</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">103T</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="tax_report_line_105" model="account.report.line">
-                                <field name="hierarchy_level">3</field>
-                                <field name="name">105 - Operations of lawyers, interpreters, notaries, adouls, bailiffs and veterinarians</field>
-                                <field name="code">l10n_ma_vat_105</field>
-                                <field name="expression_ids">
-                                    <record id="tax_report_line_105_base" model="account.report.expression">
-                                        <field name="label">base</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">105B</field>
-                                    </record>
-                                    <record id="tax_report_line_105_tax" model="account.report.expression">
-                                        <field name="label">tax</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">105T</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="tax_report_line_108" model="account.report.line">
-                                <field name="hierarchy_level">3</field>
-                                <field name="name">108 - Petroleum gas and other gaseous hydrocarbons</field>
-                                <field name="code">l10n_ma_vat_108</field>
-                                <field name="expression_ids">
-                                    <record id="tax_report_line_108_base" model="account.report.expression">
-                                        <field name="label">base</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">108B</field>
-                                    </record>
-                                    <record id="tax_report_line_108_tax" model="account.report.expression">
-                                        <field name="label">tax</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">108T</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="tax_report_line_109" model="account.report.line">
-                                <field name="hierarchy_level">3</field>
-                                <field name="name">109 - Petroleum or shale oils, crude or refined</field>
-                                <field name="code">l10n_ma_vat_109</field>
-                                <field name="expression_ids">
-                                    <record id="tax_report_line_109_base" model="account.report.expression">
-                                        <field name="label">base</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">109B</field>
-                                    </record>
-                                    <record id="tax_report_line_109_tax" model="account.report.expression">
-                                        <field name="label">tax</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">109T</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="tax_report_line_112" model="account.report.line">
-                                <field name="hierarchy_level">3</field>
-                                <field name="name">112 - Ticket sales operations for museums, cinema and theater</field>
-                                <field name="code">l10n_ma_vat_112</field>
-                                <field name="expression_ids">
-                                    <record id="tax_report_line_112_base" model="account.report.expression">
-                                        <field name="label">base</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">112B</field>
-                                    </record>
-                                    <record id="tax_report_line_112_tax" model="account.report.expression">
-                                        <field name="label">tax</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">112T</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="tax_report_line_118" model="account.report.line">
-                                <field name="hierarchy_level">3</field>
-                                <field name="name">118 - Other</field>
-                                <field name="code">l10n_ma_vat_118</field>
-                                <field name="expression_ids">
-                                    <record id="tax_report_line_118_base" model="account.report.expression">
-                                        <field name="label">base</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">118B</field>
-                                    </record>
-                                    <record id="tax_report_line_118_tax" model="account.report.expression">
-                                        <field name="label">tax</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">118T</field>
-                                    </record>
-                                </field>
-                            </record>
                         </field>
                     </record>
                     <record id="tax_report_part_b_7" model="account.report.line">
                         <field name="hierarchy_level">1</field>
-                        <field name="name">Reduced rate of 7% with right to deduct</field>
+                        <field name="name">Reduced rate of 7%</field>
                         <field name="code">l10n_ma_vat_b_7</field>
                         <field name="expression_ids">
                             <record id="tax_report_part_b_7_base_sum" model="account.report.expression">
                                 <field name="label">base_sum</field>
                                 <field name="engine">aggregation</field>
-                                <field name="formula">l10n_ma_vat_106.base + l10n_ma_vat_107.base + l10n_ma_vat_110.base + l10n_ma_vat_111.base + l10n_ma_vat_113.base + l10n_ma_vat_114.base + l10n_ma_vat_115.base + l10n_ma_vat_116.base + l10n_ma_vat_117.base + l10n_ma_vat_119.base</field>
+                                <field name="formula">l10n_ma_vat_119.base</field>
                             </record>
                             <record id="tax_report_part_b_7_tax_sum" model="account.report.expression">
                                 <field name="label">tax_sum</field>
                                 <field name="engine">aggregation</field>
-                                <field name="formula">l10n_ma_vat_106.tax + l10n_ma_vat_107.tax + l10n_ma_vat_110.tax + l10n_ma_vat_111.tax + l10n_ma_vat_113.tax + l10n_ma_vat_114.tax + l10n_ma_vat_115.tax + l10n_ma_vat_116.tax + l10n_ma_vat_117.tax + l10n_ma_vat_119.tax</field>
+                                <field name="formula">l10n_ma_vat_119.tax</field>
                             </record>
                         </field>
                         <field name="children_ids">
-                            <record id="tax_report_line_106" model="account.report.line">
-                                <field name="hierarchy_level">3</field>
-                                <field name="name">106 - Water delivered to the public distribution networks and sanitation services</field>
-                                <field name="code">l10n_ma_vat_106</field>
-                                <field name="expression_ids">
-                                    <record id="tax_report_line_106_base" model="account.report.expression">
-                                        <field name="label">base</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">106B</field>
-                                    </record>
-                                    <record id="tax_report_line_106_tax" model="account.report.expression">
-                                        <field name="label">tax</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">106T</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="tax_report_line_107" model="account.report.line">
-                                <field name="hierarchy_level">3</field>
-                                <field name="name">107 - Rental of water and electricity meters</field>
-                                <field name="code">l10n_ma_vat_107</field>
-                                <field name="expression_ids">
-                                    <record id="tax_report_line_107_base" model="account.report.expression">
-                                        <field name="label">base</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">107B</field>
-                                    </record>
-                                    <record id="tax_report_line_107_tax" model="account.report.expression">
-                                        <field name="label">tax</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">107T</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="tax_report_line_110" model="account.report.line">
-                                <field name="hierarchy_level">3</field>
-                                <field name="name">110 - Pharmaceutical products, raw materials and products used in their composition as well as non-returnable packaging of these products and materials</field>
-                                <field name="code">l10n_ma_vat_110</field>
-                                <field name="expression_ids">
-                                    <record id="tax_report_line_110_base" model="account.report.expression">
-                                        <field name="label">base</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">110B</field>
-                                    </record>
-                                    <record id="tax_report_line_110_tax" model="account.report.expression">
-                                        <field name="label">tax</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">110T</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="tax_report_line_111" model="account.report.line">
-                                <field name="hierarchy_level">3</field>
-                                <field name="name">111 - School supplies, products and materials in their composition</field>
-                                <field name="code">l10n_ma_vat_111</field>
-                                <field name="expression_ids">
-                                    <record id="tax_report_line_111_base" model="account.report.expression">
-                                        <field name="label">base</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">111B</field>
-                                    </record>
-                                    <record id="tax_report_line_111_tax" model="account.report.expression">
-                                        <field name="label">tax</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">111T</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="tax_report_line_113" model="account.report.line">
-                                <field name="hierarchy_level">3</field>
-                                <field name="name">113 - Refined or agglomerated sugar</field>
-                                <field name="code">l10n_ma_vat_113</field>
-                                <field name="expression_ids">
-                                    <record id="tax_report_line_113_base" model="account.report.expression">
-                                        <field name="label">base</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">113B</field>
-                                    </record>
-                                    <record id="tax_report_line_113_tax" model="account.report.expression">
-                                        <field name="label">tax</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">113T</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="tax_report_line_114" model="account.report.line">
-                                <field name="hierarchy_level">3</field>
-                                <field name="name">114 - Canned sardines</field>
-                                <field name="code">l10n_ma_vat_114</field>
-                                <field name="expression_ids">
-                                    <record id="tax_report_line_114_base" model="account.report.expression">
-                                        <field name="label">base</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">114B</field>
-                                    </record>
-                                    <record id="tax_report_line_114_tax" model="account.report.expression">
-                                        <field name="label">tax</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">114T</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="tax_report_line_115" model="account.report.line">
-                                <field name="hierarchy_level">3</field>
-                                <field name="name">115 - Milk powder</field>
-                                <field name="code">l10n_ma_vat_115</field>
-                                <field name="expression_ids">
-                                    <record id="tax_report_line_115_base" model="account.report.expression">
-                                        <field name="label">base</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">115B</field>
-                                    </record>
-                                    <record id="tax_report_line_115_tax" model="account.report.expression">
-                                        <field name="label">tax</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">115T</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="tax_report_line_116" model="account.report.line">
-                                <field name="hierarchy_level">3</field>
-                                <field name="name">116 - Household soap</field>
-                                <field name="code">l10n_ma_vat_116</field>
-                                <field name="expression_ids">
-                                    <record id="tax_report_line_116_base" model="account.report.expression">
-                                        <field name="label">base</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">116B</field>
-                                    </record>
-                                    <record id="tax_report_line_116_tax" model="account.report.expression">
-                                        <field name="label">tax</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">116T</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="tax_report_line_117" model="account.report.line">
-                                <field name="hierarchy_level">3</field>
-                                <field name="name">117 - Economy car and products and materials used in its in its manufacture</field>
-                                <field name="code">l10n_ma_vat_117</field>
-                                <field name="expression_ids">
-                                    <record id="tax_report_line_117_base" model="account.report.expression">
-                                        <field name="label">base</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">117B</field>
-                                    </record>
-                                    <record id="tax_report_line_117_tax" model="account.report.expression">
-                                        <field name="label">tax</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">117T</field>
-                                    </record>
-                                </field>
-                            </record>
                             <record id="tax_report_line_119" model="account.report.line">
                                 <field name="hierarchy_level">3</field>
-                                <field name="name">119 - Other</field>
+                                <field name="name">119 - Operations carried out before January 1 2024</field>
                                 <field name="code">l10n_ma_vat_119</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_119_base" model="account.report.expression">
@@ -1065,7 +1277,7 @@
                     </record>
                     <record id="tax_report_line_124" model="account.report.line">
                         <field name="hierarchy_level">2</field>
-                        <field name="name">124 - Withholding tax on transactions carried out by non-residents for the benefit of Moroccan customers excluded from the scope of application of VAT</field>
+                        <field name="name">124 - Withholding tax at source on transactions carried out by non-residents for the benefit of their clients established in Morocco and engaged in activities excluded from the scope of VAT</field>
                         <field name="code">l10n_ma_vat_124</field>
                         <field name="expression_ids">
                             <record id="tax_report_line_124_tax" model="account.report.expression">
@@ -1076,15 +1288,61 @@
                             </record>
                         </field>
                     </record>
+                    <record id="tax_report_line_127" model="account.report.line">
+                        <field name="hierarchy_level">2</field>
+                        <field name="name">127 - Special reverse charge regime referred to in Article 125 quinquies</field>
+                        <field name="code">l10n_ma_vat_127</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_127_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">127B</field>
+                            </record>
+                            <record id="tax_report_line_127_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">127T</field>
+                            </record>
+                        </field>
+                    </record>
                 </field>
             </record>
             <record id="tax_report_part_c" model="account.report.line">
                 <field name="hierarchy_level">0</field>
                 <field name="name">C - Operations carried out with non-resident taxpayers (Article 115 of the CGI)</field>
+                <field name="expression_ids">
+                    <record id="tax_report_part_c_base_sum" model="account.report.expression">
+                        <field name="label">base_sum</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">l10n_ma_vat_128.base + l10n_ma_vat_129.base</field>
+                    </record>
+                    <record id="tax_report_part_c_tax_sum" model="account.report.expression">
+                        <field name="label">tax_sum</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">l10n_ma_vat_128.tax + l10n_ma_vat_129.tax</field>
+                    </record>
+                </field>
                 <field name="children_ids">
+                    <record id="tax_report_line_128" model="account.report.line">
+                        <field name="hierarchy_level">3</field>
+                        <field name="name">128 - Royalties and license fees referred to in Article 91-XI</field>
+                        <field name="code">l10n_ma_vat_128</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_128_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">128B</field>
+                            </record>
+                            <record id="tax_report_line_128_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">128T</field>
+                            </record>
+                        </field>
+                    </record>
                     <record id="tax_report_line_129" model="account.report.line">
                         <field name="hierarchy_level">3</field>
-                        <field name="name">129 - Operations with non-resident taxpayers</field>
+                        <field name="name">129 - Transactions with non-resident taxpayers except the royalties and license fees referred to in Article 91-XI</field>
                         <field name="code">l10n_ma_vat_129</field>
                         <field name="expression_ids">
                             <record id="tax_report_line_129_base" model="account.report.expression">
@@ -1101,62 +1359,87 @@
                     </record>
                 </field>
             </record>
-            <record id="tax_report_line_130" model="account.report.line">
+            <record id="tax_report_part_d" model="account.report.line">
                 <field name="hierarchy_level">0</field>
-                <field name="name">130 - Total VAT Payable</field>
-                <field name="code">l10n_ma_vat_130</field>
-                <field name="expression_ids">
-                    <record id="tax_report_line_130_tax_criterium" model="account.report.expression">
-                        <field name="label">tax_criterium</field>
-                        <field name="engine">aggregation</field>
-                        <field name="formula">l10n_ma_vat_b.tax_sum - l10n_ma_vat_190.tax</field>
+                <field name="name">D - Calculation of VAT due</field>
+                <field name="children_ids">
+                   <record id="tax_report_line_130" model="account.report.line">
+                        <field name="hierarchy_level">1</field>
+                        <field name="name">130 - TOTAL VAT due before deduction of the withholding tax referred to in Article 117(IV and V)</field>
+                        <field name="code">l10n_ma_vat_130</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_130_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">l10n_ma_vat_b.tax_sum</field>
+                            </record>
+                        </field>
                     </record>
-                    <record id="tax_report_line_130_tax_extra" model="account.report.expression">
-                        <field name="label">tax_extra</field>
-                        <field name="engine">aggregation</field>
-                        <field name="formula">l10n_ma_vat_121.tax + l10n_ma_vat_122.tax + l10n_ma_vat_123.tax + l10n_ma_vat_124.tax + l10n_ma_vat_129.tax</field>
-                        <field name="subformula">if_other_expr_above(l10n_ma_vat_130.tax_criterium, EUR(0))</field>
+                    <record id="tax_report_line_131" model="account.report.line">
+                        <field name="hierarchy_level">1</field>
+                        <field name="name">131 - Amount of withholding tax operated by clients (Article 117(IV and V))</field>
+                        <field name="code">l10n_ma_vat_131</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_131_tax_criterium" model="account.report.expression">
+                                <field name="label">tax_criterium</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">l10n_ma_vat_b.tax_sum - l10n_ma_vat_190.tax</field>
+                            </record>
+                            <record id="tax_report_line_131_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">l10n_ma_vat_120.tax + l10n_ma_vat_121.tax + l10n_ma_vat_122.tax + l10n_ma_vat_123.tax + l10n_ma_vat_124.tax + l10n_ma_vat_127.tax + l10n_ma_vat_128.tax + l10n_ma_vat_129.tax</field>
+                                <field name="subformula">if_other_expr_above(l10n_ma_vat_131.tax_criterium, EUR(0))</field>
+                            </record>
+                        </field>
                     </record>
-                    <record id="tax_report_line_130_tax" model="account.report.expression">
-                        <field name="label">tax</field>
-                        <field name="engine">aggregation</field>
-                        <field name="formula">l10n_ma_vat_b.tax_sum + l10n_ma_vat_130.tax_extra</field>
+                    <record id="tax_report_line_132" model="account.report.line">
+                        <field name="hierarchy_level">1</field>
+                        <field name="name">132 - Total VAT Payable</field>
+                        <field name="code">l10n_ma_vat_132</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_132_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">l10n_ma_vat_130.tax + l10n_ma_vat_131.tax</field>
+                            </record>
+                        </field>
                     </record>
                 </field>
             </record>
-            <record id="tax_report_part_d" model="account.report.line">
+            <record id="tax_report_part_e" model="account.report.line">
                 <field name="hierarchy_level">0</field>
-                <field name="name">D - Breakdown of deductions</field>
-                <field name="code">l10n_ma_vat_d</field>
+                <field name="name">E - Breakdown of deductions</field>
+                <field name="code">l10n_ma_vat_e</field>
                 <field name="expression_ids">
-                    <record id="tax_report_part_d_tax_sum" model="account.report.expression">
+                    <record id="tax_report_part_e_tax_sum" model="account.report.expression">
                         <field name="label">tax_sum</field>
                         <field name="engine">aggregation</field>
-                        <field name="formula">l10n_ma_vat_d_1.tax_sum + l10n_ma_vat_d_2.tax_sum</field>
+                        <field name="formula">l10n_ma_vat_e_1.tax_sum + l10n_ma_vat_e_2.tax_sum</field>
                     </record>
                 </field>
                 <field name="children_ids">
-                    <record id="tax_report_part_d_1" model="account.report.line">
+                    <record id="tax_report_part_e_1" model="account.report.line">
                         <field name="hierarchy_level">1</field>
                         <field name="name">1 - NON-FIXED ASSETS PURCHASES</field>
-                        <field name="code">l10n_ma_vat_d_1</field>
+                        <field name="code">l10n_ma_vat_e_1</field>
                         <field name="expression_ids">
-                            <record id="tax_report_part_d_1_tax_sum" model="account.report.expression">
+                            <record id="tax_report_part_e_1_tax_sum" model="account.report.expression">
                                 <field name="label">tax_sum</field>
                                 <field name="engine">aggregation</field>
-                                <field name="formula">l10n_ma_vat_d_1_1.tax_sum + l10n_ma_vat_d_1_2.tax_sum</field>
+                                <field name="formula">l10n_ma_vat_e_1_1.tax_sum + l10n_ma_vat_e_1_2.tax_sum</field>
                             </record>
                         </field>
                         <field name="children_ids">
-                            <record id="tax_report_part_d_1_1" model="account.report.line">
+                            <record id="tax_report_part_e_1_1" model="account.report.line">
                                 <field name="hierarchy_level">2</field>
                                 <field name="name">Services</field>
-                                <field name="code">l10n_ma_vat_d_1_1</field>
+                                <field name="code">l10n_ma_vat_e_1_1</field>
                                 <field name="expression_ids">
-                                    <record id="tax_report_part_d_1_1_tax_sum" model="account.report.expression">
+                                    <record id="tax_report_part_e_1_1_tax_sum" model="account.report.expression">
                                         <field name="label">tax_sum</field>
                                         <field name="engine">aggregation</field>
-                                        <field name="formula">l10n_ma_vat_140.tax + l10n_ma_vat_141.tax + l10n_ma_vat_142.tax + l10n_ma_vat_143.tax + l10n_ma_vat_144.tax + l10n_ma_vat_153.tax</field>
+                                        <field name="formula">l10n_ma_vat_140.tax + l10n_ma_vat_141.tax + l10n_ma_vat_142.tax + l10n_ma_vat_143.tax + l10n_ma_vat_62.tax + l10n_ma_vat_154.tax + l10n_ma_vat_133.tax + l10n_ma_vat_171.tax + l10n_ma_vat_172.tax + l10n_ma_vat_153.tax</field>
                                     </record>
                                 </field>
                                 <field name="children_ids">
@@ -1185,7 +1468,7 @@
                                     </record>
                                     <record id="tax_report_line_141" model="account.report.line">
                                         <field name="hierarchy_level">3</field>
-                                        <field name="name">141 - Transportation (14%)</field>
+                                        <field name="name">141 - Transportation, excluding urban transport operations and road transport of passengers and goods (20%)</field>
                                         <field name="code">l10n_ma_vat_141</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_line_141_base_tax" model="account.report.expression">
@@ -1252,26 +1535,118 @@
                                             </record>
                                         </field>
                                     </record>
-                                    <record id="tax_report_line_144" model="account.report.line">
+                                    <record id="tax_report_line_62" model="account.report.line">
                                         <field name="hierarchy_level">3</field>
-                                        <field name="name">144 - Operations performed by lawyers, interpreters, notaries, adouls, bailiffs and veterinarians (10%)</field>
-                                        <field name="code">l10n_ma_vat_144</field>
+                                        <field name="name">62 - Other services (18%)</field>
+                                        <field name="code">l10n_ma_vat_62</field>
                                         <field name="expression_ids">
-                                            <record id="tax_report_line_144_base_tax" model="account.report.expression">
+                                            <record id="tax_report_line_62_base_tax" model="account.report.expression">
                                                 <field name="label">base_tax</field>
                                                 <field name="engine">tax_tags</field>
-                                                <field name="formula">144T</field>
+                                                <field name="formula">62T</field>
                                             </record>
-                                            <record id="tax_report_line_144_pro" model="account.report.expression">
+                                            <record id="tax_report_line_62_pro" model="account.report.expression">
                                                 <field name="label">pro</field>
                                                 <field name="engine">external</field>
                                                 <field name="formula">most_recent</field>
                                                 <field name="subformula">editable;rounding=0</field>
                                             </record>
-                                            <record id="tax_report_line_144_tax" model="account.report.expression">
+                                            <record id="tax_report_line_62_tax" model="account.report.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">aggregation</field>
-                                                <field name="formula">l10n_ma_vat_144.base_tax * l10n_ma_vat_144.pro / 100</field>
+                                                <field name="formula">l10n_ma_vat_62.base_tax * l10n_ma_vat_62.pro / 100</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="tax_report_line_154" model="account.report.line">
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="name">154 - Other services (16%)</field>
+                                        <field name="code">l10n_ma_vat_154</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_154_base_tax" model="account.report.expression">
+                                                <field name="label">base_tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">154T</field>
+                                            </record>
+                                            <record id="tax_report_line_154_pro" model="account.report.expression">
+                                                <field name="label">pro</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">most_recent</field>
+                                                <field name="subformula">editable;rounding=0</field>
+                                            </record>
+                                            <record id="tax_report_line_154_tax" model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">l10n_ma_vat_154.base_tax * l10n_ma_vat_154.pro / 100</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="tax_report_line_133" model="account.report.line">
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="name">133 - Other services (14%)</field>
+                                        <field name="code">l10n_ma_vat_133</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_133_base_tax" model="account.report.expression">
+                                                <field name="label">base_tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">133T</field>
+                                            </record>
+                                            <record id="tax_report_line_133_pro" model="account.report.expression">
+                                                <field name="label">pro</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">most_recent</field>
+                                                <field name="subformula">editable;rounding=0</field>
+                                            </record>
+                                            <record id="tax_report_line_133_tax" model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">l10n_ma_vat_133.base_tax * l10n_ma_vat_133.pro / 100</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="tax_report_line_171" model="account.report.line">
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="name">171 - Other services (13%)</field>
+                                        <field name="code">l10n_ma_vat_171</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_171_base_tax" model="account.report.expression">
+                                                <field name="label">base_tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">171T</field>
+                                            </record>
+                                            <record id="tax_report_line_171_pro" model="account.report.expression">
+                                                <field name="label">pro</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">most_recent</field>
+                                                <field name="subformula">editable;rounding=0</field>
+                                            </record>
+                                            <record id="tax_report_line_171_tax" model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">l10n_ma_vat_171.base_tax * l10n_ma_vat_171.pro / 100</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="tax_report_line_172" model="account.report.line">
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="name">172 - Other services (12%)</field>
+                                        <field name="code">l10n_ma_vat_172</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_172_base_tax" model="account.report.expression">
+                                                <field name="label">base_tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">172T</field>
+                                            </record>
+                                            <record id="tax_report_line_172_pro" model="account.report.expression">
+                                                <field name="label">pro</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">most_recent</field>
+                                                <field name="subformula">editable;rounding=0</field>
+                                            </record>
+                                            <record id="tax_report_line_172_tax" model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">l10n_ma_vat_172.base_tax * l10n_ma_vat_172.pro / 100</field>
                                             </record>
                                         </field>
                                     </record>
@@ -1300,15 +1675,15 @@
                                     </record>
                                 </field>
                             </record>
-                            <record id="tax_report_part_d_1_2" model="account.report.line">
+                            <record id="tax_report_part_e_1_2" model="account.report.line">
                                 <field name="hierarchy_level">2</field>
                                 <field name="name">Other non-fixed assets purchases</field>
-                                <field name="code">l10n_ma_vat_d_1_2</field>
+                                <field name="code">l10n_ma_vat_e_1_2</field>
                                 <field name="expression_ids">
-                                    <record id="tax_report_part_d_1_2_tax_sum" model="account.report.expression">
+                                    <record id="tax_report_part_e_1_2_tax_sum" model="account.report.expression">
                                         <field name="label">tax_sum</field>
                                         <field name="engine">aggregation</field>
-                                        <field name="formula">l10n_ma_vat_145.tax + l10n_ma_vat_146.tax + l10n_ma_vat_147.tax + l10n_ma_vat_148.tax + l10n_ma_vat_149.tax + l10n_ma_vat_150.tax + l10n_ma_vat_151.tax + l10n_ma_vat_152.tax + l10n_ma_vat_155.tax + l10n_ma_vat_156.tax + l10n_ma_vat_158.tax</field>
+                                        <field name="formula">l10n_ma_vat_145.tax + l10n_ma_vat_146.tax + l10n_ma_vat_149.tax + l10n_ma_vat_150.tax + l10n_ma_vat_159.tax + l10n_ma_vat_134.tax + l10n_ma_vat_161.tax + l10n_ma_vat_135.tax + l10n_ma_vat_136.tax + l10n_ma_vat_137.tax + l10n_ma_vat_61.tax + l10n_ma_vat_138.tax + l10n_ma_vat_139.tax + l10n_ma_vat_155.tax + l10n_ma_vat_156.tax + l10n_ma_vat_158.tax + l10n_ma_vat_173.tax</field>
                                     </record>
                                 </field>
                                 <field name="children_ids">
@@ -1358,52 +1733,6 @@
                                             </record>
                                         </field>
                                     </record>
-                                    <record id="tax_report_line_147" model="account.report.line">
-                                        <field name="hierarchy_level">3</field>
-                                        <field name="name">147 - Import purchases (14%)</field>
-                                        <field name="code">l10n_ma_vat_147</field>
-                                        <field name="expression_ids">
-                                            <record id="tax_report_line_147_base_tax" model="account.report.expression">
-                                                <field name="label">base_tax</field>
-                                                <field name="engine">tax_tags</field>
-                                                <field name="formula">147T</field>
-                                            </record>
-                                            <record id="tax_report_line_147_pro" model="account.report.expression">
-                                                <field name="label">pro</field>
-                                                <field name="engine">external</field>
-                                                <field name="formula">most_recent</field>
-                                                <field name="subformula">editable;rounding=0</field>
-                                            </record>
-                                            <record id="tax_report_line_147_tax" model="account.report.expression">
-                                                <field name="label">tax</field>
-                                                <field name="engine">aggregation</field>
-                                                <field name="formula">l10n_ma_vat_147.base_tax * l10n_ma_vat_147.pro / 100</field>
-                                            </record>
-                                        </field>
-                                    </record>
-                                    <record id="tax_report_line_148" model="account.report.line">
-                                        <field name="hierarchy_level">3</field>
-                                        <field name="name">148 - Domestic purchases (14%)</field>
-                                        <field name="code">l10n_ma_vat_148</field>
-                                        <field name="expression_ids">
-                                            <record id="tax_report_line_148_base_tax" model="account.report.expression">
-                                                <field name="label">base_tax</field>
-                                                <field name="engine">tax_tags</field>
-                                                <field name="formula">148T</field>
-                                            </record>
-                                            <record id="tax_report_line_148_pro" model="account.report.expression">
-                                                <field name="label">pro</field>
-                                                <field name="engine">external</field>
-                                                <field name="formula">most_recent</field>
-                                                <field name="subformula">editable;rounding=0</field>
-                                            </record>
-                                            <record id="tax_report_line_148_tax" model="account.report.expression">
-                                                <field name="label">tax</field>
-                                                <field name="engine">aggregation</field>
-                                                <field name="formula">l10n_ma_vat_148.base_tax * l10n_ma_vat_148.pro / 100</field>
-                                            </record>
-                                        </field>
-                                    </record>
                                     <record id="tax_report_line_149" model="account.report.line">
                                         <field name="hierarchy_level">3</field>
                                         <field name="name">149 - Import purchases (10%)</field>
@@ -1450,49 +1779,210 @@
                                             </record>
                                         </field>
                                     </record>
-                                    <record id="tax_report_line_151" model="account.report.line">
+                                    <record id="tax_report_line_159" model="account.report.line">
                                         <field name="hierarchy_level">3</field>
-                                        <field name="name">151 - Import purchases (7%)</field>
-                                        <field name="code">l10n_ma_vat_151</field>
+                                        <field name="name">159 - Other purchases (18%)</field>
+                                        <field name="code">l10n_ma_vat_159</field>
                                         <field name="expression_ids">
-                                            <record id="tax_report_line_151_base_tax" model="account.report.expression">
+                                            <record id="tax_report_line_159_base_tax" model="account.report.expression">
                                                 <field name="label">base_tax</field>
                                                 <field name="engine">tax_tags</field>
-                                                <field name="formula">151T</field>
+                                                <field name="formula">159T</field>
                                             </record>
-                                            <record id="tax_report_line_151_pro" model="account.report.expression">
+                                            <record id="tax_report_line_159_pro" model="account.report.expression">
                                                 <field name="label">pro</field>
                                                 <field name="engine">external</field>
                                                 <field name="formula">most_recent</field>
                                                 <field name="subformula">editable;rounding=0</field>
                                             </record>
-                                            <record id="tax_report_line_151_tax" model="account.report.expression">
+                                            <record id="tax_report_line_159_tax" model="account.report.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">aggregation</field>
-                                                <field name="formula">l10n_ma_vat_151.base_tax * l10n_ma_vat_151.pro / 100</field>
+                                                <field name="formula">l10n_ma_vat_159.base_tax * l10n_ma_vat_159.pro / 100</field>
                                             </record>
                                         </field>
                                     </record>
-                                    <record id="tax_report_line_152" model="account.report.line">
+                                    <record id="tax_report_line_134" model="account.report.line">
                                         <field name="hierarchy_level">3</field>
-                                        <field name="name">152 - Domestic purchases (7%)</field>
-                                        <field name="code">l10n_ma_vat_152</field>
+                                        <field name="name">134 - Other purchases (16%)</field>
+                                        <field name="code">l10n_ma_vat_134</field>
                                         <field name="expression_ids">
-                                            <record id="tax_report_line_152_base_tax" model="account.report.expression">
+                                            <record id="tax_report_line_134_base_tax" model="account.report.expression">
                                                 <field name="label">base_tax</field>
                                                 <field name="engine">tax_tags</field>
-                                                <field name="formula">152T</field>
+                                                <field name="formula">134T</field>
                                             </record>
-                                            <record id="tax_report_line_152_pro" model="account.report.expression">
+                                            <record id="tax_report_line_134_pro" model="account.report.expression">
                                                 <field name="label">pro</field>
                                                 <field name="engine">external</field>
                                                 <field name="formula">most_recent</field>
                                                 <field name="subformula">editable;rounding=0</field>
                                             </record>
-                                            <record id="tax_report_line_152_tax" model="account.report.expression">
+                                            <record id="tax_report_line_134_tax" model="account.report.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">aggregation</field>
-                                                <field name="formula">l10n_ma_vat_152.base_tax * l10n_ma_vat_152.pro / 100</field>
+                                                <field name="formula">l10n_ma_vat_134.base_tax * l10n_ma_vat_134.pro / 100</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="tax_report_line_161" model="account.report.line">
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="name">161 - Other purchases (15%)</field>
+                                        <field name="code">l10n_ma_vat_161</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_161_base_tax" model="account.report.expression">
+                                                <field name="label">base_tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">161T</field>
+                                            </record>
+                                            <record id="tax_report_line_161_pro" model="account.report.expression">
+                                                <field name="label">pro</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">most_recent</field>
+                                                <field name="subformula">editable;rounding=0</field>
+                                            </record>
+                                            <record id="tax_report_line_161_tax" model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">l10n_ma_vat_161.base_tax * l10n_ma_vat_161.pro / 100</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="tax_report_line_135" model="account.report.line">
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="name">135 - Other purchases (14%)</field>
+                                        <field name="code">l10n_ma_vat_135</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_135_base_tax" model="account.report.expression">
+                                                <field name="label">base_tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">135T</field>
+                                            </record>
+                                            <record id="tax_report_line_135_pro" model="account.report.expression">
+                                                <field name="label">pro</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">most_recent</field>
+                                                <field name="subformula">editable;rounding=0</field>
+                                            </record>
+                                            <record id="tax_report_line_135_tax" model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">l10n_ma_vat_135.base_tax * l10n_ma_vat_135.pro / 100</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="tax_report_line_136" model="account.report.line">
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="name">136 - Other purchases (12%)</field>
+                                        <field name="code">l10n_ma_vat_136</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_136_base_tax" model="account.report.expression">
+                                                <field name="label">base_tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">136T</field>
+                                            </record>
+                                            <record id="tax_report_line_136_pro" model="account.report.expression">
+                                                <field name="label">pro</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">most_recent</field>
+                                                <field name="subformula">editable;rounding=0</field>
+                                            </record>
+                                            <record id="tax_report_line_136_tax" model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">l10n_ma_vat_136.base_tax * l10n_ma_vat_136.pro / 100</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="tax_report_line_137" model="account.report.line">
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="name">137 - Other purchases (11%)</field>
+                                        <field name="code">l10n_ma_vat_137</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_137_base_tax" model="account.report.expression">
+                                                <field name="label">base_tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">137T</field>
+                                            </record>
+                                            <record id="tax_report_line_137_pro" model="account.report.expression">
+                                                <field name="label">pro</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">most_recent</field>
+                                                <field name="subformula">editable;rounding=0</field>
+                                            </record>
+                                            <record id="tax_report_line_137_tax" model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">l10n_ma_vat_137.base_tax * l10n_ma_vat_137.pro / 100</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="tax_report_line_61" model="account.report.line">
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="name">61 - Other purchases (9%)</field>
+                                        <field name="code">l10n_ma_vat_61</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_61_base_tax" model="account.report.expression">
+                                                <field name="label">base_tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">61T</field>
+                                            </record>
+                                            <record id="tax_report_line_61_pro" model="account.report.expression">
+                                                <field name="label">pro</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">most_recent</field>
+                                                <field name="subformula">editable;rounding=0</field>
+                                            </record>
+                                            <record id="tax_report_line_61_tax" model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">l10n_ma_vat_61.base_tax * l10n_ma_vat_61.pro / 100</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="tax_report_line_138" model="account.report.line">
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="name">138 - Other purchases (8%)</field>
+                                        <field name="code">l10n_ma_vat_138</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_138_base_tax" model="account.report.expression">
+                                                <field name="label">base_tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">138T</field>
+                                            </record>
+                                            <record id="tax_report_line_138_pro" model="account.report.expression">
+                                                <field name="label">pro</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">most_recent</field>
+                                                <field name="subformula">editable;rounding=0</field>
+                                            </record>
+                                            <record id="tax_report_line_138_tax" model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">l10n_ma_vat_138.base_tax * l10n_ma_vat_138.pro / 100</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="tax_report_line_139" model="account.report.line">
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="name">139 - Other purchases (7%)</field>
+                                        <field name="code">l10n_ma_vat_139</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_139_base_tax" model="account.report.expression">
+                                                <field name="label">base_tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">139T</field>
+                                            </record>
+                                            <record id="tax_report_line_139_pro" model="account.report.expression">
+                                                <field name="label">pro</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">most_recent</field>
+                                                <field name="subformula">editable;rounding=0</field>
+                                            </record>
+                                            <record id="tax_report_line_139_tax" model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">l10n_ma_vat_139.base_tax * l10n_ma_vat_139.pro / 100</field>
                                             </record>
                                         </field>
                                     </record>
@@ -1520,7 +2010,7 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_line_156" model="account.report.line">
-                                        <field name="hierarchy_level">3</field>
+                                        <field name="hierarchy_level">2</field>
                                         <field name="name">156 - Subcontracting (real estate work) (20%)</field>
                                         <field name="code">l10n_ma_vat_156</field>
                                         <field name="expression_ids">
@@ -1566,16 +2056,33 @@
                                             </record>
                                         </field>
                                     </record>
+                                    <record id="tax_report_line_173" model="account.report.line">
+                                        <field name="hierarchy_level">2</field>
+                                        <field name="name">173 - VAT deducted under the special self-assessment regime (Article 125 quinquies)</field>
+                                        <field name="code">l10n_ma_vat_173</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_173_tax" model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">127T</field>
+                                            </record>
+                                            <record id="tax_report_line_173_base_tax" model="account.report.expression">
+                                                <field name="label">base_tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">127T</field>
+                                            </record>
+                                        </field>
+                                    </record>
                                 </field>
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_part_d_2" model="account.report.line">
+                    <record id="tax_report_part_e_2" model="account.report.line">
                         <field name="hierarchy_level">1</field>
                         <field name="name">2 - FIXED ASSETS</field>
-                        <field name="code">l10n_ma_vat_d_2</field>
+                        <field name="code">l10n_ma_vat_e_2</field>
                         <field name="expression_ids">
-                            <record id="tax_report_part_d_2_tax_sum" model="account.report.expression">
+                            <record id="tax_report_part_e_2_tax_sum" model="account.report.expression">
                                 <field name="label">tax_sum</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">l10n_ma_vat_162.tax + l10n_ma_vat_163.tax + l10n_ma_vat_164.tax + l10n_ma_vat_165.tax + l10n_ma_vat_166.tax + l10n_ma_vat_167.tax + l10n_ma_vat_168.tax + l10n_ma_vat_160.tax + l10n_ma_vat_169.tax</field>
@@ -1801,7 +2308,7 @@
                     <record id="tax_report_line_182_tax" model="account.report.expression">
                         <field name="label">tax</field>
                         <field name="engine">aggregation</field>
-                        <field name="formula">l10n_ma_vat_d_1.tax_sum + l10n_ma_vat_d_2.tax_sum</field>
+                        <field name="formula">l10n_ma_vat_e_1.tax_sum + l10n_ma_vat_e_2.tax_sum</field>
                     </record>
                 </field>
             </record>
@@ -1846,12 +2353,12 @@
                             </record>
                         </field>
                     </record>
-                    <record id="tax_report_line_181" model="account.report.line">
+                    <record id="tax_report_line_183" model="account.report.line">
                         <field name="hierarchy_level">3</field>
-                        <field name="name">181 - Cumulative tax credit fraction</field>
-                        <field name="code">l10n_ma_vat_181</field>
+                        <field name="name">183 - Deduction following adjustment for failure to retain movable assets, limited to the VAT invoiced on their sale as second-hand goods</field>
+                        <field name="code">l10n_ma_vat_183</field>
                         <field name="expression_ids">
-                            <record id="tax_report_line_181_tax" model="account.report.expression">
+                            <record id="tax_report_line_183_tax" model="account.report.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">external</field>
                                 <field name="formula">most_recent</field>
@@ -1908,7 +2415,7 @@
                     <record id="tax_report_line_190_tax" model="account.report.expression">
                         <field name="label">tax</field>
                         <field name="engine">aggregation</field>
-                        <field name="formula">l10n_ma_vat_182.tax + l10n_ma_vat_170.tax + l10n_ma_vat_180.tax + l10n_ma_vat_181.tax + l10n_ma_vat_185.tax - l10n_ma_vat_186.tax - l10n_ma_vat_187.tax</field>
+                        <field name="formula">l10n_ma_vat_182.tax + l10n_ma_vat_183.tax + l10n_ma_vat_185.tax - l10n_ma_vat_186.tax - l10n_ma_vat_187.tax</field>
                     </record>
                 </field>
             </record>
@@ -1924,7 +2431,7 @@
                             <record id="tax_report_line_200_tax" model="account.report.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">aggregation</field>
-                                <field name="formula">l10n_ma_vat_130.tax - l10n_ma_vat_190.tax</field>
+                                <field name="formula">l10n_ma_vat_132.tax - l10n_ma_vat_190.tax</field>
                                 <field name="subformula">if_above(EUR(0))</field>
                             </record>
                         </field>
@@ -1937,41 +2444,8 @@
                             <record id="tax_report_line_201_tax" model="account.report.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">aggregation</field>
-                                <field name="formula">l10n_ma_vat_190.tax - l10n_ma_vat_130.tax</field>
+                                <field name="formula">l10n_ma_vat_190.tax - l10n_ma_vat_132.tax</field>
                                 <field name="subformula">if_above(EUR(0))</field>
-                            </record>
-                        </field>
-                    </record>
-                    <record id="tax_report_line_202" model="account.report.line">
-                        <field name="hierarchy_level">3</field>
-                        <field name="name">202 - 15% reduction of the credit for the period ((182 + 180) - 130) x 15%</field>
-                        <field name="code">l10n_ma_vat_202</field>
-                        <field name="expression_ids">
-                            <record id="tax_report_line_202_tax" model="account.report.expression">
-                                <field name="label">tax</field>
-                                <field name="engine">external</field>
-                                <field name="formula">most_recent</field>
-                                <field name="subformula">editable;rounding=2</field>
-                            </record>
-                        </field>
-                    </record>
-                    <record id="tax_report_line_203" model="account.report.line">
-                        <field name="hierarchy_level">3</field>
-                        <field name="name">203 - Credit to be carried forward (201 - 202)</field>
-                        <field name="code">l10n_ma_vat_203</field>
-                        <field name="expression_ids">
-                            <record id="tax_report_line_203_tax" model="account.report.expression">
-                                <field name="label">tax</field>
-                                <field name="engine">aggregation</field>
-                                <field name="formula">l10n_ma_vat_201.tax - l10n_ma_vat_202.tax</field>
-                                <field name="subformula">if_above(EUR(0))</field>
-                            </record>
-                            <record id="tax_report_line_203_carryover" model="account.report.expression">
-                                <field name="label">_carryover_tax</field>
-                                <field name="engine">aggregation</field>
-                                <field name="formula">l10n_ma_vat_203.tax</field>
-                                <field name="subformula">if_above(EUR(0))</field>
-                                <field name="carryover_target">l10n_ma_vat_170._applied_carryover_tax</field>
                             </record>
                         </field>
                     </record>
@@ -1988,8 +2462,26 @@
                             <record id="tax_report_line_204_tax" model="account.report.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">aggregation</field>
-                                <field name="formula">l10n_ma_vat_121.tax + l10n_ma_vat_122.tax + l10n_ma_vat_123.tax + l10n_ma_vat_124.tax + l10n_ma_vat_129.tax</field>
+                                <field name="formula">l10n_ma_vat_120.tax + l10n_ma_vat_121.tax + l10n_ma_vat_122.tax + l10n_ma_vat_123.tax + l10n_ma_vat_124.tax + l10n_ma_vat_129.tax</field>
                                 <field name="subformula">if_other_expr_below(l10n_ma_vat_204.tax_criterium, EUR(0))</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_205" model="account.report.line">
+                        <field name="hierarchy_level">3</field>
+                        <field name="name">205 - VAT due for the period [(132 − (182 + 180 + 183)] or VAT credit for the period [(182 + 180 + 183) − 132]</field>
+                        <field name="code">l10n_ma_vat_205</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_205_tax_criterium" model="account.report.expression">
+                                <field name="label">tax_criterium</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">l10n_ma_vat_132.tax - l10n_ma_vat_182.tax - l10n_ma_vat_180.tax - l10n_ma_vat_182.tax</field>
+                            </record>
+                            <record id="tax_report_line_205_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">l10n_ma_vat_182.tax + l10n_ma_vat_180.tax + l10n_ma_vat_182.tax - l10n_ma_vat_132.tax</field>
+                                <field name="subformula">if_other_expr_below(l10n_ma_vat_205.tax_criterium, EUR(0))</field>
                             </record>
                         </field>
                     </record>
