@@ -301,3 +301,39 @@ test("identical preparation tickets are rendered once", async () => {
         ["Small Kitchen", "image 2"],
     ]);
 });
+
+test("printers sharing the same device print one ticket at a time", async () => {
+    const store = await setupPosEnv();
+    const order = await getFilledOrder(store);
+    const createPrinter = (name, categoryId) =>
+        store.models["pos.printer"].create({
+            name,
+            printer_type: "epson_epos",
+            printer_ip: "192.168.1.10",
+            product_categories_ids: [store.models["pos.category"].get(categoryId)],
+        });
+    const kitchen = createPrinter("Kitchen", 1);
+    const bar = createPrinter("Bar", 2);
+
+    let printing = 0;
+    let maxPrinting = 0;
+    const printedBy = [];
+    for (const printer of [kitchen, bar]) {
+        printer._instance = {
+            print: async () => {
+                maxPrinting = Math.max(maxPrinting, ++printing);
+                printedBy.push(printer.name);
+                await new Promise((resolve) => setTimeout(resolve, 10));
+                printing--;
+                return { successful: true };
+            },
+        };
+    }
+    store.ticketPrinter.generateIframe = async () => ({});
+    store.ticketPrinter.setIframeSizeFromPrinter = () => {};
+    store.ticketPrinter.generateImage = async () => "image";
+
+    await store.ticketPrinter.printOrderChanges({ order, printers: [kitchen, bar] });
+    expect(printedBy).toEqual(["Kitchen", "Bar"]);
+    expect(maxPrinting).toBe(1);
+});

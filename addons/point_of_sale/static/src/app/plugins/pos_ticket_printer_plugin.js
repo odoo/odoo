@@ -33,6 +33,7 @@ export class PosTicketPrinterPlugin extends Plugin {
         this.app = useApp();
         this.env = null; // needed in createPrinterInstance for iot printers, will be removed after full conversion to owl 3
         this.defaultPrinter = null;
+        this.deviceMutexes = new Map();
     }
 
     init(env) {
@@ -145,20 +146,33 @@ export class PosTicketPrinterPlugin extends Plugin {
     }
 
     async print({ printer, iframe, image = null }) {
-        const finalImage =
+        let finalImage =
             image ||
             (this.setIframeSizeFromPrinter(iframe, printer) && (await this.generateImage(iframe)));
-        let status;
-        try {
-            status = await printer._instance.print(finalImage);
-        } catch {
-            status = {
-                successful: false,
-                message: { body: _t("An unexpected error occurred while printing.") },
-            };
-        }
+        return this._getPrinterDeviceMutex(printer).exec(async () => {
+            const printedImage = finalImage;
+            finalImage = null;
+            try {
+                return await printer._instance.print(printedImage);
+            } catch {
+                return {
+                    successful: false,
+                    message: { body: _t("An unexpected error occurred while printing.") },
+                };
+            }
+        });
+    }
 
-        return status;
+    _getPrinterDeviceKey(printer) {
+        return printer.printer_ip || `pos.printer_${printer.id}`;
+    }
+
+    _getPrinterDeviceMutex(printer) {
+        const key = this._getPrinterDeviceKey(printer);
+        if (!this.deviceMutexes.has(key)) {
+            this.deviceMutexes.set(key, new Mutex());
+        }
+        return this.deviceMutexes.get(key);
     }
     initDefaultPrinter() {
         const storedPrinterId = Number(localStorage.getItem(this.printerStorageKey));
@@ -336,10 +350,9 @@ export class PosTicketPrinterPlugin extends Plugin {
         const unsuccessfulPrints = [];
         // Each printer has its own change (filtered on its categories) to print again on retry
         const failedChanges = new Map();
-        // Printers print in parallel, each printing its own tickets in order
-        const printJobs = [];
-        // Identical tickets on printers with the same paper size are rendered only once
+        const renderMutex = new Mutex();
         const renderedTickets = new Map();
+        const printerJobs = [];
 
         for (const printer of printers) {
             const categoryIds = new Set(printer.product_categories_ids.map((c) => c.id));
@@ -359,32 +372,56 @@ export class PosTicketPrinterPlugin extends Plugin {
                 unsuccessfulPrints.push(printer.name + " is not connected");
                 continue;
             }
-            // Each printer prints its tickets one at a time
-            const printerMutex = new Mutex();
-            for (const ticket of tickets) {
+            const jobs = tickets.map((ticket) => {
                 const key = JSON.stringify([printer.paper_size, ticket.changes, ticket.extra_data]);
-                if (!renderedTickets.has(key)) {
-                    const image = await this._renderPreparationTicket(printer, template, ticket);
-                    renderedTickets.set(key, image);
-                }
-                const image = renderedTickets.get(key);
-                printJobs.push(
-                    printerMutex.exec(async () => {
-                        const result = await this.print({ printer, image });
-                        if (!result.successful) {
-                            failedChanges.set(printer, ticket._rawChange);
-                            unsuccessfulPrints.push(printer.name + ": " + result.message.body);
-                            return;
-                        }
-                        isPrinted = true;
-                        if (result.warningCode) {
-                            this.displayPrinterWarning(result, printer.name);
-                        }
-                    })
-                );
-            }
+                const entry = renderedTickets.get(key) || { users: 0, image: null };
+                entry.users++;
+                renderedTickets.set(key, entry);
+                return { printer, ticket, key };
+            });
+            printerJobs.push(jobs);
         }
-        await Promise.all(printJobs);
+
+        const maxCachedImages = 2 * printerJobs.length;
+        const getImage = ({ printer, ticket, key }) => {
+            const entry = renderedTickets.get(key);
+            entry.image ??= renderMutex.exec(() =>
+                this._renderPreparationTicket(printer, template, ticket)
+            );
+            return entry.image;
+        };
+        const releaseImage = ({ key }) => {
+            const entry = renderedTickets.get(key);
+            entry.users--;
+            const cachedImages = [...renderedTickets.values()].filter((e) => e.image).length;
+            if (!entry.users) {
+                renderedTickets.delete(key);
+            } else if (cachedImages > maxCachedImages) {
+                entry.image = null;
+            }
+        };
+
+        await Promise.all(
+            printerJobs.map(async (jobs) => {
+                let nextImage = getImage(jobs[0]);
+                for (let i = 0; i < jobs.length; i++) {
+                    const job = jobs[i];
+                    const image = await nextImage;
+                    nextImage = jobs[i + 1] && getImage(jobs[i + 1]);
+                    const result = await this.print({ printer: job.printer, image });
+                    releaseImage(job);
+                    if (!result.successful) {
+                        failedChanges.set(job.printer, job.ticket._rawChange);
+                        unsuccessfulPrints.push(job.printer.name + ": " + result.message.body);
+                        continue;
+                    }
+                    isPrinted = true;
+                    if (result.warningCode) {
+                        this.displayPrinterWarning(result, job.printer.name);
+                    }
+                }
+            })
+        );
 
         if (unsuccessfulPrints.length) {
             const message = {
