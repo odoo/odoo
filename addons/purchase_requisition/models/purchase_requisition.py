@@ -108,7 +108,9 @@ class PurchaseRequisition(models.Model):
         res = super().write(vals)
         if 'date_start' in vals or 'date_end' in vals:
             for requisition in self:
-                requisition.line_ids.supplier_info_ids.sudo().with_context(syncing_blanket_order_dates=True).write({
+                supplier_infos = requisition.line_ids.supplier_info_ids.filtered(
+                    lambda s: s.date_start != requisition.date_start or s.date_end != requisition.date_end)
+                supplier_infos.sudo().write({
                     'date_start': requisition.date_start,
                     'date_end': requisition.date_end,
                 })
@@ -407,6 +409,8 @@ class PurchaseRequisitionLine(models.Model):
                 'date_start': self.requisition_id.date_start,
                 'date_end': self.requisition_id.date_end,
                 'delay': self.lead_time,
+                # a blanket order pricelist is used in priority over any other pricelist, regardless of price
+                'sequence': 0,
             })
 
     def _get_section_totals(self, totals_field):

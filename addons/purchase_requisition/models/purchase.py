@@ -10,9 +10,16 @@ class PurchaseOrder(models.Model):
     requisition_ids = fields.Many2many(
         'purchase.requisition',
         relation='purchase_order_requisition_rel',
+        string='Agreements',
+        compute='_compute_requisition_ids', store=True, readonly=False,
     )
     requisition_type = fields.Selection(related='requisition_ids.requisition_type')
     date_order_warning = fields.Char(compute='_compute_date_order_warning')
+
+    @api.depends('order_line.requisition_line_id.requisition_id')
+    def _compute_requisition_ids(self):
+        for order in self:
+            order.requisition_ids = order.order_line.requisition_line_id.requisition_id
 
     @api.depends('date_order', 'requisition_ids.date_start', 'requisition_ids.date_end')
     def _compute_date_order_warning(self):
@@ -153,9 +160,9 @@ class PurchaseOrderLine(models.Model):
 
     requisition_line_id = fields.Many2one(
         'purchase.requisition.line',
+        compute='_compute_requisition_line_id', store=True, readonly=False,
         ondelete='set null',
         index=True,
-        compute='_compute_requisition_line_id', store=True, readonly=False, precompute=True,
     )
     order_too_big_warning = fields.Char(compute='_compute_order_too_big_warning')
 
@@ -165,20 +172,7 @@ class PurchaseOrderLine(models.Model):
             if line.requisition_line_id.product_id == line.product_id:
                 continue
             line.requisition_line_id = line.order_id.requisition_ids.line_ids.filtered(
-                lambda l: l.product_id and l.product_id == line.product_id)[:1]
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        lines = super().create(vals_list)
-        for line in lines.filtered('requisition_line_id'):
-            requisition = line.requisition_line_id.requisition_id
-            if requisition not in line.order_id.requisition_ids:
-                line.order_id.requisition_ids |= requisition
-        return lines
-
-    def _get_seller_info(self):
-        line = self if self.requisition_line_id else self.with_context(exclude_blanket_orders=True)
-        return super(PurchaseOrderLine, line)._get_seller_info()
+                lambda l: l.product_id and l.product_id == line.product_id and l.remaining_qty > 0)[:1]
 
     @api.depends('product_qty', 'uom_id', 'order_id.state',
                  'requisition_line_id.remaining_qty', 'requisition_line_id.uom_id')

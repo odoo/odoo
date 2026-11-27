@@ -27,16 +27,6 @@ class StockRule(models.Model):
             product_id = product_id.with_context(exclude_blanket_orders=True)
         return super()._update_purchase_order_line(product_id, product_qty, product_uom, company_id, values, line)
 
-    def _pick_supplier(self, company, product, partner=False, qty=None, uom=False, date=None, params=False):
-        seller_info = super()._pick_supplier(
-            company, product.with_context(skip_exhausted_blanket_order_fallback=True),
-            partner=partner, qty=qty, uom=uom, date=date, params=params,
-        )
-        supplierinfo = seller_info.get('supplierinfo', self.env['product.supplierinfo'])
-        if seller_info and not (supplierinfo and supplierinfo._is_exhausted_blanket_order()):
-            return seller_info
-        return super()._pick_supplier(company, product, partner=partner, qty=qty, uom=uom, date=date, params=params)
-
 
 class StockMove(models.Model):
     _inherit = 'stock.move'

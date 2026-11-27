@@ -288,15 +288,12 @@ class TestBlanketOrderSupplierSelection(TestPurchaseRequisitionCommon):
             [('product_id', '=', self.product.id), ('state', '=', 'draft')], order='id desc', limit=1)
 
     def test_blanket_order_has_priority(self):
-        """ A valid blanket order is chosen before any other pricelist, no matter the
-        vendor, sequence or price. If several, the first listed one is chosen. """
+        """ A blanket order's pricelist defaults to a priority sequence, so it is chosen
+        before a plain vendor pricelist, even if the latter is cheaper. """
         self.env['product.supplierinfo'].create({
-            'product_id': self.product.id, 'partner_id': self.vendor_a.id, 'price': 10, 'sequence': 1,
+            'product_id': self.product.id, 'partner_id': self.vendor_a.id, 'price': 10,
         })
         bo_b = self._create_blanket_order(self.vendor_b, 100, 50)
-        bo_c = self._create_blanket_order(self.vendor_c, 100, 40)
-        bo_b.line_ids.supplier_info_ids.sequence = 2
-        bo_c.line_ids.supplier_info_ids.sequence = 3
 
         po_line = self._replenish()
         self.assertEqual(po_line.order_id.requisition_ids, bo_b)

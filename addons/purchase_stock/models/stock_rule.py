@@ -404,7 +404,8 @@ class StockRule(models.Model):
                       p._select_seller(partner_id=partner, quantity=None, date=date, uom_id=uom, params=params) or \
                       p._select_seller(partner_id=partner, quantity=None, uom_id=uom, params=params) or \
                       p._select_seller(partner_id=partner, quantity=None, params=params) or \
-                      p._select_seller(partner_id=partner, quantity=None)
+                      p._select_seller(partner_id=partner, quantity=None) or \
+                      p._select_seller(partner_id=partner, quantity=None, valid=False)
 
         if not seller_info and not partner:  # Last fallback, also matching expired pricelists
             seller_info = p._select_seller(quantity=None) or p._prepare_sellers()[:1]._get_seller_info()

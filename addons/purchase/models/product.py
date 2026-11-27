@@ -261,8 +261,8 @@ class ProductProduct(models.Model):
         """
         return True
 
-    def _select_seller(self, partner_id=False, quantity=0.0, date=None, uom_id=False, ordered_by='price_discounted', params=False):
-        seller_info = super()._select_seller(partner_id=partner_id, quantity=quantity, date=date, uom_id=uom_id, ordered_by=ordered_by, params=params)
+    def _select_seller(self, partner_id=False, quantity=0.0, date=None, uom_id=False, ordered_by='price_discounted', params=False, valid=True):
+        seller_info = super()._select_seller(partner_id=partner_id, quantity=quantity, date=date, uom_id=uom_id, ordered_by=ordered_by, params=params, valid=valid)
         if not seller_info and self._is_last_po_fallback_applicable(params):
             company = self.env.company
             if params and params.get('order_id') and params['order_id'].company_id:
