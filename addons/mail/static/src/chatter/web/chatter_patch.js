@@ -17,6 +17,7 @@ import { assignGetter, isDragSourceExternalFile } from "@mail/utils/common/misc"
 
 import {
     providePlugins,
+    signal,
     t,
     untrack,
     useEffect,
@@ -30,7 +31,7 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { useCustomDropzone } from "@web/core/dropzone/dropzone_hook";
 import { _t } from "@web/core/l10n/translation";
-import { rpc } from "@web/core/network/rpc";
+import { ConnectionLostError, RPCError, rpc } from "@web/core/network/rpc";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
@@ -41,7 +42,6 @@ import { isMobileOS } from "@web/core/browser/feature_detection";
 const CHATTER_PANEL = Object.freeze({
     ATTACHMENT: "ATTACHMENT",
     NONE: "NONE",
-    PINNED_MESSAGES: "PINNED_MESSAGES",
     SEARCH: "SEARCH",
 });
 
@@ -109,8 +109,19 @@ const chatterPatch = {
             selectedAttachmentIds: [],
             showActivities: true,
             showAttachmentLoading: false,
+            showPinnedMessages: false,
             showScheduledMessages: true,
         });
+        this.pinnedMessagesToggleRef = signal.ref(HTMLButtonElement);
+        useOnChange(
+            () => [this.state.showPinnedMessages, this.state.thread?.pinnedMessagesState],
+            (showPinnedMessages, pinnedMessagesState) => {
+                // The loaded list was dropped for a fresher count: fetch it again when shown.
+                if (showPinnedMessages && pinnedMessagesState === undefined) {
+                    this.fetchPinnedMessages();
+                }
+            }
+        );
         this.dialog = useService("dialog");
         providePlugins([MessageSearchPlugin], { thread: this.thread });
         this.messageSearch = usePlugin(MessageSearchPlugin);
@@ -294,11 +305,6 @@ const chatterPatch = {
         return _t("Show Followers");
     },
 
-    get hasPinnedMessages() {
-        return (
-            this.state.thread?.has_pinned_messages || this.state.thread?.pinnedMessages?.length > 0
-        );
-    },
     /**
      * @returns {boolean}
      */
@@ -314,7 +320,7 @@ const chatterPatch = {
             "contact_fields",
             "defaultSubject",
             "followers",
-            "has_pinned_messages",
+            "pinned_message_count",
             "scheduledMessages",
             "showSubjectInSmallComposer",
             "suggestedRecipients",
@@ -338,6 +344,7 @@ const chatterPatch = {
 
     changeThread(threadModel, threadId) {
         super.changeThread(...arguments);
+        this.state.showPinnedMessages = false;
         this.discardAttachmentSelection();
         if (threadId === false) {
             this.state.composerType = false;
@@ -367,7 +374,27 @@ const chatterPatch = {
         if (!thread?.id || !this.state.thread?.eq(thread)) {
             return;
         }
-        await thread.fetchThreadData(requestList.filter((r) => r !== "messages"));
+        const dataRequestList = requestList.filter((r) => r !== "messages");
+        if (
+            requestList.includes("pinned_message_count") &&
+            this.state.showPinnedMessages &&
+            thread.pinnedMessagesState !== "loading"
+        ) {
+            // The expanded section needs the list matching the fresh count: fetch both at once.
+            await thread.loadPinnedMessages(() =>
+                thread.fetchThreadData([...dataRequestList, "pinnedMessages"])
+            );
+        } else {
+            await thread.fetchThreadData(dataRequestList);
+            if (
+                requestList.includes("pinned_message_count") &&
+                thread.pinnedMessagesState === "loaded"
+            ) {
+                // The count just fetched is fresher than the list loaded earlier, which misses
+                // the messages (un)pinned by other users.
+                thread.pinnedMessagesState = undefined;
+            }
+        }
         this.updateRecipients(this.props.record);
     },
 
@@ -420,14 +447,6 @@ const chatterPatch = {
                 await this.unlinkAttachments(attachments);
             },
         });
-    },
-    onClickPinnedMessages() {
-        this.closeSearch();
-        const isOpening = this.state.activePanel !== CHATTER_PANEL.PINNED_MESSAGES;
-        this.state.activePanel = isOpening ? CHATTER_PANEL.PINNED_MESSAGES : CHATTER_PANEL.NONE;
-        if (isOpening) {
-            this.state.thread?.fetchPinnedMessages();
-        }
     },
     onClickSearch() {
         if (this.state.activePanel === CHATTER_PANEL.SEARCH) {
@@ -560,6 +579,28 @@ const chatterPatch = {
         } else {
             this.onThreadCreated = toggle;
             this.props.saveRecord?.();
+        }
+    },
+
+    fetchPinnedMessages() {
+        this.state.thread?.fetchPinnedMessages().catch((error) => {
+            // A failed request shows the error with a retry: let any other error through.
+            if (!(error instanceof RPCError || error instanceof ConnectionLostError)) {
+                throw error;
+            }
+        });
+    },
+
+    retryPinnedMessages() {
+        // The Retry button goes away with the error: keep the focus on the section.
+        this.pinnedMessagesToggleRef()?.focus();
+        this.fetchPinnedMessages();
+    },
+
+    togglePinnedMessages() {
+        this.state.showPinnedMessages = !this.state.showPinnedMessages;
+        if (this.state.showPinnedMessages) {
+            this.fetchPinnedMessages();
         }
     },
 

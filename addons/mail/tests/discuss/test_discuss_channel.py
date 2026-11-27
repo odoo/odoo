@@ -1344,6 +1344,53 @@ class TestChannelInternals(MailCommon, HttpCase):
         with self.assertBus(notifications):
             test_group.execute_command_help()
 
+    @users("employee")
+    def test_message_pin(self):
+        channel = self.env["discuss.channel"].create({"name": "Pin channel"})
+        message_1 = channel.message_post(
+            body="Message 1", message_type="comment", subtype_xmlid="mail.mt_comment",
+        )
+        message_2 = channel.message_post(
+            body="Message 2", message_type="comment", subtype_xmlid="mail.mt_comment",
+        )
+        self.assertTrue(channel.set_message_pin(message_1.id, True))
+        self.assertTrue(channel.set_message_pin(message_2.id, True))
+        self.assertTrue(channel.set_message_pin(message_2.id, False))
+        self.authenticate(self.user_employee.login, self.user_employee.password)
+        data = pop_store_version(
+            self.make_jsonrpc_request(
+                "/mail/store",
+                {
+                    "fetch_params": [
+                        [
+                            "mail.thread",
+                            {
+                                "thread_model": "discuss.channel",
+                                "thread_id": channel.id,
+                                "request_list": ["pinned_message_count", "pinnedMessages"],
+                            },
+                        ],
+                    ],
+                },
+            ),
+        )
+        self.assertEqual(
+            data["mail.thread"],
+            [
+                {
+                    "canPostOnReadonly": True,
+                    "display_name": "Pin channel",
+                    "hasReadAccess": True,
+                    "hasWriteAccess": True,
+                    "has_mail_thread": False,
+                    "id": channel.id,
+                    "model": "discuss.channel",
+                    "pinnedMessageIds": message_1.ids,
+                    "pinned_message_count": 1,
+                },
+            ],
+        )
+
     @users('employee')
     def test_message_update_content_bus(self):
         self.maxDiff = None

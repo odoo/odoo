@@ -1057,6 +1057,48 @@ class TestAPI(ThreadRecipients):
                 for sugg, expected_sugg in zip(suggested_recipients, expected_recipients, strict=True):
                     self.assertDictEqual(sugg, expected_sugg)
 
+    @users("employee")
+    def test_message_pin(self):
+        """ Test (un)pinning a message sends the updated pinned messages count. """
+        test_record = self.ticket_record.with_env(self.env)
+        message = test_record.message_post(body="<p>Pinned</p>", message_type="comment")
+
+        with freeze_time("2025-04-08 10:00:00"), self.assertBus(
+            BusResult(
+                self.user_employee,
+                "mail.record/insert",
+                {
+                    "mail.message": [{"id": message.id, "pinned_at": "2025-04-08 10:00:00"}],
+                    "mail.thread": [
+                        {
+                            "id": test_record.id,
+                            "model": test_record._name,
+                            "pinned_message_count": 1,
+                        },
+                    ],
+                },
+            ),
+        ):
+            self.assertTrue(test_record.set_message_pin(message.id, True))
+
+        with self.assertBus(
+            BusResult(
+                self.user_employee,
+                "mail.record/insert",
+                {
+                    "mail.message": [{"id": message.id, "pinned_at": False}],
+                    "mail.thread": [
+                        {
+                            "id": test_record.id,
+                            "model": test_record._name,
+                            "pinned_message_count": 0,
+                        },
+                    ],
+                },
+            ),
+        ):
+            self.assertTrue(test_record.set_message_pin(message.id, False))
+
     @mute_logger('openerp.addons.mail.models.mail_mail')
     @users('employee')
     def test_message_update_content(self):
