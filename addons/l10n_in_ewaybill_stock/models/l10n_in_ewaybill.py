@@ -272,17 +272,20 @@ class L10nInEwaybill(models.Model):
             return line_details
         return super()._get_l10n_in_ewaybill_line_details(line, tax_details)
 
+    def _get_l10n_in_ewaybill_line_uom(self, line):
+        if self.picking_id:
+            return line.uom_id
+        return super()._get_l10n_in_ewaybill_line_uom(line)
+
     def _prepare_ewaybill_tax_details_json_payload(self):
         if self.picking_id:
             tax_details = self._l10n_in_tax_details_for_stock()
             round_value = self.env['account.move']._l10n_in_round_value
             return {
-                'itemList': [
-                    self._get_l10n_in_ewaybill_line_details(
-                        line, tax_details['line_tax_details'][line.id]
-                    )
+                'itemList': self._get_l10n_in_ewaybill_item_list(
+                    (line, tax_details['line_tax_details'][line.id])
                     for line in self.move_ids
-                ],
+                ),
                 'totalValue': round_value(tax_details['tax_details'].get('total_excluded', 0.00)),
                 **{
                     f'{tax_type}Value': round_value(
