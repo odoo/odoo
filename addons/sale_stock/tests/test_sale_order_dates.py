@@ -177,6 +177,37 @@ class TestSaleExpectedDate(ValuationReconciliationTestCommon):
                 "Custom invoice delivery shouldn't change resetting to draft invoice",
             )
 
+    def test_invoice_delivery_date_of_backorder(self):
+        """ The invoice of a backorder takes the date of the backorder, not of the first delivery. """
+        warehouse = self.company_data['default_warehouse']
+        self.test_product_order.invoice_policy = 'delivery'
+        self.env['stock.quant']._update_available_quantity(self.test_product_order, warehouse.lot_stock_id, 6.0)
+        order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': self.test_product_order.id,
+                'product_uom_qty': 10.0,
+            })],
+        })
+        order.action_confirm()
+        picking_1 = order.picking_ids
+        picking_1.move_ids.picked = True
+        picking_1._action_done()
+        invoice_1 = order._create_invoices()
+        invoice_1.action_post()
+        first_date = picking_1.date_done.date()
+        self.assertEqual(invoice_1.delivery_date, first_date)
+
+        self.env['stock.quant']._update_available_quantity(self.test_product_order, warehouse.lot_stock_id, 4.0)
+        with freeze_time(first_date + timedelta(days=3)):
+            picking_2 = (order.picking_ids - picking_1).ensure_one()
+            picking_2.move_ids.write({'quantity': 4.0, 'picked': True})
+            picking_2._action_done()
+            invoice_2 = order._create_invoices()
+        self.assertEqual(invoice_2.invoice_line_ids.quantity, 4.0)
+        self.assertEqual(invoice_2.delivery_date, picking_2.date_done.date())
+        self.assertEqual(invoice_1.delivery_date, first_date)
+
     def test_invoice_delivery_date_frozen_when_posted(self):
         order = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
