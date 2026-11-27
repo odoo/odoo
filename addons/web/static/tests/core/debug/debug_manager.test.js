@@ -425,6 +425,60 @@ describe("DebugMenu", () => {
         expect(".modal #formview_default_fields option:nth-child(2)").toHaveText("Name = p1");
     });
 
+    test("set defaults: fields are sorted by label", async () => {
+        serverState.debug = "1";
+
+        class Partner extends models.Model {
+            _name = "partner";
+
+            zone = fields.Char({ string: "Zone" });
+            code = fields.Char({ string: "Code" });
+            reference = fields.Char({ string: "Reference" });
+            alias = fields.Char({ string: "Alias" });
+
+            _records = [{ id: 1, zone: "z", code: "c", reference: "r", alias: "a" }];
+
+            _views = {
+                "form,18": /* xml */ `
+                    <form>
+                        <field name="zone"/>
+                        <field name="code"/>
+                        <field name="reference"/>
+                        <field name="alias"/>
+                    </form>
+                `,
+            };
+        }
+
+        class IrUiView extends models.Model {
+            _name = "ir.ui.view";
+
+            name = fields.Char();
+            model = fields.Char();
+
+            _records = [{ id: 18 }];
+        }
+
+        defineModels([Partner, IrUiView]);
+        await mountWithCleanup(WebClient);
+        await getService("action").doAction({
+            name: "Partners",
+            res_model: "partner",
+            res_id: 1,
+            type: "ir.actions.act_window",
+            views: [[18, "form"]],
+        });
+        await contains(".o_debug_manager button").click();
+        await contains(".dropdown-menu .dropdown-item:contains('Set Default Values')").click();
+        expect(queryAllTexts(".modal #formview_default_fields option")).toEqual([
+            "",
+            "Alias = a",
+            "Code = c",
+            "Reference = r",
+            "Zone = z",
+        ]);
+    });
+
     test("set defaults: click close", async () => {
         serverState.debug = "1";
 
@@ -786,14 +840,14 @@ describe("DebugMenu", () => {
 
         expect(queryAllTexts`.modal #formview_default_fields option`).toEqual([
             "",
-            "Foo = 121212121212121212121212121212121212121212121212121212121...",
             "Description = 121212121212121212121212121212121212121212121212121212121...",
+            "Foo = 121212121212121212121212121212121212121212121212121212121...",
         ]);
 
         expect(queryAllProperties(".modal #formview_default_fields option", "value")).toEqual([
             "",
-            "foo",
             "description",
+            "foo",
         ]);
 
         await contains(".modal #formview_default_fields").select("foo");
