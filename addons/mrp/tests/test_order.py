@@ -5637,6 +5637,45 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         mo.button_mark_done()
         self.assertEqual(mo.move_finished_ids.move_line_ids.lot_id, new_sn)
 
+    def test_reset_to_progress_increase_qty_multi_steps(self):
+        """In 3-steps manufacturing, increasing the quantity of a done MO set back to progress
+        creates a new pick components transfer. Validating it must add the received components
+        to the (already consumed) components moves of the MO.
+        """
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        warehouse.manufacture_steps = 'pbm_sam'
+        finished, component = self.env['product.product'].create([
+            {'name': 'Finished', 'is_storable': True},
+            {'name': 'Component', 'is_storable': True},
+        ])
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': finished.product_tmpl_id.id,
+            'bom_line_ids': [Command.create({'product_id': component.id, 'product_qty': 1})],
+        })
+        self.env['stock.quant']._update_available_quantity(component, warehouse.lot_stock_id, 10)
+        mo = self.env['mrp.production'].create({
+            'product_id': finished.id,
+            'product_qty': 2,
+            'picking_type_id': warehouse.manu_type_id.id,
+        })
+        mo.action_confirm()
+        mo.picking_ids.filtered(lambda p: p.picking_type_id == warehouse.pbm_type_id).button_validate()
+        self.assertEqual(mo.move_raw_ids.quantity, 2)
+        mo.button_mark_done()
+        self.assertEqual(mo.state, 'done')
+
+        mo.action_reset_to_progress()
+        self.env['change.production.qty'].create({'mo_id': mo.id, 'product_qty': 3}).change_prod_qty()
+        new_pick = mo.picking_ids.filtered(lambda p: p.picking_type_id == warehouse.pbm_type_id and p.state != 'done')
+        self.assertEqual(new_pick.move_ids.product_uom_qty, 1)
+        new_pick.button_validate()
+        self.assertRecordValues(mo.move_raw_ids, [{'product_uom_qty': 3, 'quantity': 3, 'picked': True}])
+
+        mo.button_mark_done()
+        self.assertEqual(mo.state, 'done')
+        self.assertRecordValues(mo.move_raw_ids, [{'state': 'done', 'quantity': 3}])
+        self.assertEqual(mo.qty_produced, 3)
+
     def test_nested_kit_component_consumed_in_parent_operation(self):
         """ Check that the components of a kit, including the ones of a kit
         nested in it, are consumed in the operation of the kit line. """
