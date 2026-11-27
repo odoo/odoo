@@ -1,6 +1,7 @@
 from datetime import timedelta
 
 from odoo import fields
+from odoo.exceptions import UserError
 from odoo.addons.mail.controllers.thread import ThreadController
 from odoo.addons.mail.tools.discuss import mail_route, Store
 from odoo.fields import Command, Domain
@@ -10,19 +11,28 @@ class PollController(ThreadController):
     @mail_route("/mail/poll/create", type="jsonrpc", auth="user", methods=["POST"])
     def poll_create(
         self,
-        duration,
         options,
         question,
         thread_id,
         thread_model,
         allow_multiple_options=False,
+        duration=None,
+        end_dt=None,
     ):
+        """Create a poll ending either after ``duration`` minutes, or at the exact
+        ``end_dt`` (UTC datetime string) when given."""
         if not self.env.user._is_internal():
             return
         thread = self._get_thread_with_access_for_post(thread_model, thread_id)
         if not thread:
             return
-        end_dt = fields.Datetime.now() + timedelta(minutes=duration)
+        now = fields.Datetime.now()
+        if end_dt:
+            end_dt = fields.Datetime.to_datetime(end_dt)
+            if end_dt <= now:
+                raise UserError(self.env._("The poll end time cannot be in the past."))
+        else:
+            end_dt = now + timedelta(minutes=duration)
         poll_values = {
             "allow_multiple_options": allow_multiple_options,
             "option_ids": [

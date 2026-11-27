@@ -3,6 +3,7 @@
 from datetime import timedelta
 from pprint import pformat
 
+from odoo import fields
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.tests.common import HttpCase, JsonRpcException, new_test_user, tagged
 
@@ -281,3 +282,28 @@ class TestMailPoll(MailCommon, HttpCase):
         self.env["mail.poll"]._end_expired_polls()
         self.assertTrue(poll.end_message_id)
         self.assertFalse(poll.winning_option_id)
+
+    def test_create_poll_with_custom_end_dt(self):
+        self.authenticate(self.user_employee.login, self.user_employee.login)
+        poll_values = {
+            "options": self.POLL_OPTIONS,
+            "question": "What is your favorite food?",
+            "thread_id": self.test_record.id,
+            "thread_model": self.test_record._name,
+        }
+        end_dt = fields.Datetime.now().replace(microsecond=0) + timedelta(days=45)
+        poll_id = self.make_jsonrpc_request(
+            "/mail/poll/create",
+            {**poll_values, "end_dt": fields.Datetime.to_string(end_dt)},
+        )
+        self.assertEqual(self.env["mail.poll"].browse(poll_id).poll_end_dt, end_dt)
+        past_end_dt = fields.Datetime.now() - timedelta(minutes=1)
+        with (
+            self.assertRaises(JsonRpcException) as error_catcher,
+            self.assertLogs("odoo.http", level="WARNING"),
+        ):
+            self.make_jsonrpc_request(
+                "/mail/poll/create",
+                {**poll_values, "end_dt": fields.Datetime.to_string(past_end_dt)},
+            )
+        self.assertEqual(error_catcher.exception.args[0], "odoo.exceptions.UserError")
