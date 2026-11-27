@@ -1,6 +1,7 @@
 import { patch } from "@web/core/utils/patch";
 import { SelfOrder } from "@pos_self_order/app/services/self_order_service";
-import { QFPay, QFPayError } from "@pos_qfpay/app/qfpay";
+import { QFPayError } from "@pos_qfpay/app/qfpay";
+import { KioskQFPay } from "@pos_self_order_qfpay/app/kiosk_qfpay";
 
 patch(SelfOrder.prototype, {
     async setup() {
@@ -11,7 +12,12 @@ patch(SelfOrder.prototype, {
         );
 
         if (QFPayPaymentMethod) {
-            this.qfpay = new QFPay(this.env, QFPayPaymentMethod, this.handleQFPayError.bind(this));
+            this.qfpay = new KioskQFPay(
+                this.env,
+                QFPayPaymentMethod,
+                this.handleQFPayError.bind(this),
+                this.access_token
+            );
         }
     },
 

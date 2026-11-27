@@ -6,27 +6,16 @@ import { patch } from "@web/core/utils/patch";
 import { QFPay } from "@pos_qfpay/app/qfpay";
 import { mockQFPayWebhook } from "@pos_qfpay/../tests/tours/utils/common";
 
-// Patch QFPay to validate the request that would be sent to the terminal
+// Mock the terminal: the payload is signed by the server, as for a real payment
 patch(QFPay.prototype, {
-    makeQFPayRequest: async function (endpoint, payload) {
+    async sendRequest(endpoint, signedPayload) {
         if (endpoint !== "trade") {
             throw new Error("Only 'trade' endpoint is supported on self checkout");
         }
-        const paymentMethod = posmodel.models["pos.payment.method"].getAll()[0];
-        const order = posmodel.currentOrder;
-        const sessionId = posmodel.config.current_session_id.id;
-        const expectedPayload = {
-            func_type: 1001,
-            amt: order.amount_total,
-            channel: paymentMethod.qfpay_payment_type,
-            out_trade_no: `${order.uuid}--${sessionId}--${paymentMethod.id}`,
-            wait_card_timeout: 30,
-            camera_id: 1,
-        };
-        if (!payload || JSON.stringify(payload) !== JSON.stringify(expectedPayload)) {
-            throw new Error("Payload does not match expected payload");
+        if (typeof signedPayload !== "string" || !signedPayload) {
+            throw new Error("The payload sent to the terminal is not signed");
         }
-        return true;
+        return { respcd: "6000" };
     },
 });
 
