@@ -39,6 +39,23 @@ class TestEventNotifications(TransactionCase, MailCase, CronMixinCase):
             self.event.partner_ids += email_partner
         self.assertMailMail(email_partner, 'sent', author=self.env.ref('base.partner_root'))
 
+    @freeze_time('2018')  # class event has hardcoded dates
+    def test_message_invite_template_mail_server(self):
+        self.env['ir.config_parameter'].sudo().set_param('mail.mail_force_send_limit', None)
+        mail_server = self.env['ir.mail_server'].create({
+            'name': 'Invitation Server',
+            'smtp_host': 'smtp.test.lan',
+        })
+        self.env.ref('calendar.calendar_template_meeting_invitation').mail_server_id = mail_server
+        email_partner = self.env['res.partner'].create({'name': 'bob invitee', 'email': 'bob.invitee@test.lan'})
+        with self.mock_mail_gateway(mail_unlink_sent=False):
+            self.event.partner_ids += email_partner
+        self.assertMailMail(
+            email_partner, 'sent',
+            author=self.env.ref('base.partner_root'),
+            fields_values={'mail_server_id': mail_server},
+        )
+
     def test_message_invite_allday(self):
         with self.assertSinglePostNotifications([{'partner': self.partner, 'type': 'inbox'}], {
             'message_type': 'user_notification',
