@@ -167,6 +167,8 @@ module.exports = [
             "**/web/static/src/views/calendar/calendar_renderer.css",
             "**/web/static/src/views/calendar/calendar_year/calendar_year_popover.css",
             "**/web/static/src/views/fields/statusbar/statusbar_field.css",
+            // mail client exclusive instructions
+            "**/mass_mailing/static/src/mail_clients_css/mass_mailing_mail.css",
         ],
         plugins: { css },
         language: "css/css",
