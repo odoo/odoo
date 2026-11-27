@@ -2,7 +2,7 @@ import { Builder } from "@html_builder/builder";
 import { CORE_PLUGINS, MAIN_PLUGINS } from "@html_builder/core/core_plugins";
 import { removePlugins } from "@html_builder/utils/utils";
 import { closestElement } from "@html_editor/utils/dom_traversal";
-import { Component, onMounted, onWillStart, useProps, t } from "@odoo/owl";
+import { Component, onMounted, onWillStart, onWillUnmount, proxy, useProps, t } from "@odoo/owl";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -17,6 +17,10 @@ import {
     localStorageNoDialogKey,
     TranslatorInfoDialog,
 } from "./translation_components/translatorInfoDialog";
+import {
+    clearPageAccessibilityHighlights,
+    highlightPageAccessibilityIssues,
+} from "./page_accessibility";
 
 // Other Plugins depend on those 2 plugins, but they are not used in translation
 // mode.
@@ -39,6 +43,8 @@ export class WebsiteBuilder extends Component {
     setup() {
         this.websiteService = useService("website");
         this.dialog = useService("dialog");
+        this.notification = useService("notification");
+        this.pageAccessibilityState = proxy({ active: false, issueCount: 0 });
         this.websiteEditService =
             this.websiteService.websiteRootInstance?.env.services["website_edit"];
         useSetupAction({
@@ -57,6 +63,11 @@ export class WebsiteBuilder extends Component {
             }
             this.websiteEditService?.clearRpcCache();
             this.pushHistoryState();
+        });
+        onWillUnmount(() => {
+            if (this.editor) {
+                clearPageAccessibilityHighlights(this.editor.document);
+            }
         });
     }
 
@@ -87,6 +98,64 @@ export class WebsiteBuilder extends Component {
             this.props.builderProps.closeEditor();
         }
         this.reloadAfterTimeout();
+    }
+
+    getPageAccessibilityLabel() {
+        return this.pageAccessibilityState.active
+            ? _t("Clear %(count)s accessibility highlight(s)", {
+                  count: this.pageAccessibilityState.issueCount,
+              })
+            : _t("Highlight accessibility issues");
+    }
+
+    checkPageAccessibility() {
+        if (this.pageAccessibilityState.active) {
+            clearPageAccessibilityHighlights(this.editor.document);
+            this.pageAccessibilityState.active = false;
+            this.pageAccessibilityState.issueCount = 0;
+            return;
+        }
+        const results = highlightPageAccessibilityIssues(this.editor.document);
+        const issueCount =
+            results.contrast +
+            results.emptyHeadings +
+            results.missingAlt +
+            results.skippedHeadingLevels;
+        this.pageAccessibilityState.issueCount = issueCount;
+        this.pageAccessibilityState.active = issueCount > 0;
+        const messages = [];
+        if (results.contrast) {
+            messages.push(_t("%(count)s text(s) lack contrast.", { count: results.contrast }));
+        }
+        if (results.missingAlt) {
+            messages.push(
+                _t("%(count)s image(s) have no alt text.", { count: results.missingAlt })
+            );
+        }
+        if (results.emptyHeadings) {
+            messages.push(_t("%(count)s heading(s) are empty.", { count: results.emptyHeadings }));
+        }
+        if (results.skippedHeadingLevels) {
+            messages.push(
+                _t("%(count)s heading(s) skip a level.", {
+                    count: results.skippedHeadingLevels,
+                })
+            );
+        }
+        if (!issueCount) {
+            messages.push(_t("No accessibility issue found."));
+        }
+        if (results.unchecked) {
+            messages.push(
+                _t(
+                    "The contrast of %(count)s text(s) over an image or a gradient could not be checked.",
+                    { count: results.unchecked }
+                )
+            );
+        }
+        this.notification.add(messages.join(" "), {
+            type: issueCount ? "warning" : results.unchecked ? "info" : "success",
+        });
     }
 
     onBeforeUnload(event) {
@@ -161,6 +230,10 @@ export class WebsiteBuilder extends Component {
                 return;
             }
         }
+
+        clearPageAccessibilityHighlights(this.editor.document);
+        this.pageAccessibilityState.active = false;
+        this.pageAccessibilityState.issueCount = 0;
 
         // TODO: handle the urgent save and the fail of the save operation
         await this.editor.shared.operation.next(

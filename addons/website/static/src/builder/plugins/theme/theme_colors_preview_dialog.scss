@@ -9,3 +9,49 @@
         }
     }
 }
+
+.o_theme_colors_preview_dialog {
+    .o_theme_colors_preview_content {
+        display: grid;
+        grid-template-rows: minmax(0, 2fr) minmax(4rem, 1fr);
+
+        @include media-breakpoint-up(lg) {
+            grid-template-columns: minmax(0, 2fr) minmax(20rem, 1fr);
+            grid-template-rows: minmax(0, 1fr);
+        }
+    }
+
+    iframe {
+        min-height: 0;
+    }
+
+    .o_theme_colors_preview_accessibility_results {
+        min-height: 0;
+
+        code {
+            color: inherit;
+        }
+    }
+
+    .o_theme_colors_preview_accessibility_issues {
+        min-height: 0;
+        overflow-y: auto;
+    }
+
+    .o_theme_colors_preview_accessibility_info {
+        min-height: 0;
+
+        .table {
+            --table-bg: transparent;
+        }
+    }
+
+    .o_theme_colors_preview_color_swatch {
+        display: inline-block;
+        width: 1rem;
+        height: 1rem;
+        border: 1px solid $border-color;
+        background-color: var(--color);
+        vertical-align: -0.125rem;
+    }
+}

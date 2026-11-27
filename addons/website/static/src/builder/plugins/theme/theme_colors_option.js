@@ -2,14 +2,12 @@ import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useDomState } from "@html_builder/core/utils";
 import { HighlightThemeRowPlugin } from "@html_builder/sidebar/highlight_theme_row_plugin";
 import { getCSSVariableValue } from "@html_editor/utils/formatting";
-import { onMounted, onWillUnmount, signal, usePlugin } from "@odoo/owl";
+import { onMounted, onWillUnmount, usePlugin } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
-import { ThemeColorsPreviewDialog } from "./theme_colors_preview_dialog";
 
 export class ThemeColorsOption extends BaseOptionComponent {
     static template = "website.ThemeColorsOption";
     static dependencies = ["themeTab"];
-    isThemeColorsPreviewOpen = signal(false);
 
     setup() {
         super.setup();
@@ -19,13 +17,12 @@ export class ThemeColorsOption extends BaseOptionComponent {
         this.state = useDomState(() => ({
             presets: this.getPresets(),
         }));
-        this.closeThemeColorsPreviewDialog = null;
         onMounted(() => {
             this.iframeDocument = document.querySelector("iframe").contentWindow.document;
             this.state.presets = this.getPresets();
             this.highlightThemeRow.colorPresetToShow.set(null);
         });
-        onWillUnmount(() => this.closeThemeColorsPreviewDialog?.());
+        onWillUnmount(() => this.dependencies.themeTab.closeThemeColorsPreview());
     }
 
     getPalettes() {
@@ -94,26 +91,10 @@ export class ThemeColorsOption extends BaseOptionComponent {
     }
 
     toggleThemeColorsPreview() {
-        if (this.closeThemeColorsPreviewDialog) {
-            this.closeThemeColorsPreviewDialog();
-            return;
+        if (this.dependencies.themeTab.isThemeColorsPreviewOpen()) {
+            this.dependencies.themeTab.closeThemeColorsPreview();
+        } else {
+            this.dependencies.themeTab.openThemeColorsPreview();
         }
-
-        this.closeThemeColorsPreviewDialog = this.services.dialog.add(
-            ThemeColorsPreviewDialog,
-            {
-                onIframeLoad: (previewDocument) => {
-                    this.config.extraPreviewDocument = previewDocument;
-                },
-            },
-            {
-                onClose: () => {
-                    this.closeThemeColorsPreviewDialog = null;
-                    this.config.extraPreviewDocument = null;
-                    this.isThemeColorsPreviewOpen.set(false);
-                },
-            }
-        );
-        this.isThemeColorsPreviewOpen.set(true);
     }
 }

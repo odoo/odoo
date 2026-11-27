@@ -4,8 +4,142 @@
 <t t-name="website.ThemeColorsPreviewDialog">
     <Dialog title.translate="Colors Preview" footer="false" withBodyPadding="false"
         contentClass="'o_theme_colors_preview_dialog h-100'">
-        <iframe class="d-block h-100 w-100" src="/website/theme_colors_preview"
-            t-on-load="(ev) => this.props.onIframeLoad(ev.target.contentDocument)"/>
+        <div class="o_theme_colors_preview_content position-relative h-100">
+            <iframe class="d-block w-100 h-100 border-0" src="/website/theme_colors_preview"
+                t-on-load="(ev) => this.onIframeLoad(ev.target.contentDocument)"/>
+            <div class="o_theme_colors_preview_accessibility d-flex flex-column overflow-hidden px-3 py-2">
+                <div class="text-center">
+                    <button type="button" class="btn btn-primary"
+                        t-att-disabled="this.state.isChecking || !this.state.isPreviewReady"
+                        t-on-click="this.checkAccessibility">
+                        Check color accessibility
+                    </button>
+                </div>
+                <div class="o_theme_colors_preview_accessibility_results flex-grow-1 overflow-hidden mt-2" aria-live="polite">
+                    <div t-if="this.state.showLoading" class="d-flex justify-content-center align-items-center gap-2 py-3">
+                        <span class="spinner-border spinner-border-sm" aria-hidden="true"/>Checking colors...
+                    </div>
+                    <div t-elif="this.state.hasChecked &amp;&amp; !this.state.issues.length" class="alert alert-success px-3 py-2 mb-0">
+                        <i class="oi me-2" data-icon="check"/>No issue found
+                    </div>
+                    <div t-elif="this.state.issues.length" class="d-flex flex-column h-100">
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                            <strong>
+                                Issues found
+                                <t t-if="this.state.selectedPreset"> for preset #<t t-out="this.state.selectedPreset"/></t>
+                            </strong>
+                            <div class="d-flex gap-1">
+                                <button t-if="this.state.selectedPreset" type="button" class="btn btn-sm btn-outline-secondary"
+                                    t-on-click="() => this.togglePresetFilter()">
+                                    Show all
+                                </button>
+                                <button type="button" class="btn btn-sm btn-outline-secondary"
+                                    t-att-aria-expanded="this.state.showInfo"
+                                    t-on-click="this.toggleInfo">
+                                    <i class="oi me-1" data-icon="info"/>
+                                    <t t-if="this.state.showInfo">Show issues</t>
+                                    <t t-else="">About this tool</t>
+                                </button>
+                            </div>
+                        </div>
+                        <div t-if="this.state.showInfo" class="o_theme_colors_preview_accessibility_info alert alert-info flex-grow-1 overflow-auto px-3 py-2 mb-0">
+                            <strong><i class="oi me-2" data-icon="info"/>About this tool</strong>
+                            <p class="mb-2">This tool checks theme preset colors against WCAG text and user interface component contrast rules.</p>
+                            <table class="table table-sm table-borderless mb-2">
+                                <thead>
+                                    <tr>
+                                        <th>Type</th>
+                                        <th>AA</th>
+                                        <th>AAA</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Normal text (&lt;18pt / &lt;14pt bold)</td>
+                                        <td>≥ 4.5:1</td>
+                                        <td>≥ 7:1</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Large text (≥18pt / ≥14pt bold)</td>
+                                        <td>≥ 3:1</td>
+                                        <td>≥ 4.5:1</td>
+                                    </tr>
+                                    <tr>
+                                        <td>UI component visual boundary</td>
+                                        <td>≥ 3:1</td>
+                                        <td>Not defined</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Link against surrounding text when not underlined</td>
+                                        <td>≥ 3:1 and a hover/focus cue</td>
+                                        <td>Not defined</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <p class="mb-1"><strong>1.4.3 / 1.4.6:</strong> Text must contrast with its displayed background, including authored hover and focus states.</p>
+                            <p class="mb-1"><strong>1.4.1:</strong> A link that is not underlined must be distinguishable without relying only on color hue.</p>
+                            <p class="mb-1"><strong>1.4.11:</strong> Visual information needed to identify a UI component or state must contrast at least 3:1 with adjacent colors.</p>
+                            <p class="mb-0">Disabled buttons are exempt. For active buttons, this checker tests text contrast in the regular, hover, focus, and active states. Focus indicator colors are controlled by the platform and are not checked here. A labeled button does not need a contrasting boundary because its text can identify the control.</p>
+                        </div>
+                        <div t-elif="!this.displayedIssues.length" class="alert alert-success px-3 py-2 mb-0">
+                            <i class="oi me-2" data-icon="check"/>No issue found for preset #<t t-out="this.state.selectedPreset"/>
+                        </div>
+                        <ul t-else="" class="o_theme_colors_preview_accessibility_issues list-unstyled d-flex flex-column flex-grow-1 gap-1 mb-0">
+                            <li t-foreach="this.displayedIssues" t-as="issue" t-key="issue.key"
+                                class="alert alert-warning d-flex align-items-start gap-2 px-3 py-2 mb-0">
+                                <i class="oi flex-shrink-0 mt-1" data-icon="warning" role="img" aria-label="Warning"/>
+                                <span class="flex-grow-1">
+                                    <strong><t t-if="issue.preset">Color preset #<t t-out="issue.preset"/> - </t><t t-out="issue.label"/>, <t t-out="issue.state"/></strong>
+                                    <span class="d-block mt-1">
+                                        <t t-out="issue.rule"/>:
+                                        <span class="o_theme_colors_preview_color_swatch" t-att-style="'--color: ' + issue.foreground"/>
+                                        <code><t t-out="issue.foreground"/></code>
+                                        with
+                                        <span class="o_theme_colors_preview_color_swatch" t-att-style="'--color: ' + issue.background"/>
+                                        <code><t t-out="issue.background"/></code>
+                                        <a class="ms-1" t-att-href="issue.url" target="_blank" rel="noopener noreferrer">
+                                            WCAG <t t-out="issue.criterion"/>
+                                        </a>
+                                    </span>
+                                    <span class="d-block mt-1">
+                                        <strong><t t-out="issue.ratio"/>:1</strong>
+                                        <span class="mx-2">|</span>
+                                        <span t-att-class="issue.aaPass ? 'text-success' : 'text-danger'">
+                                            AA <i t-if="issue.aaPass" class="oi" data-icon="check" role="img" aria-label="Passed"/><i t-else="" class="oi" data-icon="close" role="img" aria-label="Failed"/>
+                                            (≥ <t t-out="issue.aaRequirement"/>:1)
+                                        </span>
+                                        <span class="mx-2">|</span>
+                                        <span t-if="issue.aaaRequirement" t-att-class="issue.aaaPass ? 'text-success' : 'text-danger'">
+                                            AAA <i t-if="issue.aaaPass" class="oi" data-icon="check" role="img" aria-label="Passed"/><i t-else="" class="oi" data-icon="close" role="img" aria-label="Failed"/>
+                                            (≥ <t t-out="issue.aaaRequirement"/>:1)
+                                        </span>
+                                        <span t-else="" class="text-muted">AAA —</span>
+                                    </span>
+                                    <span t-if="issue.suggestion" class="d-block mt-1">
+                                        Suggestion:
+                                        <span class="o_theme_colors_preview_color_swatch" t-att-style="'--color: ' + issue.currentColor"/>
+                                        <code><t t-out="issue.currentColor"/></code>
+                                        =&gt;
+                                        <span class="o_theme_colors_preview_color_swatch" t-att-style="'--color: ' + issue.suggestion"/>
+                                        <code><t t-out="issue.suggestion"/></code>
+                                        <button t-if="issue.colorVariable &amp;&amp; this.props.applyColor"
+                                            type="button" class="btn btn-sm btn-primary ms-2"
+                                            t-att-disabled="this.state.applyingKey"
+                                            t-on-click="() => this.applySuggestion(issue)">
+                                            <span t-if="this.state.applyingKey === issue.key" class="spinner-border spinner-border-sm me-1" aria-hidden="true"/>
+                                            Apply
+                                        </button>
+                                    </span>
+                                    <span t-elif="issue.noJointLinkColor" class="d-block mt-1">
+                                        Suggestion: set Link Style to <strong>Always Underline</strong><t t-if="issue.type !== 'linkIdentification'">, then adjust the link color for background contrast</t>.
+                                    </span>
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
     </Dialog>
 </t>
 
