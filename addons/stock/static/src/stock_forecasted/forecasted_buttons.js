@@ -1,23 +1,20 @@
 import { _t } from "@web/core/l10n/translation";
-import { Component, markup, t, useProps, usePlugin } from "@odoo/owl";
+import { Component, t, useProps, usePlugin } from "@odoo/owl";
 import { ActionPlugin } from "@web/webclient/actions/action_plugin";
-import { ORM } from "@web/core/orm_plugin";
+
+export const forecastedButtonsProps = {
+    context: t.object(),
+    reloadReport: t.function(),
+};
 
 export class ForecastedButtons extends Component {
     static template = "stock.ForecastedButtons";
+    static propShape = forecastedButtonsProps;
 
-    props = useProps({
-        action: t.object(),
-        resModel: t.string().optional(),
-        reloadReport: t.function(),
-    });
+    props = useProps(this.constructor.propShape);
 
     setup() {
         this.actionPlugin = usePlugin(ActionPlugin);
-        this.orm = usePlugin(ORM);
-        this.context = this.props.action.context;
-        this.productId = this.context.active_id;
-        this.resModel = this.props.resModel || this.context.active_model || this.context.params?.active_model || 'product.template';
     }
 
     /**
@@ -31,13 +28,13 @@ export class ForecastedButtons extends Component {
 
     async _onClickReplenish() {
         const context = { ...this.context };
-        if (this.resModel === 'product.product') {
+        const resModel = this.resModel;
+        if (resModel === 'product.product') {
             context.default_product_id = this.productId;
-        } else if (this.resModel === 'product.template') {
+        } else if (resModel === 'product.template') {
             context.default_product_tmpl_id = this.productId;
         }
         context.default_warehouse_id = this.context.warehouse_id;
-
         const action = {
             res_model: 'product.replenish',
             name: _t('Product Replenish'),
@@ -49,14 +46,15 @@ export class ForecastedButtons extends Component {
         return this.actionPlugin.doAction(action, { onClose: this._onClose.bind(this) });
     }
 
-    async _onClickUpdateQuantity() {
-        const action = await this.orm.call(this.resModel, "action_open_quants", [[this.productId]]);
-        if (action.res_model === "stock.quant") { // Quant view in inventory mode.
-            action.views = [[false, "list"]];
-        }
-        if (action.help) {
-            action.help = markup(action.help);
-        }
-        return this.actionPlugin.doAction(action, { onClose: this._onClose.bind(this) });
+    get context() {
+        return this.props.context;
+    }
+
+    get productId() {
+        return this.resModel === 'product.product' ? this.context.variant_id : this.context.active_id;
+    }
+
+    get resModel() {
+        return this.context.variant_id ? 'product.product' : this.context.active_model;
     }
 }

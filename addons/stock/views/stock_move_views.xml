@@ -61,6 +61,20 @@
             </field>
         </record>
 
+        <record id="stock_move_view_list_from_forecast" model="ir.ui.view">
+            <field name="name">stock.move.view.list.from.forecast</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="stock.view_move_tree"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//list" position="attributes">
+                    <attribute name="editable"/>
+                    <attribute name="action">action_open_reference</attribute>
+                    <attribute name="type">object</attribute>
+                </xpath>
+            </field>
+        </record>
+
         <record id="view_picking_move_tree" model="ir.ui.view">
             <field name="name">stock.picking.move.list</field>
             <field name="model">stock.move</field>
