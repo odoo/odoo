@@ -1452,7 +1452,7 @@ class AccountTax(models.Model):
         sorted_taxes = base_line['tax_ids']._flatten_taxes_and_sort_them()[0]
         if (
             extra_tax_data
-            and extra_tax_data.get('manual_tax_amounts')
+            and extra_tax_data.get('currency_id')
             and base_line['currency_id'].id == extra_tax_data['currency_id']
             and base_line['currency_id'].compare_amounts(base_line['price_unit'], extra_tax_data['price_unit']) == 0
             and base_line['currency_id'].compare_amounts(base_line['discount'], extra_tax_data['discount']) == 0
@@ -3279,8 +3279,6 @@ class AccountTax(models.Model):
         for base_line in base_lines:
             tax_details = base_line['tax_details']
             taxes_data = tax_details['taxes_data']
-            if not taxes_data:
-                continue
 
             base_line['manual_total_excluded_currency'] = (
                 tax_details['total_excluded_currency']
@@ -3291,6 +3289,7 @@ class AccountTax(models.Model):
                 + tax_details['delta_total_excluded']
             )
             base_line['manual_tax_amounts'] = {}
+
             for tax_data in taxes_data:
                 if tax_data['is_reverse_charge']:
                     continue
