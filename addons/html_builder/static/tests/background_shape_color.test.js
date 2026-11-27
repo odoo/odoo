@@ -19,7 +19,9 @@ const RGB_GREEN = "rgb(0, 255, 0)";
 const HEX_RED = "#ff0000";
 const HEX_BLUE = "#0000ff";
 const HEX_GREEN = "#00ff00";
+const HEX_RED_SUBTLE = "#ff1a1a";
 const HEX_O_CC_4 = "#383e45";
+const RGB_O_CC_4 = "rgb(56, 62, 69)";
 const HEX_O_CC_5 = "#f0f0f0";
 
 function getShapeTestCSS() {
@@ -164,7 +166,7 @@ test("Flipped Connections shape takes previous element's background color", asyn
     expect(shapeData.flip.includes("y")).toBe(true);
 });
 
-test("Connections shape uses contrasting color when neighbor has same background", async () => {
+test("Connections shape uses a subtle shade when neighbor has same background", async () => {
     const { waitSidebarUpdated } = await setupHTMLBuilder(
         `
         ${getNoBgShapeSection1(RGB_RED)}
@@ -179,10 +181,10 @@ test("Connections shape uses contrasting color when neighbor has same background
     expect(":iframe #section1 .o_we_shape").toHaveCount(1);
     const shapeData = JSON.parse(queryOne(":iframe #section1").dataset.oeShapeData);
     expect(shapeData.shape).toBe("html_builder/Connections/01");
-    expect(shapeData.colors.c5).toBe(HEX_O_CC_5);
+    expect(shapeData.colors.c5).toBe(HEX_RED_SUBTLE);
 });
 
-test("Connections shape takes color when neighbor has same background", async () => {
+test("Connections shape takes neighbor's color when snippet has a background image", async () => {
     onRpc("/html_editor/get_image_info", () => ({}));
     const { waitSidebarUpdated } = await setupHTMLBuilder(
         `
@@ -265,6 +267,49 @@ test("User set connections shape color don't update when neighbor background col
     await updateBgColor(":iframe #section2", "o_cc5", waitSidebarUpdated);
     const shapeData = JSON.parse(queryOne(":iframe #section1").dataset.oeShapeData);
     expect(shapeData.colors.c5).toBe(HEX_BLUE);
+});
+
+test("Connections shape keeps its original color when dropped on an empty page", async () => {
+    const originalColor = "#7145ab";
+    const { waitSidebarUpdated } = await setupHTMLBuilder("", {
+        styleContent: getShapeTestCSS(),
+        snippets: {
+            snippet_groups: [
+                `<div name="A" data-oe-snippet-id="123" data-o-snippet-group="a">
+                    <section data-snippet="s_snippet_group">
+                    </section>
+                </div>`,
+            ],
+            snippet_structure: [
+                getSnippetStructure({
+                    name: "Test",
+                    groupName: "a",
+                    content: `
+                        <section class="s_test"
+                                data-snippet="s_test"
+                                data-oe-shape-data='{"shape":"html_builder/Connections/01","colors":{"c5":"${originalColor}"}}'>
+                            <div class="o_we_shape o_html_builder_Connections_01">
+                            </div>
+                            Test
+                        </section>`,
+                }),
+            ],
+        },
+    });
+    await contains("#blocks-tab").click();
+    const { moveTo, drop } = await contains(
+        ".o_hb_snippets_menu #snippet_groups .o_snippet_thumbnail"
+    ).drag();
+    await moveTo(":iframe .oe_drop_zone");
+    await drop();
+    await confirmAddSnippet();
+    await waitSidebarUpdated();
+
+    expect(":iframe [data-snippet]").toHaveCount(1);
+    const droppedSnippet = queryOne(":iframe .s_test");
+    const droppedShapeData = JSON.parse(droppedSnippet.dataset.oeShapeData);
+    expect(droppedShapeData.colors.c5).toBe(originalColor);
+    expect(droppedShapeData.selectedColor).toBe(false);
 });
 
 test("Connections shape color updates when snippet is dropped next to it", async () => {
@@ -395,6 +440,7 @@ test("Connection shape updates when snippet background color updates", async () 
             <div class="o_we_shape o_html_builder_Connections_01"></div>
             Section 1
         </section>
+        ${getNoBgShapeSection2(RGB_O_CC_4)}
     `,
         {
             styleContent: getShapeTestCSS(),
@@ -453,6 +499,9 @@ test("Connections shape color updates even default color shape is in hexadecimal
     // background shape.
     const { waitSidebarUpdated } = await setupHTMLBuilder(
         `
+        <section id="section0" data-snippet="s_snippet">
+            Section 0
+        </section>
         <section id="section1" style="background-color: ${RGB_BLUE}" data-snippet="s_snippet"
                  data-oe-shape-data='{"shape":"html_builder/Connections/02","flip":[],"showOnMobile":false,"shapeAnimationSpeed":"0", "selectedColor":false}'>
             <div class="o_we_shape o_html_builder_Connections_02"></div>

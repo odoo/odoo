@@ -8,8 +8,8 @@ import { getDefaultColors } from "./background_shape_option";
 import { withSequence } from "@html_editor/utils/resource";
 import { getBgImageURLFromURL } from "@html_editor/utils/image";
 import { BuilderAction } from "@html_builder/core/builder_action";
-import { getHtmlStyle, getCSSVariableValue } from "@html_editor/utils/formatting";
-import { rgbToHex, isColorGradient } from "@web/core/utils/colors";
+import { getHtmlStyle } from "@html_editor/utils/formatting";
+import { rgbToHex, isColorGradient, mixCssColors } from "@web/core/utils/colors";
 import { isVisible } from "@web/core/utils/ui";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 
@@ -115,10 +115,7 @@ export class BackgroundShapeOptionPlugin extends Plugin {
         // Add the "selectedColor" key on bg shape introduced before the
         // computed background shape color feature.
         for (const bgShapeEl of selectElements(this.editable, "[data-oe-shape-data]")) {
-            const shapeData = JSON.parse(bgShapeEl.dataset.oeShapeData.replace(/'/g, '"'));
-            if (!Object.hasOwn(shapeData, "selectedColor")) {
-                this.markShape(bgShapeEl, { selectedColor: true });
-            }
+            this.markSelectedColorIfMissing(bgShapeEl, true);
         }
     }
     /**
@@ -165,6 +162,10 @@ export class BackgroundShapeOptionPlugin extends Plugin {
             !this.isShapeEligibleForComputation(shape, editingEl) ||
             !editingEl.querySelector(":scope > .o_we_shape")
         ) {
+            return;
+        }
+        if (!this.getAdjacentEl(editingEl)) {
+            this.markSelectedColorIfMissing(editingEl, false);
             return;
         }
         const newColors = this.getImplicitColors(editingEl, shape, colors);
@@ -504,6 +505,18 @@ export class BackgroundShapeOptionPlugin extends Plugin {
         }
     }
     /**
+     * Stores the color selection state of a shape if it does not have one yet.
+     *
+     * @param {HTMLElement} editingElement
+     * @param {Boolean} selectedColor
+     */
+    markSelectedColorIfMissing(editingElement, selectedColor) {
+        const shapeData = JSON.parse(editingElement.dataset.oeShapeData.replace(/'/g, '"'));
+        if (!Object.hasOwn(shapeData, "selectedColor")) {
+            this.markShape(editingElement, { selectedColor });
+        }
+    }
+    /**
      *
      * @param {HTMLElement} shapeEl
      */
@@ -591,25 +604,32 @@ export class BackgroundShapeOptionPlugin extends Plugin {
             };
         }
         const neighborEl = this.getAdjacentEl(editingElement);
-        const neighborBgColor = neighborEl && getComputedStyle(neighborEl).backgroundColor;
+        const neighborStyle = neighborEl && getComputedStyle(neighborEl);
+        const neighborBgColor = neighborStyle?.backgroundColor;
         const hasNeighborTransparency = neighborBgColor?.match(/rgba/);
-        const computedHexColor =
-            neighborEl &&
-            !isColorGradient(getComputedStyle(neighborEl).backgroundImage) &&
+        const neighborBgHexColor =
+            neighborStyle &&
+            !isColorGradient(neighborStyle.backgroundImage) &&
             !hasNeighborTransparency
                 ? rgbToHex(neighborBgColor)
-                : Object.values(defaultColors)[0]?.toLowerCase();
+                : undefined;
+        const computedHexColor =
+            neighborBgHexColor ?? Object.values(defaultColors)[0]?.toLowerCase();
         const curBgHexColor = rgbToHex(getComputedStyle(editingElement).backgroundColor);
+        const ignoreBackgroundColor = this.checkPredicates(
+            "should_ignore_background_color_for_shapes_predicates",
+            editingElement
+        );
+
+        let shapeHexColor = computedHexColor;
+        if (curBgHexColor === computedHexColor && !ignoreBackgroundColor) {
+            // The shape would blend into the snippet: use a subtle shade of its background.
+            const overlayColor = this.getLuminance(curBgHexColor) > 127.5 ? "#000000" : "#ffffff";
+            shapeHexColor = mixCssColors(overlayColor, curBgHexColor, 0.1).toLowerCase();
+        }
 
         return {
-            [defaultKey]:
-                curBgHexColor !== computedHexColor ||
-                this.checkPredicates(
-                    "should_ignore_background_color_for_shapes_predicates",
-                    editingElement
-                )
-                    ? computedHexColor
-                    : this.getContrastingColor(computedHexColor),
+            [defaultKey]: shapeHexColor,
         };
     }
 
@@ -635,34 +655,6 @@ export class BackgroundShapeOptionPlugin extends Plugin {
         const g = parseInt(hexColor.slice(3, 5), 16);
         const b = parseInt(hexColor.slice(5), 16);
         return 0.2126 * r + 0.7152 * g + 0.0722 * b;
-    }
-    /**
-     * Return the color of the current theme with the most contrast compared to
-     * the given color.
-     *
-     */
-    getContrastingColor(baseColor) {
-        const baseLuminance = this.getLuminance(baseColor);
-
-        const htmlStyle = getHtmlStyle(this.document);
-        const colors = ["o-color-1", "o-color-2", "o-color-3", "o-color-4", "o-color-5"];
-        const luminances = colors.map((color) => {
-            const colorValue = getCSSVariableValue(color, htmlStyle);
-            return { color, luminance: this.getLuminance(colorValue) };
-        });
-
-        let bestContrast;
-        let maxDifference = 0;
-
-        for (const { color, luminance } of luminances) {
-            const difference = Math.abs(baseLuminance - luminance);
-            if (difference > maxDifference) {
-                maxDifference = difference;
-                bestContrast = color;
-            }
-        }
-
-        return getCSSVariableValue(bestContrast, htmlStyle).toLowerCase();
     }
     /**
      * Returns the neighboring snippets that contains a shape element.
