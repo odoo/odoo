@@ -1081,6 +1081,45 @@ class TestExpenses(TestExpenseCommon):
         expense_state = Expense.get_expense_dashboard()
         self.assertEqual(expense_state['to_submit']['amount'], 3000.00)
 
+    def test_company_expense_foreign_currency_tax_round_globally(self):
+        jpy = self.env.ref('base.JPY')
+        jpy.active = True
+        usd = self.env.ref('base.USD')
+        company = self.setup_company_data('JPY Company', currency_id=jpy.id, tax_calculation_rounding_method='round_globally')['company']
+        self.env['res.currency.rate'].create({'name': '2022-01-01', 'rate': 1 / 157.24, 'currency_id': usd.id, 'company_id': company.id})
+        self.expense_employee.company_id = company
+        tax = self.env['account.tax'].create({
+            'name': 'Tax 10% included',
+            'amount': 10,
+            'type_tax_use': 'purchase',
+            'price_include': True,
+            'company_id': company.id,
+        })
+        expense_sheet = self.env['hr.expense.sheet'].with_company(company).create({
+            'name': 'Company expense in USD',
+            'employee_id': self.expense_employee.id,
+            'company_id': company.id,
+            'expense_line_ids': [Command.create({
+                'name': 'Company expense',
+                'date': '2022-11-17',
+                'total_amount_currency': 27.5,
+                'payment_mode': 'company_account',
+                'employee_id': self.expense_employee.id,
+                'product_id': self.product_c.id,
+                'currency_id': usd.id,
+                'company_id': company.id,
+                'tax_ids': [Command.set(tax.ids)],
+            })],
+        })
+        expense_sheet.action_submit_sheet()
+        expense_sheet.action_approve_expense_sheets()
+        expense_sheet.action_sheet_move_create()
+        self.assertRecordValues(expense_sheet.account_move_ids.line_ids.sorted('balance'), [
+            {'balance': -4324.0, 'amount_currency': -27.5},
+            {'balance': 393.0, 'amount_currency': 2.5},
+            {'balance': 3931.0, 'amount_currency': 25.0},
+        ])
+
     def test_expense_mandatory_analytic_plan_product_category(self):
         """
         Check that when an analytic plan has a mandatory applicability matching
