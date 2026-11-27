@@ -39,19 +39,29 @@
         <field name="model">l10n_pt.at.series</field>
         <field name="inherit_id" ref="l10n_pt_certification.view_l10n_pt_at_series_form"/>
         <field name="arch" type="xml">
-            <field name="at_code" position="after">
-                <!-- A full row: a single cell would shift the next field's label into the value column. -->
+            <!-- Register sits beside the validation code it fills. -->
+            <field name="at_code" position="before">
+                <label for="at_code"/>
+                <div class="o_row" name="at_code_row"/>
+            </field>
+            <div name="at_code_row" position="inside">
+                <field name="at_code" position="move"/>
                 <button name="action_register_at_series" type="object"
-                        string="Register" class="btn-link" colspan="2"
+                        string="Register" class="btn-link"
                         groups="account.group_account_manager"
                         invisible="at_code or l10n_pt_at_ws_offline or l10n_pt_at_ws_annulment_date"
                         icon="fa-refresh"
                         help="Communicate this series to the Autoridade Tributária and retrieve the validation code."/>
+            </div>
+            <field name="at_code" position="attributes">
+                <attribute name="nolabel">1</attribute>
+            </field>
+            <div name="at_code_row" position="after">
                 <field name="l10n_pt_at_ws_error" invisible="at_code or not l10n_pt_at_ws_error" decoration-warning="1"/>
                 <field name="l10n_pt_at_ws_registration_date" invisible="not l10n_pt_at_ws_registration_date"/>
                 <field name="l10n_pt_at_ws_annulment_date" invisible="not l10n_pt_at_ws_annulment_date"/>
                 <field name="l10n_pt_at_ws_finalization_date" invisible="not l10n_pt_at_ws_finalization_date"/>
-            </field>
+            </div>
         </field>
     </record>
 </odoo>
