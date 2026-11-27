@@ -1,4 +1,5 @@
 from collections import Counter
+from freezegun import freeze_time
 from unittest.mock import patch
 
 from lxml import etree
@@ -1127,6 +1128,50 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
         self.assertEqual(len(invoices), 1)
         self.assertEqual(invoices[0].findtext('ID'), bill.name)
         self.assertEqual(invoices[0].findtext('TypeCode'), '380')
+
+    @freeze_time('2025-10-23')
+    def test_vendor_bill_is_reported_in_invoice_date_period(self):
+        # The accounting date of a vendor bill registered after its month is pushed to the end of the month.
+        bill = self._create_invoice_one_line(
+            move_type='in_invoice',
+            partner_id=self.b2bi_customer,
+            product_id=self.product_a,
+            tax_ids=self._get_purchase_tax_on_payment(),
+            invoice_date='2025-09-05',
+            date='2025-09-30',
+            post=True,
+        )
+        flow = bill.l10n_fr_pdp_last_flow_id
+
+        self.assertRecordValues(flow, [{
+            'period_start': fields.Date.to_date('2025-09-01'),
+            'period_end': fields.Date.to_date('2025-09-10'),
+            'operation_type': 'purchase',
+            'period_status': 'closed',
+            'initial_flow_id': False,
+        }])
+        self.assertIn(bill, flow._get_moves())
+        xml = self._build_flow_xml(flow)
+        self.assertEqual(xml.findtext('./ReportDocument/TypeCode'), 'IN')
+        self.assertEqual(xml.findtext('./TransactionsReport/Invoice/IssueDate'), '20250905')
+
+        payment_flow = self._register_payment(bill, '2025-10-15').move_id.l10n_fr_pdp_last_flow_id
+        xml = self._build_flow_xml(payment_flow)
+        self.assertEqual(xml.findtext('./PaymentsReport/Invoice/IssueDate'), '20250905')
+
+    def test_b2c_invoice_is_aggregated_on_its_invoice_date(self):
+        # The accounting date of an invoice is pushed after the tax lock date.
+        invoice = self._create_invoice_one_line(
+            partner_id=self.b2c_customer,
+            product_id=self.product_a,
+            invoice_date='2025-09-05',
+            date='2025-09-30',
+            post=True,
+        )
+        flow = invoice.l10n_fr_pdp_last_flow_id
+
+        xml = self._build_flow_xml(flow)
+        self.assertEqual(xml.findtext('./TransactionsReport/Transactions/Date'), '20250905')
 
     def test_invoice_type_codes(self):
         builder = self.env['pdp.flow.10.xml.builder']
