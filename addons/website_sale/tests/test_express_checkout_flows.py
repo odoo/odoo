@@ -103,20 +103,20 @@ class TestWebsiteSaleExpressCheckoutFlows(HttpCaseWithUserDemo):
             JS reloads the page and shows a warning.
         """
         company = self.env.company
-        country = company.country_id or self.env.ref('base.be')
+        tax_group = self.env['account.tax.group'].create({'name': 'Test Express Checkout'})
 
         domestic_tax = self.env['account.tax'].create({
             'name': 'Test Domestic Sale 21%',
             'amount': 21.0,
             'type_tax_use': 'sale',
-            'country_id': country.id,
+            'tax_group_id': tax_group.id,
             'company_id': company.id,
         })
         ec_tax = self.env['account.tax'].create({
             'name': 'Test EC Sale 0%',
             'amount': 0.0,
             'type_tax_use': 'sale',
-            'country_id': country.id,
+            'tax_group_id': tax_group.id,
             'company_id': company.id,
         })
         # Fiscal position that maps the domestic tax to the 0% EC tax, as a
