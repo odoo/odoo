@@ -20,6 +20,7 @@ export class GalleryElementOption extends BaseOptionComponent {
     static id = "gallery_element_option";
     static template = "website.GalleryElementOption";
 
+
     setup() {
         super.setup();
         this.state = useDomState((editingElement) => {
