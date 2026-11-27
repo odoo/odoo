@@ -198,12 +198,13 @@ class MailController(http.Controller):
         # received by mail with a message_id no longer work.
         # So this block of code is needed to guarantee the backward compatibility of those links.
         if kwargs.get('message_id'):
+            message_id = False
             try:
-                message = request.env['mail.message'].sudo().browse(int(kwargs['message_id'])).exists()
-            except:
-                message = request.env['mail.message']
-            if message:
-                model, res_id = message.model, message.res_id
+                message_id = int(kwargs['message_id'])
+            except ValueError:
+                pass
+            if message_id:
+                return request.redirect(f'/mail/message/{message_id}')
         # ==============================================================================================
 
         if res_id and isinstance(res_id, str):
