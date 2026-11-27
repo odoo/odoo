@@ -1320,7 +1320,8 @@ class HrLeave(models.Model):
             days_start = leave._to_utc(leave.request_date_from, 0, leave.employee_id).replace(tzinfo=UTC)
             days_end = leave._to_utc(leave.request_date_to + timedelta(days=1), 0, leave.employee_id).replace(tzinfo=UTC)
             worked_hours = calendar.get_work_hours_count(days_start, days_end, compute_leaves=compute_leaves)
-            if leave._plans_hours_on_the_clock(worked_hours):
+            flexible_day = calendar._is_flexible() and leave.request_date_from == leave.request_date_to
+            if flexible_day or leave._plans_hours_on_the_clock(worked_hours):
                 request_date_hour_to = leave.date_from + relativedelta(hours=leave.number_of_hours)
             else:
                 request_date_hour_to = calendar.plan_hours(
