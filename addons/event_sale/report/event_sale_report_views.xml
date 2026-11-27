@@ -4,9 +4,10 @@
         <field name="name">event.sale.report.view.graph</field>
         <field name="model">event.sale.report</field>
         <field name="arch" type="xml">
-            <graph string="Revenues" sample="1" type="line">
-                <field name="sale_price" type="measure"/>
-                <field name="event_registration_create_date" interval="day"/>
+            <graph string="Revenues" sample="1">
+                <field name="event_date_begin" interval="month"/>
+                <field name="event_type_id"/>
+                <field name="sale_price_untaxed" type="measure"/>
                 <field name="event_ticket_price" type="measure" invisible="True"/>
             </graph>
         </field>
@@ -111,6 +112,8 @@
                 <filter string="Event Start Date" name="event_date_start" date="event_date_begin" default_period="year"/>
                 <filter string="Event End Date" name="event_date_end" date="event_date_end"/>
                 <group>
+                    <filter string="Event Start Date" name="group_by_event_date_begin"
+                            context="{'group_by': 'event_date_begin:month'}"/>
                     <filter string="Event Type" name="group_by_event_type_id" context="{'group_by': 'event_type_id' }"/>
                     <filter string="Event" name="group_by_event_id" context="{'group_by': 'event_id' }"/>
                     <separator/>
@@ -133,8 +136,10 @@
         <field name="res_model">event.sale.report</field>
         <field name="view_mode">graph,pivot</field>
         <field name="context">{
-            'search_default_priced_tickets': 1,
+            'search_default_is_sold': 1,
             'search_default_event_date_start': 1,
+            'search_default_group_by_event_date_begin': 1,
+            'search_default_group_by_event_type_id': 2,
             'pivot_measures': ['__count__', 'sale_price_untaxed', 'sale_price'],
         }</field>
         <field name="help" type="html">
