@@ -187,6 +187,11 @@ def local_name(node):
     return etree.QName(node).localname if isinstance(node.tag, str) else None
 
 
+def is_in_svg(node):
+    """ Return whether ``node`` is an element of an inline SVG. """
+    return any(local_name(elem) == 'svg' for elem in (node, *node.iterancestors()))
+
+
 def translate_xml_node(node, callback, parse, serialize):
     """ Return the translation of the given XML/HTML node.
 
@@ -295,6 +300,12 @@ def translate_xml_node(node, callback, parse, serialize):
                     if namespace:
                         for elem in result_elem.iterdescendants(tag=etree.Element):
                             elem.tag = etree.QName(namespace, elem.tag).text
+                    if is_in_svg(node):
+                        # HTML elements are invalid in an SVG: e.g. the <span>
+                        # wrapping a term in translation mode becomes a <tspan>
+                        for elem in result_elem.iterdescendants(tag=etree.Element):
+                            if local_name(elem) == 'span':
+                                elem.tag = etree.QName(etree.QName(elem).namespace, 'tspan').text
                     if translatable(result_elem) and hastext(result_elem):
                         div = result_elem
                         if pos:

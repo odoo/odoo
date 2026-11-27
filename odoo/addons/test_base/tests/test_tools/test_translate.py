@@ -7,6 +7,7 @@ import time
 from hashlib import sha256
 from unittest.mock import patch
 
+from lxml import etree
 from markupsafe import Markup
 from psycopg2.extras import Json
 
@@ -330,6 +331,21 @@ class TranslationToolsTestCase(BaseCase):
                 }
                 result = xml_translate(translations.get, source)
                 self.assertEqual(result, source.replace('Pay <', 'Payer <').replace('>now<', '>vite<').replace('Receive', 'Recevoir'))
+
+    def test_translate_xml_svg_wrapper(self):
+        """ Test that a <span> wrapping a term (e.g. in translation mode)
+            becomes a <tspan> in an inline SVG, where HTML elements are invalid.
+        """
+        def wrap(term):
+            return f'<span data-oe-translation-state="to_translate">{term}</span>'
+
+        for xmlns in ('', ' xmlns="http://www.w3.org/2000/svg"'):
+            with self.subTest(xmlns=xmlns):
+                source = f"""<div><p>Hello</p><svg{xmlns}><text x="0" y="15">Pay <tspan font-weight="bold">now</tspan></text></svg></div>"""
+                self.assertEqual(
+                    xml_translate(wrap, source),
+                    f"""<div><p><span data-oe-translation-state="to_translate">Hello</span></p><svg{xmlns}><text x="0" y="15"><tspan data-oe-translation-state="to_translate">Pay <tspan font-weight="bold">now</tspan></tspan></text></svg></div>""",
+                )
 
     def test_translate_xml_invalid_translations(self):
         """ Test xml_translate() with invalid translations. """
@@ -1326,6 +1342,40 @@ class TestXMLTranslation(TransactionCase):
                 view.with_env(env_en).write({'arch_db': archf % terms_en})
                 self.assertEqual(view.with_env(env_en).arch_db, archf % terms_en)
                 self.assertEqual(view.with_env(env_fr).arch_db, archf % terms_fr)
+
+    def test_svg_edit_translations(self):
+        """ Translate the text of an SVG as in the website translate mode: the
+            term is wrapped in a <tspan> to edit, and only the content of this
+            wrapper is saved, so the translated arch has no wrapper but keeps
+            the other <tspan> elements.
+        """
+        archf = (
+            '<form string="X"><div><svg>'
+            '<text x="0" y="15">%s</text>'
+            '</svg></div></form>'
+        )
+        term_en = 'Pay <tspan font-weight="bold">now</tspan>'
+        term_fr = 'Payer <tspan font-weight="bold">vite</tspan>'
+        view = self.create_view(archf, (term_en,), fr_FR=(term_en,))
+        field = view._fields['arch_db']
+
+        # read in translate mode: the term is wrapped in a <tspan>
+        arch_edit = view.with_context(lang='fr_FR', edit_translations=True).arch_db
+        text = etree.fromstring(arch_edit).find('.//text')
+        [wrapper] = text
+        self.assertEqual(wrapper.tag, 'tspan')
+        sha = wrapper.get('data-oe-translation-source-sha')
+        self.assertTrue(sha)
+
+        # save the content of the wrapper, as /website/field/translation/update
+        view._update_field_translations(
+            'arch_db',
+            {'fr_FR': {sha: field.translate.term_converter(term_fr)}},
+            lambda old_term: sha256(old_term.encode()).hexdigest(),
+            source_lang='en_US',
+        )
+        self.assertEqual(view.with_context(lang='fr_FR').arch_db, archf % term_fr)
+        self.assertEqual(view.with_context(lang='en_US').arch_db, archf % term_en)
 
     def test_sync_xml(self):
         """ Check translations of 'arch' after xml tags changes in source terms. """

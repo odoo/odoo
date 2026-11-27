@@ -31,3 +31,13 @@ html[data-edit_translations="1"] {
         display: none !important;
     }
 }
+
+/* The texts of an inline SVG have no background: underline them instead. */
+html[lang] > body.editor_enable tspan[data-oe-translation-state] {
+    --text-translate-highlight-color: var(--o-we-content-to-translate-color);
+    text-decoration: underline 3px var(--text-translate-highlight-color);
+
+    &[data-oe-translation-state="translated"], &.o_dirty {
+        --text-translate-highlight-color: var(--o-we-translated-content-color);
+    }
+}
