@@ -1799,6 +1799,89 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
         xml = self._build_flow_xml(rectificative_flow)
         self.assertEqual(xml.findtext('./ReportDocument/TypeCode'), 'RE')
 
+    def test_identical_rectificative_flow_is_deleted_by_cron(self):
+        invoice = self._create_reporting_invoice(
+            partner=self.b2bi_customer,
+            invoice_date='2025-09-03',
+        )
+        initial_flow = invoice.l10n_fr_pdp_last_flow_id
+        self._run_send_cron('2025-09-20', identifier='FLOW-INITIAL-SENT')
+
+        # Nothing used in the e-reporting changes.
+        invoice.button_draft()
+        invoice.action_post()
+        rectificative_flow = invoice.l10n_fr_pdp_last_flow_id
+        self.assertEqual(rectificative_flow.initial_flow_id, initial_flow)
+
+        self._run_send_cron('2025-09-21', identifier='FLOW-RECTIFICATIVE')
+
+        self.assertFalse(rectificative_flow.exists())
+        self.assertRecordValues(invoice, [{
+            'l10n_fr_pdp_last_flow_id': initial_flow.id,
+            'l10n_fr_pdp_sent_in_flow_ids': initial_flow.ids,
+        }])
+
+    def test_changed_rectificative_flow_is_sent_by_cron(self):
+        invoice = self._create_reporting_invoice(
+            partner=self.b2bi_customer,
+            invoice_date='2025-09-03',
+        )
+        self._run_send_cron('2025-09-20', identifier='FLOW-INITIAL-SENT')
+
+        invoice.button_draft()
+        invoice.invoice_line_ids.price_unit = 250.0
+        invoice.action_post()
+        rectificative_flow = invoice.l10n_fr_pdp_last_flow_id
+
+        self._run_send_cron('2025-09-21', identifier='FLOW-RECTIFICATIVE')
+
+        self.assertRecordValues(rectificative_flow, [{'state': 'sent'}])
+
+    def test_cancelled_rectificative_flow_is_sent_by_cron(self):
+        invoice = self._create_reporting_invoice(
+            partner=self.b2bi_customer,
+            invoice_date='2025-09-03',
+        )
+        self._create_reporting_invoice(
+            partner=self.b2bi_customer,
+            invoice_date='2025-09-04',
+        )
+        initial_flow = invoice.l10n_fr_pdp_last_flow_id
+        self._run_send_cron('2025-09-20', identifier='FLOW-INITIAL-SENT')
+
+        invoice.button_draft()
+        invoice.button_cancel()
+        rectificative_flow = initial_flow.rectificative_flow_ids
+        self.assertTrue(rectificative_flow)
+
+        self._run_send_cron('2025-09-21', identifier='FLOW-RECTIFICATIVE')
+
+        self.assertRecordValues(rectificative_flow, [{'state': 'sent'}])
+
+    def test_empty_initial_flow_is_deleted_by_cron(self):
+        invoice = self._create_reporting_invoice(
+            partner=self.b2bi_customer,
+            invoice_date='2025-09-03',
+        )
+        flow = invoice.l10n_fr_pdp_last_flow_id
+        invoice.button_cancel()
+
+        self._run_send_cron('2025-09-20', identifier='FLOW-EMPTY')
+
+        self.assertFalse(flow.exists())
+
+        # Nothing was sent for the period: a backdated invoice goes in a new initial flow.
+        late_invoice = self._create_reporting_invoice(
+            partner=self.b2bi_customer,
+            invoice_date='2025-09-05',
+        )
+        new_flow = late_invoice.l10n_fr_pdp_last_flow_id
+        self.assertRecordValues(new_flow, [{
+            'period_start': fields.Date.to_date('2025-09-01'),
+            'initial_flow_id': False,
+            'state': 'ready',
+        }])
+
     def test_payment_on_sent_invoice_does_not_create_rectificative_flow(self):
         invoice = self._create_reporting_invoice(
             partner=self.b2c_customer,
