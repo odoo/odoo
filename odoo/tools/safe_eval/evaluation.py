@@ -385,6 +385,22 @@ _BUBBLEUP_EXCEPTIONS = (
 )
 
 
+@functools.lru_cache(maxsize=4096)
+def _compile_valid_codeobj(expr, filename, mode, policy):
+    """ Compile ``expr`` with :func:`compile_codeobj` and validate it with
+    :func:`assert_valid_codeobj`, cached as the same expressions are evaluated
+    again and again (salary rules, domains, server actions...).
+
+    The code object is immutable and only depends on the arguments: ``policy``
+    (the current :func:`unsafe_policy`) is not used here, it is part of the
+    cache key because :func:`compile_codeobj` compiles differently for each
+    policy. Invalid expressions raise, so they are never cached.
+    """
+    code_obj = compile_codeobj(expr, filename=filename, mode=mode)
+    assert_valid_codeobj(_SAFE_OPCODES, code_obj, expr)
+    return code_obj
+
+
 def safe_eval(expr, /, context=None, *, mode="eval", filename=None):
     """System-restricted Python expression evaluation
 
@@ -424,8 +440,7 @@ def safe_eval(expr, /, context=None, *, mode="eval", filename=None):
         __builtins__=dict(_BUILTINS),
     )
 
-    c = compile_codeobj(expr, filename=filename, mode=mode)
-    assert_valid_codeobj(_SAFE_OPCODES, c, expr)
+    c = _compile_valid_codeobj(expr, filename, mode, unsafe_policy())
     try:
         # empty locals dict makes the eval behave like top-level code
         return unsafe_eval(c, globals_dict, None)
