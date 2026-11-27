@@ -15,6 +15,15 @@
                     class="btn-secondary"/>
             </xpath>
             <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_payment_transaction"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="currency_exchange"
+                    invisible="not payment_transaction_id">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Transaction</span>
+                    </div>
+                </button>
                 <button name="action_view_refunds"
                     type="object"
                     class="oe_stat_button"
@@ -25,7 +34,7 @@
             </xpath>
             <xpath expr='//group[2]' position="inside">
                 <field name="source_payment_id" invisible="not source_payment_id"/>
-                <field name="payment_transaction_id" groups="base.group_no_one" invisible="not use_electronic_payment_method"/>
+                <field name="payment_transaction_id" invisible="1"/>
             </xpath>
             <field name="payment_method_line_id" position="after">
                 <field name="payment_token_id" options="{'no_create': True}"

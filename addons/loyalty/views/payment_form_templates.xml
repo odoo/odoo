@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Inline form of the gift card provider: the customer enters the code of their card. -->
+    <template id="payment_gift_card_inline_form">
+        <div name="o_loyalty_gift_card_form" class="d-flex flex-column gap-1 mt-1">
+            <label t-attf-for="o_loyalty_gift_card_code_{{provider_id}}" class="small mb-0">
+                Code
+            </label>
+            <div class="input-group">
+                <input t-attf-id="o_loyalty_gift_card_code_{{provider_id}}"
+                       name="o_loyalty_gift_card_code"
+                       type="text"
+                       class="form-control"
+                       placeholder="Gift Card Code"
+                       autocomplete="off"
+                />
+                <button name="o_loyalty_gift_card_apply"
+                        type="button"
+                        class="btn btn-primary"
+                >
+                    Apply
+                </button>
+            </div>
+            <div name="o_loyalty_gift_card_error" class="small text-danger d-none"/>
+        </div>
+    </template>
+
+    <template id="payment_method_form" inherit_id="payment.method_form">
+        <xpath expr="//t[@t-set='hide_secured_by']" position="attributes">
+            <attribute name="t-value" separator=" "
+                       add="or provider_sudo.code in ('gift_card', 'ewallet')"/>
+        </xpath>
+        <!-- Display the card that will be used to pay and the amount it covers. -->
+        <xpath expr="//div[hasclass('gap-1', 'flex-wrap', 'd-flex')]" position="before">
+            <t t-if="provider_sudo.code in ('gift_card', 'ewallet')">
+                <t t-set="loyalty_cards_values"
+                   t-value="provider_sudo._get_loyalty_payment_cards_values(partner_id, amount, currency)"
+                />
+                <t t-set="loyalty_card_values" t-value="loyalty_cards_values[:1] and loyalty_cards_values[0] or {}"/>
+                <div name="o_loyalty_payment_info"
+                     class="d-flex align-items-center gap-3"
+                     t-att-data-card-id="loyalty_card_values.get('id')"
+                     t-att-data-amount="loyalty_card_values.get('amount')"
+                     t-att-data-amount-formatted="loyalty_card_values.get('amount_formatted')"
+                >
+                    <select t-if="len(loyalty_cards_values) &gt; 1"
+                            name="o_loyalty_card_select"
+                            class="form-select form-select-sm w-auto text-muted"
+                            aria-label="eWallet"
+                    >
+                        <option t-foreach="loyalty_cards_values"
+                                t-as="card_values"
+                                t-att-value="card_values['id']"
+                                t-att-data-amount="card_values['amount']"
+                                t-att-data-amount-formatted="card_values['amount_formatted']"
+                                t-out="card_values['code']"
+                        />
+                    </select>
+                    <span t-else=""
+                          name="o_loyalty_card_code"
+                          class="small text-muted text-break"
+                          t-out="loyalty_card_values.get('code') or ''"
+                    />
+                    <span name="o_loyalty_amount"
+                          class="fw-bold text-nowrap"
+                          t-out="loyalty_card_values.get('amount_formatted') or ''"
+                    />
+                </div>
+            </t>
+        </xpath>
+    </template>
+
+</odoo>

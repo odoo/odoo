@@ -4,3 +4,7 @@ sale_loyalty_card_company_rule,Loyalty card multi company rule,loyalty.card,,cru
 loyalty_history_company_rule,Loyalty history multi company rule,loyalty.history,,crud,"['|', ('company_id', 'in', company_ids + [False]), ('company_id', 'parent_of', company_ids)]"
 sale_loyalty_rule_company_rule,Loyalty rule multi company rule,loyalty.rule,,crud,"['|', ('company_id', 'in', company_ids + [False]), ('company_id', 'parent_of', company_ids)]"
 sale_loyalty_reward_company_rule,Loyalty reward multi company rule,loyalty.reward,,crud,"['|', ('company_id', 'in', company_ids + [False]), ('company_id', 'parent_of', company_ids)]"
+access_loyalty_program_invoice,Loyalty Program (Invoicing),loyalty.program,account.group_account_invoice,r,
+access_loyalty_card_invoice,Loyalty Card (Invoicing),loyalty.card,account.group_account_invoice,r,
+access_loyalty_reward_invoice,Loyalty Reward (Invoicing),loyalty.reward,account.group_account_invoice,r,
+access_loyalty_history_invoice,Loyalty History (Invoicing),loyalty.history,account.group_account_invoice,r,

@@ -80,7 +80,8 @@ class TestLoyaltyDeliveryCost(common.TransactionCase):
         gift_card = program_gift_card.coupon_ids[0]
 
         order = self.order
-        self._apply_promo_code(order, gift_card.code)
+        # Gift cards are payment methods: they can't reduce the order amount.
+        self.assertIn("error", order._try_apply_code(gift_card.code))
         order.action_confirm()
 
         delivery_wizard = Form(
