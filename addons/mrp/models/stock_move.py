@@ -76,7 +76,9 @@ class StockMove(models.Model):
     def _compute_location_id(self):
         ids_to_super = set()
         for move in self:
-            if move.production_id:
+            if move.is_scrap:
+                ids_to_super.add(move.id)
+            elif move.production_id:
                 move.location_id = move.product_id.with_company(move.company_id).property_stock_production.id
             elif move.raw_material_production_id:
                 move.location_id = move.raw_material_production_id.location_src_id

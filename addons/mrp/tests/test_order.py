@@ -2079,6 +2079,26 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         warning = scrap.onchange({'lot_ids': [Command.link(sn2.id)]}, ['lot_ids'], {'lot_ids': {'context': {}}})
         self.assertIn('Unavailable Serial numbers. Please correct the serial numbers encoded', warning.get('warning', {}).get('message'))
 
+    def test_scrap_finished_product_from_done_mo(self):
+        """ Check that Scrapping a finished product from a done MO take it from the
+        MO's destination location (where the produced units are).
+        """
+        mo, _, p_final, _, _ = self.generate_mo(qty_final=2)
+        mo.button_mark_done()
+        self.assertEqual(mo.state, 'done')
+
+        scrap_form = Form.from_action(self.env, mo.action_scrap())
+        scrap_form.product_id = p_final
+        scrap_form.quantity = 1
+        scrap_move = scrap_form.save()
+        scrap_move.action_scrap()
+
+        self.assertRecordValues(scrap_move, [{
+            'state': 'done',
+            'production_id': mo.id,
+            'location_id': mo.location_dest_id.id,
+        }])
+
     def test_mo_assign_producing_lot(self):
         """ Checks that in an MO tracked by Lot the reservations of the raws are not
         modified if a LOT is assigned manually in the Form.
