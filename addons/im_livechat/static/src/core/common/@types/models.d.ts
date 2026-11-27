@@ -36,6 +36,8 @@ declare module "models" {
         chatbot_current_step_id: ChatbotScriptStep;
         chatbotTriggerFailedError: import("@web/core/network/rpc").RPCError|import("@web/core/network/rpc").ConnectionLostError|import("@web/core/network/rpc").ConnectionAbortedError|undefined;
         country_id: Country;
+        hasActiveChatbot: Readonly<boolean>;
+        isLastCommentFromVisitor: Readonly<boolean>;
         livechat_agent_history_ids: LivechatChannelMemberHistory[];
         livechat_bot_history_ids: LivechatChannelMemberHistory[];
         livechat_channel_id: LivechatChannel;
@@ -49,6 +51,7 @@ declare module "models" {
         livechat_note: ReturnType<typeof import("@odoo/owl").markup>|string;
         livechat_operator_id: ResPartner;
         livechat_outcome: string|undefined;
+        livechat_rating: "1"|"3"|"5"|false|undefined;
         livechat_status: "in_progress"|"need_help"|undefined;
         livechatNoteText: string|undefined;
         livechatShouldAskLeaveConfirmation: Readonly<boolean>;

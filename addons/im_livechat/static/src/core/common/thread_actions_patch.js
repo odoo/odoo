@@ -4,7 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 
 patch(ThreadAction.prototype, {
-    _condition({ action, channel, store }) {
+    _condition({ action, channel }) {
         const visitorActions = [
             "fold-chat-window",
             "close",
@@ -16,7 +16,7 @@ patch(ThreadAction.prototype, {
         ];
         if (
             channel?.channel_type === "livechat" &&
-            store.self_user?.share !== false &&
+            channel.selfMemberType === "visitor" &&
             !visitorActions.includes(action.id)
         ) {
             return false;
