@@ -1,0 +1,25 @@
+{
+    'name': "France - PDP E-reporting",
+    'version': '1.0',
+    'category': 'Accounting/Localizations/Reporting',
+    'summary': 'PDP Flux 10 e-reporting flow for France',
+    'author': 'Odoo',
+    'depends': [
+        'l10n_fr',
+        'mail',
+    ],
+    'data': [
+        'security/ir.model.access.csv',
+        'data/pdp_cron.xml',
+        'data/flux10_transaction_report_template.xml',
+        'views/res_company_views.xml',
+        'views/account_move_views.xml',
+        'views/pdp_flow_views.xml',
+        'views/account_dashboard_pdp.xml',
+        'views/pdp_send_wizard_views.xml',
+    ],
+    'installable': True,
+    'auto_install': True,
+    'license': 'LGPL-3',
+    'post_init_hook': 'post_init_hook',
+}
