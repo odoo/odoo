@@ -3,10 +3,12 @@ import { registry } from "@web/core/registry";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { useService } from "@web/core/utils/hooks";
-import { Component, onMounted, useProps, t } from "@odoo/owl";
-import { ask } from "@point_of_sale/app/utils/make_awaitable_dialog";
+import { Component, onMounted, onWillUnmount, signal, useEffect, useProps, t } from "@odoo/owl";
 import { useRouterParamsChecker } from "@point_of_sale/app/hooks/pos_router_hook";
-import { PriceFormatter } from "@point_of_sale/app/components/price_formatter/price_formatter";
+import {
+    TipSelector,
+    confirmLargeTip,
+} from "@point_of_sale/app/components/tip_selector/tip_selector";
 
 export class TipScreen extends Component {
     static template = "point_of_sale.TipScreen";
@@ -14,9 +16,7 @@ export class TipScreen extends Component {
         orderUuid: t.string(),
         finalizeValidation: t.function().optional(),
     });
-    static components = {
-        PriceFormatter,
-    };
+    static components = { TipSelector };
     setup() {
         this.pos = usePos();
         this.dialog = useService("dialog");
@@ -31,13 +31,133 @@ export class TipScreen extends Component {
             return;
         }
 
+        this.displayConfirmation = signal(null);
+        this.isSettling = signal(false);
+        this.settlePromise = null;
+
+        const stopListening = this.pos.customerDisplay.onAction("tip", (action) =>
+            this.onCustomerDisplayAction(action)
+        );
+
+        useEffect(() => {
+            this.pos.customerDisplay.send({ tipScreen: this.customerDisplayPayload });
+        });
+
+        onWillUnmount(() => {
+            stopListening();
+            this.resolveDisplayConfirmation(false);
+            this.pos.customerDisplay.send({ tipScreen: false });
+        });
+
         onMounted(async () => {
             await this.printTipReceipt();
         });
     }
 
+    get customerDisplayPayload() {
+        return {
+            orderUuid: this.currentOrder.uuid,
+            overallAmount: this.overallAmount,
+            tipSubText: this.tipSubText,
+            percentageTips: this.percentageTips.map(({ percentage, amount }) => ({
+                percentage,
+                amount,
+            })),
+            inputTipAmount: this.state.inputTipAmount,
+            selectedPercentage: this.state.selectedPercentage,
+            isSettling: this.isSettling(),
+            confirmation: this.displayConfirmation(),
+            currencySymbol: this.currentOrder.orderCurrency.symbol,
+        };
+    }
+
+    async onCustomerDisplayAction({ orderUuid, action, percentage, amount }) {
+        if (orderUuid !== this.currentOrder?.uuid) {
+            return;
+        }
+        const isChange = action === "select" || action === "input";
+        if (isChange && this.settlePromise && !this.displayConfirmation()) {
+            return;
+        }
+        switch (action) {
+            case "select": {
+                const tip = this.percentageTips.find((tip) => tip.percentage === percentage);
+                if (tip) {
+                    this.selectTip(tip);
+                }
+                break;
+            }
+            case "input":
+                this.setCustomTip(amount);
+                break;
+            case "no_tip":
+                await this.noTip({ fromDisplay: true });
+                break;
+            case "settle":
+                if (this.settlePromise) {
+                    break;
+                }
+                if (amount !== undefined) {
+                    this.setCustomTip(amount);
+                }
+                if (this.canSettle) {
+                    await this.settle({ fromDisplay: true });
+                }
+                break;
+            case "confirm":
+            case "cancel_confirm":
+                this.resolveDisplayConfirmation(action === "confirm");
+                break;
+        }
+    }
+
+    onTipInput(value) {
+        this.resolveDisplayConfirmation(false);
+        this.state.inputTipAmount = value;
+        this.state.selectedPercentage = null;
+    }
+
+    setCustomTip(amount) {
+        const value = String(amount ?? "").trim();
+        const parsed = Number(value);
+        if (value && (!Number.isFinite(parsed) || parsed < 0)) {
+            return;
+        }
+        this.resolveDisplayConfirmation(false);
+        this.state.inputTipAmount = value;
+        this.state.selectedPercentage = null;
+    }
+
+    async settle(options = {}) {
+        if (this.settlePromise) {
+            if (options.fromDisplay || !this.displayConfirmation()) {
+                return;
+            }
+            this.resolveDisplayConfirmation(false);
+            await this.settlePromise;
+        }
+        this.isSettling.set(true);
+        this.settlePromise = this.validateTip(options);
+        try {
+            await this.settlePromise;
+        } finally {
+            this.settlePromise = null;
+            this.isSettling.set(false);
+        }
+    }
+
     get tipAmount() {
         return this.pos.parseValidFloat(this.state.inputTipAmount) || 0;
+    }
+
+    resolveDisplayConfirmation(confirmed) {
+        const resolve = this.pendingDisplayConfirmation;
+        if (!resolve) {
+            return;
+        }
+        this.pendingDisplayConfirmation = null;
+        this.displayConfirmation.set(null);
+        resolve(confirmed);
     }
 
     get overallAmount() {
@@ -80,18 +200,26 @@ export class TipScreen extends Component {
     }
 
     selectTip(tip = null) {
+        this.resolveDisplayConfirmation(false);
         this.state.selectedPercentage = tip?.percentage ?? null;
         this.state.inputTipAmount = tip?.percentage
             ? this.pos.formatCurrency(tip.inputTipAmount, false)
             : "0";
     }
 
-    async noTip() {
+    async noTip(options = {}) {
+        if (this.settlePromise) {
+            if (options.fromDisplay || !this.displayConfirmation()) {
+                return;
+            }
+            this.resolveDisplayConfirmation(false);
+            await this.settlePromise;
+        }
         this.selectTip();
-        await this.validateTip();
+        await this.settle(options);
     }
 
-    async validateTip() {
+    async validateTip(options = {}) {
         if (!this.pos.config.module_pos_restaurant) {
             await this.props?.finalizeValidation?.();
         }
@@ -117,14 +245,19 @@ export class TipScreen extends Component {
         const maxTipPercentage = Math.max(...this.tipPercentages);
         const maxTipAmount = (maxTipPercentage / 100) * this.totalAmount;
         if (amount > maxTipAmount) {
-            const confirmed = await ask(this.dialog, {
-                title: _t("Are you sure?"),
-                body: _t(
-                    "%s is more than %s% of the order's total amount. Are you sure of this tip amount?",
-                    this.pos.formatCurrency(amount),
-                    maxTipPercentage
-                ),
-            });
+            const params = {
+                amount: this.pos.formatCurrency(amount),
+                maxPercentage: maxTipPercentage,
+            };
+            let confirmed;
+            if (options.fromDisplay) {
+                confirmed = await new Promise((resolve) => {
+                    this.pendingDisplayConfirmation = resolve;
+                    this.displayConfirmation.set(params);
+                });
+            } else {
+                confirmed = await confirmLargeTip(this.dialog, params);
+            }
             if (!confirmed) {
                 return;
             }

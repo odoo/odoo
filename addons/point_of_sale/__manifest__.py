@@ -277,6 +277,7 @@
             "point_of_sale/static/src/app/pos_app.css",
             "point_of_sale/static/src/app/screens/login_screen/login_screen.css",
             "point_of_sale/static/src/app/components/price_formatter/**/*",
+            "point_of_sale/static/src/app/components/tip_selector/**/*",
             "point_of_sale/static/src/app/components/validation_animation/**/*",
             "point_of_sale/static/src/app/components/feedback_payment_summary/**/*",
             "point_of_sale/static/src/app/utils/pretty_console_log.js",

@@ -21,8 +21,12 @@
                 <div class="pos-logo w-100 h-25"/>
             </div>
         </div>
+        <t t-elif="this.order.tipScreen" t-call="point_of_sale.CustomerDisplayTipScreen"/>
         <div t-elif="orderData?.state == 'paid' and orderPrices?.total_amount" class="h-100 d-flex flex-column">
             <FeedbackPaymentSummary formattedAmount="this.order.paymentAmountInCurrency" class="'h-100'" loading="this.order.processingValidation"/>
+            <div t-if="this.order.tipAmount" class="o_customer_display_tip_amount text-center fs-2 fw-bold mb-3">
+                Includes Tip Amount <t t-out="this.order.tipAmount"/>
+            </div>
             <div class="d-flex justify-content-center mb-4">
                 <t t-call="point_of_sale.CustomerDisplayFooter"/>
             </div>
@@ -189,6 +193,24 @@
             </div>
         </div>
         <MainComponentsContainer />
+    </t>
+
+    <t t-name="point_of_sale.CustomerDisplayTipScreen">
+        <t t-set="tip" t-value="this.tipScreen"/>
+        <TipSelector
+            title.translate="Would you like to leave a tip?"
+            class="'o_customer_display_tip_screen'"
+            overallAmount="tip.overallAmount"
+            tipSubText="tip.tipSubText"
+            percentageTips="tip.percentageTips"
+            selectedPercentage="this.tipSelectedPercentage"
+            inputValue="this.tipInputValue"
+            currencySymbol="tip.currencySymbol"
+            disabled="tip.isSettling"
+            onSelect="(percentageTip) => this.onTipAction('select', { percentage: percentageTip.percentage })"
+            onInput.bind="this.onTipInput"
+            onNoTip="() => this.onTipAction('no_tip')"
+            onSettle="() => this.onTipAction('settle')"/>
     </t>
 
     <t t-name="point_of_sale.CustomerDisplayFooter">

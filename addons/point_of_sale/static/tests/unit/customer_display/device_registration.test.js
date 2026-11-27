@@ -1,4 +1,5 @@
-import { beforeEach, expect, runAllTimers, test } from "@odoo/hoot";
+import { animationFrame, beforeEach, expect, runAllTimers, test } from "@odoo/hoot";
+import { patch } from "@web/core/utils/patch";
 import { mountWithCleanup, onRpc } from "@web/../tests/web_test_helpers";
 import { CustomerDisplay } from "@point_of_sale/customer_display/customer_display";
 import { definePosModels } from "../data/generate_model_definitions";
@@ -98,4 +99,35 @@ test("a display announces itself when it opens", async () => {
     await mountWithCleanup(CustomerDisplay);
     await runAllTimers();
     expect.verifySteps(["announce:ADD"]);
+});
+
+test("terminal dispatches one payload at a time, in order", async () => {
+    const store = await setupPosEnv();
+    await runAllTimers();
+    expect.verifySteps(["announce:PING"]);
+    displayAnnounces(store, "ADD");
+    // The first request is slow; the second must not overtake it.
+    const firstDone = Promise.withResolvers();
+    patch(store.customerDisplay, {
+        async _dispatch(payloadStr) {
+            const { step } = JSON.parse(payloadStr);
+            if (!step) {
+                return super._dispatch(...arguments);
+            }
+            expect.step(`start ${step}`);
+            if (step === 1) {
+                await firstDone.promise;
+            }
+            expect.step(`end ${step}`);
+        },
+    });
+
+    store.customerDisplay.send({ step: 1 });
+    const last = store.customerDisplay.send({ step: 2 });
+    await animationFrame();
+    expect.verifySteps(["start 1"]);
+
+    firstDone.resolve();
+    await last;
+    expect.verifySteps(["end 1", "start 2", "end 2"]);
 });

@@ -21,6 +21,35 @@ export class CustomerDisplayPlugin extends Plugin {
         // Fallback communication channel used when the system connection is unavailable (e.g., network loss).
         // NOTE: Works only between contexts within the same browser (tabs/windows sharing the same origin).
         this.channel = new BroadcastChannel("UPDATE_CUSTOMER_DISPLAY");
+        this.actionChannel = new BroadcastChannel("CUSTOMER_DISPLAY_ACTION");
+    }
+
+    /**
+     * Sends an action taken by the customer to the terminal, which decides
+     * what to do with it.
+     *
+     * @param {string} type - e.g. `"tip"`, see the terminal's `onAction`
+     * @param {Object} data
+     */
+    async sendAction(type, data) {
+        const message = { type, data };
+        try {
+            await rpc("/pos_customer_display/action", {
+                config_id: session.config_id,
+                identifier: session.identifier,
+                access_token: session.access_token,
+                payload: message,
+            });
+        } catch (error) {
+            logPosMessage(
+                "CustomerDisplay",
+                "sendAction",
+                `Failed to send the ${type} action to the terminal`,
+                CONSOLE_COLOR,
+                [error]
+            );
+            this.actionChannel.postMessage(message);
+        }
     }
 
     /**
