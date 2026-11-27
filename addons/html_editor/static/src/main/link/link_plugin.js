@@ -322,7 +322,7 @@ export class LinkPlugin extends Plugin {
             { predicate: "[data-mimetype]", emptyLinkLegit: true },
             {
                 predicate: `[data-bs-toggle="tab"], [data-bs-toggle="collapse"],
-                    [data-bs-toggle="dropdown"], .dropdown-item, [data-oe-model],
+                    [data-bs-toggle="dropdown"], [data-bs-slide], .dropdown-item, [data-oe-model],
                     :has(>[data-oe-model]), .o_prevent_link_editor a`,
                 immutableLink: true,
             },
