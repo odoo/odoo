@@ -1,7 +1,7 @@
 import { after, mockWorker } from "@odoo/hoot";
 import { MockServer, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
-import { WebsocketWorker } from "@bus/workers/websocket_worker";
+import { WEBSOCKET_CLOSE_CODES, WebsocketWorker } from "@bus/workers/websocket_worker";
 import { patch } from "@web/core/utils/patch";
 
 //-----------------------------------------------------------------------------
@@ -14,13 +14,16 @@ function cleanupWebSocketCallbacks() {
 }
 
 function cleanupWebSocketWorker() {
-    if (currentWebSocketWorker.connectTimeout) {
-        clearTimeout(currentWebSocketWorker.connectTimeout);
+    for (const worker of webSocketWorkers) {
+        if (worker.connectTimeout) {
+            clearTimeout(worker.connectTimeout);
+        }
+        worker.firstSubscribeResolver = Promise.withResolvers();
+        worker.websocket = null;
     }
-
-    currentWebSocketWorker.firstSubscribeResolver = Promise.withResolvers();
-    currentWebSocketWorker.websocket = null;
+    webSocketWorkers.length = 0;
     currentWebSocketWorker = null;
+    upgradeVersion = null;
 }
 
 function getWebSocketCallbacks() {
@@ -33,26 +36,63 @@ function getWebSocketCallbacks() {
     return wsCallbacks;
 }
 
-function setupWebSocketWorker() {
-    currentWebSocketWorker = new WebsocketWorker();
+function createWebSocketWorker() {
+    const worker = new WebsocketWorker();
     // Fixed reconnect delay, longer than the mocked WebSocket's open/close ticks.
-    currentWebSocketWorker.INITIAL_RECONNECT_DELAY = 1000;
-    currentWebSocketWorker.RECONNECT_JITTER = 0;
-    currentWebSocketWorker.connectRetryDelay = 1000;
+    worker.INITIAL_RECONNECT_DELAY = 1000;
+    worker.RECONNECT_JITTER = 0;
+    worker.connectRetryDelay = 1000;
+    webSocketWorkers.push(worker);
+    return worker;
+}
 
+function setupWebSocketWorker() {
+    currentWebSocketWorker = createWebSocketWorker();
+    let currentVersion = null;
     mockWorker(function onWorkerConnected(worker) {
+        // As in a browser, another version of the bundle is another worker.
+        const version = getWorkerBundleVersion(worker);
+        if (version && currentVersion && version !== currentVersion) {
+            currentWebSocketWorker = createWebSocketWorker();
+        }
+        currentVersion = version || currentVersion;
         currentWebSocketWorker.registerClient(worker._messageChannel.port2);
     });
 }
 
 /** @type {WebsocketWorker | null} */
 let currentWebSocketWorker = null;
+/** @type {WebsocketWorker[]} */
+const webSocketWorkers = [];
+/** @type {?string} Version the server asks the workers to switch to. */
+let upgradeVersion = null;
 /** @type {Map<string, (data: any) => any> | null} */
 let wsCallbacks = null;
 
 //-----------------------------------------------------------------------------
 // Exports
 //-----------------------------------------------------------------------------
+
+/**
+ * @param {Worker} worker
+ * @returns {?string} Version of the bus worker bundle loaded by the given worker.
+ */
+export function getWorkerBundleVersion(worker) {
+    const url = new URL(worker.url, location.origin);
+    return url.pathname.endsWith("/bus/websocket_worker_bundle") ? url.searchParams.get("v") : null;
+}
+
+/**
+ * Close the websocket as the server does when the minor version of the worker
+ * is outdated, then again on each reconnect of the outdated worker.
+ */
+export function simulateWorkerUpgrade(version = "test.1") {
+    upgradeVersion = version;
+    currentWebSocketWorker.websocket.close(
+        WEBSOCKET_CLOSE_CODES.CLEAN,
+        `WORKER_UPGRADE:${version}`
+    );
+}
 
 export function getWebSocketWorker() {
     return currentWebSocketWorker;
@@ -96,6 +136,14 @@ patch(WebsocketWorker.prototype, {
     _restartConnectionCheckInterval() {
         if (this.enableCheckInterval) {
             super._restartConnectionCheckInterval(...arguments);
+        }
+    },
+
+    _onWebsocketOpen() {
+        super._onWebsocketOpen(...arguments);
+        // As the server: close the socket of a worker older than the last upgrade.
+        if (upgradeVersion && !this.websocketURL.endsWith(`version=${upgradeVersion}`)) {
+            this.websocket.close(WEBSOCKET_CLOSE_CODES.CLEAN, `WORKER_UPGRADE:${upgradeVersion}`);
         }
     },
 

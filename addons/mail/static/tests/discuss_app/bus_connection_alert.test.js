@@ -5,7 +5,7 @@ import { defineMailModels, openDiscuss, start } from "@mail/../tests/mail_test_h
 import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, runAllTimers, waitFor, waitForNone } from "@odoo/hoot-dom";
 
-import { makeMockServer, MockServer } from "@web/../tests/web_test_helpers";
+import { makeMockServer, MockServer, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { patch } from "@web/core/utils/patch";
 
 defineMailModels();
@@ -51,4 +51,18 @@ test("show warning when bus connection encounters issues", async () => {
     await runAllTimers();
     await expect.waitForSteps(["BUS:RECONNECT"]);
     await waitForNone(".o-bus-ConnectionAlert");
+});
+
+test("show warning when worker version is outdated", async () => {
+    addBusServiceListeners(["BUS:CONNECT", () => expect.step("BUS:CONNECT")]);
+    await start();
+    await openDiscuss();
+    await expect.waitForSteps(["BUS:CONNECT"]);
+    patchWithCleanup(console, { warn: (message) => expect.step(message) });
+    MockServer.env["bus.bus"]._simulateDisconnection(
+        WEBSOCKET_CLOSE_CODES.CLEAN,
+        "OUTDATED_VERSION"
+    );
+    await expect.waitForSteps(["Worker deactivated due to an outdated version."]);
+    await waitFor(".o-bus-ConnectionAlert:contains('reload the page to reconnect')");
 });

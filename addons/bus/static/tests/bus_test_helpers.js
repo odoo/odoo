@@ -9,10 +9,10 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { BusBus } from "./mock_server/mock_models/bus_bus";
 import { IrWebSocket } from "./mock_server/mock_models/ir_websocket";
-import { getWebSocketWorker, onWebsocketEvent } from "./mock_websocket";
+import { onWebsocketEvent } from "./mock_websocket";
 
 import { BusPlugin } from "@bus/services/bus_plugin";
-import { WEBSOCKET_CLOSE_CODES } from "@bus/workers/websocket_worker";
+import { WEBSOCKET_CLOSE_CODES, WebsocketWorker } from "@bus/workers/websocket_worker";
 import { runAllTimers, waitUntil } from "@odoo/hoot-dom";
 import { registry } from "@web/core/registry";
 import { deepEqual } from "@web/core/utils/objects";
@@ -314,12 +314,13 @@ export async function waitNotifications(...expectedNotifications) {
  * match the given list of target actions.
  *
  * @param {WorkerAction[]} targetActions
+ * @param {{ withData?: boolean }} [options] Add the data of the action to the step.
  */
-export function stepWorkerActions(targetActions) {
-    patchWithCleanup(getWebSocketWorker(), {
-        _onClientMessage(_, { action }) {
+export function stepWorkerActions(targetActions, { withData = false } = {}) {
+    patchWithCleanup(WebsocketWorker.prototype, {
+        _onClientMessage(_, { action, data }) {
             if (targetActions.includes(action)) {
-                expect.step(action);
+                expect.step(withData ? `${action} ${data}` : action);
             }
             return super._onClientMessage(...arguments);
         },
