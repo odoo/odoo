@@ -1,9 +1,9 @@
-import { proxy, usePlugin, Plugin } from "@odoo/owl";
-import { registry } from "@web/core/registry";
+import { proxy, usePlugin, Plugin, useScope } from "@odoo/owl";
 import { PosDataPlugin } from "./pos_data_plugin";
 import { DialogPlugin } from "@web/core/dialog/dialog_plugin";
 import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { SelectDefaultPaymentMethodPopup } from "@point_of_sale/app/components/popups/select_default_payment_method_popup/select_default_payment_method_popup";
+import { electronicPaymentRegistry } from "@pos_payment_method/payment_method";
 
 export class PosPaymentMethodPlugin extends Plugin {
     // After PosDataPlugin (20)
@@ -11,6 +11,7 @@ export class PosPaymentMethodPlugin extends Plugin {
 
     data = usePlugin(PosDataPlugin);
     dialog = usePlugin(DialogPlugin);
+    scope = useScope();
 
     setup() {
         this.defaultGroups = {};
@@ -22,17 +23,19 @@ export class PosPaymentMethodPlugin extends Plugin {
     }
 
     // Called once the data is loaded, the payment interfaces need the pos store
-    init(pos) {
-        this.initPaymentInterfaces(pos);
+    init() {
+        this.initPaymentInterfaces();
         this.initDefaults();
     }
 
-    initPaymentInterfaces(pos) {
+    initPaymentInterfaces() {
         for (const pm of this.config.payment_method_ids) {
-            const PaymentInterface = registry
-                .category("pos_payment_providers")
-                .get(pm.payment_provider, null);
-            pm.payment_interface = PaymentInterface ? new PaymentInterface(pos, pm) : null;
+            if (pm.electronic_payment_id) {
+                const PaymentInterface = electronicPaymentRegistry.get(pm.payment_provider);
+                this.scope.run(
+                    () => (pm.payment_interface = new PaymentInterface(pm.electronic_payment_id))
+                );
+            }
         }
     }
 

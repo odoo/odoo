@@ -119,6 +119,7 @@
             'point_of_sale/static/src/app/components/popups/retry_print_popup/**',
             'point_of_sale/static/src/app/components/popups/text_input_popup/**',
             "pos_self_order/static/src/app/**/*",
+            "point_of_sale/static/lib/qrcode.js",
             "web/static/src/core/utils/render.js",
             "account/static/src/helpers/*.js",
             "web/static/src/model/**/*",

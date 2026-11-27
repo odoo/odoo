@@ -6,12 +6,13 @@
     'category': 'Accounting/Localizations/Point of Sale',
     'depends': [
         'l10n_id',
+        'pos_payment_method_bank_qr',
         'point_of_sale'
     ],
     'auto_install': True,
     'assets': {
-        'point_of_sale._assets_pos': [
-            'l10n_id_pos/static/src/**/*',
+        'point_of_sale.payment_terminals': [
+            'l10n_id_pos/static/src/payment_method_bank_qr_qris.js'
         ],
         'web.assets_tests': [
             'l10n_id_pos/static/tests/**/*'

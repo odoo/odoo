@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="pos_electronic_payment_view_form_cashdro" model="ir.ui.view">
+        <field name="name">pos.electronic.payment.form.inherit.cashdro</field>
+        <field name="model">pos.electronic.payment</field>
+        <field name="inherit_id" ref="pos_payment_method.pos_electronic_payment_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <notebook invisible="payment_provider != 'cashdro'">
+                    <page name="settings" string="Cashdro">
+                        <group>
+                            <field name="cashdro_ip" invisible="payment_provider != 'cashdro'" required="payment_provider == 'cashdro'"/>
+                            <field name="cashdro_username" invisible="payment_provider != 'cashdro'" required="payment_provider == 'cashdro'"/>
+                            <field name="cashdro_password" password="True" invisible="payment_provider != 'cashdro'" required="payment_provider == 'cashdro'"/>
+                            <field name="cashdro_use_lna" invisible="payment_provider != 'cashdro'"/>
+                        </group>
+                        <widget name="pos_payment_method_cashdro.admin_buttons"/>
+                    </page>
+                </notebook>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

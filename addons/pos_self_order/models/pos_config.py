@@ -260,6 +260,15 @@ class PosConfig(models.Model):
             ):
                 raise UserError(_("The Self-Order default user must be a POS user"))
 
+    @api.constrains('payment_method_ids', 'self_ordering_mode')
+    def _check_payment_methods(self):
+        for record in self:
+            if record.self_ordering_mode != "kiosk":
+                continue
+            for payment_method in record.payment_method_ids:
+                if payment_method.electronic_payment_id and not payment_method.electronic_payment_id._is_supported_in_kiosk():
+                    raise UserError(self.env._("The payment method %s is not supported in the Self Order Kiosk.", payment_method.name))
+
     def _get_qr_code_data(self):
         self.ensure_one()
 

@@ -4,6 +4,7 @@ import { rpc } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
 import { ask } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { _t } from "@web/core/l10n/translation";
+import { generateQRCodeDataUrl } from "@point_of_sale/utils";
 
 // This component is only use in Kiosk mode
 export class PaymentPage extends Component {
@@ -18,6 +19,7 @@ export class PaymentPage extends Component {
             paymentMethodId: null,
             paymentCancelled: false,
             qrCode: null,
+            transactionId: null,
             fadeOut: false,
             paymentMethodType: null,
         });
@@ -38,20 +40,21 @@ export class PaymentPage extends Component {
     }
 
     async back() {
-        if (this.state.paymentMethodType === "cash_machine" && !this.selfOrder.paymentError) {
-            const paymentLine = this.selfOrder.getPendingPaymentLine(
-                this.selectedPaymentMethod.payment_provider
-            );
-            if (paymentLine) {
-                const cancelConfirmed = await ask(this.selfOrder.dialog, {
-                    title: _t("Confirm cancellation"),
-                    body: _t("Are you sure you want to cancel the cash machine payment?"),
-                });
-                if (!cancelConfirmed) {
-                    return;
-                }
-                this.state.paymentCancelled = true;
-                await this.selectedPaymentMethod.payment_interface.sendPaymentCancel(paymentLine);
+        if (this.state.paymentMethodType !== "terminal" && !this.selfOrder.paymentError) {
+            const cancelConfirmed = await ask(this.selfOrder.dialog, {
+                title: _t("Confirm cancellation"),
+                body: _t("Are you sure you want to cancel the payment?"),
+            });
+            if (!cancelConfirmed) {
+                return;
+            }
+            this.state.paymentCancelled = true;
+            try {
+                await this.selectedPaymentMethod.payment_interface.cancelTransaction(
+                    this.state.transactionId
+                );
+            } catch (error) {
+                this.selfOrder.handleErrorNotification(error);
             }
         }
         this.selfOrder.currentOrder.uiState.lineChanges = {};
@@ -59,7 +62,7 @@ export class PaymentPage extends Component {
     }
 
     get showQrCode() {
-        return this.state.paymentMethodType === "external_qr" && this.state.qrCode;
+        return this.state.paymentMethodType === "qr" && this.state.qrCode;
     }
 
     selectMethod(methodId) {
@@ -87,45 +90,64 @@ export class PaymentPage extends Component {
         );
     }
 
+    async processElectronicPayment() {
+        const { promise, resolve, reject } = Promise.withResolvers();
+        const order = this.selfOrder.currentOrder;
+        const startPaymentResult = await this.selectedPaymentMethod.payment_interface.startPayment(
+            order.amount_total,
+            order.currency_id.id,
+            {
+                order_uuid: order.uuid,
+                kiosk_order_id: order.id,
+                kiosk_payment_method_id: this.state.paymentMethodId,
+            },
+            (result) => {
+                if (result.status === "failed") {
+                    reject(new Error(result.error));
+                }
+                resolve(result);
+            }
+        );
+        this.handleStartPaymentResult(startPaymentResult);
+        return await promise;
+    }
+
+    handleStartPaymentResult(result) {
+        this.state.transactionId = result.transaction_id;
+        if (result.qr_code) {
+            this.state.qrCode = generateQRCodeDataUrl(result.qr_code);
+        }
+    }
+
     // this function will be override by pos_online_payment_self_order module
     // in mobile is the only available payment method
     async startPayment() {
         this.state.qrCode = null;
         this.state.paymentCancelled = false;
         this.selfOrder.paymentError = false;
-        try {
-            if (this.selectedPaymentMethod.payment_interface) {
-                const result = this.selfOrder.currentOrder.addPaymentline(
-                    this.selectedPaymentMethod
-                );
-                if (!result.status) {
-                    throw new Error(`Adding payment line failed: ${result.data}`);
-                }
-                const newPaymentLine = result.data;
-                try {
-                    const paymentSuccessful = await newPaymentLine.pay();
-                    if (!paymentSuccessful) {
-                        if (newPaymentLine.useQr && newPaymentLine.qr_code) {
-                            this.state.fadeOut = true;
-                            setTimeout(() => {
-                                this.state.qrCode = newPaymentLine.qr_code;
-                                this.state.fadeOut = false;
-                            }, 300);
-                            return;
-                        }
+        const order = this.selfOrder.currentOrder;
+        const paymentInteface = this.selectedPaymentMethod.payment_interface;
 
-                        throw new Error("Payment failed");
-                    }
-                } catch (err) {
-                    this.selfOrder.currentOrder.removePaymentline(newPaymentLine);
-                    throw err;
+        try {
+            if (paymentInteface) {
+                const payment = await this.processElectronicPayment();
+                if (!paymentInteface.supportsBackendConfirmation()) {
+                    await rpc("/kiosk/payment/add_unsafe_payment", {
+                        access_token: this.selfOrder.access_token,
+                        electronic_payment_id: paymentInteface.id,
+                        order_id: order.id,
+                        payment_method_id: this.state.paymentMethodId,
+                        order_access_token: order.access_token,
+                        payment_result: payment,
+                    });
                 }
+            } else {
+                await rpc(`/kiosk/payment/${this.selfOrder.config.id}/kiosk`, {
+                    order: order.serializeForORM(),
+                    access_token: this.selfOrder.access_token,
+                    payment_method_id: this.state.paymentMethodId,
+                });
             }
-            await rpc(`/kiosk/payment/${this.selfOrder.config.id}/kiosk`, {
-                order: this.selfOrder.currentOrder.serializeForORM(),
-                access_token: this.selfOrder.access_token,
-                payment_method_id: this.state.paymentMethodId,
-            });
         } catch (error) {
             if (!this.state.paymentCancelled) {
                 this.selfOrder.handleErrorNotification(error);

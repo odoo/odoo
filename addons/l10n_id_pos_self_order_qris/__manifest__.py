@@ -9,8 +9,6 @@
     "auto_install": True,
     "assets": {
         "pos_self_order.assets": [
-            "point_of_sale/static/lib/qrcode.js",
-            "l10n_id_pos_self_order_qris/static/src/payment/payment_qris.js",
             "l10n_id_pos_self_order_qris/static/src/payment/payment_page.js",
             "l10n_id_pos_self_order_qris/static/src/payment/payment_page.xml",
         ],

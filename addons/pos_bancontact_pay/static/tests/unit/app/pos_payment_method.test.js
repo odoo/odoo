@@ -4,7 +4,7 @@ import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_mode
 
 definePosModels();
 
-test("_checkOrder", async () => {
+test("getPaymentInterfaceStates", async () => {
     const store = await setupPosEnv();
     const order = await getFilledOrder(store);
     const display = store.models["pos.payment.method"].get(4);
@@ -16,44 +16,38 @@ test("_checkOrder", async () => {
         status: false,
         message: "This sticker is already processing another payment.",
     };
-    const failureAmount = {
-        status: false,
-        message: "The amount must be positive to use this payment method.",
-    };
 
     // No display payment
-    expect(display._checkOrder({ order })).toEqual(success);
+    expect(display.getPaymentInterfaceStates({ order })).toEqual(success);
 
     // One display payment not processing
     const paymentlineDisplay = createPaymentLine(store, order, display, {
         payment_status: "pending",
     });
-    expect(display._checkOrder({ order })).toEqual(success);
+    expect(display.getPaymentInterfaceStates({ order })).toEqual(success);
 
     // One display payment processing
     paymentlineDisplay.payment_status = "waitingScan";
-    expect(display._checkOrder({ order })).toEqual(success);
+    expect(display.getPaymentInterfaceStates({ order })).toEqual(success);
 
     // No sticker payment
-    expect(sticker1._checkOrder({ order })).toEqual(success);
+    expect(sticker1.getPaymentInterfaceStates({ order })).toEqual(success);
 
     // One sticker payment not processing
     const paymentlineSticker = createPaymentLine(store, order, sticker1, {
         payment_status: "pending",
     });
-    expect(sticker1._checkOrder({ order })).toEqual(success);
+    expect(sticker1.getPaymentInterfaceStates({ order })).toEqual(success);
 
     // One sticker payment processing
     paymentlineSticker.payment_status = "waitingScan";
-    expect(sticker1._checkOrder({ order })).toEqual(failureStickerAlreadyUsed);
+    expect(sticker1.getPaymentInterfaceStates({ order })).toEqual(failureStickerAlreadyUsed);
 
     // Retry with the same paymentline
-    expect(sticker1._checkOrder({ order, paymentline: paymentlineSticker })).toEqual(success);
+    expect(sticker1.getPaymentInterfaceStates({ order, paymentline: paymentlineSticker })).toEqual(
+        success
+    );
 
     // Different sticker payment
-    expect(sticker2._checkOrder({ order })).toEqual(success);
-
-    // Negative amount on paymentline
-    paymentlineDisplay.amount = 0;
-    expect(sticker1._checkOrder({ order, paymentline: paymentlineDisplay })).toEqual(failureAmount);
+    expect(sticker2.getPaymentInterfaceStates({ order })).toEqual(success);
 });

@@ -1,14 +1,16 @@
 import { Dialog } from "@web/core/dialog/dialog";
-import { Component, useProps, proxy, t } from "@odoo/owl";
+import { Component, useProps, proxy, t, usePlugin } from "@odoo/owl";
+import { PaymentMethod } from "@pos_payment_method/payment_method";
+import { DialogPlugin } from "@web/core/dialog/dialog_plugin";
+import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { _t } from "@web/core/l10n/translation";
 
 export const qrPopupProps = {
     amount: t.string(),
     qrCode: t.string(),
-    confirm: t.function().optional(),
-    confirmLabel: t.string().optional("Confirm"),
-    cancel: t.function().optional(),
-    cancelLabel: t.string().optional("Discard"),
-    close: t.function().optional(),
+    paymentInterface: t.instanceOf(PaymentMethod),
+    transactionId: t.string(),
+    close: t.function(),
     provider: t.or([t.string(), t.boolean()]).optional(),
 };
 
@@ -19,7 +21,8 @@ export class QRPopup extends Component {
     props = useProps(qrPopupProps);
 
     setup() {
-        this.state = proxy({ qrLoaded: false });
+        this.dialog = usePlugin(DialogPlugin);
+        this.state = proxy({ qrLoaded: false, loading: false });
     }
 
     onQrLoaded() {
@@ -29,8 +32,25 @@ export class QRPopup extends Component {
         }, 150);
     }
 
-    confirm() {
-        this.props.confirm();
-        this.props.close();
+    async confirm() {
+        this.state.loading = true;
+        try {
+            const result = await this.props.paymentInterface.getTransactionStatus(
+                this.props.transactionId
+            );
+            if (result.status === "pending") {
+                this.dialog.add(AlertDialog, {
+                    title: _t("QR payment pending"),
+                    body: _t("The QR code payment is still processing."),
+                });
+            }
+        } catch (error) {
+            this.dialog.add(AlertDialog, {
+                title: _t("Failed to verify QR payment"),
+                body: error?.data?.message ?? error?.message ?? error,
+            });
+        } finally {
+            this.state.loading = false;
+        }
     }
 }
