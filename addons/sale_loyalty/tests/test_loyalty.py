@@ -1208,6 +1208,42 @@ class TestLoyalty(TestSaleCouponCommon):
         self.assertEqual(len(order.order_line.ids), 2)
         self.assertEqual(order.order_line[1].name, updated_description)
 
+    def test_sol_free_product_description_identifies_chosen_product(self):
+        """
+        Ensure that if a "Free Product" reward lets the customer choose between
+        several products, its line description identifies the chosen product.
+        """
+        free_product_tag = self.env['product.tag'].create({'name': 'Free Product'})
+        (self.product_B | self.product_C).product_tag_ids = [Command.link(free_product_tag.id)]
+        loyalty_program = self.env['loyalty.program'].create({
+            'name': 'Buy A, get B or C for free',
+            'program_type': 'buy_x_get_y',
+            'trigger': 'auto',
+            'applies_on': 'current',
+            'rule_ids': [Command.create({
+                'product_ids': self.product_A,
+                'reward_point_mode': 'unit',
+                'minimum_qty': 1,
+            })],
+            'reward_ids': [Command.create({
+                'reward_type': 'product',
+                'reward_product_tag_id': free_product_tag.id,
+                'reward_product_qty': 1,
+                'required_points': 1,
+            })],
+        })
+        reward = loyalty_program.reward_ids
+
+        order = self.empty_order
+        order.write({'order_line': [Command.create({'product_id': self.product_A.id})]})
+        order._update_programs_and_rewards()
+        coupon = order.coupon_point_ids.coupon_id.filtered(lambda c: c.program_id == loyalty_program)
+        order._apply_program_reward(reward, coupon, product=self.product_C)
+
+        reward_line = order.order_line.filtered('is_reward_line')
+        self.assertEqual(reward_line.product_id, self.product_C)
+        self.assertEqual(reward_line.name, f"{reward.description}: Product C")
+
     def test_archiving_loyalty_card_unlinks_draft_points_from_sale_order(self):
         """
         When a loyalty card has points accrued from a draft sale order, archiving the

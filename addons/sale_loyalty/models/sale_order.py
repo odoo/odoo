@@ -213,8 +213,12 @@ class SaleOrder(models.Model):
         points = self._get_real_points_for_coupon(coupon)
         claimable_count = float_round(points / reward.required_points, precision_rounding=1, rounding_method='DOWN') if not reward.clear_wallet else 1
         cost = points if reward.clear_wallet else claimable_count * reward.required_points
+        name = reward.description
+        if len(reward_products) > 1:
+            # The description doesn't tell which of the reward products was chosen
+            name = f"{reward.description}: {product.with_context(display_default_code=False).display_name}"
         return [{
-            'name': reward.description,
+            'name': name,
             'product_id': product.id,
             'discount': 100,
             'product_uom_qty': reward.reward_product_qty * claimable_count,
