@@ -419,8 +419,12 @@ class PaymentPortal(payment_portal.PaymentPortal):
 
             # Check the access token against the order values. Done after fetching the order as we
             # need the order fields to check the access token.
-            if not payment_utils.check_access_token(
-                access_token, order_sudo.partner_invoice_id.id, amount, order_sudo.currency_id.id
+            if not self._check_payment_pay_access_token(
+                access_token,
+                order_sudo.partner_invoice_id.id,
+                amount,
+                order_sudo.currency_id.id,
+                sale_order_id=sale_order_id,
             ):
                 raise ValidationError(_("The provided parameters are invalid."))
 
@@ -438,6 +442,23 @@ class PaymentPortal(payment_portal.PaymentPortal):
                 'sale_order_id': sale_order_id,
             })
         return super().payment_pay(*args, amount=amount, access_token=access_token, **kwargs)
+
+    def _check_payment_pay_access_token(
+        self, access_token, partner_id, amount, currency_id, sale_order_id=None, **kwargs
+    ):
+        """ Override of `payment` to also accept access tokens including the sales order.
+
+        :param int sale_order_id: The sales order for which a payment is made, as a `sale.order` id.
+        :return: Whether the access token is valid.
+        :rtype: bool
+        """
+        if sale_order_id and payment_utils.check_access_token(
+            access_token, partner_id, amount, currency_id, 'sale.order', sale_order_id
+        ):
+            return True
+        return super()._check_payment_pay_access_token(
+            access_token, partner_id, amount, currency_id, sale_order_id=sale_order_id, **kwargs
+        )
 
     def _get_extra_payment_form_values(self, sale_order_id=None, access_token=None, **kwargs):
         """ Override of `payment` to reroute the payment flow to the portal view of the sales order.
