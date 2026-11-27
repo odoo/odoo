@@ -54,6 +54,6 @@ class DashboardShareRoute(http.Controller):
         share = self._get_active_dashboard_share_or_not_found(share_id)
         share._check_dashboard_access(token)
         stream = request.env["ir.binary"]._get_stream_from(
-            share, "spreadsheet_binary_data"
+            share, "spreadsheet_binary_data_computed"
         )
         return stream.get_response()
