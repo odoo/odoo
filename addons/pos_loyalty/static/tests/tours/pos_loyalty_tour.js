@@ -8,7 +8,6 @@ import * as PartnerList from "@point_of_sale/../tests/pos/tours/utils/partner_li
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
-import * as Notification from "@point_of_sale/../tests/generic_helpers/notification_util";
 import { registry } from "@web/core/registry";
 import { scan_barcode } from "@point_of_sale/../tests/generic_helpers/utils";
 
@@ -48,7 +47,7 @@ registry.category("web_tour.tours").add("PosLoyaltyTour1", {
             PosLoyalty.removeRewardLine("90% on the cheapest product"),
             PosLoyalty.orderTotalIs("45.90"),
             PosLoyalty.enterCode("invalid_code"),
-            Notification.has("invalid_code"),
+            Dialog.cancel({ title: "Enter Code" }),
             PosLoyalty.enterCode("1234"),
             PosLoyalty.finalizeOrder("Cash", "50"),
 
@@ -129,8 +128,11 @@ registry.category("web_tour.tours").add("PosLoyaltyTour2", {
             ProductScreen.clickNumpad("⌫", "⌫", "1", "8"),
             PosLoyalty.hasRewardLine("10% on your order", "-8.72"),
             PosLoyalty.hasRewardLine("Free Product - Desk Organizer", "0"),
-            // scan the code again and check notification
-            PosLoyalty.enterCode("5678"),
+            // enter the code again: it is rejected inside the popup
+            PosLoyalty.enterCodeWithError(
+                "5678",
+                'The code "5678" has already been applied to this order.'
+            ),
             PosLoyalty.orderTotalIs("78.49"),
             PosLoyalty.finalizeOrder("Cash", "80"),
 

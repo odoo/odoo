@@ -12,10 +12,18 @@
                     t-ref="this.inputRef"
                     t-on-keydown="this.onKeydownGiftCardCode"
                     t-att-placeholder="this.props.placeholder"
+                    t-att-class="{'pe-5': this.state.errorMessage}"
                     t-att-style="this.state.error ? 'border-color: red;' : ''" />
                 <div t-if="this.state.loading" class="gift-card-loading pe-3 h-100 position-absolute end-0 top-0 d-flex align-items-center">
                     <i class="oi oi-spin" data-icon="progress_activity" />
                 </div>
+                <div t-elif="this.state.errorMessage" class="pe-3 h-100 position-absolute end-0 top-0 d-flex align-items-center">
+                    <i class="oi oi-filled oi-lg text-danger" data-icon="error" aria-hidden="true" />
+                </div>
+            </div>
+            <div t-if="this.state.errorMessage" class="o_pos_popup_error text-danger mt-1" role="alert">
+                <i class="oi oi-filled text-danger me-1" data-icon="error" aria-hidden="true" />
+                <t t-out="this.state.errorMessage" />
             </div>
             <div class="mt-3 d-flex">
                 <div t-attf-class="col align-items-center d-flex {{!this.ui.isSmall? 'me-2 w-50': ''}}">
@@ -49,7 +57,7 @@
                     onChange.bind="this.onExpDateChange" />
             </div>
             <t t-set-slot="footer">
-                <button class="btn btn-primary" t-on-click="this.addBalance" t-att-disabled="this.state.loading">
+                <button class="btn btn-primary" t-on-click="this.addBalance" t-att-disabled="this.state.loading || this.state.error">
                     <t t-if="this.state.lockGiftCardFields">
                         Add existing Gift Card
                     </t>
