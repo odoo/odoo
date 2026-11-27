@@ -1429,6 +1429,55 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         picking_receipt.button_validate()
         self.assertEqual(picking_receipt.state, 'done')
 
+    def test_consume_product_of_pending_subcontracted_receipt(self):
+        """ A subcontracting MO that consumes, in the subcontracting location, the product
+        of a pending subcontracted receipt must not unlink that receipt from its MO. """
+        receipt = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.in_type_id.id,
+            'partner_id': self.subcontractor_partner1.id,
+            'location_id': self.ref('stock.stock_location_suppliers'),
+            'location_dest_id': self.warehouse.lot_stock_id.id,
+            'move_ids': [Command.create({
+                'product_id': self.finished.id,
+                'product_uom_qty': 5.0,
+            })],
+        })
+        receipt.action_confirm()
+        receipt.move_ids.quantity = 2.0
+        receipt.move_ids.picked = True
+        Form.from_action(self.env, receipt.button_validate()).save().process()
+        backorder_move = receipt.backorder_ids.move_ids
+        production = backorder_move._get_subcontract_production()
+        self.assertRecordValues(production, [{'product_qty': 3.0, 'state': 'confirmed'}])
+
+        # Another subcontractor turns the finished product into a plated one.
+        plater = self.env['res.partner'].create({'name': 'Plater'})
+        plated = self.env['product.product'].create({'name': 'Plated', 'is_storable': True})
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': plated.product_tmpl_id.id,
+            'type': 'subcontract',
+            'subcontractor_ids': [Command.link(plater.id)],
+            'bom_line_ids': [Command.create({'product_id': self.finished.id, 'product_qty': 1.0})],
+        })
+        plated_receipt = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.in_type_id.id,
+            'partner_id': plater.id,
+            'location_id': self.ref('stock.stock_location_suppliers'),
+            'location_dest_id': self.warehouse.lot_stock_id.id,
+            'move_ids': [Command.create({
+                'product_id': plated.id,
+                'product_uom_qty': 2.0,
+            })],
+        })
+        plated_receipt.action_confirm()
+        plated_receipt.move_ids.quantity = 2.0
+        plated_receipt.move_ids.picked = True
+        plated_receipt.button_validate()
+        self.assertEqual(plated_receipt.state, 'done')
+
+        self.assertEqual(backorder_move.move_orig_ids, production.move_finished_ids)
+        self.assertEqual(backorder_move._get_subcontract_production(), production)
+
     def test_validate_receipt_with_expired_component_lot(self):
         """
         Check that validating a receipt marks its recorded productions as done even if
