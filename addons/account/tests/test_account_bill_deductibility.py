@@ -1,6 +1,6 @@
 from odoo import Command, fields
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tests import tagged
+from odoo.tests import Form, tagged
 
 
 @tagged('post_install', '-at_install')
@@ -403,6 +403,36 @@ class TestAccountBillPartialDeductibility(AccountTestInvoicingCommon):
             ],
         }
         self._assert_tax_totals_summary(bill.tax_totals, expected_values)
+
+    def test_bill_partial_deductibility_foreign_currency(self):
+        currency = self.setup_other_currency('EUR')
+        with Form(self.env['account.move'].with_context(default_move_type='in_invoice')) as bill_form:
+            bill_form.partner_id = self.partner_a
+            bill_form.currency_id = currency
+            bill_form.invoice_date = '2017-01-01'
+            with bill_form.invoice_line_ids.new() as line_form:
+                line_form.name = 'Partial item'
+                line_form.price_unit = 100.0
+                line_form.deductible_amount = 75.0
+                line_form.tax_ids.clear()
+                line_form.tax_ids.add(self.tax_purchase_a)
+            tax_group = bill_form.tax_totals['subtotals'][0]['tax_groups'][0]
+            self.assertEqual(tax_group['non_deductible_tax_amount_currency'], -3.75)
+            self.assertEqual(tax_group['non_deductible_tax_amount'], -1.88)
+        bill = bill_form.save()
+
+        self.assertInvoiceValues(
+            bill,
+            [
+                {'display_type': 'product',                      'amount_currency': 100.0,  'balance': 50.0},  # noqa: E241
+                {'display_type': 'non_deductible_product',       'amount_currency': -25.0,  'balance': -12.5},  # noqa: E241
+                {'display_type': 'non_deductible_product_total', 'amount_currency': 25.0,   'balance': 12.5},  # noqa: E241
+                {'display_type': 'non_deductible_tax',           'amount_currency': 3.75,   'balance': 1.88},  # noqa: E241
+                {'display_type': 'tax',                          'amount_currency': 11.25,  'balance': 5.63},  # noqa: E241
+                {'display_type': 'payment_term',                 'amount_currency': -115.0, 'balance': -57.51},  # noqa: E241
+            ],
+            {}
+        )
 
     def test_refund_non_deductible_tax_in_tax_totals(self):
         refund = self.env['account.move'].create({

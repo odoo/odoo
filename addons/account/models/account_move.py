@@ -1773,7 +1773,7 @@ class AccountMove(models.Model):
         for line in non_deductible_product_lines:
             percentage = 1 - line.deductible_amount / 100
             non_deductible_subtotal = line.currency_id.round(line.price_subtotal * percentage)
-            non_deductible_base_currency = line.company_currency_id.round(sign * non_deductible_subtotal / rate) if rate else 0.0
+            non_deductible_base_currency = line.currency_id.round(sign * non_deductible_subtotal)
             non_deductible_lines_base_total_currency += non_deductible_base_currency
 
             non_deductible_lines += [
@@ -1786,6 +1786,7 @@ class AccountMove(models.Model):
                     special_type='non_deductible',
                     tax_ids=line.tax_ids.filtered(lambda tax: tax.amount_type != 'fixed'),
                     currency_id=self.currency_id,
+                    rate=rate,
                 )
             ]
         non_deductible_lines += [
@@ -1797,6 +1798,7 @@ class AccountMove(models.Model):
                 special_mode='total_excluded',
                 special_type=False,
                 currency_id=self.currency_id,
+                rate=rate,
             )
         ]
         return non_deductible_lines
@@ -3588,8 +3590,8 @@ class AccountMove(models.Model):
 
                 percentage = (1 - line.deductible_amount / 100)
                 non_deductible_subtotal = line.currency_id.round(line.price_subtotal * percentage)
-                non_deductible_base = line.currency_id.round(sign * non_deductible_subtotal)
-                non_deductible_base_currency = line.company_currency_id.round(sign * non_deductible_subtotal / rate) if rate else 0.0
+                non_deductible_base = line.company_currency_id.round(sign * non_deductible_subtotal / rate) if rate else 0.0
+                non_deductible_base_currency = line.currency_id.round(sign * non_deductible_subtotal)
                 non_deductible_base_total += non_deductible_base
                 non_deductible_base_currency_total += non_deductible_base_currency
 
