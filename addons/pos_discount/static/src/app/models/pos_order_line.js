@@ -7,14 +7,17 @@ patch(PosOrderline.prototype, {
      * @returns Boolean
      */
     isGlobalDiscountApplicable() {
-        return !(
-            // Ignore existing discount line as not removing it before adding new discount line successfully
-            (
-                (this.config.tip_product_id &&
-                    this.product_id.id === this.config.tip_product_id?.id) ||
-                (this.config.discount_product_id &&
-                    this.product_id.id === this.config.discount_product_id?.id) ||
-                this.isServiceFeeLine()
+        return (
+            super.isGlobalDiscountApplicable() &&
+            !(
+                // Ignore existing discount line as not removing it before adding new discount line successfully
+                (
+                    (this.config.tip_product_id &&
+                        this.product_id.id === this.config.tip_product_id?.id) ||
+                    (this.config.discount_product_id &&
+                        this.product_id.id === this.config.discount_product_id?.id) ||
+                    this.isServiceFeeLine()
+                )
             )
         );
     },

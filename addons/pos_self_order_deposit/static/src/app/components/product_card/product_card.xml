@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order_deposit.ProductCard" t-inherit="pos_self_order.ProductCard" t-inherit-mode="extension">
+        <xpath expr="//span[@t-if='!this.props.hidePrice']" position="after">
+            <t t-set="deposit" t-value="!this.props.hidePrice and this.selfOrder.getSharedDepositProduct(product.product_variant_ids)"/>
+            <div t-if="deposit" class="text-muted small">
+                excl. deposit <t t-out="this.selfOrder.getDepositDisplayPrice(deposit)"/>
+            </div>
+        </xpath>
+    </t>
+</templates>

@@ -161,15 +161,7 @@ export class LoyaltyReward extends Base {
         }
         const candidateLines = order
             .getOrderlines()
-            .filter(
-                (line) =>
-                    !line.is_reward_line &&
-                    !line.combo_parent_id &&
-                    !line.isTipLine() &&
-                    line.getQuantity() > 0 &&
-                    line.linePriceTaxIncluded > 0 &&
-                    !line.isServiceFeeLine()
-            );
+            .filter((line) => this._isDiscountableLine(line));
         if (this.discount_applicability === "cheapest") {
             const productIds = this.getDiscountProductIds();
             const eligibleLines = productIds
@@ -195,6 +187,17 @@ export class LoyaltyReward extends Base {
 
         // discount_applicability === "order"
         return candidateLines;
+    }
+
+    _isDiscountableLine(line) {
+        return (
+            !line.is_reward_line &&
+            !line.combo_parent_id &&
+            !line.isTipLine() &&
+            line.getQuantity() > 0 &&
+            line.linePriceTaxIncluded > 0 &&
+            !line.isServiceFeeLine()
+        );
     }
 
     /**

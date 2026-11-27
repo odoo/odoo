@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order_deposit.CartPage" t-inherit="pos_self_order.CartPage" t-inherit-mode="extension">
+        <xpath expr="//t[@t-set='attribute_ids']" position="before">
+            <div t-if="line.depositLine" class="text-muted">
+                excl. deposit <t t-out="this.selfOrder.formatLineDepositPrice(line, this.getLineDisplayQty(line))"/>
+            </div>
+        </xpath>
+        <xpath expr="//t[@t-out='this.formatProductName(cline.product_id)']" position="after">
+            <span t-if="cline.depositLine" class="text-muted">
+                excl. deposit <t t-out="this.selfOrder.formatLineDepositPrice(cline, this.getLineDisplayQty(cline))"/>
+            </span>
+        </xpath>
+        <xpath expr="//div[@t-if='this.displayTaxes']" position="after">
+            <t t-set="total_deposit" t-value="this.totalDepositPrice"/>
+            <div t-if="total_deposit" class="fs-4 o-so-tabular-nums mb-0 pe-sm-2 pe-kiosk-p-4 text-muted">
+                Deposits: <t t-out="this.selfOrder.formatMonetary(total_deposit)"/>
+            </div>
+        </xpath>
+    </t>
+</templates>

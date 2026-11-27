@@ -153,6 +153,9 @@ export class SplitBillScreen extends Component {
         }
     }
 
+    // Used to override inside `pos_restaurant_deposit`
+    linkSplitLines(_newLines) {}
+
     async createSplittedOrder() {
         const curOrderUuid = this.currentOrder.uuid;
         const originalOrder = this.pos.models["pos.order"].find((o) => o.uuid === curOrderUuid);
@@ -176,6 +179,7 @@ export class SplitBillScreen extends Component {
 
         // Create lines for the new order
         const comboMap = new Map();
+        const newLines = new Map();
         const lineToDel = [];
         const newCourses = new Map();
         const prepLinePairs = [];
@@ -215,6 +219,7 @@ export class SplitBillScreen extends Component {
                 );
 
                 newLine.setHasChange(false);
+                newLines.set(line, newLine);
 
                 if (line.combo_line_ids.length > 0) {
                     for (const comboLine of line.combo_line_ids) {
@@ -258,6 +263,7 @@ export class SplitBillScreen extends Component {
             }
         }
 
+        this.linkSplitLines(newLines);
         for (const line of lineToDel) {
             line.delete();
         }

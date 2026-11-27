@@ -492,6 +492,10 @@ export class PosOrderline extends PosOrderlineAccounting {
         return this.prep_line_ids?.reduce((sum, pl) => sum + pl.quantity - pl.cancelled, 0) ?? 0;
     }
 
+    // Used to override inside `pos_discount`, `pos_loyalty`, `pos_deposit`.
+    isGlobalDiscountApplicable() {
+        return true;
+    }
     isServiceFeeApplicable() {
         return !this.isTipLine() && !this.isServiceFeeLine();
     }

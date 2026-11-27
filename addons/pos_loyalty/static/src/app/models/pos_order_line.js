@@ -123,7 +123,7 @@ patch(PosOrderline.prototype, {
         if (this.is_reward_line && ["gift_card", "ewallet"].includes(programType)) {
             return false;
         }
-        return super.isGlobalDiscountApplicable?.() ?? true;
+        return super.isGlobalDiscountApplicable();
     },
     /**
      * A trigger-product line sells a payment instrument (gift card / eWallet top-up), not
