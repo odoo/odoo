@@ -427,7 +427,7 @@ class PosSession(models.Model):
         if self.env.user.has_group('point_of_sale.group_pos_user'):
             record = record.sudo()
         data = {}
-        if record.get_session_orders().filtered(lambda o: o.state != 'cancel') or record.statement_line_ids:
+        if record._get_closed_orders() or record.get_session_orders().filtered(lambda o: o.state != 'cancel') or record.statement_line_ids:
             self.cash_real_transaction = sum(self.sudo().statement_line_ids.mapped('amount'))
             if self.state == 'closed':
                 raise UserError(_('This session is already closed.'))
