@@ -63,7 +63,11 @@ export function useDynamicSnippetOption(modelNameFilter, contextualFilterDomain 
         if (!Object.values(dynamicFilterTemplates).length) {
             return [];
         }
-        const snippetModel = domState.snippetModel || dynamicFilters[domState.filterId].model_name;
+        const snippetModel =
+            domState.snippetModel || dynamicFilters[domState.filterId]?.model_name;
+        if (!snippetModel) {
+            return [];
+        }
         return Object.values(dynamicFilterTemplates).filter(({ key }) => {
             const isModelTemplate = dynamicSnippetUtils.isModelSnippetTemplate(key, snippetModel);
             const isSingleModeTemplate = dynamicSnippetUtils.isSingleModeSnippetTemplate(key);
