@@ -4538,9 +4538,12 @@ class BaseModel(metaclass=MetaModel):
                     columns.append(fname)
                     for stored, row in zip(stored_list, rows):
                         if fname in stored:
+                            # do not replace the value in stored: fields like
+                            # properties may need the value given to create()
+                            value = stored[fname]
                             if field._clean_supported:
-                                stored[fname] = field.convert_to_cleaned_cache(stored[fname], self)
-                            row.append(field.convert_to_column_insert(stored[fname], self, stored))
+                                value = field.convert_to_cleaned_cache(value, self)
+                            row.append(field.convert_to_column_insert(value, self, stored))
                         else:
                             row.append(SQL_DEFAULT)
                 else:
