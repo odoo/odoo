@@ -462,7 +462,7 @@ class HrLeave(models.Model):
                       ) for version in versions)))
 
     @api.depends('request_date_from_period', 'request_date_to_period', 'request_hour_from', 'request_hour_to',
-                 'request_date_from', 'request_date_to', 'employee_id')
+                 'request_date_from', 'request_date_to', 'employee_id', 'work_entry_type_id')
     def _compute_date_from_to(self):
         for holiday in self:
             is_calendar_leave = holiday.work_entry_type_id.count_days_as == 'calendar'
@@ -729,11 +729,56 @@ class HrLeave(models.Model):
                     # Only subtract public holidays if the leave type does NOT include public holidays in duration.
                     # When include_public_holidays_in_duration is True ("Public Holiday Included" enabled),
                     # the leave should count the full day even if it falls on a public holiday.
+<<<<<<< 76a0310536114e776bc46ca70af7f4b42284f073
                     filtered_public_holidays = public_holidays.filtered(lambda h:
                         (h.calendar_id == calendar or not h.calendar_id) and
                         h.company_id == leave.company_id
                     ) if not leave.work_entry_type_id.include_public_holidays_in_duration else self.env['resource.calendar.leaves']
                     hours = leave._subtract_public_holidays(filtered_public_holidays)
+||||||| 92ed88ee9c51e4a7586c415ee0cb7e802475feaa
+                    resource_calendar_leaves = self.env['resource.calendar.leaves']
+                    public_holidays = resource_calendar_leaves.search([
+                        ('resource_id', '=', False),
+                        ('date_from', '<', leave.date_to),
+                        ('date_to', '>', leave.date_from),
+                        ('calendar_id', 'in', [False, calendar.id]),
+                        ('company_id', '=', leave.company_id.id)
+                    ]) if not leave.work_entry_type_id.include_public_holidays_in_duration else resource_calendar_leaves
+                    if public_holidays:
+                        public_holidays_intervals = Intervals([(ph.date_from, ph.date_to, ph) for ph in public_holidays])
+                        leave_intervals = Intervals([(leave.date_from, leave.date_to, leave)])
+                        real_leave_intervals = leave_intervals - public_holidays_intervals
+                        hours = sum(
+                            (stop - start).total_seconds() / 3600
+                            for start, stop, meta in real_leave_intervals
+                        )
+                    else:
+                        hours = (leave.date_to - leave.date_from).total_seconds() / 3600
+=======
+                    resource_calendar_leaves = self.env['resource.calendar.leaves']
+                    public_holidays = resource_calendar_leaves.search([
+                        ('resource_id', '=', False),
+                        ('date_from', '<', leave.date_to),
+                        ('date_to', '>', leave.date_from),
+                        ('calendar_id', 'in', [False, calendar.id]),
+                        ('company_id', '=', leave.company_id.id)
+                    ]) if not leave.work_entry_type_id.include_public_holidays_in_duration else resource_calendar_leaves
+                    if public_holidays:
+                        public_holidays_intervals = Intervals([(ph.date_from, ph.date_to, ph) for ph in public_holidays])
+                        leave_intervals = Intervals([(leave.date_from, leave.date_to, leave)])
+                        real_leave_intervals = leave_intervals - public_holidays_intervals
+                        hours = sum(
+                            (stop - start).total_seconds() / 3600
+                            for start, stop, meta in real_leave_intervals
+                        )
+                    else:
+                        hours = (leave.date_to - leave.date_from).total_seconds() / 3600
+                    # without hours per day the window covers the whole day, count at most the average hours of a day instead
+                    version = leave.employee_id.sudo()._get_version(leave.request_date_from)
+                    average_day_hours = 0
+                    if version.is_flexible and not version.is_fully_flexible and not version.hours_per_day:
+                        average_day_hours = version.hours_per_week / 7
+>>>>>>> 46844a21781b90429dcc6586b6af2cfdceda840a
                     if leave.work_entry_type_request_unit != 'hour':
                         total_days = (leave.request_date_to - leave.request_date_from).days + 1
                         if filtered_public_holidays:
@@ -749,6 +794,18 @@ class HrLeave(models.Model):
                             if leave.request_date_to_period == 'am':
                                 total_days -= 0.5
                         days = max(0, total_days)
+<<<<<<< 76a0310536114e776bc46ca70af7f4b42284f073
+||||||| 92ed88ee9c51e4a7586c415ee0cb7e802475feaa
+                    elif leave.employee_id.sudo().is_fully_flexible or not leave.employee_id.sudo().hours_per_day:
+                        days = hours / 24
+=======
+                        if average_day_hours:
+                            hours = days * average_day_hours
+                    elif leave.employee_id.sudo().is_fully_flexible or not leave.employee_id.sudo().hours_per_day:
+                        days = hours / 24
+                        if average_day_hours:
+                            hours = min(hours, average_day_hours)
+>>>>>>> 46844a21781b90429dcc6586b6af2cfdceda840a
                     else:
                         days = hours / 24
                 elif leave.work_entry_type_request_unit == 'day' and check_work_entry_type:
@@ -807,7 +864,7 @@ class HrLeave(models.Model):
                 tz = leave.employee_id._get_tz(leave.date_from) or tz
             leave.tz = tz
 
-    @api.depends('number_of_hours', 'number_of_days')
+    @api.depends('number_of_hours', 'number_of_days', 'work_entry_type_id')
     def _compute_duration_display(self):
         for leave in self:
             duration = leave.number_of_days
