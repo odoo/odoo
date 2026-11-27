@@ -4,7 +4,6 @@ import {
     click,
     contains,
     defineMailModels,
-    mockGetMedia,
     onRpcBefore,
     openDiscuss,
     patchUiSize,
@@ -21,6 +20,7 @@ import {
     expect,
     hover,
     manuallyDispatchProgrammaticEvent,
+    mockPermission,
     mockSendBeacon,
     queryFirst,
     test,
@@ -37,7 +37,8 @@ describe.current.tags("desktop");
 defineMailModels();
 
 test("basic rendering", async () => {
-    mockGetMedia();
+    mockPermission("camera", "granted");
+    mockPermission("microphone", "granted");
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
@@ -48,7 +49,7 @@ test("basic rendering", async () => {
     await contains(".o-discuss-CallActionList");
     await contains(".o-discuss-CallMenu-buttonContent");
     await contains(".o-discuss-CallActionList button", { count: 6 });
-    await contains("button[aria-label='Unmute'], button[aria-label='Mute']"); // FIXME depends on current browser permission
+    await contains("button[aria-label='Mute']");
     await contains(".o-discuss-CallActionList button[aria-label='Deafen']");
     await contains(".o-discuss-CallActionList button[aria-label='Turn camera on']");
     await contains(".o-discuss-CallActionList button[aria-label='Share Screen']");
@@ -60,7 +61,7 @@ test("basic rendering", async () => {
 });
 
 test("keep the `more` popover active when hovering it", async () => {
-    mockGetMedia();
+    mockPermission("microphone", "granted");
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
@@ -91,7 +92,7 @@ test("no call with odoobot", async () => {
 });
 
 test("should not display call UI when no more members (self disconnect)", async () => {
-    mockGetMedia();
+    mockPermission("microphone", "granted");
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
@@ -103,7 +104,7 @@ test("should not display call UI when no more members (self disconnect)", async 
 });
 
 test("show call UI in chat window when in call", async () => {
-    mockGetMedia();
+    mockPermission("microphone", "granted");
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "General" });
     await start();
@@ -117,7 +118,7 @@ test("show call UI in chat window when in call", async () => {
 });
 
 test("should disconnect when closing page while in call", async () => {
-    mockGetMedia();
+    mockPermission("microphone", "granted");
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
@@ -204,7 +205,8 @@ test("should display invitations", async () => {
 });
 
 test("can share screen", async () => {
-    mockGetMedia();
+    mockPermission("camera", "granted");
+    mockPermission("microphone", "granted");
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
@@ -220,7 +222,8 @@ test("can share screen", async () => {
 });
 
 test("can share user camera", async () => {
-    mockGetMedia();
+    mockPermission("camera", "granted");
+    mockPermission("microphone", "granted");
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
@@ -233,7 +236,8 @@ test("can share user camera", async () => {
 });
 
 test("Card should remain in focus after Share Screen is toggled", async () => {
-    mockGetMedia();
+    mockPermission("camera", "granted");
+    mockPermission("microphone", "granted");
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
@@ -257,7 +261,8 @@ test("Card should remain in focus after Share Screen is toggled", async () => {
 });
 
 test("Camera video stream stays in focus when on/off", async () => {
-    mockGetMedia();
+    mockPermission("camera", "granted");
+    mockPermission("microphone", "granted");
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
@@ -277,7 +282,7 @@ test("Camera video stream stays in focus when on/off", async () => {
 });
 
 test("Create a direct message channel when clicking on start a meeting", async () => {
-    mockGetMedia();
+    mockPermission("microphone", "granted");
     await start();
     await openDiscuss();
     await click("button", { text: "Start a meeting" });
@@ -287,7 +292,8 @@ test("Create a direct message channel when clicking on start a meeting", async (
 });
 
 test("Can share user camera and screen together", async () => {
-    mockGetMedia();
+    mockPermission("camera", "granted");
+    mockPermission("microphone", "granted");
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
@@ -300,7 +306,8 @@ test("Can share user camera and screen together", async () => {
 });
 
 test("Click on inset card should replace the inset and active stream together", async () => {
-    mockGetMedia();
+    mockPermission("camera", "granted");
+    mockPermission("microphone", "granted");
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
@@ -316,7 +323,8 @@ test("Click on inset card should replace the inset and active stream together", 
 });
 
 test("Inset card removed while being dragged", async () => {
-    mockGetMedia();
+    mockPermission("camera", "granted");
+    mockPermission("microphone", "granted");
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const env = await start();
@@ -339,7 +347,7 @@ test("Inset card removed while being dragged", async () => {
 });
 
 test("join/leave sounds are only played on main tab", async () => {
-    mockGetMedia();
+    mockPermission("microphone", "granted");
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const env1 = await start({ asTab: true });
@@ -367,7 +375,7 @@ test("join/leave sounds are only played on main tab", async () => {
 });
 
 test("'Start a meeting' in mobile", async () => {
-    mockGetMedia();
+    mockPermission("microphone", "granted");
     patchUiSize({ size: SIZES.SM });
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Partner 2" });
@@ -387,7 +395,8 @@ test("'Start a meeting' in mobile", async () => {
 });
 
 test("Systray icon shows latest action", async () => {
-    mockGetMedia();
+    mockPermission("camera", "granted");
+    mockPermission("microphone", "granted");
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
@@ -410,7 +419,8 @@ test("Systray icon shows latest action", async () => {
 });
 
 test("Systray icon keeps track of earlier actions", async () => {
-    mockGetMedia();
+    mockPermission("camera", "granted");
+    mockPermission("microphone", "granted");
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
@@ -437,7 +447,7 @@ test("Systray icon keeps track of earlier actions", async () => {
 });
 
 test("show call participants in discuss sidebar", async () => {
-    mockGetMedia();
+    mockPermission("microphone", "granted");
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
@@ -480,7 +490,7 @@ test("Compact sidebar call participants panel closes when the mouse leaves it", 
 });
 
 test("Sort call participants in side bar by name", async () => {
-    mockGetMedia();
+    mockPermission("microphone", "granted");
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     pyEnv["discuss.channel.rtc.session"].create([
@@ -526,7 +536,7 @@ test("Sort call participants in side bar by name", async () => {
 });
 
 test("Use saved volume settings", async () => {
-    mockGetMedia();
+    mockPermission("microphone", "granted");
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const partnerName = "Another Participant";
@@ -577,7 +587,7 @@ test("automatically cancel incoming call after some time", async () => {
 });
 
 test("should also invite to the call when inviting to the channel", async () => {
-    mockGetMedia();
+    mockPermission("microphone", "granted");
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
         email: "testpartner@odoo.com",
@@ -601,7 +611,7 @@ test("should also invite to the call when inviting to the channel", async () => 
 });
 
 test("should not show context menu on participant card when not in a call", async () => {
-    mockGetMedia();
+    mockPermission("microphone", "granted");
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "General",

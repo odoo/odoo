@@ -98,6 +98,14 @@ describe(parseUrl(import.meta.url), () => {
         await expect(fetch(objectURL)).rejects.toThrow();
     });
 
+    test.tags("secure");
+    test("caches are always empty", async () => {
+        await expect(caches.keys()).resolves.toEqual([]);
+        await expect(caches.match("/route")).resolves.toBe(undefined);
+        await expect(caches.delete("hoot")).resolves.toBe(false);
+        await expect(caches.open("hoot")).rejects.toThrow(/not allowed/);
+    });
+
     test("mock response with nested blobs", async () => {
         mockFetch(
             () =>

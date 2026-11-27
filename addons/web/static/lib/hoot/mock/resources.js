@@ -76,16 +76,19 @@ function trackInstance(instance, release) {
  *
  * Each class is mapped to the method acquiring its resources (`null` if they are
  * acquired on instantiation), and to the method releasing them, which must be
- * harmless to call more than once.
+ * harmless to call more than once (errors thrown when already released, e.g. by
+ * `MediaRecorder.stop`, are ignored).
  *
  * @type {[name: string, acquire: string | null, release: string][]}
  */
 const DISPOSABLE_CLASSES = [
     ["IntersectionObserver", "observe", "disconnect"],
+    ["MediaRecorder", "start", "stop"],
     ["MutationObserver", "observe", "disconnect"],
     ["PerformanceObserver", "observe", "disconnect"],
     ["ReportingObserver", "observe", "disconnect"],
     ["ResizeObserver", "observe", "disconnect"],
+    ["RTCPeerConnection", null, "close"],
 ];
 
 /** @type {Map<object, string>} */
