@@ -1,4 +1,4 @@
-import { Component, onMounted, onPatched, useProps, signal, t } from "@odoo/owl";
+import { Component, onMounted, onPatched, useEffect, useProps, signal, t } from "@odoo/owl";
 import { CenteredIcon } from "@point_of_sale/app/components/centered_icon/centered_icon";
 import { Orderline } from "@point_of_sale/app/components/orderline/orderline";
 import { formatCurrency } from "@web/core/currency";
@@ -27,6 +27,17 @@ export class OrderDisplay extends Component {
         };
         onMounted(scrollToSelectedOrderline);
         onPatched(scrollToSelectedOrderline);
+        if (this.props.mode === "display") {
+            const observer = new ResizeObserver(scrollToSelectedOrderline);
+            useEffect(() => {
+                const scrollable = this.scrollableRef();
+                if (!scrollable) {
+                    return;
+                }
+                observer.observe(scrollable);
+                return () => observer.disconnect();
+            });
+        }
     }
 
     formatCurrency(amount) {
