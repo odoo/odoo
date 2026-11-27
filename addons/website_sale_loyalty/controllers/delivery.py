@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from functools import partial
 
 from odoo.http import request, route
 
@@ -21,26 +20,11 @@ class WebsiteSaleLoyaltyDelivery(Delivery):
         return res
 
     def _order_summary_values(self, order, **post):
-        to_html = partial(
-            self.env["ir.qweb.field.monetary"].value_to_html,
-            options={"display_currency": order.currency_id},
-        )
         res = super()._order_summary_values(order, **post)
         free_shipping_lines = order._get_free_shipping_lines()
         if free_shipping_lines:
             shipping_discount = sum(free_shipping_lines.mapped("price_total"))
-            res["amount_delivery_discounted"] = to_html(shipping_discount)
             res["delivery_discount_minor_amount"] = payment_utils.to_minor_currency_units(
                 shipping_discount, order.currency_id
             )
-        discount_lines = order.order_line.filtered(
-            lambda line: line.reward_id.reward_type == "discount"
-        )
-        groupable_lines = discount_lines.filtered(
-            lambda line: line.reward_id.program_type not in ['ewallet', 'gift_card']
-        )
-        res["discount_reward_amounts"] = [
-            to_html(sum(lines.mapped("price_subtotal")))
-            for lines in groupable_lines.grouped("reward_id").values()
-        ] + [to_html(line.price_subtotal) for line in discount_lines - groupable_lines]
         return res

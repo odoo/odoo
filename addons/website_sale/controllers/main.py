@@ -15,6 +15,7 @@ from odoo.http.stream import content_disposition
 from odoo.tools import SQL, clean_context, float_round, lazy, str2bool
 from odoo.tools.translate import LazyTranslate
 
+from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.controllers import portal as payment_portal
 from odoo.addons.sale.controllers import portal as sale_portal
 from odoo.addons.website.controllers.main import QueryURL
@@ -997,22 +998,44 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         return request.redirect(redirect_url or SHOP_PATH)
 
-    @route("/shop/pricelist", type="http", auth="public", website=True, sitemap=False)
-    def pricelist(self, promo, **post):
-        redirect = post.get("r", "/shop/cart")
-        if promo:
+    @route("/shop/code/apply", type="jsonrpc", auth="public", website=True, sitemap=False)
+    def apply_code(self, code):
+        if code:
             pricelist_sudo = (
-                self.env["product.pricelist"].sudo().search([("code", "=", promo)], limit=1)
+                self.env["product.pricelist"].sudo().search([("code", "=", code)], limit=1)
             )
             if not (pricelist_sudo and self.env.website.is_pricelist_available(pricelist_sudo.id)):
-                return request.redirect("%s?code_not_available=1" % redirect)
+                return {"success": False, "message": self._promo_code_unavailable_warning()}
 
             self._apply_pricelist(pricelist=pricelist_sudo)
         else:
-            # Reset the pricelist if empty promo code is given
+            # Reset the pricelist if an empty code is given
             self._apply_pricelist(pricelist=None)
 
-        return request.redirect(redirect)
+        return {**self._get_express_checkout_amounts(request.cart), "success": True}
+
+    def _get_express_checkout_amounts(self, order_sudo):
+        """Return the amounts of the order to update the express checkout with after a cart
+        operation.
+
+        :param sale.order order_sudo: The current cart.
+        :return: The `amount` and `minor_amount` of the order, if any.
+        :rtype: dict
+        """
+        if not order_sudo:
+            return {}
+        return {
+            "amount": order_sudo.amount_total,
+            "minor_amount": (
+                order_sudo.amount_total
+                and payment_utils.to_minor_currency_units(
+                    order_sudo.amount_total, order_sudo.currency_id
+                )
+            ),
+        }
+
+    def _promo_code_unavailable_warning(self):
+        return self.env._("This promo code is not available.")
 
     def _apply_selectable_pricelist(self, pricelist_id):
         """Change the pricelist if selectable on the website.

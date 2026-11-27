@@ -7,9 +7,6 @@
         'l10n_br',
         'website_sale',
     ],
-    'data': [
-        'views/templates.xml',
-    ],
     'auto_install': True,
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

@@ -10,28 +10,39 @@ from odoo.addons.website_sale.controllers import main
 
 class WebsiteSale(main.WebsiteSale):
     @route()
-    def pricelist(self, promo, reward_id=None, **post):
+    def apply_code(self, code, reward_id=None, **post):
         if not (order_sudo := request.cart):
-            return request.redirect("/shop")
-        coupon_status = order_sudo._try_apply_code(promo)
+            return {"success": False}
+        coupon_status = order_sudo._try_apply_code(code)
         if coupon_status.get("not_found"):
-            return super().pricelist(promo, **post)
+            return super().apply_code(code, **post)
         if coupon_status.get("error"):
-            request.session["error_promo_code"] = coupon_status["error"]
-        elif "error" not in coupon_status:
-            reward_successfully_applied = True
-            if len(coupon_status) == 1:
-                coupon, rewards = next(iter(coupon_status.items()))
-                if len(rewards) == 1:
-                    reward = rewards
-                else:
-                    reward = reward_id in rewards.ids and rewards.browse(reward_id)
-                if reward and (not reward.multi_product or self.env.context.get("product_id")):
-                    reward_successfully_applied = self._apply_reward(order_sudo, reward, coupon)
+            return {"success": False, "message": coupon_status["error"]}
 
-            if reward_successfully_applied:
-                request.session["successful_code"] = promo
-        return request.redirect(post.get("r", "/shop/cart"))
+        if len(coupon_status) == 1:
+            coupon, rewards = next(iter(coupon_status.items()))
+            if len(rewards) == 1:
+                reward = rewards
+            else:
+                reward = reward_id in rewards.ids and rewards.browse(reward_id)
+            if reward and (not reward.multi_product or self.env.context.get("product_id")):
+                reward_status = self._apply_reward(order_sudo, reward, coupon)
+                if not reward_status["success"]:
+                    return reward_status
+
+        # refresh rewards
+        order_sudo._update_programs_and_rewards()
+        order_sudo._auto_apply_rewards()
+        return {
+            **self._get_express_checkout_amounts(order_sudo),
+            "success": True,
+            "message": self.env._(
+                "You have successfully applied the following code: %(code)s.", code=code
+            ),
+        }
+
+    def _promo_code_unavailable_warning(self):
+        return self.env._("Invalid or expired promo code.")
 
     @route(["/coupon/<string:code>"], type="http", auth="public", website=True, sitemap=False)
     def activate_coupon(self, code, r="/shop", **_kwargs):
@@ -56,11 +67,10 @@ class WebsiteSale(main.WebsiteSale):
         redirect = url_parts.replace(query=url_encode(url_query))
         return request.redirect(redirect.to_url())
 
-    @route("/shop/claimreward", type="http", auth="public", website=True, sitemap=False)
-    def claim_reward(self, reward_id, code=None, **post):
-        redirect = post.get("r", "/shop/cart")
+    @route("/shop/claimreward", type="jsonrpc", auth="public", website=True, sitemap=False)
+    def claim_reward(self, reward_id, code=None, product_id=None, **_post):
         if not (order_sudo := request.cart):
-            return request.redirect(redirect)
+            return {"success": False}
 
         try:
             reward_id = int(reward_id)
@@ -69,12 +79,10 @@ class WebsiteSale(main.WebsiteSale):
 
         reward_sudo = self.env["loyalty.reward"].sudo().browse(reward_id).exists()
         if not reward_sudo:
-            return request.redirect(redirect)
+            return {"success": False}
 
-        if reward_sudo.multi_product and "product_id" in post:
-            request.update_context(product_id=int(post["product_id"]))
-        else:
-            request.redirect(redirect)
+        if reward_sudo.multi_product and product_id:
+            request.update_context(product_id=int(product_id))
 
         program_sudo = reward_sudo.program_id
         claimable_rewards = order_sudo._get_claimable_and_showable_rewards()
@@ -93,27 +101,29 @@ class WebsiteSale(main.WebsiteSale):
                         and program_sudo.program_type not in ("ewallet", "loyalty")
                     )
                 ):
-                    return self.pricelist(code, reward_id=reward_id)
+                    return self.apply_code(code, reward_id=reward_id)
         if coupon:
-            self._apply_reward(order_sudo, reward_sudo, coupon)
-        return request.redirect(redirect)
+            result = self._apply_reward(order_sudo, reward_sudo, coupon)
+            if not result["success"]:
+                return result
+            return {**self._get_express_checkout_amounts(order_sudo), **result}
+        return {"success": False}
 
     def _apply_reward(self, order, reward, coupon):
         """Try to apply the given program reward.
 
-        :returns: whether the reward was successfully applied
-        :rtype: bool
+        :return: The status of the application, in the format
+                 {'success': bool, 'message': str}, with a message only if it failed.
+        :rtype: dict
         """
         product_id = self.env.context.get("product_id")
         product = product_id and self.env["product.product"].sudo().browse(product_id)
         try:
             reward_status = order._apply_program_reward(reward, coupon, product=product)
         except UserError as e:
-            request.session["error_promo_code"] = str(e)
-            return False
+            return {"success": False, "message": str(e)}
         if "error" in reward_status:
-            request.session["error_promo_code"] = reward_status["error"]
-            return False
+            return {"success": False, "message": reward_status["error"]}
         order._update_programs_and_rewards()
         if order.carrier_id.free_over and not reward.program_id.is_payment_program:
             # update shipping cost if it's `free_over` and reward isn't eWallet or gift card
@@ -123,4 +133,4 @@ class WebsiteSale(main.WebsiteSale):
                 order.set_delivery_line(order.carrier_id, res["price"])
             else:
                 order._remove_delivery_line()
-        return True
+        return {"success": True}

@@ -54,7 +54,7 @@ registry.category("web_tour.tours").add("donation_snippet_use", {
         },
         {
             content: "Check that the donation line is in the cart with quantity 1",
-            trigger: ".o_cart_product .js_quantity[value='1']",
+            trigger: ".o_cart_product .js_quantity:value(1)",
         },
         {
             content: "Check that the donation amount on the line is 55",
@@ -92,7 +92,7 @@ registry.category("web_tour.tours").add("donation_snippet_use_2", {
         },
         {
             content: "Check that the donation line is in the cart with quantity 1",
-            trigger: ".o_cart_product .js_quantity[value='1']",
+            trigger: ".o_cart_product .js_quantity:value(1)",
         },
         {
             content: "Check that the donation amount on the line is 10",
@@ -127,7 +127,7 @@ registry.category("web_tour.tours").add("donation_snippet_use_cart", {
         },
         {
             content: "Check that the donation line is in the cart",
-            trigger: ".o_cart_product .js_quantity[value='1']",
+            trigger: ".o_cart_product .js_quantity:value(1)",
         },
         {
             content: "Check that the donation amount is 10",

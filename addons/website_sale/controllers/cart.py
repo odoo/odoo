@@ -71,7 +71,6 @@ class Cart(PaymentPortal):
 
         values.update(self.env.website._get_checkout_step_values("/shop/cart", order_sudo))
         values.update(self._cart_values(**post))
-        values.update(self._prepare_order_history())
         return request.render("website_sale.cart", values)
 
     def _cart_values(self, **_post):
@@ -97,6 +96,8 @@ class Cart(PaymentPortal):
         product_custom_attribute_values=None,
         no_variant_attribute_value_ids=None,
         linked_products=None,
+        skip_order_alert=False,
+        render_shorter_cart_summary=False,
         **kwargs,
     ):
         """Add a product to the shopping cart.
@@ -114,13 +115,17 @@ class Cart(PaymentPortal):
             of `product.template.attribute.value` ids.
         :param list linked_products: A list of objects representing additional products linked to
             the product added to the cart. Can be combo item or optional products.
-        :param dict kwargs: Optional data, given to `_cart_add`. If `skip_order_alert` is set, the
-            warning isn't stored on the order when no line is created.
+        :param bool skip_order_alert: Whether to not store the warning on the order when it can't
+            be attached to a line, e.g. when the customer is not redirected to the cart page.
+        :param bool render_shorter_cart_summary: Whether to render the shorter cart summary, e.g.
+            when adding a product to an empty cart from the cart page.
+        :param dict kwargs: Optional data. This parameter is not used here.
         :return: The values
         :rtype: dict
         """
         order_sudo = request.cart or self.env.website._create_cart()
         order_sudo._check_not_partially_paid()  # Prevent modifying the cart if it's partially paid
+
         # Do not allow float values in ecommerce by default
         quantity = (quantity and int(quantity)) or 1
 
@@ -302,53 +307,35 @@ class Cart(PaymentPortal):
                 # Store the warning on the order line so the cart page can show its source to the
                 # user.
                 updated_line._add_warning_alert(warning)
-            elif not kwargs.pop("skip_order_alert", False):
+            elif not skip_order_alert:
                 # No line to attach the warning to: keep it on the order so that it is shown on the
                 # cart page for flows redirecting there.
                 order_sudo._add_warning_alert(warning)
             notifications.append({"type": "warning", "data": {"warning_message": warning}})
 
+        cart_summary_data = {}
+        if render_shorter_cart_summary and order_sudo.cart_quantity:
+            IrUiView = self.env["ir.ui.view"]
+            cart_summary_data["website_sale.shorter_cart_summary"] = IrUiView._render_template(
+                "website_sale.shorter_cart_summary",
+                {
+                    "website_sale_order": order_sudo,
+                    "show_shorter_cart_summary": True,
+                    **self._get_express_shop_payment_values(order_sudo),
+                    **self.env.website._get_checkout_step_values("/shop/cart", order_sudo),
+                },
+            )
+
         return {
-            "cart_quantity": order_sudo.cart_quantity,
+            **self._get_updated_cart_page_values(order_sudo),
             "notifications": notifications,
             "quantity": values.pop("quantity", 0),
             "tracking_info": tracking_info,
-            "currency": order_sudo.currency_id.name,
+            **cart_summary_data,
         }
 
     def _get_product_user_error(self, product):  # noqa: ARG002
         return self.env._("The given product does not exist therefore it cannot be added to cart.")
-
-    @route(
-        route="/shop/cart/quick_add", type="jsonrpc", auth="user", methods=["POST"], website=True
-    )
-    def quick_add(self, product_template_id, product_id, quantity=1.0, **kwargs):
-        # The customer is already on the cart page and gets the warning as a notification, don't
-        # keep it on the order to show it again on the next page load.
-        values = self.add_to_cart(
-            product_template_id, product_id, quantity=quantity, skip_order_alert=True, **kwargs
-        )
-
-        order_sudo = request.cart
-        values.update(self._get_updated_cart_page_values(order_sudo))
-        # If the cart was empty, no cart summary was rendered on the page. However, we just
-        # added a product, so render it now.
-        values["website_sale.shorter_cart_summary"] = self.env.website._render_template(
-            "website_sale.shorter_cart_summary",
-            {
-                "website_sale_order": order_sudo,
-                "show_shorter_cart_summary": True,
-                **self._get_express_shop_payment_values(order_sudo),
-                **self.env.website._get_checkout_step_values("/shop/cart", order_sudo),
-            },
-        )
-        # Products already in the cart should not appear in quick reorder suggestions.
-        # We just added one, so refresh the quick reorder view.
-        values["website_sale.quick_reorder_history"] = self.env.website._render_template(
-            "website_sale.quick_reorder_history",
-            {"website_sale_order": order_sudo, **self._prepare_order_history()},
-        )
-        return values
 
     def _get_express_shop_payment_values(self, order, **_kwargs):
         payment_form_values = CustomerPortal._get_payment_values(
@@ -421,22 +408,17 @@ class Cart(PaymentPortal):
 
         values = order_sudo._cart_update_line_quantity(line_id, quantity, **kwargs)
         values.update(self._get_updated_cart_page_values(order_sudo))
-        # Products already in the cart should not appear in quick reorder suggestions.
-        # Since we might have cleared the line (quantity == 0), we need to refresh the view.
-        values["website_sale.quick_reorder_history"] = self.env.website._render_template(
-            "website_sale.quick_reorder_history",
-            {"website_sale_order": order_sudo, **self._prepare_order_history()},
-        )
         return values
 
     def _get_updated_cart_page_values(self, order_sudo):
-        """Construct the values needed to update the UI after a cart update.
+        """Return the values needed to update the UI after the cart is modified, e.g. when a
+        product is added or a line is updated.
 
-        :param sale.order order_sudo: The current cart order.
+        :param sale.order order_sudo: The current cart.
+        :return: The cart's blocking alerts state, quantity, currency name, and its `amount` and
+                 `minor_amount` sent with the `cart_amount_changed` event.
         :rtype: dict
         """
-        IrUiView = self.env["ir.ui.view"]
-
         return {
             "cart_has_blocking_alerts": order_sudo._has_blocking_alerts(),
             "cart_quantity": order_sudo.cart_quantity,
@@ -448,24 +430,45 @@ class Cart(PaymentPortal):
                     order_sudo.amount_total, order_sudo.currency_id
                 )
             ),
-            "website_sale.cart_lines": IrUiView._render_template(
-                "website_sale.cart_lines",
-                {
-                    "website_sale_order": order_sudo,
-                    "date": fields.Date.today(),
-                    "suggested_products": order_sudo._cart_accessories(),
-                },
-            ),
-            "website_sale.total": IrUiView._render_template(
-                "website_sale.total", {"website_sale_order": order_sudo, **self._total_values()}
-            ),
         }
 
-    def _total_values(self):
-        """Pass additional values when rendering the 'website_sale.total' template."""
-        return {}
+    @route(route="/shop/cart/data", type="jsonrpc", auth="public", website=True)
+    def cart_data(self, from_confirmation_page=False, with_history=False) -> dict:
+        """Return the shared cart data used by the OWL cart components."""
+        if from_confirmation_page:
+            order_sudo = (
+                request.env["sale.order"].sudo().browse(request.session.get("sale_last_order_id"))
+            )
+        else:
+            order_sudo = request.cart
 
-    def _prepare_order_history(self):
+        result = {
+            "lines": {},
+            "totals": {},
+            "history": self.cart_history() if with_history else {},
+            "currency_id": None,
+            "is_quantity_view_active": self.env.website.is_view_active(
+                "website_sale.product_quantity"
+            ),
+            "is_wishlist_view_active": self.env.website.is_view_active(
+                "website_sale.wishlist_cart_lines"
+            ),
+            "show_product_reference_price": self.env.website.show_product_reference_price,
+        }
+
+        if not order_sudo:
+            return result
+
+        result.update({
+            "lines": self.cart_lines(order_sudo),
+            "totals": self.cart_totals(order_sudo),
+            "currency_id": order_sudo.currency_id.id,
+        })
+        order_sudo._clear_alerts()
+
+        return result
+
+    def cart_history(self) -> dict:
         """Prepare the order history of the current user.
 
         The valid order lines of the last 10 confirmed orders are considered and grouped by date. An
@@ -480,7 +483,9 @@ class Cart(PaymentPortal):
         The dates are represented by labels like "Today", "Yesterday", or "X days ago".
 
         :return: The order history, in the format
-                 {'order_history': [{'label': str, 'lines': SaleOrderLine}, ...]}.
+                 {'is_public_user': bool,
+                  'order_history': [{'label': str, 'lines': [dict, ...]}, ...]}, where each
+                 line is prepared by `_prepare_order_history_line`.
         :rtype: dict
         """
 
@@ -490,7 +495,7 @@ class Cart(PaymentPortal):
 
         # The public partner is shared by all visitors: it has no order history of its own
         if self.env.website.is_public_user():
-            return {"order_history": []}
+            return {"is_public_user": True, "order_history": []}
 
         # Get the last 10 confirmed orders from the current website user.
         previous_orders_lines_sudo = (
@@ -542,15 +547,40 @@ class Cart(PaymentPortal):
                 line_group_label = self.env._("Yesterday")
             else:
                 line_group_label = self.env._("%s days ago", days_ago)
-            lines_per_order_date.setdefault(line_group_label, SaleOrderLineSudo)
-            lines_per_order_date[line_group_label] |= line_sudo
+            lines_per_order_date.setdefault(line_group_label, [])
+            lines_per_order_date[line_group_label].append(
+                self._prepare_order_history_line(line_sudo)
+            )
 
         # Flatten the line groups to get the final order history.
         return {
+            "is_public_user": self.env.website.is_public_user(),
             "order_history": [
                 {"label": label, "lines": lines} for label, lines in lines_per_order_date.items()
-            ]
+            ],
         }
+
+    def _prepare_order_history_line(self, line):
+        history_line = {
+            "id": line.id,
+            "is_combo": line.product_type == "combo",
+            "name_short": line.name_short,
+            "product_id": line.product_id.id,
+            "product_tmpl_id": line.product_id.product_tmpl_id.id,
+            "product_name": line.product_id.display_name,
+            "quantity": line.product_uom_qty,
+            "price": line.price_unit,
+            "combo_item_lines": [
+                self._prepare_combo_item_line_data(combo_item_line)
+                for combo_item_line in line.linked_line_ids.filtered("combo_item_id")
+            ],
+            "selected_combo_items": line._get_selected_combo_items(),
+            "combination_info_variant": line.product_id._get_combination_info_variant(),
+            "product_uom_qty": line.product_uom_qty,
+        }
+        if line.product_id._has_multiple_uoms():
+            history_line["uom_name"] = line.product_uom_id.name
+        return history_line
 
     def _get_cart_notification_information(self, order, added_qty_per_line):
         """Get the information about the sales order lines to show in the notification.
@@ -627,3 +657,121 @@ class Cart(PaymentPortal):
             infos["uom_name"] = line.product_uom_id.name
 
         return infos
+
+    def cart_lines(self, order_sudo) -> dict:
+        values = {
+            "cart_lines": [],
+            "accessories": self._cart_accessories(order_sudo),
+            "cart_quantity": order_sudo.cart_quantity,
+        }
+
+        for line_sudo in order_sudo.website_order_line:
+            values["cart_lines"].append(self._prepare_cart_line_data(line_sudo))
+
+        return values
+
+    def _prepare_cart_line_data(self, line_sudo):
+        is_sellable = line_sudo._is_sellable()
+        line_data = {
+            "id": line_sudo.id,
+            "product_id": line_sudo.product_id.id,
+            "name_short": line_sudo.name_short,
+            "header_name": line_sudo._get_line_header(),
+            "displayed_quantity": line_sudo._get_displayed_quantity(),
+            "displayed_unit_price": line_sudo._get_displayed_unit_price(),
+            "product_price": line_sudo._get_cart_display_price(),
+            "base_unit_price": line_sudo.product_id.base_unit_price,
+            "product_uom_qty": line_sudo.product_uom_qty,
+            "product_base_unit_price": (
+                line_sudo.product_id._get_base_unit_price(
+                    line_sudo._get_cart_display_price() / line_sudo.product_uom_qty
+                )
+            ),
+            "website_url": line_sudo.product_id.website_url,
+            "is_combo": line_sudo.product_type == "combo",
+            "is_sellable": is_sellable,
+            # Unsellable products can't be accessed through `/web/image` by the customer.
+            "image_uri": (
+                image_data_uri(line_sudo.product_id.image_128)
+                if not is_sellable and line_sudo.product_id.image_128
+                else False
+            ),
+            "combination_name": line_sudo._get_combination_name(),
+            "should_show_strikethrough_price": line_sudo._should_show_strikethrough_price(),
+            "description_lines": list(line_sudo.get_description_following_lines()),
+            "alert_message": line_sudo._join_alert_messages(),
+            "alert_level": line_sudo._get_max_alert_level(),
+            "max_quantity": line_sudo._get_max_line_qty(),
+            "min_quantity": line_sudo._get_minimum_line_quantity(),
+            "min_qty_message": line_sudo._get_minimum_qty_reached_message(),
+            # Additional details shown under the product name in the cart summary, e.g. the
+            # event slot. Other modules can append to this list.
+            "short_summary": [],
+        }
+
+        if line_sudo.product_id._has_multiple_uoms():
+            line_data["uom_name"] = line_sudo.product_uom_id.name
+
+        if line_sudo.product_type == "combo":
+            line_data["combo_item_lines"] = [
+                self._prepare_combo_item_line_data(combo_item)
+                for combo_item in line_sudo.linked_line_ids.filtered("combo_item_id")
+            ]
+
+        return line_data
+
+    def _prepare_combo_item_line_data(self, combo_item_line):
+        return {
+            "id": combo_item_line.id,
+            "website_url": combo_item_line.product_id.website_url,
+            "is_sellable": combo_item_line._is_sellable(),
+            "website_published": combo_item_line.product_id.website_published,
+            "displayed_quantity": combo_item_line._get_displayed_quantity(),
+            "name_short": combo_item_line.name_short,
+            "description_lines": list(combo_item_line.get_description_following_lines()),
+        }
+
+    def cart_totals(self, order_sudo) -> dict:
+        tax_included = order_sudo.website_id.tax_display == "tax_included"
+        return {
+            "has_carrier": bool(order_sudo.carrier_id),
+            "has_deliverable_products": order_sudo._has_deliverable_products(),
+            "amount_delivery": order_sudo.amount_delivery,
+            "amount_untaxed": order_sudo.amount_untaxed,
+            "tax_subtotals": (
+                order_sudo.tax_totals["subtotals"]
+                if order_sudo.tax_totals and order_sudo.tax_totals["subtotals"]
+                else False
+            ),
+            "amount_total": order_sudo.amount_total,
+            "tax_included": tax_included,
+            "is_paid": order_sudo._is_paid(),
+            "amount_paid": order_sudo.amount_paid,
+            # Which amounts of the order to show, overridable by other modules.
+            "show_untaxed_amount": not tax_included,
+            "show_tax_lines": True,
+            "show_total": True,
+        }
+
+    def _cart_accessories(self, order_sudo):
+        accessories = order_sudo._cart_accessories()
+
+        return [
+            {
+                "id": accessory.id,
+                "product_tmpl_id": accessory.product_tmpl_id.id,
+                "type": accessory.type,
+                "display_name": accessory.with_context(display_default_code=False).display_name,
+                "website_url": accessory.website_url,
+                "website_published": accessory.website_published,
+                # Unpublished products can't be accessed through `/web/image` by the customer.
+                "image_uri": (
+                    image_data_uri(accessory.image_128)
+                    if not accessory.website_published and accessory.image_128
+                    else False
+                ),
+                "description_sale": accessory.description_sale,
+                "combination_info": accessory._get_combination_info_variant(),
+            }
+            for accessory in accessories
+        ]

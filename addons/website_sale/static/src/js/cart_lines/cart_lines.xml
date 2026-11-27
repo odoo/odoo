@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+    <t t-name="website_sale.CartLines">
+        <div t-if="this.lines.length" class="d-flex flex-column mb32">
+            <t t-foreach="this.lines" t-as="line" t-key="line.id">
+                <CartLine line="line" t-props="this.cartLinesProps"/>
+            </t>
+            <CartAccessories
+                t-if="this.data.accessories?.length"
+                t-props="this.cartAccessoriesProps"
+            />
+        </div>
+        <div t-else="" class="w-100">
+            <div class="mt-5 mb-3">
+                <t t-call="website_sale.cartLines.emptyCartSvg"/>
+            </div>
+            <h5
+                class="mb-3"
+                style="text-align: center;"
+                t-out="this.props.templateData.emptyCartTitle"
+            />
+            <p style="text-align: center;">
+                <a
+                    href="/shop"
+                    class="btn btn-primary"
+                    t-out="this.props.templateData.shopButtonTitle"
+                />
+            </p>
+        </div>
+    </t>
+
+</templates>
