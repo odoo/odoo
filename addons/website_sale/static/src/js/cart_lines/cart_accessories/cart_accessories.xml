@@ -43,19 +43,19 @@
                                 <del
                                     name="suggested_product_list_price"
                                     t-attf-class="me-2 text-nowrap text-muted {{accessoryProduct.combination_info.has_discounted_price ? '' : 'd-none'}}"
-                                    t-out="this.env.formatPrice(accessoryProduct.combination_info.list_price)"
+                                    t-out="this.cart.formatPrice(accessoryProduct.combination_info.list_price)"
                                 />
                                 <span
                                     name="suggested_product_price"
                                     class="text-nowrap"
-                                    t-out="this.env.formatPrice(accessoryProduct.combination_info.price)"
+                                    t-out="this.cart.formatPrice(accessoryProduct.combination_info.price)"
                                 />
                             </h6>
                             <small
                                 t-if="accessoryProduct.combination_info.base_unit_price"
                                 class="o_product_price_unit text-muted d-block"
                             >
-                                (<t t-call="website_sale.CartProductPrice" price="this.env.formatPrice(accessoryProduct.combination_info.base_unit_price)"/>
+                                (<t t-call="website_sale.CartProductPrice" price="this.cart.formatPrice(accessoryProduct.combination_info.base_unit_price)"/>
                                 / <span class="oe_custom_base_unit" t-out="accessoryProduct.combination_info.base_unit_name"/>)
                             </small>
                             <button

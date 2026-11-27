@@ -1,4 +1,5 @@
-import { Component, onPatched, proxy, signal, t, useProps } from "@odoo/owl";
+import { Component, onPatched, proxy, signal, t, useProps, usePlugin } from "@odoo/owl";
+import { CartPlugin } from "@website_sale/js/cart_plugin";
 
 export class OrderHistoryLine extends Component {
     static template = "website_sale.OrderHistoryLine";
@@ -7,6 +8,7 @@ export class OrderHistoryLine extends Component {
         focus: t.boolean(),
     });
     qtyInput = signal.ref();
+    cart = usePlugin(CartPlugin);
 
     setup() {
         this.state = proxy({ quantity: parseInt(this.props.line.product_uom_qty) });
@@ -27,7 +29,7 @@ export class OrderHistoryLine extends Component {
             return;
         }
 
-        return await this.env.handleReorder({
+        return await this.cart.reorder({
             product_tmpl_id: this.props.line.product_tmpl_id,
             product_id: this.props.line.product_id,
             quantity: this.state.quantity,

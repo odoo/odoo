@@ -1,9 +1,8 @@
-import { Component, onWillStart, useProps, t, signal } from "@odoo/owl";
-import { formatCurrency } from "@web/core/currency";
+import { Component, onWillStart, providePlugins, useProps, usePlugin, t, signal } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
-import { formatDate } from "@web/core/l10n/dates";
 import { useDebounced } from "@web/core/utils/timing";
+import { CartPlugin } from "@website_sale/js/cart_plugin";
 
 export class CartSummary extends Component {
     static template = "website_sale.CartSummary";
@@ -14,6 +13,8 @@ export class CartSummary extends Component {
     scrollBadge = signal.ref();
 
     setup() {
+        providePlugins([CartPlugin]);
+        this.cart = usePlugin(CartPlugin);
         this.cartService = useService("cart");
         this.debouncedOnScroll = useDebounced(this.onScroll.bind(this), 100);
         onWillStart(
@@ -32,18 +33,8 @@ export class CartSummary extends Component {
         return this.data.cart_lines?.length > 4;
     }
 
-    formatPrice(price) {
-        return formatCurrency(price, this.cartService.state.currency_id);
-    }
-
     get cartQuantity() {
         return this.data.cart_quantity;
-    }
-
-    // used in website_sale_loyalty and website_sale_renting
-    formatDate(date) {
-        const formattedDate = luxon.DateTime.fromISO(date);
-        return formatDate(formattedDate);
     }
 
     onScroll(event) {

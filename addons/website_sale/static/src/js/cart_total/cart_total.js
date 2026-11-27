@@ -1,9 +1,9 @@
-import { Component, onWillStart, proxy, t, useProps, usePlugin } from "@odoo/owl";
-import { formatCurrency } from "@web/core/currency";
+import { Component, onWillStart, providePlugins, proxy, t, useProps, usePlugin } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
 import { NotificationPlugin } from "@web/core/notifications/notification_plugin";
+import { CartPlugin } from "@website_sale/js/cart_plugin";
 
 export class CartTotal extends Component {
     static template = "website_sale.CartTotal";
@@ -15,6 +15,8 @@ export class CartTotal extends Component {
     notifications = usePlugin(NotificationPlugin);
 
     setup() {
+        providePlugins([CartPlugin]);
+        this.cart = usePlugin(CartPlugin);
         this.state = proxy({
             promoCode: "",
         });
@@ -78,9 +80,5 @@ export class CartTotal extends Component {
             this.cartService.bus.trigger("cart_amount_changed", [data.amount, data.minor_amount]);
         }
         this.state.promoCode = "";
-    }
-
-    formatPrice(price) {
-        return formatCurrency(price, this.cartService.state.currency_id);
     }
 }

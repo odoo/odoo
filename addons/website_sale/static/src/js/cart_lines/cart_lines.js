@@ -1,11 +1,8 @@
-import { Component, onWillStart, t, useProps } from "@odoo/owl";
+import { Component, onWillStart, providePlugins, t, useProps } from "@odoo/owl";
 import { CartLine } from "./cart_line/cart_line";
 import { CartAccessories } from "./cart_accessories/cart_accessories";
-import wishlistUtils from "@website_sale/js/wishlist_utils";
-import { formatCurrency } from "@web/core/currency";
-import { rpc } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
-import { useSubEnv } from "@web/owl2/utils";
+import { CartPlugin } from "@website_sale/js/cart_plugin";
 
 export class CartLines extends Component {
     static template = "website_sale.CartLines";
@@ -13,31 +10,11 @@ export class CartLines extends Component {
     props = useProps({ templateData: t.object() });
 
     setup() {
+        providePlugins([CartPlugin]);
         this.cartService = useService("cart");
         onWillStart(async () => {
             await this.cartService.loadCart({ withHistory: true });
         });
-
-        useSubEnv({
-            updateLine: this.updateLine.bind(this),
-            addToWishlist: this.addToWishlist.bind(this),
-            formatPrice: this.formatPrice.bind(this),
-        });
-    }
-
-    async updateLine(lineId, productId, quantity) {
-        await this.cartService.update({ lineId, productId, quantity }, { fromCartPage: true });
-    }
-
-    async addToWishlist(lineId, productId) {
-        await rpc("/shop/wishlist/add", { product_id: productId });
-        wishlistUtils.addWishlistProduct(productId);
-        wishlistUtils.updateWishlistNavBar();
-        await this.updateLine(lineId, productId, 0);
-    }
-
-    formatPrice(price) {
-        return formatCurrency(price, this.cartService.state.currency_id);
     }
 
     get data() {

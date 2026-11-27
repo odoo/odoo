@@ -1,9 +1,8 @@
-import { Component, onPatched, onWillStart, signal, t, useProps } from "@odoo/owl";
-import { formatCurrency } from "@web/core/currency";
+import { Component, onPatched, onWillStart, providePlugins, signal, t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
-import { useSubEnv } from "@web/owl2/utils";
 import { OrderHistoryLine } from "./order_history_line/order_history_line";
 import { useService } from "@web/core/utils/hooks";
+import { CartPlugin } from "@website_sale/js/cart_plugin";
 
 export class CartQuickReorder extends Component {
     static template = "website_sale.CartQuickReorder";
@@ -12,13 +11,9 @@ export class CartQuickReorder extends Component {
     offCanvasRef = signal.ref();
 
     setup() {
+        providePlugins([CartPlugin]);
         this.cartService = useService("cart");
         onWillStart(async () => await this.cartService.loadCart({ withHistory: true }));
-
-        useSubEnv({
-            formatPrice: this.formatPrice.bind(this),
-            handleReorder: this.handleReorder.bind(this),
-        });
 
         onPatched(() => {
             if (!this.orderHistory.length) {
@@ -28,29 +23,6 @@ export class CartQuickReorder extends Component {
                 }
             }
         });
-    }
-
-    async handleReorder(lineData) {
-        const quantity = await this.cartService.add(
-            {
-                productTemplateId: lineData.product_tmpl_id,
-                productId: lineData.product_id,
-                isCombo: lineData.is_combo,
-                quantity: lineData.quantity,
-                ...(lineData.is_combo && { selected_combo_items: lineData.selected_combo_items }),
-            },
-            {
-                isBuyNow: true,
-                redirectToCart: false,
-                showNotification: false,
-                skipOrderAlert: true,
-                // The cart summary isn't on the page if the cart was empty.
-                renderShorterCartSummary: !this.cartService.state.lines.cart_lines?.length,
-            }
-        );
-        if (quantity) {
-            await this.cartService.loadCart({ force: true, withHistory: true });
-        }
     }
 
     get quickReorderTooltip() {
@@ -68,9 +40,5 @@ export class CartQuickReorder extends Component {
 
     get orderHistory() {
         return this.data.order_history ?? [];
-    }
-
-    formatPrice(price) {
-        return formatCurrency(price, this.cartService.state.currency_id);
     }
 }

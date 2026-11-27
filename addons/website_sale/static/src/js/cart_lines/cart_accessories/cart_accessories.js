@@ -1,5 +1,6 @@
-import { Component, t, useProps } from "@odoo/owl";
+import { Component, t, useProps, usePlugin } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
+import { CartPlugin } from "@website_sale/js/cart_plugin";
 
 export class CartAccessories extends Component {
     static template = "website_sale.CartAccessories";
@@ -7,6 +8,7 @@ export class CartAccessories extends Component {
         templateData: t.object(),
         accessories: t.array(),
     });
+    cart = usePlugin(CartPlugin);
 
     setup() {
         this.cartService = useService("cart");

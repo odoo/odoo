@@ -169,11 +169,11 @@
             <del
                 t-if="this.props.line.should_show_strikethrough_price"
                 class="me-md-2 text-muted text-nowrap opacity-50"
-                t-out="this.env.formatPrice(this.props.line.displayed_unit_price * this.props.line.product_uom_qty)"
+                t-out="this.cart.formatPrice(this.props.line.displayed_unit_price * this.props.line.product_uom_qty)"
             />
             <t
                 t-call="website_sale.CartProductPrice"
-                price="this.env.formatPrice(this.props.line.product_price)"
+                price="this.cart.formatPrice(this.props.line.product_price)"
                 line="this.props.line"
             />
         </h6>
@@ -184,7 +184,7 @@
             <small class="o_product_price_unit text-muted d-block">
                 (<t
                     t-call="website_sale.CartProductPrice"
-                    price="this.env.formatPrice(this.props.line.base_unit_price)"
+                    price="this.cart.formatPrice(this.props.line.base_unit_price)"
                     line="this.props.line"
                 />/ <span class="oe_custom_base_unit" t-out="this.props.line.base_unit_name"/>)
             </small>
@@ -254,7 +254,6 @@
                 <input
                     type="text"
                     class="js_quantity quantity form-control border border-start-0 border-end-0"
-                    t-att-class="this.state.quantity == this.props.line.min_quantity ? 'opacity-0 pe-none' : ''"
                     t-att-value="this.state.quantity"
                     t-on-input="(event) => this.updateQuantity(event.target.value)"
                     t-attf-name="cart-quantity-{{this.props.line.id}}{{ isMobile ? '-mobile' : ''}}"

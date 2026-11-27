@@ -36,7 +36,7 @@
             </div>
             <div class="d-flex align-items-center ms-auto gap-2">
                 <small
-                    t-out="this.env.formatPrice(this.props.line.combination_info_variant.price * this.state.quantity)"
+                    t-out="this.cart.formatPrice(this.props.line.combination_info_variant.price * this.state.quantity)"
                     class="o_wsale_quick_reorder_product_price"
                     style="white-space: nowrap;"
                 />
