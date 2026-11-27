@@ -129,8 +129,16 @@ class ThemeIrAttachment(models.Model):
         return new_attach
 
 
+class WebsiteThemeMixin(models.AbstractModel):
+    _name = 'website.theme.mixin'
+    _description = 'Record installed by a website theme'
+
+    theme_id = fields.Many2one('ir.module.module', index='btree_not_null')
+
+
 class IrUiView(models.Model):
-    _inherit = 'ir.ui.view'
+    _name = 'ir.ui.view'
+    _inherit = ['ir.ui.view', 'website.theme.mixin']
 
     theme_template_id = fields.Many2one('theme.ir.ui.view', copy=False, index='btree_not_null')
 
@@ -157,13 +165,15 @@ class IrUiView(models.Model):
 
 
 class IrAsset(models.Model):
-    _inherit = 'ir.asset'
+    _name = 'ir.asset'
+    _inherit = ['ir.asset', 'website.theme.mixin']
 
     theme_template_id = fields.Many2one('theme.ir.asset', copy=False, index='btree_not_null')
 
 
 class IrAttachment(models.Model):
-    _inherit = 'ir.attachment'
+    _name = 'ir.attachment'
+    _inherit = ['ir.attachment', 'website.theme.mixin']
 
     key = fields.Char(copy=False)
     theme_template_id = fields.Many2one('theme.ir.attachment', copy=False, index='btree_not_null')

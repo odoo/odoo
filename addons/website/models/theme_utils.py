@@ -269,6 +269,7 @@ class ThemeUtils(models.AbstractModel):
                 if not rec_data:
                     _logger.info('Record queued: %s', rec.display_name)
                     continue
+                rec_data['theme_id'] = theme.id
 
                 find = rec.with_context(active_test=False).mapped('copy_ids').filtered(lambda m: m.website_id == website)
 
@@ -364,13 +365,9 @@ class ThemeUtils(models.AbstractModel):
             Remove orphan models of type ``model_name`` from the theme ``theme`` and
             for the website ``website``.
 
-            We need to compute it this way because if the upgrade (or deletion) of a theme module
-            removes a model template, then in the model itself the variable
-            ``theme_template_id`` will be set to NULL and the reference to the theme being removed
-            will be lost. However we do want the ophan to be deleted from the website when
-            we upgrade or delete the theme from the website.
-
-            TODO in master: add a field ``theme_id`` on the models to more cleanly compute orphans.
+            When the upgrade (or deletion) of a theme module removes a model template, its
+            copies lose their ``theme_template_id`` but keep their ``theme_id``, which is how
+            the orphans of the theme are found.
 
             :param theme: theme ``ir.module.module`` whose orphans are removed
             :param model_name: string with the technical name of the model to cleanup
@@ -387,7 +384,7 @@ class ThemeUtils(models.AbstractModel):
         # use active_test to also unlink archived models
         # and use 'force_delete' to also unlink inherited models
         orphans = model_sudo.with_context(active_test=False, force_delete=True).search([
-            ('key', '=like', theme.name + '.%'),
+            ('theme_id', '=', theme.id),
             ('website_id', '=', website.id),
             ('theme_template_id', '=', False),
         ])
