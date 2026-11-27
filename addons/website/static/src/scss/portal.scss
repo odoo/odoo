@@ -13,3 +13,12 @@
     }
     border-radius: o-website-value('portal-card-border-radius') !important;
 }
+
+.o_portal_index_card .o_portal_icon {
+    @if o-color('portal-icon-color') {
+        color: o-color('portal-icon-color') !important;
+    }
+    @if o-color('portal-icon-bg-color') {
+        background-color: o-color('portal-icon-bg-color');
+    }
+}

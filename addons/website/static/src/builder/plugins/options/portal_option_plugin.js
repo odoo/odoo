@@ -2,22 +2,30 @@ import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { StyleAction } from "@html_builder/core/core_builder_action_plugin";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { normalizeCSSColor } from "@web/core/utils/colors";
+import { CustomizeWebsiteColorAction } from "@website/builder/plugins/customize_website_plugin";
 
 export class PortalOptionPlugin extends Plugin {
     static id = "portalOption";
     static dependencies = ["customizeWebsite", "domObserver"];
-    static shared = ["getPortalCards", "loadPortalCards", "updatePortalCards"];
+    static shared = ["getPortalCards", "loadPortalCards", "updatePortalCards", "setPortalCardIcon"];
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_actions: {
             SetStylePortalCardAction,
             SetPortalCardGapAction,
             UpdatePortalCardListAction,
+            ReplacePortalCardIconAction,
+            CustomizePortalIconColorAction,
         },
         anchor_excluded_selectors: ".o_portal_index_card",
         properties: { predicate: ".o_portal_index_card > *", immutableLink: true },
         on_will_save_handlers: this.savePortalOptions.bind(this),
     };
+
+    setup() {
+        this.cardIcons = new Map();
+    }
 
     getPortalCards() {
         return this.portalCards;
@@ -87,16 +95,49 @@ export class PortalOptionPlugin extends Plugin {
         }
     }
 
+    setPortalCardIcon(iconWrapperEl, icon) {
+        const entryId = parseInt(iconWrapperEl.closest(".o_portal_index_card").dataset.id);
+        const previousNodes = [...iconWrapperEl.childNodes];
+        const previousIcon = this.cardIcons.get(entryId);
+        const iconEl = this.document.createElement("i");
+        iconEl.className = "oi oi-lg";
+        iconEl.setAttribute("role", "img");
+        iconEl.setAttribute("aria-hidden", "true");
+        iconEl.dataset.icon = icon;
+        const setIcon = (nodes, value) => {
+            // The card comes from its portal.entry, its template must not be saved
+            this.dependencies.domObserver.ignore(() => iconWrapperEl.replaceChildren(...nodes));
+            if (value) {
+                this.cardIcons.set(entryId, value);
+            } else {
+                this.cardIcons.delete(entryId);
+            }
+        };
+        setIcon([iconEl], icon);
+        this.dependencies.domObserver.stageCustomMutation({
+            apply: () => setIcon([iconEl], icon),
+            revert: () => setIcon(previousNodes, previousIcon),
+        });
+    }
+
     async savePortalOptions() {
+        const valsById = new Map();
         if (this.hasPendingChanges) {
-            const entries = this.portalCards;
-            await this.services.orm.webSaveMulti(
-                "portal.entry",
-                entries.map((entry) => entry.id),
-                entries.map((entry, index) => ({
+            this.portalCards.forEach((entry, index) =>
+                valsById.set(entry.id, {
                     sequence: (index + 1) * 10,
                     show_in_portal: entry.show_in_portal,
-                })),
+                })
+            );
+        }
+        for (const [id, icon] of this.cardIcons) {
+            valsById.set(id, { ...valsById.get(id), icon });
+        }
+        if (valsById.size) {
+            await this.services.orm.webSaveMulti(
+                "portal.entry",
+                [...valsById.keys()],
+                [...valsById.values()],
                 { specification: {} }
             );
         }
@@ -192,6 +233,43 @@ export class UpdatePortalCardListAction extends BuilderAction {
     }
     getValue() {
         return JSON.stringify(this.dependencies.portalOption.getPortalCards());
+    }
+}
+
+export class CustomizePortalIconColorAction extends CustomizeWebsiteColorAction {
+    static id = "customizePortalIconColor";
+
+    getValue(context) {
+        // Without a custom color, show the one the icon is rendered with
+        const property =
+            context.params.mainParam === "portal-icon-bg-color" ? "background-color" : "color";
+        return (
+            super.getValue(context) ||
+            normalizeCSSColor(getComputedStyle(context.editingElement).getPropertyValue(property))
+        );
+    }
+}
+
+export class ReplacePortalCardIconAction extends BuilderAction {
+    static id = "replacePortalCardIcon";
+    static dependencies = ["media", "portalOption"];
+
+    load({ editingElement }) {
+        return new Promise((resolve) => {
+            const media = document.createElement("i");
+            media.className = "oi";
+            media.dataset.icon = editingElement.querySelector("[data-icon]")?.dataset.icon || "";
+            const onClose = this.dependencies.media.openMediaDialog(
+                { visibleTabs: ["ICONS"], media, save: resolve },
+                this.editable
+            );
+            onClose.then(resolve);
+        });
+    }
+    apply({ editingElement, loadResult: iconEl }) {
+        if (iconEl) {
+            this.dependencies.portalOption.setPortalCardIcon(editingElement, iconEl.dataset.icon);
+        }
     }
 }
 

@@ -276,7 +276,7 @@
             t-att-data-hidden-by-business-rule="'1' if not show_portal_card and not entry.placeholder_count else None"
             t-att-class="'o_portal_index_card ' +  ('' if entry.show_in_portal and show_portal_card else 'd-none ') + ('w-100 order-0' if show_count else 'order-2')">
             <a t-att-href="entry.url" data-name="Portal Cards" t-att-title="entry.name" t-attf-class="d-flex align-items-center p-3 h-100 rounded-3 text-decoration-none #{bg_color or 'border'}">
-                <div t-if="not show_count and (entry.icon or entry.image)" class="o_portal_icon d-none align-items-center justify-content-center flex-shrink-0 rounded-3 text-primary">
+                <div t-if="not show_count and (entry.icon or entry.image)" class="o_portal_icon d-none align-items-center justify-content-center flex-shrink-0 rounded-3 text-primary" data-name="Card Icon">
                     <i t-if="entry.icon" class="oi oi-lg" t-att-data-icon="entry.icon" role="img" aria-hidden="true"/>
                     <span t-else="" t-field="entry.image"
                         t-options="{'widget': 'image', 'width': 28, 'height': 28}"

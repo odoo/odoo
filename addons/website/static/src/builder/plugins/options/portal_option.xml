@@ -25,6 +25,26 @@
         <BorderConfigurator label.translate="Border" withBSClass="false" action="'setStylePortalCard'"/>
     </t>
 
+    <t t-name="website.PortalIconOption">
+        <BuilderRow label.translate="Icon">
+            <BuilderButton action="'replacePortalCardIcon'" type="'success'" preview="false"><i class="oi oi-fw me-1" data-icon="refresh" role="img" aria-hidden="true"/>Replace</BuilderButton>
+        </BuilderRow>
+        <BuilderRow label.translate="Color">
+            <BuilderColorPicker
+                defaultColor="''"
+                enabledTabs="['solid', 'custom']"
+                action="'customizePortalIconColor'"
+                actionParam="{ mainParam: 'portal-icon-color', nullValue: 'NULL' }"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Background Color">
+            <BuilderColorPicker
+                defaultColor="''"
+                enabledTabs="['solid', 'custom']"
+                action="'customizePortalIconColor'"
+                actionParam="{ mainParam: 'portal-icon-bg-color', nullValue: 'NULL' }"/>
+        </BuilderRow>
+    </t>
+
     <t t-name="website.PortalCardDisplayOption">
         <BuilderList
             action="'updatePortalCardList'"
@@ -39,6 +59,11 @@
             <portal_option
                 template="website.PortalOption"
                 selector=".o_portal_index_card > a"
+                editableOnly="false"
+                groups='["website.group_website_designer"]'/>
+            <portal_icon_option
+                template="website.PortalIconOption"
+                selector=".o_portal_index_card .o_portal_icon"
                 editableOnly="false"
                 groups='["website.group_website_designer"]'/>
             <portal_card_display_option
