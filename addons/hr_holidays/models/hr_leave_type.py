@@ -167,7 +167,7 @@ class HrLeaveType(models.Model):
 
         return [('id', operator, leave_types.ids)]
 
-    @api.constrains('allow_request_on_top')
+    @api.constrains('allow_request_on_top', 'time_type')
     def _check_allow_request_on_top(self):
         for leave in self:
             if leave.time_type == "leave" and leave.allow_request_on_top:
