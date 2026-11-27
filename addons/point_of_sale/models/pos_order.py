@@ -1413,6 +1413,7 @@ class PosOrder(models.Model):
 
         to_create = []
         is_percentage = bool(self.pricelist_id.item_ids.filtered('is_plain_discount'))
+        lang = self.partner_id.lang or self.env.user.lang
 
         for base_line in base_lines:
             line = base_line['record']
@@ -1433,7 +1434,7 @@ class PosOrder(models.Model):
             elif line.product_id.type != 'combo':
                 to_create.append({
                     'account.move.line': {
-                        'name': product.description_sale,
+                        'name': line.with_context(lang=lang)._get_invoice_line_name(),
                         'display_type': 'product',
                         'quantity': base_line['quantity'],
                         'discount': base_line['discount'],

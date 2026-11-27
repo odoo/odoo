@@ -210,6 +210,63 @@ class TestPointOfSaleFlow(CommonPosTest):
 
         self.pos_config_usd.current_session_id.close_session_from_ui()
 
+    def test_invoice_line_name_with_variant_custom_attribute_value(self):
+        fabric, size, legs = self.env['product.attribute'].create([
+            {
+                'name': 'Fabric',
+                'create_variant': 'always',
+                'value_ids': [Command.create({'name': 'Leather'}), Command.create({'name': 'Other', 'is_custom': True})],
+            },
+            {
+                'name': 'Size',
+                'create_variant': 'always',
+                'value_ids': [Command.create({'name': 'S'}), Command.create({'name': 'M'})],
+            },
+            {
+                'name': 'Legs',
+                'create_variant': 'no_variant',
+                'value_ids': [Command.create({'name': 'Wood'}), Command.create({'name': 'Metal'})],
+            },
+        ])
+        chair = self.env['product.template'].create({
+            'name': 'Office Chair',
+            'list_price': 10,
+            'taxes_id': False,
+            'description_sale': 'Ergonomic office chair',
+            'attribute_line_ids': [
+                Command.create({'attribute_id': attribute.id, 'value_ids': [Command.set(attribute.value_ids.ids)]})
+                for attribute in (fabric, size, legs)
+            ],
+        })
+        ptavs = chair.attribute_line_ids.product_template_value_ids
+        other_fabric, small, wood = (
+            ptavs.filtered(lambda ptav: ptav.name == name) for name in ('Other', 'S', 'Wood')
+        )
+        variant = chair.product_variant_ids.filtered(
+            lambda product: product.product_template_attribute_value_ids == other_fabric + small
+        )
+        order, _ = self.create_backend_pos_order({
+            'order_data': {
+                'partner_id': self.partner_mobt.id,
+                'pricelist_id': self.partner_mobt.property_product_pricelist.id,
+            },
+            'line_data': [{
+                'product_id': variant.id,
+                'attribute_value_ids': [Command.set((other_fabric + small + wood).ids)],
+                'custom_attribute_value_ids': [Command.create({
+                    'custom_product_template_attribute_value_id': other_fabric.id,
+                    'custom_value': 'Linen',
+                })],
+            }],
+            'payment_data': [
+                {'payment_method_id': self.bank_payment_method.id, 'amount': 10},
+            ],
+        })
+
+        invoice = self.env['account.move'].browse(order.action_pos_order_invoice()['res_id'])
+
+        self.assertEqual(invoice.invoice_line_ids.name, '(Fabric: Other: Linen, Wood)\nErgonomic office chair')
+
     def test_pos_order_invoice_payment_term(self):
         """ Test that when invoicing a POS order paid with customer account, the partner's payment term is then applied to the invoice. """
         self.customer_account_payment_method = self.env['pos.payment.method'].create({

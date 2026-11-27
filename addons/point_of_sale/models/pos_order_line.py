@@ -334,3 +334,23 @@ class PosOrderLine(models.Model):
             })
 
         return base_lines
+
+    def _get_invoice_line_name(self):
+        self.ensure_one()
+        custom_value_names = {
+            custom_value.custom_product_template_attribute_value_id: custom_value.name
+            for custom_value in self.custom_attribute_value_ids
+        }
+        attribute_names = [
+            custom_value_names.get(ptav) or ptav.name
+            for ptav in self.attribute_value_ids
+            if ptav in custom_value_names or (
+                ptav.attribute_id.create_variant == 'no_variant'
+                and (ptav.display_type == 'multi' or ptav.attribute_line_id.value_count > 1)
+            )
+        ]
+        description = self.product_id.description_sale
+        if not attribute_names:
+            return description
+        name = f"({', '.join(attribute_names)})"
+        return f"{name}\n{description}" if description else name
