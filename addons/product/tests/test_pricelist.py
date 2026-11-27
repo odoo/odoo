@@ -16,8 +16,8 @@ class TestPricelist(ProductVariantsCommon):
     # FIXME cross-module regression (group ignored when its module is absent):
     # 'point_of_sale.group_pos_user' is only required because product.template.copy()
     # carries over the urbanpiper_pos_config_ids field (pos.config m2m), whose write
-    # triggers a pos.config read check (enterprise pos_urban_piper) -> test_copy_product_variant_pricings.
-    # To be fixed by the pos_urban_piper team.
+    # triggers a pos.config read check (enterprise pos_food_delivery_urbanpiper) -> test_copy_product_variant_pricings.
+    # To be fixed by the pos_food_delivery_urbanpiper team.
     _test_user_groups = (
         'base.group_partner_manager',  # FIXME: use base.group_user
         'product.group_product_manager',
