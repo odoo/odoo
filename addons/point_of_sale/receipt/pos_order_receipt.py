@@ -231,7 +231,7 @@ class PosOrderReceipt(models.AbstractModel):
     def _order_receipt_generate_cashier_name(self):
         return self.user_id.name.split(' ')[0] if self.user_id else ''
 
-    # Used to override inside `pos_loyalty`
+    # Used to override inside `pos_loyalty` and `pos_deposit`
     def _is_item_count_excluded_line(self, line):
         return bool(line.combo_line_ids)
 

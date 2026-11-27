@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_deposit.CustomerDisplay" t-inherit="point_of_sale.CustomerDisplay" t-inherit-mode="extension">
+        <xpath expr="//li[hasclass('o_customer_display_orderline')]" position="attributes">
+            <attribute name="t-attf-class">{{ line.is_deposit_line ? 'orderline-combo fst-italic ' + (line.is_combo_child_deposit ? 'ms-5' : 'ms-4') : '' }}</attribute>
+        </xpath>
+    </t>
+</templates>
