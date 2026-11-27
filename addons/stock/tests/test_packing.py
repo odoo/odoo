@@ -1776,6 +1776,17 @@ class TestPacking(TestPackingCommon):
         # check that the package is now in the Customer location
         self.assertEqual(pack.location_id, delivery.location_dest_id)
 
+    def test_clear_package_name_batch_without_type(self):
+        """A package without a type must not use the sequence of another package's type."""
+        pack_box, pack_no_type = self.env['stock.package'].create([
+            {'name': 'Custom Box', 'package_type_id': self.pack_type_box.id},
+            {'name': 'Custom Package'},
+        ])
+        (pack_box | pack_no_type).write({'name': False})
+        self.assertTrue(pack_box.name.startswith('TBOX'))
+        self.assertTrue(pack_no_type.name)
+        self.assertFalse(pack_no_type.name.startswith('TBOX'))
+
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestPackagePropagation(TestPackingCommon):
