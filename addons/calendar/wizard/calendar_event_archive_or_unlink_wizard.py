@@ -106,6 +106,7 @@ class CalendarEventArchiveOrUnlinkWizard(models.TransientModel):
                 'body_html': self.body,
                 'email_from': self.env.user.email_formatted,
                 'partner_ids': self.recipient_ids,
+                'recipient_ids': self.recipient_ids.ids,
                 'res_id': False,
                 'subject': self.subject,
             }
