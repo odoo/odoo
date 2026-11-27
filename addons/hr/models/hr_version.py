@@ -315,6 +315,47 @@ class HrVersion(models.Model):
             if not contract_period_exists:
                 dates_per_employee[version.employee_id].append((version.contract_date_start, version.contract_date_end, version))
 
+    @api.constrains('employee_id', 'contract_date_start', 'date_version', 'active')
+    def _check_contract_start_in_version(self):
+        """
+        Check that each contract starts within one of its own versions.
+        """
+        if self.env.context.get('skip_contract_start_check'):
+            return
+        self._check_contract_start_in_employee_versions(self.employee_id)
+
+    @api.model
+    def _check_contract_start_in_employee_versions(self, employees, excluded_versions=None, error_message=None):
+        """
+        Raise if a contract of employees does not start within one of its versions.
+
+        :raise ValidationError:
+            . if a contract starts before its first version
+            . if a contract starts on a day covered by a version of another contract
+            . if a contract starts on a day covered by a version without contract
+        """
+        if not employees:
+            return
+        domain = [('employee_id', 'in', employees.ids), ('active', '=', True)]
+        if excluded_versions:
+            domain.append(('id', 'not in', excluded_versions.ids))
+        all_versions = self.env['hr.version'].sudo().search(domain, order='date_version')
+        for versions in all_versions.grouped('employee_id').values():
+            for contract_start in set(versions.mapped('contract_date_start')) - {False}:
+                version_in_effect = versions.filtered(lambda v: v.date_version <= contract_start)[-1:]
+                if version_in_effect.contract_date_start != contract_start:
+                    raise ValidationError(error_message or self.env._(
+                        "You're trying to start a new contract before the start of the version. "
+                        "Modify the start of the version first then add a new contract date."
+                    ))
+
+    def _get_modifying_version_error_message(self):
+        return self.env._(
+            "You cannot archive, delete or reassign this version of a contract: "
+            "the contract would no longer start within one of its versions. "
+            "Modify the contract start date first."
+        )
+
     def check_contract_finished(self):
         """Raise if the version has an open-ended contract (start date but no end date).
 
@@ -442,6 +483,12 @@ class HrVersion(models.Model):
                 raise ValidationError(
                     self.env._('Employee %s must always have at least one active version.') % employee_id.name
                 )
+        # the remaining versions must still cover the start of their contracts
+        self._check_contract_start_in_employee_versions(
+            self.employee_id.filtered(lambda e: e.id not in deleted_employee_ids),
+            excluded_versions=self,
+            error_message=self._get_modifying_version_error_message(),
+        )
 
     def _track_log_context_disabled(self):
         """ Whether the employee-chatter tracking added on top of the regular
@@ -522,9 +569,21 @@ class HrVersion(models.Model):
         if 'employee_id' in vals:
             if self.filtered(lambda v: v.employee_id and v.employee_id.version_ids <= self and vals['employee_id'] != v.employee_id.id):
                 raise ValidationError(self.env._("Cannot unassign all the active versions of an employee."))
+            # the versions left to their previous employee must still cover the start of their contracts
+            self._check_contract_start_in_employee_versions(
+                self.employee_id.filtered(lambda e: e.id != vals['employee_id']),
+                excluded_versions=self,
+                error_message=self._get_modifying_version_error_message(),
+            )
         if 'active' in vals and not vals['active']:
             if self.filtered(lambda v: v.employee_id and v.employee_id.version_ids <= self):
                 raise ValidationError(self.env._("Cannot archive all the active versions of an employee."))
+            # the versions left active must still cover the start of their contracts
+            self._check_contract_start_in_employee_versions(
+                self.employee_id,
+                excluded_versions=self,
+                error_message=self._get_modifying_version_error_message(),
+            )
 
         if not self._track_log_context_disabled():
             tracked_fnames = self._track_get_fields() & vals.keys()
@@ -539,11 +598,14 @@ class HrVersion(models.Model):
         if self.env.context.get('sync_contract_dates') or ("contract_date_start" not in vals and "contract_date_end" not in vals):
             return super().write(vals)
 
-        for versions_by_employee in self.grouped('employee_id').values():
+        # the contract dates are synchronized through several writes
+        # check that each contract starts within one of its versions once all of them are done
+        versions = self.with_context(skip_contract_start_check=True)
+        for versions_by_employee in versions.grouped('employee_id').values():
             if len(versions_by_employee.grouped('contract_date_start').keys()) > 1:
                 raise ValidationError(self.env._("Cannot modify multiple versions contract dates with different contracts at once."))
 
-        multiple_versions = self
+        multiple_versions = versions
         if vals.get("contract_date_start"):
             unique_versions = multiple_versions.filtered(lambda v: len(v.employee_id.version_ids) == 1)
             multiple_versions -= unique_versions
@@ -554,17 +616,23 @@ class HrVersion(models.Model):
                 })
 
         if not any(multiple_versions.mapped('contract_date_start')):
-            return super(HrVersion, multiple_versions).write(vals)
+            res = super(HrVersion, multiple_versions).write(vals)
+            self._check_contract_start_in_employee_versions(self.employee_id)
+            return res
 
         new_vals = {
             f_name: f_value
             for f_name, f_value in vals.items()
             if (f_name != 'contract_date_start' or not f_value) and f_name != 'contract_date_end'
         }
-        for employee, versions in multiple_versions.grouped('employee_id').items():
+        # write the version date before syncing the contract dates, so that the
+        # contract start date is checked against the new version date
+        if 'date_version' in new_vals:
+            super(HrVersion, multiple_versions).write({'date_version': new_vals.pop('date_version')})
+        for employee, employee_versions in multiple_versions.grouped('employee_id').items():
 
             dates_vals = {}
-            first_version = next(iter(versions), versions)
+            first_version = next(iter(employee_versions), employee_versions)
 
             if "contract_date_start" in vals:
                 dates_vals["contract_date_start"] = fields.Date.to_date(vals.get('contract_date_start'))
@@ -580,7 +648,7 @@ class HrVersion(models.Model):
                     date_start=first_version.contract_date_start,
                     date_end=first_version.contract_date_end,
                 )
-                all_versions_to_sync = self.env['hr.version']
+                all_versions_to_sync = versions.env['hr.version']
                 for contract_versions in versions_to_sync.values():
                     all_versions_to_sync |= next(iter(contract_versions.values()))
 
@@ -588,9 +656,11 @@ class HrVersion(models.Model):
                     all_versions_to_sync.with_context(sync_contract_dates=True, skip_employee_tracking=True).write(dates_vals)
 
             else:
-                versions.with_context(sync_contract_dates=True, skip_employee_tracking=True).write(dates_vals)
+                employee_versions.with_context(sync_contract_dates=True, skip_employee_tracking=True).write(dates_vals)
 
-        return super(HrVersion, multiple_versions).write(new_vals)
+        res = super(HrVersion, multiple_versions).write(new_vals)
+        self._check_contract_start_in_employee_versions(self.employee_id)
+        return res
 
     def get_record_default_action(self, access_uid=None):
         """Return the action opening the version: the employee form for employee versions.

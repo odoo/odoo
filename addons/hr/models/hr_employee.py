@@ -2370,6 +2370,10 @@ class HrEmployee(models.Model):
                 # here, explicit values having priority (as in hr.version create)
                 template_vals = Version.get_values_from_contract_template(Version.browse(vals['contract_template_id']))
                 vals.update({**template_vals, **vals})
+            if vals.get('contract_date_start'):
+                # the contract must start within the first version
+                # synchronize the version date with the contract start
+                vals['date_version'] = vals['contract_date_start']
             if skill_commands := self._pop_employee_skill_commands(vals):
                 vals['employee_skill_ids'] = self.env['hr.employee.skill']._get_transformed_commands(skill_commands, self)
             if vals.get('user_id'):
