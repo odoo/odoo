@@ -263,14 +263,11 @@ export class PosStore extends WithLazyGetterTrap {
         if (!searchProductWord?.length) {
             return;
         }
-        this.searchProductDBState = this.searchProductDBState || {};
-        if (searchProductWord !== this.searchProductDBState.query) {
-            this.searchProductDBState = {
-                query: searchProductWord,
-            };
+        if (searchProductWord !== this.searchProductDBState?.query) {
+            this.searchProductDBState = { query: searchProductWord };
         }
-        const { query = "", previousQuery = "" } = this.searchProductDBState;
-        const { offset = 0 } = this.searchProductDBState;
+        const currentSearchState = this.searchProductDBState;
+        const { query, previousQuery = "", offset = 0 } = currentSearchState;
         this.setSelectedCategory(0);
         const domain = this.searchProductsFromDBDomain(query);
         const { limit_categories, iface_available_categ_ids } = this.config;
@@ -279,16 +276,16 @@ export class PosStore extends WithLazyGetterTrap {
             domain.push(["pos_categ_ids", "in", categIds]);
         }
         const loadResult = await this.loadNewProducts(domain, offset, 30);
+        if (this.searchProductDBState !== currentSearchState) {
+            return;
+        }
         const result = loadResult["product.product"];
-        if (result.length === 0) {
+        if (!result.length) {
             this.notification.add(_t('No other products found for "%s".', query), 3000);
         }
-        if (previousQuery === query) {
-            this.searchProductDBState.offset += result.length;
-        } else {
-            this.searchProductDBState.previousQuery = query;
-            this.searchProductDBState.offset = result.length;
-        }
+        currentSearchState.offset =
+            previousQuery === query ? offset + result.length : result.length;
+        currentSearchState.previousQuery = query;
     }
 
     searchProductsFromDBDomain(searchProductWord) {
