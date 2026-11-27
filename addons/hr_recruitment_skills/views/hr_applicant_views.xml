@@ -16,7 +16,7 @@
                                     <list
                                         class="o_applicant_skills"
                                         decoration-muted="valid_to and valid_to &lt; context_today().strftime('%Y-%m-%d')"
-                                        decoration-danger="valid_to and valid_to &lt;= (context_today() + relativedelta(days=7)).strftime('%Y-%m-%d') and valid_to &gt; context_today().strftime('%Y-%m-%d')"
+                                        decoration-danger="valid_to and valid_to &lt;= (context_today() + relativedelta(days=7)).strftime('%Y-%m-%d') and valid_to &gt;= context_today().strftime('%Y-%m-%d')"
                                         decoration-warning="valid_to and valid_to &lt;= (context_today() + relativedelta(months=1)).strftime('%Y-%m-%d') and valid_to &gt; (context_today() + relativedelta(days=7)).strftime('%Y-%m-%d')">
                                         <field name="skill_type_id" optional="hidden"/>
                                         <field name="skill_id"/>

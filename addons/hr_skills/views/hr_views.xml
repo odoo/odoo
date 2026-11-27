@@ -127,7 +127,7 @@
                     <list
                         class="o_employee_skills"
                         decoration-muted="valid_to and valid_to &lt; context_today().strftime('%Y-%m-%d')"
-                        decoration-danger="valid_to and valid_to &lt;= (context_today() + relativedelta(days=7)).strftime('%Y-%m-%d') and valid_to &gt; context_today().strftime('%Y-%m-%d')"
+                        decoration-danger="valid_to and valid_to &lt;= (context_today() + relativedelta(days=7)).strftime('%Y-%m-%d') and valid_to &gt;= context_today().strftime('%Y-%m-%d')"
                         decoration-warning="valid_to and valid_to &lt;= (context_today() + relativedelta(months=3)).strftime('%Y-%m-%d') and valid_to &gt; (context_today() + relativedelta(days=7)).strftime('%Y-%m-%d')">
                         <field name="skill_id"/>
                         <field name="skill_level_id"/>
@@ -150,7 +150,7 @@
                             <field name="valid_to" string="To" widget="formatted_date" options="{
                                 'month_format': 'short',
                                 'color': {
-                                    'danger': 'valid_to and valid_to &lt;= (context_today() + relativedelta(days=7)).strftime(\'%Y-%m-%d\') and valid_to &gt; context_today().strftime(\'%Y-%m-%d\')',
+                                    'danger': 'valid_to and valid_to &lt;= (context_today() + relativedelta(days=7)).strftime(\'%Y-%m-%d\') and valid_to &gt;= context_today().strftime(\'%Y-%m-%d\')',
                                     'warning': 'valid_to and valid_to &lt;= (context_today() + relativedelta(months=3)).strftime(\'%Y-%m-%d\') and valid_to &gt; (context_today() + relativedelta(days=7)).strftime(\'%Y-%m-%d\')'
                                 }
                             }"/>
@@ -194,7 +194,7 @@
                             <list
                                 no_open="1"
                                 decoration-muted="valid_to and valid_to &lt; context_today().strftime('%Y-%m-%d')"
-                                decoration-danger="valid_to and valid_to &lt;= (context_today() + relativedelta(days=7)).strftime('%Y-%m-%d') and valid_to &gt; context_today().strftime('%Y-%m-%d')"
+                                decoration-danger="valid_to and valid_to &lt;= (context_today() + relativedelta(days=7)).strftime('%Y-%m-%d') and valid_to &gt;= context_today().strftime('%Y-%m-%d')"
                                 decoration-warning="valid_to and valid_to &lt;= (context_today() + relativedelta(months=3)).strftime('%Y-%m-%d') and valid_to &gt; (context_today() + relativedelta(days=7)).strftime('%Y-%m-%d')">
                                 <field name="skill_type_id" optional="hidden"/>
                                 <field name="skill_id"/>
@@ -219,7 +219,7 @@
                             <field name="valid_to" string="To" widget="formatted_date" options="{
                                 'month_format': 'short',
                                 'color': {
-                                    'danger': 'valid_to and valid_to &lt;= (context_today() + relativedelta(days=7)).strftime(\'%Y-%m-%d\') and valid_to &gt; context_today().strftime(\'%Y-%m-%d\')',
+                                    'danger': 'valid_to and valid_to &lt;= (context_today() + relativedelta(days=7)).strftime(\'%Y-%m-%d\') and valid_to &gt;= context_today().strftime(\'%Y-%m-%d\')',
                                     'warning': 'valid_to and valid_to &lt;= (context_today() + relativedelta(months=3)).strftime(\'%Y-%m-%d\') and valid_to &gt; (context_today() + relativedelta(days=7)).strftime(\'%Y-%m-%d\')'
                                 }
                             }"/>
@@ -546,7 +546,7 @@
                 create="0"
                 expand="1"
                 decoration-muted="valid_to and valid_to &lt; context_today().strftime('%Y-%m-%d')"
-                decoration-danger="valid_to and valid_to &lt;= (context_today() + relativedelta(days=7)).strftime('%Y-%m-%d') and valid_to &gt; context_today().strftime('%Y-%m-%d')"
+                decoration-danger="valid_to and valid_to &lt;= (context_today() + relativedelta(days=7)).strftime('%Y-%m-%d') and valid_to &gt;= context_today().strftime('%Y-%m-%d')"
                 decoration-warning="valid_to and valid_to &lt;= (context_today() + relativedelta(months=3)).strftime('%Y-%m-%d') and valid_to &gt; (context_today() + relativedelta(days=7)).strftime('%Y-%m-%d')">
                 <header>
                     <button name="action_new_certification" string="New" type="object" class="btn-primary" display="always"/>
@@ -572,7 +572,7 @@
                     domain="[
                         '|',
                             ('valid_to', '=', False),
-                            ('valid_to', '&gt;', 'today')
+                            ('valid_to', '&gt;=', 'today')
                     ]"/>
                 <filter string='Certification' name="group_by_certification"  context="{'group_by': 'skill_id'}"/>
                 <filter string='Type' name="group_by_type"  context="{'group_by': 'skill_type_id'}"/>
