@@ -306,7 +306,7 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
                 'product_id': self.product_a.id,
                 'quantity': 1,
                 'price_unit': 1000.0,
-                'tax_ids': [],
+                'tax_ids': [self.env['account.chart.template'].ref('vs_kraj_0').id],
             })],
         })
         invoice.action_post()
@@ -1219,6 +1219,7 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
         self.assertEqual(self._get_xml_value(xml, "//ns:DaneFaKorygowanej/ns:NrKSeF"), '1')
         self.assertEqual(self._get_xml_value(xml, "//ns:DaneFaKorygowanej/ns:NrKSeFFaKorygowanej"), fake_ksef_number)
         self.assertFalse(self._get_xml_nodes(xml, "//ns:DaneFaKorygowanej/ns:NrKSeFN"))
+<<<<<<< 48fe1c4fc4637a37e70715cbd0f9d1e934465e50
 
     def test_mpp_value(self):
         invoice = self._create_invoice(
@@ -1251,3 +1252,33 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
             content = fd.read().replace(b'<P_18A>2</P_18A>', b'<P_18A>1</P_18A>')
         bill = self.env['account.move'].create(self.env['account.move'].l10n_pl_edi_get_ksef_bill_vals_from_xml(content))
         self.assertEqual(bill.l10n_pl_mpp, 'mpp')
+||||||| 2387abff99a1c5e119e08de60a0be4b09ffa1174
+=======
+
+    def test_export_error_with_no_tax(self):
+        """
+        Test that the export raises an error if an invoice line does not have a tax.
+        """
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_pl.id,
+            'invoice_date': fields.Date.today(),
+            'currency_id': self.env.ref('base.PLN').id,
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'quantity': 1,
+                    'price_unit': 1000.0,
+                    'tax_ids': []
+                }),
+                Command.create({
+                    'display_type': 'line_note',
+                    'name': 'note line 1'
+                })
+            ],
+        })
+        invoice.action_post()
+
+        wizard = self.env['account.move.send.wizard'].create({'move_id': invoice.id})
+        self.assertEqual(set(wizard.alerts), {'tax_missing'})
+>>>>>>> a4f1436f52e0953f8ece5716734ee248635e084e
