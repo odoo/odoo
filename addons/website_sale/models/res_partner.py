@@ -63,6 +63,20 @@ class ResPartner(models.Model):
 
         return frontend_writable_fields
 
+    def _get_mandatory_billing_address_fields(self, country_sudo, **kwargs):
+        """Override `portal` to make the phone optional during checkout."""
+        field_names = super()._get_mandatory_billing_address_fields(country_sudo, **kwargs)
+        if kwargs.get("order_sudo"):
+            field_names.discard("phone")
+        return field_names
+
+    def _get_mandatory_delivery_address_fields(self, country_sudo, **kwargs):
+        """Override `portal` to make the phone optional during checkout."""
+        field_names = super()._get_mandatory_delivery_address_fields(country_sudo, **kwargs)
+        if kwargs.get("order_sudo"):
+            field_names.discard("phone")
+        return field_names
+
     def _needs_address(self, **kwargs):
         if cart := kwargs.get("order_sudo"):
             return cart._needs_customer_address()
