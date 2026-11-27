@@ -443,3 +443,72 @@ class TestConsumptionWarning(common.TransactionCase):
 
         mo.button_mark_done()
         self.assertEqual(mo.state, 'done')
+
+    def test_consumption_warning_on_variant_with_kit_component(self):
+        """Check that a kit component restricted to another variant does not trigger
+        a consumption warning when the bill of material concern all variants"""
+        color = self.env['product.attribute'].create({
+            'name': 'Color',
+            'value_ids': [
+                Command.create({'name': 'White'}),
+                Command.create({'name': 'Black'}),
+            ],
+        })
+        template = self.env['product.template'].create({
+            'name': 'Product 1',
+            'attribute_line_ids': [Command.create({
+                'attribute_id': color.id,
+                'value_ids': [Command.set(color.value_ids.ids)],
+            })],
+        })
+        
+        ptavs = template.attribute_line_ids.product_template_value_ids
+        ptav_white = ptavs.filtered(lambda v: v.name == 'White')
+        ptav_black = ptavs.filtered(lambda v: v.name == 'Black')
+        p1_white = template._get_variant_for_combination(ptav_white)
+
+        # Dummy kit and component
+        kit, kit_component, component = self.env['product.product'].create([
+            {'name': 'Kit'},
+            {'name': 'Kit Component'},
+            {'name': 'Component'},
+        ])
+
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': kit.product_tmpl_id.id,
+            'type': 'phantom',
+            'bom_line_ids': [
+                Command.create({
+                    'product_id': kit_component.id,
+                    'product_qty': 1,
+                }),
+            ],
+        })
+
+        # Bill of Material shared by all variants (no product_id), the kit only applies to Black
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': template.id,
+            'type': 'normal',
+            'bom_line_ids': [
+                Command.create({
+                    'product_id': kit.id,
+                    'product_qty': 1,
+                    'bom_product_template_attribute_value_ids': [Command.link(ptav_black.id)],
+                }),
+                Command.create({
+                    'product_id': component.id,
+                    'product_qty': 1,
+                }),
+            ],
+        })
+
+        mo = self.env['mrp.production'].create({
+            'product_id': p1_white.id,
+            'bom_id': bom.id,
+        })
+
+        self.assertEqual(mo.move_raw_ids.product_id, component, "Only the component compatible with the White variant should be in the MO.")
+        mo.action_confirm()
+        result = mo.button_mark_done()
+        self.assertIs(result, True, "No consumption warning should be raised for a kit restricted to another variant.")
+        self.assertEqual(mo.state, "done")
