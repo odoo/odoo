@@ -6,7 +6,7 @@
 
 from odoo.addons.stock.tests.common2 import TestStockCommon
 from odoo.exceptions import UserError
-from odoo.tests.common import Form
+from odoo.tests import Form, new_test_user
 
 
 class TestVirtualAvailable(TestStockCommon):
@@ -381,3 +381,17 @@ class TestVirtualAvailable(TestStockCommon):
         self.picking_out.button_validate()
         with self.assertRaises(UserError):
             self.product_3.write({'type': 'consu'})
+
+    def test_archive_product_without_stock_access(self):
+        """ A user who may edit products but not the reordering rules can archive a product:
+        its reordering rules are archived with it. """
+        user = new_test_user(self.env, login='product_editor', groups='base.group_user,base.group_system')
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'product_id': self.product_3.id,
+            'location_id': self.env.ref('stock.stock_location_stock').id,
+            'product_min_qty': 0.0,
+            'product_max_qty': 5.0,
+        })
+        self.product_3.with_user(user).action_archive()
+        self.assertFalse(self.product_3.active)
+        self.assertFalse(orderpoint.active)
