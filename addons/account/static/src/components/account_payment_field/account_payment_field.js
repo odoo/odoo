@@ -16,6 +16,7 @@ class AccountPaymentPopOver extends Component {
         _onRemoveMoveReconcile: t.function(),
         amount_company_currency: t.string(),
         amount_foreign_currency: t.or([t.string(), t.literal(null)]).optional(),
+        can_open_move: t.boolean().optional(true),
         close: t.function(),
         company_name: t.or([t.string(), t.literal(false)]),
         date: t.string(),
