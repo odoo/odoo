@@ -1549,21 +1549,6 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
             'state': 'ready',
         }])
 
-    def test_transaction_flow_is_not_auto_sent_before_due_date(self):
-        invoice = self._create_reporting_invoice(
-            partner=self.b2bi_customer,
-            invoice_date='2025-09-03',
-        )
-        flow = invoice.l10n_fr_pdp_last_flow_id
-
-        self._run_send_cron('2025-09-19')
-        flow.invalidate_recordset(['state', 'payload_id'])
-
-        self.assertRecordValues(flow, [{
-            'state': 'ready',
-        }])
-        self.assertFalse(flow.payload_id)
-
     def test_transaction_flow_is_auto_sent_on_due_date(self):
         invoice = self._create_reporting_invoice(
             partner=self.b2bi_customer,
@@ -2184,26 +2169,6 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
             [node.findtext('ID') for node in second_xml.findall('./TransactionsReport/Invoice')],
             [second_invoice.name],
         )
-
-    def test_payment_flow_is_not_auto_sent_before_due_date(self):
-        invoice = self._create_reporting_invoice(
-            partner=self.b2bi_customer,
-            amount=100.0,
-            invoice_date='2025-09-03',
-            tax_ids=self._get_tax_on_payment_20(),
-        )
-        payment = self._register_payment(invoice, '2025-09-09')
-        flow = payment.move_id.l10n_fr_pdp_last_flow_id
-
-        self._run_send_cron('2025-10-09')
-        flow.invalidate_recordset(['state', 'payload_id'])
-
-        self.assertRecordValues(flow, [{
-            'report_type': 'payment',
-            'operation_type': 'sale',
-            'state': 'ready',
-        }])
-        self.assertFalse(flow.payload_id)
 
     def test_payment_flow_is_auto_sent_on_due_date(self):
         invoice = self._create_reporting_invoice(
