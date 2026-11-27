@@ -333,6 +333,7 @@ class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
         self.assertEqual(channel.livechat_expertise_ids, operator_expertise_ids | cat_expertise)
         channel._add_members(users=bob)
         self.assertEqual(channel.livechat_expertise_ids, operator_expertise_ids | cat_expertise)
+<<<<<<< f3d004159ebc32a48d986a6109c6b3ad7f07afda
 
     def test_update_looking_for_help_dt(self):
         bob = self._create_operator()
@@ -361,3 +362,39 @@ class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
         self.assertTrue(channel.livechat_looking_for_help_since_dt)
         channel.livechat_end_dt = fields.Datetime.now()
         self.assertFalse(channel.livechat_looking_for_help_since_dt)
+||||||| 57f75084ddffd93575fe4b6480b354e1a151b7bf
+=======
+
+    def test_livechat_outcome_batch_computation(self):
+        bob = self._create_operator()
+        jane = self._create_operator()
+        self.livechat_channel.user_ids = bob
+        channels = self.env["discuss.channel"]
+        for _ in range(3):
+            data = self.make_jsonrpc_request(
+                "/im_livechat/get_session", {"channel_id": self.livechat_channel.id}
+            )
+            channels |= self.env["discuss.channel"].browse(data["channel_id"])
+        ch_escalated, ch_answered, ch_no_answer = channels
+        ch_escalated._add_members(users=jane)
+        ch_answered.with_user(bob).message_post(
+            body="I am here to help!",
+            message_type="comment",
+            subtype_xmlid="mail.mt_comment",
+        )
+        self.assertTrue(ch_escalated.livechat_is_escalated)
+        self.assertFalse(ch_answered.livechat_is_escalated)
+        self.assertEqual(ch_escalated.livechat_outcome, "escalated")
+        self.assertEqual(ch_answered.livechat_outcome, "no_failure")
+        self.assertEqual(ch_no_answer.livechat_outcome, "no_answer")
+        (ch_escalated | ch_answered).write({"livechat_failure": "no_agent"})
+        self.assertEqual(ch_escalated.livechat_outcome, "escalated")
+        self.assertEqual(ch_answered.livechat_outcome, "no_agent")
+        self.assertEqual(ch_no_answer.livechat_outcome, "no_answer")
+        self.assertEqual(
+            ch_escalated.livechat_channel_member_history_ids[:1].session_outcome, "escalated"
+        )
+        self.assertEqual(
+            ch_answered.livechat_channel_member_history_ids[:1].session_outcome, "no_agent"
+        )
+>>>>>>> ef5ca94cee58e3aece2565d24fb1a7bb5bd2df86
