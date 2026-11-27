@@ -41,7 +41,7 @@ export const seoContext = proxy({
     defaultTitle: "",
     hasNoImageWarning: true,
     hasNoVideoWarning: true,
-    updatedAlts: [],
+    altAttributes: [],
     videoDescriptionAttributes: [],
     brokenLinks: [],
     checkedLinks: false,
@@ -855,18 +855,15 @@ export class SeoChecks extends Component {
         } = this.website.currentWebsite;
         this.object = seoObject || mainObject;
         this.state = proxy({
-            altAttributes: [],
             checkingLinks: false,
             counterLinks: 0,
             totalLinks: 0,
         });
-        this.imgUpdated = this.imgUpdated.bind(this);
         onWillStart(async () => {
             const { altAttributes, videoDescriptionAttributes } = await this.getMediaAttributes();
-            this.state.altAttributes = altAttributes;
+            this.seoContext.altAttributes = altAttributes;
             this.seoContext.videoDescriptionAttributes = videoDescriptionAttributes;
             this.loadVideoPreviews();
-            this.seoContext.updatedAlts = [];
             if (!this.props.isDefaultLang) {
                 this.hasDelayedTranslation = await fetchDelayedTranslations(path);
             }
@@ -877,18 +874,13 @@ export class SeoChecks extends Component {
             }
         });
         useEffect(() => {
-            this.seoContext.hasNoImageWarning = !this.state.altAttributes.some(
+            this.seoContext.hasNoImageWarning = !this.seoContext.altAttributes.some(
                 (alt) => !alt.decorative && !alt.alt.trim()
             );
             this.seoContext.hasNoVideoWarning = !this.seoContext.videoDescriptionAttributes.some(
                 (video) => !video.description.trim()
             );
         });
-    }
-
-    imgUpdated(img) {
-        img.updated = true;
-        this.seoContext.updatedAlts = this.state.altAttributes.filter((img) => img.updated);
     }
 
     async getMediaAttributes() {
@@ -1264,12 +1256,13 @@ export class OptimizeSEODialog extends Component {
                 })
             );
         }
+        const updatedAlts = seoContext.altAttributes.filter((img) => img.updated);
         const updatedVideoDescriptions = seoContext.videoDescriptionAttributes.filter(
             (video) => video.updated
         );
         if (!this.isDefaultLang) {
             const translationsByRecord = {};
-            for (const media of [...seoContext.updatedAlts, ...updatedVideoDescriptions]) {
+            for (const media of [...updatedAlts, ...updatedVideoDescriptions]) {
                 const key = `${media.res_model}::${media.res_id}::${media.field}`;
                 translationsByRecord[key] ??= {
                     model: media.res_model,
@@ -1292,10 +1285,10 @@ export class OptimizeSEODialog extends Component {
                     })
                 );
             }
-        } else if (seoContext.updatedAlts.length || updatedVideoDescriptions.length) {
+        } else if (updatedAlts.length || updatedVideoDescriptions.length) {
             rpcCalls.push(
                 rpc("/website/update_media_elements", {
-                    elements: [...seoContext.updatedAlts, ...updatedVideoDescriptions],
+                    elements: [...updatedAlts, ...updatedVideoDescriptions],
                 })
             );
         }
