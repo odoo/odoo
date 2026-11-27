@@ -63,7 +63,6 @@
                 <filter string="Training Series" name="training_series" domain="[('training_series','=',True)]"/>
                 <filter string="Non-Training Series" name="non_training_series" domain="[('training_series','=',False)]"/>
                 <separator/>
-                <filter name="active" string="Active" domain="[('active','=',True)]" help="Show active series"/>
                 <filter name="inactive" string="Ended" domain="[('active','=',False)]" help="Show the series whose end date has passed"/>
                 <group>
                     <filter string="Company" name="company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
@@ -78,7 +77,7 @@
         <field name="view_mode">list</field>
         <field name="view_id" ref="l10n_pt_certification.view_l10n_pt_at_series_tree"/>
         <field name="search_view_id" ref="view_l10n_pt_at_series_search"/>
-        <field name="context">{'search_default_active': 1}</field>
+        <field name="context">{}</field>
     </record>
 
 </odoo>
