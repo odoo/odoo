@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
@@ -23,6 +22,15 @@ class PosOrderLine(models.Model):
         if self.env.company.country_id.code == 'IN':
             params += ['l10n_in_hsn_code']
         return params
+
+    def _l10n_in_get_receipt_combo_child_lines(self):
+        self.ensure_one()
+        return " - ".join(
+            f"{child.qty:g} {child.full_product_name}"
+            + (self.env._(" (HSN Code: %s)", child.l10n_in_hsn_code) if child.l10n_in_hsn_code else "")
+            + (self.env._("(Note: %s)", child.customer_note) if child.customer_note else "")
+            for child in self.combo_line_ids
+        )
 
     def _prepare_base_lines_for_taxes_computation(self):
         base_lines = super()._prepare_base_lines_for_taxes_computation()
