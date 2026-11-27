@@ -131,6 +131,11 @@
                 <FileReference t-out="line.get('FileReference')"/>
                 <FileDate t-out="line.get('FileDate')"/>
                 <SequenceNumber t-out="line.get('SequenceNumber')"/>
+                <DeliveryNotesReferences>
+                    <DeliveryNote>
+                        <DeliveryNoteNumber t-out="line.get('DeliveryNote')"/>
+                    </DeliveryNote>
+                </DeliveryNotesReferences>
                 <ItemDescription t-out="line['ItemDescription']"/>
                 <Quantity t-out="line['Quantity']"/>
                 <UnitOfMeasure t-out="line.get('UnitOfMeasure')"/>
