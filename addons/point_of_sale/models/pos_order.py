@@ -1589,18 +1589,18 @@ class PosOrder(models.Model):
         if rounding_line:
             line_ids_commands.append(Command.unlink(rounding_line.id))
 
-        debit = sum(lines.mapped('debit'))
-        credit = sum(lines.mapped('credit'))
-        invoice_difference = credit - debit
+        # The rounding is in the invoice currency, its balance in the company
+        # currency is what is left to balance the move.
+        invoice_difference = -sum(lines.mapped('amount_currency'))
+        difference_balance = invoice.company_currency_id.round(-sum(lines.mapped('balance')))
 
         if invoice.move_type == 'out_refund':
             invoice_difference = -invoice_difference
+            difference_balance = -difference_balance
 
         if not self.config_id.cash_rounding or currency.is_zero(invoice_difference):
             return line_ids_commands
 
-        rate = invoice.invoice_currency_rate
-        difference_balance = invoice.company_currency_id.round(invoice_difference / rate) if rate else 0.0
         signed_difference = (invoice_difference * invoice.direction_sign)
         signed_balance = (difference_balance * invoice.direction_sign)
 
