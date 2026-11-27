@@ -19,6 +19,7 @@ export class LoyaltyProgram extends models.ServerModel {
             "date_to",
             "limit_usage",
             "max_usage",
+            "total_order_count",
             "is_nominative",
             "portal_visible",
             "portal_point_name",

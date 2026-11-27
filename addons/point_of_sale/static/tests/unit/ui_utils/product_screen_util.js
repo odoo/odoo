@@ -3,9 +3,10 @@ import { contains, getService } from "@web/../tests/web_test_helpers";
 import { ensurePane, isMobile } from "./common";
 import { clickNumpadButtons } from "./numpad_util";
 
-export async function clickDisplayedProduct(name) {
+export async function clickDisplayedProduct(name, { exact = false } = {}) {
     await ensurePane("right");
-    await contains(`article.product .product-name:contains("${name}")`).click();
+    const matcher = exact ? "text" : "contains";
+    await contains(`article.product .product-name:${matcher}("${name}")`).click();
     await animationFrame();
 }
 
