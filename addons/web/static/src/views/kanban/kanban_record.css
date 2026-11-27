@@ -71,7 +71,7 @@
 
 /* In selection mode, the focused card shows the ring even after a click. */
 .o_kanban_selection_active .o_kanban_record:focus {
-    outline: var(--o-focus-ring);
+    outline: var(--o-focus-ring-width) solid var(--o-focus-ring-color);
     outline-offset: var(--o-focus-ring-offset);
     z-index: 1;
 }

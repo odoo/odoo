@@ -1,10 +1,10 @@
-/* Keyboard focus ring of the web client: an outline, which forced colors mode */
-/* keeps (it drops shadows). It sits inside the element, where no container */
-/* clips it; an element that cannot take it inside sets --o-focus-ring-offset. */
+/* Keyboard focus ring, loaded with the backend's Bootstrap, whose focus */
+/* shadows it replaces: an outline, which forced colors mode keeps (it drops */
+/* shadows). It sits inside the element, where no container clips it; an */
+/* element that cannot take it inside sets --o-focus-ring-offset. */
 :root {
     --o-focus-ring-width: 2px;
     --o-focus-ring-color: var(--o-component-active-border);
-    --o-focus-ring: var(--o-focus-ring-width) solid var(--o-focus-ring-color);
     --o-focus-ring-inside: calc(-1 * var(--o-focus-ring-width));
     --o-focus-ring-outside: var(--o-focus-ring-width);
     --o-focus-ring-offset: var(--o-focus-ring-inside);
@@ -26,7 +26,8 @@
 .navbar-toggler:focus-visible,
 .page-link:focus-visible,
 .form-check-input:focus-visible {
-    outline: var(--o-focus-ring);
+    /* Composed here, so that a container can change the color alone. */
+    outline: var(--o-focus-ring-width) solid var(--o-focus-ring-color);
     outline-offset: var(--o-focus-ring-offset);
     /* Scrolled into view, it keeps room for a ring drawn outside it. */
     scroll-margin: max(0px, calc(var(--o-focus-ring-width) + var(--o-focus-ring-offset)));
@@ -39,10 +40,12 @@ input:is([type="checkbox"], [type="radio"]) {
     --o-focus-ring-offset: var(--o-focus-ring-outside);
 }
 
-/* Buttons without padding, or without side padding, draw it outside, */
+/* Links, and buttons without padding or side padding, draw it outside, */
 /* against their edge: inside, it would cover their content (an activity */
-/* clock, a status dot, the first and last letters of a label). */
-.btn:is(.btn-link-inline, .p-0, .px-0) {
+/* clock, a status dot, the first and last letters of a label). Links with */
+/* padding set it back inside. */
+.btn:is(.btn-link-inline, .p-0, .px-0),
+:where(a:not(.btn, .nav-link, .dropdown-item, .list-group-item, .page-link)) {
     --o-focus-ring-offset: 0px;
 }
 
