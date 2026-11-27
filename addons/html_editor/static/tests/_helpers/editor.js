@@ -109,6 +109,11 @@ class TestEditor extends Component {
  * @returns { Promise<{el: HTMLElement; editor: Editor; plugins: Map<string,Plugin>}> }
  */
 export async function setupEditor(content, options = {}) {
+    // A previous test may have left the focus in a removed iframe: the main
+    // document would then not get it back when focusing one of its elements.
+    if (!document.hasFocus()) {
+        window.focus();
+    }
     const wysiwygProps = Object.assign({}, options.props);
     options.config ??= {};
 
