@@ -17,12 +17,20 @@ registry.category("web_tour.tours").add("snippet_blog_bost", {
             groupName: "Blogs",
         }),
         ...clickOnSnippet(".s_dynamic_snippet_blog_posts"),
-        ...changeOptionInPopover("Blog Post", "Fetched Elements", "3"),
+        {
+            content: "Set Fetched Elements to 3",
+            trigger: "[data-container-title='Blog Post'] [data-label='Fetched Elements'] input",
+            run: "edit 3 && click body",
+        },
         {
             content: "Check if the cover image option is not visible",
             trigger: "[data-container-title='Blog Post']:not(:has([data-label='Cover Image']))",
         },
-        ...changeOptionInPopover("Blog Post", "Fetched Elements", "1"),
+        {
+            content: "Set Fetched Elements to 1",
+            trigger: "[data-container-title='Blog Post'] [data-label='Fetched Elements'] input",
+            run: "edit 1 && click body",
+        },
         {
             content: "Check if the cover image option is visible",
             trigger: "[data-container-title='Blog Post'] [data-label='Cover Image']",
