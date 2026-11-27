@@ -40,8 +40,9 @@
         <field name="inherit_id" ref="l10n_pt_certification.view_l10n_pt_at_series_form"/>
         <field name="arch" type="xml">
             <field name="at_code" position="after">
+                <!-- A full row: a single cell would shift the next field's label into the value column. -->
                 <button name="action_register_at_series" type="object"
-                        string="Register" class="btn-link"
+                        string="Register" class="btn-link" colspan="2"
                         groups="account.group_account_manager"
                         invisible="at_code or l10n_pt_at_ws_offline or l10n_pt_at_ws_annulment_date"
                         icon="fa-refresh"
