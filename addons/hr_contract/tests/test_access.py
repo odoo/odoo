@@ -90,3 +90,12 @@ class TestContractPublicAccess(TransactionCase):
             # Should not find Laura as the user is not her manager
             self.assertEqual(len(employees), 2)
             self.assertTrue('Laura' not in employees.mapped('name'))
+
+
+class TestContractGroupsIsolation(TransactionCase):
+
+    def test_contract_admin_is_not_hr_officer(self):
+        """ Contracts rights must not give access to the Employees app """
+        user = mail_new_test_user(self.env, login='contract_admin', groups='base.group_user,hr_contract.group_hr_contract_manager')
+        self.assertTrue(user.has_group('hr_contract.group_hr_contract_employee_manager'))
+        self.assertFalse(user.has_group('hr.group_hr_user'))

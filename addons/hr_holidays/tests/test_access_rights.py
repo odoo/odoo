@@ -861,3 +861,13 @@ class TestMultiCompany(TestHrHolidaysCommon):
         employee_leave_hrmanager.name
         employee_leave_hrmanager.action_approve()
         self.assertEqual(employee_leave_hrmanager.state, 'validate')
+
+
+@tests.tagged('access_rights', 'post_install', '-at_install')
+class TestHrHolidaysGroupsIsolation(tests.TransactionCase):
+
+    def test_time_off_admin_is_not_hr_officer(self):
+        """ Time Off rights must not give access to the Employees app """
+        user = tests.new_test_user(self.env, login='time_off_admin', groups='base.group_user,hr_holidays.group_hr_holidays_manager')
+        self.assertTrue(user.has_group('hr_holidays.group_hr_holidays_user'))
+        self.assertFalse(user.has_group('hr.group_hr_user'))
