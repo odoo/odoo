@@ -5,6 +5,7 @@ from collections import OrderedDict
 from odoo import api, fields, models
 from odoo.fields import Domain
 from odoo.http import request
+from odoo.tools.urls import urljoin
 
 
 class ProductProduct(models.Model):
@@ -25,6 +26,12 @@ class ProductProduct(models.Model):
         help="The full URL to access the document through the website.",
         compute="_compute_product_website_url",
     )
+    # Defined on the variant, otherwise _inherits reads the template's field
+    website_absolute_url = fields.Char(
+        string="Website Absolute URL",
+        help="The full absolute URL to access the document through the website.",
+        compute="_compute_product_website_absolute_url",
+    )
 
     stock_notification_partner_ids = fields.Many2many(
         "res.partner",
@@ -43,6 +50,11 @@ class ProductProduct(models.Model):
                 pav_ids = [str(pav.id) for pav in pavs]
                 url = f"{url}?attribute_values={','.join(pav_ids)}"
             product.website_url = url
+
+    @api.depends("website_url")
+    def _compute_product_website_absolute_url(self):
+        for product in self:
+            product.website_absolute_url = urljoin(product.get_base_url(), product.website_url)
 
     # === BUSINESS METHODS ===#
 
