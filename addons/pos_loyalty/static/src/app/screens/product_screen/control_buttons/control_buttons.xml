@@ -13,7 +13,7 @@
                     btnText.translate="eWallet Refund"
                     onClick="() => this.onClickWalletRefund()"
                     disabled="this.pos.disableForSelfOrder"
-                    t-if="_orderTotal lt 0">
+                    t-if="this.pos.currency.isNegative(_orderTotal)">
                 </t>
                 <t t-call="point_of_sale.controlButton"
                     btnClasses="'btn-secondary highlight'"
@@ -21,14 +21,14 @@
                     btnText.translate="eWallet Pay"
                     onClick="() => this.onClickWalletPay()"
                     disabled="this.pos.disableForSelfOrder"
-                    t-if="_orderTotal gt 0 and _eWalletRewards gte 1">
+                    t-if="this.pos.currency.isPositive(_orderTotal) and _eWalletRewards gte 1">
                 </t>
                 <t t-call="point_of_sale.controlButton"
                     btnClasses="'btn-secondary disabled'"
                     icon="'credit_card'"
                     btnText.translate="eWallet"
                     disabled="this.pos.disableForSelfOrder"
-                    t-if="_orderTotal == 0 or (_orderTotal gte 0 and _eWalletRewards lt 1)">
+                    t-if="this.pos.currency.isZero(_orderTotal) or (this.pos.currency.isPositive(_orderTotal) and _eWalletRewards lt 1)">
                 </t>
             </t>
             <t t-if="this.pos.models['loyalty.program'].some((p) => ['coupons', 'promotion', 'gift_card', 'promo_code', 'next_order_coupons'].includes(p.program_type)) and this.pos.accessRight.canApplyPromoCode" t-call="point_of_sale.controlButton"

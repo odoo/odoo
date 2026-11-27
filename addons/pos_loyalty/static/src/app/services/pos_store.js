@@ -62,7 +62,8 @@ patch(PosStore.prototype, {
         }
         if (program) {
             const orderTotal = this.getOrder()?.priceIncl ?? 0;
-            if (orderTotal < 0) {
+            // Through the currency: an order paid to the cent can sum to -1e-15.
+            if (this.currency.isNegative(orderTotal)) {
                 vals.price_unit = -orderTotal;
             }
             // When selling a gift card or an eWallet product, we should not put taxes on it.
