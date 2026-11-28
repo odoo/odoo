@@ -958,11 +958,14 @@ class PdfSigner:
         ]
 
         signed_attrs = build_signed_attributes(digest, cert)
-        signature = private_key.sign(
-            signed_attrs.dump(),
-            padding.PKCS1v15(),
-            hashes.SHA256()
-        )
+        if isinstance(private_key, ec.EllipticCurvePrivateKey):
+            signature = private_key.sign(signed_attrs.dump(), ec.ECDSA(hashes.SHA256()))
+        else:
+            signature = private_key.sign(
+                signed_attrs.dump(),
+                padding.PKCS1v15(),
+                hashes.SHA256()
+            )
 
         return build_cms_signature(signed_attrs, signature, cert, chain)
 
