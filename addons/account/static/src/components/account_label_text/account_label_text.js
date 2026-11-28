@@ -68,6 +68,7 @@ export class AccountLabelTextField extends ListTextField {
             update: (records) => this.onMany2XUpdate(records),
             value: "",
             context: this.props.context,
+            preventMemoization: true,
         };
     }
 
