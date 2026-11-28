@@ -1126,7 +1126,29 @@ class StockQuant(models.Model):
                 [('company_id', '=', company_id)], limit=1
             ).lot_stock_id
 
+    def _check_serial_inventory_quantity(self):
+        """
+        Check that quantity is 0 or 1 if lot_id is provided
+        and product tracking is serial.
+        """
+        invalid_quants = self.filtered(
+            lambda q: q.product_id.tracking == 'serial'
+            and q.lot_id
+            and q.location_id.usage != 'inventory'
+            and q.uom_id.compare(q.inventory_quantity, 1) != 0
+            and q.uom_id.compare(q.inventory_quantity, 0) != 0
+        )
+        if invalid_quants:
+            raise ValidationError(_(
+                "The quantity of a serial number can only be 0 or 1:\n%(quants)s",
+                quants="\n".join(
+                    f"- Product: {q.product_id.display_name}, Serial Number: {q.lot_id.name}"
+                    for q in invalid_quants
+                ),
+            ))
+
     def _apply_inventory(self, date=None):
+        self._check_serial_inventory_quantity()
         # Consider the inventory_quantity as set => recompute the inventory_diff_quantity if needed
         self.inventory_quantity_set = True
         move_vals = []
