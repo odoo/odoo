@@ -8,6 +8,7 @@ from markupsafe import Markup
 
 from odoo import api, exceptions, models, tools, _
 from odoo.addons.mail.tools.alias_error import AliasError
+from odoo.exceptions import AccessError
 
 import logging
 
@@ -156,10 +157,18 @@ class BaseModel(models.AbstractModel):
         tracking_value_ids = []
 
         fields_track_info = self._mail_track_order_fields(tracked_fields)
+        mail_track_with_sudo = self.env.context.get('mail_track_with_sudo', True)
         for col_name, _sequence in fields_track_info:
             if col_name not in initial_values:
                 continue
-            initial_value, new_value = initial_values[col_name], self[col_name]
+            initial_value = initial_values[col_name]
+            if not mail_track_with_sudo:
+                try:  # Try access without sudo, may raise AccessError
+                    new_value = self.sudo(False)[col_name]
+                except AccessError:  # Fallback to sudo access
+                    new_value = self[col_name]
+            else:  # Access with sudo (original behavior)
+                new_value = self[col_name]
             if new_value == initial_value or (not new_value and not initial_value):  # because browse null != False
                 continue
 
