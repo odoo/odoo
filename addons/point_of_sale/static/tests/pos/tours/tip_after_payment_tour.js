@@ -31,7 +31,7 @@ registry.category("web_tour.tours").add("PosTipAfterPaymentTour", {
             FeedbackScreen.isShown(),
             FeedbackScreen.checkTicketData({
                 total_amount: "2.30",
-                payment_lines: [{ name: "Bank", amount: "2.00" }],
+                payment_lines: [{ name: "Bank", amount: "2.30" }],
                 orderlines: [
                     { name: "Desk Pad", quantity: "1", price_unit: "2.00", line_price: "2.00" },
                     { name: "Tips", quantity: "1", price_unit: "0.30", line_price: "0.30" },
@@ -55,7 +55,7 @@ registry.category("web_tour.tours").add("PosTipAfterPaymentTour", {
             FeedbackScreen.isShown(),
             FeedbackScreen.checkTicketData({
                 total_amount: "4.80",
-                payment_lines: [{ name: "Bank", amount: "4.00" }],
+                payment_lines: [{ name: "Bank", amount: "4.80" }],
                 orderlines: [
                     { name: "Desk Pad", quantity: "2", price_unit: "2.00", line_price: "4.00" },
                     { name: "Tips", quantity: "1", price_unit: "0.80", line_price: "0.80" },
@@ -79,7 +79,7 @@ registry.category("web_tour.tours").add("PosTipAfterPaymentTour", {
             FeedbackScreen.isShown(),
             FeedbackScreen.checkTicketData({
                 total_amount: "7.50",
-                payment_lines: [{ name: "Bank", amount: "6.00" }],
+                payment_lines: [{ name: "Bank", amount: "7.50" }],
                 orderlines: [
                     { name: "Desk Pad", quantity: "3", price_unit: "2.00", line_price: "6.00" },
                     { name: "Tips", quantity: "1", price_unit: "1.50", line_price: "1.50" },
@@ -103,7 +103,7 @@ registry.category("web_tour.tours").add("PosTipAfterPaymentTour", {
             FeedbackScreen.isShown(),
             FeedbackScreen.checkTicketData({
                 total_amount: "10.00",
-                payment_lines: [{ name: "Bank", amount: "8.00" }],
+                payment_lines: [{ name: "Bank", amount: "10.00" }],
                 orderlines: [
                     { name: "Desk Pad", quantity: "4", price_unit: "2.00", line_price: "8.00" },
                     { name: "Tips", quantity: "1", price_unit: "2.00", line_price: "2.00" },
@@ -148,7 +148,7 @@ registry.category("web_tour.tours").add("PosTipAfterPaymentTour", {
             FeedbackScreen.isShown(),
             FeedbackScreen.checkTicketData({
                 total_amount: "13.00",
-                payment_lines: [{ name: "Bank", amount: "12.00" }],
+                payment_lines: [{ name: "Bank", amount: "13.00" }],
                 orderlines: [
                     { name: "Desk Pad", quantity: "6", price_unit: "2.00", line_price: "12.00" },
                     { name: "Tips", quantity: "1", price_unit: "1.00", line_price: "1.00" },
@@ -279,5 +279,18 @@ registry.category("web_tour.tours").add("PosTipAfterPaymentTour", {
                 ],
             }),
             FeedbackScreen.clickNextOrder(),
+
+            // Tipped orders must not unbalance the closing entry
+            Chrome.clickMenuOption("Close Register"),
+            Chrome.closeRegisterPopupIsShown(),
+            {
+                trigger: ".modal .modal-footer .btn:contains(close register)",
+                run: "click",
+                expectUnloadPage: true,
+            },
+            {
+                content: "session closed and POS reloaded",
+                trigger: ".screen-login .btn.open-register-btn",
+            },
         ].flat(),
 });

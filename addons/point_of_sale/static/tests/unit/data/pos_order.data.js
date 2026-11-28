@@ -87,6 +87,30 @@ export class PosOrder extends models.ServerModel {
         return this.read_pos_data(orderIds, data, this.config_id);
     }
 
+    add_tip_after_payment(orderIds, tipLineVals, paymentId) {
+        const [order] = this.browse(orderIds);
+        const [payment] = this.env["pos.payment"].browse(paymentId);
+        const tip = tipLineVals.price_unit * tipLineVals.qty;
+        this.env["pos.order.line"].create({
+            ...tipLineVals,
+            order_id: order.id,
+            price_subtotal: tip,
+            price_subtotal_incl: tip,
+        });
+        this.env["pos.payment"].write([paymentId], {
+            amount: payment.amount + tip,
+            amount_currency: payment.amount_currency + tip,
+        });
+        this.write(orderIds, {
+            is_tipped: true,
+            is_tipped_after_payment: true,
+            tip_amount: tip,
+            amount_total: order.amount_total + tip,
+            amount_paid: order.amount_paid + tip,
+        });
+        return this.read_pos_data(orderIds, [], order.config_id);
+    }
+
     record_uuid_mapping(uuidMapping) {
         for (const [model, data] of Object.entries(uuidMapping)) {
             for (const [uuid, fields] of Object.entries(data)) {

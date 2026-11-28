@@ -1079,20 +1079,11 @@ export class TicketScreen extends Component {
             promises.push(
                 new Promise((resolve) => {
                     const fn = async () => {
-                        const tipLine = await this.pos.data.create("pos.order.line", [
+                        await this.pos.data.callRelated("pos.order", "add_tip_after_payment", [
+                            [order.id],
                             serializedTipLine,
+                            order.adjustableTipLine.id,
                         ]);
-                        const state = await this.pos.data.ormWrite("pos.order", [order.id], {
-                            is_tipped: true,
-                            tip_amount: tipLine[0].price_unit,
-                        });
-
-                        if (state) {
-                            order.update({
-                                is_tipped: true,
-                                tip_amount: tipLine[0].price_unit,
-                            });
-                        }
                         resolve();
                     };
                     fn();

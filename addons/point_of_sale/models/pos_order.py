@@ -377,6 +377,7 @@ class PosOrder(models.Model):
     is_singly_invoiced = fields.Boolean('Is Singly Invoiced', compute='_compute_is_invoiced')
     is_globally_invoiced = fields.Boolean('Is Globally Invoiced', compute='_compute_is_invoiced')
     is_tipped = fields.Boolean('Is this already tipped?', readonly=True)
+    is_tipped_after_payment = fields.Boolean('Tipped After Payment', readonly=True, copy=False)
     tip_amount = fields.Monetary(string='Tip Amount', readonly=True)
     refund_orders_count = fields.Integer('Number of Refund Orders', compute='_compute_refund_related_fields', help="Number of orders where items from this order were refunded")
     refunded_order_id = fields.Many2one('pos.order', compute='_compute_refund_related_fields', help="Order from which items were refunded in this order")
@@ -1058,6 +1059,24 @@ class PosOrder(models.Model):
             'pos.prep.order': self.env['pos.prep.order']._load_pos_data_read(self.prep_order_ids, config) if config else [],
             'pos.prep.line': self.env['pos.prep.line']._load_pos_data_read(self.prep_order_ids.prep_line_ids, config) if config else [],
         }
+
+    def add_tip_after_payment(self, tip_line_vals, payment_id):
+        """Add a tip to a paid order, collected by the given payment."""
+        self.ensure_one()
+        if self.state not in ('paid', 'done'):
+            raise UserError(_("Only paid orders can be tipped after payment."))
+        tip_line = self.env['pos.order.line'].create({**tip_line_vals, 'order_id': self.id})
+        # The line was not priced by the order sync
+        tip_line.write(tip_line._compute_amount_line_all())
+        tip = tip_line.price_subtotal_incl
+        payment = self.payment_ids.filtered(lambda p: p.id == payment_id).ensure_one()
+        payment.write({
+            'amount': payment.amount + tip,
+            'amount_currency': payment.amount_currency + self.currency_id._convert(tip, payment.foreign_currency_id or self.currency_id, self.company_id),
+        })
+        self._compute_prices()
+        self.write({'is_tipped': True, 'is_tipped_after_payment': True, 'tip_amount': tip})
+        return self.read_pos_data([], self.config_id)
 
     @api.model
     def _get_refunded_orders(self, order):
