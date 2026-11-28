@@ -92,3 +92,71 @@ class TestOwnChecks(L10nLatamCheckTest):
         })
         payment.action_post()
         self.assertEqual(payment.amount, 120)
+
+    def test_own_check_multicurrency_liquidity_amounts(self):
+        """ Own checks issued in a currency different from the company one. Each
+        check liquidity line must keep the check nominal in amount_currency (the
+        payment currency) and its conversion to company currency in balance. The
+        issue only shows up when the rate is not 1:1, so we set a controlled one. """
+        company = self.company_data_3['company']
+        company_currency = company.currency_id
+        foreign_currency = self.env.ref('base.EUR')
+        foreign_currency.active = True
+        self.assertNotEqual(company_currency, foreign_currency)
+        self.env['res.currency.rate'].create({
+            'name': '2016-01-01',
+            'currency_id': foreign_currency.id,
+            'company_id': company.id,
+            'rate': 4.0,
+        })
+        payment_method_line = self.bank_journal._get_available_payment_method_lines('outbound').filtered_domain([('code', '=', 'own_checks')])[:1]
+        payment = self.env['account.payment'].create({
+            'payment_type': 'outbound',
+            'partner_id': self.partner_a.id,
+            'journal_id': self.bank_journal.id,
+            'currency_id': foreign_currency.id,
+            'date': fields.Date.today(),
+            'payment_method_line_id': payment_method_line.id,
+            'l10n_latam_new_check_ids': [
+                Command.create({'payment_date': fields.Date.today(), 'amount': 20}),
+                Command.create({'payment_date': fields.Date.today(), 'amount': 30}),
+                Command.create({'payment_date': fields.Date.today(), 'amount': 70}),
+            ]
+        })
+        payment.action_post()
+        self.assertEqual(payment.amount, 120)
+
+        for check in payment.l10n_latam_new_check_ids:
+            line = check.outstanding_line_id
+            self.assertEqual(
+                abs(line.amount_currency), check.amount,
+                "Check liquidity line must hold the nominal in the payment currency")
+            expected_balance = foreign_currency._convert(
+                check.amount, company_currency, company, payment.date)
+            self.assertEqual(
+                abs(line.balance), expected_balance,
+                "Check liquidity line balance must be the nominal converted to company currency")
+
+    def test_own_check_liquidity_lines_keep_sign(self):
+        """ The check lines must add up to the liquidity they receive, with its sign. It comes positive
+        when the withholdings exceed the checks, and abs() turned it into an inflated check line plus an
+        automatic balancing line. """
+        payment_method_line = self.bank_journal._get_available_payment_method_lines(
+            'outbound').filtered(lambda x: x.code == 'own_checks')[0]
+        payment = self.env['account.payment'].create({
+            'payment_type': 'outbound',
+            'partner_id': self.partner_a.id,
+            'journal_id': self.bank_journal.id,
+            'payment_method_line_id': payment_method_line.id,
+            'l10n_latam_new_check_ids': [
+                Command.create({'name': '00000011', 'payment_date': fields.Date.today(), 'amount': 40}),
+                Command.create({'name': '00000012', 'payment_date': fields.Date.today(), 'amount': 20}),
+            ],
+        })
+        for liquidity in (-30.0, 40.0):
+            line_vals = payment._prepare_move_liquidity_lines(
+                {'name': '/', 'balance': liquidity, 'amount_currency': liquidity})
+            self.assertEqual(len(line_vals), 2)
+            self.assertAlmostEqual(sum(line['balance'] for line in line_vals), liquidity)
+            self.assertAlmostEqual(sum(line['amount_currency'] for line in line_vals), liquidity)
+            self.assertAlmostEqual(line_vals[0]['balance'], -40.0)

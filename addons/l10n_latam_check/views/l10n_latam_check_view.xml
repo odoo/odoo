@@ -102,7 +102,6 @@
         <field name="model">l10n_latam.check</field>
         <field name="arch" type="xml">
             <form create="false" edit="false" delete="false">
-                <field name="outstanding_line_id" invisible="True"/>
                 <header>
                     <button name="action_void" string="Void Check" invisible="issue_state != 'handed'" type="object" class="oe_highlight" confirm="Marking a check as void will cancel the check and generate a new entry that will re-open the debt."  data-hotkey="v"/>
                     <field name="issue_state" statusbar_visible="issue_state" widget="statusbar"/>
@@ -114,9 +113,6 @@
                         </button>
                         <button  icon="fa-bars" type="object" name="button_open_payment" invisible="payment_method_code != 'own_checks'">
                             <span>Payment</span>
-                        </button>
-                        <button  icon="fa-bars" type="object" invisible="not outstanding_line_id" name="action_show_journal_entry" groups="account.group_account_user,account.group_account_readonly">
-                            <span>Journal Entry</span>
                         </button>
                         <button  icon="fa-bars" type="object" invisible="not issue_state or issue_state == 'handed'" name="action_show_reconciled_move" groups="account.group_account_user,account.group_account_readonly">
                             <span>Reconciled move</span>
