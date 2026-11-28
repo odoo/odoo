@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.l10n_ar_stock</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="stock.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <block name="operations_setting_container" position="after">
+                <block title="Argentina Delivery Guide" name="l10n_ar_delivery_guide_setting_container" invisible="country_code != 'AR'">
+                    <setting string="ARBA/COT (Electronic Delivery Guide)" company_dependent="1"
+                             help="Configure ARBA COT credentials to generate COTs (Código de Operación de Traslado). The connection uses the company's CUIT as the username and the CIT as the password.">
+                        <div class="text-muted mt16" invisible="not l10n_ar_arba_cot_uses_parent">
+                            This branch has no CUIT, so the ARBA COT credentials of its parent company will be used. For separate credentials, set the CUIT on
+                            <button name="open_company" type="object" string="this branch's company" class="btn-link p-0 align-baseline"/>
+                            and then the CIT.
+                        </div>
+                        <div class="content-group mt16" invisible="l10n_ar_arba_cot_uses_parent">
+                            <div class="row">
+                                <label for="l10n_ar_arba_cit" class="o_light_label col-lg-4" string="CIT (Clave de Identificación Tributaria)"/>
+                                <field name="l10n_ar_arba_cit" password="True" class="col-lg-8"/>
+                            </div>
+                            <div class="row mt8">
+                                <label for="l10n_ar_arba_cot_environment" class="o_light_label col-lg-4" string="ARBA COT Environment"/>
+                                <field name="l10n_ar_arba_cot_environment" widget="radio" class="col-lg-8"/>
+                            </div>
+                            <div class="text-muted">
+                                The demo environment does not require credentials and the COT will not be sent to ARBA. Use for testing workflows.
+                            </div>
+                        </div>
+                    </setting>
+                </block>
+            </block>
+        </field>
+    </record>
+</odoo>

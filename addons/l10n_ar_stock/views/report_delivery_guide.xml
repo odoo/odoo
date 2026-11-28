@@ -8,6 +8,11 @@
                 <br/>
                 <span t-att-style="'color: %s;' % o.company_id.secondary_color">Delivery Guide No: </span>
                 <span t-out="o.l10n_ar_delivery_guide_number"/>
+                <div t-if="o.l10n_ar_cot_number" name="l10n_ar_cot_number" class="d-inline-block text-start rounded bg-light mt-2 px-3 py-2">
+                    <span>COT NUMBER</span>
+                    <br/>
+                    <strong class="fs-4" t-out="o.l10n_ar_cot_number"/>
+                </div>
             </xpath>
         </template>
 

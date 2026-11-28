@@ -22,7 +22,36 @@
                             class="btn-primary"
                             string="Send Delivery Guide"
                             invisible="country_code != 'AR' or not l10n_ar_allow_send_delivery_guide"/>
+                    <button name="l10n_ar_action_generate_cot"
+                            type="object"
+                            string="Generate COT"
+                            invisible="country_code != 'AR' or picking_type_code != 'outgoing' or not l10n_ar_delivery_guide_number or l10n_ar_cot_number or not l10n_ar_is_cot_enabled"/>
                 </xpath>
+                <xpath expr="//header" position="after">
+                    <div class="alert alert-warning" role="alert" invisible="not l10n_ar_cot_error">
+                        <field name="l10n_ar_cot_error"/>
+                        <button name="l10n_ar_action_generate_cot"
+                                type="object"
+                                class="oe_link"
+                                string="Retry"/>
+                    </div>
+                </xpath>
+                <page name="extra" position="after">
+                    <page string="COT" name="l10n_ar_cot" invisible="country_code != 'AR' or picking_type_code != 'outgoing' or not l10n_ar_delivery_guide_number or not (l10n_ar_is_cot_enabled or l10n_ar_cot_number)">
+                        <group>
+                            <group string="COT Information" name="l10n_ar_cot_information">
+                                <field name="l10n_ar_cot_departure_date" readonly="l10n_ar_cot_number"/>
+                                <field name="l10n_ar_cot_carrier_id" readonly="l10n_ar_cot_number"/>
+                                <field name="l10n_ar_cot_license_plate" readonly="l10n_ar_cot_number"/>
+                                <field name="l10n_ar_cot_is_non_finished_product" readonly="l10n_ar_cot_number"/>
+                                <field name="l10n_ar_cot_amount" readonly="l10n_ar_cot_number"/>
+                            </group>
+                            <group string="ARBA" name="l10n_ar_cot_arba">
+                                <field name="l10n_ar_cot_number"/>
+                            </group>
+                        </group>
+                    </page>
+                </page>
             </field>
         </record>
     </data>
