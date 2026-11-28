@@ -7,6 +7,7 @@ import { useDropdownAutoVisibility } from "@html_editor/toolbar_dropdown_hook";
 import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
 import { Component, useProps, proxy, signal, t, useEffect } from "@odoo/owl";
 import { isColorGradient } from "@web/core/utils/colors";
+import { uniqueId } from "@web/core/utils/functions";
 
 export class ColorSelector extends Component {
     static template = "html_editor.ColorSelector";
@@ -79,9 +80,18 @@ export class ColorSelector extends Component {
                     this.colorSelectorState.isOpen = true;
                 },
                 ref: colorPickerRef,
+                role: "dialog",
             }
         );
         useDropdownAutoVisibility(this.env.overlayState, colorPickerRef);
+        this.colorPickerId = uniqueId("o-we-color-picker-");
+        useEffect(() => {
+            const colorPickerEl = colorPickerRef();
+            if (colorPickerEl) {
+                colorPickerEl.id = this.colorPickerId;
+                colorPickerEl.ariaLabel = this.colorSelectorBtn()?.ariaLabel;
+            }
+        });
     }
 
     getCorrespondingColorTab(color) {

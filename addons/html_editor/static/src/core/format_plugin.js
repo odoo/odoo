@@ -137,7 +137,7 @@ export class FormatPlugin extends Plugin {
             { hotkey: "control+5", commandId: "formatStrikethrough" },
             { hotkey: "control+space", commandId: "removeFormat" },
         ],
-        toolbar_groups: withSequence(20, { id: "decoration" }),
+        toolbar_groups: withSequence(20, { id: "decoration", description: _t("Decoration") }),
         toolbar_items: [
             {
                 id: "bold",

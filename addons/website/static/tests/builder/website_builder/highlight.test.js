@@ -1,9 +1,13 @@
 import { expect, test } from "@odoo/hoot";
-import { click, queryOne, waitFor, waitForNone } from "@odoo/hoot-dom";
+import { click, press, queryOne, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { setupEditor } from "@html_editor/../tests/_helpers/editor";
 import { setSelection } from "@html_editor/../tests/_helpers/selection";
-import { expandToolbar } from "@html_editor/../tests/_helpers/toolbar";
+import {
+    expandToolbar,
+    expectAccessibleLabels,
+    expectConsistentAriaStates,
+} from "@html_editor/../tests/_helpers/toolbar";
 import { HighlightPlugin } from "@website/builder/plugins/highlight/highlight_plugin";
 import { contains } from "@web/../tests/web_test_helpers";
 import { closestElement } from "@html_editor/utils/dom_traversal";
@@ -47,6 +51,33 @@ test("Can highlight a selected text", async () => {
     await click(".o_popover .o_text_highlight_underline");
     expect("p>.o_text_highlight_underline").toHaveCount(1);
     checkHighlightColor("o_text_highlight_freehand_2");
+});
+
+test("highlight button aria-expanded should match whether its popover is open", async () => {
+    const { editor } = await setupEditor("<p>This is [highlighted]</p>", {
+        config: { includePlugins: [HighlightPlugin, FakeEditInteractionPlugin] },
+    });
+    // The `active` class of these buttons means that a text effect is applied,
+    // so the popup state is read from `aria-expanded`, checked here
+    const isPopupOpen = (el) => el.getAttribute("aria-expanded") === "true";
+    const expectAccessibleToolbar = () => {
+        expectConsistentAriaStates(editor, { isPopupOpen });
+        expectAccessibleLabels();
+    };
+
+    await expandToolbar();
+    expect(".o_hb_select_highlight").toHaveAttribute("aria-haspopup", "dialog");
+    expect(".o_hb_select_highlight").toHaveAttribute("aria-expanded", "false");
+    expectAccessibleToolbar();
+    await click(".o-we-toolbar .o_hb_select_highlight");
+    await waitFor(".o_popover .o_text_highlight_underline");
+    expect(".o_hb_select_highlight").toHaveAttribute("aria-expanded", "true");
+    expectAccessibleToolbar();
+
+    await press("Escape");
+    await waitForNone(".o_popover .o_text_highlight_underline");
+    expect(".o_hb_select_highlight").toHaveAttribute("aria-expanded", "false");
+    expectAccessibleToolbar();
 });
 
 test("Check no highlight color is displayed in colorpicker when text with multiple highlight color is selected", async () => {

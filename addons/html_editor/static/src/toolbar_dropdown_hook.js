@@ -1,4 +1,6 @@
 import { proxy, untrack, useEffect, useListener } from "@odoo/owl";
+import { usePopover } from "@web/core/popover/popover_hook";
+import { Tooltip } from "@web/core/tooltip/tooltip";
 
 export function useDropdownAutoVisibility(overlayState, popoverRef) {
     if (!overlayState) {
@@ -19,7 +21,19 @@ export function useDropdownAutoVisibility(overlayState, popoverRef) {
     });
 }
 
-export function useToolbarDropdownFocus(dropdown, buttonRef) {
+/**
+ * Manages the focus of a toolbar dropdown:
+ * - Escape moves the focus back to the dropdown toggle,
+ * - when the dropdown is opened from the keyboard, its active item (i.e. the
+ *   current value) gets the focus, so that keyboard and screen reader users
+ *   start from it. Without active item, the focus stays on the toggle: focusing
+ *   another item would preview it.
+ *
+ * @param {Object} dropdown state of the dropdown, as returned by `useDropdownState`
+ * @param {() => HTMLElement | null} buttonRef dropdown toggle reference
+ * @param {() => HTMLElement | null} menuRef dropdown menu reference
+ */
+export function useToolbarDropdownFocus(dropdown, buttonRef, menuRef) {
     useListener(
         document,
         "keydown",
@@ -30,6 +44,23 @@ export function useToolbarDropdownFocus(dropdown, buttonRef) {
         },
         { capture: true }
     );
+    // A click triggered by the keyboard (Enter or Space) has no `detail`.
+    // Opening the dropdown with the arrows does not trigger a click.
+    let isOpenedByPointer = false;
+    useListener(buttonRef, "click", (ev) => {
+        isOpenedByPointer = ev.detail !== 0;
+    });
+    useEffect(() => {
+        const menuEl = menuRef();
+        if (!dropdown.isOpen) {
+            isOpenedByPointer = false;
+            return;
+        }
+        if (!menuEl || isOpenedByPointer || document.activeElement !== untrack(buttonRef)) {
+            return;
+        }
+        menuEl.querySelector(".o-dropdown-item.active")?.focus();
+    });
 }
 
 /**
@@ -79,4 +110,44 @@ export function useToolbarDropdownPreview({ dropdown, menuRef, previewableOperat
         },
         revert: revertPreview,
     };
+}
+
+/**
+ * The `title` of an element is only displayed by the browser on hover: this
+ * hook displays it as a tooltip when an element inside the given container
+ * gets the focus from the keyboard as well. It is not displayed when the
+ * focus comes from a pointer, as the native tooltip is then displayed on
+ * hover.
+ *
+ * @param {() => HTMLElement | null} containerRef
+ */
+export function useFocusTooltip(containerRef) {
+    const tooltip = usePopover(Tooltip, { closeOnEscape: false, setActiveElement: false });
+    // Whether the next focus comes from a pointer. It is only valid for the
+    // focus given by the pointer down: it is reset when the pointer is
+    // released anywhere, and once used, as the pointer may be released in
+    // another document (e.g. the iframe of the editable).
+    let isPointerFocus = false;
+    const resetPointerFocus = () => {
+        isPointerFocus = false;
+    };
+    useListener(containerRef, "pointerdown", () => {
+        isPointerFocus = true;
+    });
+    useListener(document, "pointerup", resetPointerFocus, { capture: true });
+    useListener(document, "pointercancel", resetPointerFocus, { capture: true });
+    useListener(containerRef, "focusin", (ev) => {
+        const isFocusedByPointer = isPointerFocus;
+        isPointerFocus = false;
+        tooltip.close();
+        const el = ev.target.closest("[title]");
+        if (isFocusedByPointer || !el?.title || !ev.currentTarget.contains(el)) {
+            return;
+        }
+        tooltip.open(el, { tooltip: el.title });
+    });
+    useListener(containerRef, "focusout", () => tooltip.close());
+    // e.g. a dropdown opened from the keyboard while its toggle keeps the
+    // focus (capture, as dropdown toggles stop the propagation of clicks)
+    useListener(containerRef, "click", () => tooltip.close(), { capture: true });
 }

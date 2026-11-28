@@ -24,6 +24,8 @@ import { removeStyle } from "@html_editor/utils/dom";
 /**
  * @typedef {Object} ToolbarGroup
  * @property {string} id
+ * @property {TranslatedString} [description] Name of the group, used as its
+ *   accessible name when it displays several buttons
  * @property {string[]} [namespaces]
  *
  *
@@ -44,6 +46,7 @@ import { removeStyle } from "@html_editor/utils/dom";
  * @property {string} [text] Can be used with (or instead of) `icon`
  * @property {(selection: EditorSelection) => boolean} [isAvailable] ? *
  * @property {(selection: EditorSelection, nodes: Node[]) => boolean} [isActive]
+ *   Only define it for toggle buttons: its presence sets `aria-pressed` on the button.
  * @property {(selection: EditorSelection, nodes: Node[]) => boolean} [isDisabled]
  * @property {boolean} [opensUi] The button opens some UI (dialog, popover...) that takes the focus
  *
@@ -172,8 +175,8 @@ export class ToolbarPlugin extends Plugin {
             },
         },
         toolbar_groups: [
-            withSequence(100, { id: "expand_toolbar" }),
-            withSequence(30, { id: "layout" }),
+            withSequence(100, { id: "expand_toolbar", description: _t("More options") }),
+            withSequence(30, { id: "layout", description: _t("Layout") }),
         ],
         toolbar_items: {
             id: "expand_toolbar",
@@ -546,6 +549,7 @@ export class ToolbarPlugin extends Plugin {
         this.state.buttonGroups = this.buttonGroups
             .map((group) => ({
                 id: group.id,
+                description: group.description,
                 buttons: group.buttons
                     .filter((button) => availableButtons.has(button))
                     .map((button) => ({
@@ -556,7 +560,11 @@ export class ToolbarPlugin extends Plugin {
                             ? pick(button, "Component", "props")
                             : {
                                   ...pick(button, "run", "icon", "iconClass", "text", "opensUi"),
-                                  isActive: !!button.isActive?.(selection, targetedNodes),
+                                  // Buttons without `isActive` are not toggle buttons:
+                                  // keep it undefined so that no `aria-pressed` is set.
+                                  isActive: button.isActive
+                                      ? !!button.isActive(selection, targetedNodes)
+                                      : undefined,
                               }),
                     })),
             }))

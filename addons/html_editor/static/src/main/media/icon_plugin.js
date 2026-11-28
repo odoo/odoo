@@ -56,9 +56,21 @@ export class IconPlugin extends Plugin {
         ],
         properties: [{ predicate: isIconElement, toolbar: "icon" }],
         toolbar_groups: [
-            withSequence(2, { id: "icon_size", namespaces: ["icon"] }),
-            withSequence(3, { id: "icon_spin", namespaces: ["icon"] }),
-            withSequence(3, { id: "icon_replace", namespaces: ["icon"] }),
+            withSequence(2, {
+                id: "icon_size",
+                description: _t("Icon size"),
+                namespaces: ["icon"],
+            }),
+            withSequence(3, {
+                id: "icon_spin",
+                description: _t("Icon animation"),
+                namespaces: ["icon"],
+            }),
+            withSequence(3, {
+                id: "icon_replace",
+                description: _t("Icon replacement"),
+                namespaces: ["icon"],
+            }),
         ],
         toolbar_items: [
             {

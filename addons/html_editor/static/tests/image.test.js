@@ -41,22 +41,22 @@ test("Can change an image size", async () => {
     await waitFor(".o-we-toolbar");
     expect(queryOne("img").style.width).toBe("");
 
-    await click(".o-we-toolbar [name='image_actions'] .dropdown-toggle");
+    await click(".o-we-toolbar [data-group-id='image_actions'] .dropdown-toggle");
     await animationFrame();
     await click(".image_size_selector .dropdown-item:contains('100%')");
     expect(queryOne("img").style.width).toBe("100%");
 
-    await click(".o-we-toolbar [name='image_actions'] .dropdown-toggle");
+    await click(".o-we-toolbar [data-group-id='image_actions'] .dropdown-toggle");
     await animationFrame();
     await click(".image_size_selector .dropdown-item:contains('50%')");
     expect(queryOne("img").style.width).toBe("50%");
 
-    await click(".o-we-toolbar [name='image_actions'] .dropdown-toggle");
+    await click(".o-we-toolbar [data-group-id='image_actions'] .dropdown-toggle");
     await animationFrame();
     await click(".image_size_selector .dropdown-item:contains('25%')");
     expect(queryOne("img").style.width).toBe("25%");
 
-    await click(".o-we-toolbar [name='image_actions'] .dropdown-toggle");
+    await click(".o-we-toolbar [data-group-id='image_actions'] .dropdown-toggle");
     await animationFrame();
     await click(".image_size_selector .dropdown-item:contains('Default')");
     expect(queryOne("img").style.width).toBe("");
@@ -68,12 +68,12 @@ test("image should show actual width if set to default size", async () => {
     `);
     await click("img");
     await waitFor(".o-we-toolbar");
-    expect(queryOne(".o-we-toolbar .dropdown-toggle[title='Resize image']")).toHaveText("50%");
-    await click(".o-we-toolbar .dropdown-toggle[title='Resize image']");
+    expect(queryOne(".o-we-toolbar .dropdown-toggle[title^='Resize image']")).toHaveText("50%");
+    await click(".o-we-toolbar .dropdown-toggle[title^='Resize image']");
     await animationFrame();
     await click(".image_size_selector .dropdown-item:contains('Default')");
     await animationFrame();
-    expect(queryOne(".o-we-toolbar .dropdown-toggle[title='Resize image']")).toHaveText(
+    expect(queryOne(".o-we-toolbar .dropdown-toggle[title^='Resize image']")).toHaveText(
         queryOne("img").getBoundingClientRect().width + "px"
     );
 });
@@ -84,7 +84,7 @@ test("should show the current image size as active when opening the dropdown", a
     `);
     await click("img.test-image");
     await waitFor(".o-we-toolbar");
-    const sizeToggle = ".o-we-toolbar .dropdown-toggle[title='Resize image']";
+    const sizeToggle = ".o-we-toolbar .dropdown-toggle[title^='Resize image']";
 
     await click(sizeToggle);
     await animationFrame();
@@ -111,7 +111,7 @@ test("Can undo the image sizing", async () => {
     await click("img.test-image");
     await waitFor(".o-we-toolbar");
 
-    await click(".o-we-toolbar [name='image_actions'] .dropdown-toggle");
+    await click(".o-we-toolbar [data-group-id='image_actions'] .dropdown-toggle");
     await animationFrame();
     await click(".image_size_selector .dropdown-item:contains('100%')");
     expect(queryOne("img").style.width).toBe("100%");
@@ -126,9 +126,9 @@ test("The image size shown in the toolbar updates with undo and redo", async () 
     `);
     await click("img.test-image");
     await waitFor(".o-we-toolbar");
-    const sizeToggle = ".o-we-toolbar .dropdown-toggle[title='Resize image']";
+    const sizeToggle = ".o-we-toolbar .dropdown-toggle[title^='Resize image']";
 
-    await click(".o-we-toolbar [name='image_actions'] .dropdown-toggle");
+    await click(".o-we-toolbar [data-group-id='image_actions'] .dropdown-toggle");
     await animationFrame();
     await click(".image_size_selector .dropdown-item:contains('100%')");
     await animationFrame();
@@ -152,34 +152,34 @@ test("Can change the padding of an image", async () => {
     await click("img.test-image");
     await waitFor(".o-we-toolbar");
 
-    await click(".o-we-toolbar .dropdown-toggle[title='Set image padding']");
+    await click(".o-we-toolbar .dropdown-toggle[title^='Set image padding']");
     await animationFrame();
     await click(".o-dropdown--menu span:contains('Small')");
     await animationFrame();
     expect("img").toHaveClass("p-1");
 
-    await click(".o-we-toolbar .dropdown-toggle[title='Set image padding']");
+    await click(".o-we-toolbar .dropdown-toggle[title^='Set image padding']");
     await animationFrame();
     await click(".o-dropdown--menu span:contains('Medium')");
     await animationFrame();
     expect("img").not.toHaveClass("p-1");
     expect("img").toHaveClass("p-2");
 
-    await click(".o-we-toolbar .dropdown-toggle[title='Set image padding']");
+    await click(".o-we-toolbar .dropdown-toggle[title^='Set image padding']");
     await animationFrame();
     await click(".o-dropdown--menu span:contains('Large')");
     await animationFrame();
     expect("img").not.toHaveClass("p-2");
     expect("img").toHaveClass("p-3");
 
-    await click(".o-we-toolbar .dropdown-toggle[title='Set image padding']");
+    await click(".o-we-toolbar .dropdown-toggle[title^='Set image padding']");
     await animationFrame();
     await click(".o-dropdown--menu span:contains('XL')");
     await animationFrame();
     expect("img").not.toHaveClass("p-3");
     expect("img").toHaveClass("p-5");
 
-    await click(".o-we-toolbar .dropdown-toggle[title='Set image padding']");
+    await click(".o-we-toolbar .dropdown-toggle[title^='Set image padding']");
     await animationFrame();
     await click(".o-dropdown--menu span:contains('None')");
     await animationFrame();
@@ -193,13 +193,13 @@ test("should show the current image padding as active when opening the dropdown"
     await click("img.test-image");
     await waitFor(".o-we-toolbar");
 
-    await click(".o-we-toolbar .dropdown-toggle[title='Set image padding']");
+    await click(".o-we-toolbar .dropdown-toggle[title^='Set image padding']");
     await animationFrame();
     expect(".o-dropdown--menu .dropdown-item.active").toHaveText("None");
     await click(".o-dropdown--menu span:contains('Medium')");
     await animationFrame();
 
-    await click(".o-we-toolbar .dropdown-toggle[title='Set image padding']");
+    await click(".o-we-toolbar .dropdown-toggle[title^='Set image padding']");
     await animationFrame();
     expect("img").toHaveClass("p-2");
     expect(".o-dropdown--menu .dropdown-item.active").toHaveText("Medium");
@@ -212,7 +212,7 @@ test("Can undo the image padding", async () => {
     await click("img.test-image");
     await waitFor(".o-we-toolbar");
 
-    await click(".o-we-toolbar .dropdown-toggle[title='Set image padding']");
+    await click(".o-we-toolbar .dropdown-toggle[title^='Set image padding']");
     await animationFrame();
     await click(".o-dropdown--menu span:contains('Small')");
     await animationFrame();
@@ -454,7 +454,7 @@ test("image alignment option should be available for images", async () => {
     `);
     await click("img.test-image");
     await waitFor(".o-we-toolbar");
-    expectElementCount(".o-we-toolbar button[title='Set image alignment']", 1);
+    expectElementCount(".o-we-toolbar button[title^='Set image alignment']", 1);
 });
 
 test("change image's alignment to 'Wrap text'", async () => {
@@ -463,7 +463,7 @@ test("change image's alignment to 'Wrap text'", async () => {
     `);
     await click("img");
     await waitFor(".o-we-toolbar");
-    await click(".o-we-toolbar button[title='Set image alignment']");
+    await click(".o-we-toolbar button[title^='Set image alignment']");
     await animationFrame();
     await click(".o-we-toolbar-dropdown .btn[title='Wrap text']");
     await animationFrame();
@@ -476,7 +476,7 @@ test("change image's alignment to 'Break text'", async () => {
     `);
     await click("img");
     await waitFor(".o-we-toolbar");
-    await click(".o-we-toolbar button[title='Set image alignment']");
+    await click(".o-we-toolbar button[title^='Set image alignment']");
     await animationFrame();
     await click(".o-we-toolbar-dropdown .btn[title='Break text']");
     await animationFrame();
@@ -489,21 +489,21 @@ test("change image's alignment to 'Wrap text' then 'Break text' then 'Inline'", 
     `);
     await click("img");
     await waitFor(".o-we-toolbar");
-    await click(".o-we-toolbar button[title='Set image alignment']");
+    await click(".o-we-toolbar button[title^='Set image alignment']");
     await animationFrame();
     await click(".o-we-toolbar-dropdown .btn[title='Wrap text']");
     await animationFrame();
     expect("img").toHaveClass("float-start");
     expect("img").not.toHaveClass("d-block");
 
-    await click(".o-we-toolbar button[title='Set image alignment']");
+    await click(".o-we-toolbar button[title^='Set image alignment']");
     await animationFrame();
     await click(".o-we-toolbar-dropdown .btn[title='Break text']");
     await animationFrame();
     expect("img").not.toHaveClass("float-start");
     expect("img").toHaveClass("d-block");
 
-    await click(".o-we-toolbar button[title='Set image alignment']");
+    await click(".o-we-toolbar button[title^='Set image alignment']");
     await animationFrame();
     await click(".o-we-toolbar-dropdown .btn[title='Inline']");
     await animationFrame();
@@ -518,7 +518,7 @@ test("changing image alignment should not remove any existing classes", async ()
     `);
     await click("img");
     await waitFor(".o-we-toolbar");
-    await click(".o-we-toolbar button[title='Set image alignment']");
+    await click(".o-we-toolbar button[title^='Set image alignment']");
     await animationFrame();
     await click(".o-we-toolbar-dropdown .btn[title='Wrap text']");
     await animationFrame();
@@ -532,7 +532,7 @@ test("test order of image options in image toolbar", async () => {
 
     const toolbarGroups = queryAll(".o-we-toolbar .btn-group");
     expect(toolbarGroups).toHaveCount(5);
-    expect(toolbarGroups.map((g) => g.getAttribute("name"))).toEqual([
+    expect(toolbarGroups.map((g) => g.dataset.groupId)).toEqual([
         "image_modifiers",
         "image_actions",
         "image_link",
@@ -540,16 +540,14 @@ test("test order of image options in image toolbar", async () => {
         "image_delete",
     ]);
 
+    // Titles without the current value of the selectors (e.g. "Set image alignment: Inline")
+    const getTitle = (b) => b.getAttribute("title").replace(/: .*$/, "");
     expect(
-        queryAll(".o-we-toolbar .btn-group[name='image_modifiers'] .btn").map((b) =>
-            b.getAttribute("title")
-        )
+        queryAll(".o-we-toolbar .btn-group[data-group-id='image_modifiers'] .btn").map(getTitle)
     ).toMatchObject(["Set image alignment", "Set image padding", "Crop image"]);
 
     expect(
-        queryAll(".o-we-toolbar .btn-group[name='image_actions'] .btn").map((b) =>
-            b.getAttribute("title")
-        )
+        queryAll(".o-we-toolbar .btn-group[data-group-id='image_actions'] .btn").map(getTitle)
     ).toMatchObject(["Resize image", "Preview image"]);
 });
 

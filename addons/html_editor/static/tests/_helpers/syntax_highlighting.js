@@ -97,7 +97,7 @@ const TOOLBAR = (language) =>
     unformat(
         `<div class="o_code_toolbar">
         <div data-prevent-closing-overlay="true">
-            <button class="btn o-dropdown dropdown-toggle dropdown" name="language" title="${language}" aria-expanded="false">
+            <button class="btn o-dropdown dropdown-toggle dropdown" name="language" title="${language}" aria-expanded="false" aria-haspopup="menu">
                 <span class="px-1">${language}</span>
                 <i class="oi" data-icon="arrow_drop_down"></i>
             </button>

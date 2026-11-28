@@ -58,7 +58,7 @@ test("Popovers scroll with iframe", async () => {
     await contains(".o-we-toolbar button.o-select-color-background").click();
     await expectScroll(".o_popover:has(> .o_font_color_selector)");
 
-    await contains(".o-we-toolbar div[name=websiteDecoration] > button").click();
+    await contains(".o-we-toolbar div[data-group-id=websiteDecoration] > button").click();
     await expectScroll(".o_popover");
 
     await contains(".o-we-toolbar button.o_hb_select_highlight").click();

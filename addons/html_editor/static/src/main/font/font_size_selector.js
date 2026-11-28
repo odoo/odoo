@@ -1,4 +1,4 @@
-import { Component, useProps, proxy, signal, t } from "@odoo/owl";
+import { Component, computed, useProps, proxy, signal, t } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { PreviewableDropdownItem } from "@html_editor/main/toolbar/previewable_dropdown_item";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
@@ -11,6 +11,7 @@ import {
 } from "@html_editor/toolbar_dropdown_hook";
 import { IframeInput } from "@html_editor/components/iframe_input/iframe_input";
 import { ACTIVE_ELEMENT_CLASS } from "@web/core/navigation/navigation";
+import { getToolbarAriaLabel } from "@html_editor/main/toolbar/toolbar";
 
 export const MAX_FONT_SIZE = 144;
 
@@ -54,7 +55,7 @@ export class FontSizeSelector extends Component {
             this.onCustomFontSizeInput.bind(this),
             200
         );
-        useToolbarDropdownFocus(this.dropdown, this.fontSizeSelector);
+        useToolbarDropdownFocus(this.dropdown, this.fontSizeSelector, this.menuRef);
         this.preview = useToolbarDropdownPreview({
             dropdown: this.dropdown,
             menuRef: this.menuRef,
@@ -130,6 +131,8 @@ export class FontSizeSelector extends Component {
             }
         }
     }
+
+    ariaLabel = computed(() => getToolbarAriaLabel(this.props.title, this.state.displayName));
 
     onSelected(item) {
         this.preview.commit(item);

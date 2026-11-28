@@ -134,7 +134,11 @@ export class TablePlugin extends Plugin {
             },
         ],
         toolbar_groups: [
-            withSequence(28, { id: "table_cell_merge", namespaces: ["expanded", "table"] }),
+            withSequence(28, {
+                id: "table_cell_merge",
+                description: _t("Cell merge"),
+                namespaces: ["expanded", "table"],
+            }),
         ],
 
         /** Providers */

@@ -5,7 +5,7 @@
         t-on-mouseout="this.props.onColorPointerOut" t-on-focusin="this.props.onFocusin" t-on-focusout="this.props.onFocusout">
         <div class="o_colorpicker_gradient_section">
             <t t-foreach="this.usedGradients" t-as="gradient" t-key="gradient_index">
-                <button class="o_color_button o_preview_alpha_background w-100 m-0 o_color_picker_button o_gradient_color_button btn p-0"
+                <button type="button" class="o_color_button o_preview_alpha_background w-100 m-0 o_color_picker_button o_gradient_color_button btn p-0"
                     t-att-class="{'selected': gradient_last and this.isColorGradient(this.props.currentCustomColor)}"
                     t-att-data-color="gradient"
                     t-attf-style="background-image: {{gradient}}"/>
@@ -13,14 +13,14 @@
         </div>
         <div class="o_colorpicker_gradient_section">
             <t t-foreach="this.DEFAULT_GRADIENTS_WITH_OPACITY" t-as="gradient" t-key="gradient">
-                <button class="w-100 m-0 o_color_button o_preview_alpha_background o_color_picker_button o_gradient_color_button btn p-0"
+                <button type="button" class="w-100 m-0 o_color_button o_preview_alpha_background o_color_picker_button o_gradient_color_button btn p-0"
                     t-att-class="{'selected': currentGradient?.includes(gradient)}"
                     t-attf-style="background-image: #{gradient};" t-att-data-color="gradient"/>
             </t>
         </div>
     </div>
     <div class="px-2">
-        <button t-ref="this.customGradientButton" t-attf-style="{{ currentGradient ? `background-image: ${currentGradient}` : '' }};"
+        <button type="button" t-ref="this.customGradientButton" t-attf-style="{{ currentGradient ? `background-image: ${currentGradient}` : '' }};"
             class="w-50 btn mb-2 o_custom_gradient_button o_preview_alpha_background o_color_picker_button"
             t-att-class="{'selected': currentGradient and !this.DEFAULT_GRADIENTS_WITH_OPACITY.includes(currentGradient)}"
             t-att-data-color="currentGradient" t-on-click="this.toggleGradientPicker" title="Define a custom gradient">

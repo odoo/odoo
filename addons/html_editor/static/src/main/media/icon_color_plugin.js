@@ -8,7 +8,11 @@ export class IconColorPlugin extends Plugin {
     static dependencies = ["icon", "colorUi"];
     /** @type {import("plugins").EditorResources} */
     resources = {
-        toolbar_groups: withSequence(1, { id: "icon_color", namespaces: ["icon"] }),
+        toolbar_groups: withSequence(1, {
+            id: "icon_color",
+            description: _t("Icon color"),
+            namespaces: ["icon"],
+        }),
         toolbar_items: [
             {
                 id: "icon_forecolor",

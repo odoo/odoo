@@ -6,6 +6,7 @@ export class IframeInput extends Component {
     props = useProps({
         // data / value
         value: t.or([t.string(), t.number()]),
+        title: t.string(),
         inputAttrs: t.object().optional(),
 
         // styling
@@ -76,6 +77,7 @@ export class IframeInput extends Component {
 
                 this.input = iframeDoc.createElement("input");
                 this.input.autocomplete = "off";
+                this.input.setAttribute("aria-label", this.props.title);
                 for (const [key, val] of Object.entries(this.props.inputAttrs || {})) {
                     this.input.setAttribute(key, val);
                 }

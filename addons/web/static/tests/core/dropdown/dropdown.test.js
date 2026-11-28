@@ -151,6 +151,42 @@ test("can be toggled", async () => {
     expect(DROPDOWN_TOGGLE).toHaveAttribute("aria-expanded", "false");
 });
 
+test("toggler references its menu", async () => {
+    await mountWithCleanup(SimpleDropdown);
+    expect(DROPDOWN_TOGGLE).toHaveAttribute("aria-haspopup", "menu");
+    expect(DROPDOWN_TOGGLE).not.toHaveAttribute("aria-controls");
+
+    await click(DROPDOWN_TOGGLE);
+    await animationFrame();
+    const menuId = queryOne(DROPDOWN_MENU).id;
+    expect(menuId).not.toBe("");
+    expect(DROPDOWN_TOGGLE).toHaveAttribute("aria-controls", menuId);
+
+    if (isSmall()) {
+        await click(".o_bottom_sheet_handle_bar");
+    } else {
+        await click(DROPDOWN_TOGGLE);
+    }
+    await animationFrame();
+    expect(DROPDOWN_TOGGLE).not.toHaveAttribute("aria-controls");
+});
+
+test("toggler keeps its own aria-haspopup", async () => {
+    class Parent extends Component {
+        static components = { Dropdown, DropdownItem };
+        static template = xml`
+            <Dropdown>
+                <button aria-haspopup="listbox">Dropdown</button>
+                <t t-set-slot="content">
+                    <DropdownItem>Item A</DropdownItem>
+                </t>
+            </Dropdown>
+        `;
+    }
+    await mountWithCleanup(Parent);
+    expect(DROPDOWN_TOGGLE).toHaveAttribute("aria-haspopup", "listbox");
+});
+
 test("initial open state can be true", async () => {
     class Parent extends SimpleDropdown {
         setup() {

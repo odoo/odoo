@@ -5,6 +5,7 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
 import {
     useDropdownAutoVisibility,
     useToolbarDropdownPreview,
+    useFocusTooltip,
     useToolbarDropdownFocus,
 } from "@html_editor/toolbar_dropdown_hook";
 import { PreviewableDropdownItem } from "@html_editor/main/toolbar/previewable_dropdown_item";
@@ -25,13 +26,14 @@ export class ListSelector extends Component {
     setup() {
         this.menuRef = signal.ref();
         this.dropdown = useDropdownState();
-        useToolbarDropdownFocus(this.dropdown, this.listSelector);
+        useToolbarDropdownFocus(this.dropdown, this.listSelector, this.menuRef);
         useDropdownAutoVisibility(this.env.overlayState, this.menuRef);
         this.preview = useToolbarDropdownPreview({
             dropdown: this.dropdown,
             menuRef: this.menuRef,
             previewableOperation: this.props.previewableOperation,
         });
+        useFocusTooltip(this.menuRef);
     }
     getActiveMode() {
         const { editableSelection: selection } = this.props.getSelection();

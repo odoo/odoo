@@ -1,10 +1,13 @@
-import { Component, proxy, signal, t, useProps } from "@odoo/owl";
+import { Component, computed, proxy, signal, t, useProps } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
+import { _t } from "@web/core/l10n/translation";
 import { PreviewableDropdownItem } from "@html_editor/main/toolbar/previewable_dropdown_item";
-import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
+import { getToolbarAriaLabel, toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
 import {
     useDropdownAutoVisibility,
+    useFocusTooltip,
+    useToolbarDropdownFocus,
     useToolbarDropdownPreview,
 } from "@html_editor/toolbar_dropdown_hook";
 
@@ -18,6 +21,8 @@ export class TableBorderStyleSelector extends Component {
     });
     static components = { Dropdown, PreviewableDropdownItem };
 
+    buttonRef = signal.ref();
+
     setup() {
         this.items = this.props.getItems();
         this.state = proxy(this.props.getDisplay());
@@ -29,7 +34,17 @@ export class TableBorderStyleSelector extends Component {
             menuRef: this.menuRef,
             previewableOperation: this.props.previewableOperation,
         });
+        useFocusTooltip(this.menuRef);
+        useToolbarDropdownFocus(this.dropdown, this.buttonRef, this.menuRef);
     }
+
+    ariaLabel = computed(() => {
+        const value =
+            this.state.displayName === "none"
+                ? _t("None")
+                : this.items.find((item) => item.value === this.state.displayName)?.title;
+        return getToolbarAriaLabel(this.props.title, value);
+    });
 
     onSelected(item) {
         this.preview.commit(item);

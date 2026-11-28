@@ -73,9 +73,21 @@ export class ImagePlugin extends Plugin {
             },
         ],
         toolbar_groups: [
-            withSequence(26, { id: "image_modifiers", namespaces: ["image"] }),
-            withSequence(28, { id: "image_actions", namespaces: ["image"] }),
-            withSequence(34, { id: "image_delete", namespaces: ["image"] }),
+            withSequence(26, {
+                id: "image_modifiers",
+                description: _t("Image modifiers"),
+                namespaces: ["image"],
+            }),
+            withSequence(28, {
+                id: "image_actions",
+                description: _t("Image actions"),
+                namespaces: ["image"],
+            }),
+            withSequence(34, {
+                id: "image_delete",
+                description: _t("Image deletion"),
+                namespaces: ["image"],
+            }),
         ],
         toolbar_items: [
             withSequence(10, {

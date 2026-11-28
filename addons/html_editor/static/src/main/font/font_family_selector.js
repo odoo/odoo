@@ -1,7 +1,7 @@
-import { Component, signal, t, useProps } from "@odoo/owl";
+import { Component, computed, signal, t, useProps } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { PreviewableDropdownItem } from "@html_editor/main/toolbar/previewable_dropdown_item";
-import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
+import { getToolbarAriaLabel, toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
 import {
     useDropdownAutoVisibility,
     useToolbarDropdownPreview,
@@ -27,7 +27,7 @@ export class FontFamilySelector extends Component {
     setup() {
         this.menuRef = signal.ref();
         this.dropdown = useDropdownState();
-        useToolbarDropdownFocus(this.dropdown, this.fontFamilySelector);
+        useToolbarDropdownFocus(this.dropdown, this.fontFamilySelector, this.menuRef);
         useDropdownAutoVisibility(this.env.overlayState, this.menuRef);
         this.preview = useToolbarDropdownPreview({
             dropdown: this.dropdown,
@@ -35,6 +35,10 @@ export class FontFamilySelector extends Component {
             previewableOperation: this.props.previewableOperation,
         });
     }
+
+    ariaLabel = computed(() =>
+        getToolbarAriaLabel(this.props.title, this.props.currentFontFamily.displayName)
+    );
 
     onSelected(item) {
         this.preview.commit(item);

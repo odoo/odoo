@@ -16,7 +16,7 @@ export class DynamicFieldPlugin extends Plugin {
 
     /** @type {import("plugins").EditorResources} */
     resources = {
-        toolbar_groups: withSequence(9, { id: "dynamic_field" }),
+        toolbar_groups: withSequence(9, { id: "dynamic_field", description: _t("Dynamic field") }),
         toolbar_items: [
             {
                 id: "editDynamicField",

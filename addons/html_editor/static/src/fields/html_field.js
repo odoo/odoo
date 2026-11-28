@@ -389,6 +389,7 @@ export class HtmlField extends Component {
                 ],
                 toolbar_groups: withSequence(100, {
                     id: "codeview",
+                    description: _t("Code view"),
                 }),
                 toolbar_items: {
                     id: "codeview",

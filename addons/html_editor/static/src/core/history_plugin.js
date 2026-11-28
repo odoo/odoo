@@ -93,7 +93,7 @@ export class HistoryPlugin extends Plugin {
             },
         ],
         ...(hasTouch() && {
-            toolbar_groups: withSequence(5, { id: "historyMobile" }),
+            toolbar_groups: withSequence(5, { id: "historyMobile", description: _t("History") }),
             toolbar_items: [
                 {
                     id: "undo",

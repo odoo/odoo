@@ -24,6 +24,7 @@
         <div class="o_color_picker_inputs d-flex mb-2">
             <div class="o_hex_div px-1 d-flex align-items-center">
                 <IframeInput
+                    title.translate="Hex color"
                     value="this.hexDisplay.value"
                     inputAttrs="{ name: 'hex_input' }"
                     iframeClass="'o_hex_iframe'"
@@ -34,8 +35,8 @@
                 />
                 <label class="flex-grow-0 ms-1">hex</label>
             </div>
-            <button t-if="window.EyeDropper" class="btn btn-sm p-0 px-1" title="Pick a color from the screen" t-on-click="this.pickColor">
-                <i class="oi" data-icon="colorize"/>
+            <button type="button" t-if="window.EyeDropper" class="btn btn-sm p-0 px-1" title="Pick a color from the screen" aria-label="Pick a color from the screen" t-on-click="this.pickColor">
+                <i class="oi" data-icon="colorize" aria-hidden="true"/>
             </button>
         </div>
     </div>
