@@ -8,7 +8,7 @@
         container: account-journal-card / inline-size;
 
         &:not(.o_kanban_ghost) {
-            min-height: 150px;
+            min-height: 250px;
         }
 
         @media screen and (min-width: 576px), print and (min-width: 100mm) {
@@ -33,11 +33,19 @@
         }
 
         .o_dashboard_graph {
-            margin-bottom: calc(var(--o-bs-spacer-2) * -1);
+            /* Cancel exactly the card padding, so that the graph spans the card without overflowing its borders */
+            margin-inline: calc(var(--Card-padding-h) * -1);
         }
 
         .o_graph_barchart {
             margin-bottom: calc(var(--o-bs-spacer-1) * -1);
+        }
+
+        .o_graph_linechart {
+            margin-bottom: calc(var(--Card-padding-v) * -1);
+            overflow: hidden;
+            border-end-start-radius: calc(var(--Card-border-radius-bottom) - var(--Card-border-width));
+            border-end-end-radius: calc(var(--Card-border-radius-bottom) - var(--Card-border-width));
         }
 
         .o_field_widget.o_field_kanban_vat_activity {

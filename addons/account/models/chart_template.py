@@ -835,8 +835,12 @@ class AccountChartTemplate(models.AbstractModel):
             )
             sudoed_products_purchase._force_default_purchase_tax(company)
 
-        # Display caba fields if there are caba taxes
-        if not company.parent_id and self.env['account.tax'].search_count([('tax_exigibility', '=', 'on_payment')], limit=1):
+        # Enable cash basis if the company has cash basis taxes
+        # The chart is loaded in sudo, so the search must be restricted to the company
+        if not company.parent_id and self.env['account.tax'].search_count([
+            *self.env['account.tax']._check_company_domain(company),
+            ('tax_exigibility', '=', 'on_payment'),
+        ], limit=1):
             company.tax_exigibility = True
 
         # Set default transfer account on the internal transfer reconciliation model
@@ -1210,7 +1214,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'name': _('Miscellaneous Operations'),
                 'type': 'general',
                 'code': _('MISC'),
-                'show_on_dashboard': False,
+                'show_on_dashboard': True,
                 'sequence': 9,
             },
             "exch": {
@@ -1224,6 +1228,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'type': 'general',
                 'code': _('CABA'),
                 'show_on_dashboard': False,
+                # Unarchived when cash basis is enabled
+                'active': False,
             },
             "bank": {
                 'name': _('Bank'),
@@ -1231,20 +1237,13 @@ class AccountChartTemplate(models.AbstractModel):
                 'show_on_dashboard': True,
                 'sequence': 7,
             },
-            "inventory_valuation": {
-                'name': _('Inventory Valuation'),
-                'code': 'STJ',
-                'type': 'general',
-                'sequence': 10,
-                'show_on_dashboard': False,
-            },
         }
 
     @template(model='res.company')
     def _get_account_res_company(self, template_code):
         return {
             self.env.company.id: {
-                'account_stock_journal_id': 'inventory_valuation',
+                'account_stock_journal_id': 'general',
             },
         }
 
