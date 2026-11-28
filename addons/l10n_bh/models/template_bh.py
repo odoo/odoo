@@ -16,9 +16,9 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             self.env.company.id: {
                 'account_fiscal_country_id': 'base.bh',
-                'bank_account_code_prefix': '1000',
-                'cash_account_code_prefix': '1009',
-                'transfer_account_code_prefix': '1001',
+                'bank_account_code_prefix': '1601',
+                'cash_account_code_prefix': '1601',
+                'transfer_account_code_prefix': '1701',
                 'account_default_pos_receivable_account_id': 'bh_account_100202',
                 'income_currency_exchange_account_id': 'bh_account_400301',
                 'expense_currency_exchange_account_id': 'bh_account_500903',
@@ -37,3 +37,51 @@ class AccountChartTemplate(models.AbstractModel):
                 'stock_account_production_cost_id': 'bh_account_100505',
             },
         }
+
+    def _get_account_parent_xmlid(self, code_prefix, template_code):
+        if template_code == 'bh':
+            return {
+                '1601': 'bh_account_160000',
+            }.get(code_prefix)
+        return super()._get_account_parent_xmlid(code_prefix, template_code)
+
+    @template('bh', 'account.journal')
+    def _get_bh_account_journal(self):
+        return {
+            'bank': {
+                'default_account_id': 'bh_account_160100',
+            },
+        }
+
+    def _create_outstanding_accounts(self, company, bank_prefix, code_digits):
+        if company.chart_template != 'bh':
+            super()._create_outstanding_accounts(company, bank_prefix, code_digits)
+            return
+
+        parent = self.ref('bh_group_04')
+        accounts_data_no_fields = {
+            'account_journal_payment_debit_account_id': {
+                'name': self.env._("Outstanding Receipts"),
+                'parent_id': parent.id,
+                'prefix': '150',
+                'code_digits': code_digits,
+                'account_type': 'asset_current',
+                'reconcile': True,
+            },
+            'account_journal_payment_credit_account_id': {
+                'name': self.env._("Outstanding Payments"),
+                'parent_id': parent.id,
+                'prefix': '150',
+                'code_digits': code_digits,
+                'account_type': 'asset_current',
+                'reconcile': True,
+            },
+        }
+        self.env['account.account']._load_records([
+            {
+                'xml_id': self.company_xmlid(xml_id, company),
+                'values': values,
+                'noupdate': True,
+            }
+            for xml_id, values in accounts_data_no_fields.items()
+        ])
