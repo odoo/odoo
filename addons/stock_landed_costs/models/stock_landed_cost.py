@@ -111,6 +111,17 @@ class StockLandedCost(models.Model):
                 _('Validated landed costs cannot be cancelled, but you could create negative landed costs to reverse them'))
         return self.write({'state': 'cancel'})
 
+    def button_reset_to_draft(self):
+        entries = self.account_move_id
+        entries._reverse_moves([{'ref': _('Reversal of: %s', entry.ref)} for entry in entries], cancel=True)
+        self.write({'state': 'draft', 'account_move_id': False})
+        for cost in self:
+            cost = cost.with_company(cost.company_id)
+            for move, lines in cost.valuation_adjustment_lines.filtered('move_id').grouped('move_id').items():
+                move.value -= sum(lines.mapped('additional_landed_cost'))
+            cost.valuation_adjustment_lines.move_id.with_context(landed_cost_in_progress=cost.id)._set_value()
+        return True
+
     def button_validate(self):
         self._check_can_validate()
         cost_without_adjusment_lines = self.filtered(lambda c: not c.valuation_adjustment_lines)
