@@ -491,7 +491,7 @@ patch(PosStore.prototype, {
         return data;
     },
     //@override
-    addNewOrder(data = {}) {
+    addNewOrder(data = {}, opt = {}) {
         if (
             this.config.module_pos_restaurant &&
             this.router.currentScreen() === "ProductScreen" &&
@@ -506,21 +506,21 @@ patch(PosStore.prototype, {
             // to be linked to the new order.
             data = { ...data, table_id: this.selectedTable };
         }
-        const order = super.addNewOrder(data);
+        const order = super.addNewOrder(data, opt);
         if (this.config.module_pos_restaurant) {
             this.addPendingOrder([order.id]);
         }
         return order;
     },
-    createOrderIfNeeded(data = {}) {
+    createOrderIfNeeded(data = {}, opt = {}) {
         if (this.config.module_pos_restaurant && !data["table_id"]) {
-            let order = this.models["pos.order"].find(
+            const order = this.models["pos.order"].find(
                 (order) => order.isDirectSale && !order.isSynced
             );
-            if (!order) {
-                order = this.createNewOrder(data);
+            if (order) {
+                order.setOrderUiState(opt.uiState);
+                return order;
             }
-            return order;
         }
         return super.createOrderIfNeeded(...arguments);
     },
