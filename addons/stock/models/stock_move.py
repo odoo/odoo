@@ -2272,6 +2272,15 @@ Please change the quantity done or the rounding precision in your settings.""",
         StockMove.browse(assigned_moves_ids).write({'state': 'assigned'})
         if not self.env.context.get('bypass_entire_pack'):
             self.picking_id._check_entire_pack()
+
+        restricted_mls = self.sudo().move_line_ids.filtered(
+            lambda ml: ml.move_id.company_id
+            and ml.result_package_id.package_type_id.company_id
+            and ml.result_package_id.package_type_id.company_id != ml.move_id.company_id
+        )
+        if restricted_mls:
+            restricted_mls.write({'result_package_id': False})
+
         StockMove.browse(moves_to_redirect).move_line_ids._apply_putaway_strategy()
 
         if self.env['stock.picking']._is_batch_feature_enabled():
@@ -2421,7 +2430,25 @@ Please change the quantity done or the rounding precision in your settings.""",
                 move_dests_per_company[move_dest.company_id.id] |= move_dest
 
         for company_id, move_dests in move_dests_per_company.items():
-            move_dests.sudo().with_company(company_id)._action_assign()
+            move_dests_sudo = move_dests.sudo().with_company(company_id)
+            premature_dest_moves = move_dests_sudo.filtered(
+                lambda m: m._should_bypass_reservation()
+                and m.state in ('assigned', 'partially_available')
+                and not m.picked
+                and not any(ml.picked or ml.package_id or ml.result_package_id for ml in m.move_line_ids)
+                and any(
+                    ml.result_package_id and (
+                        not ml.result_package_id.package_type_id.company_id
+                        or ml.result_package_id.package_type_id.company_id.id == company_id
+                    )
+                    for ml in m.move_orig_ids.sudo().move_line_ids
+                )
+            )
+            if premature_dest_moves:
+                premature_dest_moves.move_line_ids.unlink()
+                premature_dest_moves.write({'state': 'waiting'})
+
+            move_dests_sudo._action_assign()
 
         # We don't want to create back order for scrap moves
         # Replace by a kwarg in master
