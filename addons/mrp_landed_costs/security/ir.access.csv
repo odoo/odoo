@@ -1,0 +1,8 @@
+id,name,model_id,group_id/id,operation,domain
+access_stock_landed_cost_mrp_manager,stock.landed.cost mrp manager,stock.landed.cost,mrp.group_mrp_manager,crud,"[('target_model', '=', 'manufacturing')]"
+access_stock_landed_cost_lines_mrp_manager,stock.landed.cost.lines mrp manager,stock.landed.cost.lines,mrp.group_mrp_manager,crud,"[('cost_id', 'access', 'write')]"
+access_stock_valuation_adjustment_lines_mrp_manager,stock.valuation.adjustment.lines mrp manager,stock.valuation.adjustment.lines,mrp.group_mrp_manager,crud,"[('cost_id', 'access', 'write')]"
+
+access_account_move_mrp_manager,account.move mrp manager,account.move,mrp.group_mrp_manager,r,"[('move_type', '=', 'in_invoice'), ('landed_costs_ids', 'any', [('target_model', '=', 'manufacturing')])]"
+
+access_mrp_production_bookkeeper,mrp.production bookkeeper,mrp.production,account.group_account_user,r,

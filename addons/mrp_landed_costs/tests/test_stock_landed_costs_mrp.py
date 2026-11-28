@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
 from odoo.tests import tagged, Form
 
@@ -174,10 +175,16 @@ class TestStockLandedCostsMrp(ValuationReconciliationTestCommon):
         self.assertTrue(man_order in self.env['mrp.production'].search([
             ('move_finished_ids.is_in', '!=', False), ('company_id', '=', landed_cost.company_id.id)]))
         landed_cost.mrp_production_ids = [(6, 0, [man_order.id])]
+        landed_cost.cost_lines = [Command.create({
+            'product_id': self.landed_cost.id,
+            'price_unit': 5.0,
+            'split_method': 'equal',
+        })]
 
         # Check that he can validate the landed cost without an access error
         landed_cost.with_user(stock_manager).button_validate()
         self.assertEqual(landed_cost.state, 'done')
+        self.assertEqual(landed_cost.account_move_id.state, 'posted')
 
     def test_landed_cost_on_mrp_03(self):
         """
