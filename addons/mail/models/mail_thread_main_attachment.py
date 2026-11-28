@@ -43,7 +43,7 @@ class MailThreadMainAttachment(models.AbstractModel):
             if attachments:
                 self.message_main_attachment_id = max(
                     attachments,
-                    key=lambda r: (r.mimetype.endswith('pdf'), r.mimetype.startswith('image'))
+                    key=lambda r: (r.mimetype.endswith('pdf'), r.mimetype.startswith('image'), not r.quote_attachment)
                 ).id
 
     def _store_thread_fields(self, res: Store.FieldList, *, request_list, **kwargs):
