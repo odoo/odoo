@@ -81,7 +81,7 @@ list of filtered posts (by date or tag).
                     <div t-field="blog.content" t-attf-data-editor-message.translate='Drag blocks here to customize the header of the "{{blog.name}}" category.'/>
                 </t>
                 <t t-elif="blogs">
-                    <div class="oe_structure oe_empty" data-editor-message.translate="Drag blocks here to customize the Blog page header"/>
+                    <div class="oe_structure oe_empty" id="oe_structure_blog_all_header" data-editor-message.translate="Drag blocks here to customize the Blog page header"/>
                 </t>
             </t>
             <t t-else="">
