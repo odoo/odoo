@@ -231,12 +231,32 @@ class HrApplicant(models.Model):
             if not applicant.partner_phone:
                 applicant.partner_phone = applicant.partner_id.phone
 
+    @api.model
+    def _is_internal_contact(self, partner):
+        """ Whether the partner belongs to an internal user, an employee or a company. """
+        if not partner:
+            return False
+        partner_sudo = partner.sudo().with_context(active_test=False)
+        return bool(
+            not partner_sudo.partner_share
+            or partner_sudo.employee_ids
+            or partner_sudo.env['res.company'].search_count(
+                [('partner_id', '=', partner_sudo.commercial_partner_id.id)], limit=1,
+            )
+        )
+
     def _inverse_partner_email(self):
         for applicant in self:
             email_normalized = tools.email_normalize(applicant.email_from or '')
             if not email_normalized:
                 continue
-            if not applicant.partner_id:
+            partner = applicant.partner_id
+            if partner != applicant.employee_id.work_contact_id and self._is_internal_contact(partner):
+                # don't overwrite an internal contact (e.g. a forwarder), relink by email instead
+                if email_normalized == partner.email_normalized:
+                    continue
+                partner = self.env['res.partner']
+            if not partner:
                 if not applicant.partner_name:
                     raise UserError(_("You must define a Contact Name for this applicant."))
                 applicant.partner_id = applicant._partner_find_from_emails_single(
@@ -962,11 +982,14 @@ class HrApplicant(models.Model):
             'partner_name': partner_name,
         }
         job_platform = self.env['hr.job.platform'].search([('email', '=', email_from_normalized)], limit=1)
+        # like job platforms, internal contacts only forward applications
+        author = self.env['res.partner'].browse(msg_dict.get('author_id'))
+        is_forwarded = bool(job_platform) or self._is_internal_contact(author)
 
-        if msg_dict.get('from') and not job_platform:
+        if msg_dict.get('from') and not is_forwarded:
             defaults['email_from'] = msg_dict.get('from')
             defaults['partner_id'] = msg_dict.get('author_id', False)
-        if msg_dict.get('email_from') and job_platform:
+        if msg_dict.get('email_from') and is_forwarded:
             subject_pattern = re.compile(job_platform.regex or '')
             regex_results = re.findall(subject_pattern, msg_dict.get('subject')) + re.findall(subject_pattern, msg_dict.get('body'))
             defaults['partner_name'] = regex_results[0] if regex_results else partner_name
