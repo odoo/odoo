@@ -42,6 +42,7 @@ export const seoContext = proxy({
     updatedAlts: [],
     brokenLinks: [],
     checkedLinks: false,
+    headingIssues: [],
 });
 
 const LINK_CHECK_BASE_OPTIONS = {
@@ -191,6 +192,39 @@ const getSeo = async (self, onlyKeywords = false) => {
         self.seoContext.description = extractDescription();
     }
 };
+
+/**
+ * Check the headings of the given content: The page should contain a single
+ * <h1>, and heading levels which never skip a level when going deeper (e.g.
+ * "h1 > h2 > h3 > h3 > h2" is valid, "h1 > h3 > h2" is not).
+ *
+ * @param {HTMLElement} contentEl
+ * @returns {string[]} the issues found, empty if the headings are valid
+ */
+function getHeadingIssues(contentEl) {
+    const levels = [...contentEl.querySelectorAll("h1, h2, h3, h4, h5, h6")].map((headingEl) =>
+        parseInt(headingEl.tagName[1])
+    );
+    const issues = [];
+    const h1Count = levels.filter((level) => level === 1).length;
+    if (!h1Count) {
+        issues.push(_t("H1 tag is missing"));
+    } else if (h1Count > 1) {
+        issues.push(_t("One and only one H1 tag should be present in your page"));
+    }
+    // Without <h1>, the missing level is already reported: start the check as
+    // if it was there, so that a page starting with an <h2> is not reported
+    // twice.
+    let previousLevel = h1Count ? 0 : 1;
+    for (const level of levels) {
+        if (level > previousLevel + 1) {
+            issues.push(_t("Heading elements should appear in a sequentially-descending order"));
+            break;
+        }
+        previousLevel = level;
+    }
+    return issues;
+}
 
 /**
  * Render the given page with `edit_translations`, which marks the terms whose
@@ -1047,7 +1081,6 @@ export class OptimizeSEODialog extends Component {
             );
             this.canEditUrl =
                 this.canEditSeo && Boolean(new URL(path).pathname.match(editableSlugPattern));
-            seoContext.title = this.canEditTitle && this.data.website_meta_title;
 
             // If website.page, hide the google preview & tell user his page is currently unindexed
             this.isIndexed = "website_indexed" in this.data ? this.data.website_indexed : true;
@@ -1070,7 +1103,14 @@ export class OptimizeSEODialog extends Component {
             );
             this.defaultTitle = this.getMeta({ name: "default_title" }) || "";
             seoContext.defaultTitle = this.defaultTitle;
+            // Prefill the title with the one used when none is set.
+            seoContext.title = this.canEditTitle
+                ? this.data.website_meta_title || htmlToTextContentInline(this.defaultTitle)
+                : "";
             this.url = path;
+            seoContext.headingIssues = getHeadingIssues(
+                this.pageDocumentElement.querySelector("main")
+            );
 
             seoContext.metaImage =
                 this.data.website_meta_og_img || this.getMeta({ property: "og:image" });
@@ -1143,7 +1183,10 @@ export class OptimizeSEODialog extends Component {
     async save() {
         const data = {};
         if (this.canEditTitle) {
-            data.website_meta_title = seoContext.title;
+            // Keep the title empty while it is the default one, so that it
+            // follows the default title if the latter changes.
+            const defaultTitle = htmlToTextContentInline(this.defaultTitle);
+            data.website_meta_title = seoContext.title === defaultTitle ? "" : seoContext.title;
         }
         if (this.canEditDescription) {
             data.website_meta_description = seoContext.description;

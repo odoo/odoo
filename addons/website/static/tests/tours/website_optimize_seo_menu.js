@@ -131,3 +131,20 @@ registerWebsitePreviewTour(
         },
     ]
 );
+
+registerWebsitePreviewTour("website_optimize_seo_headings", {}, () => [
+    ...openSeoModal(),
+    {
+        content: "The skipped heading level is reported in the overview",
+        trigger: ".oe_seo_configuration .o_seo_overview .alert-warning:contains('Headings')",
+    },
+    {
+        content: "The skipped heading level is reported in the content checks",
+        trigger:
+            ".oe_seo_configuration .o_seo_headings_issues:contains('Heading elements should appear in a sequentially-descending order')",
+    },
+    {
+        content: "There is only one H1, which is not reported",
+        trigger: ".oe_seo_configuration .o_seo_headings_issues:not(:contains('H1'))",
+    },
+]);
