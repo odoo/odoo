@@ -1383,6 +1383,23 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         record.write({'related_related_name': 'C'})
         self.assertEqual(record.name, 'C')
 
+    def test_25_related_custom_inverse(self):
+        """ test related fields with a custom inverse method """
+        field = self.registry['test_orm.related'].related_name_inverse
+        self.assertFalse(field.readonly, "A related field with an inverse is not readonly by default")
+        self.assertEqual(field.inverse, '_inverse_related_name_inverse')
+
+        # the custom inverse is called, not the default one of related fields
+        record = self.env['test_orm.related'].create({'related_name_inverse': 'a'})
+        self.assertEqual(record.name, 'A')
+        record.invalidate_recordset(['related_name_inverse'])
+        self.assertEqual(record.related_name_inverse, 'A')
+
+        record.related_name_inverse = 'b'
+        self.assertEqual(record.name, 'B')
+        record.invalidate_recordset(['related_name_inverse'])
+        self.assertEqual(record.related_name_inverse, 'B')
+
     def test_25_related_sudo(self):
         model = self.env['test_orm.related'].with_user(self.env.ref('base.user_admin'))
         bar1 = self.env['test_orm.related_bar'].create({'name': 'B1'})
