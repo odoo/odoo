@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.DiscussCommand" t-inherit-mode="extension">
+        <xpath expr="//span[@t-att-title='this.email']" position="replace">
+            <t t-set="lastMessagePreview" t-value="this.lastMessagePreview()"/>
+            <span t-if="lastMessagePreview" class="o-livechat-DiscussCommand-lastMessage text-truncate text-muted smaller opacity-75" t-out="lastMessagePreview"/>
+            <t t-else="">$0</t>
+        </xpath>
+    </t>
+</templates>

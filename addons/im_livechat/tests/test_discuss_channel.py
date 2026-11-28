@@ -433,3 +433,10 @@ class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
         self.assertTrue(channel.livechat_looking_for_help_since_dt)
         channel.livechat_end_dt = fields.Datetime.now()
         self.assertFalse(channel.livechat_looking_for_help_since_dt)
+
+    def test_search_returns_livechat_last_message(self):
+        channel = self._create_conversation(self.livechat_channel, self.operators[0])
+        self.authenticate(self.operators[0].login, self.password)
+        data = self.make_jsonrpc_request("/discuss/search", {"term": channel.name})
+        found_message_ids = [m["id"] for m in data.get("mail.message", [])]
+        self.assertEqual(found_message_ids, [channel.message_ids[0].id])

@@ -92,6 +92,10 @@ export class DiscussCommand extends Component {
     get email() {
         return this.props.persona?.displayEmail;
     }
+
+    hasNameSideText() {
+        return Boolean(this.props.persona?.statusSubtitle?.());
+    }
 }
 
 // -----------------------------------------------------------------------------
