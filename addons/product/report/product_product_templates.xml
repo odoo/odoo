@@ -388,7 +388,7 @@
         <template id="barcode_normal_label">
 ^PW457
 ^LL254
-^FO0,13^A0N,30^FB457,1,0,C^FH^FD<t t-out="name"/>^FS
+^FO5,13^A0N,30^TBN,447,31^FH^FD<t t-out="name.replace(' ', '\u00a0')"/>^FS
             <t t-if="barcode_value">
 ^FO30,54^BY2^BCN,80,Y,N,N^FH^FD<t t-out="barcode_value"/>^FS
             </t>
@@ -434,7 +434,7 @@
         <template id="barcode_alternative_label">
 ^PW406
 ^LL203
-^FO5,9^A0N,27^FB396,1,0,C^FH^FD<t t-out="name"/>^FS
+^FO5,9^A0N,27^TBN,396,28^FH^FD<t t-out="name.replace(' ', '\u00a0')"/>^FS
             <t t-if="barcode_value">
 ^FO12,51^BY2^BCN,64,Y,N,N^FH^FD<t t-out="barcode_value"/>^FS
             </t>
@@ -482,7 +482,7 @@
         <template id="barcode_small_label">
 ^PW254
 ^LL203
-^FO5,13^A0N,25^FB244,1,0,C^FH^FD<t t-out="name"/>^FS
+^FO5,13^A0N,25^TBN,244,26^FH^FD<t t-out="name.replace(' ', '\u00a0')"/>^FS
             <t t-if="barcode_value">
 ^FO30,46^BY1^BCN,70,Y,N,N^FH^FD<t t-out="barcode_value"/>^FS
             </t>
@@ -506,7 +506,7 @@
         <template id="qr_small_label">
 ^PW254
 ^LL203
-^FO6,15^A0N,25,16^FB242,1,0,C^FH^FD<t t-out="name"/>^FS
+^FO6,15^A0N,25,16^TBN,242,26^FH^FD<t t-out="name.replace(' ', '\u00a0')"/>^FS
             <t t-if="barcode_value">
 ^FO6,46^BXN,6,200,20,20^FH^FD<t t-out="barcode_value"/>^FS
 ^FO6,173^A0N,14^FB120,1,0,C^FH^FD<t t-out="barcode_value"/>^FS
