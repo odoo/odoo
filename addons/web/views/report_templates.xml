@@ -350,7 +350,10 @@
              t-att-data-oe-model="o and o._name"
              t-att-data-oe-id="o and o.id"
              t-att-data-oe-lang="o and o.env.context.get('lang')">
-            <t t-call="web.address_layout"/>
+            <t t-set="extra_offset" t-value="(max(0, int(company.custom_header_height or 174) - 174)) * 2"/>
+            <div t-attf-style="{{extra_offset > 0 and ('padding-top: ' + str(extra_offset) + 'px !important;') or ''}}">
+                <t t-call="web.address_layout"/>
+            </div>
             <h2 t-out="layout_document_title"/>
             <t t-out="0"/>
         </div>
@@ -410,7 +413,10 @@
              t-att-data-oe-model="o and o._name"
              t-att-data-oe-id="o and o.id"
              t-att-data-oe-lang="o and o.env.context.get('lang')">
-            <t t-call="web.address_layout"/>
+            <t t-set="extra_offset" t-value="(max(0, int(company.custom_header_height or 174) - 174)) * 2"/>
+            <div t-attf-style="{{extra_offset > 0 and ('padding-top: ' + str(extra_offset) + 'px !important;') or ''}}">
+                <t t-call="web.address_layout"/>
+            </div>
             <h2 t-out="layout_document_title"/>
             <t t-out="0"/>
         </div>
@@ -474,7 +480,10 @@
              t-att-data-oe-model="o and o._name"
              t-att-data-oe-id="o and o.id"
              t-att-data-oe-lang="o and o.env.context.get('lang')">
-            <t t-call="web.address_layout"/>
+            <t t-set="extra_offset" t-value="(max(0, int(company.custom_header_height or 174) - 174)) * 2"/>
+            <div t-attf-style="{{extra_offset > 0 and ('padding-top: ' + str(extra_offset) + 'px !important;') or ''}}">
+                <t t-call="web.address_layout"/>
+            </div>
             <h2 t-out="layout_document_title"/>
             <t t-out="0"/>
         </div>
@@ -538,7 +547,10 @@
              t-att-data-oe-model="o and o._name"
              t-att-data-oe-id="o and o.id"
              t-att-data-oe-lang="o and o.env.context.get('lang')">
-            <t t-call="web.address_layout"/>
+            <t t-set="extra_offset" t-value="(max(0, int(company.custom_header_height or 174) - 174)) * 2"/>
+            <div t-attf-style="{{extra_offset > 0 and ('padding-top: ' + str(extra_offset) + 'px !important;') or ''}}">
+                <t t-call="web.address_layout"/>
+            </div>
             <h2 t-out="layout_document_title"/>
             <t t-out="0"/>
         </div>
@@ -555,8 +567,7 @@
     </template>
 
     <template id="external_layout_folder">
-        <t t-set="header_shape_height" t-value="'174'"/>
-
+        <t t-set="header_shape_height" t-value="str(company.custom_header_height or 174)"/>
         <div t-attf-class="header o_company_#{company.id}_layout {{report_type != 'pdf' and 'h-0'}}">
             <div class="o_folder_header_container position-absolute start-0 top-0 z-n1 w-100">
                 <svg width="100%" t-att-height="header_shape_height" fill="none" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
@@ -620,7 +631,8 @@
              t-att-data-oe-model="o and o._name"
              t-att-data-oe-id="o and o.id"
              t-att-data-oe-lang="o and o.env.context.get('lang')">
-            <div class="pt-2" t-attf-style="{{report_type != 'pdf' and 'margin-top:' + str(env['ir.actions.report'].get_paperformat().margin_top) + 'pt;'}}">
+            <t t-set="pdf_extra_offset" t-value="(max(0, int(company.custom_header_height or 174) - 174)) * 2"/>
+            <div class="pt-2" t-attf-style="{{report_type != 'pdf' and ('margin-top:' + str(env['ir.actions.report'].get_paperformat().margin_top) + 'pt;') or (pdf_extra_offset > 0 and 'padding-top: ' + str(pdf_extra_offset) + 'px !important;' or '')}}">
                 <t t-set="custom_layout_address" t-value="true"/>
                 <t t-call="web.address_layout"/>
             </div>
@@ -642,7 +654,7 @@
 
     <template id="external_layout_wave">
         <!-- HEADER -->
-        <t t-set="header_shape_height" t-value="'230'"/>
+        <t t-set="header_shape_height" t-value="str(230 + max(0, int(company.custom_header_height or 230) - 230))"/>
         <div t-attf-class="header o_company_#{company.id}_layout {{report_type != 'pdf' and 'h-0'}}">
             <svg t-attf-class="{{report_type == 'pdf' and 'position-fixed' or 'position-absolute'}} start-0 top-0 w-100 z-n1" preserveAspectRatio="none" t-att-height="header_shape_height" viewBox="0 0 1000 240" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M1000 230.734C937.384 240.621 803.83 250.266 562.185 220.602C311.343 189.809 104.626 201.375 0 211.598V0.5H1000V230.734Z" t-att-fill="company.primary_color" fill-opacity=".1"/>
@@ -694,8 +706,11 @@
              t-att-data-oe-model="o and o._name"
              t-att-data-oe-id="o and o.id"
              t-att-data-oe-lang="o and o.env.context.get('lang')">
-            <t t-set="custom_layout_address" t-value="true"/>
-            <t t-call="web.address_layout"/>
+            <t t-set="extra_offset" t-value="(max(0, int(company.custom_header_height or 230) - 230)) * 2"/>
+            <div t-attf-style="{{extra_offset > 0 and ('padding-top: ' + str(extra_offset) + 'px !important;') or ''}}">
+                <t t-set="custom_layout_address" t-value="true"/>
+                <t t-call="web.address_layout"/>
+            </div>
             <h2 t-out="layout_document_title"/>
             <t t-out="0"/>
         </div>
@@ -764,7 +779,8 @@
              t-att-data-oe-model="o and o._name"
              t-att-data-oe-id="o and o.id"
              t-att-data-oe-lang="o and o.env.context.get('lang')">
-            <table class="o_ignore_layout_styling table table-borderless mb-0">
+            <t t-set="extra_offset" t-value="(max(0, int(company.custom_header_height or 174) - 174)) * 2"/>
+            <table class="o_ignore_layout_styling table table-borderless mb-0" t-attf-style="{{extra_offset > 0 and ('margin-top: ' + str(extra_offset) + 'px !important;') or ''}}">
                 <tbody>
                     <tr>
                         <td t-call="web.address_layout" class="p-0">
