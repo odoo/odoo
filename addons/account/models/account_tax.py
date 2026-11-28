@@ -3,7 +3,7 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.tools import frozendict, groupby, html2plaintext, is_html_empty, split_every, SQL
 from odoo.tools.float_utils import float_is_zero, float_repr, float_round, float_compare
-from odoo.tools.translate import html_translate, adapt_translated_field_value
+from odoo.tools.translate import html_translate
 from collections import defaultdict
 from collections.abc import Iterable
 from markupsafe import Markup
@@ -115,7 +115,11 @@ class AccountTax(models.Model):
     sequence = fields.Integer(required=True, default=1,
         help="The sequence field is used to define order in which the tax lines are applied.")
     amount = fields.Float(required=True, digits=(16, 4), default=0.0, tracking=True)
-    description = fields.Html(string='Description', translate=html_translate)
+    description = fields.Html(
+        string='Description', translate=html_translate,
+        # Wrap plain text in <div> if description has no HTML tags to avoid the padding with automatically added <p>
+        clean=lambda description: f"<div>{description}</div>" if description and not re.search(r'<[^>]+>', description) else description,
+    )
     invoice_label = fields.Char(string='Label on Invoices', translate=True)
     tax_label = fields.Char(compute='_compute_tax_label')
     price_include = fields.Boolean(
@@ -598,15 +602,6 @@ class AccountTax(models.Model):
     def _sanitize_vals(self, vals):
         """Normalize the create/write values."""
         sanitized = vals.copy()
-
-        # Wrap plain text in <div> if description has no HTML tags to avoid the padding with automatically added <p>
-        if sanitized.get('description'):
-            sanitized['description'] = adapt_translated_field_value(
-                self.env,
-                self._fields["description"],
-                sanitized.get('description'),
-                lambda lang, v: f"<div>{v}</div>" if not re.search(r'<[^>]+>', v) else v,
-            )
 
         # Allow to provide invoice_repartition_line_ids and refund_repartition_line_ids by dispatching them
         # correctly in the repartition_line_ids

@@ -9,7 +9,7 @@ class L10nInPanEntity(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = 'Indian PAN Entity'
 
-    name = fields.Char(string="PAN", tracking=1, required=True)
+    name = fields.Char(string="PAN", tracking=1, required=True, clean=lambda name: name and name.upper())
     type = fields.Selection([
         ('a', 'Association of Persons'),
         ('b', 'Body of Individuals'),
@@ -58,16 +58,7 @@ class L10nInPanEntity(models.Model):
             if record.name and not pan.is_valid(record.name):
                 raise ValidationError(_("The entered PAN %s seems invalid. Please enter a valid PAN.", record.name))
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        records = super().create(vals_list)
-        for record in records:
-            record.name = record.name.upper()
-        return records
-
     def write(self, vals):
-        if vals.get('name'):
-            vals['name'] = vals['name'].upper()
         res = super().write(vals)
         if vals.get('tds_certificate'):
             for rec in self:

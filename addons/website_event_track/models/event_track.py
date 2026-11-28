@@ -15,6 +15,8 @@ from odoo.fields import Domain
 from odoo.tools.mail import email_normalize, html_to_inner_content, is_html_empty
 from odoo.tools.translate import _, html_translate
 
+from odoo.addons.base.models.res_partner import clean_website
+
 _logger = logging.getLogger(__name__)
 
 try:
@@ -165,7 +167,7 @@ class EventTrack(models.Model):
     website_cta = fields.Boolean('Magic Button',
                                  help="Display a Call to Action button to your Attendees while they watch your Track.")
     website_cta_title = fields.Char('Button Title')
-    website_cta_url = fields.Char('Button Target URL')
+    website_cta_url = fields.Char('Button Target URL', clean=clean_website)
     website_cta_delay = fields.Integer('Show Button')
     # time information for CTA
     is_website_cta_live = fields.Boolean(
@@ -454,10 +456,6 @@ class EventTrack(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        for values in vals_list:
-            if values.get('website_cta_url'):
-                values['website_cta_url'] = self.env['res.partner']._clean_website(values['website_cta_url'])
-
         tracks = super().create(vals_list)
 
         post_values = {} if self.env.user.email else {'email_from': self.env.company.catchall_formatted}
@@ -476,8 +474,6 @@ class EventTrack(models.Model):
         return tracks
 
     def write(self, vals):
-        if vals.get('website_cta_url'):
-            vals['website_cta_url'] = self.env['res.partner']._clean_website(vals['website_cta_url'])
         if 'stage_id' in vals and 'kanban_state' not in vals:
             vals['kanban_state'] = 'normal'
         if vals.get('stage_id'):

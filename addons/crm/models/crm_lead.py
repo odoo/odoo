@@ -10,6 +10,7 @@ from zoneinfo import ZoneInfo
 from markupsafe import Markup
 
 from odoo import api, fields, models, modules, tools
+from odoo.addons.base.models.res_partner import clean_website
 from odoo.addons.iap.tools import iap_tools
 from odoo.addons.phone_validation.tools import phone_validation
 from odoo.exceptions import UserError, AccessError, ValidationError
@@ -196,7 +197,8 @@ class CrmLead(models.Model):
     email_state = fields.Selection([
         ('correct', 'Correct'),
         ('incorrect', 'Incorrect')], string='Email Quality', compute="_compute_email_state", store=True)
-    website = fields.Char('Website', help="Website of the contact", compute="_compute_website", readonly=False, store=True, tracking=35)
+    website = fields.Char('Website', help="Website of the contact", compute="_compute_website", readonly=False, store=True, tracking=35,
+                          clean=clean_website)
     lang_id = fields.Many2one(
         'res.lang', string='Language',
         compute='_compute_lang_id', readonly=False, store=True, index=True)
@@ -725,9 +727,6 @@ class CrmLead(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        for vals in vals_list:
-            if vals.get('website'):
-                vals['website'] = self.env['res.partner']._clean_website(vals['website'])
         leads = super().create(vals_list)
 
         # handling a date_closed value if the lead is directly created in the won stage
@@ -756,9 +755,6 @@ class CrmLead(models.Model):
         return leads
 
     def write(self, vals):
-        if vals.get('website'):
-            vals['website'] = self.env['res.partner']._clean_website(vals['website'])
-
         now = self.env.cr.now()
         stage_updated, stage_is_won = False, False
         # stage change (or reset): update date_last_stage_update if at least one

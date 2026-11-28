@@ -8,6 +8,7 @@ class UomUom(models.Model):
         "UN/ECE Code",
         copy=False,
         help="The code element for units of measurement (UoM) as specified by UN/ECE",
+        clean=lambda code: code and code.upper(),
     )
     is_unece_code_supported = fields.Boolean(compute="_compute_is_unece_code_supported")
 
@@ -15,18 +16,6 @@ class UomUom(models.Model):
         'unique (unece_code)',
         'The UN/ECE code already exists!',
     )
-
-    def _sanitize_vals(self, vals):
-        if vals.get('unece_code'):
-            vals['unece_code'] = vals['unece_code'].upper()
-        return vals
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        return super().create([self._sanitize_vals(vals) for vals in vals_list])
-
-    def write(self, vals):
-        return super().write(self._sanitize_vals(vals))
 
     def _compute_is_unece_code_supported(self):
         for uom in self:

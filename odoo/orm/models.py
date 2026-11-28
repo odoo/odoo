@@ -1390,7 +1390,7 @@ class BaseModel(metaclass=MetaModel):
                                 corecord.check_field_access(corecord._fields[fname], 'write')
                         elif command_code == Command.DELETE:
                             self.env[field.comodel_name].browse(cmd[1]).check_access('unlink')
-                value = field.convert_to_cache(value, self)
+                value = field.convert_to_cleaned_cache(value, self)
                 defaults[fname] = field.convert_to_write(value, self)
 
         # add default values for inherited fields
@@ -2902,8 +2902,9 @@ class BaseModel(metaclass=MetaModel):
             translations = {lang: value for lang, value in translations.items() if lang not in drop_langs}
             if drop_langs:
                 stored_translations = self._get_stored_translations(field_name)
-                if field.type == 'html':
-                    translations = {lang: field._validated_cache_value(value, self.env) for lang, value in translations.items()}
+                # StoredTranslations are not cleaned when assigned to the field,
+                # so clean the translations here
+                translations = field.convert_to_cleaned_cache(translations, self)
                 if stored_translations is None:
                     if not translations:
                         return False
@@ -4537,7 +4538,12 @@ class BaseModel(metaclass=MetaModel):
                     columns.append(fname)
                     for stored, row in zip(stored_list, rows):
                         if fname in stored:
-                            row.append(field.convert_to_column_insert(stored[fname], self, stored))
+                            # do not replace the value in stored: fields like
+                            # properties may need the value given to create()
+                            value = stored[fname]
+                            if field._clean_supported:
+                                value = field.convert_to_cleaned_cache(value, self)
+                            row.append(field.convert_to_column_insert(value, self, stored))
                         else:
                             row.append(SQL_DEFAULT)
                 else:
@@ -4584,7 +4590,7 @@ class BaseModel(metaclass=MetaModel):
             for fname, value in vals.items():
                 field = self._fields[fname]
                 if field.type not in ('one2many', 'many2many', 'html'):
-                    cache_value = field.convert_to_cache(value, record)
+                    cache_value = field.convert_to_cleaned_cache(value, record)
                     field._update_cache(record, cache_value)
                     if field.type in ('many2one', 'many2one_reference') and self.pool.field_inverses[field]:
                         inverses_update[(field, cache_value)].append(record.id)
@@ -5704,7 +5710,8 @@ class BaseModel(metaclass=MetaModel):
         """ Update the cache of ``self`` with ``values``.
 
             :param values: dict of field values, in any format.
-            :param validate: whether values must be checked
+            :param validate: whether values must be checked; values are cleaned
+                by parameter ``clean`` in any case
         """
         self.ensure_one()
         fields = self._fields
@@ -5715,7 +5722,7 @@ class BaseModel(metaclass=MetaModel):
 
         # convert monetary fields after other columns for correct value rounding
         for field, value in sorted(field_values, key=lambda item: self._fields_update_order__[item[0]]):
-            value = field.convert_to_cache(value, self, validate)
+            value = field.convert_to_cleaned_cache(value, self, validate)
             field._update_cache(self, value)
 
             # set inverse fields on new records in the comodel
@@ -6762,7 +6769,11 @@ class BaseModel(metaclass=MetaModel):
         """ Return whether ``field`` should trigger an onchange event in the
             presence of ``other_fields``.
         """
-        return (field.name in self._onchange_methods) or any(
+        # a field with a clean function triggers an onchange, so that the
+        # client gets its cleaned value; the cleaning specific to the field
+        # type, like html sanitization, is not considered, as it is not a
+        # canonical form for the client (see onchange() in web)
+        return (field.name in self._onchange_methods) or field.clean is not None or any(
             dep in other_fields
             for dep in self.pool.get_dependent_fields(field.base_field)
         )

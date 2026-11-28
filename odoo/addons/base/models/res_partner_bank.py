@@ -71,6 +71,7 @@ class ResPartnerBank(models.Model):
         string="BIC/SWIFT",
         help="Bank Identifier Code for international wires in the format Bank Code (4 letters) + Country Code (2 letters) + Location Code (2 letters/numbers) + Optional Branch Code (3 letters/numbers).",
         index=True,
+        clean=lambda bic: bic and bic.upper(),
     )
     clearing_label_id = fields.Many2one(
         comodel_name='clearing.label',
@@ -206,8 +207,6 @@ class ResPartnerBank(models.Model):
             vals['account_number'] = vals.pop('sanitized_account_number')
         if vals.get('account_number'):
             vals['account_number'] = format_account_number(self.env, vals['account_number'])
-        if vals.get('bank_bic'):
-            vals['bank_bic'] = vals['bank_bic'].upper()
 
     @api.model_create_multi
     def create(self, vals_list):

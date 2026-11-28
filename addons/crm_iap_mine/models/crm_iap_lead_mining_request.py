@@ -34,7 +34,8 @@ class CrmIapLeadMiningRequest(models.Model):
     state = fields.Selection([('draft', 'Draft'), ('error', 'Error'), ('done', 'Done')], string='Status', required=True, default='draft')
 
     # Request Data
-    lead_number = fields.Integer(string='Number of Leads', required=True, default=3)
+    lead_number = fields.Integer(string='Number of Leads', required=True, default=3,
+                                 clean=lambda number: min(max(number, 1), MAX_LEAD))
     error_type = fields.Selection([
         ('credits', 'Insufficient Credits'),
         ('no_result', 'No Result'),
@@ -128,13 +129,6 @@ class CrmIapLeadMiningRequest(models.Model):
         self.state_ids -= self.state_ids.filtered(
             lambda state: (state._origin.id or state.id) not in self.available_state_ids.ids
         )
-
-    @api.onchange('lead_number')
-    def _onchange_lead_number(self):
-        if self.lead_number <= 0:
-            self.lead_number = 1
-        elif self.lead_number > MAX_LEAD:
-            self.lead_number = MAX_LEAD
 
     @api.onchange('country_ids')
     def _onchange_country_ids(self):

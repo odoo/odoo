@@ -150,6 +150,24 @@ class PropertiesCase(TestPropertiesMixin):
         sql_values = self._get_sql_properties(message)
         self.assertEqual(sql_values.get("test_html"), expected)
 
+        # create a record that changes the definition: the value is sanitized,
+        # and the definition is updated
+        message = self.env['test_orm.message'].create({
+            'discussion': self.discussion_2.id,
+            'attributes': [{
+                "name": "new_html",
+                "type": "html",
+                "string": "HTML",
+                "value": xss_payload,
+                "definition_changed": True,
+            }],
+        })
+        self.assertEqual(message.attributes['new_html'], expected)
+        sql_values = self._get_sql_properties(message)
+        self.assertEqual(sql_values.get("new_html"), expected)
+        definition = self._get_sql_definition(self.discussion_2)
+        self.assertEqual([d['name'] for d in definition], ['new_html'])
+
     @mute_logger('odoo.fields')
     def test_properties_field_onchange2(self):
         """If we change the definition record, the onchange of the properties field must be triggered."""

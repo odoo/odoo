@@ -16,18 +16,13 @@ class L10n_LatamPaymentRegisterCheck(models.TransientModel):
     payment_register_id = fields.Many2one('account.payment.register', required=True, ondelete='cascade')
     company_id = fields.Many2one(related='payment_register_id.company_id')
     currency_id = fields.Many2one(related='payment_register_id.currency_id')
-    name = fields.Char(string='Number')
+    name = fields.Char(string='Number', clean=lambda name: name and name.zfill(8))
     issuer_vat = fields.Char(
         compute='_compute_issuer_vat', store=True, readonly=False,
     )
     payment_date = fields.Date(readonly=False, required=True)
     amount = fields.Monetary()
     bank_account_id = fields.Many2one('res.partner.bank', compute='_compute_bank_account_id', store=True, readonly=False)
-
-    @api.onchange('name')
-    def _onchange_name(self):
-        if self.name:
-            self.name = self.name.zfill(8)
 
     @api.depends('payment_register_id.payment_method_line_id.code', 'payment_register_id.partner_id')
     def _compute_issuer_vat(self):

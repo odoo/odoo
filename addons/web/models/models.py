@@ -2436,6 +2436,17 @@ class Base(models.AbstractModel):
         # update snapshot0 with changed values
         for field_name in field_names:
             snapshot0.fetch(field_name)
+            field = self._fields[field_name]
+            # check parameter clean only: the cleaning specific to the field
+            # type, like html sanitization, is not a canonical form for the
+            # client
+            if field.clean is not None:
+                value = field.convert_to_cache(changed_values[field_name], record, validate=False)
+                value = field.convert_to_record(value, record)
+                if field.clean(value) != value:
+                    # put the value as given by the client in snapshot0, so
+                    # that its cleaned value is returned
+                    snapshot0[field_name] = value
 
         # Determine which field(s) should be triggered an onchange. On the first
         # call, 'names' only contains fields with a default. If 'self' is a new

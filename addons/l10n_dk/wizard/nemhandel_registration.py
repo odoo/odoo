@@ -47,12 +47,6 @@ class NemhandelRegistration(models.TransientModel):
     # ONCHANGE METHODS
     # -------------------------------------------------------------------------
 
-    @api.onchange('identifier_value')
-    def _onchange_identifier_value(self):
-        for wizard in self:
-            if wizard.identifier_value:
-                wizard.identifier_value = ''.join(char for char in wizard.identifier_value if char.isalnum())
-
     @api.onchange('phone_number')
     def _onchange_phone_number(self):
         self.env['res.company']._check_phonenumbers_import()

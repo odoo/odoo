@@ -12,7 +12,10 @@ from odoo.tools.urls import urljoin
 from odoo.tools import single_email_re
 
 from odoo.addons.account_peppol.tools.demo_utils import handle_demo
-from odoo.addons.account_edi_ubl_cii.tools.partner_identifiers import DEPRECATED_ELECTRONIC_ADDRESS_SCHEMES_CODELIST
+from odoo.addons.account_edi_ubl_cii.tools.partner_identifiers import (
+    DEPRECATED_ELECTRONIC_ADDRESS_SCHEMES_CODELIST,
+    ELECTRONIC_ADDRESS_SCHEME_INVALID_CHARS_RE,
+)
 from odoo.addons.account_peppol.tools.peppol_iap_connector import PeppolIAPConnector
 from odoo.addons.account_peppol.tools.peppol_errors import ERROR_MESSAGES
 
@@ -91,6 +94,7 @@ class PeppolRegistration(models.TransientModel):
         compute='_compute_peppol_eas_endpoint',
         store=True,
         readonly=False,
+        clean=lambda endpoint: endpoint and ELECTRONIC_ADDRESS_SCHEME_INVALID_CHARS_RE.sub('', endpoint),
     )
     # Convenience technical field
     peppol_identifier = fields.Char(
@@ -133,12 +137,6 @@ class PeppolRegistration(models.TransientModel):
     # -------------------------------------------------------------------------
     # ONCHANGE METHODS
     # -------------------------------------------------------------------------
-
-    @api.onchange('peppol_endpoint')
-    def _onchange_peppol_endpoint(self):
-        for wizard in self:
-            if wizard.peppol_endpoint:
-                wizard.peppol_endpoint = ''.join(char for char in wizard.peppol_endpoint if char.isalnum())
 
     @api.onchange('phone_number')
     def _onchange_phone_number(self):

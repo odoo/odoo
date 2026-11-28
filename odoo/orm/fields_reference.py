@@ -95,6 +95,7 @@ class Many2oneReference(Integer):
 
     """
     type = 'many2one_reference'
+    _clean_supported = False
 
     model_field = None
     aggregator = None

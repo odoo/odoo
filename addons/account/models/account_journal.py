@@ -287,6 +287,7 @@ class AccountJournal(models.Model):
     incoming_einvoice_notification_email = fields.Char(  # no longer incoming-specific, rename in master
         string="Send Copy To",
         help="Email addresses that should receive invoices copy/return reminders. Separate entries with ';'.",
+        clean=lambda emails: ', '.join(email_normalize_all(emails)) or False,
     )
 
     _code_company_uniq = models.Constraint(
@@ -706,11 +707,6 @@ class AccountJournal(models.Model):
     def _check_incoming_einvoice_notification_email(self):
         # to remove in master
         pass
-
-    @api.onchange('incoming_einvoice_notification_email')
-    def _onchange_incoming_einvoice_notification_email(self):
-        for journal in self:
-            journal.incoming_einvoice_notification_email = ', '.join(email_normalize_all(journal.incoming_einvoice_notification_email or ''))
 
     @api.depends('type')
     def _compute_refund_sequence(self):

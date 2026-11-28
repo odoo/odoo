@@ -728,7 +728,7 @@ class PropertiesCase(TestPropertiesMixin):
             })
 
         sql_values = self._get_sql_properties(message)
-        self.assertEqual(sql_values, {})
+        self.assertIsNone(sql_values)
         properties = message.read(['attributes'])[0]['attributes']
         self.assertNotIn('value', properties[0])
 

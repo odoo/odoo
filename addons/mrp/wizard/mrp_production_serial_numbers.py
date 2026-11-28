@@ -17,7 +17,11 @@ class MrpProductionSerials(models.TransientModel):
     lot_name = fields.Char('First SN', compute="_compute_lot_name", store=True, readonly=False)
     lot_quantity = fields.Integer('Number of SN', compute="_compute_lot_quantity", store=True, readonly=False)
 
-    serial_numbers = fields.Text('Produced Serial Numbers', compute="_compute_lot_name", store=True, readonly=False)
+    serial_numbers = fields.Text(
+        'Produced Serial Numbers', compute="_compute_lot_name", store=True, readonly=False,
+        # remove empty and duplicate lot names
+        clean=lambda serial_numbers: serial_numbers and '\n'.join(dict.fromkeys(s for s in serial_numbers.split('\n') if s.strip())),
+    )
 
     @api.depends('production_id')
     def _compute_lot_name(self):
@@ -36,17 +40,11 @@ class MrpProductionSerials(models.TransientModel):
         for wizard in self:
             wizard.lot_quantity = wizard.production_id.product_qty
 
-    @api.onchange('serial_numbers')
-    def _onchange_serial_numbers(self):
-        lot_names = list(filter(lambda s: len(s.strip()) > 0, self.serial_numbers.split('\n'))) if self.serial_numbers else []
-        self.serial_numbers = '\n'.join(list(dict.fromkeys(lot_names)))  # remove duplicate lot names
-
     def action_generate_serial_numbers(self):
         self.ensure_one()
         if self.lot_name and self.lot_quantity:
             lots = self.env['stock.lot'].generate_lot_names(self.lot_name, self.lot_quantity, self.production_id.product_id.lot_sequence_id)
             self.serial_numbers = '\n'.join([lot['lot_name'] for lot in lots])
-            self._onchange_serial_numbers()
         action = self.env["ir.actions.actions"]._for_xml_id("mrp.action_assign_serial_numbers")
         action['res_id'] = self.id
         return action

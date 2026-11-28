@@ -7,7 +7,7 @@ from datetime import datetime, timedelta, UTC
 from zoneinfo import ZoneInfo
 
 from dateutil.relativedelta import relativedelta
-from urllib.parse import urlparse
+from urllib.parse import urlsplit
 
 from odoo import _, api, Command, fields, models, tools
 from odoo.addons.base.models.res_partner import _tz_get
@@ -184,6 +184,8 @@ class EventEvent(models.Model):
     event_url = fields.Char(
         string='Online Event URL', compute='_compute_event_url', readonly=False, store=True,
         help="Link where the online event will take place.",
+        # add the scheme if it is missing
+        clean=lambda url: 'https://' + url if url and urlsplit(url).scheme not in ('http', 'https') else url,
     )
     event_share_url = fields.Char(string='Event Share URL', compute='_compute_event_share_url')
     lang = fields.Selection(_lang_get, string='Language',
@@ -606,17 +608,9 @@ class EventEvent(models.Model):
     @api.constrains('event_url')
     def _check_event_url(self):
         for event in self.filtered('event_url'):
-            url = urlparse(event.event_url)
+            url = urlsplit(event.event_url)
             if not (url.scheme and url.netloc):
                 raise ValidationError(_('Please enter a valid event URL.'))
-
-    @api.onchange('event_url')
-    def _onchange_event_url(self):
-        """Correct the url by adding scheme if it is missing."""
-        for event in self.filtered('event_url'):
-            parsed_url = urlparse(event.event_url)
-            if parsed_url.scheme not in ('http', 'https'):
-                event.event_url = 'https://' + event.event_url
 
     @api.onchange('seats_max')
     def _onchange_seats_max(self):

@@ -18,7 +18,7 @@ from .fields import Field, _logger
 from .fields_temporal import BaseDate
 from .models import BaseModel
 from .query import Query
-from .utils import COLLECTION_TYPES, SQL_OPERATORS, RegistrySetupError, parse_field_expr, regex_alphanumeric
+from .utils import COLLECTION_TYPES, SQL_OPERATORS, RegistrySetupError, parse_field_expr, regex_alphanumeric, setup_warning
 
 if typing.TYPE_CHECKING:
     from .query import FieldSQL, TableSQL
@@ -61,6 +61,9 @@ class Properties(Field['Property', dict]):
     store = True
     readonly = False
     precompute = True
+
+    # values are sanitized by convert_to_cleaned_cache() for html property
+    _clean_supported = True
 
     definition = None
     definition_record = None         # field on the current model that point to the definition record
@@ -112,6 +115,15 @@ class Properties(Field['Property', dict]):
             definition_record_field.properties_fields += (self,)
         return super().setup(model)
 
+    def _get_attrs(self, model_class, name):
+        attrs = super()._get_attrs(model_class, name)
+        # Properties are cleaned by convert_to_cleaned_cache(), but parameter
+        # clean is not supported, as the record format is not a write format
+        # that preserves the definitions of properties
+        if attrs.pop('clean', None) is not None:
+            setup_warning(self, f"clean is not supported on {self.type} fields, ignoring it")
+        return attrs
+
     def _setup(self, model):
         super()._setup(model)
         if self.related and self.inherited_field and not self.definition:
@@ -159,15 +171,19 @@ class Properties(Field['Property', dict]):
         else:
             raise TypeError(f"Wrong property type {type(value)!r}")
 
-        if validate:
-            # Sanitize `_html` flagged properties
-            for property_name, property_value in value.items():
-                if property_name.endswith('_html'):
-                    value[property_name] = html_sanitize(
-                        property_value,
-                        **self.HTML_SANITIZE_OPTIONS,
-                    )
+        return value
 
+    def convert_to_cleaned_cache(self, value, records, validate=True):
+        value = super().convert_to_cleaned_cache(value, records, validate)
+        if validate and value:
+            # sanitize `_html` flagged properties
+            value = {
+                name: (
+                    html_sanitize(property_value, **self.HTML_SANITIZE_OPTIONS)
+                    if name.endswith('_html') else property_value
+                )
+                for name, property_value in value.items()
+            }
         return value
 
     # Record format: the value is either False, or a dict mapping property

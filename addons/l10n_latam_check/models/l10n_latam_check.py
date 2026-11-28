@@ -39,7 +39,7 @@ class L10n_LatamCheck(models.Model):
         compute='_compute_current_journal',
         store=True,
     )
-    name = fields.Char(string='Number')
+    name = fields.Char(string='Number', clean=lambda name: name and name.zfill(8))
     issuer_vat = fields.Char(
         compute='_compute_issuer_vat', store=True, readonly=False,
     )
@@ -79,11 +79,6 @@ class L10n_LatamCheck(models.Model):
 
     # issue_state is used to know that is an own check and also that is posted
     _unique = models.UniqueIndex("(name, payment_method_line_id) WHERE outstanding_line_id IS NOT NULL")
-
-    @api.onchange('name')
-    def _onchange_name(self):
-        if self.name:
-            self.name = self.name.zfill(8)
 
     @api.depends('current_journal_id')
     def _compute_on_hand(self):

@@ -793,6 +793,29 @@ test("edit an html field during an onchange", async () => {
     expect("[name='txt'] .odoo-editor-editable").toHaveInnerHTML("<p>Yop Hello first </p>");
 });
 
+test("onchange modifying the edited html field updates the editor", async () => {
+    Partner._onChanges = {
+        txt(record) {
+            record.txt = record.txt.replace("colour", "color");
+        },
+    };
+    await mountView({
+        type: "form",
+        resId: 1,
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="name"/>
+                <field name="txt" widget="html"/>
+            </form>`,
+    });
+
+    setSelectionInHtmlField();
+    await insertText(htmlEditor, "colour ");
+    await contains("[name='name'] input").click();
+    expect("[name='txt'] .odoo-editor-editable").toHaveInnerHTML("<p>color first</p>");
+});
+
 test("click on next/previous page", async () => {
     await mountView({
         type: "form",
@@ -1696,6 +1719,33 @@ test("edit and enable/disable codeview with editor toolbar", async () => {
 
     undo(htmlEditor);
     expect("[name='txt'] .odoo-editor-editable").toHaveInnerHTML("<p>Hellofirst </p>");
+});
+
+test("leave codeview when an onchange modifies the edited html field", async () => {
+    serverState.debug = "1";
+    Partner._onChanges = {
+        txt(record) {
+            record.txt = record.txt.replace("colour", "color");
+        },
+    };
+    await mountView({
+        type: "form",
+        resId: 1,
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="txt" widget="html" options="{'codeview': true}"/>
+            </form>`,
+    });
+
+    const node = queryOne(".odoo-editor-editable p");
+    setSelection({ anchorNode: node, anchorOffset: 0, focusNode: node, focusOffset: 1 });
+    await expandToolbar();
+    await contains(".o-we-toolbar button[name='codeview']").click();
+    await contains("[name='txt'] textarea").edit("<p>colour</p>");
+
+    await contains(".o_codeview_btn").click();
+    expect("[name='txt'] .odoo-editor-editable").toHaveText("color");
 });
 
 test("edit and save a html field in collaborative should keep the same wysiwyg", async () => {

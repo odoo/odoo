@@ -19,6 +19,7 @@ class Integer(Field[int, int]):
     """ Encapsulates an :class:`int`. """
     type = 'integer'
     _column_type = ('int4', 'int4')
+    _clean_supported = True
     falsy_value = 0
 
     aggregator = 'sum'
@@ -101,6 +102,7 @@ class Float(Field[float, float]):
     """
 
     type = 'float'
+    _clean_supported = True
     _digits: str | tuple[int, int] | None = None  # digits argument passed to class initializer
     _min_display_digits: str | int | None = None
     falsy_value = 0.0
@@ -194,6 +196,7 @@ class Monetary(Field[float, float]):
     # Monetary fields need their corresponding currency field in cache for rounding values.
     write_sequence = 10
     _column_type = ('numeric', 'numeric')
+    _clean_supported = True
     falsy_value = 0.0
 
     currency_field: Field | None = None
