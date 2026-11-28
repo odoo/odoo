@@ -115,6 +115,12 @@
                 <separator/>
                 <filter name="filter_transmission_in" string="Initial" domain="[('initial_flow_id', '=', None)]"/>
                 <filter name="filter_transmission_re" string="Rectificative" domain="[('initial_flow_id', '!=', None)]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_by_state" string="Status" context="{'group_by': 'state'}"/>
+                    <filter name="group_by_report_type" string="Type" context="{'group_by': 'report_type'}"/>
+                    <filter name="group_by_period_start" string="Start date" context="{'group_by': 'period_start:day'}"/>
+                    <filter name="group_by_period_end" string="End date" context="{'group_by': 'period_end:day'}"/>
+                </group>
             </search>
         </field>
     </record>
