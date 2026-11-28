@@ -4,7 +4,7 @@
 from contextlib import contextmanager
 from unittest.mock import patch
 
-from odoo import Command, models
+from odoo import Command, api, models
 from odoo.addons.base.models.ir_mail_server import extract_rfc2822_addresses
 from odoo.addons.base.models.res_partner import Partner
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
@@ -343,6 +343,23 @@ class TestPartner(TransactionCaseWithUserDemo):
         self.assertEqual(child_contact.with_context(lang='en_US').display_name, 'Parent, Other Address')
 
         self.assertEqual(child_contact.with_context(lang='fr_FR').display_name, 'Parent, Autre adresse')
+
+    def test_company_type_before_constraints(self):
+        """ Constraints on stored fields must see the partner type set through company_type """
+        @api.constrains('function', 'is_company')
+        def _check_function_is_company(partners):
+            for partner in partners:
+                if partner.function and not partner.is_company:
+                    raise ValidationError("Only companies can have a function in this test")
+
+        Partner = self.env['res.partner']
+        with patch.object(type(Partner), '_constraint_methods', [_check_function_is_company]):
+            company = Partner.create({'name': 'Company', 'company_type': 'company', 'function': 'Retail'})
+            self.assertTrue(company.is_company)
+
+            contact = Partner.create({'name': 'Contact'})
+            contact.write({'company_type': 'company', 'function': 'Retail'})
+            self.assertTrue(contact.is_company)
 
 
 @tagged('res_partner')
