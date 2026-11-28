@@ -83,16 +83,16 @@ class PosOrder(models.Model):
             state = order.l10n_es_edi_verifactu_document_ids._get_state()
             order.l10n_es_edi_verifactu_state = state
 
-    @api.depends('l10n_es_edi_verifactu_document_ids', 'l10n_es_edi_verifactu_document_ids.json_attachment_id')
+    @api.depends('is_singly_invoiced', 'l10n_es_edi_verifactu_document_ids', 'l10n_es_edi_verifactu_document_ids.json_attachment_id')
     def _compute_l10n_es_edi_verifactu_qr_code(self):
+        # Unlike account.move's field of the same name, this one is only ever used to generate a
+        # new QR code on the POS receipt (not as an `<img src>`), so it must hold the raw AEAT
+        # validation URL, not the `/report/barcode` image-proxy URL.
         for order in self:
-            invoice = order.account_move
-            if invoice:
-                url = invoice.l10n_es_edi_verifactu_qr_code
-            else:
-                last_submission = order.l10n_es_edi_verifactu_document_ids._get_last('submission')
-                url = last_submission._get_qr_code_img_url() if last_submission else False
-            order.l10n_es_edi_verifactu_qr_code = url
+            record = order.account_move if order.is_singly_invoiced else order
+            documents = record.l10n_es_edi_verifactu_document_ids
+            last_submission = documents._get_last('submission')
+            order.l10n_es_edi_verifactu_qr_code = last_submission._get_qr_code_url() if last_submission else False
 
     def _l10n_es_edi_verifactu_get_tax_applicability(self):
         """
@@ -150,11 +150,9 @@ class PosOrder(models.Model):
         # again after a cancellation (else we get the error '[3000] Registro de facturación duplicado.').
         rejected_before = documents._get_last(document_type).state == 'rejected'
         refunded_order = self.refunded_order_id
-        if refunded_order.account_move:
-            # We invoiced the refunded order
-            refunded_document = refunded_order.account_move.l10n_es_edi_verifactu_document_ids._get_last('submission')
-        else:
-            refunded_document = refunded_order.l10n_es_edi_verifactu_document_ids._get_last('submission')
+        # The global move of a closed session carries no Veri*Factu document of the order.
+        refunded_record = refunded_order.account_move if refunded_order.is_singly_invoiced else refunded_order
+        refunded_document = refunded_record.l10n_es_edi_verifactu_document_ids._get_last('submission')
 
         name = self._l10n_es_edi_verifactu_get_simplified_invoice_name()
         is_simplified = not refunded_order or self.l10n_es_invoice_type == 'R5'
@@ -279,7 +277,7 @@ class PosOrder(models.Model):
         return str(self.config_id.id) + '/' + str(self.sequence_number).zfill(6)
 
     def l10n_es_edi_verifactu_get_invoice_name(self):
-        if self.account_move:
+        if self.is_singly_invoiced:
             return self.account_move.name
         return self._l10n_es_edi_verifactu_get_simplified_invoice_name()
 
