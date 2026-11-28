@@ -2623,6 +2623,16 @@
                                                 </t>
                                             </select>
                                         </div>
+                                        <div t-if="website._display_partner_b2b_fields() and show_vat"
+                                             id="div_company_registry" class="col-lg-6 mb-2"
+                                             t-att-style="not company_registry_label and 'display: none'">
+                                            <t t-set="company_registry_warning" t-value="partner_sudo.company_registry and not can_edit_vat"/>
+                                            <label class="col-form-label label-optional" for="o_company_registry" t-out="company_registry_label"/>
+                                            <input id="o_company_registry" type="text" name="company_registry" class="form-control" t-att-value="partner_sudo.company_registry" t-att-readonly="'1' if company_registry_warning else None"/>
+                                            <small t-if="company_registry_warning" class="form-text text-muted">
+                                                Changing company registry is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.
+                                            </small>
+                                        </div>
                                     </div>
                                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" t-nocache="The csrf token must always be up to date."/>
                                     <input type="hidden" name="address_type" t-att-value="address_type"/>
