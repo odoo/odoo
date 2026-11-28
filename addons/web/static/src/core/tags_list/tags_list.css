@@ -15,4 +15,14 @@
             border: 1px solid var(--o-colorlist-border);
         }
     }
+
+    /* Same tones as the color list palette, mixed from any hexadecimal color */
+    &.o_tag_hex_color {
+        &, &::after {
+            --background-color: rgb(from color-mix(in oklch, var(--o-tag-hex-color) 25%, var(--o-view-background-color)) r g b / var(--bg-opacity, 1));
+            background-color: var(--background-color) !important;
+            --color: rgb(from color-mix(in oklch, var(--o-tag-hex-color) 30%, var(--o-main-text-color)) r g b / var(--text-opacity, 1));
+            color: var(--color) !important;
+        }
+    }
 }
