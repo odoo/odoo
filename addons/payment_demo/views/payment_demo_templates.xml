@@ -31,6 +31,7 @@
              t-attf-id="o_demo_express_checkout_container_{{provider_sudo.id}}"
              t-att-data-provider-id="provider_sudo.id"
              t-att-data-provider-code="provider_sudo.code"
+             t-att-data-payment-method-id="provider_sudo._get_pm_from_code('demo').id"
         >
             <button type="button"
                     class="btn btn-primary w-100"

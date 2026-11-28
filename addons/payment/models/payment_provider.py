@@ -65,7 +65,7 @@ class PaymentProvider(models.Model):
         comodel_name="payment.method",
         compute="_compute_primary_payment_method_ids",
         context={"active_test": False},
-    )  # PMs with code "unknown" are excluded from this set
+    )
     payment_transaction_ids = fields.One2many(
         string="Payment Transactions",
         comodel_name="payment.transaction",
@@ -256,11 +256,7 @@ class PaymentProvider(models.Model):
             .env["payment.method"]
             .with_context(active_test=False)
             ._read_group(
-                domain=[
-                    ("provider_id", "in", self.ids),
-                    ("primary_payment_method_id", "=", False),
-                    ("code", "!=", "unknown"),
-                ],
+                domain=[("provider_id", "in", self.ids), ("primary_payment_method_id", "=", False)],
                 groupby=["provider_id"],
                 aggregates=["id:recordset"],
             )

@@ -168,7 +168,6 @@
         <t t-set="page_title">Payment Confirmation</t>
         <t t-set="additional_title"><t t-out="page_title"/></t>
         <t t-call="portal.frontend_layout" page_title="page_title" additional_title="additional_title">
-            <t t-set="show_pm" t-value="tx.payment_method_code != 'unknown'"/>
             <div class="wrap">
                 <div class="container">
                     <!-- Portal breadcrumb -->
@@ -181,9 +180,7 @@
                                 <t t-call="payment.state_header"/>
                             </div>
                         </div>
-                        <div t-att-class="'text-bg-light row row-cols-1 mx-0 mb-3 py-2 rounded'
-                                          + (' row-cols-md-4' if show_pm else ' row-cols-md-3')"
-                        >
+                        <div class="text-bg-light row row-cols-1 row-cols-md-4 mx-0 mb-3 py-2 rounded">
                             <t t-call="payment.summary_item"
                                 name.f="amount"
                                 label.translate="Amount"
@@ -194,13 +191,11 @@
                                 label.translate="Reference"
                                 value="tx.reference"
                                 include_separator="True"/>
-                            <t t-if="tx.payment_method_code != 'unknown'">
-                               <t t-call="payment.summary_item"
-                                   name.f="method"
-                                   label.translate="Payment Method"
-                                   value="tx.payment_method_id.name"
-                                   include_separator="True"/>
-                            </t>
+                            <t t-call="payment.summary_item"
+                                name.f="method"
+                                label.translate="Payment Method"
+                                value="tx.payment_method_id.name"
+                                include_separator="True"/>
                             <t t-call="payment.summary_item"
                                 name.f="provider"
                                 label.translate="Processed by"
