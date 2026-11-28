@@ -3815,7 +3815,7 @@ class TestStockValuation(TestStockValuationCommon):
                 Company._cron_post_stock_valuation()
                 self.assertIn(daily_periodic.id, called_ids)
                 self.assertNotIn(monthly_periodic.id, called_ids)
-                self.assertNotIn(daily_realtime.id, called_ids)
+                self.assertIn(daily_realtime.id, called_ids)
                 self.assertNotIn(manual_periodic.id, called_ids)
 
             with freeze_time('2026-03-31'):
@@ -3823,7 +3823,7 @@ class TestStockValuation(TestStockValuationCommon):
                 Company._cron_post_stock_valuation()
                 self.assertIn(daily_periodic.id, called_ids)
                 self.assertIn(monthly_periodic.id, called_ids)
-                self.assertNotIn(daily_realtime.id, called_ids)
+                self.assertIn(daily_realtime.id, called_ids)
                 self.assertNotIn(manual_periodic.id, called_ids)
 
             with freeze_time('2026-02-28'):
@@ -3831,7 +3831,7 @@ class TestStockValuation(TestStockValuationCommon):
                 Company._cron_post_stock_valuation()
                 self.assertIn(daily_periodic.id, called_ids)
                 self.assertIn(monthly_periodic.id, called_ids)
-                self.assertNotIn(daily_realtime.id, called_ids)
+                self.assertIn(daily_realtime.id, called_ids)
                 self.assertNotIn(manual_periodic.id, called_ids)
 
             with freeze_time('2026-03-30 16:00:00'):  # 2026-03-31 01:00 in Tokyo
