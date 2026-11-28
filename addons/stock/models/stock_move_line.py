@@ -846,7 +846,10 @@ class StockMoveLine(models.Model):
             ('id', 'not in', tuple(ml_ids_to_ignore)),
         ]
 
-        outdated_candidates = self.env['stock.move.line'].search(outdated_move_lines_domain).sorted(self._get_outdated_candidate_sort_key)
+        # Lines of moves that bypass the reservation did not reserve any quant: there is nothing to free.
+        outdated_candidates = self.env['stock.move.line'].search(outdated_move_lines_domain).filtered(
+            lambda ml: not ml.move_id or not ml.move_id._should_bypass_reservation(ml.location_id)
+        ).sorted(self._get_outdated_candidate_sort_key)
 
         # As the move's state is not computed over the move lines, we'll have to manually
         # recompute the moves which we adapted their lines.
