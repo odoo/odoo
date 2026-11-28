@@ -15,16 +15,20 @@ export class OutLine extends Component {
         productUom: types.object(),
         allocatedQuantity: types.signal(types.number()),
         updateMoveReservation: types.function(),
-    })
+    });
+
     static components = {
         CheckBox,
-    }
+    };
 
-    favorite = computed(() => this.props.moves.some(move => move.priority == 1));
+    favorite = computed(() => this.props.moves.some((move) => move.priority == 1));
     date = computed(() => this.props.moves[0].date);
     isLate = computed(() => this.date() < serializeDateTime(DateTime.now()));
     demandQuantity = computed(() =>
-        this.props.moves.reduce((v, mv) => v + mv.quantity - mv.reserved_quantity, 0)
+        this.props.moves.reduce(
+            (v, mv) => v + mv.quantity - (mv.is_reserved ? 0 : mv.reserved_quantity),
+            0
+        )
     );
 
     setup() {
@@ -38,8 +42,13 @@ export class OutLine extends Component {
 
     get quantityCSSClass() {
         if (this.props.allocatedQuantity()) {
-            return this.props.allocatedQuantity() >= this.demandQuantity() ? "text-success" : "text-warning";
-        } else if (this.props.quantityToAllocate() && this.props.quantityToAllocate() >= this.demandQuantity()) {
+            return this.props.allocatedQuantity() >= this.demandQuantity()
+                ? "text-success"
+                : "text-warning";
+        } else if (
+            this.props.quantityToAllocate() &&
+            this.props.quantityToAllocate() >= this.demandQuantity()
+        ) {
             return "";
         }
         return "text-danger";
@@ -51,7 +60,7 @@ export class OutLine extends Component {
 
     getCheckBoxProps() {
         let disabled = this.props.isReserved() ? false : !this.props.availableQuantity;
-        if (this.props.moves.some(move => ["cancel", "done"].includes(move.state))) {
+        if (this.props.moves.some((move) => ["cancel", "done"].includes(move.state))) {
             disabled = true;
         }
         return {
@@ -65,7 +74,7 @@ export class OutLine extends Component {
                 await this.props.updateMoveReservation(value, this.props);
                 this.onGoingJob.set(false);
             },
-        }
+        };
     }
 
     displayDate(date) {
@@ -74,8 +83,8 @@ export class OutLine extends Component {
 
     async onPrintLabels() {
         if (this.props.allocatedQuantity()) {
-            const docids = this.props.moves.map((move) => move.id)
-            const movesQty = this.props.moves.map((move) => move.is_reserved ? move.quantity : 0);
+            const docids = this.props.moves.map((move) => move.id);
+            const movesQty = this.props.moves.map((move) => (move.is_reserved ? move.quantity : 0));
             await this.env.bus.trigger("print_labels", { docids, movesQty });
         }
     }
