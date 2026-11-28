@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
+from urllib.parse import parse_qs, urlparse
 
 import odoo
 from odoo.tests import tagged, users
@@ -526,13 +527,16 @@ class TestMessageLinks(MailCommon, HttpCase):
             message_type='comment',
         ).id
         self.authenticate('employee', 'employee')
-        with self.subTest(channel_message=channel_message):
-            expected_url = self.base_url() + f'/odoo/action-mail.action_discuss?active_id={channel_message.res_id}&highlight_message_id={channel_message.id}'
-            res = self.url_open(f'/mail/message/{channel_message.id}')
-            self.assertEqual(res.url, expected_url)
-        with self.subTest(private_message_id=private_message_id):
-            res = self.url_open(f'/mail/message/{private_message_id}')
-            self.assertEqual(res.status_code, 404)
+        # legacy links (message_id) behave like message links
+        expected_url = self.base_url() + f'/odoo/action-mail.action_discuss?active_id={channel_message.res_id}&highlight_message_id={channel_message.id}'
+        for url in (f'/mail/message/{channel_message.id}', f'/mail/view?message_id={channel_message.id}'):
+            with self.subTest(url=url):
+                res = self.url_open(url)
+                self.assertEqual(res.url, expected_url)
+        for url in (f'/mail/message/{private_message_id}', f'/mail/view?message_id={private_message_id}'):
+            with self.subTest(url=url):
+                res = self.url_open(url)
+                self.assertEqual(res.status_code, 404)
 
     @users('employee')
     def test_message_link_by_public(self):
@@ -541,5 +545,19 @@ class TestMessageLinks(MailCommon, HttpCase):
             message_type='comment',
             subtype_xmlid='mail.mt_comment'
         )
-        res = self.url_open(f'/mail/message/{message.id}')
-        self.assertEqual(res.status_code, 200)
+        note = self.public_channel.message_post(
+            body='Public Channel Note',
+            subtype_xmlid='mail.mt_note',
+        )
+
+        # legacy links (message_id) behave like message links; without guest,
+        # public ends on login, redirected to the channel or the message link
+        for msg, expected_redirect in [
+            (message, f'/discuss/channel/{self.public_channel.id}?highlight_message_id={message.id}'),
+            (note, f'/mail/message/{note.id}'),
+        ]:
+            for url in (f'/mail/message/{msg.id}', f'/mail/view?message_id={msg.id}'):
+                with self.subTest(url=url):
+                    res_url = urlparse(self.url_open(url).url)
+                    self.assertEqual(res_url.path, '/web/login')
+                    self.assertEqual(parse_qs(res_url.query)['redirect'], [expected_redirect])
