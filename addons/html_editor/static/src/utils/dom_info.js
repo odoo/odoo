@@ -37,10 +37,39 @@ export function isEmptyTextNode(node) {
 }
 
 /**
+ * Return true if the two weights of the given font family render with
+ * different faces (e.g. a family without a 500 face renders 500 like 400).
+ * Faces are compared by measuring a sample text on a canvas; the result is
+ * cached per family/weight.
+ *
+ * @param {string} family
+ * @param {number} weight
+ * @param {number} otherWeight
+ * @returns {boolean}
+ */
+const rendersDifferent = (() => {
+    const ctx = document.createElement("canvas").getContext("2d");
+    const faceCache = new Map();
+    const getFaceSignature = (family, weight) => {
+        const key = `${family}|${weight}`;
+        if (!faceCache.has(key)) {
+            ctx.font = `${weight} 48px ${family}`;
+            const m = ctx.measureText("AbcdefghiJKlmnOpqRsTuvWxyZ");
+            faceCache.set(
+                key,
+                [m.width, m.actualBoundingBoxAscent, m.actualBoundingBoxDescent].join()
+            );
+        }
+        return faceCache.get(key);
+    };
+    return (family, weight, otherWeight) =>
+        getFaceSignature(family, weight) !== getFaceSignature(family, otherWeight);
+})();
+
+/**
  * Return true if the given node appears bold. The node is considered to appear
- * bold if its font weight is bigger than the regular font weight configured
- * for its context, or if its font weight is bigger than that of its closest
- * block.
+ * bold if it renders with a heavier face than the regular font weight
+ * configured for its context, or than that of its closest block.
  *
  * @param {Node} node
  * @returns {boolean}
@@ -62,10 +91,10 @@ export function isBold(node) {
         node,
         (el) => isBlock(el) || +getComputedStyle(el).fontWeight !== fontWeight
     );
-    return (
-        fontWeight > regularFontWeight ||
-        fontWeight > +getComputedStyle(referenceElement).fontWeight
-    );
+    const referenceFontWeight = +getComputedStyle(referenceElement).fontWeight;
+    const rendersHeavier = (refWeight) =>
+        fontWeight > refWeight && rendersDifferent(style.fontFamily, fontWeight, refWeight);
+    return rendersHeavier(regularFontWeight) || rendersHeavier(referenceFontWeight);
 }
 
 /**
