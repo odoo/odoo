@@ -212,9 +212,7 @@ export class ChannelMember extends Record {
     }
 
     get canRemoveOwner() {
-        return (
-            this.channel_role === "owner" && (this.store.self_user?.is_admin || this.channelAsSelf)
-        );
+        return this.channel_role === "owner" && this.store.self_user?.is_admin;
     }
 
     get canResendInvitation() {
@@ -230,8 +228,7 @@ export class ChannelMember extends Record {
             this.partner_id?.main_user_id?.active &&
             this.channel_role !== "admin" &&
             (this.store.self_user?.is_admin ||
-                (this.selfChannelRole === "owner" && this.channel_role !== "owner") ||
-                (this.selfChannelRole === "owner" && this.channelAsSelf))
+                (this.selfChannelRole === "owner" && this.channel_role !== "owner"))
         );
     }
 
@@ -355,16 +352,12 @@ export class ChannelMember extends Record {
 
     /** @param {string} role */
     setChannelRole(role) {
-        if (!this.store.self_user?.is_admin && (this.channelAsSelf || role === "owner")) {
+        if (!this.store.self_user?.is_admin && role === "owner") {
             this.store.env.services.dialog.add(ConfirmationDialog, {
-                body: this.channelAsSelf
-                    ? _t(
-                          "Do you want to remove owner from yourself? You will no longer have full control over the channel and its settings."
-                      )
-                    : _t(
-                          'Do you want to set "%(member_name)s" as the owner? This means that the member will have full control over the channel and its settings.\n\nThis action cannot be reverted.',
-                          { member_name: this.name }
-                      ),
+                body: _t(
+                    'Do you want to set "%(member_name)s" as the owner? This means that the member will have full control over the channel and its settings.\n\nThis action cannot be reverted.',
+                    { member_name: this.name }
+                ),
                 cancel: () => {},
                 confirm: () => this.setChannelRoleRpc(role),
             });
