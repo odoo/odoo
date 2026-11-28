@@ -392,10 +392,11 @@ class HolidaysRequest(models.Model):
 
     @api.depends('leave_type_request_unit', 'number_of_days')
     def _compute_leave_type_increases_duration(self):
-        durations = self._get_durations(check_leave_type=False)
-        for leave in self:
-            days = durations[leave.id][0]
-            leave.leave_type_increases_duration = leave.leave_type_request_unit == 'day' and days < leave.number_of_days
+        day_leaves = self.filtered(lambda l: l.leave_type_request_unit == 'day')
+        durations = day_leaves._get_durations(check_leave_type=False)
+        for leave in day_leaves:
+            leave.leave_type_increases_duration = durations[leave.id][0] < leave.number_of_days
+        (self - day_leaves).leave_type_increases_duration = False
 
     def _get_durations(self, check_leave_type=True, resource_calendar=None):
         """
@@ -407,26 +408,74 @@ class HolidaysRequest(models.Model):
         result = {}
         employee_leaves = self.filtered('employee_id')
         employees_by_dates_calendar = defaultdict(lambda: self.env['hr.employee'])
+        fixed_employees_by_dates_calendar = defaultdict(lambda: self.env['hr.employee'])
         for leave in employee_leaves:
             if not leave.date_from or not leave.date_to:
                 continue
-            employees_by_dates_calendar[(leave.date_from, leave.date_to, leave.holiday_status_id.include_public_holidays_in_duration, resource_calendar or leave.resource_calendar_id)] += leave.employee_id
+            calendar = resource_calendar or leave.resource_calendar_id
+            employee = leave.employee_id
+            key = (leave.date_from, leave.date_to, leave.holiday_status_id.include_public_holidays_in_duration, calendar)
+            if calendar and not calendar.flexible_hours and not employee.is_flexible and not employee.is_fully_flexible:
+                fixed_employees_by_dates_calendar[key] += employee
+            else:
+                employees_by_dates_calendar[key] += employee
         # We force the company in the domain as we are more than likely in a compute_sudo
         domain = [('time_type', '=', 'leave'),
                   ('company_id', 'in', self.env.companies.ids + self.env.context.get('allowed_company_ids', [])),
                   # When searching for resource leave intervals, we exclude the one that
                   # is related to the leave we're currently trying to compute for.
                   '|', ('holiday_id', '=', False), ('holiday_id', 'not in', employee_leaves.ids)]
-        # Precompute values in batch for performance purposes
-        work_time_per_day_mapped = {
-            (date_from, date_to, include_public_holidays_in_duration, calendar): employees.with_context(
-                    compute_leaves=not include_public_holidays_in_duration)._list_work_time_per_day(date_from, date_to, domain=domain, calendar=calendar)
-            for (date_from, date_to, include_public_holidays_in_duration, calendar), employees in employees_by_dates_calendar.items()
-        }
-        work_days_data_mapped = {
-            (date_from, date_to, include_public_holidays_in_duration, calendar): employees._get_work_days_data_batch(date_from, date_to, compute_leaves=not include_public_holidays_in_duration, domain=domain, calendar=calendar)
-            for (date_from, date_to, include_public_holidays_in_duration, calendar), employees in employees_by_dates_calendar.items()
-        }
+        work_time_per_day_mapped = defaultdict(dict)
+        work_days_data_mapped = defaultdict(dict)
+        # Employees on a fixed calendar are computed below, once per (include_public_holidays_in_duration,
+        # calendar, from month, to month) instead of once per key.
+        dates_calendar_by_period = defaultdict(list)
+        for key in fixed_employees_by_dates_calendar:
+            date_from, date_to, include_public_holidays_in_duration, calendar = key
+            dates_calendar_by_period[include_public_holidays_in_duration, calendar, date_from.year, date_from.month, date_to.year, date_to.month].append(key)
+        for (include_public_holidays_in_duration, calendar, _from_year, _from_month, _to_year, _to_month), keys in dates_calendar_by_period.items():
+            batch_start, batch_stop = min(k[0] for k in keys).replace(tzinfo=UTC), max(k[1] for k in keys).replace(tzinfo=UTC)
+            batch_employees = self.env['hr.employee'].concat(*(fixed_employees_by_dates_calendar[k] for k in keys))
+            if len(keys) > 1:
+                # For periods with more than one key we need to make sure no employees' calendar is non-fixed during the period
+                # otherwise the batched computation would be the incorrect result.
+                calendar_periods = batch_employees._get_calendar_periods(batch_start, batch_stop)
+                not_always_fixed = batch_employees.filtered(lambda e: not all(
+                    c and not c.flexible_hours for _start, _stop, c in calendar_periods.get(e, [])
+                ))
+                batch_employees -= not_always_fixed
+                for key in keys:
+                    if moved := fixed_employees_by_dates_calendar[key] & not_always_fixed:
+                        fixed_employees_by_dates_calendar[key] -= moved
+                        employees_by_dates_calendar[key] += moved
+                if not batch_employees:
+                    continue
+            all_intervals = calendar._work_intervals_batch(
+                batch_start, batch_stop, batch_employees.resource_id,
+                domain=domain, compute_leaves=not include_public_holidays_in_duration)
+            for key in keys:
+                date_from, date_to, include_public_holidays_in_duration, calendar = key
+                for employee in fixed_employees_by_dates_calendar[key]:
+                    tz = timezone(employee.resource_id.tz or calendar.tz)
+                    window_start, window_stop = date_from.replace(tzinfo=UTC).astimezone(tz), date_to.replace(tzinfo=UTC).astimezone(tz)
+                    intervals = all_intervals[employee.resource_id.id] & Intervals([(window_start, window_stop, self.env['resource.calendar.attendance'])])
+                    # Overlapping attendances are merged over the whole batch window, so keep only the ones that
+                    # overlap this key's window, as the per-key computation would.
+                    intervals = [(start, stop, meta if len(meta) == 1 else meta.filtered(
+                        lambda a: tz.localize(datetime.combine(start.date(), float_to_time(a.hour_from))) < window_stop
+                        and tz.localize(datetime.combine(start.date(), float_to_time(a.hour_to))) > window_start
+                    )) for start, stop, meta in intervals]
+                    per_day = defaultdict(float)
+                    for start, stop, _meta in intervals:
+                        per_day[start.date()] += (stop - start).total_seconds() / 3600
+                    work_time_per_day_mapped[key][employee.id] = sorted(per_day.items())
+                    work_days_data_mapped[key][employee.id] = calendar._get_attendance_intervals_days_data(intervals)
+        for key, employees in employees_by_dates_calendar.items():
+            date_from, date_to, include_public_holidays_in_duration, calendar = key
+            work_time_per_day_mapped[key].update(employees.with_context(
+                compute_leaves=not include_public_holidays_in_duration)._list_work_time_per_day(date_from, date_to, domain=domain, calendar=calendar))
+            work_days_data_mapped[key].update(employees._get_work_days_data_batch(
+                date_from, date_to, compute_leaves=not include_public_holidays_in_duration, domain=domain, calendar=calendar))
         for leave in self:
             calendar = resource_calendar or leave.resource_calendar_id
             if not leave.date_from or not leave.date_to or (not calendar and not leave.employee_id):
