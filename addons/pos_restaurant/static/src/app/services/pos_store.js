@@ -416,7 +416,10 @@ patch(PosStore.prototype, {
         }
     },
     canEditPayment(order) {
-        return order.isTippedAfterPayment ? false : super.canEditPayment(order);
+        // Don't handle this in pos_order's canEditPayment, as changing a normal tip would trigger the
+        // assertEditable due to the order value change. Calculate isTippedAfterPayment only once on the
+        // feedback screen, based on whether the order is editable, and validate accordingly.
+        return !order.isTippedAfterPayment && super.canEditPayment(order);
     },
     get selectedTable() {
         return this.getOrder()?.table_id;

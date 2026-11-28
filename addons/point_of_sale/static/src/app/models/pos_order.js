@@ -242,8 +242,19 @@ export class PosOrder extends PosOrderAccounting {
         this.lines.forEach((line) => line.updateSavedQuantity());
     }
 
+    get canEditPayment() {
+        return (
+            this.state === "paid" && this.invoice_status !== "invoiced" && !this.refund_orders_count
+        );
+    }
+
+    get isPaidAndPrinted() {
+        // Editing it refunds it and applies the edit on a copy, see `_replace_printed_order`.
+        return this.state === "paid" && this.nb_print > 0;
+    }
+
     assertEditable() {
-        if (this.finalized && (this.nb_print || this.state == "done")) {
+        if (this.finalized && !this.canEditPayment) {
             throw new Error("Finalized Order cannot be modified");
         }
         return true;

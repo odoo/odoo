@@ -217,12 +217,16 @@ export class PosTicketPrinterPlugin extends Plugin {
             }
         }
 
-        if (!printersToTry.length && !download) {
-            webFallback && this.printWeb(iframe);
-            return;
-        }
-
         let status = { successful: false };
+
+        if (!printersToTry.length && !download) {
+            if (!webFallback) {
+                return status;
+            }
+            // The receipt is printed or saved as PDF from the browser dialog
+            this.printWeb(iframe);
+            return { successful: true };
+        }
 
         for (const printer of printersToTry.filter(Boolean)) {
             try {
@@ -307,7 +311,7 @@ export class PosTicketPrinterPlugin extends Plugin {
         const iframe = await this.generateIframe("point_of_sale.pos_order_receipt", data);
         const result = await this.printWithFallback({ iframe, webFallback });
 
-        if (!printBillActionTriggered && result) {
+        if (!printBillActionTriggered && result?.successful) {
             await this.markReceiptAsPrinted(order);
         } else if (!order.nb_print) {
             order.nb_print = 0;

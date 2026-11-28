@@ -220,16 +220,94 @@ class PosOrder(models.Model):
             })
 
     def process_saved_payments(self, order, existing_order):
-        """This will process and save payment related changes by ensuring necessary updates are performed on UI"""
-        # don't directly write the order - on continuing from feedback screen it syncs with wrong amounts
+        """Apply a payment edit made from the PoS on an already paid order.
+
+        Only the customer, the tip, the lines and the payments are taken from
+        ``order``. Its amounts are not written directly: continuing from the
+        feedback screen can sync them with wrong values.
+
+        :param dict order: edited order data sent by the PoS.
+        :param existing_order: ``pos.order`` the commands of ``order`` apply to.
+        """
         if order.get('partner_id'):
             self.update_order_partner(order)
-            existing_order.write({'partner_id': order.get('partner_id'), 'to_invoice': order.get('to_invoice', False)})
-        # payments
+            existing_order.write({
+                'partner_id': order.get('partner_id'),
+                'to_invoice': order.get('to_invoice', False),
+            })
+        if 'tip_amount' in order:
+            existing_order.write({
+                'is_tipped': bool(order.get('is_tipped')),
+                'tip_amount': order['tip_amount'] or 0,
+            })
         if order.get('payment_ids'):
             self._update_lines(order, existing_order, ['lines', 'payment_ids'])
             self._process_payment_lines(order, existing_order, existing_order.session_id, False)
         existing_order._generate_order_invoice()
+
+    def _replace_printed_order(self, order):
+        """Apply a payment edit on a printed order.
+
+        A printed receipt can't be altered anymore: the order is reversed by a full
+        refund, and the edit is applied to a copy of it which gets its own receipt.
+
+        :param dict order: edited order data sent by the PoS, its commands target ``self``.
+        :return: tuple ``(refund_order, replacement_order)``.
+        """
+        self.ensure_one()
+        Payment = self.env['pos.payment']
+
+        refund_order = self._refund()
+        Payment.create([{
+            'pos_order_id': refund_order.id,
+            'name': payment.name,
+            'amount': -payment.amount,
+            'payment_method_id': payment.payment_method_id.id,
+        } for payment in self.payment_ids])
+        refund_order._process_saved_order(False)
+
+        # Copy lines and payments one by one to map old ids to the copies, so the
+        # update/delete commands sent by the PoS can be replayed on the copy.
+        replacement_order = self.copy({'lines': False})
+        line_map = {}
+        # Combo parents first: a plain copy would keep the children on the original parents.
+        for line in self.lines.sorted(lambda line: bool(line.combo_parent_id)):
+            line_map[line.id] = line.copy(line._prepare_replacement_data(replacement_order, line_map)).id
+        # The change line is recomputed by `_process_payment_lines`.
+        payment_map = {
+            payment.id: payment.copy({
+                'pos_order_id': replacement_order.id,
+                'account_move_id': False,
+            }).id
+            for payment in self.payment_ids.filtered(lambda p: not p.is_change)
+        }
+        # The PoS commands target the original's records, e.g. a tip edit updates or deletes the tip line
+        self._remap_edit_commands(order, 'lines', line_map, 'order_id')
+        # Same for the edited payments
+        self._remap_edit_commands(order, 'payment_ids', payment_map, 'pos_order_id')
+
+        self.process_saved_payments(order, replacement_order)
+        # Same finalization as a regular order: prices, paid state, picking, invoice.
+        replacement_order._process_saved_order(False)
+        return refund_order, replacement_order
+
+    @api.model
+    def _remap_edit_commands(self, order, field, id_map, inverse_name):
+        """Retarget the x2many commands of ``order[field]`` on copied records.
+
+        Commands on records without a copy are left as is: `_update_lines` skips them.
+        """
+        for command in order.get(field) or []:
+            if command[0] in (Command.UPDATE, Command.DELETE, Command.UNLINK):
+                command[1] = id_map.get(command[1], command[1])
+            if len(command) > 2 and isinstance(vals := command[2], dict):
+                # The record must stay on the copy, never be moved back to the original order
+                vals.pop(inverse_name, None)
+                if command[0] == Command.UPDATE:
+                    # Copies have their own uuid, the original's is unique
+                    vals.pop('uuid', None)
+                if vals.get('combo_parent_id') in id_map:
+                    vals['combo_parent_id'] = id_map[vals['combo_parent_id']]
 
     def _clean_payment_lines(self):
         self.ensure_one()
@@ -326,7 +404,7 @@ class PosOrder(models.Model):
             ]).unlink()
 
     name = fields.Char(string='Order Ref', required=True, readonly=True, copy=False, default='/')
-    date_order = fields.Datetime(string='Date', readonly=True, index=True, default=fields.Datetime.now)
+    date_order = fields.Datetime(string='Date', readonly=True, index=True, default=fields.Datetime.now, copy=False)
     user_id = fields.Many2one(
         comodel_name='res.users', string='Employee',
         help="Employee who uses the cash register.",
@@ -1016,13 +1094,21 @@ class PosOrder(models.Model):
                 order_ids.append(self._process_order(order, False))
                 _logger.info("PoS synchronisation #%d order %s created pos.order #%d", sync_token, order_log_name, order_ids[-1])
             else:
-                # In theory, this situation is unintended
-                # In practice it can happen when "Tip later" option is used
-                # This will update the order if edited after payent from UI.
-                if existing_order.state == "paid" and not existing_order.nb_print and not existing_order.account_move:
+                if existing_order.state != 'paid' or existing_order.account_move:
+                    _logger.info("PoS synchronisation #%d order %s sync ignored for existing PoS order %s (state: %s)", sync_token, order_log_name, existing_order, existing_order.state)
+                # Paid order edited from the PoS (payment edit, tip, customer, ...)
+                elif not (existing_order.nb_print and order.get('payment_ids')):
                     self.process_saved_payments(order, existing_order)
+                    _logger.info("PoS synchronisation #%d order %s updated existing PoS order %s", sync_token, order_log_name, existing_order)
+                elif existing_order.refund_orders_count:
+                    # Already refunded some of the items
+                    _logger.warning("PoS synchronisation #%d order %s edit ignored, %s is already refunded", sync_token, order_log_name, existing_order)
+                else:
+                    refund_order, replacement_order = existing_order._replace_printed_order(order)
+                    # The PoS opens the replacement order, the one with the highest id
+                    order_ids += [refund_order.id, replacement_order.id]
+                    _logger.info("PoS synchronisation #%d order %s printed PoS order %s replaced: refunded by %s, edit applied on %s", sync_token, order_log_name, existing_order, refund_order, replacement_order)
                 order_ids.append(existing_order.id)
-                _logger.info("PoS synchronisation #%d order %s sync ignored for existing PoS order %s (state: %s)", sync_token, order_log_name, existing_order, existing_order.state)
 
         # Sometime pos_orders_ids can be empty.
         pos_order_ids = self.env['pos.order'].browse(order_ids)

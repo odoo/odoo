@@ -1,3 +1,5 @@
+/* global posmodel */
+
 import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
 import * as FeedbackScreen from "@point_of_sale/../tests/pos/tours/utils/feedback_screen_util";
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
@@ -213,6 +215,7 @@ registry.category("web_tour.tours").add("test_edit_paid_order", {
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
             FeedbackScreen.isShown(),
+            FeedbackScreen.isEditBtnShown(),
             FeedbackScreen.clickEditPayment(),
             // Add customer
             PaymentScreen.clickPartnerButton(),
@@ -225,6 +228,44 @@ registry.category("web_tour.tours").add("test_edit_paid_order", {
                     await new Promise((resolve) => setTimeout(resolve, 200));
                 },
             },
+            PaymentScreen.clickValidate(),
+            FeedbackScreen.isShown(),
+            negateStep(FeedbackScreen.isEditBtnShown()),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_edit_printed_paid_order", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            {
+                content: "Stub the browser print dialog (receipt printed or saved as PDF)",
+                trigger: "body",
+                run: () => {
+                    posmodel.ticketPrinter._print = () => {};
+                },
+            },
+            ProductScreen.addOrderline("Desk Organizer", "2"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.enterPaymentLineAmount("Cash", "5", true, { remaining: "5.20" }),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            FeedbackScreen.isShown(),
+            FeedbackScreen.isEditBtnShown(),
+            // we are adding, updating & deleting to check all the operations once
+            FeedbackScreen.clickEditPayment(),
+            // deleted Bank entry
+            PaymentScreen.clickPaymentlineDelButton("Bank", "5.20"),
+            // update existing cash entry by changing amount to 3
+            { ...PaymentScreen.clickPaymentline("Cash", "5.00")[0], isActive: ["desktop"] },
+            PaymentScreen.enterPaymentLineAmount("Cash", "3.00", true, {
+                nth: "1",
+                remaining: "7.20",
+            }),
+            // a new cash entry for rest of the 7.2
+            PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
             FeedbackScreen.isShown(),
         ].flat(),

@@ -207,12 +207,6 @@ patch(PosStore.prototype, {
         }
         return super.shouldShowOpeningControl(...arguments);
     },
-    canEditPayment(order) {
-        return (
-            super.canEditPayment(order) &&
-            (!this.config.module_pos_hr || this.accessRight.employeeIsAdmin)
-        );
-    },
     async handleUrlParams() {
         if (this.config.module_pos_hr && !this.accessRight.cashier) {
             if (this.router.currentScreen() !== "LoginScreen") {

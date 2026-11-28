@@ -100,3 +100,29 @@ test("printWeb gives the focus back to the POS window after printing", async () 
     expect.verifySteps(["print from iframe"]);
     expect(document.activeElement).not.toBe(iframe);
 });
+
+test("printOrderReceipt verify nb_print", async () => {
+    const store = await setupPosEnv();
+    store.config.update({ receipt_printer_ids: [] });
+    const order = await getFilledOrder(store);
+    const iframe = document.createElement("iframe");
+    getFixture().appendChild(iframe);
+    patchWithCleanup(store.ticketPrinter, {
+        async generateIframe() {
+            return iframe;
+        },
+        _print() {
+            expect.step("web print");
+        },
+    });
+    // no printer and no web fallback is not counted as printed
+    const result = await store.ticketPrinter.printOrderReceipt({ order, webFallback: false });
+    expect(result.successful).toBe(false);
+    expect(order.nb_print).toBe(0);
+    expect.verifySteps([]);
+    // web print (or save as PDF) is counted as printed
+    const result2 = await store.ticketPrinter.printOrderReceipt({ order });
+    expect(result2.successful).toBe(true);
+    expect(order.nb_print).toBe(1);
+    expect.verifySteps(["web print"]);
+});

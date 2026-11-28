@@ -124,7 +124,7 @@ export class ConfirmationPage extends Component {
                 }
                 if (order.state === "paid") {
                     order.nb_print = 1;
-                    if (order.isSynced && result) {
+                    if (order.isSynced && result?.successful) {
                         await rpc("/pos_self_order/kiosk/increment_nb_print/", {
                             access_token: this.selfOrder.access_token,
                             order_id: order.id,

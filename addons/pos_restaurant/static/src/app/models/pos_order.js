@@ -159,14 +159,12 @@ patch(PosOrder.prototype, {
         });
     },
     get isTippedAfterPayment() {
-        if (
+        return (
             this.state === "paid" &&
             this.config.set_tip_after_payment &&
-            this.totalDue != this.amount_paid
-        ) {
-            return true;
-        }
-        return false;
+            this.is_tipped &&
+            !this.currency.isZero(this.totalDue - this.amount_paid)
+        );
     },
     hasCourses() {
         return this.course_ids.length > 0;

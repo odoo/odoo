@@ -119,6 +119,20 @@ class PosOrderLine(models.Model):
             'refunded_orderline_id': self.id,
         }
 
+    def _prepare_replacement_data(self, replacement_order, line_map):
+        """Values to copy this line on the order replacing its printed order, see
+        `pos.order._replace_printed_order`.
+
+        :param line_map: ids of the original lines mapped to their copies made so far.
+        """
+        self.ensure_one()
+        return {
+            'order_id': replacement_order.id,
+            'combo_parent_id': line_map.get(self.combo_parent_id.id, False),
+            # One2many fields are not copied by default
+            'custom_attribute_value_ids': [Command.create(vals) for vals in self.custom_attribute_value_ids.copy_data()],
+        }
+
     def _is_tip_line(self):
         self.ensure_one()
         tip_product = self.order_id.config_id.tip_product_id

@@ -77,11 +77,22 @@ export default class OrderPaymentValidation {
     }
 
     async shouldHideValidationBehindFeedbackScreen() {
-        const nextPage = this.nextPage;
+        let nextPage = this.nextPage;
         const waitForFn = async () => {
             await this.finalizeValidation();
         };
-        if (nextPage.page === "FeedbackScreen") {
+        if (nextPage.page === "FeedbackScreen" && this.order.isPaidAndPrinted) {
+            // A printed order is replaced by a copy on the server: wait for it, so the feedback screen opens the copy.
+            // Block the UI meanwhile, otherwise the navigation below would pull the user back from wherever they went.
+            try {
+                this.pos.env.services.ui.block();
+                await waitForFn();
+            } finally {
+                this.pos.env.services.ui.unblock();
+            }
+            // We need to navigate to the next page again because, for edited orders, the parameters will be updated by finalizeValidation after printing.
+            nextPage = this.nextPage;
+        } else if (nextPage.page === "FeedbackScreen") {
             nextPage.params.waitFor = waitForFn();
         } else if (nextPage.page === "TipScreen" && !this.pos.config.module_pos_restaurant) {
             nextPage.params.finalizeValidation = waitForFn;
@@ -96,7 +107,6 @@ export default class OrderPaymentValidation {
                 this.pos.env.services.ui.unblock();
             }
         }
-
         this.pos.navigate(nextPage.page, nextPage.params);
     }
 
@@ -132,6 +142,8 @@ export default class OrderPaymentValidation {
     }
 
     async finalizeValidation() {
+        // Read before the order is set as paid below
+        const isPrintedOrderEdit = this.order.isPaidAndPrinted;
         if (this.order.isPaidWithCash() || this.order.change) {
             this.pos.openCashbox();
         }
@@ -155,9 +167,21 @@ export default class OrderPaymentValidation {
             // 1. Ensure pos is set as the source when paid from the PoS.
             // If the order came from Self Order and was paid from the PoS.
             this.order.source = "pos";
-            const syncOrderResult = await this.pos.syncAllOrders({ throw: true });
+            const syncOrderResult = await this.pos.syncAllOrders({
+                ...(this.isPrintedOrderEdit && { orders: [this.order] }),
+                throw: true,
+            });
             if (!syncOrderResult) {
                 return false;
+            }
+            if (isPrintedOrderEdit) {
+                const replacementOrder = syncOrderResult.reduce((latest, order) =>
+                    order.id > latest.id ? order : latest
+                );
+                if (replacementOrder.id > this.order.id) {
+                    this.pos.setOrder(replacementOrder);
+                    this.orderUuid = replacementOrder.uuid;
+                }
             }
 
             // 2. Invoice, should not stop the validation process but a dialog is shown if an
