@@ -614,6 +614,114 @@ test("domain field: does not wait for the count to render", async function () {
     expect(".o_domain_show_selection_button").toHaveText("2 record(s)");
 });
 
+test("domain field: have a default count limit of 10000", async function () {
+    serverState.debug = true;
+
+    Partner._fields.bar = fields.Char();
+    Partner._records = [
+        {
+            foo: "[]",
+            bar: "product",
+        },
+    ];
+    Partner._views = {
+        form: `
+                <form>
+                    <field name="bar"/>
+                    <field name="foo" widget="domain" options="{'model': 'bar'}"/>
+                </form>`,
+        search: `<search />`,
+    };
+
+    onRpc("search_count", ({ kwargs }) => {
+        expect.step(kwargs.limit);
+        return 99999;
+    });
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        name: "test",
+        res_id: 1,
+        res_model: "partner",
+        type: "ir.actions.act_window",
+        views: [[false, "form"]],
+    });
+    expect.verifySteps([10001]);
+    expect(".o_domain_show_selection_button").toHaveText("10000+ record(s)");
+});
+
+test("domain field: foldable and count limit reached", async function () {
+    serverState.debug = true;
+
+    Partner._fields.bar = fields.Char();
+    Partner._records = [
+        {
+            foo: "[]",
+            bar: "product",
+        },
+    ];
+    Partner._views = {
+        form: `
+                <form>
+                    <field name="bar"/>
+                    <field name="foo" widget="domain" options="{'foldable': true, 'model': 'bar'}"/>
+                </form>`,
+        search: `<search />`,
+    };
+
+    onRpc("search_count", ({ kwargs }) => {
+        expect.step(kwargs.limit);
+        return 99999;
+    });
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        name: "test",
+        res_id: 1,
+        res_model: "partner",
+        type: "ir.actions.act_window",
+        views: [[false, "form"]],
+    });
+    expect.verifySteps([10001]);
+    expect(".o_domain_show_selection_button").toHaveText("10000+ record(s)");
+});
+
+test("domain field: configurable count limit", async function () {
+    serverState.debug = true;
+
+    Partner._fields.bar = fields.Char();
+    Partner._records = [
+        {
+            foo: "[]",
+            bar: "product",
+        },
+    ];
+    Partner._views = {
+        form: `
+                <form>
+                    <field name="bar"/>
+                    <field name="foo" widget="domain" options="{'model': 'bar', 'count_limit': 10}"/>
+                </form>`,
+        search: `<search />`,
+    };
+
+    onRpc("search_count", ({ kwargs }) => {
+        expect.step(kwargs.limit);
+        return 99999;
+    });
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        name: "test",
+        res_id: 1,
+        res_model: "partner",
+        type: "ir.actions.act_window",
+        views: [[false, "form"]],
+    });
+    expect.verifySteps([11]);
+    expect(".o_domain_show_selection_button").toHaveText("10+ record(s)");
+});
+
 test("domain field: edit domain with dynamic content", async function () {
     expect.assertions(3);
 
