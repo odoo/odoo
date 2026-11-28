@@ -45,6 +45,28 @@ class TestLeadConvertToTicket(crm_common.TestCrmCommon):
         self.assertEqual(action['context']['default_partner_id'], new_partner.id)
 
     @users('user_sales_salesman')
+    def test_lead_convert_to_quotation_keep_void_company(self):
+        """ Assigning a customer through the wizard must not refill a voided company. """
+        lead = self.lead_1.with_user(self.env.user)
+        self.assertEqual(lead.company_id, self.env.company, 'Company should be computed from the salesman')
+
+        for action, partner in [('create', self.env['res.partner']), ('exist', self.contact_2)]:
+            with self.subTest(action=action):
+                lead.write({'company_id': False, 'partner_id': False})
+                convert = self.env['crm.quotation.partner'].with_context({
+                    'active_model': 'crm.lead',
+                    'active_id': lead.id,
+                }).create({'action': action, 'partner_id': partner.id})
+                convert.action_apply()
+
+                self.assertTrue(lead.partner_id)
+                self.assertFalse(lead.company_id, 'Empty company should not be refilled by customer assignment')
+
+        # outside the wizard, changing the customer still recomputes the company as before
+        lead.partner_id = False
+        self.assertEqual(lead.company_id, self.env.company)
+
+    @users('user_sales_salesman')
     def test_lead_convert_to_quotation_exist(self):
         """ Test taking only existing customer while converting """
         lead = self.lead_1.with_user(self.env.user)
