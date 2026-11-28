@@ -1,6 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 import { queryAll } from "@odoo/hoot-dom";
-import { contains, defineModels, fields, models, mountView } from "@web/../tests/web_test_helpers";
+import { contains, defineModels, fields, models, mountView, onRpc } from "@web/../tests/web_test_helpers";
 
 class Partner extends models.Model {
     _name = "res.partner";
@@ -74,6 +74,28 @@ test("closes when color selected or outside click", async () => {
     await contains(".o_field_color_picker button").click();
     await contains(".o_field_widget[name='name'] input").click();
     expect(".o_field_color_picker button").toHaveCount(1);
+});
+
+test("Saves when color selected", async () => {
+    onRpc("web_save", ({ args }) => {
+        expect.step("web_save");
+        expect(args).toEqual([[1], { int_field: 3 }]);
+    });
+
+    await mountView({
+        type: "list",
+        resModel: "res.partner",
+        arch: `
+        <list>
+            <field name="int_field" widget="color_picker"/>
+            <field name="display_name" />
+        </list>`,
+    });
+
+    // Open color picker dropdown on the first row and select color index 3
+    await contains(".o_field_color_picker button").click();
+    await contains(".o_colorlist .o_colorlist_item_color_3").click();
+    expect.verifySteps(["web_save"]);
 });
 
 test("color picker on list view", async () => {
