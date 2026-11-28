@@ -34,6 +34,7 @@ class TestPartner(TransactionCase):
             'partner_id': cls.partner.id,
         })
         cls.employees = cls.env['hr.employee'].create([{
+            'tz': 'UTC',
             'user_id': user.id,
         } for user in cls.users])
         cls.work_entry_type = cls.env['hr.work.entry.type'].create({
@@ -73,6 +74,7 @@ class TestPartner(TransactionCase):
                     "active": True,
                     "company_id": self.env.company.id,
                     "id": self.employees[0].id,
+                    "leave_back_datetime": "2024-06-07 08:00:00",
                     "leave_date_to": "2024-06-07",
                     "user_id": self.users[0].id,
                     "work_location_type": False,
@@ -81,6 +83,7 @@ class TestPartner(TransactionCase):
                     "active": True,
                     "company_id": self.env.company.id,
                     "id": self.employees[1].id,
+                    "leave_back_datetime": "2024-06-06 08:00:00",
                     "leave_date_to": "2024-06-06",
                     "user_id": self.users[1].id,
                     "work_location_type": False,
@@ -100,6 +103,7 @@ class TestPartner(TransactionCase):
                     "active": True,
                     "company_id": self.env.company.id,
                     "id": self.employees[0].id,
+                    "leave_back_datetime": False,
                     "leave_date_to": False,
                     "user_id": self.users[0].id,
                     "work_location_type": False,
@@ -108,6 +112,7 @@ class TestPartner(TransactionCase):
                     "active": True,
                     "company_id": self.env.company.id,
                     "id": self.employees[1].id,
+                    "leave_back_datetime": "2024-06-06 08:00:00",
                     "leave_date_to": "2024-06-06",
                     "user_id": self.users[1].id,
                     "work_location_type": False,
@@ -131,6 +136,7 @@ class TestPartner(TransactionCase):
                     "active": True,
                     "company_id": self.env.company.id,
                     "id": self.employees[0].id,
+                    "leave_back_datetime": "2024-06-07 08:00:00",
                     "leave_date_to": "2024-06-07",
                     "user_id": self.users[0].id,
                     "work_location_type": False,
@@ -139,6 +145,7 @@ class TestPartner(TransactionCase):
                     "active": True,
                     "company_id": self.env.company.id,
                     "id": self.employees[1].id,
+                    "leave_back_datetime": "2024-06-06 08:00:00",
                     "leave_date_to": "2024-06-06",
                     "user_id": self.users[1].id,
                     "work_location_type": False,

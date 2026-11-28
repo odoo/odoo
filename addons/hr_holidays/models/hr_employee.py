@@ -30,6 +30,7 @@ class HrEmployee(models.Model):
         ], groups="hr.group_hr_user")
     leave_date_from = fields.Date('From Date', compute='_compute_leave_status', groups="hr.group_hr_user")
     leave_date_to = fields.Date('To Date', compute='_compute_leave_status')
+    leave_back_datetime = fields.Datetime('Back At', compute='_compute_leave_status')
     allocation_count = fields.Float('Total number of days allocated.', compute='_compute_allocation_count',
                                     groups="hr.group_hr_user")
     allocations_count = fields.Integer('Total number of allocations', compute="_compute_allocation_count",
@@ -143,9 +144,9 @@ class HrEmployee(models.Model):
             for employee_id, interval in work_intervals.items():
                 if employee_id not in min_dts or not interval._items:
                     continue
-                for start, _stop, _meta in interval._items:
-                    d1 = start.astimezone(UTC).replace(tzinfo=None)
-                    if min_dts[employee_id] < d1:
+                for start, stop, _meta in interval._items:
+                    if min_dts[employee_id] < stop.astimezone(UTC).replace(tzinfo=None):
+                        d1 = max(start.astimezone(UTC).replace(tzinfo=None), min_dts[employee_id])
                         d2 = result.get(employee_id)
                         if not d2 or d1 < d2:
                             result[employee_id] = d1
@@ -211,8 +212,9 @@ class HrEmployee(models.Model):
         """Compute the time off status of the employees now.
 
         ``leave_date_from``, ``current_leave_state`` and ``is_absent`` come from the validated
-        time off in progress; ``leave_date_to`` is the day the employee is back: the first
-        working day after the end of that time off or of the public holiday in progress.
+        time off in progress; ``leave_back_datetime`` is when the employee is back: the start of
+        the first work interval after the end of that time off or of the public holiday in
+        progress, and ``leave_date_to`` its day.
         """
         # Used SUPERUSER_ID to forcefully get status of other user's leave, to bypass record rule
         now = fields.Datetime.now()
@@ -264,11 +266,15 @@ class HrEmployee(models.Model):
         })
 
         employees_with_leave_end = self.browse(leave_end_by_employee_id)
-        (employees_not_on_leave - employees_with_leave_end).leave_date_to = False
+        (employees_not_on_leave - employees_with_leave_end).update({
+            'leave_back_datetime': False,
+            'leave_date_to': False,
+        })
 
         back_on_by_employee_id = employees_with_leave_end._get_first_working_interval_batch(leave_end_by_employee_id)
         for employee in employees_with_leave_end:
             back_on = back_on_by_employee_id.get(employee.id, leave_end_by_employee_id[employee.id])
+            employee.leave_back_datetime = back_on
             employee.leave_date_to = back_on.date()
             emp_holidays = holidays_by_employee_id.get(employee.id)
             if not emp_holidays:  # the employee is off because of a public holiday
@@ -947,10 +953,12 @@ class HrEmployee(models.Model):
 
     def _store_avatar_card_fields(self, res: Store.FieldList):
         super()._store_avatar_card_fields(res)
+        res.attr("leave_back_datetime", version=False)
         res.attr("leave_date_to", version=False)
 
     def _store_im_status_fields(self, res: Store.FieldList):
         super()._store_im_status_fields(res)
+        res.attr("leave_back_datetime", version=False)
         res.attr("leave_date_to", version=False)
 
     def _get_hours_for_date(self, target_date, day_period=None, count_non_working_days=False):

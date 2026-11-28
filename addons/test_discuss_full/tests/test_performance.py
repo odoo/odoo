@@ -2954,6 +2954,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             "active": employee.active,
             "company_id": employee.company_id.id,
             "id": employee.id,
+            "leave_back_datetime": False,
             "leave_date_to": False,
             "user_id": employee.user_id.id,
             "work_location_type": False,
