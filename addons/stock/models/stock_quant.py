@@ -921,6 +921,9 @@ class StockQuant(models.Model):
             res = self.search(domain, order=order)
         if removal_strategy == "closest":
             res = res.sorted(lambda q: (q.location_id.complete_name, -q.id))
+        elif removal_strategy == 'least_packages':
+            # Consume the selected packages before using loose units to fill the remainder.
+            res = res.sorted(lambda q: not q.package_id)
         return res.sorted(lambda q: not q.lot_id)
 
     def _get_available_quantity(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False, allow_negative=False):

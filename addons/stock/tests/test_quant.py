@@ -1712,6 +1712,52 @@ class TestStockQuantRemovalStrategy(TestStockCommon):
             [{'quantity_product_uom': 5}] * 6
         )
 
+    def test_least_package_removal_strategy_packages_before_loose_units(self):
+        """Reserve complete packages before loose units, regardless of receipt dates."""
+        self.stock_location.sudo().removal_strategy_id = self.product.categ_id.removal_strategy_id
+        self.product.categ_id.removal_strategy_id = False
+        packages = self.env['stock.package'].create([{} for _ in range(10)])
+        Quant = self.env['stock.quant']
+        for package in packages:
+            Quant._update_available_quantity(self.product, self.shelf_1, 6, package_id=package)
+        Quant._update_available_quantity(self.product, self.shelf_2, 8)
+        quants = Quant.search([('product_id', '=', self.product.id)])
+        packed_quants = quants.filtered('package_id')
+        loose_quants = quants - packed_quants
+
+        # Test both receipt orders to ensure dates do not change the package/loose-unit allocation.
+        for loose_date, package_date in (
+            ('2026-01-01', '2026-01-02'),
+            ('2026-01-02', '2026-01-01'),
+        ):
+            packed_quants.sudo().in_date = package_date
+            loose_quants.sudo().in_date = loose_date
+            for quantity, package_count, loose_quantity in (
+                (4, 0, 4),
+                (8, 1, 2),
+                (10, 1, 4),
+                (12, 2, 0),
+                (14, 2, 2),
+            ):
+                with self.subTest(quantity=quantity, loose_date=loose_date), closing(self.cr.savepoint()):
+                    move = self.env['stock.move'].create({
+                        'product_id': self.product.id,
+                        'uom_id': self.product.uom_id.id,
+                        'location_id': self.stock_location.id,
+                        'location_dest_id': self.customer_location.id,
+                        'product_uom_qty': quantity,
+                    })
+                    move._action_confirm()
+                    move._action_assign()
+                    packed_lines = move.move_line_ids.filtered('package_id')
+                    loose_lines = move.move_line_ids - packed_lines
+                    self.assertEqual(move.state, 'assigned')
+                    self.assertEqual(len(packed_lines), package_count)
+                    self.assertEqual(packed_lines.mapped('quantity_product_uom'), [6] * package_count)
+                    self.assertEqual(sum(loose_lines.mapped('quantity_product_uom')), loose_quantity)
+                    self.assertEqual(packed_lines.location_id, self.shelf_1 if package_count else self.env['stock.location'])
+                    self.assertEqual(loose_lines.location_id, self.shelf_2 if loose_quantity else self.env['stock.location'])
+
     def test_least_package_removal_strategy_not_possible(self):
         """
         Tests the least package removal strategy in the case where an exact matching
@@ -1770,9 +1816,9 @@ class TestStockQuantRemovalStrategy(TestStockCommon):
         self.assertEqual(len(move.move_line_ids), 8)
         self.assertRecordValues(
             move.move_line_ids,
-            [{'quantity_product_uom': 2}] +
             [{'quantity_product_uom': 10}] * 5 +
-            [{'quantity_product_uom': 5}] * 2
+            [{'quantity_product_uom': 5}] * 2 +
+            [{'quantity_product_uom': 2}]
         )
 
     def test_clean_quant_after_package_move(self):
