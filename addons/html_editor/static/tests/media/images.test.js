@@ -1,6 +1,7 @@
 import { EDITABLE_MEDIA_CLASS } from "@html_editor/utils/dom_info";
 import { describe, expect, test } from "@odoo/hoot";
 import { click, dblclick, press, waitFor, waitForNone } from "@odoo/hoot-dom";
+<<<<<<< 73ab2ca1845c9cd40a1c5cf0a3f8b793b97c179b:addons/html_editor/static/tests/media/images.test.js
 import { animationFrame, tick } from "@odoo/hoot-mock";
 import { makeMockEnv, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { cleanHints } from "../_helpers/dispatch";
@@ -8,6 +9,34 @@ import { base64Img, setupEditor, testEditor } from "../_helpers/editor";
 import { getContent } from "../_helpers/selection";
 import { expectElementCount } from "../_helpers/ui_expectations";
 import { deleteBackward, deleteForward, insertText } from "../_helpers/user_actions";
+||||||| 2096fbb190da9e205ec0d2c80b366cba360ce1d3:addons/html_editor/static/tests/media.test.js
+import { animationFrame, tick } from "@odoo/hoot-mock";
+import {
+    makeMockEnv,
+    mountWithCleanup,
+    onRpc,
+    patchWithCleanup,
+} from "@web/../tests/web_test_helpers";
+import { cleanHints } from "./_helpers/dispatch";
+import { base64Img, setupEditor, testEditor } from "./_helpers/editor";
+import { getContent } from "./_helpers/selection";
+import { expectElementCount } from "./_helpers/ui_expectations";
+import { deleteBackward, deleteForward, insertText } from "./_helpers/user_actions";
+=======
+import { animationFrame, Deferred, tick } from "@odoo/hoot-mock";
+import {
+    contains,
+    makeMockEnv,
+    mountWithCleanup,
+    onRpc,
+    patchWithCleanup,
+} from "@web/../tests/web_test_helpers";
+import { cleanHints } from "./_helpers/dispatch";
+import { base64Img, setupEditor, testEditor } from "./_helpers/editor";
+import { getContent } from "./_helpers/selection";
+import { expectElementCount } from "./_helpers/ui_expectations";
+import { deleteBackward, deleteForward, insertText } from "./_helpers/user_actions";
+>>>>>>> 336a87611920004d43b573b5f10bc32047313897:addons/html_editor/static/tests/media.test.js
 import { delay } from "@web/core/utils/concurrency";
 import { ImageCrop } from "@html_editor/main/media/image_crop";
 import { ImageSelector } from "@html_editor/main/media/media_dialog/image_selector";
@@ -439,4 +468,31 @@ test("documents tab domain excludes uploaded fonts and their css", async () => {
     await animationFrame();
     await click(".nav-link:contains('Documents')");
     expect.verifySteps(["fonts excluded from attachments domain"]);
+});
+
+test("should show a loader and disable the button while uploading from URL", async () => {
+    onRpc("ir.attachment", "search_read", () => []);
+    const uploadDeferred = new Deferred();
+    patchWithCleanup(ImageSelector.prototype, {
+        async validateUrl() {
+            return { isValidUrl: true, isValidFileFormat: true };
+        },
+        uploadUrl: () => uploadDeferred,
+    });
+    const env = await makeMockEnv();
+    const { editor } = await setupEditor("<p>a[]bc</p>", { env });
+    await insertText(editor, "/image");
+    await waitFor(".o-we-powerbox");
+    await press("Enter");
+    await contains(".o_upload_media_url_button").click();
+    await contains(".o_we_url_input").edit("https://www.odoo.com/image.png", { confirm: false });
+    await waitFor(".o_we_url_success");
+
+    await click(".o_upload_media_url_button");
+    await animationFrame();
+    expect(".o_upload_media_url_button").not.toBeEnabled();
+    expect(".o_we_url_loading").toHaveCount(1);
+
+    uploadDeferred.resolve();
+    await waitForNone(".o_we_url_loading");
 });

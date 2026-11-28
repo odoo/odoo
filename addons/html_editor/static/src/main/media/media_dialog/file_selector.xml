@@ -21,7 +21,7 @@
                     <t t-out="this.props.addText"/>
             </button>
             <div class="d-flex align-items-center">
-                <span t-if="this.state.urlInput and this.state.isValidatingUrl" class="o_we_url_loading mx-2 fa fa-lg fa-circle-o-notch fa-spin" title="Loading..."/>
+                <span t-if="this.state.urlInput and (this.state.isValidatingUrl or this.state.isUploadingUrl)" class="o_we_url_loading mx-2 fa fa-lg fa-circle-o-notch fa-spin" title="Loading..."/>
                 <span t-elif="this.state.urlInput and this.state.isValidUrl and this.state.isValidFileFormat" class="o_we_url_success text-success mx-2 fa fa-lg fa-check" title="The URL seems valid."/>
                 <span t-elif="this.state.urlInput and !this.state.isValidUrl" class="o_we_url_error text-danger mx-2 oi oi-large oi-close" title="The URL does not seem to work."/>
                 <span t-elif="this.props.urlWarningTitle and this.state.urlInput and this.state.isValidUrl and !this.state.isValidFileFormat" class="o_we_url_warning text-warning mx-2 fa fa-lg fa-warning" t-att-title="this.props.urlWarningTitle"/>
