@@ -2,6 +2,7 @@
 
 from . import test_margin
 from . import test_sale_mrp_flow
+from . import test_sale_mrp_lot_packaging
 from . import test_sale_mrp_kit_bom
 from . import test_sale_mrp_lead_time
 from . import test_sale_mrp_procurement

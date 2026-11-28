@@ -100,7 +100,7 @@ class StockRule(models.Model):
                 while procurement.uom_id.compare(procurement_qty, 0) > 0:
                     new_productions_values_by_company[procurement.company_id.id]['values'].append({
                         **vals,
-                        'product_qty': procurement.uom_id._compute_quantity(batch_size, bom.uom_id) if bom else procurement_qty,
+                        'product_qty': bom._get_whole_units(procurement.uom_id._compute_quantity(batch_size, bom.uom_id)) if bom else procurement_qty,
                     })
                     new_productions_values_by_company[procurement.company_id.id]['procurements'].append(procurement)
                     procurement_qty -= batch_size
@@ -108,7 +108,7 @@ class StockRule(models.Model):
                 procurement_product_uom_qty = procurement.uom_id._compute_quantity(procurement.product_qty, procurement.product_id.uom_id)
                 self.env['change.production.qty'].sudo().with_context(skip_activity=True).create({
                     'mo_id': mo.id,
-                    'product_qty': mo.product_id.uom_id._compute_quantity((mo.product_uom_qty + procurement_product_uom_qty), mo.uom_id),
+                    'product_qty': mo.bom_id._get_whole_units(mo.product_id.uom_id._compute_quantity((mo.product_uom_qty + procurement_product_uom_qty), mo.uom_id)),
                 }).change_prod_qty()
                 if procurement.values.get('move_dest_ids'):
                     mo.move_finished_ids.filtered(
@@ -181,7 +181,7 @@ class StockRule(models.Model):
             'product_id': product_id.id,
             'product_description_variants': values.get('product_description_variants'),
             'never_product_template_attribute_value_ids': values.get('never_product_template_attribute_value_ids'),
-            'product_qty': product_uom._compute_quantity(product_qty, bom.uom_id) if bom else product_qty,
+            'product_qty': bom._get_whole_units(product_uom._compute_quantity(product_qty, bom.uom_id)) if bom else product_qty,
             'uom_id': bom.uom_id.id if bom else product_uom.id,
             'location_src_id': picking_type.default_location_src_id.id,
             'location_dest_id': picking_type.default_location_dest_id.id or location_dest_id.id,
