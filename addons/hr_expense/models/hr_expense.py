@@ -818,6 +818,9 @@ class HrExpense(models.Model):
         if any(field in vals for field in {'is_editable', 'can_approve', 'can_refuse'}):
             raise UserError(_("You cannot edit the security fields of an expense manually"))
 
+        if not self.env.su and 'account_move_id' in vals:
+            raise AccessError(_("You cannot edit the security fields of an expense manually"))
+
         if any(field in vals for field in {'tax_ids', 'analytic_distribution', 'account_id', 'manager_id'}):
             if any((not expense.is_editable and not self.env.su) for expense in self):
                 raise UserError(_(
@@ -842,6 +845,8 @@ class HrExpense(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         expenses = super().create(vals_list)
+        if not self.env.su and expenses.filtered('account_move_id'):
+            raise AccessError(_("You cannot edit the security fields of an expense manually"))
         expenses.update_activities_and_mails()
         return expenses
 

@@ -48,6 +48,8 @@ class HrExpensePostWizard(models.TransientModel):
         if not self.env['account.move'].has_access('create'):
             raise UserError(_("You don't have the rights to create accounting entries."))
         expenses._check_can_create_move()
+        if 'company_account' in expenses.mapped('payment_mode'):
+            raise UserError(_("Only expense paid by the employee can be posted with the wizard"))
         expense_receipt_vals_list = [
             {
                 **new_receipt_vals,
