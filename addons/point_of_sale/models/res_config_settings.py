@@ -40,6 +40,7 @@ class ResConfigSettings(models.TransientModel):
     module_pos_dpopay = fields.Boolean(string="DPO Pay Payment Terminal", help="The transactions are processed by DPO Pay. Set your DPO Pay credentials on the related payment method.")
     module_pos_sumup = fields.Boolean(string="Sumup Payment Terminal", help="The transactions are processed by SumUp. Set your SumUp credentials on the related payment method.")
     module_pos_pricer = fields.Boolean(string="Pricer electronic price tags", help="Display the price of your products through electronic price tags")
+    module_pos_printer = fields.Boolean(string="PoS Label Printers")
     barcode_nomenclature_id = fields.Many2one('barcode.nomenclature', related='company_id.nomenclature_id', readonly=False)
     use_kiosk_mode = fields.Boolean(string="Is Kiosk Mode", default=False)
     pos_customer_display_bg_img = fields.Image(related='pos_config_id.customer_display_bg_img', readonly=False)

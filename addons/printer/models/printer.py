@@ -9,8 +9,8 @@ class Printer(models.Model):
     ip_address = fields.Char(string="IP Address")
     report_ids = fields.Many2many("ir.actions.report", string="Linked Reports")
     type = fields.Selection([
-            ("zpl", "ZPL"),
-            ('epos', 'ePOS'),
+            ("zpl", "Zebra"),
+            ('epos', 'EPSON'),
         ],
         default="zpl", required=True, string="Type"
     )

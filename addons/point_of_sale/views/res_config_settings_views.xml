@@ -522,6 +522,17 @@
                                             context="{'search_default_receipt': 1, 'default_use_type': 'receipt'}"/>
                                     </div>
                                 </setting>
+                                <setting id="pos_label_printers" string="Label Printers" help="Print product labels on Zebra and EPSON printers">
+                                    <field name="module_pos_printer"/>
+                                    <div class="content-group" invisible="not module_pos_printer">
+                                        <div>
+                                            <button name="action_manage_printers" icon="east" type="object" string="Manage Printers" class="btn-link"/>
+                                        </div>
+                                        <div>
+                                            <button name="action_reset_linked_printers" icon="east" type="object" string="Reset Linked Printers" class="btn-link"/>
+                                        </div>
+                                    </div>
+                                </setting>
                                 <setting id="welcome_message" string="Customer Message" help="Set the message that will be displayed on the PoS customer display" >
                                     <field name="pos_welcome_message" class="w-100" placeholder="Welcome"/>
                                 </setting>

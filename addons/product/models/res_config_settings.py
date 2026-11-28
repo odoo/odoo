@@ -35,6 +35,14 @@ class ResConfigSettings(models.TransientModel):
                                  "Every active pricelist will be archived.")
                 }}
 
+    def action_manage_printers(self):
+        if action := self.env.ref('printer.manage_printers_action', raise_if_not_found=False):
+            return action._get_action_dict()
+
+    def action_reset_linked_printers(self):
+        if action := self.env.ref('printer.action_reset_linked_printers', raise_if_not_found=False):
+            return action._get_action_dict()
+
     def set_values(self):
         had_group_pl = self.default_get(['group_product_pricelist'])['group_product_pricelist']
         super().set_values()
