@@ -1,0 +1,385 @@
+// Enterprise account_reports comparison filter dropdown.
+.account_report_filter.comparison,
+.o_fs_report_filter_comparison {
+    .dropdown-item.period,
+    .dropdown-item.interval {
+        display: flex;
+        justify-content: space-between;
+
+        &.order:hover {
+            background-color: unset;
+            color: unset;
+            cursor: default;
+        }
+
+        input[type="number"] {
+            display: inline;
+            width: 86px;
+            margin: 0 8px;
+            border-top: none;
+            border-left: none;
+            border-right: none;
+            border-bottom: 1px solid var(--o-input-border-color);
+            text-align: center;
+            background-color: inherit;
+        }
+    }
+
+    .dropdown-item.date {
+        display: flex;
+        justify-content: space-between;
+
+        .o_datetime_input {
+            display: inline;
+            width: auto;
+            min-width: 12ch;
+            margin: 0 8px;
+            padding: 0 4px;
+            text-align: center;
+            field-sizing: content;
+        }
+    }
+}
+
+// Enterprise account_reports filter_date dropdown (single / as-of mode).
+.account_report_filter.date,
+.o_fs_report_filter_date {
+    .date_filter:hover .btn_previous_date,
+    .date_filter:hover .btn_next_date:not(:disabled) {
+        color: $o-gray-600;
+    }
+    .filter_name {
+        min-width: 20ch;
+        padding: 1px 0;
+        border: var(--border-width) solid transparent;
+        border-width: 0 0 var(--border-width) 0;
+        margin-right: 16px;
+    }
+    .btn_previous_date,
+    .btn_next_date {
+        background: inherit;
+        border: var(--border-width) solid transparent;
+        border-width: 0 0 var(--border-width) 0;
+        color: $o-gray-300;
+        padding: 1px 0;
+        text-align: center;
+        width: 20px;
+    }
+    .date_filter .o_input {
+        min-width: 20ch;
+        padding: 0 4px;
+        margin: 0 8px;
+        border-color: var(--o-input-border-color);
+        text-align: center;
+        &[readonly] {
+            cursor: pointer;
+        }
+        &[readonly]:not(:focus) {
+            border-color: transparent;
+        }
+        &:not([readonly]):focus {
+            --o-input-border-color: #{$o-action};
+        }
+    }
+    .dropdown-item.date {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        overflow: visible;
+
+        // Enterprise: flex-grow-1 centers the DateTimeInput in remaining space
+        // (keeps it off the dropdown’s right edge, same as month/quarter arrows).
+        > .d-flex.flex-grow-1 {
+            overflow: visible;
+            min-width: 12ch;
+        }
+
+        // DateTimeInput uses field-sizing:content; default flex-shrink clips MM/DD/YYYY.
+        input.o_datetime_input.o_input {
+            flex: 0 0 auto;
+            display: inline;
+            width: auto;
+            min-width: 12ch;
+            max-width: none;
+            margin: 0 8px;
+            padding: 0 4px;
+            text-align: center;
+            overflow: visible;
+            field-sizing: content;
+        }
+    }
+}
+
+.o_fs_report {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    // Vertical scroll lives here so thead.sticky is not trapped by overflow-x.
+    .o_fs_report_content {
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow: auto;
+    }
+
+    // Enterprise scroll container is full-width; table itself is centered via mx-auto.
+    // Do not set overflow-x here — it breaks position:sticky for vertical page scroll.
+    .o_fs_report_table_container,
+    .o_fs_report_scroll_container {
+        margin-inline: 0 !important;
+        padding-bottom: 40px;
+    }
+
+    // Mirror Enterprise account_reports table chrome + line/figure styling.
+    .o_fs_report_table {
+        background-color: $o-view-background-color;
+        border-collapse: separate;
+        border-spacing: 0;
+        font-size: 0.8rem;
+        margin: 24px auto;
+        padding: 24px;
+        width: auto !important;
+        min-width: 800px;
+        border: 1px solid $o-gray-300;
+        border-radius: 0.25rem;
+
+        --row-muted-color: #{$o-gray-300};
+        --row-action-color: #{$o-gray-300};
+        --row-action-opacity: 0;
+
+        td,
+        th {
+            padding: 0.25rem 0.75rem !important;
+        }
+
+        > thead {
+            > tr > th {
+                color: var(--AccountReport-muted-data-color, #{$o-gray-300});
+                white-space: nowrap;
+                vertical-align: middle;
+                background-color: $o-view-background-color;
+            }
+
+            .companies_header {
+                display: inline-block;
+                color: var(--AccountReport-muted-data-color, #{$o-gray-300});
+            }
+
+            .column_header {
+                text-align: end;
+            }
+        }
+
+        // Enterprise sticky header (companies left + Balance right).
+        thead.sticky {
+            background-color: $o-view-background-color;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+        }
+
+        // Enterprise comparison striping: odd balance columns (prior period) get muted bg.
+        &.striped {
+            > thead > tr:nth-child(n+3) > th:nth-child(2n+3) {
+                background: $o-gray-100;
+            }
+
+            > tbody > tr {
+                > td.line_cell_odd {
+                    background: $o-gray-100;
+                }
+
+                &.line_level_0 > td.line_cell_odd {
+                    background: $o-gray-300;
+                }
+            }
+        }
+
+        .o_fs_report_name,
+        .line_name {
+            text-align: start;
+            min-width: 320px;
+            white-space: nowrap;
+            vertical-align: middle;
+
+            &.unfoldable:hover {
+                cursor: pointer;
+            }
+        }
+
+        .o_fs_report_amount,
+        .numeric {
+            text-align: end;
+            white-space: nowrap;
+            vertical-align: middle;
+            padding-right: calc(20px + 0.75rem) !important;
+        }
+
+        .o_fs_report_debug {
+            width: 20px;
+            padding-left: 0 !important;
+            padding-right: 0.75rem !important;
+            vertical-align: middle;
+        }
+
+        > tbody > tr {
+            height: calc(0.8rem * 1.5 + 0.5rem + 5px);
+
+            > td {
+                border-bottom: 1px solid $o-gray-200;
+
+                &.muted,
+                .muted {
+                    color: var(--row-muted-color);
+                }
+
+                .clickable {
+                    color: $o-enterprise-action-color;
+                    text-decoration: none;
+                }
+
+                // Enterprise: auditable amount links inherit until row hover.
+                &.line_cell > a.cursor-pointer {
+                    color: inherit;
+                    text-decoration: none;
+                }
+            }
+
+            &.unfolded {
+                font-weight: bold;
+
+                > td {
+                    border-bottom: 1px solid $o-gray-300;
+                }
+            }
+
+            &.empty > td {
+                padding: 0 !important;
+                border: 0 !important;
+            }
+
+            &:hover {
+                --row-muted-color: #{$o-gray-800};
+                --row-action-color: #{$o-enterprise-action-color};
+
+                > td.auditable {
+                    color: $o-enterprise-action-color !important;
+                }
+            }
+        }
+
+        .line_level_0 {
+            color: $o-gray-700;
+            font-weight: bold;
+
+            > td {
+                border-bottom: 0 !important;
+                background-color: $o-gray-300;
+            }
+
+            .muted {
+                color: $o-gray-400 !important;
+            }
+
+            .btn_foldable,
+            .btn_debug,
+            .btn_dropdown {
+                color: $o-gray-400;
+            }
+        }
+
+        .line_level_1 > td:nth-child(1) {
+            padding-left: calc(20px + 0.75rem) !important;
+
+            &.unfoldable {
+                padding-left: 0.75rem !important;
+            }
+        }
+
+        @for $i from 2 through 16 {
+            .line_level_#{$i} {
+                $indentation: ($i - 1) * 8px;
+
+                > td:nth-child(1) {
+                    color: $o-gray-700;
+                    padding-left: calc(#{$indentation} + 20px + 0.75rem) !important;
+
+                    &.unfoldable {
+                        padding-left: calc(#{$indentation} + 0.75rem) !important;
+                    }
+                }
+            }
+        }
+    }
+
+    .btn_foldable,
+    .btn_debug,
+    .btn_dropdown {
+        border: none;
+        color: $o-gray-300;
+        font-size: inherit;
+        font-weight: normal;
+        padding: 0 !important;
+        text-align: center;
+        width: 20px;
+        white-space: nowrap;
+        vertical-align: middle;
+        background: transparent;
+
+        &:hover {
+            color: $o-enterprise-action-color !important;
+            cursor: pointer;
+        }
+    }
+
+    .btn_foldable,
+    .btn_dropdown {
+        color: var(--row-action-color);
+    }
+
+    .btn_foldable {
+        padding: 0;
+    }
+}
+
+.o_fs_report_popover_debug.account_report_popover_debug {
+    width: 350px;
+    overflow-x: auto;
+
+    > .line_debug {
+        display: flex;
+        flex-direction: row;
+        padding: 0.25rem 1rem;
+
+        &:first-child {
+            padding-top: 1rem;
+        }
+
+        &:last-child {
+            padding-bottom: 1rem;
+        }
+
+        > span:first-child {
+            color: $o-gray-600;
+            max-width: 25%;
+            min-width: 25%;
+            white-space: nowrap;
+            margin-right: 10px;
+        }
+
+        > span:last-child,
+        > code {
+            color: $o-gray-800;
+            max-width: 75%;
+            min-width: 75%;
+        }
+    }
+
+    > .totals_separator {
+        margin: 0.25rem 1rem;
+    }
+
+    > .engine_separator {
+        margin: 1rem;
+    }
+}

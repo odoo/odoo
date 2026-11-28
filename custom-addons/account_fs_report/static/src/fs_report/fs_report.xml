@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="account_fs_report.FsReport">
+        <div class="o_action o_fs_report" t-ref="this.rootRef">
+            <ControlPanel>
+                <!-- Enterprise: Print (primary) always visible -->
+                <t t-set-slot="control-panel-buttons">
+                    <button class="btn btn-primary text-nowrap" t-on-click="this.onExportPdf">Print</button>
+                </t>
+                <!-- Enterprise cog: XLSX and other non-always_show buttons -->
+                <t t-set-slot="control-panel-additional-actions">
+                    <Dropdown>
+                        <button class="btn p-0 ms-1 border-0">
+                            <i class="oi oi-fw oi-filled" data-icon="settings"/>
+                        </button>
+                        <t t-set-slot="content">
+                            <DropdownItem onSelected="() => this.onExportXlsx()">XLSX</DropdownItem>
+                        </t>
+                    </Dropdown>
+                </t>
+                <t t-set-slot="control-panel-actions">
+                    <div class="d-flex gap-1 flex-wrap">
+                        <!-- Date: Enterprise AccountReportFilterDate (single BS / range P&L) -->
+                        <FsReportFilterDate
+                            t-key="this.reportType + '-' + this.state.fiscalStartMonth + '-' + this.state.fiscalStartDay"
+                            dateFrom="this.state.dateFrom"
+                            dateTo="this.state.asOf"
+                            periodType="this.state.periodType"
+                            rangeMode="this.isRangeMode"
+                            fiscalStartDay="this.state.fiscalStartDay"
+                            fiscalStartMonth="this.state.fiscalStartMonth"
+                            onPeriodSelected.bind="this.onDatePeriodSelected"
+                        />
+                        <!-- Comparison (Enterprise AccountReportFilterComparison; hidden on Cash Flow Direct) -->
+                        <FsReportFilterComparison
+                            t-if="this.showComparisonFilter"
+                            compare="this.state.compare"
+                            numberPeriod="this.state.numberPeriod"
+                            periodOrder="this.state.periodOrder"
+                            growthDisplay="this.state.growthDisplay"
+                            customDate="this.state.customDate"
+                            customDateFrom="this.state.customDateFrom"
+                            asOf="this.state.asOf"
+                            dateFrom="this.state.dateFrom"
+                            rangeMode="this.isRangeMode"
+                            baseReportLineId="this.state.baseReportLineId"
+                            reportId="this.reportId"
+                            onComparisonChange.bind="this.onComparisonChange"
+                        />
+                        <!-- Extra options: Enterprise AccountReportFilterExtraOptions -->
+                        <FsReportFilterExtraOptions
+                            allEntries="this.state.targetMove === 'all'"
+                            unfoldAll="this.state.unfoldAll"
+                            hide0Lines="this.state.hide0Lines"
+                            horizontalSplit="this.state.horizontalSplit"
+                            showHorizontalSplit="this.showHorizontalSplit"
+                            onToggleDraftEntries.bind="this.onToggleDraftEntries"
+                            onToggleUnfoldAll.bind="this.onToggleUnfoldAll"
+                            onToggleHide0Lines.bind="this.onToggleHide0Lines"
+                            onToggleHorizontalSplit.bind="this.onToggleHorizontalSplit"
+                        />
+                        <!-- Rounding unit: Enterprise AccountReportFilterRoundingUnit -->
+                        <Dropdown>
+                            <button class="btn btn-secondary">
+                                <t t-out="this.roundingLabel"/>
+                            </button>
+                            <t t-set-slot="content">
+                                <t t-foreach="this.roundingUnits" t-as="unit" t-key="unit">
+                                    <DropdownItem
+                                        class="{ 'selected': this.state.roundingUnit === unit }"
+                                        onSelected="() => this.onSetRoundingUnit(unit)"
+                                    >
+                                        <t t-out="this.roundingUnitName(unit)"/>
+                                    </DropdownItem>
+                                </t>
+                            </t>
+                        </Dropdown>
+                    </div>
+                </t>
+            </ControlPanel>
+            <div class="o_content o_fs_report_content">
+                <div t-if="this.state.hasUnposted" id="warnings" class="warnings d-print-none">
+                    <div class="alert alert-info alert-dismissible fade show text-center" role="alert">
+                        There are
+                        <a type="button" href="#" t-on-click.prevent="this.onOpenUnpostedMoves">unposted Journal Entries</a>
+                        prior or included in this period.
+                        <button type="button" class="btn-close" aria-label="Close" t-on-click="() => this.state.hasUnposted = false"/>
+                    </div>
+                </div>
+                <div t-if="this.state.loading" class="d-flex justify-content-center p-4">
+                    <span class="fa fa-spin fa-circle-o-notch"/>
+                </div>
+                <div t-else="" class="o_fs_report_table_container o_fs_report_scroll_container">
+                    <div class="d-flex align-items-start o_fs_report_scroll_content">
+                        <t t-foreach="this.splitSides" t-as="splitSide" t-key="splitSide">
+                            <table t-att-class="this.getTableClasses()">
+                                <thead id="table_header" class="sticky">
+                                    <!-- Period labels only when comparing (Enterprise column_headers). -->
+                                    <tr t-if="this.options.columns.length > 1" data-id="column_headers_row">
+                                        <th class="o_fs_report_name"/>
+                                        <th
+                                            t-foreach="this.options.columns"
+                                            t-as="column"
+                                            t-key="column_index"
+                                            class="o_fs_report_amount column_header"
+                                        >
+                                            <t t-out="column.label"/>
+                                        </th>
+                                        <th
+                                            t-if="this.showGrowthColumn"
+                                            class="o_fs_report_amount column_header column_percent_comparison_header"
+                                            t-att-rowspan="2"
+                                        >
+                                            <t t-out="this.growthColumnLabel"/>
+                                        </th>
+                                        <th t-if="this.hasDebugColumn" class="o_fs_report_debug"/>
+                                    </tr>
+                                    <!-- Enterprise: companies (left) + Balance (right) on one sticky row. -->
+                                    <tr data-id="column_subheaders_row">
+                                        <th class="o_fs_report_name">
+                                            <span t-if="this.companiesHeader" class="companies_header" t-out="this.companiesHeader"/>
+                                        </th>
+                                        <th
+                                            t-foreach="this.options.columns"
+                                            t-as="column"
+                                            t-key="column_index"
+                                            class="o_fs_report_amount column_header"
+                                        >
+                                            <t t-out="this.balanceColumnLabel"/>
+                                        </th>
+                                        <th
+                                            t-if="this.showGrowthColumn and this.options.columns.length &lt;= 1"
+                                            class="o_fs_report_amount column_header column_percent_comparison_header"
+                                        >
+                                            <t t-out="this.growthColumnLabel"/>
+                                        </th>
+                                        <th t-if="this.hasDebugColumn" class="o_fs_report_debug"/>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr
+                                        t-foreach="this.displayRowsForSide(splitSide)"
+                                        t-as="row"
+                                        t-key="row.key"
+                                        t-att-class="this.getRowClasses(row)"
+                                    >
+                                        <t t-if="row.kind === 'spacer'">
+                                            <td t-att-colspan="this.tableColspan"/>
+                                        </t>
+                                        <t t-else="">
+                                            <td
+                                                class="o_fs_report_name line_name"
+                                                t-att-class="{
+                                                    unfoldable: row.kind === 'line' and row.unfoldable,
+                                                }"
+                                                t-on-click="() => this.onToggleLine(row)"
+                                            >
+                                                <i
+                                                    t-if="row.kind === 'line' and row.unfoldable"
+                                                    class="oi oi-fw btn_foldable"
+                                                    t-att-data-icon="this.state.accountLines[row.id] ? 'arrow_drop_down' : 'arrow_right'"
+                                                />
+                                                <t t-if="row.kind === 'account'">
+                                                    <span t-out="row.name"/>
+                                                    <!-- Enterprise caret: more_vert → General Ledger -->
+                                                    <Dropdown t-if="row.caret_options === 'account.account'" position="'right-start'">
+                                                        <i class="btn btn_dropdown oi" data-icon="more_vert" tabindex="-1"/>
+                                                        <t t-set-slot="content">
+                                                            <div data-id="caret_options">
+                                                                <DropdownItem onSelected="() => this.caretOpenGeneralLedger(row)">
+                                                                    General Ledger
+                                                                </DropdownItem>
+                                                            </div>
+                                                        </t>
+                                                    </Dropdown>
+                                                </t>
+                                                <a
+                                                    t-elif="row.kind === 'line' and row.action_id"
+                                                    href="#"
+                                                    class="clickable cursor-pointer"
+                                                    t-on-click.stop.prevent="(ev) => this.onLineAction(row, ev)"
+                                                    t-out="row.name"
+                                                />
+                                                <span t-else="" t-out="row.name"/>
+                                            </td>
+                                            <td t-foreach="row.columns" t-as="amount" t-key="amount_index" t-att-class="this.getAmountClasses(row, amount, amount_index)">
+                                                <a
+                                                    t-if="(row.kind === 'line' and row.auditable) or row.kind === 'account'"
+                                                    href="#"
+                                                    class="cursor-pointer"
+                                                    t-on-click.stop.prevent="(ev) => this.onAuditAmount(row, amount_index, ev)"
+                                                    t-out="this.formatAmount(amount)"
+                                                />
+                                                <t t-else="" t-out="this.formatAmount(amount)"/>
+                                            </td>
+                                            <t t-if="this.showGrowthColumn">
+                                                <t t-set="growth" t-value="this.getGrowthComparison(row)"/>
+                                                <td t-att-class="this.getGrowthClasses(growth)">
+                                                    <t t-out="growth and growth.name or ''"/>
+                                                </td>
+                                            </t>
+                                            <td t-if="this.hasDebugColumn" class="text-center o_fs_report_debug">
+                                                <i
+                                                    t-if="this.hasDebugData(row)"
+                                                    class="btn btn_debug oi"
+                                                    data-icon="info"
+                                                    t-on-click.stop="(ev) => this.showDebugPopover(ev, row)"
+                                                />
+                                            </td>
+                                        </t>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

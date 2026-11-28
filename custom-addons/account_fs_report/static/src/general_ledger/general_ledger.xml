@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="account_fs_report.FsGeneralLedger">
+        <div class="o_action o_fs_report o_fs_general_ledger" t-ref="this.rootRef">
+            <ControlPanel>
+                <t t-set-slot="control-panel-buttons">
+                    <button class="btn btn-primary text-nowrap" t-on-click="this.onPrint">Print</button>
+                </t>
+                <t t-set-slot="control-panel-actions">
+                    <div class="d-flex gap-1 flex-wrap align-items-center">
+                        <!-- Enterprise search bar -->
+                        <form class="o_searchview form-control d-flex align-items-center py-1 w-auto o_fs_gl_search" role="search" t-on-submit="this.onSearchSubmit">
+                            <i class="o_searchview_icon oi d-print-none me-2" data-icon="search" role="img" title="Search..."/>
+                            <input
+                                type="text"
+                                class="o_searchview_input o_input d-print-none flex-grow-1 w-auto border-0"
+                                t-att-value="this.state.searchInput"
+                                t-on-input="(ev) => this.state.searchInput = ev.target.value"
+                                placeholder="Search..."
+                                role="searchbox"
+                            />
+                        </form>
+                        <!-- Enterprise AccountReportFilterDate (range) — button shows "2025" for FY -->
+                        <FsReportFilterDate
+                            t-key="this.state.fiscalStartMonth + '-' + this.state.fiscalStartDay + '-' + this.state.periodType"
+                            dateFrom="this.state.dateFrom"
+                            dateTo="this.state.dateTo"
+                            periodType="this.state.periodType"
+                            rangeMode="true"
+                            fiscalStartDay="this.state.fiscalStartDay"
+                            fiscalStartMonth="this.state.fiscalStartMonth"
+                            onPeriodSelected.bind="this.onDatePeriodSelected"
+                        />
+                        <!-- Posted / Draft -->
+                        <Dropdown>
+                            <button class="btn btn-secondary">
+                                <i class="oi me-1" data-icon="tune"/>
+                                <t t-out="this.targetMoveLabel"/>
+                            </button>
+                            <t t-set-slot="content">
+                                <DropdownItem
+                                    class="{ 'selected': this.state.targetMove === 'posted' }"
+                                    onSelected="() => this.onSetTargetMove('posted')"
+                                    closingMode="'none'"
+                                >
+                                    Posted Entries
+                                </DropdownItem>
+                                <DropdownItem
+                                    class="{ 'selected': this.state.targetMove === 'all' }"
+                                    onSelected="() => this.onSetTargetMove('all')"
+                                    closingMode="'none'"
+                                >
+                                    With Draft Entries
+                                </DropdownItem>
+                            </t>
+                        </Dropdown>
+                        <!-- Rounding -->
+                        <Dropdown>
+                            <button class="btn btn-secondary">
+                                <t t-out="this.roundingLabel"/>
+                            </button>
+                            <t t-set-slot="content">
+                                <t t-foreach="this.roundingUnits" t-as="unit" t-key="unit">
+                                    <DropdownItem
+                                        class="{ 'selected': this.state.roundingUnit === unit }"
+                                        onSelected="() => this.onSetRoundingUnit(unit)"
+                                    >
+                                        <t t-out="this.roundingUnitName(unit)"/>
+                                    </DropdownItem>
+                                </t>
+                            </t>
+                        </Dropdown>
+                    </div>
+                </t>
+            </ControlPanel>
+            <div class="o_content o_fs_report_content">
+                <div t-if="this.state.hasUnposted" id="warnings" class="warnings d-print-none">
+                    <div class="alert alert-info alert-dismissible fade show text-center" role="alert">
+                        There are
+                        <a type="button" href="#" t-on-click.prevent="this.onOpenUnpostedMoves">unposted Journal Entries</a>
+                        prior or included in this period.
+                        <button type="button" class="btn-close" aria-label="Close" t-on-click="() => this.state.hasUnposted = false"/>
+                    </div>
+                </div>
+                <div t-if="this.state.loading" class="d-flex justify-content-center p-4">
+                    <span class="fa fa-spin fa-circle-o-notch"/>
+                </div>
+                <div t-else="" class="o_fs_report_table_container o_fs_report_scroll_container">
+                    <table class="table table-sm table-hover table-borderless o_fs_report_table mx-auto">
+                        <thead class="sticky">
+                            <tr>
+                                <th class="o_fs_report_name"/>
+                                <th class="o_fs_gl_col">Date</th>
+                                <th class="o_fs_gl_col">Partner</th>
+                                <th class="o_fs_gl_col text-end">Currency</th>
+                                <th class="o_fs_gl_col text-end">Debit</th>
+                                <th class="o_fs_gl_col text-end">Credit</th>
+                                <th class="o_fs_gl_col text-end">Balance</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr
+                                t-foreach="this.displayRows"
+                                t-as="row"
+                                t-key="row.id"
+                                t-att-class="'line_level_' + row.level + (row.unfolded ? ' unfolded' : '')"
+                            >
+                                <td
+                                    class="o_fs_report_name line_name"
+                                    t-att-class="{ unfoldable: row.unfoldable }"
+                                    t-on-click="() => this.onToggleAccount(row)"
+                                >
+                                    <i
+                                        t-if="row.unfoldable"
+                                        class="oi oi-fw btn_foldable"
+                                        t-att-data-icon="row.unfolded ? 'arrow_drop_down' : 'arrow_right'"
+                                    />
+                                    <a
+                                        t-if="row.kind === 'aml'"
+                                        href="#"
+                                        class="clickable cursor-pointer"
+                                        t-on-click.stop.prevent="() => this.onOpenMove(row)"
+                                        t-out="row.name"
+                                    />
+                                    <span t-else="" t-out="row.name"/>
+                                    <button
+                                        t-if="row.kind === 'account' and row.unfoldable"
+                                        class="btn btn_action"
+                                        t-on-click="(ev) => this.onOpenJournalItems(row, ev)"
+                                    >
+                                        Journal Items
+                                    </button>
+                                </td>
+                                <td t-out="this.formatRowDate(row)"/>
+                                <td t-out="row.partner_name"/>
+                                <td class="text-end" t-out="this.formatAmountCurrency(row)"/>
+                                <td t-att-class="'text-end ' + this.amountClass(row.debit)" t-out="this.formatAmount(row.debit)"/>
+                                <td t-att-class="'text-end ' + this.amountClass(row.credit)" t-out="this.formatAmount(row.credit)"/>
+                                <td t-att-class="'text-end ' + this.amountClass(row.balance)" t-out="this.formatAmount(row.balance)"/>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

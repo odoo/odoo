@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="account_fs_report.FsReportFilterComparison">
+        <Dropdown menuClass="'account_report_filter comparison o_fs_report_filter_comparison'">
+            <button class="btn btn-secondary">
+                <span>Comparison</span>
+                <t t-if="this.props.compare === 'report_line' and this.props.baseReportLineId">
+                    <span>: </span>
+                    <span>Percentage of</span>
+                </t>
+                <t t-elif="this.buttonSuffix">
+                    <span>: </span>
+                    <t t-out="this.buttonSuffix"/>
+                </t>
+            </button>
+
+            <t t-set-slot="content">
+                <DropdownItem
+                    class="{ 'selected': this.props.compare === 'no_comparison' }"
+                    onSelected="() => this.selectFilter('no_comparison')"
+                    closingMode="'none'"
+                >
+                    No Comparison
+                </DropdownItem>
+
+                <DropdownItem
+                    class="{
+                        'selected': this.props.compare === 'previous_period',
+                        'dropdown-item': true,
+                        'period': true,
+                    }"
+                    onSelected="() => this.selectFilter('previous_period')"
+                    closingMode="'none'"
+                >
+                    <label class="d-flex align-items-center">Previous Period</label>
+                    <div t-att-class="this.props.compare !== 'previous_period' ? 'invisible' : ''">
+                        <input
+                            min="1"
+                            type="number"
+                            t-att-value="this.props.numberPeriod"
+                            t-on-change="(ev) => this.setNumberPeriods(ev)"
+                        />
+                        <label><t t-out="this.periodLabel"/></label>
+                    </div>
+                </DropdownItem>
+
+                <DropdownItem
+                    class="{
+                        'selected': this.props.compare === 'same_last_year',
+                        'dropdown-item': true,
+                        'period': true,
+                    }"
+                    onSelected="() => this.selectFilter('same_last_year')"
+                    closingMode="'none'"
+                >
+                    <label class="d-flex align-items-center">Same Period Last Year</label>
+                    <div t-att-class="this.props.compare !== 'same_last_year' ? 'invisible' : ''">
+                        <input
+                            min="1"
+                            type="number"
+                            t-att-value="this.props.numberPeriod"
+                            t-on-change="(ev) => this.setNumberPeriods(ev)"
+                        />
+                        <label><t t-out="this.periodLabel"/></label>
+                    </div>
+                </DropdownItem>
+
+                <div
+                    class="dropdown-item o-navigable d-flex gap-2 align-items-center"
+                    t-att-class="{ 'selected': this.props.compare === 'report_line' }"
+                >
+                    <label class="me-2 mb-0">Percentage of </label>
+                    <div>
+                        <RecordSelector t-props="this.reportLineComparisonProps"/>
+                    </div>
+                </div>
+
+                <DropdownItem
+                    t-if="this.isRangeMode"
+                    class="{
+                        'selected': this.props.compare === 'custom',
+                        'dropdown-item': true,
+                        'date': true,
+                    }"
+                    onSelected="() => this.selectFilter('custom')"
+                    closingMode="'none'"
+                >
+                    <label class="d-flex align-items-center">Custom Dates</label>
+                    <div
+                        class="d-flex flex-row"
+                        t-att-class="this.props.compare !== 'custom' ? 'invisible' : ''"
+                    >
+                        <DateTimeInput
+                            type="'date'"
+                            value="this.props.customDateFrom"
+                            onChange="(dateFrom) => this.setCustomDateFrom(dateFrom)"
+                        />
+                        <label class="d-flex align-items-center">to</label>
+                        <DateTimeInput
+                            type="'date'"
+                            value="this.props.customDate"
+                            onChange="(dateTo) => this.setCustomDate(dateTo)"
+                        />
+                    </div>
+                </DropdownItem>
+
+                <DropdownItem
+                    t-if="!this.isRangeMode"
+                    class="{
+                        'selected': this.props.compare === 'custom',
+                        'dropdown-item': true,
+                        'date': true,
+                    }"
+                    onSelected="() => this.selectFilter('custom')"
+                    closingMode="'none'"
+                >
+                    <label class="d-flex align-items-center">Specific Date</label>
+                    <div t-att-class="this.props.compare !== 'custom' ? 'invisible' : ''">
+                        <DateTimeInput
+                            type="'date'"
+                            value="this.props.customDate"
+                            onChange="(dateTo) => this.setCustomDate(dateTo)"
+                        />
+                    </div>
+                </DropdownItem>
+
+                <div class="dropdown-divider"/>
+
+                <div class="dropdown-item period order">
+                    <label class="d-flex align-items-center pe-none">Period order</label>
+                    <div>
+                        <select
+                            name="select_order"
+                            class="o_input pe-3"
+                            t-on-change="(ev) => this.setPeriodOrder(ev)"
+                        >
+                            <option
+                                t-foreach="Object.keys(this.availablePeriodOrder)"
+                                t-as="order"
+                                t-key="order"
+                                t-att-value="order"
+                                t-att-selected="order === this.props.periodOrder"
+                                t-out="this.availablePeriodOrder[order]"
+                            />
+                        </select>
+                    </div>
+                </div>
+
+                <div
+                    t-if="this.props.compare !== 'report_line'"
+                    class="dropdown-item period order"
+                >
+                    <label class="d-flex align-items-center pe-none">Comparison in</label>
+                    <div>
+                        <select
+                            name="select_growth_display"
+                            class="o_input pe-3"
+                            t-on-change="(ev) => this.setGrowthDisplay(ev)"
+                        >
+                            <option
+                                value="percent"
+                                t-att-selected="this.props.growthDisplay === 'percent'"
+                            >Percentage</option>
+                            <option
+                                value="amount"
+                                t-att-selected="this.props.growthDisplay === 'amount'"
+                            >Amount</option>
+                        </select>
+                    </div>
+                </div>
+            </t>
+        </Dropdown>
+    </t>
+</templates>

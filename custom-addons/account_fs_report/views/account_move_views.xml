@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Enterprise account_reports.view_move_line_account — Journal Items from GL. -->
+    <record id="view_move_line_account" model="ir.ui.view">
+        <field name="name">account.move.line.list.account</field>
+        <field name="model">account.move.line</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="account.view_move_line_tree_grouped_partner"/>
+        <field name="arch" type="xml">
+            <list position="inside">
+                <field name="cumulated_balance" optional="hide"/>
+            </list>
+        </field>
+    </record>
+</odoo>

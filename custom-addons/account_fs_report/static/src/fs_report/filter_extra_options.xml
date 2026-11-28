@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="account_fs_report.FsReportFilterExtraOptions">
+        <Dropdown>
+            <button class="btn btn-secondary">
+                <i class="oi me-1" data-icon="tune"/>
+                <t t-out="this.selectedExtraOptions"/>
+            </button>
+            <t t-set-slot="content">
+                <!-- Enterprise non-ui_filter: Draft Entries, Unfold All -->
+                <DropdownItem
+                    class="{ 'selected': this.props.allEntries }"
+                    onSelected="() => this.props.onToggleDraftEntries()"
+                    closingMode="'none'"
+                >
+                    Draft Entries
+                </DropdownItem>
+                <DropdownItem
+                    class="{ 'selected': this.props.unfoldAll }"
+                    onSelected="() => this.props.onToggleUnfoldAll()"
+                    closingMode="'none'"
+                >
+                    Unfold All
+                </DropdownItem>
+
+                <!-- Enterprise ui_filter section — Hide lines at 0 on BS and P&amp;L -->
+                <div class="dropdown-divider"/>
+                <DropdownItem
+                    class="{ 'selected': this.props.hide0Lines }"
+                    onSelected="() => this.props.onToggleHide0Lines()"
+                    closingMode="'none'"
+                >
+                    Hide lines at 0
+                </DropdownItem>
+                <DropdownItem
+                    t-if="this.props.showHorizontalSplit"
+                    class="{ 'selected': this.props.horizontalSplit }"
+                    onSelected="() => this.props.onToggleHorizontalSplit()"
+                    closingMode="'none'"
+                >
+                    Split Horizontally
+                </DropdownItem>
+            </t>
+        </Dropdown>
+    </t>
+</templates>

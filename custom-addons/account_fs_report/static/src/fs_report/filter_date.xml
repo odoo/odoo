@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="account_fs_report.FsReportFilterDate">
+        <Dropdown menuClass="'account_report_filter date o_fs_report_filter_date'">
+            <button class="btn btn-secondary">
+                <i class="oi oi-filled me-1" data-icon="calendar_today"/>
+                <t t-out="this.dateDescription"/>
+            </button>
+
+            <t t-set-slot="content">
+                <t t-foreach="this.filters" t-as="dateFilter" t-key="dateFilter.key">
+                    <DropdownItem
+                        tag="'div'"
+                        class="{
+                            'd-flex justify-content-between date_filter': true,
+                            'date_filter_month': dateFilter.key === 'month',
+                            'date_filter_quarter': dateFilter.key === 'quarter',
+                            'date_filter_year': dateFilter.key === 'year',
+                            'selected': this.isFilterDateSelected(dateFilter.key),
+                        }"
+                        attrs="{
+                            'data-period-type': dateFilter.key,
+                            'date-mode': this.dateModeAttr,
+                        }"
+                        onSelected="() => this.selectDateFilter(dateFilter.key)"
+                        closingMode="'none'"
+                    >
+                        <t t-if="dateFilter.key === 'today'" t-out="dateFilter.label"/>
+                        <t t-else="">
+                            <div class="filter_name" t-out="dateFilter.label"/>
+                            <div class="d-flex justify-content-between">
+                                <button
+                                    type="button"
+                                    class="btn_previous_date oi"
+                                    data-icon="arrow_left"
+                                    t-on-click.stop="() => this.selectNewPeriod(dateFilter, -1)"
+                                />
+                                <t t-set="date_display" t-value="this.getFilterDateDisplay(dateFilter)"/>
+                                <input
+                                    class="o_input input_current_date"
+                                    type="text"
+                                    t-att-data-value="date_display"
+                                    t-att-value="date_display"
+                                    t-att="{ 'readonly': this.state.editing !== dateFilter.key }"
+                                    t-on-change="(ev) => this.writeDate(dateFilter, ev.target)"
+                                />
+                                <button
+                                    type="button"
+                                    class="btn_next_date oi"
+                                    data-icon="arrow_right"
+                                    t-on-click.stop="() => this.selectNewPeriod(dateFilter, 1)"
+                                />
+                            </div>
+                        </t>
+                    </DropdownItem>
+                </t>
+
+                <div id="filter_date_divider_single" class="dropdown-divider"/>
+
+                <DropdownItem
+                    tag="'div'"
+                    class="{
+                        'date d-flex justify-content-between': true,
+                        'selected': this.isFilterDateSelected('custom'),
+                    }"
+                    attrs="{
+                        'data-period-type': 'custom',
+                        'date-mode': this.dateModeAttr,
+                    }"
+                    onSelected="() => this.selectDateFilter('custom')"
+                    closingMode="'none'"
+                >
+                    <div t-if="!this.isRangeMode" class="filter_name">Specific Date</div>
+                    <div t-else="" class="filter_name">Custom Dates</div>
+
+                    <div
+                        t-if="!this.isRangeMode and (this.isFilterDateSelected('custom') or this.isFilterDateSelected('year'))"
+                        class="d-flex justify-content-center flex-grow-1"
+                    >
+                        <DateTimeInput
+                            type="'date'"
+                            class="'o-navigable'"
+                            value="this.customDateTo"
+                            onChange="(dateTo) => this.setCustomDateTo(dateTo)"
+                        />
+                    </div>
+
+                    <div
+                        t-elif="this.isRangeMode and (this.isFilterDateSelected('custom') or this.isFilterDateSelected('year'))"
+                        class="d-flex justify-content-center flex-grow-1"
+                    >
+                        <DateTimeInput
+                            type="'date'"
+                            class="'o-navigable'"
+                            value="this.customDateFrom"
+                            onChange="(dateFrom) => this.setCustomDateFrom(dateFrom)"
+                        />
+                        <span class="d-flex align-items-center">to</span>
+                        <DateTimeInput
+                            type="'date'"
+                            class="'o-navigable'"
+                            value="this.customDateTo"
+                            onChange="(dateTo) => this.setCustomDateTo(dateTo)"
+                            minDate="this.customDateFrom"
+                        />
+                    </div>
+                </DropdownItem>
+            </t>
+        </Dropdown>
+    </t>
+</templates>

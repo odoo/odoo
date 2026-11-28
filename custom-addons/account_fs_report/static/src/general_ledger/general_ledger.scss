@@ -1,0 +1,38 @@
+.o_fs_general_ledger {
+    .o_fs_gl_search {
+        min-width: 180px;
+        max-width: 280px;
+
+        .o_searchview_input {
+            min-width: 120px;
+            outline: none;
+            box-shadow: none;
+        }
+    }
+
+    .o_fs_gl_col {
+        white-space: nowrap;
+        min-width: 6rem;
+    }
+
+    .btn_action {
+        opacity: 0;
+        background-color: $o-view-background-color;
+        color: $o-gray-600;
+        width: auto;
+        padding: 0 0.25rem !important;
+        margin: 0 0.25rem;
+        border: 1px solid $o-gray-300;
+        border-radius: 0.25rem;
+        font-size: inherit;
+        font-weight: normal;
+        vertical-align: middle;
+    }
+
+    .o_fs_report_table > tbody > tr {
+        &.unfolded .btn_action,
+        &:hover .btn_action {
+            opacity: 1;
+        }
+    }
+}

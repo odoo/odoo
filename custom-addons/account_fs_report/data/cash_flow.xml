@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Enterprise Direct Cash Flow Statement (root report).
+         Menu name matches Enterprise; layout/engine from account.cash.flow.report.handler.
+         Lines are generated dynamically — no static fs.report.line rows. -->
+    <record id="fs_report_cash_flow" model="fs.report">
+        <field name="name">Cash Flow Statement</field>
+        <field name="code">CFS</field>
+        <field name="report_type">cash_flow</field>
+    </record>
+</odoo>

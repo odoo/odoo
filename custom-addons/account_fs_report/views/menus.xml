@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Drop legacy P&amp;L window action (xmlid model conflict). -->
+    <delete model="ir.actions.act_window" id="action_fs_profit_and_loss"/>
+
+    <!-- Reporting → Statement Reports -->
+
+    <record id="action_fs_balance_sheet" model="ir.actions.client">
+        <field name="name">Balance Sheet</field>
+        <field name="tag">account_fs_report.main</field>
+        <field name="path">balance-sheet</field>
+        <field name="context" eval="{'report_id': ref('account_fs_report.fs_report_balance_sheet')}"/>
+    </record>
+
+    <record id="action_fs_profit_and_loss" model="ir.actions.client">
+        <field name="name">Profit and Loss</field>
+        <field name="tag">account_fs_report.main</field>
+        <field name="path">profit-and-loss</field>
+        <field name="context" eval="{'report_id': ref('account_fs_report.fs_report_profit_and_loss')}"/>
+    </record>
+
+    <record id="action_fs_cash_flow" model="ir.actions.client">
+        <field name="name">Cash Flow Statement</field>
+        <field name="tag">account_fs_report.main</field>
+        <field name="path">cash-flow</field>
+        <field name="context" eval="{'report_id': ref('account_fs_report.fs_report_cash_flow')}"/>
+    </record>
+
+    <record id="action_fs_general_ledger" model="ir.actions.client">
+        <field name="name">General Ledger</field>
+        <field name="tag">account_fs_report.general_ledger</field>
+        <field name="path">general-ledger</field>
+    </record>
+
+    <menuitem id="menu_fs_balance_sheet"
+        name="Balance Sheet"
+        parent="account.account_reports_legal_statements_menu"
+        action="action_fs_balance_sheet"
+        sequence="10"
+        groups="account.group_account_readonly,account.group_account_basic"/>
+
+    <menuitem id="menu_fs_profit_and_loss"
+        name="Profit and Loss"
+        parent="account.account_reports_legal_statements_menu"
+        action="action_fs_profit_and_loss"
+        sequence="20"
+        groups="account.group_account_readonly,account.group_account_basic"/>
+
+    <menuitem id="menu_fs_cash_flow"
+        name="Cash Flow Statement"
+        parent="account.account_reports_legal_statements_menu"
+        action="action_fs_cash_flow"
+        sequence="30"
+        groups="account.group_account_readonly,account.group_account_basic"/>
+</odoo>
