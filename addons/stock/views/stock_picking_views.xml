@@ -251,9 +251,11 @@
                             invisible="return_count == 0">
                             <field string="Returns" name="return_count" widget="statinfo"/>
                         </button>
-                        <button name="action_see_move_scrap" string="Scraps" type="object"
+                        <button name="action_see_move_scrap" type="object"
                             class="oe_stat_button" icon="height"
-                            invisible="not has_scrap_move"/>
+                            invisible="nb_scrap_move == 0">
+                             <field name="nb_scrap_move" widget="statinfo" string="Scraps"/>
+                        </button>
                         <button name="action_see_packages" string="Packages" type="object"
                             class="oe_stat_button" icon="package_2"
                             invisible="state == 'done' or not packages_count" groups="stock.group_tracking_lot">

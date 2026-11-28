@@ -94,8 +94,8 @@ class StockPicking(models.Model):
         compute="_compute_location_dest_id", store=True, precompute=True, readonly=False, ui_domain="[('usage','!=','view')]",
         check_company=True, required=True)
     move_ids = fields.One2many('stock.move', 'picking_id', string="Stock Moves", domain=[('is_scrap', '=', False)], copy=True)
-    has_scrap_move = fields.Boolean(
-        'Has Scrap Moves', compute='_has_scrap_move')
+    nb_scrap_move = fields.Integer(
+        'Number Of Scrap Moves', compute='_compute_nb_scrap_move')
     picking_type_id = fields.Many2one(
         'stock.picking.type', 'Operation Type',
         required=True, index=True,
@@ -517,16 +517,14 @@ class StockPicking(models.Model):
                 continue
             picking.move_ids.write({'date': picking.scheduled_date})
 
-    def _has_scrap_move(self):
-        result = {
-            picking
-            for [picking] in self.env['stock.move']._read_group(
+    def _compute_nb_scrap_move(self):
+        result = dict(self.env['stock.move']._read_group(
                 [('picking_id', 'in', self.ids), ('is_scrap', '=', True)],
                 ['picking_id'],
-            )
-        }
+                ['__count'],
+            ))
         for picking in self:
-            picking.has_scrap_move = picking._origin in result
+            picking.nb_scrap_move = result.get(picking._origin, 0)
 
     def _compute_packages_count(self):
         done_pickings, other_pickings = self.partitioned(lambda picking: picking.state == 'done')
