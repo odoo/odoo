@@ -485,7 +485,7 @@ class SaleOrder(models.Model):
             request.session[FISCAL_POSITION_SESSION_CACHE_KEY] = new_fpos.id
             request.fiscal_position = new_fpos
 
-        # If user explicitely selected a valid pricelist, we don't want to change it
+        # If user explicitly selected a valid pricelist, we don't want to change it
         if selected_pricelist_id := request.session.get(PRICELIST_SELECTED_SESSION_CACHE_KEY):
             selected_pricelist = (
                 self.env["product.pricelist"].browse(selected_pricelist_id).exists()

@@ -333,8 +333,14 @@ class ProductTemplate(models.Model):
             pricelists = config.available_pricelist_ids
         else:
             pricelists = config.pricelist_id
-        price_per_pricelist_id = pricelists._price_get(template_or_variant, quantity) if pricelists else False
-        pricelist_list = [{'name': pl.name, 'price': price_per_pricelist_id[pl.id]} for pl in pricelists]
+
+        pricelist_list = [
+            {
+                'name': pl.name,
+                'price': pl._get_product_price(template_or_variant, quantity)
+            }
+            for pl in pricelists
+        ]
 
         # Suppliers
         supplier_list = []
