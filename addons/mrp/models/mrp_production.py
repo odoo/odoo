@@ -1021,6 +1021,22 @@ class MrpProduction(models.Model):
     @api.onchange('qty_producing')
     def _onchange_qty_producing(self):
         self._change_producing()
+        return self._onchange_quantity_warning()
+
+    @api.onchange('product_id', 'product_qty', 'uom_id')
+    def _onchange_quantity_warning(self):
+        if whole_product_qty := self.product_id._get_whole_serial_quantity(self.product_qty, self.uom_id):
+            self.product_qty = whole_product_qty
+        if whole_qty_producing := self.product_id._get_whole_serial_quantity(self.qty_producing, self.uom_id):
+            self.qty_producing = whole_qty_producing
+        if whole_product_qty or whole_qty_producing:
+            return {
+                'warning': {
+                    'title': self.env._("Fractional quantity"),
+                    'message': self.env._("Products tracked by serial numbers cannot be produced in fractional amounts."
+                                          " The quantity has been rounded up."),
+                }
+            }
 
     @api.onchange('lot_producing_ids')
     def _onchange_lot_producing(self):
@@ -1530,6 +1546,7 @@ class MrpProduction(models.Model):
 
             new_qty = move.uom_id.round((self.qty_producing - self.qty_produced) * move.unit_factor)
             if move.has_tracking in ['lot', 'serial']:
+                new_qty = move.product_id._get_whole_serial_quantity(new_qty, move.uom_id) or new_qty
                 relevant_orig_ids = set()
                 qty_available = 0
                 for move_orig in move.move_orig_ids:
@@ -1957,6 +1974,8 @@ class MrpProduction(models.Model):
                 elif line := move.bom_line_id:
                     expected_qty = line.uom_id._compute_quantity(
                         line.product_qty * bom_factors[line.bom_id.id], move.uom_id)
+                # Fraction check for serial numbers, to make sure we don't complain about rounded consumption.
+                expected_qty = move.product_id._get_whole_serial_quantity(expected_qty, move.uom_id) or expected_qty
                 picked_qty = sum(ml.uom_id._compute_quantity(ml.quantity, move.uom_id, round=False)
                     for ml in move.move_line_ids if ml.picked or not move._should_bypass_set_qty_producing())
                 if move.uom_id.compare(picked_qty, expected_qty):
