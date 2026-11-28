@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
+from datetime import date, timedelta
 from pytz import timezone, utc
 
 from odoo import api, fields, models, _
@@ -123,15 +124,45 @@ class ResourceCalendarLeaves(models.Model):
         """
         resource_calendars = self._get_resource_calendars()
         work_hours_data = self._work_time_per_day(resource_calendars)
-        employees_groups = self.env['hr.employee']._read_group(
-            [('resource_calendar_id', 'in', resource_calendars.ids), ('company_id', 'in', self.company_id.ids if self.company_id else self.env.companies.ids)],
+        versions_group = self.env['hr.version'].sudo()._read_group(
+            [
+                ('company_id', 'in', self.company_id.ids if self.company_id else self.env.companies.ids),
+                ('date_start', '<=', max(self.mapped('date_to'))),
+                '|',
+                    ('date_end', '>=', min(self.mapped('date_from'))),
+                    ('date_end', '=', False),
+                ('employee_id.active', '=', True),
+            ],
             ['resource_calendar_id'],
             ['id:recordset'])
-        mapped_employee = {
-            resource_calendar.id: employees
-            for resource_calendar, employees in employees_groups
-        }
-        employee_ids_all = [_id for __, employees in employees_groups for _id in employees._ids]
+
+        employee_ids_all = [emp_id for __, versions in versions_group for emp_id in versions.employee_id._ids]
+        # Whether an employee has a version is checked for each leave, the batch can cover several periods
+        employee_groups = self.env['hr.employee']._read_group(
+            [
+                ('company_id', 'in', self.company_id.ids if self.company_id else self.env.companies.ids),
+                ('resource_calendar_id', 'in', resource_calendars.ids),
+            ],
+            ['resource_calendar_id'],
+            ['id:recordset'])
+        employee_ids_all.extend([
+            emp_id
+            for _, employees in employee_groups
+            for emp_id in employees.ids
+        ])
+        mapped_versions = defaultdict(lambda: self.env['hr.version'])
+        mapped_employee = defaultdict(lambda: self.env['hr.employee'])
+        all_versions = self.env['hr.version'].sudo()
+
+        for calendar, versions in versions_group:
+            # versions on other calendars are kept to exclude their employee from the current calendar fallback
+            all_versions |= versions
+            if calendar:
+                mapped_versions[calendar.id] |= versions
+
+        for calendar, employees in employee_groups:
+            if calendar:
+                mapped_employee[calendar.id] |= employees
         min_date = max_date = None
         for values in work_hours_data.values():
             for vals in values.values():
@@ -156,10 +187,12 @@ class ResourceCalendarLeaves(models.Model):
         }
         vals_list = []
 
-        def get_timesheets_data(employees, work_hours_list, vals_list):
-            for employee in employees:
+        def get_timesheets_data(employee_periods, work_hours_list, vals_list):
+            for employee, date_start, date_end in employee_periods:
                 holidays = holidays_by_employee.get(employee.id)
                 for index, (day_date, work_hours_count) in enumerate(work_hours_list):
+                    if day_date < date_start or (date_end and day_date > date_end):
+                        continue
                     if not holidays or all(not (date_from <= day_date and date_to >= day_date) for date_from, date_to in holidays):
                         vals_list.append(
                             leave._timesheet_prepare_line_values(
@@ -172,15 +205,25 @@ class ResourceCalendarLeaves(models.Model):
                         )
             return vals_list
 
+        def get_leave_employees(calendar_id, leave_versions):
+            versions = leave_versions.filtered(lambda v: v.resource_calendar_id.id == calendar_id)
+            # Employees without any version during the leave keep their current calendar
+            return [(v.employee_id, v.date_start, v.date_end) for v in versions] + [
+                (employee, date.min, False) for employee in mapped_employee[calendar_id] - leave_versions.employee_id
+            ]
+
         for leave in self:
+            leave_start, leave_end = leave.date_from.date(), leave.date_to.date()
+            leave_versions = all_versions.filtered(
+                lambda v: v.date_start <= leave_end and (not v.date_end or v.date_end >= leave_start)
+            )
             if not leave.calendar_id:
-                for calendar_id, calendar_employees in mapped_employee.items():
+                for calendar_id in mapped_versions.keys() | mapped_employee.keys():
                     work_hours_list = work_hours_data[calendar_id][leave.id]
-                    vals_list = get_timesheets_data(calendar_employees, work_hours_list, vals_list)
+                    vals_list = get_timesheets_data(get_leave_employees(calendar_id, leave_versions), work_hours_list, vals_list)
             else:
-                employees = mapped_employee.get(leave.calendar_id.id, self.env['hr.employee'])
                 work_hours_list = work_hours_data[leave.calendar_id.id][leave.id]
-                vals_list = get_timesheets_data(employees, work_hours_list, vals_list)
+                vals_list = get_timesheets_data(get_leave_employees(leave.calendar_id.id, leave_versions), work_hours_list, vals_list)
 
         return self.env['account.analytic.line'].sudo().create(vals_list)
 
@@ -208,7 +251,7 @@ class ResourceCalendarLeaves(models.Model):
         timesheet_vals_list = []
         resource_calendars = self._get_resource_calendars()
         work_hours_data = self._work_time_per_day(resource_calendars)
-        timesheet_read_group = self.env['account.analytic.line']._read_group(
+        timesheet_read_group = self.env['account.analytic.line'].sudo()._read_group(
             [('global_leave_id', 'in', self.ids), ('employee_id', 'in', employees.ids)],
             ['employee_id'],
             ['date:array_agg']
@@ -217,25 +260,48 @@ class ResourceCalendarLeaves(models.Model):
             employee.id: date
             for employee, date in timesheet_read_group
         }
+        # Days still covered by another time off, the callers unlink the timesheets of the updated ones first
+        time_off_timesheet_read_group = self.env['account.analytic.line'].sudo()._read_group(
+            [
+                ('holiday_id', '!=', False),
+                ('employee_id', 'in', employees.ids),
+                ('date', '>=', min(self.mapped('date_from')).date() - timedelta(days=1)),
+                ('date', '<=', max(self.mapped('date_to')).date() + timedelta(days=1)),
+            ],
+            ['employee_id'],
+            ['date:array_agg']
+        )
+        time_off_dates_per_employee_id = {
+            employee.id: dates
+            for employee, dates in time_off_timesheet_read_group
+        }
         for leave in self:
+            leave_start, leave_end = leave.date_from.date(), leave.date_to.date()
             for employee in employees:
-                if leave.calendar_id and employee.resource_calendar_id != leave.calendar_id:
-                    continue
-                calendar = leave.calendar_id or employee.resource_calendar_id
-                work_hours_list = work_hours_data[calendar.id][leave.id]
-                timesheet_dates = timesheet_dates_per_employee_id.get(employee.id, [])
-                for index, (day_date, work_hours_count) in enumerate(work_hours_list):
-                    generate_timesheet = day_date not in timesheet_dates
-                    if not generate_timesheet:
+                versions = employee.sudo().version_ids.filtered(
+                    lambda v: v.date_start <= leave_end and (not v.date_end or v.date_end >= leave_start)
+                )
+                if versions:
+                    # fully flexible versions have no calendar, so no timesheet
+                    calendar_periods = [(v.resource_calendar_id, v.date_start, v.date_end) for v in versions if v.resource_calendar_id]
+                else:
+                    calendar_periods = [(employee.resource_calendar_id, date.min, False)]
+                skipped_dates = timesheet_dates_per_employee_id.get(employee.id, []) + time_off_dates_per_employee_id.get(employee.id, [])
+                for calendar, date_start, date_end in calendar_periods:
+                    if leave.calendar_id and calendar != leave.calendar_id:
                         continue
-                    timesheet_vals = leave._timesheet_prepare_line_values(
-                        index,
-                        employee,
-                        work_hours_list,
-                        day_date,
-                        work_hours_count
-                    )
-                    timesheet_vals_list.append(timesheet_vals)
+                    work_hours_list = work_hours_data[calendar.id][leave.id]
+                    for index, (day_date, work_hours_count) in enumerate(work_hours_list):
+                        if day_date in skipped_dates or day_date < date_start or (date_end and day_date > date_end):
+                            continue
+                        timesheet_vals = leave._timesheet_prepare_line_values(
+                            index,
+                            employee,
+                            work_hours_list,
+                            day_date,
+                            work_hours_count
+                        )
+                        timesheet_vals_list.append(timesheet_vals)
         return self.env['account.analytic.line'].sudo().create(timesheet_vals_list)
 
     def _get_overlapping_hr_leaves(self, domain=None):

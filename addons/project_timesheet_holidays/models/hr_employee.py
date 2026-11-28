@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
-from collections import defaultdict
 
 
 class HrEmployee(models.Model):
@@ -33,10 +32,6 @@ class HrEmployee(models.Model):
             else:
                 # Delete future holiday timesheets
                 self_company._delete_future_public_holidays_timesheets()
-        elif 'resource_calendar_id' in vals:
-            # Update future holiday timesheets
-            self_company._delete_future_public_holidays_timesheets()
-            self_company._create_future_public_holidays_timesheets(self_company)
         return result
 
     def _delete_future_public_holidays_timesheets(self):
@@ -45,29 +40,18 @@ class HrEmployee(models.Model):
         future_timesheets.unlink()
 
     def _create_future_public_holidays_timesheets(self, employees):
-        lines_vals = []
+        timesheets = self.env['account.analytic.line']
         today = fields.Datetime.today()
-        global_leaves_wo_calendar = defaultdict(lambda: self.env["resource.calendar.leaves"])
-        global_leaves_wo_calendar.update(dict(self.env['resource.calendar.leaves']._read_group(
-            [('calendar_id', '=', False), ('resource_id', '=', False), ('date_from', '>=', today)],
-            groupby=['company_id'],
-            aggregates=['id:recordset'],
-        )))
-        for employee in employees:
-            if not employee.active:
-                continue
-            # First we look for the global time off that are already planned after today
-            global_leaves = employee.resource_calendar_id.global_leave_ids.filtered(lambda l: l.date_from >= today) + global_leaves_wo_calendar[employee.company_id]
-            work_hours_data = global_leaves._work_time_per_day()
-            for global_time_off in global_leaves:
-                for index, (day_date, work_hours_count) in enumerate(work_hours_data[employee.resource_calendar_id.id][global_time_off.id]):
-                    lines_vals.append(
-                        global_time_off._timesheet_prepare_line_values(
-                            index,
-                            employee,
-                            work_hours_data[global_time_off.id],
-                            day_date,
-                            work_hours_count
-                        )
-                    )
-        return self.env['account.analytic.line'].sudo().create(lines_vals)
+        for company, company_employees in employees.filtered('active').grouped('company_id').items():
+            # The global time off already planned after today, of any working schedule of the employees
+            calendars = company_employees.sudo().version_ids.resource_calendar_id | company_employees.resource_calendar_id
+            global_leaves = self.env['resource.calendar.leaves'].search([
+                ('resource_id', '=', False),
+                ('date_from', '>=', today),
+                '|',
+                    ('calendar_id', 'in', calendars.ids),
+                    '&', ('calendar_id', '=', False), ('company_id', '=', company.id),
+            ])
+            if global_leaves:
+                timesheets |= global_leaves._generate_public_time_off_timesheets(company_employees)
+        return timesheets
