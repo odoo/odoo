@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website_sale.ProductCategoriesColumn">
+    <t t-if="categoryData">
+        <t t-if="showParent">
+            <t t-set="category" t-value="categoryData.category"/>
+            <a
+                t-att-href="category.url"
+                name="category_heading"
+                class="h5 d-block fw-bold text-reset"
+                t-att-class="{ 'opacity-50': category.unpublished }"
+            >
+                <t t-call="website_sale.ProductCategoryName"/>
+            </a>
+            <hr t-if="showSeparator" class="mt-1 mb-3 border-2 border-primary opacity-100"/>
+        </t>
+        <nav class="nav flex-column">
+            <a
+                t-foreach="categoryData.child_categories"
+                t-as="category"
+                t-key="category.id"
+                t-att-href="category.url"
+                class="nav-link px-0"
+                t-att-class="{ 'opacity-50': category.unpublished }"
+            >
+                <t t-call="website_sale.ProductCategoryName"/>
+            </a>
+        </nav>
+    </t>
+    <div t-elif="editMode" class="alert alert-info mb-0">
+        Select a category in the options of the block.
+    </div>
+</t>
+
+<!-- In edit mode, the name is bound to its category, so that editing it renames the category -->
+<t t-name="website_sale.ProductCategoryName">
+    <span
+        t-if="editMode"
+        class="o_savable"
+        contenteditable="true"
+        data-oe-model="product.public.category"
+        t-att-data-oe-id="category.id"
+        data-oe-field="name"
+        data-oe-type="char"
+        t-out="category.name"
+    />
+    <t t-else="" t-out="category.name"/>
+</t>
+
+</templates>

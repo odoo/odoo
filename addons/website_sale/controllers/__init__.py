@@ -9,6 +9,7 @@ from . import (
     main,
     payment,
     portal,
+    product_categories,
     product_configurator,
     product_feed,
     reorder,

@@ -1,0 +1,48 @@
+<templates>
+
+<t t-name="website_sale.ProductCategoriesOption">
+    <BuilderRow label.translate="Alignment">
+        <BuilderButtonGroup>
+            <BuilderButton
+                title.translate="Left"
+                classAction="'justify-content-start text-start'"
+                icon="'format_align_left'"
+                ltrRtlMapping="'left-right'"
+            />
+            <BuilderButton
+                title.translate="Center"
+                classAction="'justify-content-center text-center'"
+                icon="'format_align_center'"
+            />
+            <BuilderButton
+                title.translate="Right"
+                classAction="'justify-content-end text-end'"
+                icon="'format_align_right'"
+                ltrRtlMapping="'left-right'"
+            />
+        </BuilderButtonGroup>
+    </BuilderRow>
+    <BuilderRow label.translate="Filters">
+        <BuilderSelect dataAttributeAction="'parentCategoryId'">
+            <t t-foreach="this.categories" t-as="category" t-key="category.id">
+                <BuilderSelectItem
+                    label="category.name"
+                    dataAttributeActionValue="`${category.id}`"
+                    t-out="category.name"
+                />
+            </t>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow t-if="this.domState.parentCategoryId" label.translate="Parent Category" level="1">
+        <BuilderCheckbox dataAttributeAction="'showParent'" dataAttributeActionValue="'true'"/>
+    </BuilderRow>
+    <BuilderRow
+        t-if="this.domState.parentCategoryId and this.domState.showParent"
+        label.translate="Separator"
+        level="2"
+    >
+        <BuilderCheckbox dataAttributeAction="'showSeparator'" dataAttributeActionValue="'true'"/>
+    </BuilderRow>
+</t>
+
+</templates>
