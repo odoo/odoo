@@ -773,7 +773,10 @@ export class PosDataPlugin extends Plugin {
                     });
                     break;
                 case "call":
-                    promise = this.orm.call(model, method, args, kwargs);
+                    promise = this.orm.call(model, method, args, {
+                        ...kwargs,
+                        context: { ...kwargs.context, device_identifier: this.device?.identifier },
+                    });
                     break;
                 case "read":
                     queue = false;
@@ -1232,7 +1235,6 @@ export class PosDataPlugin extends Plugin {
         }
 
         if (data) {
-            this.deviceSync?.dispatch && this.deviceSync.dispatch(data);
             const result = this.models.connectNewData(data);
             this.synchronizeServerDataInIndexedDB(data);
             return result;

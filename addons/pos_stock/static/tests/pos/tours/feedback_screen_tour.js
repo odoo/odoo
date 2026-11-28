@@ -19,7 +19,6 @@ registry.category("web_tour.tours").add("StockFeedbackScreenTour", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             OfflineUtil.setOfflineMode(),
-            Dialog.cancel(), // Offline mode after opening register will trigger the offline popup since the device try to sync
             ProductScreen.addOrderline("Letter Tray", "10", "5"),
             ProductScreen.clickPartnerButton(),
             ProductScreen.clickCustomer("APartner Full"),
@@ -29,6 +28,7 @@ registry.category("web_tour.tours").add("StockFeedbackScreenTour", {
             StockPaymentScreen.clickShipLaterButton(),
             StockPaymentScreen.shippingLaterHighlighted(),
             PaymentScreen.clickValidate(),
+            Dialog.cancel(), // Validating offline fails the order sync and shows the offline popup
             FeedbackScreen.isShown(),
             StockFeedbackScreen.checkTicketData({
                 total_amount: "55.00", // letter tray has 10% tax (search SRC)

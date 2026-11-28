@@ -85,6 +85,12 @@ class ProductTemplate(models.Model):
         pos_config = self.env['pos.config'].browse(config_id)
         product_template_attribute_value_ids = self.env['product.template.attribute.value'].browse(attribute_value_ids)
         product_variant = self._create_product_variant(product_template_attribute_value_ids)
+        if pos_config.current_session_id:
+            pos_config._notify_synchronisation(
+                pos_config.current_session_id.id,
+                self.env.context.get('device_identifier', 0),
+                {'product.product': product_variant.ids},
+            )
         return {
             'product.product': product_variant.read(self.env['product.product']._load_pos_data_fields(pos_config), load=False),
         }
