@@ -35,19 +35,36 @@
                             <t t-foreach="website_sale_order._get_claimable_and_showable_rewards().items()" t-as="coupon_reward">
                                 <t t-set="coupon" t-value="coupon_reward[0]"/>
                                 <t t-set="rewards" t-value="coupon_reward[1]"/>
-                                <t t-set="is_loyalty" t-value="rewards[0].program_id.program_type == 'loyalty'"/>
+                                <t t-set="program_type" t-value="rewards[0].program_id.program_type"/>
+                                <t t-set="is_loyalty" t-value="program_type == 'loyalty'"/>
+                                <t t-set="is_grouped" t-value="len(rewards) > 1"/>
+                                <t t-set="is_code" t-value="program_type in {'promo_code', 'coupons'}"/>
 
                                 <div
                                     t-if="is_loyalty"
                                     class="alert alert-primary d-flex justify-content-between align-items-center mb-0 p-2 rounded-bottom-0"
                                     role="alert"
                                 >
-                                    <strong class="text-start small" t-out="coupon_reward[0].point_name"/>
+                                    <strong class="text-start small" t-out="coupon.point_name"/>
                                     <strong
                                         class="small"
                                         name="o_loyalty_points"
                                         t-out="website_sale_order._get_real_points_for_coupon(coupon)"
                                     />
+                                </div>
+
+                                <div
+                                    t-elif="is_grouped"
+                                    t-attf-class="alert {{'alert-success' if is_code else 'alert-primary'}} d-flex align-items-center mb-0 p-2 rounded-bottom-0 gap-1"
+                                    role="alert"
+                                >
+                                    <t t-if="is_code">
+                                        <t t-set="entered_code" t-value="website_sale_order.code_enabled_rule_ids.filtered(
+                                            lambda rule: rule.program_id == coupon.program_id
+                                        )[:1].code"/>
+                                        Coupon <strong class="small" t-out="entered_code or coupon.code"/>
+                                    </t>
+                                    <strong t-else="" class="small" t-out="coupon.program_id.name"/>
                                 </div>
 
                                 <t t-foreach="rewards" t-as="reward">
@@ -56,7 +73,7 @@
                                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                                         <input type="hidden" name="reward_id" t-att-value="reward.id"/>
                                         <input type="hidden" name="code" t-att-value="coupon.code"/>
-                                        <div t-attf-class="{{'border border-primary-subtle border-top-0 p-2 text-start' if is_loyalty else 'alert alert-primary p-2 text-start'}} {{'rounded-bottom mb-3' if is_loyalty and reward_last else ''}}">
+                                        <div t-attf-class="{{'border border-primary-subtle border-top-0 p-2 text-start' if is_loyalty or is_grouped else 'alert alert-primary p-2 text-start'}} {{'rounded-bottom mb-3' if (is_loyalty or is_grouped) and reward_last else ''}}">
                                             <div class="d-flex gap-2 align-items-center">
                                                 <div class="flex-grow-1 text-break">
                                                     <t t-set="program" t-value="reward.program_id"/>
@@ -71,7 +88,6 @@
                                                         </t>
                                                         <t t-elif="program.program_type == 'coupons'">
                                                             <strong class="small">
-                                                                Coupons -
                                                                 <t t-out="reward.description"/>
                                                             </strong>
                                                         </t>
@@ -79,12 +95,7 @@
                                                             <strong class="small" t-out="reward.description"/>
                                                         </t>
                                                         <div class="d-md-block small">
-                                                            <span t-if="coupon and not coupon.program_id.is_nominative">
-                                                                Code:
-                                                                <t t-out="coupon.code[-4:].rjust(14, '&#8902;')"/>
-                                                            </span>
-                                                            <t t-if="coupon.expiration_date">
-                                                                <br/>
+                                                            <t t-if="coupon.expiration_date and not is_code">
                                                                 <span>
                                                                     Expired Date:
                                                                     <t t-out="coupon.expiration_date"/>
@@ -138,7 +149,10 @@
                                                         class="btn btn-sm btn-primary"
                                                         name="o_loyalty_claim"
                                                     >
-                                                        <t t-if="(reward.program_id.trigger == 'with_code' and reward.program_id.program_type != 'promo_code') or (reward.program_id.trigger == 'auto' and reward.program_id.applies_on == 'future')">
+                                                        <t t-if="is_grouped and not is_loyalty">
+                                                            Choose
+                                                        </t>
+                                                        <t t-elif="(reward.program_id.trigger == 'with_code' and reward.program_id.program_type != 'promo_code') or (reward.program_id.trigger == 'auto' and reward.program_id.applies_on == 'future')">
                                                             Use
                                                         </t>
                                                         <t t-else="">Claim</t>
