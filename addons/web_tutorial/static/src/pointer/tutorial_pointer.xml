@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="web_tutorial.TutorialPointer">
+        <div
+            t-if="this.pointerState.centered and this.content()"
+            class="o_tutorial_pointer o_tutorial_centered position-fixed top-50 start-50 translate-middle"
+        >
+            <div class="o_tutorial_pointer_content popover position-relative shadow w-100 mw-100">
+                <t t-call="web_tutorial.TutorialPointer.body"/>
+            </div>
+        </div>
+        <div
+            t-elif="this.isVisible"
+            t-ref="this.pointerRef"
+            t-attf-class="o_tutorial_pointer o_{{ this.side() }}"
+            t-on-mouseenter="() => this.onMouseEnter()"
+            t-on-mouseleave="() => this.onMouseLeave()"
+        >
+            <div t-if="!this.pointerState.ballHidden" t-attf-class="o_tutorial_pointer_tip o_{{ this.side() }}"/>
+            <div t-if="this.showContent() and this.content()" t-ref="this.bubbleRef" class="o_tutorial_pointer_bubble">
+                <div
+                    t-attf-class="o_tutorial_pointer_content popover position-relative shadow bs-popover-{{ this.bubbleSide() }} {{ this.pointerState.invalid ? 'o_tutorial_invalid' : '' }}"
+                    t-on-click="() => this.onContentClick()"
+                >
+                    <div class="popover-arrow position-absolute z-n1"/>
+                    <t t-call="web_tutorial.TutorialPointer.body"/>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="web_tutorial.TutorialPointer.body">
+        <div class="popover-body px-3 py-2">
+            <small t-if="this.pointerState.progress" class="o_tutorial_progress d-block text-muted" t-out="this.pointerState.progress"/>
+            <div t-if="this.pointerState.chapterSizes" class="o_tutorial_progress_bar d-flex gap-2 mt-1 mb-3">
+                <div
+                    t-foreach="this.progressBar()"
+                    t-as="chapter"
+                    t-key="chapter_index"
+                    class="o_tutorial_progress_chapter d-flex rounded-pill overflow-hidden"
+                    t-attf-style="flex: {{ chapter.length }} 1 0; gap: 2px;"
+                >
+                    <div
+                        t-foreach="chapter"
+                        t-as="state"
+                        t-key="state_index"
+                        t-attf-class="o_tutorial_progress_step o_{{ state }} flex-grow-1 bg-primary {{ state === 'todo' ? 'opacity-25' : state === 'current' ? 'opacity-50' : '' }}"
+                        style="height: 3px;"
+                    />
+                </div>
+            </div>
+            <span>
+                <t t-out="this.content()"/>
+            </span>
+            <div class="d-flex justify-content-between align-items-center gap-3 mt-2">
+                <button t-if="this.pointerState.onSkip" class="btn btn-link btn-sm shadow-none fw-normal text-muted px-0 o_tutorial_skip" t-on-click.stop="this.pointerState.onSkip">Skip Tutorial</button>
+                <button t-if="this.isNextShown()" class="btn btn-primary btn-sm o_tutorial_next" t-on-click.stop="this.pointerState.onNext">Next</button>
+            </div>
+        </div>
+    </t>
+</templates>

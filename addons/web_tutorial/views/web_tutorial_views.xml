@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="tutorial_form" model="ir.ui.view">
+        <field name="model">web_tutorial.tutorial</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_restart" type="object" string="Start" class="btn-primary"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <div class="oe_title">
+                        <h1><field name="title" placeholder="e.g. Discover a feature..."/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="sequence"/>
+                            <field name="key"/>
+                            <field name="group_ids" widget="many2many_tags" placeholder="Everyone"/>
+                            <field name="expand_messages"/>
+                            <field name="end_message"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Steps" name="steps">
+                            <field name="step_ids">
+                                <list>
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="chapter"/>
+                                    <field name="model_id"/>
+                                    <field name="action_id" placeholder="All"/>
+                                    <field name="view_types" widget="tutorial_dynamic_selection" options="{'options_field': 'view_type_selection_options', 'multi_select': True}" placeholder="All views"/>
+                                    <field name="type"/>
+                                    <field name="name" widget="tutorial_step_name"/>
+                                    <field name="message"/>
+                                    <field name="skippable"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="tutorial_step_form" model="ir.ui.view">
+        <field name="model">web_tutorial.step</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <field name="res_model" invisible="1"/> <!-- used in the domain of action_id -->
+                    <group>
+                        <group string="Scope" name="scope">
+                            <field name="model_id" options="{'no_create': True}"/>
+                            <field name="action_id" domain="[('res_model', '=', res_model)] if res_model else []" options="{'no_create': True}" placeholder="All"/>
+                            <field name="view_types" widget="tutorial_dynamic_selection" options="{'options_field': 'view_type_selection_options', 'multi_select': True}" placeholder="All views"/>
+                        </group>
+                        <group string="Target" name="target">
+                            <field name="type"/>
+                            <field name="name" widget="tutorial_step_name" readonly="type == 'dialog'" required="type != 'dialog'" force_save="1"/>
+                        </group>
+                    </group>
+                    <separator string="Message"/>
+                    <field name="message" placeholder="What should the user do?"/>
+                    <group>
+                        <field name="skippable"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="tutorial_list" model="ir.ui.view">
+        <field name="model">web_tutorial.tutorial</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle"/>
+                <field name="title"/>
+                <field name="group_ids" widget="many2many_tags"/>
+                <field name="expand_messages" widget="boolean_toggle"/>
+                <button name="action_restart" type="object" string="Start" class="btn-link"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="tutorial_search" model="ir.ui.view">
+        <field name="model">web_tutorial.tutorial</field>
+        <field name="arch" type="xml">
+            <search string="Tutorials">
+                <field name="title"/>
+                <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="tutorial_action" model="ir.actions.act_window">
+        <field name="name">Tutorials</field>
+        <field name="res_model">web_tutorial.tutorial</field>
+        <field name="view_id" ref="tutorial_list"/>
+        <field name="search_view_id" ref="tutorial_search"/>
+    </record>
+    <menuitem action="tutorial_action" id="menu_tutorial_action" parent="base.next_id_2" sequence="6"/>
+</odoo>

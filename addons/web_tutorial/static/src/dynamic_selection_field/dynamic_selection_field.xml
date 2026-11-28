@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web_tutorial.DynamicSelectionField">
+        <span t-if="this.props.readonly" t-out="this.labels().join(', ')"/>
+        <SelectMenu
+            t-else=""
+            choices="this.choices()"
+            value="this.value()"
+            multiSelect="this.props.multiSelect"
+            autoSort="false"
+            placeholder="this.props.placeholder"
+            onSelect.bind="this.onSelect"
+        />
+    </t>
+</templates>

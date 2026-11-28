@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="project_tutorial" model="web_tutorial.tutorial">
+        <field name="title">Organize your projects</field>
+        <field name="sequence">110</field>
+        <field name="group_ids" eval="[Command.link(ref('group_project_manager'))]"/>
+        <field name="end_message">Congratulations, you are now a master of project management.</field>
+    </record>
+
+    <record id="project_tutorial_step_project_kanban_welcome" model="web_tutorial.step">
+        <field name="tutorial_id" ref="project_tutorial"/>
+        <field name="action_id" ref="open_view_project_all"/>
+        <field name="view_types">list,kanban</field>
+        <field name="sequence">5</field>
+        <field name="type">dialog</field>
+        <field name="message" type="html">
+            <div class="text-center">
+                <img src="/project/static/description/icon.png" alt="Project" width="72" class="mb-3"/>
+                <h3>Welcome to <b>Project</b>!</h3>
+                <p>Organize your work in <b>projects</b>, split it into <b>tasks</b> and follow them until they're <b>done</b>.</p>
+                <p class="text-muted mb-0">Let's create your first project together, it only takes a minute.</p>
+            </div>
+        </field>
+    </record>
+
+    <record id="project_tutorial_step_project_kanban_new" model="web_tutorial.step">
+        <field name="tutorial_id" ref="project_tutorial"/>
+        <field name="action_id" ref="open_view_project_all"/>
+        <field name="view_types">list,kanban</field>
+        <field name="sequence">10</field>
+        <field name="type">generic_button</field>
+        <field name="name">New</field>
+        <field name="message">Start a new project to organize your work.</field>
+    </record>
+
+    <record id="project_tutorial_step_project_form_name" model="web_tutorial.step">
+        <field name="tutorial_id" ref="project_tutorial"/>
+        <field name="model_id" ref="model_project_project"/>
+        <field name="view_types">form</field>
+        <field name="sequence">20</field>
+        <field name="type">field</field>
+        <field name="name">name</field>
+        <field name="message">Give your project a name, e.g. Office move or Website redesign.</field>
+    </record>
+
+    <record id="project_tutorial_step_project_form_action_view_tasks" model="web_tutorial.step">
+        <field name="tutorial_id" ref="project_tutorial"/>
+        <field name="model_id" ref="model_project_project"/>
+        <field name="view_types">form</field>
+        <field name="sequence">30</field>
+        <field name="type">method</field>
+        <field name="name">action_view_tasks</field>
+        <field name="message">All set! Create your project and jump into its tasks.</field>
+    </record>
+
+    <record id="project_tutorial_step_task_kanban_new" model="web_tutorial.step">
+        <field name="tutorial_id" ref="project_tutorial"/>
+        <field name="model_id" ref="model_project_task"/>
+        <field name="view_types">list,kanban</field>
+        <field name="sequence">40</field>
+        <field name="type">generic_button</field>
+        <field name="name">New</field>
+        <field name="message">Now, create your first task.</field>
+    </record>
+
+    <record id="project_tutorial_step_task_form_name" model="web_tutorial.step">
+        <field name="tutorial_id" ref="project_tutorial"/>
+        <field name="model_id" ref="model_project_task"/>
+        <field name="view_types">form</field>
+        <field name="sequence">50</field>
+        <field name="type">field</field>
+        <field name="name">name</field>
+        <field name="message">What needs to be done? Describe the task in a few words.</field>
+    </record>
+
+    <record id="project_tutorial_step_task_form_user_ids" model="web_tutorial.step">
+        <field name="tutorial_id" ref="project_tutorial"/>
+        <field name="model_id" ref="model_project_task"/>
+        <field name="view_types">form</field>
+        <field name="sequence">60</field>
+        <field name="type">field</field>
+        <field name="name">user_ids</field>
+        <field name="message">Who's on it? Assign the task to yourself or a teammate.</field>
+    </record>
+
+    <record id="project_tutorial_step_task_form_priority" model="web_tutorial.step">
+        <field name="tutorial_id" ref="project_tutorial"/>
+        <field name="model_id" ref="model_project_task"/>
+        <field name="view_types">form</field>
+        <field name="sequence">70</field>
+        <field name="type">field</field>
+        <field name="name">priority</field>
+        <field name="message">Is it urgent? Star it so it stands out.</field>
+    </record>
+
+    <record id="project_tutorial_step_task_form_tag_ids" model="web_tutorial.step">
+        <field name="tutorial_id" ref="project_tutorial"/>
+        <field name="model_id" ref="model_project_task"/>
+        <field name="view_types">form</field>
+        <field name="sequence">80</field>
+        <field name="type">field</field>
+        <field name="name">tag_ids</field>
+        <field name="message">Add tags to find similar tasks at a glance (e.g. Design, Bug).</field>
+    </record>
+
+    <record id="project_tutorial_step_task_form_date_deadline" model="web_tutorial.step">
+        <field name="tutorial_id" ref="project_tutorial"/>
+        <field name="model_id" ref="model_project_task"/>
+        <field name="view_types">form</field>
+        <field name="sequence">90</field>
+        <field name="type">field</field>
+        <field name="name">date_deadline</field>
+        <field name="message">When should it be done? Set a deadline.</field>
+    </record>
+
+    <record id="project_tutorial_step_task_form_description" model="web_tutorial.step">
+        <field name="tutorial_id" ref="project_tutorial"/>
+        <field name="model_id" ref="model_project_task"/>
+        <field name="view_types">form</field>
+        <field name="sequence">100</field>
+        <field name="type">field</field>
+        <field name="name">description</field>
+        <field name="message">Write down the details, so everyone knows what to do.</field>
+    </record>
+</odoo>
