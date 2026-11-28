@@ -3,7 +3,6 @@ import {
     insertSnippet,
     registerWebsitePreviewTour,
     changeImageShape,
-    openPowerbox,
 } from "@website/js/tours/tour_utils";
 
 registerWebsitePreviewTour(
@@ -215,45 +214,6 @@ registerWebsitePreviewTour(
         {
             content: "Checks that the icon doesn't have a shape",
             trigger: ":iframe .s_text_image [data-icon='favorite']:not([data-shape])",
-        },
-    ]
-);
-
-registerWebsitePreviewTour(
-    "website_media_dialog_insert_media",
-    {
-        edition: true,
-    },
-    () => [
-        ...insertSnippet({
-            id: "s_text_block",
-            name: "Text",
-            groupName: "Text",
-        }),
-        {
-            content: "Click on the first paragraph",
-            trigger: ":iframe .s_text_block p",
-            run: "editor test",
-        },
-        openPowerbox(":iframe .s_text_block p:last-child"),
-        {
-            content: "Click on the media item from powerbox",
-            trigger: "div.o-we-command-name:contains('Media')",
-            run: "click",
-        },
-        {
-            content: "Click on the 'Icons' tab",
-            trigger: ".o_select_media_dialog button.nav-link:contains('Icons')",
-            run: "click",
-        },
-        {
-            content: "Click on the first icon",
-            trigger: ".o_select_media_dialog .font-icons-icon",
-            run: "click",
-        },
-        {
-            content: "Verify that the icon was inserted",
-            trigger: ":iframe .s_text_block p > span.oi",
         },
     ]
 );

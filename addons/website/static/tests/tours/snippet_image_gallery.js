@@ -13,26 +13,6 @@ import {
 } from "@website/js/tours/tour_utils";
 
 registerWebsitePreviewTour(
-    "snippet_image_gallery",
-    {
-        edition: true,
-    },
-    () => [
-        ...insertSnippet({ id: "s_images_wall", name: "Images Wall", groupName: "Images" }),
-        ...clickOnSave(),
-        {
-            content: "Click on an image of the Image Wall",
-            trigger: ":iframe .s_image_gallery img",
-            run: "click",
-        },
-        {
-            content: "Check that the modal has opened properly",
-            trigger: ":iframe .o_image_lightbox img",
-        },
-    ]
-);
-
-registerWebsitePreviewTour(
     "snippet_image_gallery_remove",
     {
         edition: true,

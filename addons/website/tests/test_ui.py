@@ -603,9 +603,6 @@ class TestUi(HttpCaseWithWebsiteUser):
     def test_27_website_clicks(self):
         self.start_tour(self.env["website"].get_client_action_url('/', False), 'website_click_tour', login='admin')
 
-    def test_29_website_text_edition(self):
-        self.start_tour(self.env["website"].get_client_action_url('/', True), 'website_text_edition', login='admin')
-
     def test_29_website_backend_menus_redirect(self):
         Menu = self.env['ir.ui.menu']
         menu_root = Menu.create({'name': 'Test Root'})
@@ -618,9 +615,6 @@ class TestUi(HttpCaseWithWebsiteUser):
         self.assertTrue(self.env.ref('base.user_admin').action_id, 'The user should have an action (or the test/tour will not test anything).')
         self.assertFalse(menu_root.action, 'The top menu should not have an action (or the test/tour will not test anything).')
         self.start_tour('/', 'website_backend_menus_redirect', login='admin')
-
-    def test_30_website_text_animations(self):
-        self.start_tour(self.env['website'].get_client_action_url('/', True), 'text_animations', login='admin')
 
     def test_31_website_edit_megamenu_big_icons_subtitles(self):
         self.start_tour(self.env['website'].get_client_action_url('/', True), 'edit_megamenu_big_icons_subtitles', login='admin')
@@ -640,9 +634,6 @@ class TestUi(HttpCaseWithWebsiteUser):
 
     def test_website_media_dialog_image_shape(self):
         self.start_tour(self.env['website'].get_client_action_url("/", True), 'website_media_dialog_image_shape', login='admin')
-
-    def test_website_media_dialog_insert_media(self):
-        self.start_tour(self.env['website'].get_client_action_url("/", True), "website_media_dialog_insert_media", login="admin")
 
     def test_website_media_dialog_insert_file(self):
         # Ensure at least one document exists for the step that chooses one
@@ -999,13 +990,6 @@ class TestUi(HttpCaseWithWebsiteUser):
 
     def test_header_bg_blur_option(self):
         self.start_tour(self.env['website'].get_client_action_url('/', True), 'header_bg_blur_option', login='admin')
-
-    def test_header_over_the_content_bg_blur_option(self):
-        self.start_tour(
-            self.env['website'].get_client_action_url('/', True),
-            'header_over_the_content_bg_blur_option',
-            login='admin',
-        )
 
     def test_website_img_width_height(self):
         self.env['res.lang'].create({

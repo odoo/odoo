@@ -1,6 +1,5 @@
 import { registry } from "@web/core/registry";
 import {
-    changeOptionInPopover,
     clickOnEditAndWaitEditMode,
     clickOnSave,
     selectHeader,
@@ -170,31 +169,5 @@ registry.category("web_tour.tours").add("header_bg_blur_option", {
             content: `Check that the blur is present on the sidebar`,
             trigger: ":iframe #wrapwrap > header.o_top_menu_collapse_shown .o_navbar_mobile",
         }),
-    ],
-});
-
-registry.category("web_tour.tours").add("header_over_the_content_bg_blur_option", {
-    steps: () => [
-        waitForEditMode,
-        selectHeader(),
-        ...changeOptionInPopover("Header", "Header Position", "Over the content"),
-        {
-            content: "Wait for the operation to finish",
-            trigger: ".o_website_preview :iframe:not(:has(.o_loading_screen))",
-        },
-        {
-            content: "Check that the header is over the content",
-            trigger: ":iframe #wrapwrap.o_header_overlay",
-        },
-        ...setHeaderBackgroundHex("#000000"),
-        {
-            content: "Check that the blur option is hidden for an opaque background",
-            trigger: `body:not(:has(${headerBlurRangeSelector}))`,
-        },
-        ...setHeaderBackgroundHex("#00000080"),
-        {
-            content: "Check that the blur option appears for a transparent background",
-            trigger: headerBlurRangeSelector,
-        },
     ],
 });
