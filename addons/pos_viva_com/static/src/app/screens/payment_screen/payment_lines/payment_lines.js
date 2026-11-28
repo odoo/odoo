@@ -1,7 +1,8 @@
 import { PaymentScreenPaymentLines } from "@point_of_sale/app/screens/payment_screen/payment_lines/payment_lines";
 import { patch } from "@web/core/utils/patch";
-import { useVivaApp } from "../../../hooks/use_viva_app";
+import { useVivaApp } from "@pos_viva_com/app/hooks/use_viva_app";
 import { _t } from "@web/core/l10n/translation";
+import { setVivaAppEnabled } from "@pos_viva_com/app/utils/viva_app";
 
 patch(PaymentScreenPaymentLines.prototype, {
     setup() {
@@ -10,43 +11,25 @@ patch(PaymentScreenPaymentLines.prototype, {
     },
 
     getPaymentActionState(line) {
-        if (this.vivaApp.isIntegrated(line)) {
+        if (this.vivaApp.use(line.payment_method_id)) {
             return {
                 id: "viva_continue_app",
                 title: _t("Continue on Viva app"),
                 icon: "smartphone",
                 actions: [
                     {
-                        id: "viva_reset_integration",
-                        label: _t("Reset Integration"),
-                        title: _t("Reset Viva Integration"),
-                        action: () => this.vivaApp.resetIntegration(line),
-                        severity: "danger",
+                        id: "viva_use_terminal",
+                        label: _t("Use terminal instead"),
+                        title: _t("Stop using the Viva app on this device"),
+                        action: () => {
+                            this.props.deleteLine(line.uuid);
+                            setVivaAppEnabled(false);
+                        },
+                        severity: "warning",
                     },
                 ],
             };
         }
-
-        const state = super.getPaymentActionState(...arguments);
-        if (
-            this.vivaApp.use(line.payment_method_id) &&
-            this.vivaApp.hasRefused() &&
-            !line.isDone()
-        ) {
-            state.actions = [
-                ...state.actions,
-                {
-                    id: "viva_use_app",
-                    label: _t("Use Viva app"),
-                    title: _t("Pay with the Viva Wallet application"),
-                    action: () => {
-                        this.vivaApp.forgetIntegration();
-                        this.props.deleteLine(line.uuid);
-                    },
-                    severity: "warning",
-                },
-            ];
-        }
-        return state;
+        return super.getPaymentActionState(...arguments);
     },
 });
