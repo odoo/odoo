@@ -220,3 +220,17 @@ class TestGetBaseUrl(odoo.tests.TransactionCase):
             mail._prepare_outgoing_body(),
             "The notification layout links should also use the related record's website.",
         )
+
+    def test_06_report_url_ignores_current_website(self):
+        self.env['ir.config_parameter'].sudo().set_param('report.url', False)
+        web_base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        website = self.env['website'].create({
+            'name': 'Website Test',
+            'domain': 'https://website-report.example.com',
+        })
+        report = self.env['ir.actions.report'].with_context(website_id=website.id)
+        self.assertEqual(
+            report._get_report_url(layout=report._get_layout()),
+            web_base_url,
+            "wkhtmltopdf should fetch the report assets from web.base.url, not from the website being served.",
+        )
