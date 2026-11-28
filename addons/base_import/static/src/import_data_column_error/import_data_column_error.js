@@ -1,38 +1,32 @@
 import { Component, proxy, t, useProps } from "@odoo/owl";
-import { useService } from "@web/core/utils/hooks";
+import { ImportErrorResolution } from "../import_error_resolution/import_error_resolution";
+import { formatErrorRows } from "../import_model";
 
 export class ImportDataColumnError extends Component {
     static template = "ImportDataColumnError";
+    static components = { ImportErrorResolution };
 
     props = useProps({
         errors: t.array(),
         fieldInfo: t.object(),
         resultNames: t.array(),
+        onErrorResolved: t.function(),
     });
 
     setup() {
-        this.action = useService("action");
-        this.orm = useService("orm");
-        this.state = proxy({
-            isExpanded: false,
-            moreInfoContent: undefined,
-        });
+        this.state = proxy({ isExpanded: false });
     }
-    get moreInfo() {
-        const moreInfoObjects = this.props.errors.map((error) => error.moreinfo);
-        return moreInfoObjects.length && moreInfoObjects[0];
-    }
+
     isErrorVisible(index) {
         return this.state.isExpanded || index < 3;
     }
-    onMoreInfoClicked() {
-        const moreInfo = this.moreInfo;
-        if (this.state.moreInfoContent) {
-            this.state.moreInfoContent = undefined;
-        } else if (moreInfo instanceof Array) {
-            this.state.moreInfoContent = moreInfo;
-        } else {
-            this.action.doAction(moreInfo);
-        }
+
+    getMessageClass(error) {
+        return error.reportedBefore && !error.resolution ? "text-danger" : "";
+    }
+
+    getErrorText(error) {
+        const rowsText = formatErrorRows(error, this.props.resultNames);
+        return rowsText ? `${error.message} ${rowsText}` : error.message;
     }
 }
