@@ -25,6 +25,8 @@ export class SetIconsAction extends BuilderAction {
         editingElement.dataset.ratingIcon = iconParam;
         delete editingElement.dataset.activeCustomIcon;
         delete editingElement.dataset.inactiveCustomIcon;
+        delete editingElement.dataset.activeCustomIconFilled;
+        delete editingElement.dataset.inactiveCustomIconFilled;
         renderIcons(editingElement);
     }
     isApplied({ editingElement, params: { mainParam: iconParam } }) {
@@ -34,13 +36,9 @@ export class SetIconsAction extends BuilderAction {
 export class CustomIconAction extends BuilderAction {
     static id = "customIcon";
     static dependencies = ["media"];
-    async load({ editingElement, params: { mainParam: customParam } }) {
+    async load() {
         return new Promise((resolve) => {
-            const isCustomActive = customParam === "customActiveIcon";
             const media = document.createElement("i");
-            media.className = isCustomActive
-                ? getActiveCustomIcons(editingElement)
-                : getInactiveCustomIcons(editingElement);
             const mediaDialogParams = {
                 visibleTabs: ["ICONS"],
                 media,
@@ -71,7 +69,13 @@ export class CustomIconAction extends BuilderAction {
             inactiveIconEls.length > 0 ? inactiveIconEls[0].getAttribute("data-icon") : customIcon;
         editingElement.dataset.activeCustomIcon = oiActiveCustomIcons;
         editingElement.dataset.inactiveCustomIcon = oiInactiveCustomIcons;
+        const filledKey = isCustomActive ? "activeCustomIconFilled" : "inactiveCustomIconFilled";
+        editingElement.dataset[filledKey] = String(savedIconEl.classList.contains("oi-filled"));
         editingElement.dataset.ratingIcon = "dark_mode";
+        const iconClass = isCustomActive
+            ? getActiveIconClass(editingElement)
+            : getInactiveIconClass(editingElement);
+        renderIconGroup(iconEls, iconClass, customIcon);
     }
 }
 export class ActiveIconsNumberAction extends BuilderAction {
@@ -130,8 +134,11 @@ function updateAriaLabel({ editingElement, nbActiveIcons, nbTotalIcons }) {
         })
     );
 }
-function getActiveCustomIcons(editingElement) {
-    return editingElement.dataset.activeCustomIcon || "";
+function getActiveIconClass(editingElement) {
+    return editingElement.dataset.activeCustomIconFilled === "false" ? "oi" : "oi oi-filled";
+}
+function getActiveIconName(editingElement) {
+    return editingElement.dataset.activeCustomIcon || getIconType(editingElement);
 }
 function getActiveIcons(editingElement) {
     return editingElement.querySelectorAll(".s_rating_active_icons > i");
@@ -142,25 +149,30 @@ function getAllIcons(editingElement) {
 function getIconType(editingElement) {
     return editingElement.dataset.ratingIcon;
 }
-function getInactiveCustomIcons(editingElement) {
-    return editingElement.dataset.inactiveCustomIcon || "";
+function getInactiveIconClass(editingElement) {
+    return editingElement.dataset.inactiveCustomIconFilled === "true" ? "oi oi-filled" : "oi";
+}
+function getInactiveIconName(editingElement) {
+    return editingElement.dataset.inactiveCustomIcon || getIconType(editingElement);
 }
 function getInactiveIcons(editingElement) {
     return editingElement.querySelectorAll(".s_rating_inactive_icons  > i");
 }
 function renderIcons(editingElement) {
-    const iconType = getIconType(editingElement);
-    const activeIconName = getActiveCustomIcons(editingElement) || iconType;
-    const inactiveIconName = getInactiveCustomIcons(editingElement) || iconType;
-
-    const activeIconEls = getActiveIcons(editingElement);
-    const inactiveIconEls = getInactiveIcons(editingElement);
-    activeIconEls.forEach((activeIconEl) => {
-        activeIconEl.className = "oi oi-filled";
-        activeIconEl.dataset.icon = activeIconName;
-    });
-    inactiveIconEls.forEach((inactiveIconEl) => {
-        inactiveIconEl.className = "oi";
-        inactiveIconEl.dataset.icon = inactiveIconName;
+    renderIconGroup(
+        getActiveIcons(editingElement),
+        getActiveIconClass(editingElement),
+        getActiveIconName(editingElement)
+    );
+    renderIconGroup(
+        getInactiveIcons(editingElement),
+        getInactiveIconClass(editingElement),
+        getInactiveIconName(editingElement)
+    );
+}
+function renderIconGroup(iconEls, iconClass, iconName) {
+    iconEls.forEach((iconEl) => {
+        iconEl.className = iconClass;
+        iconEl.dataset.icon = iconName;
     });
 }
