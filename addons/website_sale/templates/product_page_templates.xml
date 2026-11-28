@@ -939,7 +939,7 @@
     >
         <div id="add_to_cart_wrap" position="inside">
             <div
-                t-attf-class="css_quantity input-group {{'d-none' if combination_info['prevent_sale'] else 'd-inline-flex order-first'}} align-middle border"
+                t-attf-class="css_quantity o_prevent_border input-group {{'d-none' if combination_info['prevent_sale'] else 'd-inline-flex order-first'}} align-middle border"
                 contenteditable="false"
             >
                 <t t-set="minus_button_title"><t t-if="combination_info.get('minimum_qty_reached_message')" t-out="combination_info['minimum_qty_reached_message']"/><t t-else="">Remove one</t></t>
@@ -955,7 +955,7 @@
                 <t t-set="minimum_qty" t-value="combination_info.get('minimum_qty') or 1"/>
                 <input
                     type="text"
-                    t-attf-class="form-control quantity text-center border-0"
+                    t-attf-class="form-control o_force_shadow quantity text-center border-0"
                     t-att-data-min="minimum_qty"
                     name="add_qty"
                     t-att-value="minimum_qty"
