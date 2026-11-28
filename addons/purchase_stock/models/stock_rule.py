@@ -175,7 +175,8 @@ class StockRule(models.Model):
         supplier = False
         # Get the schedule date in order to find a valid seller
         if 'date_planned' in values:
-            date = max(fields.Datetime.from_string(values['date_planned']).date(), fields.Date.today())
+            company_today = fields.Date.context_today(self.with_context(tz=company_id.tz)) if company_id.tz else fields.Date.today()
+            date = max(fields.Datetime.from_string(values['date_planned']).date(), company_today)
         else:
             date = None
 

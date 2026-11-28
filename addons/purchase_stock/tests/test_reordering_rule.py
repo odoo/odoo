@@ -6,7 +6,7 @@ from datetime import timedelta as td
 from json import loads
 
 from odoo import SUPERUSER_ID, Command
-from odoo.fields import Date
+from odoo.fields import Date, Datetime
 from odoo.tests import Form, tagged, freeze_time
 from odoo.tests.common import TransactionCase
 from odoo.tools import format_date
@@ -1550,3 +1550,24 @@ class TestReorderingRule(TransactionCase):
             'product_qty': 6.0,
             'price_unit': 100.0,
         }])
+
+    def test_orderpoint_deadline_timezone(self):
+        """
+        Tests that the date_order on a PO is on the same day even with a timezone
+        that is different from UTC when ordering with a Reordering Rule
+        """
+        self.env.company.tz = 'Australia/Sydney'
+        self.env.company.horizon_days = 0
+        self.product_01.seller_ids.delay = 0
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'name': 'Sydney RR',
+            'product_id': self.product_01.id,
+            'product_min_qty': 0,
+            'product_max_qty': 10,
+        })
+
+        with freeze_time('2026-11-03 14:00:00'):
+            orderpoint.invalidate_recordset(['lead_horizon_date', 'lead_days'])
+            self.assertEqual(orderpoint.lead_horizon_date, Date.from_string('2026-11-04'))
+            deadline = orderpoint._get_orderpoint_procurement_date()
+            self.assertEqual(deadline, Datetime.from_string('2026-11-04 01:00:00'))
