@@ -13,7 +13,7 @@ class PaymentTransaction(models.Model):
         }
         super()._process_pos_online_payment()
         for tx in self:
-            if tx and tx.pos_order_id and tx.state in ('authorized', 'done'):
+            if tx and tx.pos_order_id:
                 if previous_states.get(tx.id) == 'draft':
                     tx.pos_order_id._send_self_order_receipt()
                 tx.pos_order_id._send_notification_online_payment_status('success')

@@ -24,14 +24,19 @@ class PaymentTransaction(models.Model):
                 return pos_order.pos_reference
         return super()._compute_reference_prefix(separator, **values)
 
-    def _post_process(self):
+    def _finalize_authorized_transactions(self):
         """ Override of payment to process POS online payments automatically. """
-        super()._post_process()
+        super()._finalize_authorized_transactions()
+        self._process_pos_online_payment()
+
+    def _finalize_done_transactions(self):
+        """ Override of payment to process POS online payments automatically. """
+        super()._finalize_done_transactions()
         self._process_pos_online_payment()
 
     def _process_pos_online_payment(self):
         for tx in self:
-            if tx and tx.pos_order_id and tx.state in ('authorized', 'done') and not tx.payment_id.pos_order_id:
+            if tx and tx.pos_order_id and not tx.payment_id.pos_order_id:
                 pos_order = tx.pos_order_id
                 if tools.float_compare(tx.amount, 0.0, precision_rounding=pos_order.currency_id.rounding) <= 0:
                     raise ValidationError(_('The payment transaction (%d) has a negative amount.', tx.id))
