@@ -14,7 +14,7 @@ from functools import cache
 from pathlib import Path
 from platform import system, release
 
-from odoo import release as odoo_release
+from odoo import release as odoo_release, tools
 
 _logger = logging.getLogger(__name__)
 
@@ -295,6 +295,10 @@ def get_gateway():
     if gw:
         return gw[0]
     return None
+
+
+def get_log_path():
+    return tools.config['logfile'] or ("/var/log/odoo/odoo-server.log" if IS_RPI else str(path_file('odoo.log')))
 
 
 IOT_IDENTIFIER = _get_identifier()
