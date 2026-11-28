@@ -105,14 +105,15 @@ class HrAttendance(models.Model):
     @api.depends('check_in', 'check_out', 'employee_id')
     def _compute_overtime_status(self):
         for attendance in self:
-            if not attendance.linked_overtime_ids:
+            statuses = set(attendance.linked_overtime_ids.mapped('status'))
+            if not statuses:
                 attendance.overtime_status = False
-            elif all(attendance.linked_overtime_ids.mapped(lambda ot: ot.status == 'approved')):
-                attendance.overtime_status = 'approved'
-            elif all(attendance.linked_overtime_ids.mapped(lambda ot: ot.status == 'refused')):
-                attendance.overtime_status = 'refused'
-            else:
+            elif 'to_approve' in statuses:
                 attendance.overtime_status = 'to_approve'
+            elif 'approved' in statuses:
+                attendance.overtime_status = 'approved'
+            else:
+                attendance.overtime_status = 'refused'
 
     @api.depends('check_in', 'check_out', 'employee_id')
     def _compute_overtime_hours(self):
