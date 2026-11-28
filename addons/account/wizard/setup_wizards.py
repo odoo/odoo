@@ -45,7 +45,11 @@ class FinancialYearOpeningWizard(models.TransientModel):
         # fields, the inverse write is done one value at a time, and thus the constraint is verified
         # one value at a time... so it is likely to fail.
         for wiz in self:
-            wiz.company_id.write({
+            # Accounting managers are allowed to use this wizard but have no write access on res.company
+            company_to_update = wiz.company_id
+            if wiz.company_id in self.env.companies and self.env.user.has_group('account.group_account_manager'):
+                company_to_update = wiz.company_id.sudo()
+            company_to_update.write({
                 'fiscalyear_last_day': vals.get('fiscalyear_last_day') or wiz.company_id.fiscalyear_last_day,
                 'fiscalyear_last_month': vals.get('fiscalyear_last_month') or wiz.company_id.fiscalyear_last_month,
                 'account_opening_date': vals.get('opening_date') or wiz.company_id.account_opening_date,
@@ -60,10 +64,11 @@ class FinancialYearOpeningWizard(models.TransientModel):
         return super().write(vals)
 
     def action_save_onboarding_fiscal_year(self):
-        step_state = self.env['onboarding.onboarding.step'].with_company(self.company_id).action_validate_step('account.onboarding_onboarding_step_fiscal_year')
+        self.ensure_one()
+        step_state = self.env['onboarding.onboarding.step'].sudo().with_company(self.company_id).action_validate_step('account.onboarding_onboarding_step_fiscal_year')
         # move the state to DONE to avoid an update in the web_read
         if step_state == 'JUST_DONE':
-            self.env.ref('account.onboarding_onboarding_account_dashboard')._prepare_rendering_values()
+            self.env.ref('account.onboarding_onboarding_account_dashboard').sudo()._prepare_rendering_values()
         return {'type': 'ir.actions.client', 'tag': 'soft_reload'}
 
 
