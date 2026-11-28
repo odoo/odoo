@@ -4,7 +4,11 @@ import { SaleOrderLine } from "@pos_sale/../tests/unit/data/sale_order_line.data
 // Lots reserved on the delivery of the sale order line, as computed by
 // `_get_read_converted_extra_items` for tracked products.
 const LOTS_BY_SALE_ORDER_LINE = {
-    31: { lot_names: ["1001", "1002"], lot_qty_by_name: { 1001: 1, 1002: 1 } },
+    31: {
+        lot_names: ["1001", "1002"],
+        lot_qty_by_name: { 1001: 1, 1002: 1 },
+        lot_expiration_date_by_name: { 1001: "2027-01-01 10:00:00" },
+    },
     32: { lot_names: ["LOT-1", "LOT-2"], lot_qty_by_name: { "LOT-1": 2, "LOT-2": 1 } },
     33: { lot_names: ["LOT-PRICE"], lot_qty_by_name: { "LOT-PRICE": 1 } },
     34: { lot_names: ["1001"], lot_qty_by_name: { 1001: 1 } },

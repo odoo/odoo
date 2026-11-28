@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models
+from odoo import api, fields, models
 
 
 class SaleOrder(models.Model):
@@ -78,4 +78,10 @@ class SaleOrderLine(models.Model):
                 if line.lot_id:
                     lot_qty_by_name[line.lot_id.name] = lot_qty_by_name.get(line.lot_id.name, 0.0) + line.quantity
             extra_items['lot_qty_by_name'] = lot_qty_by_name
+            if 'expiration_date' in self.env['stock.lot']._fields:
+                extra_items['lot_expiration_date_by_name'] = {
+                    lot.name: fields.Datetime.to_string(lot.expiration_date)
+                    for lot in move_lines.lot_id
+                    if lot.expiration_date
+                }
         return extra_items

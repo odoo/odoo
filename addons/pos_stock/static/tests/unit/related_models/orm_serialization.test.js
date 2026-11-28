@@ -5,7 +5,7 @@ import { definePosStockModels } from "@pos_stock/../tests/unit/data/generate_mod
 
 definePosStockModels();
 
-test("serialization of dynamic model without uuid", async () => {
+test("serialization of dynamic model with uuid (pack lots)", async () => {
     await makeMockServer();
     const models = getRelatedModelsInstance(false);
     let order = models["pos.order"].create({});
@@ -16,7 +16,12 @@ test("serialization of dynamic model without uuid", async () => {
     });
     const line1UUID = line1.uuid;
 
-    models["pos.pack.operation.lot"].create({ pos_order_line_id: line1, lot_name: "lot1" });
+    const lot1 = models["pos.pack.operation.lot"].create({
+        pos_order_line_id: line1,
+        lot_name: "lot1",
+    });
+    const lot1UUID = lot1.uuid;
+    expect(lot1UUID).not.toBeEmpty();
     {
         const keepCommandResult = models.serializeForORM(order, { keepCommands: true });
         const result = models.serializeForORM(order);
@@ -25,8 +30,13 @@ test("serialization of dynamic model without uuid", async () => {
         const pack_lot_ids = result.lines[0][2].pack_lot_ids;
         expect(pack_lot_ids.length).toBe(1);
         expect(pack_lot_ids[0][0]).toBe(0);
-        expect(pack_lot_ids[0][0]).toBe(0);
-        expect(pack_lot_ids[0][2]).toEqual({ lot_name: "lot1", write_date: false });
+        expect(pack_lot_ids[0][1]).toBe(0);
+        expect(pack_lot_ids[0][2]).toEqual({
+            lot_name: "lot1",
+            write_date: false,
+            expiration_date: false,
+            uuid: lot1UUID,
+        });
     }
 
     models.connectNewData({
@@ -48,6 +58,7 @@ test("serialization of dynamic model without uuid", async () => {
             {
                 id: 99,
                 lot_name: "lot1",
+                uuid: lot1UUID,
             },
         ],
     });
@@ -55,7 +66,14 @@ test("serialization of dynamic model without uuid", async () => {
     order = models["pos.order"].getBy("uuid", orderUUID);
     line1 = models["pos.order.line"].getBy("uuid", line1UUID);
 
-    models["pos.pack.operation.lot"].create({ pos_order_line_id: line1, lot_name: "lot2" });
+    expect(line1.pack_lot_ids.map((p) => p.id)).toEqual([99]);
+    expect(models["pos.pack.operation.lot"].getBy("uuid", lot1UUID).id).toBe(99);
+
+    const lot2 = models["pos.pack.operation.lot"].create({
+        pos_order_line_id: line1,
+        lot_name: "lot2",
+    });
+    const lot2UUID = lot2.uuid;
     {
         const keepCommandResult = models.serializeForORM(order, { keepCommands: true });
         const result = models.serializeForORM(order);
@@ -66,6 +84,7 @@ test("serialization of dynamic model without uuid", async () => {
         expect(pack_lot_ids[0][0]).toBe(0);
         expect(pack_lot_ids[0][1]).toBe(0);
         expect(pack_lot_ids[0][2].lot_name).toEqual("lot2");
+        expect(pack_lot_ids[0][2].uuid).toEqual(lot2UUID);
     }
 
     models.connectNewData({
@@ -89,15 +108,19 @@ test("serialization of dynamic model without uuid", async () => {
                 id: 99,
                 pos_order_line_id: 11,
                 lot_name: "lot1",
+                uuid: lot1UUID,
             },
             {
                 id: 999,
                 pos_order_line_id: 11,
                 lot_name: "lot2",
+                uuid: lot2UUID,
             },
         ],
     });
     order = models["pos.order"].getBy("uuid", orderUUID);
+    expect(order.lines[0].pack_lot_ids.map((p) => p.id)).toEqual([99, 999]);
+    expect(models["pos.pack.operation.lot"].length).toBe(2);
     order.lines[0].pack_lot_ids[1].delete();
     order.lines[0].pack_lot_ids[0].delete();
     {

@@ -19,11 +19,18 @@ patch(PosStore.prototype, {
                 state.userWasAskedAboutLoadedLots = true;
             }
             if (state.useLoadedLots) {
+                const lotNames = convertedLine.lot_names || [];
+                for (const lotName of lotNames) {
+                    const expirationDate = convertedLine.lot_expiration_date_by_name?.[lotName];
+                    if (expirationDate) {
+                        this.showNotificationIfLotExpired(lotName, expirationDate);
+                    }
+                }
                 newLine.setPackLotLines({
                     modifiedPackLotLines: [],
-                    newPackLotLines: (convertedLine.lot_names || []).map((name) => ({
-                        lot_name: name,
-                    })),
+                    newPackLotLines: lotNames.map((name) =>
+                        this.getSOPackLotLineValues(convertedLine, name)
+                    ),
                 });
             }
         }
@@ -53,7 +60,7 @@ patch(PosStore.prototype, {
                     const splitted_line = lotSplittedLines.shift();
                     splitted_line.setPackLotLines({
                         modifiedPackLotLines: [],
-                        newPackLotLines: [{ lot_name: lot }],
+                        newPackLotLines: [this.getSOPackLotLineValues(convertedLine, lot)],
                         setQuantity: false,
                     });
                     total_lot_quantity += splitted_line.qty;
@@ -68,7 +75,7 @@ patch(PosStore.prototype, {
                     splitted_line.setDiscount(line.discount);
                     splitted_line.setPackLotLines({
                         modifiedPackLotLines: [],
-                        newPackLotLines: [{ lot_name: lot }],
+                        newPackLotLines: [this.getSOPackLotLineValues(convertedLine, lot)],
                         setQuantity: false,
                     });
                     total_lot_quantity += lot_remaining_quantity;
@@ -83,6 +90,12 @@ patch(PosStore.prototype, {
             }
         }
         return splittedOrderLines;
+    },
+    getSOPackLotLineValues(convertedLine, lotName) {
+        return {
+            lot_name: lotName,
+            expiration_date: convertedLine.lot_expiration_date_by_name?.[lotName] || false,
+        };
     },
     initLoadState() {
         return {
