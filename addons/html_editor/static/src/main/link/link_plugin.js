@@ -754,7 +754,13 @@ export class LinkPlugin extends Plugin {
                 this.linkInDocument.parentElement.isContentEditable &&
                 !this.dependencies.delete.isUnremovable(this.linkInDocument),
             canUpload: this.config.allowFile,
-            onUpload: this.config.onAttachmentChange,
+            onUpload: (attachment) => {
+                this.services["pending_attachment_service"]?.addPendingAttachments(
+                    attachment.id,
+                    this.config.getRecordInfo?.()
+                );
+                this.config.onAttachmentChange?.(attachment);
+            },
             type: this.type || "",
             LinkPopoverState: this.LinkPopoverState,
             showReplaceTitleBanner: this.newlyInsertedLinks.has(linkElement),

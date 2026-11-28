@@ -504,7 +504,7 @@ class HTML_Editor(Controller):
         if attachment.url:
             prepare_attachment_url(attachment)
 
-        res = {'original': get_attachment_src(attachment)}
+        res = {'original': get_attachment_src(attachment), 'id': attachment.id}
         if alt_images:
             for size, image_b64 in alt_images.items():
                 fields['raw'] = b64decode(image_b64)

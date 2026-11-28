@@ -2796,6 +2796,118 @@ describe("save image", () => {
         await contains(".o_form_button_save").click();
         expect.verifySteps(["web_save: [42]"]);
     });
+
+    test("Attachments added on a new record are sent on save", async () => {
+        const pngData =
+            "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII";
+        Partner._fields.txt = fields.Html({ default: "<p class='test_target'><br></p>" });
+        // x2many of the same model, to discard another record of the model.
+        Partner._fields.line_ids = fields.One2many({ relation: "partner" });
+        // Attachments listed by the media dialog when it is reopened.
+        IrAttachment._records = [
+            {
+                id: 44,
+                name: "44.png",
+                mimetype: "image/png",
+                type: "binary",
+                res_model: "partner",
+                res_id: 0,
+                image_src: `data:image/png;base64,${pngData}`,
+            },
+            {
+                id: 45,
+                name: "45.png",
+                mimetype: "image/png",
+                type: "binary",
+                res_model: "partner",
+                res_id: 0,
+                image_src: `data:image/png;base64,${pngData}`,
+            },
+        ];
+        onRpc("/html_editor/attachment/add_data", async (request) => {
+            const { params } = await request.json();
+            // The pasted image (42) is returned as webp so it also goes through
+            // `saveModifiedImage`. Uploads are named after their id.
+            const [id, mimetype] =
+                params.name === "test_image.png"
+                    ? [42, "image/webp"]
+                    : [parseInt(params.name), "image/png"];
+            return {
+                id,
+                name: params.name,
+                mimetype,
+                image_src: `/web/image/${id}`,
+                access_token: "1234",
+                public: false,
+            };
+        });
+        // Modified copy of the pasted image.
+        onRpc("/html_editor/modify_image/42", () => ({ original: "/web/image/43", id: 43 }));
+        onRpc("/html_editor/attachment/remove", () => ({}));
+        onRpc("ir.attachment", "unlink", () => expect.step("unlink"));
+        onRpc("partner", "web_save", ({ kwargs }) => {
+            const ids = [...kwargs.context.pending_attachment_ids].sort((a, b) => a - b);
+            expect.step(
+                `web_save: ${JSON.stringify(ids)} ${kwargs.context.pending_attachment_res_model}`
+            );
+        });
+        await mountView({
+            type: "form",
+            resModel: "partner",
+            arch: `
+            <form>
+                <field name="txt" widget="html"/>
+                <field name="line_ids">
+                    <list><field name="name"/></list>
+                    <form><field name="name"/></form>
+                </field>
+            </form>`,
+        });
+        // Paste an image: queued when saved as attachment (42), and its
+        // modified copy is queued too (43).
+        setSelectionInHtmlField(".test_target");
+        pasteFile(htmlEditor, createBase64ImageFile(pngData));
+        await waitFor("img");
+
+        // Upload two images from the media dialog: queued on upload (44, 45).
+        // A single upload is inserted and closes the dialog.
+        for (const name of ["44.png", "45.png"]) {
+            htmlEditor.shared.media.openMediaDialog();
+            await waitFor(".o_select_media_dialog");
+            const fileInput = queryOne(".o_select_media_dialog input.d-none.o_file_input");
+            Object.defineProperty(fileInput, "files", {
+                value: [new File([], name, { type: "image/png" })],
+            });
+            manuallyDispatchProgrammaticEvent(fileInput, "change");
+            await expectElementCount(".o_select_media_dialog", 0);
+        }
+
+        // Delete the second upload from the media dialog: it is removed from
+        // the queue (45). The dialog lists it as a pending attachment of the
+        // record.
+        htmlEditor.shared.media.openMediaDialog();
+        await waitFor(".o_select_media_dialog img[title='45.png']");
+        await click(
+            ".o_existing_attachment_cell:has(img[title='45.png']) .o_existing_attachment_remove"
+        );
+        await contains(".modal-footer .btn-danger").click();
+        // The removal succeeded and the image is no longer listed.
+        await expectElementCount(".o_select_media_dialog img[title='45.png']", 0);
+        await contains(".o_select_media_dialog .btn-close").click();
+
+        // Discard a new x2many line: the model hooks are also called for it,
+        // but the pending attachments of the main record must be kept (no
+        // "unlink" step).
+        await contains(".o_field_x2many_list_row_add button").click();
+        await waitFor(".o_dialog .o_form_view");
+        await contains(".o_dialog .o_form_button_cancel").click();
+        await expectElementCount(".o_dialog", 0);
+
+        // On save, the context holds the pasted image, its modified copy and
+        // the kept upload, but not the deleted one, along with the record model.
+        await contains(".o_form_button_save").click();
+        await expect.waitForSteps(["web_save: [42,43,44] partner"]);
+    });
 });
 
 describe("translatable", () => {

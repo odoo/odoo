@@ -29,7 +29,6 @@ import { EditorVersionPlugin } from "@html_editor/core/editor_version_plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { canRenderAsHTML, fixInvalidHTML, instanceofMarkup } from "@html_editor/utils/sanitize";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
-import { extractUnmappedAttachmentsIds } from "@html_editor/main/media/media_plugin";
 
 const HTML_FIELD_METADATA_ATTRIBUTES = ["data-last-history-commits"];
 
@@ -85,7 +84,11 @@ export class HtmlField extends Component {
         this.codeViewRef = useRef("codeView");
 
         const { model } = this.props.record;
-        useBus(model.bus, "WILL_SAVE_URGENTLY", () => this.commitChanges({ urgent: true }));
+        useBus(model.bus, "WILL_SAVE_URGENTLY", () => {
+            // An urgent save doesn't call `onWillSaveRecord`.
+            this.pendingAttachmentsService.addAttachmentsIdsToContext(this.props.record);
+            this.commitChanges({ urgent: true });
+        });
         useBus(model.bus, "NEED_LOCAL_CHANGES", ({ detail }) =>
             detail.proms.push(this.commitChanges())
         );
@@ -139,20 +142,24 @@ export class HtmlField extends Component {
         const onRecordDiscarded = model.hooks.onRecordDiscarded;
         const onWillSaveRecord = model.hooks.onWillSaveRecord;
         const onRecordSaved = model.hooks.onRecordSaved;
-        model.hooks.onRecordDiscarded = (...args) => {
-            if (this.props.record.isNew) {
-                this.pendingAttachmentsService.unlinkPendingAttachments(this.props.record?.resId);
+        model.hooks.onRecordDiscarded = (record, ...args) => {
+            if (record.id === this.props.record.id && record.isNew) {
+                this.pendingAttachmentsService.unlinkPendingAttachments(record);
             }
-            return onRecordDiscarded(...args);
+            return onRecordDiscarded(record, ...args);
         };
-        model.hooks.onWillSaveRecord = (...args) => {
-            this.pendingAttachmentsService.addAttachmentsIdsToContext(this.props.record);
-            return onWillSaveRecord(...args);
+        model.hooks.onWillSaveRecord = (record, ...args) => {
+            if (record.id === this.props.record.id) {
+                this.pendingAttachmentsService.addAttachmentsIdsToContext(record);
+            }
+            return onWillSaveRecord(record, ...args);
         };
-        model.hooks.onRecordSaved = (...args) => {
-            this.pendingAttachmentsService.clearPendingAttachments(false);
-            this.pendingAttachmentsService.clearAttachmentsIdsFromContext(this.props.record);
-            return onRecordSaved(...args);
+        model.hooks.onRecordSaved = (record, ...args) => {
+            if (record.id === this.props.record.id) {
+                this.pendingAttachmentsService.clearPendingAttachments(record);
+                this.pendingAttachmentsService.clearAttachmentsIdsFromContext(record);
+            }
+            return onRecordSaved(record, ...args);
         };
     }
 
@@ -248,12 +255,7 @@ export class HtmlField extends Component {
                 await this.updateValue(this.editor.getContent());
             }
             const changeId = this.lastChangeId;
-            const editable = this.editor.editable;
             const el = await this.getEditorContent();
-            this.pendingAttachmentsService.addPendingAttachments(
-                this.props.record?.resId,
-                extractUnmappedAttachmentsIds(editable)
-            );
             const content = el.innerHTML;
             this.clearElementToCompare(el);
             const comparisonValue = el.innerHTML;
@@ -328,18 +330,11 @@ export class HtmlField extends Component {
             direction: localization.direction || "ltr",
             getRecordInfo: () => {
                 const { resModel, resId, data, fields, id } = this.props.record;
-                return { resModel, resId, data, fields, id };
+                return { resModel, resId, data, fields, id, fieldName: this.props.name };
             },
             resources: {},
-            getPendingAttachmentsIds: () => {
-                this.pendingAttachmentsService.addPendingAttachments(
-                    this.props.record?.resId,
-                    extractUnmappedAttachmentsIds(this.editor.editable)
-                );
-                return this.pendingAttachmentsService.pendingAttachmentIds[
-                    this.props.record?.resId
-                ];
-            },
+            getPendingAttachmentsIds: () =>
+                this.pendingAttachmentsService.pendingAttachmentIds[this.props.record.id] || [],
             ...this.props.editorConfig,
         };
 
@@ -504,36 +499,69 @@ const pendingAttachmentsService = {
     dependencies: ["orm"],
     start(env, { orm }) {
         const pendingAttachmentIds = {};
-        async function unlinkPendingAttachments(recordId) {
-            if (pendingAttachmentIds[recordId]?.length) {
-                orm.unlink("ir.attachment", [...new Set(pendingAttachmentIds[recordId])]);
-                clearPendingAttachments(recordId);
+        const pendingAttachmentFields = {};
+        function addPendingAttachments(attachmentId, { id, resId, fieldName } = {}) {
+            if (attachmentId && id && !resId) {
+                attachmentId = parseInt(attachmentId);
+                if (!pendingAttachmentIds[id]) {
+                    pendingAttachmentIds[id] = [];
+                }
+                pendingAttachmentIds[id].push(attachmentId);
+                if (fieldName) {
+                    if (!pendingAttachmentFields[id]) {
+                        pendingAttachmentFields[id] = {};
+                    }
+                    if (!pendingAttachmentFields[id][fieldName]) {
+                        pendingAttachmentFields[id][fieldName] = [];
+                    }
+                    pendingAttachmentFields[id][fieldName].push(attachmentId);
+                }
             }
         }
-        function addPendingAttachments(recordId, ids) {
-            if (!pendingAttachmentIds[recordId]) {
-                pendingAttachmentIds[recordId] = [];
+        function removePendingAttachments(attachmentId, { id } = {}) {
+            if (pendingAttachmentIds[id]) {
+                pendingAttachmentIds[id] = pendingAttachmentIds[id].filter(
+                    (pendingId) => pendingId !== attachmentId
+                );
             }
-            if (ids) {
-                pendingAttachmentIds[recordId].push(...ids);
+            for (const fieldName in pendingAttachmentFields[id]) {
+                pendingAttachmentFields[id][fieldName] = pendingAttachmentFields[id][
+                    fieldName
+                ].filter((pendingId) => pendingId !== attachmentId);
             }
         }
-        function clearPendingAttachments(recordId) {
-            delete pendingAttachmentIds[recordId];
+        function clearPendingAttachments(record) {
+            delete pendingAttachmentIds[record.id];
+            delete pendingAttachmentFields[record.id];
+        }
+        async function unlinkPendingAttachments(record) {
+            const ids = pendingAttachmentIds[record.id];
+            clearPendingAttachments(record);
+            if (ids?.length) {
+                await orm.unlink("ir.attachment", [...new Set(ids)]);
+            }
         }
         function addAttachmentsIdsToContext(record) {
-            if (pendingAttachmentIds[record?.resId]) {
-                record.context["pending_attachment_ids"] = pendingAttachmentIds[record?.resId];
+            if (record.isNew && pendingAttachmentIds[record.id]) {
+                record.context["pending_attachment_ids"] = [
+                    ...new Set(pendingAttachmentIds[record.id]),
+                ];
+                record.context["pending_attachment_res_model"] = record.resModel;
+                record.context["pending_attachment_fields"] =
+                    pendingAttachmentFields[record.id] || {};
             }
         }
         function clearAttachmentsIdsFromContext(record) {
             delete record.context["pending_attachment_ids"];
+            delete record.context["pending_attachment_res_model"];
+            delete record.context["pending_attachment_fields"];
         }
         return {
-            unlinkPendingAttachments,
-            addPendingAttachments,
-            clearPendingAttachments,
             pendingAttachmentIds,
+            addPendingAttachments,
+            removePendingAttachments,
+            clearPendingAttachments,
+            unlinkPendingAttachments,
             addAttachmentsIdsToContext,
             clearAttachmentsIdsFromContext,
         };

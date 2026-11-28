@@ -28,6 +28,8 @@ _lt = LazyTranslate(__name__)
 SEARCH_PANEL_ERROR_MESSAGE = _lt("Too many items to display.")
 MAX_NUMBER_OPENED_GROUPS = 10
 PENDING_ATTACHMENTS_KEY = "pending_attachment_ids"
+PENDING_ATTACHMENTS_MODEL_KEY = "pending_attachment_res_model"
+PENDING_ATTACHMENT_FIELDS_KEY = "pending_attachment_fields"
 
 
 class lazymapping(defaultdict):
@@ -210,10 +212,11 @@ class Base(models.AbstractModel):
         :return: A list of dictionaries representing the requested records.
         """
         ctx = self.env.context
-        attachments = self.env['ir.attachment'].browse(ctx.get(PENDING_ATTACHMENTS_KEY, ()))
+        attachments = self.env['ir.attachment'].browse(ctx.get(PENDING_ATTACHMENTS_KEY, ())).exists()
+        attachment_fields = ctx.get(PENDING_ATTACHMENT_FIELDS_KEY) or {}
         if attachments:
             attachments.check_access('read')
-            ctx = {k: v for k, v in ctx.items() if k != PENDING_ATTACHMENTS_KEY}
+            ctx = {k: v for k, v in ctx.items() if k not in (PENDING_ATTACHMENTS_KEY, PENDING_ATTACHMENTS_MODEL_KEY, PENDING_ATTACHMENT_FIELDS_KEY)}
         record = self.with_context(ctx)
         if record:
             record.write(vals)
@@ -221,10 +224,24 @@ class Base(models.AbstractModel):
             record = record.create(vals)
 
         if attachments and len(record) == 1:
-            attachments.filtered(lambda a: not a.res_id).write({
-                'res_model': record._name,
-                'res_id': record.id,
-            })
+            pending = attachments.filtered(lambda a: not a.res_id)
+            # In the case that the field is related, we want to instead link the attachment to that record.
+            for fname, ids in attachment_fields.items():
+                field = record._fields.get(fname)
+                if not (field and field.related):
+                    continue
+                target = record
+                for name in field.related.split('.')[:-1]:
+                    target = target[name][:1]
+                field_attachments = pending.filtered(lambda a: a.id in ids)
+                if target and target != record and field_attachments:
+                    field_attachments.write({'res_model': target._name, 'res_id': target.id})
+                    pending -= field_attachments
+            if pending:
+                pending.write({
+                    'res_model': self.env.context.get(PENDING_ATTACHMENTS_MODEL_KEY) or record._name,
+                    'res_id': record.id,
+                })
         if next_id:
             record = record.browse(next_id)
         return record.with_context(bin_size=True).web_read(specification)
