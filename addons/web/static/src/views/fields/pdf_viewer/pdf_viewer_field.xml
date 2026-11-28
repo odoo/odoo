@@ -49,6 +49,7 @@
         </t>
         <t t-if="this.props.record.data[this.props.name]">
             <iframe class="o_pdfview_iframe"
+                t-key="this.urlFile"
                 alt="PDF file"
                 t-att-src="this.url"
                 t-att-name="this.props.name"
