@@ -32,12 +32,6 @@ class ProductTemplate(models.Model):
             return False
         return all(variant._is_sold_out() for variant in self.product_variant_ids)
 
-    def _website_show_quick_add(self):
-        return (
-            super()._website_show_quick_add()
-            and not self._is_sold_out()
-        )
-
     def _get_additionnal_combination_info(self, product_or_template, quantity, uom, date, website):
         res = super()._get_additionnal_combination_info(product_or_template, quantity, uom, date, website)
 
