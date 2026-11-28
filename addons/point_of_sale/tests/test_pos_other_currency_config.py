@@ -82,6 +82,40 @@ class TestPoSOtherCurrencyConfig(TestPoSCommon):
                 credit += line.credit
             self.assertEqual(tools.float_compare(debit, credit, precision_rounding=self.other_currency_config.currency_id.rounding), 0)  # debit and credit should be equal
 
+    def test_cash_rounding_invoice(self):
+        """ The cash rounding of an invoice of a PoS in another currency is
+            computed in that currency and keeps the invoice balanced.
+        """
+        rounding_method = self.env['account.cash.rounding'].create({
+            'name': 'Rounding 0.05',
+            'rounding': 0.05,
+            'rounding_method': 'HALF-UP',
+            'strategy': 'add_invoice_line',
+            'profit_account_id': self.company.default_cash_difference_income_account_id.id,
+            'loss_account_id': self.company.default_cash_difference_expense_account_id.id,
+        })
+        self.config.write({
+            'cash_rounding': True,
+            'rounding_method': rounding_method.id,
+            'only_round_cash_method': False,
+        })
+        # 10.06 in the company currency, 5.03 in the PoS currency
+        product = self.create_product('Product Rounded', self.categ_basic, 10.06)
+        session = self.open_new_session()
+        order_data = self.create_ui_order_data(
+            [(product, 1)],
+            customer=self.customer,
+            is_invoiced=True,
+            payments=[(self.cash_pm2, 5.05)],
+        )
+        order_id = self.env['pos.order'].sync_from_ui([order_data])['pos.order'][0]['id']
+        invoice = self.env['pos.order'].browse(order_id).account_move
+        rounding_line = invoice.line_ids.filtered(lambda line: line.display_type == 'rounding')
+        self.assertRecordValues(rounding_line, [{'amount_currency': -0.02, 'balance': -0.04}])
+        self.assertRecordValues(invoice, [{'amount_total': 5.05, 'amount_residual': 0.0}])
+        session.close_session_from_ui({self.cash_pm2.id: 5.05})
+        self.assertEqual(session.state, 'closed')
+
     def test_with_session_check_product_cost(self):
         def find_by(list_of_dicts, key, value):
             return next((d for d in list_of_dicts if d.get(key) == value), None)
