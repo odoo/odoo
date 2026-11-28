@@ -144,8 +144,9 @@ class MailTrackMixin(models.AbstractModel):
             return
 
         # tracked fields to check are those at model level as well as those
-        # manually put in initial values
-        fnames = self._track_get_fields() | {fname for record_values in initial_values.values() if record_values for fname in record_values}
+        # manually put in initial values; use the tracked records, as self may
+        # hold records deleted since (and discarded from tracking)
+        fnames = self.browse(ids)._track_get_fields() | {fname for record_values in initial_values.values() if record_values for fname in record_values}
         if not fnames:
             return
 
