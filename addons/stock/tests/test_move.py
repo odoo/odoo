@@ -1234,7 +1234,8 @@ class StockMove(TransactionCase):
 
         self.env['stock.quant']._update_available_quantity(self.product, shelf1_location, 1.0)
 
-        # putaway from stock to child location with storage_category
+        # putaway from stock to child location with storage_category with the parent having the same storage_category
+        # the parent shouldn't be included in the search since we select a sublocation strategy
         putaway = self.env['stock.putaway.rule'].create({
             'product_id': self.product.id,
             'location_in_id': self.stock_location.id,
@@ -1244,6 +1245,7 @@ class StockMove(TransactionCase):
         })
         self.stock_location.write({
             'putaway_rule_ids': [(4, putaway.id, 0)],
+            'storage_category_id': storage_category.id,
         })
 
         move1 = self.env['stock.move'].create({
