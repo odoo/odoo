@@ -13,6 +13,7 @@ class TestEmployee(TransactionCase):
         super().setUpClass()
         cls.company = cls.env['res.company'].create({
             'name': 'Test Company',
+            'tz': 'UTC',
         })
         cls.global_leave = cls.env['resource.calendar.leaves'].create({
             'name': 'Test Global Leave',
