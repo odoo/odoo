@@ -587,7 +587,10 @@ export class Form extends Interaction {
                 } else if (inputEl.type === "file" && !this.isFileInputValid(inputEl)) {
                     return true;
                 } else if (this.requirementFunction(fieldEl) === false) {
-                    this.updateStatusInline(fieldEl.dataset.errorMessage, inputEl);
+                    this.updateStatusInline(
+                        this.getRequirementErrorMessage(fieldEl),
+                        inputEl
+                    );
                     return true;
                 }
 
@@ -909,6 +912,72 @@ export class Form extends Interaction {
             return true;
         }
         return this.compareTo(comparator, value, condition, between);
+    }
+
+    /**
+     * Returns a translated error message for a field that failed its
+     * requirement check. For date/datetime comparators the message is built
+     * at call time so that _t() runs in the visitor's active language rather
+     * than the editor's language (which is what happens when the message is
+     * pre-baked into data-error-message at save time).
+     *
+     * @param {HTMLElement} fieldEl
+     * @returns {string}
+     */
+    getRequirementErrorMessage(fieldEl) {
+        const {
+            requirementComparator: comparator,
+            requirementCondition: condition,
+            requirementBetween: between,
+            type,
+        } = fieldEl.dataset;
+
+        if (["date", "datetime"].includes(type) && condition) {
+            const format = type === "date" ? localization.dateFormat : localization.dateTimeFormat;
+            const start = formatDate(DateTime.fromSeconds(parseInt(condition)), { format });
+            const end = formatDate(DateTime.fromSeconds(parseInt(between)), { format });
+            const dateMessages = {
+                dateEqual: _t(
+                    "Entered date or time is not correct! It must be %(start)s (%(format)s).",
+                    { start, format }
+                ),
+                "date!equal": _t(
+                    "Entered date or time is not correct! It must not be %(start)s (%(format)s).",
+                    { start, format }
+                ),
+                before: _t(
+                    "Entered date or time is not correct! It must be before %(start)s (%(format)s).",
+                    { start, format }
+                ),
+                after: _t(
+                    "Entered date or time is not correct! It must be after %(start)s (%(format)s).",
+                    { start, format }
+                ),
+                "equal or before": _t(
+                    "Entered date or time is not correct! It must be before or equal to %(start)s (%(format)s).",
+                    { start, format }
+                ),
+                "equal or after": _t(
+                    "Entered date or time is not correct! It must be after or equal to %(start)s (%(format)s).",
+                    { start, format }
+                ),
+                between: _t(
+                    "Entered date or time is not correct! It must be within %(start)s and %(end)s (%(format)s).",
+                    { start, end, format }
+                ),
+                "!between": _t(
+                    "Entered date or time is not correct! It must not be within %(start)s and %(end)s (%(format)s).",
+                    { start, end, format }
+                ),
+            };
+            if (dateMessages[comparator]) {
+                return dateMessages[comparator];
+            }
+        }
+
+        // Fall back to the pre-stored message (covers text/number comparators
+        // whose messages are set by the editor and don't need runtime translation).
+        return fieldEl.dataset.errorMessage || _t("An error has occurred, the form has not been sent.");
     }
 
     isFieldVisible(fieldEl) {
