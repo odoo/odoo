@@ -1,0 +1,32 @@
+schema_version = "1.4"
+
+[task]
+name = "odoo/odoo-git-commit-fix-snailmail-no-context"
+description = "Commit a pending snailmail bug fix with a message that follows the odoo-git skill, with no ticket or description: the agent must derive what it can and flag what is missing."
+keywords = ["odoo", "git", "commit-message", "skills", "odoo-git", "no-context"]
+
+[metadata]
+skill = "odoo-git"
+odoo_version = "20.0"
+# The checkout is at this commit, with the fix applied but not committed.
+base_commit = "c6f3b034f29220afa236737ab79d1228bdc9f3c0"
+# The merged fix whose message is the reference (odoo/odoo 2a4f2233211d).
+# It is not reachable from the task checkout.
+reference_commit = "2a4f2233211d"
+
+[verifier]
+timeout_sec = 900.0
+# The verifier reads the agent's commit as root; test.sh marks /app safe.
+user = "root"
+
+[verifier.env]
+# The LLM judges in tests/message and tests/process need it.
+ANTHROPIC_API_KEY = "${ANTHROPIC_API_KEY}"
+
+[agent]
+timeout_sec = 1200.0
+
+[environment]
+build_timeout_sec = 2400.0
+cpus = 2
+memory_mb = 4096
