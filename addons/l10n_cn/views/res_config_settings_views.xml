@@ -19,6 +19,19 @@
                     </div>
                 </setting>
             </block>
+            <xpath expr="//block[@id='peppol']" position="after">
+                <block title="E-Fapiao" id="l10n_cn_edi" invisible="country_code != 'CN'">
+                    <setting id="l10n_cn_edi_activate_setting"
+                             string="E-Fapiao"
+                             help="Issue e-Fapiao to the State Taxation Administration through Aisino Yunshui."
+                             invisible="module_l10n_cn_edi_yunshui">
+                        <button string="Activate Yunshui"
+                                type="object"
+                                name="action_l10n_cn_activate_edi_yunshui"
+                                class="btn btn-primary mt-2"/>
+                    </setting>
+                </block>
+            </xpath>
         </field>
     </record>
 </odoo>
