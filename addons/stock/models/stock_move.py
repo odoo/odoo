@@ -807,9 +807,12 @@ Please change the quantity done or the rounding precision in your settings.""",
                 move.location_id.name, move.location_dest_id.name)
 
     def _set_references(self):
-        for move in self:
-            if not move.reference_ids and move.picking_id:
-                move.reference_ids = move.picking_id.reference_ids
+        for picking, moves in self.grouped('picking_id').items():
+            if not picking or not picking.reference_ids:
+                continue
+            moves = moves.filtered(lambda m: not m.reference_ids)
+            if moves:
+                moves.reference_ids = picking.reference_ids
 
     @api.depends('product_id', 'picking_type_id', 'description_picking_manual')
     def _compute_description_picking(self):
