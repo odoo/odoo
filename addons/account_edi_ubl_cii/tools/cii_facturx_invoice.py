@@ -17,6 +17,7 @@ ExchangedDocument = {
     'ram:TypeCode': {},
     'ram:IssueDateTime': DateTimeString,
     'ram:IncludedNote': {
+        'ram:ContentCode': {},
         'ram:Content': {},
         'ram:SubjectCode': {},
     },
