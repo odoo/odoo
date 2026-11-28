@@ -586,6 +586,10 @@ class SaleOrderLine(models.Model):
             if not line.product_uom or not line.product_id:
                 line.price_unit = 0.0
                 line.technical_price_unit = 0.0
+            elif line.combo_item_id and line._is_combo_item_outdated():
+                # This combo item's combo was removed from its combo product, so it can't be priced
+                # anymore. Keep its current price; such orders can't be confirmed.
+                continue
             else:
                 line._reset_price_unit()
 
@@ -1667,6 +1671,34 @@ class SaleOrderLine(models.Model):
                 lambda line: line.linked_virtual_id == self.virtual_id
             )
         ) or self.env['sale.order.line']
+
+    def _is_combo_item_outdated(self):
+        """ Return whether this combo item line's combo is no longer part of its combo product.
+
+        Note: self.ensure_one()
+        """
+        self.ensure_one()
+        combo_line = self._get_linked_line()
+        return (
+            combo_line.product_type != 'combo'
+            or self.combo_item_id.combo_id not in combo_line.product_template_id.combo_ids
+        )
+
+    def _is_combo_outdated(self):
+        """ Return whether this combo line's combo item lines no longer match its combo product,
+        i.e. a combo was added to or removed from the combo product, or a combo item was removed or
+        changed.
+
+        Note: self.ensure_one()
+        """
+        self.ensure_one()
+        combos = self.product_template_id.combo_ids
+        combo_item_lines = self._get_linked_lines().filtered('combo_item_id')
+        return (
+            len(combo_item_lines) != len(combos)
+            or combo_item_lines.combo_item_id.combo_id != combos
+            or any(line.combo_item_id.product_id != line.product_id for line in combo_item_lines)
+        )
 
     def _sellable_lines_domain(self):
         discount_products_ids = self.env.companies.sale_discount_product_id.ids

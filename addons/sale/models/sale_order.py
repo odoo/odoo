@@ -1198,8 +1198,29 @@ class SaleOrder(models.Model):
             for line in self.order_line
         ):
             return _("A line on these orders missing a product, you cannot confirm it.")
+        # Orders already paid for must still be confirmed, even if a combo changed meanwhile.
+        if (
+            not self.transaction_ids.filtered(lambda tx: tx.state in ('authorized', 'done'))
+            and (outdated_combo_lines := self._get_outdated_combo_lines())
+        ):
+            return self._get_outdated_combo_error_message(outdated_combo_lines)
 
         return False
+
+    def _get_outdated_combo_lines(self):
+        """ Return the combo lines whose configuration no longer matches their combo product. """
+        return self.order_line.filtered(lambda line: (
+            (line.product_type == 'combo' and line._is_combo_outdated())
+            or (line.combo_item_id and line._is_combo_item_outdated())
+        ))
+
+    def _get_outdated_combo_error_message(self, outdated_combo_lines):
+        return _(
+            "The following combo products were modified after being added to the order %(order)s:"
+            " %(products)s. Please remove them and add them again.",
+            order=self.name,
+            products=", ".join(outdated_combo_lines.product_id.mapped('display_name')),
+        )
 
     def _prepare_confirmation_values(self):
         """ Prepare the sales order confirmation values.
@@ -1348,6 +1369,9 @@ class SaleOrder(models.Model):
 
     def action_update_prices(self):
         self.ensure_one()
+
+        if outdated_combo_lines := self._get_outdated_combo_lines():
+            raise UserError(self._get_outdated_combo_error_message(outdated_combo_lines))
 
         self.with_context(pricelist_update=True)._recompute_prices()
 
