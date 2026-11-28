@@ -115,3 +115,36 @@ test("Document tab does not crash with FileSelector extension", async () => {
     await click("li:nth-child(2) > a.nav-link");
     expect(".o_existing_attachment_cell").toHaveCount(1);
 });
+
+test("Unsplash download failure with empty attachments is handled gracefully", async () => {
+    onRpc("ir.attachment", "search_read", () => []);
+    const fetchDef = new Deferred();
+    onRpc("/web_unsplash/fetch_images", () => {
+        fetchDef.resolve();
+        return {
+            total: 1,
+            total_pages: 1,
+            results: [{
+                id: "test_img",
+                urls: { regular: "/web/static/img/logo2.png" },
+                user: { name: "TestUser", links: { html: "https://example.com/" } },
+                links: { download_location: "https://example.com/" },
+            }],
+        };
+    });
+    onRpc("/web_unsplash/attachment/add", () => []);
+
+    const env = await makeMockEnv();
+    const { editor } = await setupEditor(`<p>[]</p>`, { env });
+    await insertText(editor, "/image");
+    await animationFrame();
+    await press("enter");
+    await animationFrame();
+    contains("input.o_we_search").edit("cat");
+    await fetchDef;
+    await waitFor("img[title='TestUser']");
+    await click(".o_button_area[aria-label='TestUser']");
+    await animationFrame();
+
+    expect(".o-wysiwyg img").toHaveCount(0);
+});

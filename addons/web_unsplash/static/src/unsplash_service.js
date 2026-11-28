@@ -53,9 +53,10 @@ export const unsplashService = {
                         { xhr }
                     );
 
-                    if (attachments.error) {
+                    if (attachments.error || !attachments.length) {
                         file.hasError = true;
-                        file.errorMessage = attachments.error;
+                        file.errorMessage = attachments.error || _t("Failed to download image from Unsplash. Please try again.");
+                        await onUploaded([]);
                     } else {
                         file.uploaded = true;
                         await onUploaded(attachments);
