@@ -495,6 +495,7 @@ class CiiExportFacturXFR(TestCiiFacturXCommon, TestUblCiiFRCommon):
         self._assert_invoice_ubl_file(invoice, 'test_invoice_cash_rounding_biggest_tax')
 
     def test_invoice_deferred_dates(self):
+        self.ensure_installed('account_accountant')
         invoice = self._create_invoice(
             partner_id=self.partner_fr,
             partner_bank_id=self.recipient_bank,
@@ -525,6 +526,7 @@ class CiiExportFacturXFR(TestCiiFacturXCommon, TestUblCiiFRCommon):
         ActualDeliverySupplyChainEvent, so the delivery date is not exported and the XML is the same as in
         test_invoice_deferred_dates.
         """
+        self.ensure_installed('account_accountant')
         invoice = self._create_invoice(
             partner_id=self.partner_fr,
             partner_bank_id=self.recipient_bank,
@@ -555,6 +557,7 @@ class CiiExportFacturXFR(TestCiiFacturXCommon, TestUblCiiFRCommon):
         """ Only the first line has a start and an end date: the header has no BillingSpecifiedPeriod, and
         ActualDeliverySupplyChainEvent holds the invoice date (20260101). The first line keeps its own period.
         """
+        self.ensure_installed('account_accountant')
         invoice = self._create_invoice(
             partner_id=self.partner_fr,
             partner_bank_id=self.recipient_bank,
@@ -578,6 +581,7 @@ class CiiExportFacturXFR(TestCiiFacturXCommon, TestUblCiiFRCommon):
         """ Only the first line has a start and an end date: the header has no BillingSpecifiedPeriod, and
         ActualDeliverySupplyChainEvent holds the delivery date (20260115). The first line keeps its own period.
         """
+        self.ensure_installed('account_accountant')
         invoice = self._create_invoice(
             partner_id=self.partner_fr,
             partner_bank_id=self.recipient_bank,
