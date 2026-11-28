@@ -12,6 +12,57 @@ class TestHolidaysMultiContract(TestHolidayContract):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.calendar_8_17, cls.calendar_10_16 = cls.env['resource.calendar'].create([
+            {
+                'name': '8:00-17:00',
+                'attendance_ids': [
+                    (0, 0, {'dayofweek': str(day), 'hour_from': hour_from, 'hour_to': hour_to})
+                    for day in range(5)
+                    for hour_from, hour_to in [(8, 12), (13, 17)]
+                ],
+            },
+            {
+                'name': '10:00-16:00',
+                'attendance_ids': [
+                    (0, 0, {'dayofweek': str(day), 'hour_from': 10, 'hour_to': 16})
+                    for day in range(5)
+                ],
+            },
+        ])
+        cls.hour_work_entry_type = cls.env['hr.work.entry.type'].create({
+            'name': 'Time Off in Hours',
+            'code': 'Time Off in Hours',
+            'count_as': 'absence',
+            'requires_allocation': False,
+            'request_unit': 'hour',
+            'unit_of_measure': 'hour',
+        })
+
+    def _create_hour_employee(self, calendar):
+        employee = self.env['hr.employee'].create({
+            'name': 'Employee requesting hours',
+            'tz': 'UTC',
+        })
+        employee.version_id.write({
+            'date_version': date(2026, 9, 1),
+            'contract_date_start': date(2026, 9, 1),
+            'resource_calendar_id': calendar.id,
+        })
+        return employee
+
+    def _create_hour_leave(self, employee, date_from, date_to, duration, hour_from, hour_to, work_entry_type=None):
+        # The hours are written as the form sets them
+        vals = {
+            'employee_id': employee.id,
+            'work_entry_type_id': (work_entry_type or self.hour_work_entry_type).id,
+            'request_date_from': date_from,
+            'request_date_to': date_to,
+            'request_hour_from': hour_from,
+            'request_hour_to': hour_to,
+        }
+        if duration:
+            vals['request_duration'] = duration
+        return self.env['hr.leave'].create(vals)
 
     def test_move_contract_in_leave(self):
         # test move contract dates such that a leave is across two contracts
@@ -547,3 +598,112 @@ class TestHolidaysMultiContract(TestHolidayContract):
         self.assertEqual(leave.state, 'cancel')
         self.assertEqual(leave.resource_calendar_id, self.calendar_40h)
         self.assertEqual(self.env['hr.leave'].search([('employee_id', '=', employee.id)]), leave)
+
+    def test_schedule_change_recomputes_prefilled_hours(self):
+        """Requests in hours follow a new schedule of their version, unless their hours were chosen."""
+        employee = self._create_hour_employee(self.calendar_8_17)
+        full_day_leave = self._create_hour_leave(employee, date(2026, 11, 23), date(2026, 11, 25), 'full', 8, 17)
+        morning_leave = self._create_hour_leave(employee, date(2026, 11, 26), date(2026, 11, 26), 'am', 8, 12)
+        specific_leave = self._create_hour_leave(employee, date(2026, 11, 27), date(2026, 11, 27), 'specific', 9, 11)
+        working_time_type = self.env['hr.work.entry.type'].create({
+            'name': 'Training in Hours',
+            'code': 'Training in Hours',
+            'count_as': 'working_time',
+            'requires_allocation': False,
+            'request_unit': 'hour',
+            'unit_of_measure': 'hour',
+        })
+        # A day of working time lasts the planned hours from the start of the day
+        working_time_leave = self._create_hour_leave(
+            employee, date(2026, 11, 30), date(2026, 11, 30), 'full', 8, 16, working_time_type)
+        # The batch time off wizard sets the hours without a duration, so the request gets Full Day
+        batch_leave = self._create_hour_leave(employee, date(2026, 12, 1), date(2026, 12, 1), None, 14, 17)
+        full_day_leave.action_approve()
+        self.assertEqual(full_day_leave.number_of_hours, 24)
+        self.assertEqual(morning_leave.number_of_hours, 4)
+
+        employee.version_id.resource_calendar_id = self.calendar_10_16
+
+        # The full day takes the bounds of the new schedule and stays approved
+        self.assertEqual((full_day_leave.request_hour_from, full_day_leave.request_hour_to), (10, 16))
+        self.assertEqual(full_day_leave.date_from, datetime(2026, 11, 23, 10))
+        self.assertEqual(full_day_leave.date_to, datetime(2026, 11, 25, 16))
+        self.assertEqual(full_day_leave.number_of_hours, 18)
+        self.assertEqual(full_day_leave.number_of_days, 3)
+        self.assertEqual(full_day_leave.state, 'validate')
+        resource_leave = self.env['resource.calendar.leaves'].search([('holiday_id', '=', full_day_leave.id)])
+        self.assertEqual((resource_leave.date_from, resource_leave.date_to), (full_day_leave.date_from, full_day_leave.date_to))
+        # The morning takes the morning of the new schedule
+        self.assertEqual((morning_leave.request_hour_from, morning_leave.request_hour_to), (10, 12))
+        self.assertEqual(morning_leave.number_of_hours, 2)
+        # The prefilled hours of working time are not taken as chosen ones
+        self.assertEqual((working_time_leave.request_hour_from, working_time_leave.request_hour_to), (10, 16))
+        # The hours chosen by the employee are kept
+        self.assertEqual((specific_leave.request_hour_from, specific_leave.request_hour_to), (9, 11))
+        # Only the hour inside the new schedule is counted
+        self.assertEqual(specific_leave.number_of_hours, 1)
+        # Hours other than the ones of the schedule were chosen, whatever the duration
+        self.assertEqual((batch_leave.request_hour_from, batch_leave.request_hour_to), (14, 17))
+
+    def test_new_version_recomputes_prefilled_hours(self):
+        """A request in hours prefilled from a temporary schedule takes the hours of the next version."""
+        calendar_temporary = self.env['resource.calendar'].create({
+            'name': '7:00-11:30',
+            'attendance_ids': [
+                (0, 0, {'dayofweek': str(day), 'hour_from': 7, 'hour_to': 11.5})
+                for day in range(5)
+            ],
+        })
+        employee = self._create_hour_employee(calendar_temporary)
+        work_entry_type = self.env['hr.work.entry.type'].create({
+            'name': 'Overtime',
+            'code': 'Overtime',
+            'count_as': 'absence',
+            'requires_allocation': True,
+            'request_unit': 'hour',
+            'unit_of_measure': 'hour',
+        })
+        allocation = self.env['hr.leave.allocation'].create({
+            'name': 'Overtime',
+            'employee_id': employee.id,
+            'work_entry_type_id': work_entry_type.id,
+            'number_of_hours': 20,
+            'date_from': date(2026, 9, 1),
+        })
+        allocation.action_approve()
+        leave = self._create_hour_leave(employee, date(2026, 10, 27), date(2026, 10, 28), 'full', 7, 11.5, work_entry_type)
+        self.assertEqual(leave.number_of_hours, 9)
+
+        # The final schedule starts before the request
+        employee.create_version({
+            'date_version': date(2026, 10, 26),
+            'resource_calendar_id': self.calendar_10_16.id,
+        })
+
+        self.assertEqual((leave.request_hour_from, leave.request_hour_to), (10, 16))
+        self.assertEqual(leave.number_of_hours, 12)
+        self.assertEqual(leave.number_of_days, 2)
+        allocation.invalidate_recordset(['virtual_remaining_leaves'])
+        self.assertEqual(allocation.virtual_remaining_leaves, 8)
+
+    def test_split_leave_takes_hours_of_each_version(self):
+        """Each part of a request in hours split between versions takes the hours of its own version."""
+        employee = self._create_hour_employee(self.calendar_8_17)
+        next_version = employee.create_version({
+            'date_version': date(2026, 11, 24),
+            'resource_calendar_id': self.calendar_8_17.id,
+        })
+        leave = self._create_hour_leave(employee, date(2026, 11, 23), date(2026, 11, 25), 'full', 8, 17)
+
+        next_version.resource_calendar_id = self.calendar_10_16
+
+        self.assertEqual(leave.state, 'refuse')
+        parts = self.env['hr.leave'].search(
+            [('employee_id', '=', employee.id), ('state', '!=', 'refuse')], order='request_date_from')
+        self.assertEqual(
+            [(part.request_date_from, part.request_hour_from, part.request_hour_to, part.number_of_hours) for part in parts],
+            [
+                (date(2026, 11, 23), 8, 17, 8),
+                (date(2026, 11, 24), 10, 16, 12),
+            ],
+        )
