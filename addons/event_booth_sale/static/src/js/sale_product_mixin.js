@@ -57,11 +57,9 @@ const eventBoothSaleProductMixin = () => ({
                 onClose: async (closeInfo) => {
                     if (!closeInfo?.eventBoothConfiguration || closeInfo.special || closeInfo.dismiss) {
                         // wizard popup closed or 'Discard' button triggered
-                        if (!this.props.record.data.event_ticket_id) {
-                            // remove product if event configuration was cancelled.
-                            this.props.record.update({
-                                [this.props.name]: undefined,
-                            });
+                        if (!this.props.record.data.event_booth_pending_ids.count) {
+                            // remove the line if event booth configuration was cancelled.
+                            this._getOrderLines().delete(this.props.record);
                         }
                     } else {
                         const { event_id, event_booth_category_id, event_booth_pending_ids } =
