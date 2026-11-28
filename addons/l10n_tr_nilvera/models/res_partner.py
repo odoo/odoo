@@ -89,23 +89,40 @@ class ResPartner(models.Model):
                 },
             )
 
+    def _l10n_tr_nilvera_get_alias_fields(self):
+        """ Return a dict mapping a Nilvera document type (e.g. 'Invoice') to the
+        res.partner field storing the alias to use for that document type.
+        """
+        return {}
+
     def _check_nilvera_customer(self):
         self.ensure_one()
         if not self.vat:
             return
 
+        endpoint = "/general/GlobalCompany/Check/TaxNumber/" + urllib.parse.quote(self.vat)
         with _get_nilvera_client(self.env._, self.env.company) as client:
-            response = client.request("GET", "/general/GlobalCompany/Check/TaxNumber/" + urllib.parse.quote(self.vat), handle_response=False)
+            # Nilvera only returns the aliases registered for the document type asked with `globalUserType`.
+            response = client.request("GET", endpoint, params={'globalUserType': 'Invoice'}, handle_response=False)
             if response.status_code == 200:
                 query_result = response.json()
 
                 if not query_result:
                     self.l10n_tr_nilvera_customer_status = 'earchive'
                 else:
+                    # The other document types are only available to e-Invoice taxpayers.
+                    alias_fields = self._l10n_tr_nilvera_get_alias_fields()
+                    aliases_per_type = {'Invoice': {result.get('Name') for result in query_result}}
+                    for document_type in alias_fields.keys() - aliases_per_type.keys():
+                        response = client.request("GET", endpoint, params={'globalUserType': document_type}, handle_response=False)
+                        if response.status_code != 200:
+                            return False
+                        aliases_per_type[document_type] = {result.get('Name') for result in response.json()}
+
                     self.l10n_tr_nilvera_customer_status = 'einvoice'
 
                     # We need to sync the data from the API with the records in database.
-                    aliases = {result.get('Name') for result in query_result}
+                    aliases = set().union(*aliases_per_type.values())
                     persisted_aliases = self.l10n_tr_nilvera_customer_alias_ids
                     # Find aliases to add (in query result but not in database).
                     aliases_to_add = aliases - set(persisted_aliases.mapped('name'))
@@ -119,6 +136,12 @@ class ResPartner(models.Model):
                     # Remove aliases from database that are not in query result.
                     to_keep = persisted_aliases.filtered(lambda a: a.name not in aliases_to_remove)
                     (persisted_aliases - to_keep).unlink()
+
+                    # Set each alias field to an alias registered for its document type.
+                    for document_type, field_name in alias_fields.items():
+                        type_aliases = aliases_per_type[document_type]
+                        if self[field_name].name not in type_aliases:
+                            self[field_name] = self.l10n_tr_nilvera_customer_alias_ids.filtered(lambda a: a.name in type_aliases)[:1]
 
                 # commit the result of each request because in the case of a bulk verify the
                 # server can timeout and all progress will be undone
