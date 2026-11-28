@@ -379,7 +379,27 @@ class StockMove(models.Model):
         moves_to_explode = self.filtered(lambda m: m.product_id.is_kits and m.state not in ('draft', 'cancel'))
         exploded_moves = moves_to_explode.action_explode()
         moves = (self - moves_to_explode) | exploded_moves
-        return super(StockMove, moves)._action_done(cancel_backorder)
+        done_moves = super(StockMove, moves)._action_done(cancel_backorder)
+        done_moves._assign_raw_moves_from_done_orig()
+        return done_moves
+
+    def _assign_raw_moves_from_done_orig(self):
+        """ The components brought by done moves (e.g. a pick components transfer) are added to
+        the MO components moves they feed. The standard reservation of the destination moves
+        skips the components moves which are picked or whose quantity was set from the quantity
+        producing, so they would otherwise never get what was brought for them.
+        Only what was brought and not already taken is added, up to what the MO needs.
+        """
+        raw_moves = self.move_dest_ids.filtered(lambda m:
+            m.raw_material_production_id.state in ('confirmed', 'progress', 'to_close')
+            and m.state not in ('done', 'cancel')
+        )
+        for move in raw_moves:
+            missing_qty = move.product_uom_qty - move.quantity
+            if move.uom_id.compare(missing_qty, 0) > 0:
+                # `force_qty` bypasses the picked filter of `_action_assign` and `skip_mo_check`
+                # the protection of the moves updated from the quantity producing.
+                move.sudo().with_company(move.company_id).with_context(skip_mo_check=True)._action_assign(force_qty=missing_qty)
 
     def _should_bypass_reservation(self, forced_location=False):
         return super()._should_bypass_reservation(forced_location) or self.product_id.with_company(self.company_id).is_kits
