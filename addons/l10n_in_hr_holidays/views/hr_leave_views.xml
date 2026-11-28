@@ -7,8 +7,19 @@
         <field name="inherit_id" ref="hr_holidays.hr_leave_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='dashboard_warning_message']" position="after">
-                <div name="l10n_in_contains_sandwich_leaves" invisible="not l10n_in_contains_sandwich_leaves" class="alert alert-warning d-flex mt-2 mb-0" role="alert" style="white-space: pre-wrap;">
-                    The requested time considers the sandwich leave policy.
+                <div name="l10n_in_contains_sandwich_leaves" class="alert alert-warning mt-2 mb-0" role="alert"
+                    invisible="not l10n_in_contains_sandwich_leaves or l10n_in_sandwich_remaining_balance &lt; 0">
+                    Sandwich Leave Policy applies:
+                    <field name="number_of_days" widget="float_without_trailing_zeros" class="oe_inline" readonly="1"/>
+                    leave days will be deducted
+                </div>
+                <div name="l10n_in_sandwich_leaves_negative_balance" class="alert alert-warning mt-2 mb-0" role="alert"
+                    invisible="not l10n_in_contains_sandwich_leaves or l10n_in_sandwich_remaining_balance &gt;= 0">
+                    Sandwich Leave Policy applies:
+                    <field name="number_of_days" widget="float_without_trailing_zeros" class="oe_inline" readonly="1"/>
+                    leave days will be deducted: Remaining balance is
+                    <field name="l10n_in_sandwich_remaining_balance" widget="float_without_trailing_zeros" class="oe_inline"/>
+                    <span invisible="work_entry_type_request_unit != 'hour'">hours</span>.
                 </div>
             </xpath>
         </field>

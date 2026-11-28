@@ -7,40 +7,33 @@ from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools.date_utils import sum_intervals
 from odoo.tools.intervals import Intervals
-from odoo.tools.float_utils import float_compare
+from odoo.tools.float_utils import float_round
 
 
 class HrLeave(models.Model):
     _inherit = "hr.leave"
 
     l10n_in_contains_sandwich_leaves = fields.Boolean()
+    l10n_in_sandwich_remaining_balance = fields.Float(compute="_compute_l10n_in_sandwich_remaining_balance")
 
-    def _l10n_in_get_default_leave_hours(self):
-        self.ensure_one()
-        calendar = self.employee_id.resource_calendar_id
-        start_dt = self._to_utc(self.request_date_from, 0.0, self.employee_id)
-        end_dt = self._to_utc(self.request_date_to, 24.0, self.employee_id)
-        work_data = self.employee_id._get_work_days_data_batch(
-            start_dt,
-            end_dt,
-            compute_leaves=False,
-            calendar=calendar,
-        )
-        data = work_data.get(self.employee_id.id)
-        return data.get("hours", 0.0) if data else 0.0
-
-    def _l10n_in_is_full_day_request(self, hours=None, default_hours=None):
-        self.ensure_one()
-        default_hours = default_hours or self._l10n_in_get_default_leave_hours()
-        hours = hours if hours is not None else (self.number_of_hours or 0.0)
-        if self.work_entry_type_request_unit == 'hour':
-            return bool(default_hours) and float_compare(hours, default_hours, precision_digits=2) >= 0
-        if (
-            self.request_date_from_period != self.request_date_to_period
-            and (self.request_date_from_period != "pm" or self.request_date_to_period != "am")
-        ) or not default_hours:
-            return True
-        return float_compare(hours, default_hours, precision_digits=2) >= 0
+    @api.depends(
+        'number_of_days', 'number_of_hours', 'employee_id', 'work_entry_type_id', 'request_date_from',
+        'work_entry_type_id.allows_negative', 'work_entry_type_id.requires_allocation',
+        'work_entry_type_id.unit_of_measure', 'l10n_in_contains_sandwich_leaves',
+    )
+    def _compute_l10n_in_sandwich_remaining_balance(self):
+        self.l10n_in_sandwich_remaining_balance = 0
+        today = fields.Date.context_today(self)
+        for leave in self.filtered(lambda l: l.l10n_in_contains_sandwich_leaves and l.employee_id
+                                   and l.work_entry_type_id.requires_allocation
+                                   and l.work_entry_type_id.allows_negative):
+            # Same balance as hr_holidays' allocation warning: a saved request is already
+            # deducted from the balance, so ignore it before deducting the requested amount.
+            remaining, _allocated = leave.with_context(ignored_leave_ids=leave._origin.ids)._get_allocation_balance(
+                leave.request_date_from or today)[leave]
+            is_hour = leave.work_entry_type_id.unit_of_measure == 'hour'
+            leave.l10n_in_sandwich_remaining_balance = float_round(
+                remaining - (leave.number_of_hours if is_hour else leave.number_of_days), precision_digits=2)
 
     @api.constrains("work_entry_type_id", "request_date_from", "request_date_to")
     def _l10n_in_check_optional_holiday_request_dates(self):
@@ -99,10 +92,27 @@ class HrLeave(models.Model):
             current_date += timedelta(days=step)
             if self._l10n_in_is_working(current_date, public_holiday_dates, resource_calendar):
                 break
-        linked_leave = leaves_by_date.get(current_date, self.env["hr.leave"])
-        if linked_leave and not linked_leave._l10n_in_is_full_day_request():
+        linked_leaves = leaves_by_date.get(current_date, self.env["hr.leave"])
+        if linked_leaves and self._l10n_in_has_working_time_left(current_date, linked_leaves):
             return self.env["hr.leave"]
-        return linked_leave
+        return linked_leaves
+
+    def _l10n_in_has_working_time_left(self, day, leaves):
+        """ Return whether the employee still works part of ``day`` once ``leaves`` are taken,
+            e.g. a lone half day. Only whole days off can be part of a sandwich.
+        """
+        self.ensure_one()
+        resource = self.employee_id.resource_id
+        start_dt = self._to_utc(day, 0.0, self.employee_id).replace(tzinfo=UTC)
+        end_dt = self._to_utc(day, 24.0, self.employee_id).replace(tzinfo=UTC)
+        attendances = self.resource_calendar_id._attendance_intervals_batch(
+            start_dt, end_dt, resources_per_tz=resource._get_resources_per_tz(),
+        ).get(resource.id, Intervals())
+        leave_intervals = Intervals([
+            (leave.date_from.replace(tzinfo=UTC), leave.date_to.replace(tzinfo=UTC), self.env["hr.leave"])
+            for leave in leaves if leave.date_from and leave.date_to
+        ])
+        return bool(attendances - leave_intervals)
 
     def _l10n_in_get_linked_leaves(self, leaves_dates_by_employee, public_holidays_date_by_company):
         linked_before = self.env["hr.leave"]
@@ -111,10 +121,10 @@ class HrLeave(models.Model):
         for leave in self:
             public_holiday_dates = leave._l10n_in_get_public_holiday_dates(public_holidays_date_by_company)
             leaves_by_date = leaves_dates_by_employee.get(leave.employee_id, {})
-            linked_before |= self._l10n_in_find_linked_leave(
+            linked_before |= leave._l10n_in_find_linked_leave(
                 leave.request_date_from, public_holiday_dates, leave.resource_calendar_id, leaves_by_date, reverse=True
             )
-            linked_after |= self._l10n_in_find_linked_leave(
+            linked_after |= leave._l10n_in_find_linked_leave(
                 leave.request_date_to, public_holiday_dates, leave.resource_calendar_id, leaves_by_date, reverse=False
             )
         return linked_before, linked_after
@@ -123,7 +133,7 @@ class HrLeave(models.Model):
         """
             Build and return a tuple:
                 (indian_leaves, leaves_by_employee, public_holidays_by_company_id)
-            - Filters Indian, full-day, sandwich-enabled leaves.
+            - Filters Indian, sandwich-enabled leaves.
             - Prepares dicts for sibling employee leaves and company public holidays.
         """
         def _to_local_date(datetime, tz):
@@ -137,25 +147,12 @@ class HrLeave(models.Model):
             return (indian_leaves, {}, {})
 
         leaves_dates_by_employee = {}
-        grouped_leaves = self._read_group(
-            domain=[
-                ('id', 'not in', self.ids),
-                ('employee_id', 'in', self.employee_id.ids),
-                ('state', 'not in', ['cancel', 'refuse']),
-                ('work_entry_type_id.l10n_in_is_sandwich_leave', '=', True),
-            ],
-            groupby=['employee_id'],
-            aggregates=['id:recordset'],
-        )
-        for emp_id, recs in grouped_leaves:
-            valid_recs = recs.filtered(lambda leave: leave._l10n_in_is_full_day_request())
-            if not valid_recs:
-                continue
-            leaves_dates_by_employee[emp_id] = {
-                (leave.request_date_from + timedelta(days=offset)): leave
-                for leave in valid_recs
-                for offset in range((leave.request_date_to - leave.request_date_from).days + 1)
-            }
+        self.search([
+            ('id', 'not in', self.ids),
+            ('employee_id', 'in', self.employee_id.ids),
+            ('state', 'not in', ['cancel', 'refuse']),
+            ('work_entry_type_id.l10n_in_is_sandwich_leave', '=', True),
+        ])._l10n_in_add_leaves_by_date(leaves_dates_by_employee)
 
         public_holidays_dates_by_company = {}
         for company_id, recs in self.env['resource.calendar.leaves']._read_group(
@@ -176,6 +173,14 @@ class HrLeave(models.Model):
             public_holidays_dates_by_company[company_id] = company_dates
 
         return indian_leaves, leaves_dates_by_employee, public_holidays_dates_by_company
+
+    def _l10n_in_add_leaves_by_date(self, leaves_dates_by_employee):
+        """ Add the leaves to ``leaves_dates_by_employee``: {employee: {date: leaves}}. """
+        for leave in self.filtered(lambda leave: leave.request_date_from and leave.request_date_to):
+            leaves_by_date = leaves_dates_by_employee.setdefault(leave.employee_id, {})
+            for offset in range((leave.request_date_to - leave.request_date_from).days + 1):
+                leave_date = leave.request_date_from + timedelta(days=offset)
+                leaves_by_date[leave_date] = leaves_by_date.get(leave_date, self.env["hr.leave"]) | leave
 
     def _l10n_in_count_days_by_sandwich_policy(self, date_from, date_to, public_holiday_dates):
         self.ensure_one()
@@ -199,7 +204,7 @@ class HrLeave(models.Model):
             current_date += timedelta(days=1)
         return total_leaves
 
-    def _l10n_in_apply_sandwich_rule(self, public_holidays_date_by_company, leaves_dates_by_employee):
+    def _l10n_in_apply_sandwich_rule(self, leave_days, public_holidays_date_by_company, leaves_dates_by_employee):
         self.ensure_one()
         if not (self.request_date_from and self.request_date_to):
             return 0
@@ -207,6 +212,14 @@ class HrLeave(models.Model):
         date_from = self.request_date_from
         date_to = self.request_date_to
         public_holiday_dates = self._l10n_in_get_public_holiday_dates(public_holidays_date_by_company)
+        # A partial first or last day (e.g. a lone half day) makes no sandwich, unless the other
+        # leaves of the employee on that day complete it (e.g. the other half day).
+        leaves_by_date = leaves_dates_by_employee.get(self.employee_id, {})
+        if any(
+            self._l10n_in_has_working_time_left(day, (leaves_by_date.get(day, self.env["hr.leave"]) - self._origin) | self)
+            for day in {date_from, date_to}
+        ):
+            return 0
         is_non_working_from = not self._l10n_in_is_working(date_from, public_holiday_dates, self.resource_calendar_id)
         is_non_working_to = not self._l10n_in_is_working(date_to, public_holiday_dates, self.resource_calendar_id)
 
@@ -217,6 +230,12 @@ class HrLeave(models.Model):
             return 0
 
         total_leaves = self._l10n_in_count_days_by_sandwich_policy(date_from, date_to, public_holiday_dates)
+        # Don't charge the part of its working days that other requests take (e.g. the other half day).
+        working_days = sum(
+            self._l10n_in_is_working(date_from + timedelta(days=x), public_holiday_dates, self.resource_calendar_id)
+            for x in range((date_to - date_from).days + 1)
+        )
+        total_leaves -= max(working_days - leave_days, 0)
         linked_before, linked_after = self._l10n_in_get_linked_leaves(leaves_dates_by_employee, public_holidays_date_by_company)
         linked_before_leave = linked_before[:1]
         linked_after_leave = linked_after[:1]
@@ -251,17 +270,14 @@ class HrLeave(models.Model):
             return result
 
         for leave in indian_leaves:
+            leave._l10n_in_add_leaves_by_date(leaves_dates_by_employee)
             leave_days, hours = result[leave.id]
             if not leave_days or (
                 leave.state in ["validate", "validate1"]
                 and not self.env.user.has_group("hr_holidays.group_hr_holidays_user")
             ):
                 continue
-            default_hours = leave._l10n_in_get_default_leave_hours()
-            if not leave._l10n_in_is_full_day_request(hours=hours, default_hours=default_hours):
-                leave.l10n_in_contains_sandwich_leaves = False
-                continue
-            updated_days = leave._l10n_in_apply_sandwich_rule(public_holidays_date_by_company, leaves_dates_by_employee)
+            updated_days = leave._l10n_in_apply_sandwich_rule(leave_days, public_holidays_date_by_company, leaves_dates_by_employee)
             if updated_days and updated_days != leave_days:
                 updated_hours = (updated_days * (hours / leave_days)) if leave_days else hours
                 result[leave.id] = (updated_days, updated_hours)
@@ -285,7 +301,13 @@ class HrLeave(models.Model):
         linked_before, linked_after = indian_leaves._l10n_in_get_linked_leaves(
             leaves_dates_by_employee, public_holidays_dates_by_company
         )
-        neighbors = (linked_before | linked_after) - self
+        neighbors = linked_before | linked_after
+        # The other leaves of the same days (e.g. the other half day) may make a sandwich only with these leaves.
+        for leave in indian_leaves:
+            leaves_by_date = leaves_dates_by_employee.get(leave.employee_id, {})
+            for day in {leave.request_date_from, leave.request_date_to}:
+                neighbors |= leaves_by_date.get(day, self.env["hr.leave"])
+        neighbors -= self
         if not neighbors:
             return
 
@@ -299,15 +321,8 @@ class HrLeave(models.Model):
 
         for neighbor in neighbors:
             base_days, base_hours = base_map.get(neighbor.id, (neighbor.number_of_days, neighbor.number_of_hours))
-            default_hours = neighbor._l10n_in_get_default_leave_hours()
-            if not neighbor._l10n_in_is_full_day_request(hours=base_hours, default_hours=default_hours):
-                neighbor.write({
-                    'number_of_days': base_days,
-                    'number_of_hours': base_hours,
-                    'l10n_in_contains_sandwich_leaves': False,
-                })
-                continue
             updated_days = neighbor._l10n_in_apply_sandwich_rule(
+                base_days,
                 public_holidays_date_by_company=public_holidays_dates_by_company,
                 leaves_dates_by_employee=leaves_dates_by_employee,
             )

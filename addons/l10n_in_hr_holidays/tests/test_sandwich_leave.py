@@ -662,6 +662,55 @@ class TestSandwichLeave(TransactionCase):
         before_leave.action_refuse()
         self.assertEqual(after_leave.number_of_days, 1)
 
+    def _create_half_day_type_leave(self, day, period_from='am', period_to='pm'):
+        return self.env['hr.leave'].create({
+            'name': f'Leave {day} {period_from}-{period_to}',
+            'employee_id': self.rahul_emp.id,
+            'work_entry_type_id': self.work_entry_type_half_day.id,
+            'request_date_from': day,
+            'request_date_to': day,
+            'request_date_from_period': period_from,
+            'request_date_to_period': period_to,
+        })
+
+    @freeze_time('2025-07-01')
+    def test_sandwich_half_days_after_weekend(self):
+        """
+            Taking the Monday as two half days (PM logged first) must not bypass the sandwich rule:
+            the half completing the Monday is charged the weekend.
+            -- working days: 11th (Fri) and 14th (Mon) July
+            -- non-working days: 12th, 13th July
+        """
+        friday_leave = self._create_half_day_type_leave('2025-07-11')
+        monday_pm = self._create_half_day_type_leave('2025-07-14', 'pm', 'pm')
+        monday_am = self._create_half_day_type_leave('2025-07-14', 'am', 'am')
+        self.assertTrue(monday_am.l10n_in_contains_sandwich_leaves)
+        self.assertEqual(monday_am.number_of_days, 2.5)
+        self.assertFalse(monday_pm.l10n_in_contains_sandwich_leaves)
+        self.assertEqual(monday_pm.number_of_days, 0.5)
+        self.assertEqual(friday_leave.number_of_days, 1)
+
+    @freeze_time('2025-07-01')
+    def test_sandwich_single_half_day_not_counted(self):
+        """ A lone half day next to the weekend does not trigger the sandwich rule. """
+        self._create_half_day_type_leave('2025-07-11')
+        monday_pm = self._create_half_day_type_leave('2025-07-14', 'pm', 'pm')
+        self.assertFalse(monday_pm.l10n_in_contains_sandwich_leaves)
+        self.assertEqual(monday_pm.number_of_days, 0.5)
+
+    @freeze_time('2025-07-01')
+    def test_sandwich_half_days_cancel_one_half(self):
+        """ Cancelling the half that completes the Monday removes the sandwich. """
+        friday_leave = self._create_half_day_type_leave('2025-07-11')
+        monday_am = self._create_half_day_type_leave('2025-07-14', 'am', 'am')
+        monday_pm = self._create_half_day_type_leave('2025-07-14', 'pm', 'pm')
+        self.assertEqual(monday_pm.number_of_days, 2.5)
+
+        monday_pm._action_user_cancel('Cancelled')
+        self.assertFalse(monday_am.l10n_in_contains_sandwich_leaves)
+        self.assertEqual(monday_am.number_of_days, 0.5)
+        self.assertEqual(friday_leave.number_of_days, 1)
+
     def test_sandwich_leave_weekend_only_policy(self):
         """
         Verify that only weekend days are counted as sandwich days
