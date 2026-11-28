@@ -56,6 +56,56 @@ test(`Month: mount a CalendarCommonRenderer`, async () => {
     expect(`.o_calendar_widget.fc .fc-dayGridMonth-view`).toHaveCount(1);
 });
 
+for (const scale of ["day", "week"]) {
+    test(`${scale}: keep header gutters without empty scrollbars`, async () => {
+        await mountWithCleanup(
+            `<div class="o_calendar_renderer" style="height: 500px; flex: 0 0 auto;"/>`
+        );
+        await start({ model: { ...FAKE_MODEL, scale } }, queryFirst(".o_calendar_renderer"));
+
+        const header = ".fc-scrollgrid-section-header";
+        const allDay = ".fc-scrollgrid-section-body:not(.fc-scrollgrid-section-liquid)";
+        const body = ".fc-scrollgrid-section-liquid";
+        for (const section of [header, allDay]) {
+            expect(`${section} .fc-scroller`).toHaveStyle({
+                overflowY: "hidden",
+                scrollbarGutter: "stable",
+            });
+            const scroller = queryFirst(`${section} .fc-scroller`);
+            const bodyScroller = queryFirst(`${body} .fc-scroller`);
+            expect(scroller.offsetWidth - scroller.clientWidth).toBe(
+                bodyScroller.offsetWidth - bodyScroller.clientWidth
+            );
+        }
+        expect(`${body} .fc-scroller`).toHaveStyle({ overflowY: "scroll" });
+
+        const headerColumn = queryRect(".fc-col-header-cell:eq(0)");
+        const allDayColumn = queryRect(".fc-daygrid-day:eq(0)");
+        const timeColumn = queryRect(".fc-timegrid-col[data-date]:eq(0)");
+        for (const column of [headerColumn, allDayColumn]) {
+            expect(Math.abs(column.x - timeColumn.x)).toBeLessThan(1);
+            expect(Math.abs(column.width - timeColumn.width)).toBeLessThan(1);
+        }
+    });
+
+    test(`${scale}: do not reserve gutters when the time grid fits`, async () => {
+        await mountWithCleanup(
+            `<div class="o_calendar_renderer" style="height: 4000px; flex: 0 0 auto;"/>`
+        );
+        await start({ model: { ...FAKE_MODEL, scale } }, queryFirst(".o_calendar_renderer"));
+
+        expect(".fc-scrollgrid-section-header .fc-scroller").toHaveStyle({
+            overflowY: "hidden",
+            scrollbarGutter: "auto",
+        });
+        expect(".fc-scrollgrid-section-body:not(.fc-scrollgrid-section-liquid) .fc-scroller").toHaveStyle({
+            overflowY: "hidden",
+            scrollbarGutter: "auto",
+        });
+        expect(".fc-scrollgrid-section-liquid .fc-scroller").toHaveStyle({ overflowY: "auto" });
+    });
+}
+
 test(`Day: check week number`, async () => {
     await start({ model: { ...FAKE_MODEL, scale: "day" } });
     expect(`[aria-label^="Week "]`).toHaveCount(1);
