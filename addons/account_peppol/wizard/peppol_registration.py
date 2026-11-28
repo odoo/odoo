@@ -160,7 +160,7 @@ class PeppolRegistration(models.TransientModel):
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
 
-    @api.depends('company_id')
+    @api.depends('company_id', 'company_id.peppol_parent_company_id')
     def _compute_parent_company_id(self):
         for wizard in self:
             wizard.parent_company_id = wizard.company_id.peppol_parent_company_id or wizard.company_id
@@ -233,11 +233,25 @@ class PeppolRegistration(models.TransientModel):
                     'message': _("Your company is already registered on an Access Point (%s) for receiving invoices. "
                                  "We will register you on Odoo as a sender only.", wizard.peppol_external_provider)
                 }
+            if wizard.use_parent_connection_selection == 'use_parent':
+                peppol_warnings['use_parent_company'] = {
+                    'level': 'info',
+                    'message': _(
+                        "You are about to register with the main company. Use another %s to register with your company.",
+                        dict(self.env['res.company']._fields['routing_scheme']._description_selection(self.env))[wizard.peppol_eas],
+                    )
+                }
             if wizard.peppol_eas == '9925':
                 peppol_warnings['be_9925_warning'] = {
                     'level': 'warning',
                     'message': _("You are about to register with your VAT number. Make sure you register with your "
                                 "Company Registry (BCE/KBO) first to be compliant with the new regulation."),
+                }
+            if wizard.peppol_eas == '9950':
+                peppol_warnings['sk_9950_warning'] = {
+                    'level': 'warning',
+                    'message': _("You are about to register with your Slovak VAT (IČ DPH). Make sure you register with "
+                                 "your Slovak DIČ (Tax identification number) first to be compliant with the new regulation."),
                 }
             if wizard.peppol_can_connect_data and wizard.peppol_can_connect_data.get('kyc_error'):
                 peppol_warnings['kyc_initiation_error'] = {
@@ -293,12 +307,16 @@ class PeppolRegistration(models.TransientModel):
             and self.peppol_identifier == self.parent_company_id.routing_identifier
         )
 
+    # Contact details may already be provided by an external registration flow (e.g. national KYC)
+    def _is_email_required(self):
+        return True
+
     def _ensure_mandatory_fields(self):
         if not self.selected_company_id.account_fiscal_country_id.code:
             raise ValidationError(_("Please select a country for your company."))
-        if not self.contact_email or not self.phone_number:
-            raise ValidationError(_("Contact email and phone number are required."))
-        if not single_email_re.match(self.contact_email):
+        if self._is_email_required() and not self.contact_email:
+            raise ValidationError(_("Contact email is required."))
+        if self.contact_email and not single_email_re.match(self.contact_email):
             raise ValidationError(_("Please make sure the Contact email is a valid email address."))
         if not self.peppol_eas or not self.peppol_endpoint:
             raise ValidationError(_("Peppol Address should be provided."))
@@ -484,6 +502,12 @@ class PeppolRegistration(models.TransientModel):
         selected_auth = 'generic' if available_auths.get('generic') else 'itsme'
         return self.button_register_peppol_participant(selected_auth=selected_auth)
 
+    def _get_peppol_registration_data(self):
+        return {
+            'account_peppol_contact_email': self.contact_email,
+            'account_peppol_phone_number': self.phone_number,
+        }
+
     def button_register_peppol_participant(self, selected_auth=None):
         self.ensure_one()
         self._ensure_mandatory_fields()
@@ -505,10 +529,7 @@ class PeppolRegistration(models.TransientModel):
             raise UserError(self.env._("A connection to '%s' already exists.", blocking_proxy_type))
 
         if self.use_parent_connection:
-            self.company_id.write({
-                'account_peppol_contact_email': self.contact_email,
-                'account_peppol_phone_number': self.phone_number,
-            })
+            self.company_id.write({**self._get_peppol_registration_data()})
         self._ensure_can_connect(self.peppol_can_connect_data, selected_auth=selected_auth)
         if self.peppol_can_connect_data.get('auth_required'):
             return {
