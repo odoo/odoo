@@ -264,7 +264,7 @@ class AccountChartTemplate(models.AbstractModel):
             'invoice_payment_term_id': 'account.account_payment_term_end_following_month',
             'invoice_date': today,
             'invoice_line_ids': [
-                Command.create({'product_id': 'product.product_product_1_product_template', 'price_unit': 1230000.0, 'quantity': 1}),
+                Command.create({'product_id': 'product.product_product_1', 'price_unit': 1230000.0, 'quantity': 1}),
             ],
         }
         # sale in uf
@@ -292,7 +292,7 @@ class AccountChartTemplate(models.AbstractModel):
             'invoice_payment_term_id': 'account.account_payment_term_end_following_month',
             'invoice_date': today,
             'invoice_line_ids': [
-                Command.create({'product_id': 'product.product_product_1_product_template', 'price_unit': 1230000.0, 'quantity': 1}),
+                Command.create({'product_id': 'product.product_product_1', 'price_unit': 1230000.0, 'quantity': 1}),
             ],
         }
         # credit note with a discount over product product_product_2 for invoice demo_cl_invoice_1
@@ -370,7 +370,7 @@ class AccountChartTemplate(models.AbstractModel):
             'invoice_payment_term_id': 'account.account_payment_term_end_following_month',
             'invoice_date': today - relativedelta(months=1),
             'invoice_line_ids': [
-                Command.create({'product_id': 'product.product_product_1_product_template', 'price_unit': 890500.0, 'quantity': 3, 'tax_ids': [Command.set([purchase_tax_id])]}),
+                Command.create({'product_id': 'product.product_product_1', 'price_unit': 890500.0, 'quantity': 3, 'tax_ids': [Command.set([purchase_tax_id])]}),
             ],
         }
         # purchase supermarket bill
@@ -384,7 +384,7 @@ class AccountChartTemplate(models.AbstractModel):
             'journal_id': local_purchase_journal.id,
             'invoice_date': today - timedelta(days=29),
             'invoice_line_ids': [
-                Command.create({'product_id': 'product.monitor_stand_product_template', 'price_unit': 28500.0, 'quantity': 1, 'tax_ids': [Command.set([supermarket_tax_id])]}),
+                Command.create({'product_id': 'product.monitor_stand', 'price_unit': 28500.0, 'quantity': 1, 'tax_ids': [Command.set([supermarket_tax_id])]}),
             ],
         }
         # Purchase fees bill (in_invoice) in CLP
@@ -400,7 +400,7 @@ class AccountChartTemplate(models.AbstractModel):
             'invoice_date': today - timedelta(days=30),
             'invoice_date_due': today,
             'invoice_line_ids': [
-                Command.create({'product_id': 'product.product_product_1_product_template', 'price_unit': 1000000.0, 'quantity': 1}),
+                Command.create({'product_id': 'product.product_product_1', 'price_unit': 1000000.0, 'quantity': 1}),
             ],
         }
         # national purchase credit note
@@ -415,7 +415,7 @@ class AccountChartTemplate(models.AbstractModel):
             'invoice_payment_term_id': 'account.account_payment_term_end_following_month',
             'invoice_date': today - timedelta(days=29),
             'invoice_line_ids': [
-                Command.create({'product_id': 'product.product_product_1_product_template', 'price_unit': 890500.0, 'quantity': 3}),
+                Command.create({'product_id': 'product.product_product_1', 'price_unit': 890500.0, 'quantity': 3}),
             ],
         }
 
