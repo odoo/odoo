@@ -45,20 +45,7 @@
     background-color: var(--gray-200);
 }
 
-.o-mail-Followers-dropdown {
-    /**
-     * Note: Min() refers to CSS min() and not SCSS min().
-     *
-     * To by-pass SCSS min() shadowing CSS min(), we rely on SCSS being case-sensitive while CSS isn't.
-     */
-    max-width: Min(400px, 95vw);
-    max-height: Min(500px, 50vh);
-}
-
-.o-mail-Follower-avatar {
-    --Avatar-size: var(--o-mail-Avatar-sizeSmall);
-}
-
-.o-mail-Follower:has(.o-mail-Follower-action:hover), .o-mail-FollowerList-unfollow:has(.o-mail-Follower-action:hover) {
-    background-color: inherit !important;
+.o-mail-Followers-dropdown:not(.o_bottom_sheet_body) {
+    width: min(400px, 95vw);
+    max-height: min(500px, 50vh);
 }

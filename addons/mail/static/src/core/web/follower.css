@@ -1,0 +1,18 @@
+.o-mail-Follower {
+    &:hover, &:has(:focus-visible), &.o-editing {
+        background-color: var(--o-bs-dropdown-link-hover-bg) !important;
+    }
+    @media (hover: hover) {
+        &:not(:hover, :has(:focus-visible)) .o-mail-Follower-actions {
+            opacity: 0;
+        }
+    }
+}
+
+.o-mail-Follower-avatar {
+    --Avatar-size: 30px;
+}
+
+.o-mail-Follower-action {
+    --btn-hover-bg: var(--o-bs-dropdown-link-hover-bg);
+}

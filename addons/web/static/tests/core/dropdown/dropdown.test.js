@@ -217,6 +217,62 @@ test("close on click outside an active element", async () => {
     expect(DROPDOWN_MENU).toHaveCount(0);
 });
 
+test.tags("desktop");
+test("keyboard navigation pauses while a child dialog is active", async () => {
+    class CustomDialog extends Component {
+        static components = { Dialog };
+        static template = xml`
+            <Dialog title="'Navigation test'">
+                <input class="dialog-input"/>
+                <button class="dialog-next">Next</button>
+            </Dialog>
+        `;
+    }
+
+    class ActiveElementDropdown extends Component {
+        static components = { Dropdown, DropdownItem };
+        static template = xml`
+            <div t-ref="this.activeRef">
+                <Dropdown>
+                    <button>Dropdown</button>
+                    <t t-set-slot="content">
+                        <button class="o-navigable open-dialog" t-on-click="this.openDialog">Open dialog</button>
+                        <DropdownItem class="'item-b'">Item B</DropdownItem>
+                    </t>
+                </Dropdown>
+            </div>
+        `;
+        activeRef = signal.ref();
+
+        setup() {
+            useActiveElement(this.activeRef);
+            this.dialog = useService("dialog");
+        }
+
+        openDialog() {
+            this.dialog.add(CustomDialog);
+        }
+    }
+
+    await mountWithCleanup(ActiveElementDropdown);
+    await contains(DROPDOWN_TOGGLE).click();
+    await contains(".open-dialog").click();
+    expect(DROPDOWN_MENU).toHaveCount(1);
+    await contains(".dialog-input").focus();
+    await press("Tab");
+    await animationFrame();
+    expect(".dialog-next").toBeFocused();
+    expect(DROPDOWN_MENU).toHaveCount(1);
+
+    await click(".modal-dialog .btn-close");
+    await animationFrame();
+    expect(".modal-dialog").toHaveCount(0);
+    expect(".open-dialog").toBeFocused();
+    await press("ArrowDown");
+    await animationFrame();
+    expect(".item-b").toBeFocused();
+});
+
 test("close on click outside when the opening active element was removed", async () => {
     class ActiveElementDropdown extends Component {
         static components = { Dropdown, DropdownItem };

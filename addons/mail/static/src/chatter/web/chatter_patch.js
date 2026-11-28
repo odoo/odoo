@@ -10,7 +10,7 @@ import { MessageSearchPlugin } from "@mail/core/common/message_search_plugin";
 import { SearchMessageInput } from "@mail/core/common/search_message_input";
 import { SearchMessageResult } from "@mail/core/common/search_message_result";
 import { Activity } from "@mail/core/web/activity";
-import { FollowerList } from "@mail/core/web/follower_list";
+import { FollowerList, useFollowerListNavigation } from "@mail/core/web/follower_list";
 import { groupAttachments } from "@mail/utils/common/attachments";
 import { mergeProps } from "@mail/utils/common/hooks";
 import { assignGetter, isDragSourceExternalFile } from "@mail/utils/common/misc";
@@ -116,6 +116,7 @@ const chatterPatch = {
         this.messageSearch = usePlugin(MessageSearchPlugin);
         this.attachmentUploader = useAttachmentUploader(this.thread);
         this.followerListDropdown = useDropdownState();
+        this.followerListNavigation = useFollowerListNavigation(this.followerListDropdown);
         /** @type {number|null} */
         this.loadingAttachmentTimeout = null;
         /** @type {Map<string, Function>} */
@@ -449,7 +450,6 @@ const chatterPatch = {
 
     /** @param {import("models").Thread} thread */
     onFollowerChanged(thread) {
-        document.body.click(); // hack to close dropdown
         if (thread?.eq(this.state.thread)) {
             this.reloadParentView();
         }
