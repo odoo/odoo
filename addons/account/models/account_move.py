@@ -7119,7 +7119,7 @@ class AccountMove(models.Model):
 
         direct_validate_moves = draft_moves - need_confirmation_moves
         if direct_validate_moves:
-            direct_validate_moves._post(soft=False)
+            direct_validate_moves.with_context(validate_analytic=True)._post(soft=False)
         if need_confirmation_moves:
             wizard = self.env['validate.account.move'].create({
                 'move_ids': [Command.set(need_confirmation_moves.ids)],
