@@ -43,17 +43,32 @@ class ReportPosOrder(models.Model):
 
     def _select(self):
         return SQL("""
-            -- The purpose of this CTE is to map each "pos_order_line" to the "payment_method_id" corresponding to its "pos_order"
-            -- considering we always show the first "payment_method_id"
-            WITH payment_method_by_order_line AS (
+            -- Each order line is reported once per payment method used by its order, its
+            -- amounts prorated by the share that method represents in the order.
+            WITH payment_by_method AS (
                 SELECT
-                    pol.id AS pos_order_line_id,
-                    pm.pos_order_id as pos_order_id,
-                    (array_agg(pm.payment_method_id ORDER BY pm.id ASC))[1] AS payment_method_id
-                FROM pos_order_line pol
-                LEFT JOIN pos_order po ON (po.id = pol.order_id)
-                LEFT JOIN pos_payment pm ON (pm.pos_order_id=po.id)
-                GROUP BY pol.id, pm.pos_order_id
+                    pay.pos_order_id,
+                    pay.payment_method_id,
+                    SUM(pay.amount) AS amount
+                FROM pos_payment pay
+                GROUP BY pay.pos_order_id, pay.payment_method_id
+            ),
+            -- The share of each payment method in its order, and the rank of the method in
+            -- the order: 0 is the main method, the one that paid the largest part (in
+            -- absolute value, so that refunds are ranked like sales).
+            payment_share AS (
+                SELECT
+                    pos_order_id,
+                    payment_method_id,
+                    CASE
+                        WHEN SUM(amount) OVER (PARTITION BY pos_order_id) = 0
+                            THEN 1.0 / COUNT(*) OVER (PARTITION BY pos_order_id)
+                        ELSE amount / SUM(amount) OVER (PARTITION BY pos_order_id)
+                    END AS share,
+                    ROW_NUMBER() OVER (
+                        PARTITION BY pos_order_id ORDER BY ABS(amount) DESC, payment_method_id
+                    ) - 1 AS method_rank
+                FROM payment_by_method
             ),
             first_pos_category AS (
                 SELECT
@@ -65,19 +80,22 @@ class ReportPosOrder(models.Model):
                 GROUP BY pt.id
             )
             SELECT
-                l.id AS id,
-                1 AS nbr_lines, -- number of lines in order line is always 1
+                l.id::bigint * 1000 + COALESCE(pay.method_rank, 0) AS id, -- stable: one id per line and method
+                CASE WHEN COALESCE(pay.method_rank, 0) = 0 THEN 1 ELSE 0 END AS nbr_lines, -- a line is counted on one method only
                 s.date_order AS date,
-                ROUND((SIGN(l.qty) * SIGN(l.price_unit) * ABS(l.price_subtotal)) / CASE COALESCE(s.currency_rate, 0) WHEN 0 THEN 1.0 ELSE s.currency_rate END, cu.decimal_places) AS price_subtotal_excl,
-                l.qty AS product_qty,
-                l.qty * l.price_unit / COALESCE(NULLIF(s.currency_rate, 0), 1.0) AS price_sub_total,
-                ROUND((SIGN(l.qty) * SIGN(l.price_unit) * ABS(l.price_subtotal_incl)) / COALESCE(NULLIF(s.currency_rate, 0), 1.0), cu.decimal_places) AS price_total,
-                (l.qty * l.price_unit) * (l.discount / 100) / COALESCE(NULLIF(s.currency_rate, 0), 1.0) AS total_discount,
+                ROUND((SIGN(l.qty) * SIGN(l.price_unit) * ABS(l.price_subtotal) * COALESCE(pay.share, 1.0)) / CASE COALESCE(s.currency_rate, 0) WHEN 0 THEN 1.0 ELSE s.currency_rate END, cu.decimal_places) AS price_subtotal_excl,
+                CASE WHEN COALESCE(pay.method_rank, 0) = 0 THEN l.qty ELSE 0 END AS product_qty,
+                (l.qty * l.price_unit * COALESCE(pay.share, 1.0)) / COALESCE(NULLIF(s.currency_rate, 0), 1.0) AS price_sub_total,
+                ROUND((SIGN(l.qty) * SIGN(l.price_unit) * ABS(l.price_subtotal_incl) * COALESCE(pay.share, 1.0)) / COALESCE(NULLIF(s.currency_rate, 0), 1.0), cu.decimal_places) AS price_total,
+                (l.qty * l.price_unit * COALESCE(pay.share, 1.0)) * (l.discount / 100) / COALESCE(NULLIF(s.currency_rate, 0), 1.0) AS total_discount,
                 CASE
-                    WHEN l.qty * u.factor = 0 THEN NULL
+                    WHEN COALESCE(pay.method_rank, 0) > 0 OR l.qty * u.factor = 0 THEN NULL
                     ELSE (l.qty*l.price_unit / COALESCE(NULLIF(s.currency_rate, 0), 1.0))/(l.qty * u.factor)::decimal
                 END AS average_price,
-                cast(to_char(date_trunc('day',s.date_order) - date_trunc('day',s.create_date),'DD') AS INT) AS delay_validation,
+                CASE WHEN COALESCE(pay.method_rank, 0) = 0
+                    THEN cast(to_char(date_trunc('day',s.date_order) - date_trunc('day',s.create_date),'DD') AS INT)
+                    ELSE 0
+                END AS delay_validation,
                 s.id as order_id,
                 s.partner_id AS partner_id,
                 s.state AS state,
@@ -93,8 +111,8 @@ class ReportPosOrder(models.Model):
                 s.session_id,
                 s.preset_id,
                 s.account_move IS NOT NULL AS invoiced,
-                ((SIGN(l.qty) * SIGN(l.price_unit) * ABS(l.price_subtotal)) - COALESCE(l.total_cost,0)) / COALESCE(NULLIF(s.currency_rate, 0), 1.0) AS margin,
-                pm.payment_method_id AS payment_method_id,
+                (((SIGN(l.qty) * SIGN(l.price_unit) * ABS(l.price_subtotal)) - COALESCE(l.total_cost,0)) * COALESCE(pay.share, 1.0)) / COALESCE(NULLIF(s.currency_rate, 0), 1.0) AS margin,
+                pay.payment_method_id AS payment_method_id,
                 fpc.id AS pos_categ_id
 
         """)
@@ -109,8 +127,7 @@ class ReportPosOrder(models.Model):
                 LEFT JOIN pos_session ps ON (s.session_id=ps.id)
                 LEFT JOIN res_company co ON (s.company_id=co.id)
                 LEFT JOIN res_currency cu ON (co.currency_id=cu.id)
-                LEFT JOIN payment_method_by_order_line pm ON (pm.pos_order_line_id=l.id)
-                LEFT JOIN pos_payment_method ppm ON (pm.payment_method_id=ppm.id)
+                LEFT JOIN payment_share pay ON (pay.pos_order_id=s.id)
                 LEFT JOIN first_pos_category fpc ON (pt.id = fpc.product_template_id)
         """)
 
