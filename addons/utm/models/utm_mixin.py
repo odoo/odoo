@@ -127,8 +127,26 @@ class UtmMixin(models.AbstractModel):
         # Retrieve existing similar names
         search_domain = Domain.OR(Domain('name', 'ilike', name) for name in names_without_counter)
         if skip_record_ids:
+<<<<<<< 5f10a6b94d1fcf00551cccc8b48381038e8ae575
             search_domain &= Domain('id', 'not in', skip_record_ids)
         existing_names = {vals['name'] for vals in self.env[model_name].search_read(search_domain, ['name'])}
+||||||| 7dabd031627e020a5d67ced35ddc05cfcc134c7c
+            search_domain = expression.AND([
+                [('id', 'not in', skip_record_ids)],
+                search_domain
+            ])
+        existing_names = {vals['name'] for vals in self.env[model_name].search_read(search_domain, ['name'])}
+=======
+            search_domain = expression.AND([
+                [('id', 'not in', skip_record_ids)],
+                search_domain
+            ])
+        # Archived records keep their name and the unique constraint still applies to them
+        existing_names = {
+            vals['name']
+            for vals in self.env[model_name].with_context(active_test=False).search_read(search_domain, ['name'])
+        }
+>>>>>>> db1421f9730ebc665598f94a922b1eeda877874d
 
         # Counter for each names, based on the names list given in argument
         # and the record names in database
