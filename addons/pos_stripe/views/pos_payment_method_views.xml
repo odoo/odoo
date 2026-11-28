@@ -16,7 +16,9 @@
                                 </div>
                             </group>
                             <group>
-                                <button name="action_stripe_test_creds" type="object" string="Test" class="btn-primary" invisible="payment_provider != 'stripe' or not stripe_serial_number"/>
+                                <div class="d-flex justify-content-end" colspan="2">
+                                    <button name="action_stripe_test_creds" type="object" string="Test" class="btn-primary" invisible="payment_provider != 'stripe' or not stripe_serial_number"/>
+                                </div>
                             </group>
                         </group>
                     </page>
