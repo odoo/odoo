@@ -2923,6 +2923,58 @@ class TestSinglePicking(TestStockCommon):
                 picking_form.partner_id = contact
                 self.assertEqual(picking_form.save().location_id, expected_location)
 
+    def test_set_lot_ids_on_multiple_moves(self):
+        """
+        Ensure that setting lot_ids on multiple moves correctly creates move lines.
+        """
+        lot_products = self.product + self.productA
+        lot_products.write({'is_storable': True, 'tracking': 'lot'})
+        lots = self.env['stock.lot'].create([
+            {'name': f'Superlot {i + 1}', 'product_id': product.id}
+            for product in lot_products
+            for i in range(3)
+        ])
+
+        move_ids = self.env['stock.move'].create([{
+            'product_id': product.id,
+            'product_uom_qty': 1,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'lot_ids': [Command.set(lot.ids)],
+        } for product, lot in ((lot_products[0], lots[0]), (lot_products[1], lots[3]))])
+        self.assertRecordValues(move_ids.move_line_ids, [
+            {'lot_id': lots[0].id, 'quantity': 1.0, 'location_id': self.supplier_location.id},
+            {'lot_id': lots[3].id, 'quantity': 1.0, 'location_id': self.supplier_location.id},
+        ])
+
+        # Reservation from the quants of the lots
+        self.env['stock.quant']._update_available_quantity(lot_products[0], self.stock_location, 1, lot_id=lots[1])
+        self.env['stock.quant']._update_available_quantity(lot_products[1], self.stock_location, 1, lot_id=lots[4])
+        move_ids = self.env['stock.move'].create([{
+            'product_id': product.id,
+            'product_uom_qty': 1,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'lot_ids': [Command.set(lot.ids)],
+        } for product, lot in ((lot_products[0], lots[1]), (lot_products[1], lots[4]))])
+        self.assertRecordValues(move_ids.move_line_ids, [
+            {'lot_id': lots[1].id, 'quantity': 1.0, 'location_id': self.stock_location.id},
+            {'lot_id': lots[4].id, 'quantity': 1.0, 'location_id': self.stock_location.id},
+        ])
+
+        # No quant available for the lots
+        move_ids = self.env['stock.move'].create([{
+            'product_id': product.id,
+            'product_uom_qty': 1,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'lot_ids': [Command.set(lot.ids)],
+        } for product, lot in ((lot_products[0], lots[2]), (lot_products[1], lots[5]))])
+        self.assertRecordValues(move_ids.move_line_ids, [
+            {'lot_id': lots[2].id, 'quantity': 1.0, 'location_id': self.stock_location.id},
+            {'lot_id': lots[5].id, 'quantity': 1.0, 'location_id': self.stock_location.id},
+        ])
+
 
 class TestStockUOM(TestStockCommon):
     @classmethod
