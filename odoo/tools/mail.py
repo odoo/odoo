@@ -108,6 +108,7 @@ class _Cleaner(clean.Cleaner):
         'padding', 'padding-top', 'padding-left', 'padding-bottom', 'padding-right',
         'margin', 'margin-top', 'margin-left', 'margin-bottom', 'margin-right',
         'white-space',
+        'list-style',
         # appearance
         'background-image', 'background-position', 'background-size', 'background-repeat', 'background-origin',
         # box model

@@ -10,6 +10,7 @@ import { LinkPlugin } from "@html_editor/main/link/link_plugin";
 import { ProtectedNodePlugin } from "@html_editor/core/protected_node_plugin";
 import { SelectionPlaceholderPlugin } from "@html_editor/main/selection_placeholder_plugin";
 import { LinkSelectionPlugin } from "@html_editor/main/link/link_selection_plugin";
+import { ListPlugin } from "@html_editor/main/list/list_plugin";
 import { OdooLinkSelectionPlugin } from "@html_editor/main/link/link_selection_odoo_plugin";
 import { ShortCutPlugin } from "@html_editor/core/shortcut_plugin";
 import { SyntaxHighlightingPlugin } from "@html_editor/others/embedded_components/plugins/syntax_highlighting_plugin/syntax_highlighting_plugin";
@@ -30,6 +31,7 @@ export const MAIL_CORE_PLUGINS = [
     LinkPastePlugin,
     LinkPlugin,
     LinkSelectionPlugin,
+    ListPlugin,
     MailComposerPlugin,
     MentionPlugin,
     OdooLinkSelectionPlugin,
