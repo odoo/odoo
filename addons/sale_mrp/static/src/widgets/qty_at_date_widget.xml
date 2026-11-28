@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="sale_mrp.QtyAtDatePopover" t-inherit="sale_stock.QtyAtDatePopover" t-inherit-mode="extension">
+        <xpath expr="//button[@t-on-click='this.openForecast']" position="after">
+            <button t-if="['draft', 'sent'].includes(this.props.record.data.state) and this.props.record.data.manufacturing_bom_id"
+                class="text-start btn btn-link" type="button" t-on-click="this.openManufacturingForecast">
+                <i class="oi oi-fw o_button_icon" data-icon="east"></i>
+                View Manufacturing Forecast
+            </button>
+        </xpath>
+    </t>
+</templates>
