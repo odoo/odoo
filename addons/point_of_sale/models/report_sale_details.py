@@ -173,7 +173,7 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
 
         cash_moves_by_session = {
             session.id: lines
-            for session, lines in StatementLine._read_group(
+            for session, lines in StatementLine.sudo()._read_group(
                 [('pos_session_id', 'in', sessions.ids)],
                 ['pos_session_id'],
                 ['id:recordset'],
@@ -183,6 +183,11 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
         for session in sessions:
             cash_counted = session.closing_balance or 0
             related_moves = cash_moves_by_session.get(session.id, [])
+            cash_in_out_amount = sum(
+                m.amount for m in related_moves
+                if m.journal_id.suspense_account_id
+                and m.journal_id.suspense_account_id in m.move_id.line_ids.account_id
+            )
             is_cash_method = False
             for p in payments:
                 if p['session'] != session.id:
@@ -190,7 +195,7 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
 
                 if p['cash']:
                     is_cash_method = True
-                    p['final_count'] = p['total'] + session.opening_balance
+                    p['final_count'] = p['total'] + session.opening_balance + cash_in_out_amount
                     p['money_counted'] = cash_counted
                     p['money_difference'] = p['money_counted'] - p['final_count']
 
@@ -249,7 +254,7 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
             if not is_cash_method:
                 cash_name = _('Cash %(session_name)s', session_name=session.name)
                 previous_session = PosSession.search([('id', '<', session.id), ('state', '=', 'closed'), ('config_id', '=', session.config_id.id)], limit=1)
-                final_count = previous_session.closing_balance
+                final_count = previous_session.closing_balance + cash_in_out_amount
                 cash_difference = session.closing_balance - final_count
                 cash_moves = self.env['account.bank.statement.line'].search([('pos_session_id', '=', session.id)], order='date asc')
                 cash_in_out_list = []
