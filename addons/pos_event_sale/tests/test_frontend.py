@@ -69,7 +69,7 @@ class TestPoSEventSale(TestUi):
             ]
         })
         sale_order = self._create_event_sale_order()
-        sale_order.action_confirm()
+        sale_order.with_context(event_sale_registration=True).action_confirm()
         registrations = sale_order.order_line.registration_ids
         self.assertEqual(len(registrations), 2)
 

@@ -252,7 +252,7 @@ class TestEventSale(TestEventSaleCommon):
                 'price_unit': 10,
             })]
         })
-        customer_so.action_confirm()
+        customer_so.with_context(event_sale_registration=True).action_confirm()
 
         registrations = self.env['event.registration'].search([
             ('sale_order_id', '=', customer_so.id)
@@ -269,6 +269,16 @@ class TestEventSale(TestEventSaleCommon):
         ])
         self.assertEqual(len(registrations), 1)
         self.assertEqual(registrations.state, 'open')
+
+    def test_event_sale_full_event(self):
+        """ Test registrations of orders confirmed online, with and without seats left. """
+        ticket = self.event_0.event_ticket_ids[0]
+        self.event_0.write({'seats_limited': True, 'seats_max': 2})
+        # seats left, then not enough seats left for the whole order
+        for prices, states in (([10], ['open']), ([10, 0], ['draft', 'draft']), ([0, 0], ['draft', 'draft'])):
+            sale_order = self._create_ticket_so(ticket, prices)
+            sale_order.action_confirm()
+            self.assertEqual(sale_order.order_line.registration_ids.mapped('state'), states)
 
     @users('user_sales_salesman')
     def test_event_sale_free_confirm(self):
@@ -349,7 +359,7 @@ class TestEventSale(TestEventSaleCommon):
 
         # Confirming the SO will raise an error if there is not enough seats
         with self.assertRaises(ValidationError):
-            customer_so.action_confirm()
+            customer_so.with_context(event_sale_registration=True).action_confirm()
 
         editor = self.env['registration.editor'].with_context({
             'default_sale_order_id': customer_so.id
@@ -394,7 +404,7 @@ class TestEventSale(TestEventSaleCommon):
 
         # Confirming the SO will raise an error if there is not enough seats
         with self.assertRaises(ValidationError):
-            customer_so.action_confirm()
+            customer_so.with_context(event_sale_registration=True).action_confirm()
 
         editor = self.env['registration.editor'].with_context({
             'default_sale_order_id': customer_so.id
@@ -591,7 +601,7 @@ class TestEventSale(TestEventSaleCommon):
         self.assertEqual(event.registration_ids.state, 'cancel')
         # After canceling the sale order, we set it back to draft and confirm it again. This should create new registrations.
         self.sale_order.action_draft()
-        self.sale_order.action_confirm()
+        self.sale_order.with_context(event_sale_registration=True).action_confirm()
         self.assertEqual(len(event.registration_ids), 2)
         self.assertEqual(event.registration_ids.mapped('state'), ['cancel', 'draft'])
 

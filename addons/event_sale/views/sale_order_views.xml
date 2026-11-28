@@ -15,6 +15,12 @@
                     <field name="attendee_count" widget="statinfo" string="Attendees"/>
                 </button>
             </div>
+            <xpath expr="//button[@id='action_confirm']" position="attributes">
+                <attribute name="context">{'validate_analytic': True, 'event_sale_registration': True}</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_confirm'][not(@id)]" position="attributes">
+                <attribute name="context">{'validate_analytic': True, 'event_sale_registration': True}</attribute>
+            </xpath>
             <xpath expr="//field[@name='order_line']//form//field[@name='product_id']" position="after">
                 <field
                     name="event_id"

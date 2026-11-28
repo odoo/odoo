@@ -804,6 +804,29 @@ class TestEventRegistrationData(TestEventInternalsCommon):
             self.assertEqual(attendee.message_ids.mapped('body').count(new_message), 1,
                 'Logged a new message when marked as attended on a different day.')
 
+    @users('user_eventregistrationdesk')
+    def test_registration_overbooking(self):
+        """ Test adding extra attendees to a full event once warned,
+        and marking attendees of an overbooked event as attended. """
+        self.event_0.write({'seats_limited': True, 'seats_max': 1})
+        Registration = self.env['event.registration']
+        registered = Registration.create({'event_id': self.event_0.id, 'name': 'Registered'})
+        unconfirmed = Registration.create({'event_id': self.event_0.id, 'name': 'Unconfirmed', 'state': 'draft'})
+        self.assertFalse(registered.overbooking_message)
+        self.assertIn('There are not enough seats available for the event: TestEvent', unconfirmed.overbooking_message)
+        registration_form = Form(Registration)
+        registration_form.event_id = self.event_0
+        self.assertTrue(registration_form.overbooking_message)
+
+        with self.assertRaises(exceptions.ValidationError):  # only for back-end event users
+            unconfirmed.with_user(self.user_employee).sudo().with_context(event_registration_allow_overbooking=True).action_confirm()
+        unconfirmed.with_context(event_registration_allow_overbooking=True).action_confirm()
+        self.assertEqual(unconfirmed.state, 'open')
+
+        # overbooked: attending keeps the seat
+        (registered | unconfirmed).action_attend_event()
+        self.assertEqual((registered | unconfirmed).mapped('state'), ['done', 'done'])
+
     @users('user_eventmanager')
     def test_registration_partner_sync(self):
         """ Test registration computed fields about partner """
