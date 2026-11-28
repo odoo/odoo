@@ -93,3 +93,22 @@ export function processCountdownHTML({ endAction = "nothing", endTime = "9876543
         }
     };
 }
+
+export function getCompareImageXml(classes = "") {
+    return `
+        <figure class="s_compare_image ${classes}" data-snippet="s_compare_image" data-name="Compare Image" style="--s_compare_image-position: 50%;">
+            <div class="s_compare_image_frame o-contenteditable-false">
+                <img class="s_compare_image_before o_editable_media o_snippet_not_selectable" data-mimetype="image/png" src="/base/static/img/logo_white.png" alt=""/>
+                <img class="s_compare_image_after o_editable_media o_snippet_not_selectable" data-mimetype="image/png" src="/base/static/img/logo_white.png" alt=""/>
+                <div class="s_compare_image_labels">
+                    <p class="s_compare_image_label o-contenteditable-true badge mb-0">Before</p>
+                    <p class="s_compare_image_label o-contenteditable-true badge mb-0">After</p>
+                </div>
+                <div class="s_compare_image_divider">
+                    <span class="s_compare_image_handle"></span>
+                </div>
+            </div>
+            <figcaption>Caption</figcaption>
+        </figure>
+    `;
+}
