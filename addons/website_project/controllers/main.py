@@ -3,6 +3,7 @@
 from odoo.http import request
 
 from odoo import _
+from odoo.exceptions import ValidationError
 from odoo.addons.base.models.ir_qweb_fields import nl2br, nl2br_enclose
 from odoo.addons.website.controllers import form
 from odoo.tools import html2plaintext
@@ -24,6 +25,8 @@ class WebsiteForm(form.WebsiteForm):
         if model_name != 'project.task':
             return res
         task = request.env['project.task'].sudo().browse(res)
+        if task.project_privacy_visibility == 'followers':
+            raise ValidationError(_("This project does not accept tickets through the online form"))
         custom = custom.replace('email_from', _('Email'))
         custom_label = nl2br_enclose(_("Other Information"), 'h4')  # Title for custom fields
         default_field = model.website_form_default_field_id
