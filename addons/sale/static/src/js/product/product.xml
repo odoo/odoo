@@ -13,11 +13,11 @@
                 name="o_sale_product_configurator_name"
                 class="mb-1 mb-lg-3"
             >
-                <span class="h5 o_line_clamp" t-out="this.props.display_name"/>
+                <span class="h5 o_line_clamp text-break" t-out="this.props.display_name"/>
                 <div
                     t-if="this.props.description_sale"
                     t-out="this.props.description_sale"
-                    class="o_sale_product_configurator_description o_line_clamp text-muted small"
+                    class="o_sale_product_configurator_description o_line_clamp text-muted small text-break"
                 />
                 <div t-if="this.props.selectedComboItems" class="text-muted small">
                     <div

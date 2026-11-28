@@ -175,7 +175,7 @@
         <!-- Information -->
         <div class="o_wsale_product_information_text">
             <!-- Product Name -->
-            <h6 class="o_wsale_products_item_title text-break">
+            <h6 class="o_wsale_products_item_title text-truncate">
                 <a
                     class="text-decoration-none"
                     t-att-href="product_href"
@@ -203,7 +203,7 @@
                         class="oe_subdescription text-muted small"
                         contenteditable="false"
                     >
-                        <div t-field="product.description_sale"/>
+                        <div class="text-truncate" t-field="product.description_sale"/>
                     </div>
                 </div>
             </t>

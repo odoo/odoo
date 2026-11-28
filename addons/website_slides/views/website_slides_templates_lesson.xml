@@ -283,7 +283,7 @@
     </div>
     <div t-if="slide.tag_ids" class="pb-2">
         <t t-foreach="slide.tag_ids" t-as="tag">
-            <a t-att-href="'/slides/%s/tag/%s' % (slug(slide.channel_id), slug(tag))" class="badge text-bg-info" t-out="tag.name"/>
+            <a t-att-href="'/slides/%s/tag/%s' % (slug(slide.channel_id), slug(tag))" class="badge text-bg-info text-truncate mw-100" t-out="tag.name"/>
         </t>
     </div>
     <div class="oe_structure oe_empty" id="oe_structure_website_slides_lesson_top_1" data-editor-message.translate="Drag blocks here to add them on all lessons"/>
@@ -300,13 +300,13 @@
                 Click on the "Edit" button in the top corner of the screen to edit your slide content.
             </div>
             <div class="bg-white p-3">
-                <div t-field="slide.html_content" placeholder="Add your content here..."/>
+                <div t-field="slide.html_content" class="text-break" placeholder="Add your content here..."/>
             </div>
         </div>
     </div>
 
     <div class="mb-5 position-relative">
-        <ul class="nav nav-tabs o_wslides_lesson_nav" role="tablist">
+        <ul class="nav nav-tabs o_wslides_lesson_nav text-break" role="tablist">
             <li class="nav-item" role="presentation">
                 <a href="#about" aria-controls="about" t-att-class="'nav-link active' if not comments else 'nav-link'" role="tab" data-bs-toggle="tab">
                     <i class="oi" data-icon="home" role="img" aria-hidden="true"></i> About
@@ -325,7 +325,7 @@
         </ul>
         <div class="tab-content mt-3">
             <div role="tabpanel" t-att-class="not comments and 'tab-pane fade in show active' or 'tab-pane fade'" id="about">
-                <div t-field="slide.description"/>
+                <div t-field="slide.description" class="text-break"/>
                 <div t-if="slide.channel_id.allow_comment" class="d-flex">
                     <span class="text-muted fw-bold me-3">Rating</span>
                     <div class="text-muted border-start ps-3">

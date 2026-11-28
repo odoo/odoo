@@ -34,8 +34,8 @@
                     t-out="line.quantity"
                 />
             </div>
-            <div class="d-flex flex-column align-items-start flex-grow-1">
-                <span t-out="line.name"/>
+            <div class="d-flex flex-column align-items-start flex-grow-1 overflow-hidden">
+                <span class="text-truncate mw-100" t-out="line.name"/>
                 <span
                     t-if="line.combination_name"
                     class="text-muted small"

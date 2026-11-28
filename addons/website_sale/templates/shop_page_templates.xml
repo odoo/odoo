@@ -97,12 +97,12 @@
                 <span t-if="len(category.parents_and_self) &gt; 1" class="d-lg-none">...</span>
             </li>
             <t t-foreach="category.parents_and_self" t-as="cat">
-                <li t-if="cat == category" class="breadcrumb-item">
-                    <span class="d-inline-block" t-field="cat.name"/>
+                <li t-if="cat == category" class="breadcrumb-item d-flex mw-100">
+                    <span class="d-inline-block text-truncate" t-field="cat.name"/>
                 </li>
                 <li
                     t-else=""
-                    t-attf-class="breadcrumb-item {{cat_index &lt; cat_size - 2 and 'd-none d-lg-inline'}}"
+                    t-attf-class="breadcrumb-item text-truncate {{cat_index &lt; cat_size - 2 and 'd-none d-lg-inline'}}"
                 >
                     <a
                         t-att-href="keep(cat.website_url, **reset_filters)"
@@ -268,7 +268,7 @@
                                 >
                                     <t t-if="search and category">
                                         <span class="text-muted">Searching</span>
-                                        <span class="badge text-bg-info fw-normal base-fs">
+                                        <span class="badge text-bg-info fw-normal base-fs text-wrap text-break">
                                             <t t-out="search"/>
                                             <a
                                                 aria-label="Clear search for this category"
@@ -280,7 +280,7 @@
                                             </a>
                                         </span>
                                         <span class="text-muted">in</span>
-                                        <span class="badge text-bg-primary fw-normal base-fs">
+                                        <span class="badge text-bg-primary fw-normal base-fs text-wrap text-break">
                                             <t t-out="category.name"/>
                                             <a
                                                 aria-label="Search globally"
@@ -291,15 +291,15 @@
                                             </a>
                                         </span>
                                     </t>
-                                    <span t-elif="search">
+                                    <span t-elif="search" class="text-break">
                                         <span class="text-muted">Search results for </span>'<strong t-out="search"/>' <small t-if="search_count" class="text-muted"> (<t t-out="search_count"/>)</small>
                                     </span>
                                     <t t-elif="category">
-                                        <span t-field="category.name"/>
+                                        <span class="text-truncate text-wrap" t-field="category.name"/>
                                     </t>
                                 </h1>
                                 <div class="o_wsale_shop_title" t-if="not category and not search">
-                                    <h1 class="h4-fs">
+                                    <h1 class="h4-fs text-break">
                                         All products
                                     </h1>
                                 </div>
@@ -310,7 +310,7 @@
                                     </t>
                                     <div
                                         id="category_header"
-                                        class="o_wsale_category_description"
+                                        class="o_wsale_category_description text-break"
                                         t-att-data-editor-message="editor_msg"
                                         t-field="category.website_description"
                                     />
@@ -660,7 +660,7 @@
                         t-att-checked="v.id in attrib_set"
                     />
                     <label
-                        class="form-check-label fw-normal"
+                        class="form-check-label fw-normal d-block text-truncate text-wrap"
                         t-att-for="'%s-%s' % (a.id,v.id)"
                         t-field="v.name"
                     />
@@ -687,7 +687,7 @@
                                 t-att-checked="v.id in attrib_set"
                             />
                             <label
-                                class="form-check-label fw-normal"
+                                class="form-check-label fw-normal d-block text-truncate text-wrap"
                                 t-att-for="'%s-%s' % (a.id,v.id)"
                                 t-field="v.name"
                             />
@@ -738,7 +738,7 @@
                             t-att-checked="v.id in attrib_set"
                         />
                         <label
-                            class="form-check-label fw-normal"
+                            class="form-check-label fw-normal d-block text-truncate text-wrap"
                             t-att-for="'%s-%s' % (a.id,v.id)"
                             t-field="v.name"
                         />
@@ -760,7 +760,7 @@
                 autocomplete="off"
             />
             <label
-                t-attf-class="btn border {{'active bg-primary-subtle border-primary text-primary-emphasis' if v.id in attrib_set else ''}}"
+                t-attf-class="btn border text-truncate {{'active bg-primary-subtle border-primary text-primary-emphasis' if v.id in attrib_set else ''}}"
                 t-att-for="'%s-%s' % (a.id,v.id)"
                 t-field="v.name"
             />
@@ -840,11 +840,11 @@
                             t-att-aria-expanded="_expand_attributes"
                             t-attf-aria-controls="o_wsale_offcanvas_attribute_{{a.id}}"
                         >
-                            <b t-out="a.name"/>
+                            <b class="text-truncate text-wrap" t-out="a.name"/>
                         </button>
                     </h2>
                     <div t-else="" class="mb-3">
-                        <b class="d-none d-lg-block" t-field="a.name"/>
+                        <b class="d-none d-lg-block text-truncate text-wrap" t-field="a.name"/>
                     </div>
                     <div
                         t-attf-id="{{'o_wsale_offcanvas_attribute_' + str(a.id) if isMobile else 'o_products_attributes_' + str(a.id)}}"
@@ -1404,7 +1404,7 @@
                     t-attf-aria-controls="o_products_attributes_{{a.id}}"
                     t-att-aria-expanded="_expand_attributes"
                 >
-                    <b t-field="a.name"/>
+                    <b class="text-truncate text-wrap" t-field="a.name"/>
                 </button>
             </div>
         </xpath>
@@ -1529,7 +1529,7 @@
                        t-att-value="slug(tag)"
                        t-att-checked="'checked' if tag.id in tags else None"
                 />
-                <label class="form-check-label fw-normal" t-attf-for="tag_#{tag.id}" t-field="tag.name"/>
+                <label class="form-check-label fw-normal d-block text-truncate text-wrap" t-attf-for="tag_#{tag.id}" t-field="tag.name"/>
             </div>
         </t>
     </template>

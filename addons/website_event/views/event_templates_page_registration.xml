@@ -41,8 +41,8 @@
                         <i class="oi me-2" data-icon="check" role="img" aria-hidden="true"/>Registered
                     </span>
                     <div class="w-100 mt-auto">
-                        <h2 t-field="event.name" placeholder="Event Title" class="mt-3"/>
-                        <p class="lead" t-field="event.subtitle" placeholder="Event Subtitle"/>
+                        <h2 t-field="event.name" placeholder="Event Title" class="mt-3 text-truncate text-wrap"/>
+                        <p class="lead text-truncate text-wrap" t-field="event.subtitle" placeholder="Event Subtitle"/>
                     </div>
                 </div>
             </div>
@@ -74,14 +74,14 @@
                                     <span t-if="event.is_participating" class="badge text-bg-success o_wevent_badge">
                                         <i class="oi me-2" data-icon="check" role="img" aria-hidden="true"/>Registered
                                     </span>
-                                    <h1 t-field="event.name" placeholder="Event Title" class="mt-3 h2-fs"/>
-                                    <p class="lead" t-field="event.subtitle" placeholder="Event Subtitle"/>
+                                    <h1 t-field="event.name" placeholder="Event Title" class="mt-3 h2-fs text-truncate text-wrap"/>
+                                    <p class="lead text-truncate text-wrap" t-field="event.subtitle" placeholder="Event Subtitle"/>
                                 </div>
                             </t>
                             <div class="o_wevent_event_main_dates_mobile d-lg-none mt-3">
                                 <t t-call="website_event.event_description_dates"/>
                             </div>
-                            <div class="mt-4" t-field="event.description"/>
+                            <div class="mt-4 text-break" t-field="event.description"/>
                         </div>
                     </div>
 
@@ -89,7 +89,7 @@
                     <aside t-if="opt_event_registration_block or opt_event_dates_block or opt_event_calendar_block or
                         opt_event_location_block or opt_event_organizer_block or opt_event_share_block"
                         id="o_wevent_event_main_sidebar"
-                        t-attf-class="col-lg-4 py-3 pb-lg-0 d-print-none {{'sticky-top align-self-start' if opt_event_fixed_sidebar else ''}}">
+                        t-attf-class="col-lg-4 py-3 pb-lg-0 d-print-none text-break {{'sticky-top align-self-start' if opt_event_fixed_sidebar else ''}}">
                         <!-- CTA (desktop only) -->
                         <div t-if="opt_event_registration_block" class="d-none d-lg-block mb-3">
                             <t t-call="website_event.registration_template" cta_additional_classes.translate="w-100"/>
@@ -106,7 +106,7 @@
                             <div>
                                 <h6 class="o_wevent_sidebar_title">Location</h6>
                             </div>
-                            <div class="mb-1" t-field="event.address_id"/>
+                            <div class="mb-1 text-truncate" t-field="event.address_id"/>
                             <small class="d-block mb-2" t-field="event.address_id" t-options='{
                                 "widget": "contact",
                                 "fields": ["address"],
@@ -134,7 +134,7 @@
                             <div>
                                 <h6 class="o_wevent_sidebar_title">Organizer</h6>
                             </div>
-                            <div class="mb-1" t-field="event.organizer_id"/>
+                            <div class="mb-1 text-truncate" t-field="event.organizer_id"/>
                             <small t-field="event.organizer_id" t-options="{'widget': 'contact', 'fields': ['phone', 'mobile', 'email'], 'with_microdata': False,}"/>
                         </div>
                     </aside>
@@ -507,9 +507,9 @@
                                 t-attf-class="d-flex justify-content-between o_wevent_ticket_selector mb-2 pb-2 {{not ticket_last and 'border-bottom' or ''}}"
                                 t-att-name="ticket.name">
                                 <div class="col-6 pe-3">
-                                    <h5 t-field="ticket.name" class="h6 my-0"/>
+                                    <h5 t-field="ticket.name" class="h6 my-0 text-truncate text-wrap"/>
                                     <t t-if="ticket.description">
-                                        <small t-field="ticket.description" class="text-muted py-2"/>
+                                        <small t-field="ticket.description" class="text-muted py-2 text-break"/>
                                         <br/>
                                     </t>
                                     <small t-if="ticket.end_sale_datetime and ticket.sale_available and not ticket.is_expired"
@@ -587,12 +587,12 @@
                     <div t-else="" class="o_wevent_registration_single">
                         <div class="modal-body row px-3 py-2 mx-0">
                             <div class="col-12 col-md-6 p-0 pe-3">
-                                <h5 class="my-0 pe-3 o_wevent_single_ticket_name">
+                                <h5 class="my-0 pe-3 o_wevent_single_ticket_name text-truncate text-wrap">
                                     <span t-if="tickets" t-field="tickets.name"/>
                                     <span t-else="">Registration</span>
                                 </h5>
                                 <t t-if="tickets.description">
-                                    <small t-field="tickets.description" class="text-muted py-2"/>
+                                    <small t-field="tickets.description" class="text-muted py-2 text-break"/>
                                     <br/>
                                 </t>
                                 <small t-if="tickets.end_sale_datetime and tickets.sale_available and not tickets.is_expired"

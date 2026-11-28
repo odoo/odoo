@@ -78,7 +78,7 @@ list of filtered posts (by date or tag).
             <t t-if="not tag and not date_begin and not search">
                 <div id="o_wblog_blog_top_droppable"/>
                 <t t-if="blog">
-                    <div t-field="blog.content" t-attf-data-editor-message.translate='Drag blocks here to customize the header of the "{{blog.name}}" category.'/>
+                    <div t-field="blog.content" class="text-break" t-attf-data-editor-message.translate='Drag blocks here to customize the header of the "{{blog.name}}" category.'/>
                 </t>
                 <t t-elif="blogs">
                     <div class="oe_structure oe_empty" data-editor-message.translate="Drag blocks here to customize the Blog page header"/>
@@ -143,8 +143,8 @@ list of filtered posts (by date or tag).
                 <div t-att-class="'col-md-7' if (not opt_blog_list_view and not opt_blog_sidebar_show) else 'col-md-6'">
                     <div class="container position-relative h-100 d-flex flex-column justify-content-around pt-1 pb-2">
                         <div t-attf-class="o_wblog_post_title">
-                            <h1 t-field="blog.name" class="o_wblog_post_name text-wrap-pretty" placeholder="Blog Title"/>
-                            <p t-field="blog.subtitle" class="h4 lead" placeholder="Subtitle"/>
+                            <h1 t-field="blog.name" class="o_wblog_post_name text-wrap-pretty text-truncate text-wrap" placeholder="Blog Title"/>
+                            <p t-field="blog.subtitle" class="h4 lead text-truncate text-wrap" placeholder="Subtitle"/>
                         </div>
                     </div>
                 </div>
@@ -168,8 +168,8 @@ list of filtered posts (by date or tag).
             <div class="container position-relative h-100 d-flex flex-column justify-content-around">
                 <div t-attf-class="o_wblog_post_title my-lg-4">
                     <span t-att-title="blog.name" class="text-decoration-none">
-                        <h1 t-field="blog.name" class="o_wblog_post_name text-wrap-pretty" placeholder="Blog Title"/>
-                        <div t-field="blog.subtitle" class="o_wblog_post_subtitle" placeholder="Subtitle"/>
+                        <h1 t-field="blog.name" class="o_wblog_post_name text-wrap-pretty text-truncate text-wrap" placeholder="Blog Title"/>
+                        <div t-field="blog.subtitle" class="o_wblog_post_subtitle text-truncate text-wrap" placeholder="Subtitle"/>
                     </span>
                 </div>
             </div>
@@ -280,15 +280,15 @@ list of filtered posts (by date or tag).
                     <div class="o_container_small text-center position-relative h-100 d-flex flex-column flex-grow-1 justify-content-center">
                         <!-- Title and subtitle -->
                         <div t-attf-class="o_wblog_post_title">
-                            <h1 t-field="blog_post.name" class="o_wblog_post_name o_editable_no_shadow text-wrap-pretty" data-oe-expression="blog_post.name" t-att-data-blog-id="blog_post.id" placeholder="Blog Post Title"/>
-                            <p t-field="blog_post.subtitle" class="o_wblog_post_subtitle o_editable_no_shadow" placeholder="Subtitle"/>
+                            <h1 t-field="blog_post.name" class="o_wblog_post_name o_editable_no_shadow text-wrap-pretty text-truncate text-wrap" data-oe-expression="blog_post.name" t-att-data-blog-id="blog_post.id" placeholder="Blog Post Title"/>
+                            <p t-field="blog_post.subtitle" class="o_wblog_post_subtitle o_editable_no_shadow text-truncate text-wrap" placeholder="Subtitle"/>
                         </div>
                         <!-- Options -->
                         <div id="o_wblog_post_header_options">
                             <!-- Tags -->
                             <div t-if="opt_blog_post_header_tags_display and blog_post.tag_ids" class="mb-4">
                                 <t t-foreach="blog_post.tag_ids" t-as="one_tag">
-                                    <a t-attf-class="badge post_link text-decoration-none o_tag o_color_#{one_tag.color}" t-attf-href="#{blog_url(tag=slug(one_tag))}" t-out="one_tag.name"/>
+                                    <a t-attf-class="badge post_link text-decoration-none text-truncate o_tag o_color_#{one_tag.color}" t-attf-href="#{blog_url(tag=slug(one_tag))}" t-out="one_tag.name"/>
                                 </t>
                             </div>
                             <!-- Author and date -->
@@ -340,15 +340,15 @@ list of filtered posts (by date or tag).
     <!-- Mobile table of contents: simple card with list of links (sidebar hidden on mobile) -->
     <t id="o_wblog_post_content_mobile_toc_hook"/>
     <!-- Blog content -->
-    <div t-field="blog_post.content" class="o_wblog_post_content_field"/>
+    <div t-field="blog_post.content" class="o_wblog_post_content_field text-break"/>
     <!-- Content footer -->
     <div t-if="opt_blog_post_footer_show" id="o_wblog_post_content_footer" class="d-flex align-items-center flex-wrap gap-3 justify-content-between mt-5">
         <!-- Share links -->
         <t id="o_wblog_post_footer_share_links_hook"/>
         <!-- Tags -->
-        <div t-if="opt_blog_post_footer_tags_display and blog_post.tag_ids">
+        <div t-if="opt_blog_post_footer_tags_display and blog_post.tag_ids" class="mw-100">
             <t t-foreach="blog_post.tag_ids" t-as="one_tag">
-                <a t-attf-class="badge post_link text-decoration-none o_tag o_color_#{one_tag.color}" t-attf-href="#{blog_url(tag=slug(one_tag))}" t-out="one_tag.name"/>
+                <a t-attf-class="badge post_link text-decoration-none text-truncate o_tag o_color_#{one_tag.color}" t-attf-href="#{blog_url(tag=slug(one_tag))}" t-out="one_tag.name"/>
             </t>
         </div>
         <!-- Mobile archive (since the sidebar is hidden on mobile) -->
@@ -373,7 +373,7 @@ list of filtered posts (by date or tag).
     <xpath expr="//t[@id='o_wblog_post_content_mobile_toc_hook']" position="replace">
         <t t-if="opt_blog_post_toc_display">
             <div class="o_wblog_toc o_wblog_toc_mobile d-lg-none p-3 border rounded mb-4">
-                <h2 class="h6">Table of contents</h2>
+                <h2 class="h6 text-break">Table of contents</h2>
                 <!-- Placeholder when there is no content to display -->
                 <div class="o_wblog_toc_placeholder d-none bg-light p-3 border rounded o_not_editable">
                     <h2 class="text-muted h6 mb-0"><em>No titles in the blog post</em></h2>
@@ -389,7 +389,7 @@ list of filtered posts (by date or tag).
 <template id="blog_post_content_footer_archive" name="Content Footer Mobile Archive" inherit_id="website_blog.blog_post_content">
     <xpath expr="//t[@id='o_wblog_post_footer_archive_hook']" position="replace">
         <div t-if="opt_blog_post_archive_display" class="d-lg-none w-100 pt-4">
-            <h2 class="h5 mb-3">Archive</h2>
+            <h2 class="h5 mb-3 text-break">Archive</h2>
             <t t-call="website_blog.date_selector"/>
         </div>
     </xpath>
@@ -407,15 +407,15 @@ list of filtered posts (by date or tag).
                     <t t-if="opt_blog_post_breadcrumb" t-call="website_blog.post_breadcrumbs"/>
                     <!-- Title and subtitle -->
                     <div t-attf-class="o_wblog_post_title #{not opt_blog_post_breadcrumb and 'mt-4'}">
-                        <h1 t-field="blog_post.name" class="o_wblog_post_name mb-3 text-wrap-pretty" data-oe-expression="blog_post.name" t-att-data-blog-id="blog_post.id" placeholder="Blog Post Title"/>
-                        <p t-field="blog_post.subtitle" class="o_wblog_post_subtitle lead" placeholder="Subtitle"/>
+                        <h1 t-field="blog_post.name" class="o_wblog_post_name mb-3 text-wrap-pretty text-truncate text-wrap" data-oe-expression="blog_post.name" t-att-data-blog-id="blog_post.id" placeholder="Blog Post Title"/>
+                        <p t-field="blog_post.subtitle" class="o_wblog_post_subtitle lead text-truncate text-wrap" placeholder="Subtitle"/>
                     </div>
                     <!-- Options -->
                     <div id="o_wblog_post_header_options">
                         <!-- Tags -->
                         <div t-if="opt_blog_post_header_tags_display and blog_post.tag_ids" t-attf-class="mb-2">
                             <t t-foreach="blog_post.tag_ids" t-as="one_tag">
-                                <a t-attf-class="badge post_link text-decoration-none o_tag o_color_#{one_tag.color}" t-attf-href="#{blog_url(tag=slug(one_tag))}" t-out="one_tag.name"/>
+                                <a t-attf-class="badge post_link text-decoration-none text-truncate o_tag o_color_#{one_tag.color}" t-attf-href="#{blog_url(tag=slug(one_tag))}" t-out="one_tag.name"/>
                             </t>
                         </div>
                         <div t-if="opt_blog_post_header_author_avatar_display or opt_blog_post_header_share_links_display or opt_blog_post_comment"
@@ -471,15 +471,15 @@ list of filtered posts (by date or tag).
                     <t t-if="opt_blog_post_breadcrumb" t-call="website_blog.post_breadcrumbs" single_breadcrumb="True"/>
                     <!-- Title and subtitle -->
                     <div t-attf-class="o_wblog_post_title #{not opt_blog_post_breadcrumb and 'mt-4'}">
-                        <h1 t-field="blog_post.name" class="o_wblog_post_name mb-3 text-wrap-pretty" data-oe-expression="blog_post.name" t-att-data-blog-id="blog_post.id" placeholder="Blog Post Title"/>
-                        <p t-field="blog_post.subtitle" class="o_wblog_post_subtitle lead" placeholder="Subtitle"/>
+                        <h1 t-field="blog_post.name" class="o_wblog_post_name mb-3 text-wrap-pretty text-truncate text-wrap" data-oe-expression="blog_post.name" t-att-data-blog-id="blog_post.id" placeholder="Blog Post Title"/>
+                        <p t-field="blog_post.subtitle" class="o_wblog_post_subtitle lead text-truncate text-wrap" placeholder="Subtitle"/>
                     </div>
                     <!-- Options -->
                     <div id="o_wblog_post_header_options" class="d-flex flex-column flex-grow-1">
                         <!-- Tags -->
                         <div t-if="blog_post.tag_ids and opt_blog_post_header_tags_display" class="mb-4">
                             <t t-foreach="blog_post.tag_ids" t-as="one_tag">
-                                <a t-attf-class="badge post_link text-decoration-none o_tag o_color_#{one_tag.color}" t-attf-href="#{blog_url(tag=slug(one_tag))}" t-out="one_tag.name"/>
+                                <a t-attf-class="badge post_link text-decoration-none text-truncate o_tag o_color_#{one_tag.color}" t-attf-href="#{blog_url(tag=slug(one_tag))}" t-out="one_tag.name"/>
                             </t>
                         </div>
                         <div class="d-flex flex-column gap-3 mt-auto">
@@ -572,7 +572,7 @@ list of filtered posts (by date or tag).
 <template id="opt_blog_post_comment" name="Allow Comments" inherit_id="website_blog.blog_post_complete" active="False" priority="1">
     <xpath expr="//div[@id='o_wblog_post_content']" position="inside">
         <div id="o_wblog_post_comments" class="pt-4">
-            <h2 class="h5 mb-3">Comments</h2>
+            <h2 class="h5 mb-3 text-break">Comments</h2>
             <div groups="base.group_public" class="small mb-4">
                 <a t-attf-href="/web/login?redirect=/blog/{{slug(blog_post.blog_id)}}/{{slug(blog_post)}}#discussion" class="btn btn-sm btn-primary"><b>Sign in</b></a> to leave a comment
             </div>
@@ -607,15 +607,15 @@ list of filtered posts (by date or tag).
 <template id="blog_post_next_compact" name="Next Post Compact">
     <div>
         <hr class="mt-5"/>
-        <h2 class="h5 mb-3">Recommended</h2>
+        <h2 class="h5 mb-3 text-break">Recommended</h2>
         <a t-attf-href="/blog/#{slug(next_post.blog_id)}/#{slug(next_post)}" t-att-title="'Read next: ' + next_post.name" class="d-flex align-items-center gap-4 bg-light rounded-3 p-3 text-reset text-decoration-none">
             <t t-call="website.record_cover"
                 _record="next_post"
                 display_opt_name.translate="Blog Post Cover"
                 additionnal_classes.f="flex-basis-50 rounded shadow-sm overflow-hidden h-100 ratio ratio-16x9"/>
-            <div class="d-flex flex-column flex-basis-75">
-                <h3 t-field="next_post.name" class="o_wblog_post_name text-wrap-pretty h5-fs" t-att-data-blog-id="next_post.id" placeholder="Blog Post Title"/>
-                <p t-field="next_post.subtitle" class="o_wblog_post_subtitle o_line_clamp mb-2 small text-muted" placeholder="Subtitle"/>
+            <div class="d-flex flex-column flex-basis-75 overflow-hidden">
+                <h3 t-field="next_post.name" class="o_wblog_post_name text-wrap-pretty h5-fs text-truncate text-wrap" t-att-data-blog-id="next_post.id" placeholder="Blog Post Title"/>
+                <p t-field="next_post.subtitle" class="o_wblog_post_subtitle o_line_clamp mb-2 small text-muted text-break" placeholder="Subtitle"/>
                 <small t-if="next_post.publish_on" class="text-muted">
                     Planned for <t t-out="next_post.publish_on" t-options="{'widget': 'date', 'format': 'MMMM d, yyyy'}"/>
                 </small>
@@ -646,8 +646,8 @@ list of filtered posts (by date or tag).
 
             <div class="o_container_small text-center position-relative h-100 d-flex flex-column flex-grow-1 justify-content-around">
                 <div class="o_wblog_post_title">
-                    <div t-field="next_post.name" t-att-data-blog-id="next_post.id" placeholder="Blog Post Title" class="o_wblog_post_name h1 text-wrap-pretty"/>
-                    <div t-field="next_post.subtitle" class="o_wblog_post_subtitle o_line_clamp" placeholder="Subtitle"/>
+                    <div t-field="next_post.name" t-att-data-blog-id="next_post.id" placeholder="Blog Post Title" class="o_wblog_post_name h1 text-wrap-pretty text-truncate text-wrap"/>
+                    <div t-field="next_post.subtitle" class="o_wblog_post_subtitle o_line_clamp text-break" placeholder="Subtitle"/>
                 </div>
 
                 <div t-attf-class="o_wblog_toggle mt-4 mb-n4">

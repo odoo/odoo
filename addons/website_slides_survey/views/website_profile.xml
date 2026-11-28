@@ -70,8 +70,8 @@
                     <div class="card mb-2">
                         <div class="card-body o_wprofile_slides_course_card_body p-0 d-flex" t-attf-onclick="location.href='/slides/#{slug(certificate.slide_id.channel_id)}';">
                             <div class="ps-5 pe-4 rounded-start" t-attf-style="background-image: url(#{website.image_url(certificate.slide_id, 'image_128')}); background-position: center"/>
-                            <div class="p-2 w-100">
-                                <h5 class="mt-0 mb-1" t-out="certificate.survey_id.title"/>
+                            <div class="p-2 w-100 overflow-hidden">
+                                <h5 class="mt-0 mb-1 text-truncate" t-out="certificate.survey_id.title"/>
                                 <div t-if="user.id == uid">
                                     <small class="fw-bold">Score: <span t-out="certificate.scoring_percentage"/> %</small>
                                     <div class="float-end">
