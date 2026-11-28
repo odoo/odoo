@@ -257,6 +257,8 @@ class TestLandedCosts(TestStockLandedCostsCommon):
             {'name': 'split by quantity - Microwave Oven',   'debit': 0.0,    'credit': 33.33},
             {'name': 'equal split - Microwave Oven',         'debit': 2.5,    'credit': 0.0},
             {'name': 'equal split - Microwave Oven',         'debit': 0.0,    'credit': 2.5},
+            # Refrigerator: 3/5 still on hand. Sold share uses the same expense
+            # account as the cost line → no wash AMLs (share stays on expense).
             {'name': 'split by weight - Refrigerator',       'debit': 6.0,    'credit': 0.0},
             {'name': 'split by weight - Refrigerator',       'debit': 0.0,    'credit': 6.0},
             {'name': 'split by volume - Refrigerator',       'debit': 0.75,   'credit': 0.0},
@@ -692,16 +694,24 @@ class TestLandedCostsWithPurchaseAndInv(TestStockValuationLCCommon):
         self.assertAlmostEqual(self.product1.total_value, 20995)
 
     def test_landed_cost_partial_cogs(self):
-        """ Check that when billing a landed cost product and then creating the associate
-        landed cost, the default accounts are correct
-        """
+        """Late landed costs capitalize remaining qty and expense the sold share."""
         self.landed_cost.landed_cost_ok = True
         self.landed_cost.categ_id.property_cost_method = 'average'
         self.landed_cost.categ_id.property_valuation = 'real_time'
-        self.product_a.categ_id = self.landed_cost.categ_id
-        self.product_a.is_storable = True
         lc_stock_valuation_account = self.landed_cost.categ_id.property_stock_valuation_account_id
         lc_expense_account = self.landed_cost.categ_id.property_account_expense_categ_id
+        # Distinct product COGS so the sold share is visible (not cancelled into the LC account).
+        product_cogs_account = self.env['account.account'].create({
+            'code': 'COGS.LC.PARTIAL',
+            'name': 'COGS - Partial Landed Cost',
+            'account_type': 'expense',
+        })
+        # Copy then write: company-dependent properties are unreliable in copy() vals.
+        product_categ = self.landed_cost.categ_id.copy({'name': 'Product categ with distinct COGS'})
+        product_categ.property_account_expense_categ_id = product_cogs_account
+        self.product_a.is_storable = True
+        self.product_a.categ_id = product_categ
+        self.product_a.property_account_expense_id = False
 
         po = self.env['purchase.order'].create({
             'partner_id': self.partner_a.id,
@@ -761,9 +771,13 @@ class TestLandedCostsWithPurchaseAndInv(TestStockValuationLCCommon):
         self.assertRecordValues(bill_landed_cost_amls, [
             {'account_id': lc_expense_account.id, 'debit': 200.0, 'credit': 0.0},
         ])
-        landed_cost_amls = landed_cost.account_move_id.line_ids.sorted('credit')
+        landed_cost_amls = landed_cost.account_move_id.line_ids.sorted(lambda line: (line.credit, line.debit, line.account_id.id))
+        # LC company amount 200; 7 remaining → valuation 140; 3 sold → COGS 60
+        # Sort key (credit, debit, account_id) → COGS debit 60 before valuation debit 140.
         self.assertRecordValues(landed_cost_amls, [
-            {'account_id': lc_stock_valuation_account.id, 'debit':  140.0,   'credit':  0.0},
-            {'account_id': lc_expense_account.id,         'debit':   0.0,   'credit': 140.0},
+            {'account_id': product_cogs_account.id,       'debit':  60.0, 'credit': 0.0},
+            {'account_id': lc_stock_valuation_account.id, 'debit': 140.0, 'credit': 0.0},
+            {'account_id': lc_expense_account.id,         'debit':   0.0, 'credit': 60.0},
+            {'account_id': lc_expense_account.id,         'debit':   0.0, 'credit': 140.0},
         ])
         self.assertEqual(bill.landed_costs_ids.cost_lines.price_unit, 200)
