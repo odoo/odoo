@@ -6,12 +6,25 @@
         <Layout display="this.display">
             <t t-set-slot="control-panel-navigation-additional">
                 <div class="btn-group d-none d-md-inline-block float-end" style="margin-right: 20px;">
-                    <t t-foreach="this.state.websites" t-as="website" t-key="website.id">
+                    <t t-foreach="this.visibleWebsites" t-as="website" t-key="website.id">
                         <button class="btn btn-secondary text-truncate js_website" style="max-width: 200px;" t-att-class="{'active': website.selected}"
                                 t-on-click="() => this.state.website = website.id">
                             <t t-out="website.name"/>
                         </button>
                     </t>
+                    <t t-set="hiddenWebsites" t-value="this.hiddenWebsites"/>
+                    <Dropdown t-if="hiddenWebsites.length">
+                        <button class="btn btn-secondary o_website_dashboard_more" title="More websites">
+                            +<t t-out="hiddenWebsites.length"/>
+                        </button>
+                        <t t-set-slot="content">
+                            <t t-foreach="hiddenWebsites" t-as="website" t-key="website.id">
+                                <DropdownItem class="'js_website text-truncate'" onSelected="() => this.state.website = website.id">
+                                    <t t-out="website.name"/>
+                                </DropdownItem>
+                            </t>
+                        </t>
+                    </Dropdown>
                 </div>
             </t>
             <t t-set-slot="control-panel-buttons">

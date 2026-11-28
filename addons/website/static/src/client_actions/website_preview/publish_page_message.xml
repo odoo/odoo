@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.PublishPageMessage">
+    <div class="alert alert-warning alert-dismissible m-0 rounded-0 border-0">
+        <div class="container d-flex align-items-center">
+            <i class="oi oi-lg me-2" data-icon="info" role="img" aria-hidden="true"></i>
+            <span class="me-auto">This page is not published, your visitors will end up on a 404 page. Would you like to publish it?</span>
+            <button type="button" class="btn btn-primary" t-on-click="this.props.publishPage">Publish</button>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+</t>
+</templates>
