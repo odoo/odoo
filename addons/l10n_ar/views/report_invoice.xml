@@ -6,7 +6,7 @@
         <div class="mb-3">
             <div class="row mb-2">
                 <div name="left-upper-side" class="col-5" t-if="not pre_printed_report">
-                    <img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)" style="max-height: 65px;" alt="Logo"/>
+                    <img t-if="o.company_id.logo" class="o_company_logo_big" t-att-src="image_data_uri(o.company_id.logo)" alt="Logo"/>
                 </div>
                 <div name="center-upper" class="col-2 text-center" t-att-style="'color: %s;' % o.company_id.primary_color">
                     <span id="withholding_legend" style="display: inline-block; text-align: center; line-height: 8px;">
@@ -71,6 +71,12 @@
                 </div>
             </div>
         </div>
+    </template>
+
+    <template id="document_header" inherit_id="web.external_layout_document_header">
+        <xpath expr="." position="inside">
+            <t t-if="custom_header == 'l10n_ar.custom_header'" t-call="l10n_ar.custom_header"/>
+        </xpath>
     </template>
 
     <template id="report_invoice_document" inherit_id="account.report_invoice_document" primary="True">

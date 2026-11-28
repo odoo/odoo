@@ -17,7 +17,6 @@
         'data/template_requests.xml',
         'data/template_invoice.xml',
         'data/ir_cron.xml',
-        'views/report_templates.xml',
         'views/report_invoice.xml',
         'views/account_move_views.xml',
         'views/product_template_views.xml',
