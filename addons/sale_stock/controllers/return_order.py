@@ -46,12 +46,6 @@ class CustomerPortal(sale_portal.CustomerPortal):
         for line in order_sudo.order_line:
             if not line._is_returnable():
                 continue
-            common_vals = {
-                "name": line.product_id.with_context(display_default_code=False).display_name,
-                "price": line.price_unit,
-                "product_id": line.product_id.id,
-                "product_img_url": f"/web/image/product.product/{line.product_id.id}/image_128",
-            }
             for move in line.move_ids:
                 if not (
                     move.state == "done" and move.picking_id.picking_type_code == "outgoing"
@@ -59,7 +53,15 @@ class CustomerPortal(sale_portal.CustomerPortal):
                     continue
                 move_vals = move._prepare_return_data()
                 if move_vals["remaining_delivered_qty"] > 0:
-                    return_data["returnable_lines"].append({**common_vals, **move_vals})
+                    # Use the product of the move, it differs from the one of the line for kits
+                    product = move.product_id
+                    return_data["returnable_lines"].append({
+                        "name": product.with_context(display_default_code=False).display_name,
+                        "price": line.price_unit,
+                        "product_id": product.id,
+                        "product_img_url": f"/web/image/product.product/{product.id}/image_128",
+                        **move_vals,
+                    })
 
         return return_data
 
