@@ -13,7 +13,7 @@ class PaymentProvider(models.Model):
         if not sale_order_id:
             return providers
         sale_order = self.env['sale.order'].browse(sale_order_id)
-        if sale_order.coupon_point_ids.filtered(lambda pe: pe.coupon_id.program_id.program_type in ['gift_card', 'ewallet']).coupon_id:
+        if sale_order.coupon_point_ids.filtered(lambda pe: pe.points > 0 and pe.coupon_id.program_id.program_type in ['gift_card', 'ewallet']).coupon_id:
             unfiltered_providers = providers
             providers = providers.filtered(
                 lambda p: p.code != 'custom' or p.custom_mode != 'on_site'
