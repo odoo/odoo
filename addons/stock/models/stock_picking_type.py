@@ -721,16 +721,20 @@ class StockPickingType(models.Model):
         return self._get_batch_group_by_keys() + self._get_wave_group_by_keys()
 
     def _validate_line_date_for_wave(self, line, wave):
-        line_date = line.date.date()
-        if wave._name == "stock.picking.batch":
-            wave_date = wave.scheduled_date.date()
-        elif wave._name == "stock.move.line":
-            wave_date = wave.date.date()
+        if wave._name == 'stock.picking.batch':
+            wave_datetime = wave.scheduled_date
+        elif wave._name == 'stock.move.line':
+            wave_datetime = wave.date
         else:
             return False
 
+        if not (line.date and wave_datetime):
+            return False
+
+        line_date = line.date.date()
+        wave_date = wave_datetime.date()
         if self.wave_date_granularity == 'day':
             return line_date == wave_date
         if self.wave_date_granularity == 'week':
-            return line_date.year == wave_date.year and line_date.isocalendar().week == wave_date.isocalendar().week
+            return line_date.isocalendar()[:2] == wave_date.isocalendar()[:2]
         return False
