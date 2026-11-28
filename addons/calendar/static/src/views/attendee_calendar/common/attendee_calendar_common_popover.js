@@ -119,7 +119,7 @@ export class AttendeeCalendarCommonPopover extends CalendarCommonPopover {
         }
         let recurrenceUpdate = false;
         if (record.rawRecord.recurrency) {
-            recurrenceUpdate = await this.askRecurrenceUpdatePolicy();
+            recurrenceUpdate = await this.askRecurrenceUpdatePolicy({excludeFutureEvents: true});
             if (!recurrenceUpdate) {
                 return this.props.close();
             }

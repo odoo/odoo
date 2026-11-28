@@ -1529,6 +1529,7 @@ class CalendarEvent(models.Model):
         else:
             events = self
         attendee = events.attendee_ids.filtered(lambda x: x.partner_id == self.env.user.partner_id)
+        attendee = attendee.with_context(recurrence_update_setting=recurrence_update_setting)
         if status == 'accepted':
             return attendee.do_accept()
         if status == 'declined':
