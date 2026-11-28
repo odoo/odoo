@@ -57,6 +57,12 @@ class TestAdditionalIdentifiers(AccountTestInvoicingCommon):
         with self.assertRaisesRegex(ValidationError, "Invalid identifier: EAN/GLN."):
             self.partner.global_location_number = 'wrong_gln'
 
+    def test_identifier_hu_company_registry(self):
+        """ The Hungarian company registry number is not a GLN. """
+        self.partner.country_id = self.env.ref('base.hu')
+        self.partner.additional_identifiers = {'HU_EN': '13-09-077789'}
+        self.assertEqual(self.partner.additional_identifiers, {'HU_EN': '13-09-077789'})
+
     def test_identifier_metadata_by_country_multiple(self):
         """ Filters mapped directly to a country include generic and non-tax ids. """
         metadata = self.env['res.partner'].get_available_additional_identifiers_metadata('FR', seq_max=999)
