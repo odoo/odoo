@@ -20,9 +20,9 @@ class ProductLabelLayout(models.TransientModel):
     ], string="Type", default='barcode')
     print_format = fields.Selection([
         ('dymo', 'Dymo'),
-        ('2x7', '2 x 7'),
-        ('4x7', '4 x 7'),
-        ('4x12', '4 x 12'),
+        ('2x7', '2 x 7 per page'),
+        ('4x7', '4 x 7 per page'),
+        ('4x12', '4 x 12 per page'),
         ('zpl', 'ZPL Labels'),
     ], string="Format", default='2x7', required=True)
     zpl_template = fields.Selection([
