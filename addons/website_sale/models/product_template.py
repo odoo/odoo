@@ -1142,7 +1142,7 @@ class ProductTemplate(models.Model):
         if query_params:
             url = f'{url}?{urls.url_encode(query_params)}'
 
-        return url
+        return self.env['ir.http']._url_for(url) if request else url
 
     def _mail_get_operation_for_mail_message_operation(self, message_operation):
         if (

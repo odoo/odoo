@@ -55,10 +55,14 @@ def handle_product_params_error(exc, product, category=None, **kwargs):
         category = category.exists()
 
     if category and not (product and product.has_access('read')):
-        return request.redirect(WebsiteSale._get_shop_path(category))
+        return request.redirect(
+            request.env['ir.http']._url_localized(WebsiteSale._get_shop_path(category))
+        )
 
     if not category and product and product.has_access('read'):
-        return request.redirect(product._get_product_url())
+        return request.redirect(
+            request.env['ir.http']._url_localized(product._get_product_url())
+        )
 
     return NotFound.code  # 404
 
@@ -1996,7 +2000,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             path += f'/category/{slug(category)}'
         if page:
             path += f'/page/{page}'
-        return path
+        return request.env['ir.http']._url_for(path)
 
     @staticmethod
     def _get_filtered_query_string(query_string, keys_to_remove):

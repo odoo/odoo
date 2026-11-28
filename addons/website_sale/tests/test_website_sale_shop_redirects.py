@@ -63,6 +63,40 @@ class TestWebsiteSaleShopRedirects(HttpCase, WebsiteSaleCommon):
             f'/shop/{slug(test_product)}?some-key=some-value',
         )
 
+    def test_website_sale_shop_redirects_keep_lang(self):
+        lang_fr = self.env['res.lang']._activate_lang('fr_FR')
+        self.website.language_ids = self.env.ref('base.lang_en') + lang_fr
+        category_a = self.env['product.public.category'].create({'name': "Category A"})
+        category_b = self.env['product.public.category'].create({'name': "Category B"})
+        test_product = self._create_product(
+            public_categ_ids=[Command.link(category_a.id)],
+        ).product_tmpl_id
+        unpublished_product = self._create_product(
+            website_published=False, public_categ_ids=[Command.link(category_b.id)],
+        ).product_tmpl_id
+        self._create_product(public_categ_ids=[Command.link(category_b.id)])
+
+        slug = self.env['ir.http']._slug
+        for url, location in (
+            (f'/fr/shop?category={category_a.id}', f'/fr/shop/category/{slug(category_a)}'),
+            (
+                f'/fr/shop/{slug(test_product)}?category={category_a.id}',
+                f'/fr/shop/{slug(category_a)}/{slug(test_product)}',
+            ),
+            (
+                f'/fr/shop/{slug(category_b)}/{slug(test_product)}',
+                f'/fr/shop/{slug(test_product)}',
+            ),
+            (f'/fr/shop/product/{slug(test_product)}', f'/fr/shop/{slug(test_product)}'),
+            (
+                f'/fr/shop/{category_b.id}/{unpublished_product.id}',
+                f'/fr/shop/category/{slug(category_b)}',
+            ),
+        ):
+            with self.subTest(url=url):
+                response = self.url_open(url, allow_redirects=False)
+                self.assertURLEqual(response.headers.get('Location'), location)
+
     def test_ecommerce_product_page_url_unpublished_product(self):
         # Unpublished products should be hidden and return a 404.
         accessory_product = self.env['product.template'].create({
