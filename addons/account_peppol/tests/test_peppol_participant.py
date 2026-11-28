@@ -7,6 +7,7 @@ from odoo.tests.common import tagged, TransactionCase, freeze_time
 from odoo.tools import mute_logger
 from odoo.tools.misc import file_open
 
+from odoo.addons.account_edi_ubl_cii.models.account_edi_common import GENERIC_PEPPOL_EAS
 from odoo.addons.account_peppol.tests.common import PeppolConnectorCommon
 
 
@@ -24,6 +25,7 @@ class TestPeppolParticipant(PeppolConnectorCommon):
         })
 
         cls.env.company.write({
+            'country_id': cls.env.ref('base.be').id,
             'peppol_eas': '0208',
             'peppol_endpoint': '0239843188',
             'account_peppol_phone_number': '+32483123456',
@@ -398,8 +400,8 @@ class TestPeppolParticipant(PeppolConnectorCommon):
             self._mock_connect(),
         ]):
             wizard = self.env['peppol.registration'].create({
-                'peppol_eas': '0088',
-                'peppol_endpoint': '88888888888',
+                'peppol_eas': '0208',
+                'peppol_endpoint': '0239843188',
                 'phone_number': '+32483123456',
                 'contact_email': 'yourcompany@test.example.com',
             })
@@ -408,16 +410,16 @@ class TestPeppolParticipant(PeppolConnectorCommon):
             self.env.company.account_edi_proxy_client_ids._peppol_get_participant_status()
         self.env.company.vat = 'BE0475646428'
         self.assertRecordValues(self.env.company.partner_id, [{
-            'peppol_eas': '0088',
-            'peppol_endpoint': '88888888888',
+            'peppol_eas': '0208',
+            'peppol_endpoint': '0239843188',
         }])
 
         with Form(self.env.company.partner_id) as partner:
             # Test with NewID record
             partner.vat = 'BE0477472701'
         self.assertRecordValues(self.env.company.partner_id, [{
-            'peppol_eas': '0088',
-            'peppol_endpoint': '88888888888',
+            'peppol_eas': '0208',
+            'peppol_endpoint': '0239843188',
         }])
 
         company_partner = self.env.company.partner_id
@@ -428,8 +430,8 @@ class TestPeppolParticipant(PeppolConnectorCommon):
 
         company_partner.vat = 'BE0477472701'
         self.assertRecordValues(company_partner, [{
-            'peppol_eas': '0088',
-            'peppol_endpoint': '88888888888',
+            'peppol_eas': '0208',
+            'peppol_endpoint': '0239843188',
         }])
 
         self.env.company.vat = 'BE0475646428'
@@ -437,3 +439,28 @@ class TestPeppolParticipant(PeppolConnectorCommon):
             'peppol_eas': '0208',
             'peppol_endpoint': '0475646428',
         }])
+
+    def test_registration_wizard_exclusive_country_eas(self):
+        """ Exclusive countries only offer their own schemes, a non-allowed EAS must be replaced by an allowed one. """
+        self.assertEqual(self._get_wizard_eas_codes(), {'0208'})
+
+        self.env.company.partner_id.write({'peppol_eas': '9925', 'peppol_endpoint': 'BE0239843188'})
+        wizard = self.env['peppol.registration'].create({})
+        self.assertFalse(wizard.peppol_eas)
+
+    def test_registration_wizard_generic_country_eas(self):
+        """ Other countries offer their own schemes and the generic ones, without 0225 which is reserved to the PDP. """
+        for country_code, country_eas in (('de', {'9930', '0246', '0204'}), ('fr', {'0002', '0009', '9957'})):
+            with self.subTest(country=country_code):
+                # France does not offer 0225: it is only used through the PDP registration
+                self.env.company.country_id = self.env.ref(f'base.{country_code}')
+                self.assertEqual(self._get_wizard_eas_codes(), country_eas | GENERIC_PEPPOL_EAS)
+
+    def test_partner_available_peppol_eas(self):
+        """ Contacts are offered their country's schemes and the generic ones. """
+        with Form(self.env['res.partner']) as partner_form:
+            partner_form.name = "Contact"
+            partner_form.country_id = self.env.ref('base.be')
+            self.assertEqual(set(partner_form.available_peppol_eas), {'0208', '9925'} | GENERIC_PEPPOL_EAS)
+            partner_form.country_id = self.env.ref('base.de')
+            self.assertEqual(set(partner_form.available_peppol_eas), {'9930', '0246', '0204'} | GENERIC_PEPPOL_EAS)
