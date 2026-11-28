@@ -15,6 +15,11 @@
         'data/digest_tips.xml',
         'views/mail_plugin_login.xml',
     ],
+    'assets': {
+        'web.assets_frontend': [
+            'mail_plugin/static/src/scss/mail_plugin_login.scss',
+        ],
+    },
     'auto_install': True,
     'iap_paid_service': True,
     'author': 'Odoo S.A.',
