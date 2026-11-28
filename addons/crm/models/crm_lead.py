@@ -1603,7 +1603,8 @@ class CrmLead(models.Model):
                     'res_id': self.id,
                     'subject': subject,
                 })
-        opportunities.activity_ids.write({
+        # include done (archived) activities
+        opportunities.with_context(active_test=False).activity_ids.write({
             'res_id': self.id,
         })
         # need to invalidate manually because res_id is an integer

@@ -759,6 +759,16 @@ class CrmTeam(models.Model):
     # ACTIONS
     # ------------------------------------------------------------
 
+    def action_open_activities(self):
+        self.ensure_one()
+        action = self.env['ir.actions.actions']._for_xml_id('crm.crm_activity_report_action')
+        action['context'] = {
+            **literal_eval(action['context']),
+            'search_default_filter_team_members': 1,
+            'team_member_ids': self.member_ids.ids,
+        }
+        return action
+
     def action_open_opportunities(self):
         action = self.env['ir.actions.actions']._for_xml_id('crm.crm_case_form_view_salesteams_opportunity')
         rcontext = {

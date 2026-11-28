@@ -11,9 +11,6 @@ res_partner_rule_user,user read access,res.partner,sales_team.group_sale_salesma
 access_res_partner_category,res.partner.category.crm.user,res.partner.category,sales_team.group_sale_salesman,cru,
 access_crm_lost_reason_manager,crm.lost.reason.manager,crm.lost.reason,sales_team.group_sale_manager,crud,
 access_crm_lost_reason_user,crm.lost.reason.user,crm.lost.reason,base.group_user,r,
-crm_activity_report_rule_all_activities,All Activities,crm.activity.report,sales_team.group_sale_salesman_all_leads,r,
-crm_activity_report_rule_personal_activities,Personal Activities,crm.activity.report,sales_team.group_sale_salesman,r,"['|',('user_id','=',user.id),('user_id','=',False)]"
-crm_activity_report_rule_multi_company,CRM Lead Multi-Company,crm.activity.report,,crud,"[('company_id', 'in', company_ids + [False])]"
 calendar_event_rule_employee,All Calendar Event for employees,calendar.event,sales_team.group_sale_manager,crud,
 calendar_event_rule_employee_1,All Calendar Event for employees,calendar.event,sales_team.group_sale_salesman,cru,
 access_calendar_event_type_sale_manager,calendar.event.type.manager,calendar.event.type,sales_team.group_sale_manager,cru,
