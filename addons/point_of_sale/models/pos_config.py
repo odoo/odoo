@@ -452,12 +452,12 @@ class PosConfig(models.Model):
 
         self.env.cr.execute("""
             SELECT o.config_id,
-                   DATE(o.date_order AT TIME ZONE 'UTC') AS order_date,
+                   DATE(o.date_order) AS order_date,
                    SUM(o.amount_total) AS total
               FROM pos_order o
              WHERE o.config_id = ANY(%s)
                AND o.state IN ('done', 'paid', 'invoiced')
-               AND DATE(o.date_order AT TIME ZONE 'UTC') >= (CURRENT_DATE - INTERVAL '6 days')
+               AND o.date_order >= (NOW() AT TIME ZONE 'UTC')::date - 6
           GROUP BY o.config_id, order_date
         """, (self.ids,))
         rows = {}
