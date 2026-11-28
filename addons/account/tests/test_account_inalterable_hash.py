@@ -350,7 +350,7 @@ class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
         move3 = self.init_invoice("out_invoice", self.partner_a, "2024-01-02", amounts=[1000], post=True)
 
         move2.button_draft()  # Create hole in the middle of unhashed chain [move1, move2, move3]
-
+        move2.sequence_number = False
         self.company_data['default_journal_sale'].restrict_mode_hash_table = True
 
         with self.assertRaisesRegex(UserError, "An error occurred when computing the inalterability. A gap has been detected in the sequence."), self.env.cr.savepoint():
