@@ -196,6 +196,30 @@ class TestControllers(tests.HttpCase):
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.text, "{'message': 'Succeeded'}")
 
+    def test_website_action_dotted_path(self):
+        for path in ("does.not_exist", "base.main_company"):
+            res = self.url_open(f"/website/action/{path}", allow_redirects=False)
+            self.assertEqual(res.status_code, 303)
+        self.authenticate("admin", "admin")
+        action = self.env["ir.actions.server"].create({
+            "name": "Test Action",
+            "website_published": True,
+            "website_path": "my.test.action",
+            "model_id": self.ref("base.model_res_partner"),
+            "code": """response = request.make_response("{'message': 'Succeeded'}")""",
+            "state": "code",
+        })
+        self.env["ir.model.data"].create({
+            "module": "website",
+            "name": "test_action",
+            "model": "ir.actions.server",
+            "res_id": action.id,
+        })
+        for path in ("my.test.action", "website.test_action"):
+            res = self.url_open(f"/website/action/{path}")
+            self.assertEqual(res.status_code, 200)
+            self.assertEqual(res.text, "{'message': 'Succeeded'}")
+
     def test_website_force_domain_redirect(self):
         """
         Test that /website/force/{website.id} redirects domain correctly
