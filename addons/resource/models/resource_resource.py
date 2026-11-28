@@ -10,6 +10,7 @@ from dateutil.relativedelta import relativedelta, weekdays
 
 from odoo import api, fields, models
 from odoo.addons.base.models.res_partner import _tz_get
+from odoo.fields import Domain
 from odoo.tools import get_lang, babel_locale_parse
 from odoo.tools.intervals import Intervals
 from odoo.tools.date_utils import localized, sum_intervals, to_timezone, weeknumber
@@ -68,6 +69,28 @@ class ResourceResource(models.Model):
         'CHECK(time_efficiency>0)',
         'Time efficiency must be strictly positive',
     )
+
+    @api.model
+    def name_search(self, name='', domain=None, operator='ilike', limit=100):
+        """ Moves the current user's resources first in the result. """
+        domain = Domain(domain or Domain.TRUE)
+        resource_list = super().name_search(name, domain, operator, limit)
+
+        user_resource_ids = set(self.env.user.resource_ids.ids)
+        user_resource_tuples, other_resource_tuples = [], []
+        for resource_tuple in resource_list:
+            resource_id = resource_tuple[0]
+            if resource_id in user_resource_ids:
+                user_resource_ids.remove(resource_id)
+                user_resource_tuples.append(resource_tuple)
+            else:
+                other_resource_tuples.append(resource_tuple)
+
+        # If all current user's resources are not fetched, fetch them
+        if user_resource_ids and limit is not None:
+            user_resource_tuples += super().name_search(name, domain & Domain('id', 'in', user_resource_ids), operator, limit=len(user_resource_ids))
+
+        return (user_resource_tuples + other_resource_tuples)[:limit]
 
     @api.depends('user_id')
     def _compute_avatar_128(self):
