@@ -93,6 +93,17 @@ class TestAnalyticAccount(AnalyticCommon):
         })
         self.assertEqual(distribution_json, {str(self.analytic_account_2.id): 100}, "Distribution 2 should be given")
 
+    def test_analytic_distribution_model_does_not_alter_criteria(self):
+        """ The criteria are used as cache keys by the callers, they must not be modified """
+        partner_category = self.env['res.partner.category'].create({'name': 'partner_categ'})
+        criteria = {
+            "partner_id": self.partner_a.id,
+            "company_id": self.company.id,
+            "partner_category_id": partner_category.ids,
+        }
+        self.env['account.analytic.distribution.model']._get_distribution(criteria)
+        self.assertEqual(criteria["partner_category_id"], partner_category.ids)
+
     def test_order_analytic_distribution_model(self):
         """ Test the distribution returned with company field"""
         self.env['account.analytic.distribution.model'].create({  # distribution_3

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from datetime import timedelta
+from unittest.mock import patch
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.exceptions import UserError
@@ -498,6 +499,45 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
         })
         po_no_analytic_distribution.button_confirm()
         self.assertFalse(pol_no_analytic_distribution.analytic_distribution, "The compute should not overwrite what the user has set.")
+
+    def test_purchase_order_analytic_distribution_computed_once_per_criteria(self):
+        """ Lines sharing the same criteria should look up the analytic distribution models only once. """
+        analytic_plan = self.env['account.analytic.plan'].create({'name': 'Plan Test'})
+        analytic_account_super, analytic_account_great = self.env['account.analytic.account'].create([
+            {'name': 'Super Account', 'plan_id': analytic_plan.id},
+            {'name': 'Great Account', 'plan_id': analytic_plan.id},
+        ])
+        super_product, great_product = self.env['product.product'].create([
+            {'name': 'Super Product'},
+            {'name': 'Great Product'},
+        ])
+        self.env['account.analytic.distribution.model'].create([
+            {'analytic_distribution': {analytic_account_super.id: 100}, 'product_id': super_product.id},
+            {'analytic_distribution': {analytic_account_great.id: 100}, 'product_id': great_product.id},
+        ])
+
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({'product_id': super_product.id}),
+                Command.create({'product_id': super_product.id}),
+                Command.create({'product_id': super_product.id}),
+                Command.create({'product_id': great_product.id}),
+            ],
+        })
+
+        DistributionModel = self.registry['account.analytic.distribution.model']
+        with patch.object(DistributionModel, '_get_distribution', autospec=True, side_effect=DistributionModel._get_distribution) as get_distribution:
+            purchase_order.partner_id = self.partner_b
+            purchase_order.flush_recordset()
+
+        self.assertEqual(get_distribution.call_count, 2, "The distribution should be looked up once per distinct criteria")
+        self.assertEqual(purchase_order.order_line.mapped('analytic_distribution'), [
+            {str(analytic_account_super.id): 100},
+            {str(analytic_account_super.id): 100},
+            {str(analytic_account_super.id): 100},
+            {str(analytic_account_great.id): 100},
+        ])
 
     def test_purchase_order_to_invoice_analytic_rule_with_account_prefix(self):
         """

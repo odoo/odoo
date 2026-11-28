@@ -93,7 +93,6 @@ class AccountAnalyticDistributionModel(models.Model):
 
     def _create_domain(self, fname, value):
         if fname == 'partner_category_id':
-            value += [False]
-            return [(fname, 'in', value)]
+            return [(fname, 'in', [*value, False])]
         else:
             return [(fname, 'in', [value, False])]
