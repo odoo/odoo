@@ -1,4 +1,5 @@
 from . import test_cases
+from . import test_benchmark
 from . import test_form
 from . import test_freeze_time
 from . import test_logging

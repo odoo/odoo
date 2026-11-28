@@ -2,6 +2,7 @@
 
 from . import (
     test_barcode,
+    test_benchmark,
     test_common,
     test_import_files,
     test_name,
