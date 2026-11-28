@@ -2695,6 +2695,45 @@ class TestPointOfSaleFlow(CommonPosTest):
             self.assertEqual(line.debit, reverse_line.credit)
             self.assertEqual(line.credit, reverse_line.debit)
 
+    def test_valuation_consumable_order_invoiced_after_session_closed(self):
+        """The closing entry has no stock lines for a non-storable product, so the
+        reversal created when invoicing after closing must not have any either."""
+        self.env.company.inventory_valuation = 'real_time'
+        real_time_categ = self.env['product.category'].create({
+            'name': 'test category',
+            'property_cost_method': 'average',
+            'property_valuation': 'real_time',
+        })
+        consumable_product = self.env['product.product'].create({
+            'name': 'Consumable Product',
+            'is_storable': False,
+            'available_in_pos': True,
+            'lst_price': 100.0,
+            'standard_price': 50.0,
+            'categ_id': real_time_categ.id,
+            'taxes_id': False,
+        })
+        stock_valuation_account = consumable_product._get_product_accounts()['stock_valuation']
+
+        self.pos_config_usd.open_ui()
+        current_session = self.pos_config_usd.current_session_id
+        order, _ = self.create_backend_pos_order({
+            'line_data': [{'product_id': consumable_product.id}],
+            'payment_data': [{'payment_method_id': self.bank_payment_method.id, 'amount': 100}],
+            'order_data': {'to_invoice': False},
+        })
+        current_session.close_session_from_ui()
+        self.assertEqual(current_session.state, 'closed')
+        self.assertFalse(current_session.move_id.line_ids.filtered(lambda l: l.account_id == stock_valuation_account))
+
+        order.partner_id = self.partner
+        order.action_pos_order_invoice()
+
+        reversal_move = self.env['account.move'].search([('reversed_pos_order_id', '=', order.id)], limit=1)
+        self.assertTrue(reversal_move)
+        self.assertFalse(reversal_move.line_ids.filtered(lambda l: l.account_id == stock_valuation_account))
+        self.assertEqual(len(reversal_move.line_ids), 2)
+
     def test_reversal_move_tax_base_amount_sign(self):
         """When a POS order is invoiced after its session is closed, `_create_misc_reversal_move`
         creates a reversal misc entry by negating `balance` and `amount_currency`. It must also

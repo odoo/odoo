@@ -1056,6 +1056,7 @@ class PosOrder(models.Model):
         if self.picking_ids.ids:
             stock_moves = self.env['stock.move'].sudo().search([
                 ('picking_id', 'in', self.picking_ids.ids),
+                ('product_id.is_storable', '=', True),
                 ('product_id.valuation', '=', 'real_time'),
             ])
             for stock_move in stock_moves:
