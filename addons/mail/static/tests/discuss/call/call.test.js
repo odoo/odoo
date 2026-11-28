@@ -1940,6 +1940,19 @@ test("disconnecting ends the call even when leaving it fails", async () => {
     await waitFor("[title='Join the Call']");
 });
 
+test("Join Call of the welcome page starts the call of an empty meeting in Discuss", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        default_display_mode: "video_full_screen",
+        name: "Meeting",
+    });
+    redirect(`/odoo/action-mail.action_discuss?active_id=${channelId}&fullscreen=1&call=join`);
+    await start();
+    await waitFor(
+        ".o-mail-Meeting .o-discuss-CallParticipantCard[aria-label='Mitchell Admin']:count(1)"
+    );
+});
+
 test("automatically cancel incoming call after some time", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });

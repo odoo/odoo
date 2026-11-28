@@ -12,6 +12,32 @@ from odoo.tools.misc import hash_sign
 
 
 class TestDiscussChannelInvite(HttpCase, MailCommon):
+    def _join_from_invitation(
+        self,
+        channel,
+        guest_name,
+        email_token,
+        cookies=None,
+        invitation_token=None,
+    ):
+        self.make_jsonrpc_request(
+            "/mail/store",
+            {
+                "fetch_params": [
+                    [
+                        "/discuss/channel/join_from_invitation",
+                        {
+                            "channel_id": channel.id,
+                            "email_token": email_token,
+                            "guest_name": guest_name,
+                            "invitation_token": invitation_token or channel.uuid,
+                        },
+                    ],
+                ],
+            },
+            cookies=cookies,
+        )
+
     def test_01_invite_by_email_flow(self):
         bob = new_test_user(self.env, "bob", groups="base.group_user", email="bob@test.com")
         john = new_test_user(self.env, "john", groups="base.group_user", email="john@test.com")
@@ -103,31 +129,28 @@ class TestDiscussChannelInvite(HttpCase, MailCommon):
         group_chat = (
             self.env["discuss.channel"].with_user(bob)._create_group(users_to=bob)
         )
-        # Guest email is filled at create
-        self.url_open(
-            f"{group_chat.invitation_url}?email_token={hash_sign(self.env, 'mail.invite_email', 'alfred@test.com')}"
-        )
+        # Guest email is filled at join
+        email_token = hash_sign(self.env, "mail.invite_email", "alfred@test.com")
+        self.url_open(f"{group_chat.invitation_url}?email_token={email_token}")
+        self.assertEqual(group_chat.channel_member_ids.partner_id, bob.partner_id)
+        self._join_from_invitation(group_chat, "Alfred", email_token)
         self.assertEqual(group_chat.channel_member_ids.guest_id.email, "alfred@test.com")
-        self.assertEqual(group_chat.channel_member_ids.guest_id.name, "alfred@test.com")
+        self.assertEqual(group_chat.channel_member_ids.guest_id.name, "Alfred")
         # Guest email is updated if empty when invited from email
         guest = self.env["mail.guest"].create({"name": "Alice"})
         self.assertFalse(guest.email)
-        self.url_open(
-            f"{group_chat.invitation_url}?email_token={hash_sign(self.env, 'mail.invite_email', 'alice@test.com')}",
-            cookies={
-                guest._cookie_name: f"{guest.id}{guest._cookie_separator}{guest.access_token}",
-            },
-        )
+        email_token = hash_sign(self.env, "mail.invite_email", "alice@test.com")
+        cookies = {guest._cookie_name: f"{guest.id}{guest._cookie_separator}{guest.access_token}"}
+        self.url_open(f"{group_chat.invitation_url}?email_token={email_token}", cookies=cookies)
+        self.assertFalse(guest.email)
+        self._join_from_invitation(group_chat, "Alice Liddell", email_token, cookies=cookies)
         self.assertEqual(guest.email, "alice@test.com")
-        self.assertEqual(guest.name, "Alice")
+        self.assertEqual(guest.name, "Alice Liddell")
         # Guest email is not overwriten if already filled
         guest = self.env["mail.guest"].create({"name": "John", "email": "john@test.com"})
-        self.url_open(
-            f"{group_chat.invitation_url}?email_token={hash_sign(self.env, 'mail.invite_email', 'john_other_email@test.com')}",
-            cookies={
-                guest._cookie_name: f"{guest.id}{guest._cookie_separator}{guest.access_token}",
-            },
-        )
+        email_token = hash_sign(self.env, "mail.invite_email", "john_other_email@test.com")
+        cookies = {guest._cookie_name: f"{guest.id}{guest._cookie_separator}{guest.access_token}"}
+        self._join_from_invitation(group_chat, "John", email_token, cookies=cookies)
         self.assertEqual(guest.email, "john@test.com")
         self.assertEqual(guest.name, "John")
 
@@ -196,9 +219,14 @@ class TestDiscussChannelInvite(HttpCase, MailCommon):
             {"name": "Rotation Test Channel", "group_public_id": False},
         )
         old_url = public_channel.invitation_url
+        old_uuid = public_channel.uuid
         response = self.url_open(old_url)
         self.assertEqual(response.status_code, 200)
         public_channel.action_reset_invitation_uuid()
+        members = public_channel.channel_member_ids
+        with self.assertRaises(JsonRpcException), mute_logger("odoo.http"):
+            self._join_from_invitation(public_channel, "Alfred", None, invitation_token=old_uuid)
+        self.assertEqual(public_channel.channel_member_ids, members)
         new_url = public_channel.invitation_url
         response = self.url_open(old_url)
         self.assertEqual(response.status_code, 404)
@@ -242,9 +270,10 @@ class TestDiscussChannelInvite(HttpCase, MailCommon):
             pending_member,
         )
         # Once the invitation is accepted, the address is no longer invitable.
-        self.url_open(
-            f"{group_chat.invitation_url}?email_token={hash_sign(self.env, 'mail.invite_email', 'alfred@test.com')}"
-        )
+        email_token = hash_sign(self.env, "mail.invite_email", "alfred@test.com")
+        self.url_open(f"{group_chat.invitation_url}?email_token={email_token}")
+        self.assertTrue(pending_member.invitation_sent_dt)
+        self._join_from_invitation(group_chat, "Alfred", email_token)
         self.assertFalse(pending_member.invitation_sent_dt)
         result = self.env["res.partner"].search_for_channel_invite(
             "alfred@test.com", channel_id=group_chat.id
@@ -375,3 +404,13 @@ class TestDiscussChannelInvite(HttpCase, MailCommon):
             name, channel_id=group_chat.id, with_portal_users=True
         )
         self.assertEqual(result["partner_ids"], joel.partner_id.ids)
+
+    def test_13_join_as_user_keeps_name_of_cookie_guest(self):
+        bob = new_test_user(self.env, "bob", groups="base.group_user")
+        guest = self.env["mail.guest"].create({"name": "Old Guest"})
+        channel = self.env["discuss.channel"]._create_channel(name="Public Channel", group_id=None)
+        self.authenticate("bob", "bob")
+        cookies = {guest._cookie_name: f"{guest.id}{guest._cookie_separator}{guest.access_token}"}
+        self._join_from_invitation(channel, "Bob", None, cookies=cookies)
+        self.assertIn(bob.partner_id, channel.channel_member_ids.partner_id)
+        self.assertEqual(guest.name, "Old Guest")

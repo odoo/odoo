@@ -44,6 +44,7 @@ declare module "models" {
         fetchChannelPromiseByChannelId: Map<number, Promise<DiscussChannel|void>>;
         getRecentChatPartnerIds: () => number[];
         has_hidden_channels: boolean|undefined;
+        invitation_email_token: string|undefined;
         is_welcome_page_displayed: boolean|undefined;
         isChannelTokenSecret: boolean|undefined;
         sortMembers: (m1: ChannelMember, m2: ChannelMember) => number;
