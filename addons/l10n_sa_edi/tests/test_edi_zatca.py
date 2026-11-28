@@ -538,6 +538,35 @@ class TestEdiZatca(TestSaEdiCommon):
             self.assertEqual(line_ext + tax_amt, rounding_amt,
                 msg=f"LineExtensionAmount ({line_ext}) + TaxAmount ({tax_amt}) != RoundingAmount ({rounding_amt})")
 
+    def test_zatca_xml_excludes_gift_card_line(self):
+        if self.env['ir.module.module']._get('sale_loyalty').state != 'installed':
+            self.skipTest("sale_loyalty module is required for this test")
+        self.env.user.group_ids += self.env.ref('sales_team.group_sale_manager')
+        LoyaltyProgram = self.env['loyalty.program']  # noqa: OLS03001
+        program = LoyaltyProgram.browse(LoyaltyProgram.create_from_template('gift_card')['res_id'])
+        gift_card = self.env['loyalty.card'].create({'program_id': program.id, 'points': 50})  # noqa: OLS03001
+        order = self.env['sale.order'].create({  # noqa: OLS03001
+            'partner_id': self.partner_sa.id,
+            'order_line': [Command.create({
+                'product_id': self.product_a.id,
+                'price_unit': 200,
+                'tax_ids': self.tax_15.ids,
+            })],
+        })
+        status = order._try_apply_code(gift_card.code)
+        order._apply_program_reward(status[gift_card], gift_card)
+        order.action_confirm()
+        invoice = order._create_invoices()
+        invoice.action_post()
+        gift_card_line = invoice.invoice_line_ids.filtered(lambda line: not line.tax_ids)
+        self.assertEqual(invoice.amount_total, 180)
+        self.assertFalse(gift_card_line._check_edi_line_tax_required())
+
+        xml_root = etree.fromstring(self.env['account.edi.format']._l10n_sa_generate_zatca_template(invoice))
+        namespaces = self.env['account.edi.xml.ubl_21.zatca']._l10n_sa_get_namespaces()
+        self.assertEqual(len(xml_root.xpath('//cac:InvoiceLine', namespaces=namespaces)), 1)
+        self.assertEqual(xml_root.xpath('//cac:LegalMonetaryTotal/cbc:PayableAmount/text()', namespaces=namespaces), ['230.00'])
+
     def test_csr_generation_compliant_company(self):
         """Test that CSR generation succeeds for a compliant company with valid field lengths."""
         compliant_company = self.env['res.company'].create({

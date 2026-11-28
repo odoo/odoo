@@ -3,6 +3,8 @@ from base64 import b64decode
 from contextlib import contextmanager
 from unittest.mock import patch
 
+from lxml import etree
+
 from odoo.fields import Command
 from odoo.tests import tagged
 
@@ -290,3 +292,46 @@ class TestSAZATCAPosInvoice(TestPoSCommon):
             "ZATCA EDI document must be processed synchronously during POS checkout")
         self.assertFalse(invoice.invoice_pdf_report_id,
             "PDF must not be generated during checkout — it is deferred to on-demand generation")
+
+    def test_zatca_xml_excludes_gift_card_line(self):
+        if self.env['ir.module.module']._get('pos_loyalty').state != 'installed':
+            self.skipTest("pos_loyalty module is required for this test")
+        LoyaltyProgram = self.env['loyalty.program']  # noqa: OLS03001
+        program = LoyaltyProgram.browse(LoyaltyProgram.create_from_template('gift_card')['res_id'])
+        program.pos_report_print_id = self.env.ref('loyalty.report_gift_card')
+        gift_card = self.env['loyalty.card'].create({'program_id': program.id, 'points': 50})  # noqa: OLS03001
+        reward = program.reward_ids
+        with self.with_pos_session():
+            order_data = self.create_ui_order_data(
+                pos_order_lines_ui_args=[
+                    (self.sa_product, 1),
+                    {
+                        'product': reward.discount_line_product_id,
+                        'quantity': 1,
+                        'price_unit': -50,
+                        'price_subtotal': -50,
+                        'price_subtotal_incl': -50,
+                        'tax_ids': [],
+                        'is_reward_line': True,
+                        'reward_id': reward.id,
+                        'coupon_id': gift_card.id,
+                        'points_cost': 50,
+                    },
+                ],
+                customer=self.sa_partner,
+                is_invoiced=True,
+            )
+            with patch(
+                'odoo.addons.l10n_sa_edi.models.account_edi_format.AccountEdiFormat._l10n_sa_post_zatca_edi',
+                new=lambda __self, invoice: {invoice: {'success': True}},
+            ):
+                results = self.env['pos.order'].sync_from_ui([order_data])
+
+        invoice = self.env['pos.order'].browse(results['pos.order'][0]['id']).account_move
+        gift_card_line = invoice.invoice_line_ids.filtered(lambda line: line.product_id == reward.discount_line_product_id)
+        self.assertFalse(gift_card_line._check_edi_line_tax_required())
+
+        xml_root = etree.fromstring(self.env['account.edi.format']._l10n_sa_generate_zatca_template(invoice))
+        namespaces = self.env['account.edi.xml.ubl_21.zatca']._l10n_sa_get_namespaces()
+        self.assertEqual(len(xml_root.xpath('//cac:InvoiceLine', namespaces=namespaces)), 1)
+        self.assertEqual(xml_root.xpath('//cac:LegalMonetaryTotal/cbc:PayableAmount/text()', namespaces=namespaces), ['107.00'])
