@@ -1,3 +1,37 @@
+.o-mail-AttachmentList-content {
+    --AttachmentList__container-min-width: 11em;
+    --AttachmentList__container-max-width: 13em;
+
+    display: grid;
+    grid-template-columns: repeat(
+        auto-fit,
+        minmax(
+            MIN(var(--AttachmentList__container-min-width), 100%),
+            max-content
+        )
+    );
+    gap: 0.5em;
+
+    .o-mail-AttachmentContainer:not(.o-inMessage.o-isImage),
+    .o-mail-AttachmentContainer.o-inChatter.o-inMessage.o-isImage {
+        width: var(--AttachmentList__container-max-width);
+        max-width: 100%;
+        min-width: 0;
+    }
+}
+
+.o-mail-Message .o-mail-AttachmentList-content {
+    display: flex;
+    flex-wrap: wrap;
+
+    .o-mail-AttachmentContainer:not(.o-inMessage.o-isImage),
+    .o-mail-AttachmentContainer.o-inChatter.o-inMessage.o-isImage {
+        flex: 0 1 auto;
+        max-width: var(--AttachmentList__container-max-width);
+        min-width: var(--AttachmentList__container-min-width);
+    }
+}
+
 .o-mail-AttachmentContainer {
     --o-mail-attachment-height: 10em;
 
@@ -6,7 +40,6 @@
         min-height: var(--o-mail-attachment-height);
     }
     &:not(.o-inMessage.o-isImage),&.o-inChatter.o-inMessage.o-isImage {
-        width: 13em;
         height: var(--o-mail-attachment-height);
     }
     background-color: var(--gray-200);

@@ -5,8 +5,9 @@ import {
     openDiscuss,
     start,
     startServer,
+    patchUiSize,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, test, waitFor } from "@odoo/hoot";
+import { animationFrame, describe, expect, queryAllRects, test, waitFor } from "@odoo/hoot";
 import { contains } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
@@ -78,4 +79,35 @@ test("can jump to attachment in conversation from attachment panel", async () =>
         .o-mail-AttachmentButtons button[title='Show in Conversation']:count(1)`
     ).click();
     await waitFor(".o-mail-Message.o-highlighted:contains('Here is my cat!'):count(1)");
+});
+
+test("attachment panel fits as many columns as the width allows", async () => {
+    const getColumnCount = () => {
+        const rects = queryAllRects(".o-mail-AttachmentContainer");
+        return rects.filter((rect) => Math.round(rect.top) === Math.round(rects[0].top)).length;
+    };
+
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    pyEnv["ir.attachment"].create(
+        Array.from({ length: 5 }, (_, i) => ({
+            mimetype: "text/plain",
+            name: `file${i}.txt`,
+            res_id: channelId,
+            res_model: "discuss.channel",
+        }))
+    );
+    await start();
+    await patchUiSize({ width: 300 });
+    await openDiscuss(channelId);
+    await contains(".o-mail-ChatWindow-displayName:count(1)").click();
+    await contains(".o-dropdown-item[name='attachments']").click();
+    await waitFor(".o-mail-AttachmentContainer:count(5)");
+    expect(getColumnCount()).toBe(1);
+    await patchUiSize({ width: 380 });
+    await animationFrame();
+    expect(getColumnCount()).toBe(2);
+    await patchUiSize({ width: 520 });
+    await animationFrame();
+    expect(getColumnCount()).toBe(3);
 });
