@@ -69,6 +69,15 @@
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">WH 2%</field>
                             </record>
+                            <!-- This is the only "Total WH VAT" line with no date_scope override, so it's the
+                                 one that reflects the return's own period; the sibling under "selected month"
+                                 uses date_scope=previous_return_period and is a comparison figure, not part of
+                                 what this return itself owes. -->
+                            <record id="wh_tax_report_total_wh_vat_next_month_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">ke_total_wh_vat_next_month.balance</field>
+                            </record>
                         </field>
                     </record>
                 </field>

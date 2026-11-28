@@ -5,6 +5,20 @@
         <field name="root_report_id" ref="account.generic_tax_report"/>
         <field name="country_id" ref="base.us"/>
         <field name="availability_condition">country</field>
+        <field name="line_ids">
+            <record id="tax_report_line_closing" model="account.report.line">
+                <field name="name">Tax Closing</field>
+                <field name="hide_if_zero" eval="True"/>
+                <field name="expression_ids">
+                    <record id="tax_report_line_closing_closing_amount" model="account.report.expression">
+                        <field name="label">_closing_amount</field>
+                        <field name="engine">domain</field>
+                        <field name="formula">[('tax_repartition_line_id.use_in_tax_closing', '=', True)]</field>
+                        <field name="subformula">-sum</field>
+                    </record>
+                </field>
+            </record>
+        </field>
         <field name="column_ids">
             <record id="column_net" model="account.report.column">
                 <field name="name">Total Sales</field>
