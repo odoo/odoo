@@ -387,6 +387,13 @@ registry.category("web_tour.tours").add("MultiProductOptionsTour", {
             ProductScreen.clickDisplayedProduct("Product A"),
             ProductConfiguratorPopup.isOptionShown("Value 1"),
             ProductConfiguratorPopup.isOptionShown("Value 2"),
+            ProductConfiguratorPopup.pickMulti("Value 1"),
+            ProductConfiguratorPopup.pickMulti("Value 2"),
+            {
+                content: "The title lists the selected values",
+                trigger:
+                    ".modal .section-product-info-title .h4:contains('Product A (Value 1, Value 2)')",
+            },
             Dialog.confirm("Add"),
 
             Chrome.endTour(),
