@@ -84,7 +84,7 @@ class ResourceCalendar(models.Model):
     is_fulltime = fields.Boolean(compute='_compute_is_fulltime', string="Is Full Time")
     work_resources_count = fields.Integer("Work Resources count", compute='_compute_work_resources_count')
     work_time_rate = fields.Float(string='Work Time Rate', compute='_compute_work_time_rate', store=True,
-        help='Work time rate versus full time working schedule, should be between 0 and 100 %.')
+        help='Work time rate versus the full time working schedule: above 100 % when working more than the full time.')
     calendar_type = fields.Selection([
         ('fixed', 'Fixed'),
         ('variable', 'Variable'),
@@ -196,14 +196,13 @@ class ResourceCalendar(models.Model):
     # Compute Methods
     # --------------------------------------------------
 
-    @api.depends('reference_calendar_id', 'reference_calendar_id.hours_per_week', 'hours_per_week', 'company_id.resource_calendar_id.hours_per_week')
+    @api.depends('reference_calendar_id.hours_per_week', 'company_id.resource_calendar_id.hours_per_week')
     def _compute_full_time_required_hours(self):
         for calendar in self:
-            if calendar.reference_calendar_id:
-                calendar.full_time_required_hours = calendar.reference_calendar_id.hours_per_week
-            elif calendar.company_id.resource_calendar_id:
-                calendar.full_time_required_hours = calendar.company_id.resource_calendar_id.hours_per_week
-            else:
+            ref_calendar = calendar.reference_calendar_id or calendar.company_id.resource_calendar_id
+            if ref_calendar and ref_calendar != calendar._origin:
+                calendar.full_time_required_hours = ref_calendar.hours_per_week
+            elif not calendar.full_time_required_hours:
                 calendar.full_time_required_hours = calendar.hours_per_week
 
     @api.depends('company_id', 'calendar_type')
@@ -268,7 +267,7 @@ class ResourceCalendar(models.Model):
     @api.depends('hours_per_week', 'full_time_required_hours')
     def _compute_is_fulltime(self):
         for calendar in self:
-            calendar.is_fulltime = float_compare(calendar.full_time_required_hours, calendar.hours_per_week, 3) == 0
+            calendar.is_fulltime = float_compare(calendar.hours_per_week, calendar.full_time_required_hours, 3) >= 0
 
     @api.depends('hours_per_week', 'full_time_required_hours')
     def _compute_work_time_rate(self):
