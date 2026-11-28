@@ -7,7 +7,7 @@
                 <field name="currency_id" column_invisible="1"/>
                 <field name="reference"/>
                 <field name="product_id"/>
-                <field name="date"/>
+                <field name="date" options="{'show_time': false}"/>
                 <field name="description"/>
                 <field name="quantity" column_invisible="context.get('cost_method') == 'standard'"/>
                 <field name="added_value" widget="monetary" options="{'currency_field': 'currency_id'}" column_invisible="context.get('cost_method') == 'standard'"/>
