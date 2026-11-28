@@ -138,3 +138,13 @@ class TestHrLeaveType(TestHrHolidaysCommon):
         }).action_approve()
         self.assertEqual(leave_type_comp.with_context(employee_id=employee_id).max_leaves, 0)
         self.assertEqual(leave_type_no_comp.with_context(employee_id=employee_id).max_leaves, 10)
+
+    def test_allow_request_on_top_on_absence(self):
+        """A type allowing requests on top cannot become an absence."""
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Training',
+            'time_type': 'other',
+            'allow_request_on_top': True,
+        })
+        with self.assertRaises(ValidationError):
+            leave_type.time_type = 'leave'
