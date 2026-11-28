@@ -1146,6 +1146,7 @@ SERVICES_MAPPING = {
     "partner_autocomplete.companyAutocomplete": ['CompanyAutocompletePlugin', '@partner_autocomplete/js/company_autocomplete_plugin'],
     "popover": ['PopoverPlugin', '@web/core/popover/popover_plugin'],
     "presence": ['PresencePlugin', '@bus/services/presence_plugin'],
+    "report_printers_cache": ['ReportPrintersCachePlugin', '@printer/services/report_printers_cache_plugin'],
     "reloadCompany": ['ReloadCompanyPlugin', '@web/webclient/reload_company_plugin'],
     "signInfo": ['SignInfoPlugin', '@sign/services/sign_info_plugin'],
     "sortable": ['SortablePlugin', '@web/core/utils/sortable_plugin'],
