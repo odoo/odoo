@@ -294,7 +294,7 @@ class SetDefaultDialog extends Component {
                 };
             })
             .filter((val) => val)
-            .sort((field) => field.string);
+            .sort((a, b) => a.string.localeCompare(b.string));
     }
 
     getConditions() {
