@@ -102,6 +102,71 @@ class TestHrLeaveReport(TestHrHolidaysCommon):
         self.assertEqual(sum(left_allocation.mapped('number_of_hours')), 104.5)
         self.assertEqual(sum(taken_allocation.mapped('number_of_hours')), 24.0)
 
+    def test_hourly_remaining_days_follow_remaining_hours(self):
+        calendar = self.env['resource.calendar'].create({
+            'name': '35 hours with unequal half days',
+            'tz': 'Europe/Brussels',
+            'attendance_ids': [(5, 0, 0)] + [
+                (0, 0, {
+                    'name': period,
+                    'dayofweek': str(day),
+                    'day_period': period,
+                    'hour_from': start,
+                    'hour_to': end,
+                })
+                for day in range(5)
+                for period, start, end in [
+                    ('morning', 8.75, 12.5), ('afternoon', 13.5, 16.75),
+                ]
+            ],
+        })
+        self.employee_emp.resource_calendar_id = calendar
+        self.assertEqual(calendar.hours_per_day, 7)
+        allocation = self.env['hr.leave.allocation'].create({
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': self.overtime_leave_type.id,
+            'date_from': '2026-01-01',
+            'number_of_days': 7.5 / 7,
+        })
+        allocation.action_validate()
+        self.assertAlmostEqual(allocation.number_of_hours_display, 7.5)
+
+        leaves = self.env['hr.leave']
+        for date, remaining_hours in [
+            ('2026-05-15', 5), ('2026-05-18', 2.5), ('2026-05-19', 0),
+        ]:
+            leave = self.env['hr.leave'].create({
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': self.overtime_leave_type.id,
+                'request_date_from': date,
+                'request_date_to': date,
+                'request_unit_hours': True,
+                'request_hour_from': 9,
+                'request_hour_to': 11.5,
+            })
+            leave.action_validate()
+            leaves |= leave
+            self.assertEqual(leave.number_of_hours, 2.5)
+            self.assertEqual(leave.number_of_days, 0.333)
+            self.env.flush_all()
+            balances = {
+                status: (hours, days)
+                for status, hours, days in self.env['hr.leave.employee.type.report']._read_group(
+                    [('employee_id', '=', self.employee_emp.id),
+                     ('leave_type', '=', self.overtime_leave_type.id),
+                     ('date_from', '>=', '2026-01-01'),
+                     ('date_from', '<', '2027-01-01')],
+                    ['holiday_status'], ['number_of_hours:sum', 'number_of_days:sum'],
+                )
+            }
+            self.assert_virtual_leaves_equal(
+                self.overtime_leave_type, remaining_hours, self.employee_emp, date='2026-05-20')
+            self.assertAlmostEqual(balances['left'][0], remaining_hours)
+            self.assertAlmostEqual(balances['taken'][0], 7.5 - remaining_hours)
+            self.assertAlmostEqual(balances['taken'][1], sum(leaves.mapped('number_of_days')))
+            with self.subTest(date=date):
+                self.assertAlmostEqual(balances['left'][1], remaining_hours / 7)
+
     def test_overlapping_allocations_leaves_balance(self):
         """
         Test that leaves only deduct from allocations they actually overlap.
