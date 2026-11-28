@@ -13,7 +13,7 @@
                 menuClass="'o_switch_company_menu_dropdown'"
                 disabled="isSingleCompany"
             >
-                <button data-hotkey="shift+u" t-att-disabled="isSingleCompany" t-att-title="companyService.currentCompany.name">
+                <button t-ref="togglerRef" data-hotkey="shift+u" t-att-disabled="isSingleCompany" t-att-title="companyService.currentCompany.name">
                     <i class="fa fa-building d-lg-none"/>
                     <span class="oe_topbar_name d-none d-lg-block text-truncate" t-esc="companyService.currentCompany.name"/>
                 </button>

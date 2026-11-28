@@ -162,7 +162,13 @@ export class SwitchCompanyMenu extends Component {
             isAvailable: () => this.companySelector.hasSelectionChanged,
         });
 
-        useCommand(_t("Switch Company"), () => this.dropdown.open(), { hotkey: "alt+shift+u" });
+        this.togglerRef = useRef("togglerRef");
+        useCommand(_t("Switch Company"), () => this.dropdown.open(), {
+            hotkey: "alt+shift+u",
+            hotkeyOptions: {
+                withOverlay: () => this.togglerRef.el,
+            },
+        });
 
         this.containerRef = useChildRef();
         this.navigationOptions = {
