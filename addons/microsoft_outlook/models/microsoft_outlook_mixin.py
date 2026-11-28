@@ -39,9 +39,17 @@ class MicrosoftOutlookMixin(models.AbstractModel):
     microsoft_outlook_uri = fields.Char(compute='_compute_outlook_uri', string='Authentication URI',
         help='The URL to generate the authorization code from Outlook', groups='base.group_system')
 
+    def _get_outlook_base_url(self):
+        """Return the base URL used to build the OAuth redirect URI.
+
+        The redirect URI must match the one registered on the Microsoft side,
+        so it must not depend on the website in the context.
+        """
+        return self.with_context(website_id=False).get_base_url()
+
     def _compute_outlook_uri(self):
         Config = self.env['ir.config_parameter'].sudo()
-        base_url = self.get_base_url()
+        base_url = self._get_outlook_base_url()
         microsoft_outlook_client_id = Config.get_param('microsoft_outlook_client_id')
         microsoft_outlook_client_secret = Config.get_param('microsoft_outlook_client_secret')
         is_configured = microsoft_outlook_client_id and microsoft_outlook_client_secret
@@ -103,7 +111,7 @@ class MicrosoftOutlookMixin(models.AbstractModel):
                 'rec_id': self.id,
                 'csrf_token': self._get_outlook_csrf_token(),
             })
-            callback_url = url_join(self.get_base_url(), f'/microsoft_outlook/iap_confirm?{callback_params}')
+            callback_url = url_join(self._get_outlook_base_url(), f'/microsoft_outlook/iap_confirm?{callback_params}')
 
             try:
                 response = requests.get(
@@ -176,7 +184,7 @@ class MicrosoftOutlookMixin(models.AbstractModel):
         :param values: Additional parameters that will be given to the Outlook endpoint
         """
         Config = self.env['ir.config_parameter'].sudo()
-        base_url = self.get_base_url()
+        base_url = self._get_outlook_base_url()
         microsoft_outlook_client_id = Config.get_param('microsoft_outlook_client_id')
         microsoft_outlook_client_secret = Config.get_param('microsoft_outlook_client_secret')
 

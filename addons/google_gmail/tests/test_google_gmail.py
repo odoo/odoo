@@ -71,3 +71,24 @@ class TestIrMailServer(TransactionCase):
                     mock_fetch_gmail_access_token.assert_not_called()
 
                 mock_logger.assert_called_once_with(*expected_log)
+
+    def test_redirect_uri_ignores_context_website(self):
+        """The redirect URI must match the one registered on the Google side,
+        whatever the website in context (e.g. sending a mail during a website request).
+        """
+        def get_base_url(record):
+            # mimic `website`, whose `get_base_url` follows the website in context
+            if record.env.context.get('website_id'):
+                return 'https://website.example.com'
+            return 'https://db.example.com'
+
+        self.env['ir.config_parameter'].sudo().set_param('google_gmail_client_id', 'test_client_id')
+        self.env['ir.config_parameter'].sudo().set_param('google_gmail_client_secret', 'test_client_secret')
+        expected_redirect_uri = 'https://db.example.com/google_gmail/confirm'
+        mail_server = self.mail_server.with_context(website_id=1)
+
+        with mock.patch.object(type(self.mail_server), 'get_base_url', get_base_url), \
+             mock.patch('odoo.addons.google_gmail.models.google_gmail_mixin.requests.post',
+                        return_value=mock.Mock(ok=True, json=dict)) as mock_post:
+            mail_server._fetch_gmail_token('refresh_token', refresh_token='test_refresh_token')
+            self.assertEqual(mock_post.call_args.kwargs['data']['redirect_uri'], expected_redirect_uri)
