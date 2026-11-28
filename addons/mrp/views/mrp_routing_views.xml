@@ -87,36 +87,48 @@
                             </h1>
                         </div>
                         <group>
-                            <group name="description">
-                                <field name="active" invisible="1"/> <!-- drives invisible of the Archived web_ribbon widget -->
-                                <field name="company_id" invisible="1"/> <!-- needed by the company-dependent domain of the check_company fields and xpath anchor of mrp_workorder -->
-                                <field name="bom_id" invisible="context.get('bom_id_invisible', False)" domain="[]" readonly="context.get('default_bom_id', False)"/>
-                                <field name="workcenter_id"/>
-                                <field name="possible_bom_product_template_attribute_value_ids" invisible="1"/> <!-- used in the python-declared domain of bom_product_template_attribute_value_ids -->
-                                <field name="bom_product_template_attribute_value_ids" widget="many2many_tags" options="{'no_create': True}" groups="product.group_product_variant"/>
-                                <field name="cost_mode" widget="radio" options="{'horizontal': true}"/>
-                                <field name="allow_operation_dependencies" invisible="1"/> <!-- drives invisible of blocked_by_operation_ids -->
-                                <field name="blocked_by_operation_ids" widget="many2many_tags" context="{'default_bom_id':bom_id}" invisible="not allow_operation_dependencies"/>
-                            </group><group name="workorder">
-                                <field name="workorder_count" invisible="1"/> <!-- drives invisible of time_cycle_manual -->
-                                <field name="time_mode" widget="radio" options="{'horizontal': true}"/>
-                                <label for="time_cycle_manual" string="Default Duration"/>
-                                <div>
-                                    <field name="time_cycle_manual" widget="float_time" options="{'unit': 'minutes', 'show_seconds': True}" class="o_float_time" invisible="time_mode == 'auto' and workorder_count != 0"/>
-                                    <span invisible="time_mode == 'manual'"> / last </span>
-                                    <field name="time_mode_batch" class="oe_inline o_small_integer" invisible="time_mode == 'manual'"/>
-                                    <span invisible="time_mode == 'manual'">work orders</span>
-                                </div>
-                                <field name="cycle_number" class="oe_inline" invisible="cycle_number &lt; 2"/>
-                                <field name="show_time_total" invisible="1"/> <!-- drives invisible of the Total Duration label and block -->
-                                <label for="time_total" string="Total Duration" invisible="not show_time_total"/>
-                                <div invisible="not show_time_total">
-                                    <field name="time_total" widget="float_time" options="{'unit': 'minutes'}" class="oe_inline"/>
-                                </div>
-                                <field name="company_id" groups="base.group_multi_company" />
-                            </group>
+                            <field name="workcenter_id"/>
+                            <field name="allow_operation_dependencies" invisible="1"/> <!-- drives invisible of blocked_by_operation_ids -->
+                            <field name="blocked_by_operation_ids" widget="many2many_tags" context="{'default_bom_id':bom_id}" invisible="not allow_operation_dependencies"/>
                         </group>
+                        <notebook>
+                            <page string="Configuration" name="configuration">
+                                <group>
+                                    <group name="workorder">
+                                        <field name="workorder_count" invisible="1"/> <!-- drives invisible of time_cycle_manual -->
+                                        <field name="time_mode" widget="radio" options="{'horizontal': true}"/>
+                                        <label for="time_cycle_manual" string="Default Duration"/>
+                                        <div>
+                                            <field name="time_cycle_manual" widget="float_time" options="{'unit': 'minutes', 'show_seconds': True}" class="o_float_time" invisible="time_mode == 'auto' and workorder_count != 0"/>
+                                            <span invisible="time_mode == 'manual'"> / last </span>
+                                            <field name="time_mode_batch" class="oe_inline o_small_integer" invisible="time_mode == 'manual'"/>
+                                            <span invisible="time_mode == 'manual'">work orders</span>
+                                        </div>
+                                        <field name="cycle_number" class="oe_inline" invisible="cycle_number &lt; 2"/>
+                                        <field name="show_time_total" invisible="1"/> <!-- drives invisible of the Total Duration label and block -->
+                                        <label for="time_total" string="Total Duration" invisible="not show_time_total"/>
+                                        <div invisible="not show_time_total">
+                                            <field name="time_total" widget="float_time" options="{'unit': 'minutes'}" class="oe_inline"/>
+                                        </div>
+                                        <field name="company_id" groups="base.group_multi_company" />
+                                    </group>
+                                    <group name="description">
+                                        <field name="active" invisible="1"/> <!-- drives invisible of the Archived web_ribbon widget -->
+                                        <field name="company_id" invisible="1"/> <!-- needed by the company-dependent domain of the check_company fields and xpath anchor of mrp_workorder -->
+                                        <field name="bom_id" invisible="context.get('bom_id_invisible', False)" domain="[]" readonly="context.get('default_bom_id', False)"/>
+                                        <field name="cost_mode" widget="radio" options="{'horizontal': true}"/>
+                                        <field name="possible_bom_product_template_attribute_value_ids" invisible="1"/> <!-- used in the python-declared domain of bom_product_template_attribute_value_ids -->
+                                        <field name="bom_product_template_attribute_value_ids" widget="many2many_tags" options="{'no_create': True}" groups="product.group_product_variant"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
                     </sheet>
+                    <footer>
+                        <button string="Save &amp; Close" special="save" close="1" class="btn btn-primary" data-hotkey="q"/>
+                        <button string="Save &amp; New" type = "object" name="action_open_operation_form" class="btn btn-primary" data-hotkey="n"/>
+                        <button class="btn-secondary" special="cancel" data-hotkey="x"/>
+                    </footer>
                     <chatter/>
                 </form>
             </field>

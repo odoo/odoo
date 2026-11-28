@@ -212,4 +212,10 @@ class MrpRoutingWorkcenter(models.Model):
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'res_model': 'mrp.routing.workcenter',
+            'target': 'new',
+            'context': {
+                'default_bom_id': self.bom_id.id,
+                'search_default_bom_id': self.bom_id.id,
+                'bom_id_invisible': True,
+            },
         }

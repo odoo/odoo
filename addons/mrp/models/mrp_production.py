@@ -283,7 +283,7 @@ class MrpProduction(models.Model):
     show_allocation = fields.Boolean(
         compute='_compute_show_allocation',
         help='Technical Field used to decide whether the button "Allocation" should be displayed.')
-    allow_workorder_dependencies = fields.Boolean('Allow Work Order Dependencies')
+    allow_workorder_dependencies = fields.Boolean('Allow Work Order Dependencies', compute='_compute_allow_workorder_dependencies', store=True)
     show_generate_bom = fields.Boolean('Show Generate BOM', compute='_compute_show_generate_bom')
     is_outdated_bom = fields.Boolean("Outdated BoM", help="The BoM has been updated since creation of the MO")
     is_delayed = fields.Boolean(compute='_compute_is_delayed', search='_search_is_delayed')
@@ -1000,6 +1000,13 @@ class MrpProduction(models.Model):
         for mo in self:
             packages = mo.move_finished_ids.move_line_ids.result_package_id
             mo.packages_count = len(packages)
+
+    @api.depends('bom_id.allow_operation_dependencies')
+    def _compute_allow_workorder_dependencies(self):
+        for production in self:
+            if production.state == 'done':
+                continue
+            production.allow_workorder_dependencies = production.bom_id.allow_operation_dependencies
 
     def _change_producing(self):
         if self.state in ['draft', 'cancel'] or (self.state == 'done' and self.is_locked):
@@ -1808,28 +1815,23 @@ class MrpProduction(models.Model):
     def _link_workorders_and_moves(self):
         self.ensure_one()
         workorder_per_operation = {workorder.operation_id: workorder for workorder in self.workorder_ids}
-        last_workorder_per_bom = defaultdict(lambda: self.env['mrp.workorder'])
-        self.allow_workorder_dependencies = self.bom_id.allow_operation_dependencies
 
         def workorder_order(wo):
             return (wo.sequence, wo.id)
 
+        self.workorder_ids.blocked_by_workorder_ids = [Command.clear()]
         if self.allow_workorder_dependencies:
             for workorder in self.workorder_ids.sorted(workorder_order):
-                commands = [Command.link(workorder_per_operation[operation_id].id)
+                workorder.blocked_by_workorder_ids = [Command.link(workorder_per_operation[operation_id].id)
                                                       for operation_id in
                                                       workorder.operation_id.blocked_by_operation_ids
                                                       if operation_id in workorder_per_operation]
-                workorder.blocked_by_workorder_ids = [Command.clear()] + commands
-                if not workorder.needed_by_workorder_ids:
-                    last_workorder_per_bom[workorder.operation_id.bom_id] = workorder
         else:
             previous_workorder = False
             for workorder in self.workorder_ids.sorted(workorder_order):
                 if previous_workorder:
-                    workorder.blocked_by_workorder_ids = [Command.clear(), Command.link(previous_workorder.id)]
+                    workorder.blocked_by_workorder_ids = [Command.link(previous_workorder.id)]
                 previous_workorder = workorder
-                last_workorder_per_bom[workorder.operation_id.bom_id] = workorder
         for move in (self.move_raw_ids | self.move_finished_ids):
             if move.operation_id:
                 move.write({
@@ -1868,8 +1870,6 @@ class MrpProduction(models.Model):
         work schedule.
         """
         self.ensure_one()
-
-        self._link_workorders_and_moves()
 
         # Plan workorders starting from final ones (those with no dependent workorders)
         self.workorder_ids.filtered(
@@ -3386,7 +3386,6 @@ class MrpProduction(models.Model):
         for index_wo, wo in enumerate(non_phantom_workorders):
             if wo.operation_id:
                 wo.sequence = operation_sequence_map.get(wo.operation_id.id, 0) + offset
-                wo.blocked_by_workorder_ids = [Command.clear()]
             else:
                 wo.sequence = index_wo + offset
         return True
