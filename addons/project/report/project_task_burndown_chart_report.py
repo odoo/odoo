@@ -89,6 +89,15 @@ class ProjectTaskBurndownChartReport(models.AbstractModel):
                   AND t.duration_tracking IS NOT NULL
                   AND t.duration_tracking ? 's'
                   AND t.duration_tracking ? 'd'
+                  AND (
+                       s.id IS NULL
+                    OR EXISTS (
+                        SELECT 1
+                          FROM project_task_type_rel rel
+                         WHERE rel.type_id = s.id
+                           AND rel.project_id = t.project_id
+                      )
+                  )
         ), project_task_tracking_by_end AS (
                 SELECT
                        id,
