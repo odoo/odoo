@@ -3,7 +3,7 @@
 
 from odoo import Command
 from odoo.addons.stock.tests.common import TestStockCommon
-from odoo.tests import tagged, Form
+from odoo.tests import Form, new_test_user
 from odoo.exceptions import ValidationError
 
 
@@ -396,3 +396,28 @@ class TestLotSerial(TestStockCommon):
         default_lot_sequence = self.env.ref('stock.sequence_production_lots')
         product_a.invalidate_recordset()
         self.assertEqual(product_a.lot_sequence_id, default_lot_sequence)
+
+    def test_change_partner_company_without_lot_access(self):
+        """ A user who may edit contacts but not the lots can move a contact to another
+        company: the contact is removed from the lots of the company it left. """
+        other_company = self.env['res.company'].sudo().create({'name': 'Other Company'})
+        companies = self.company | other_company
+        user = new_test_user(
+            self.env,
+            login='contact_editor',
+            groups='base.group_user,base.group_partner_manager',
+            company_id=self.company.id,
+            company_ids=companies.ids,
+        )
+        partner = self.env['res.partner'].create({'name': 'Moving partner', 'company_id': self.company.id})
+        lot = self.LotObj.create({
+            'name': 'lot_moving_partner',
+            'product_id': self.productA.id,
+            'company_id': self.company.id,
+            'partner_ids': [Command.link(partner.id)],
+        })
+
+        partner.with_user(user).with_context(allowed_company_ids=companies.ids).company_id = other_company
+
+        self.assertEqual(partner.company_id, other_company)
+        self.assertFalse(lot.partner_ids)
