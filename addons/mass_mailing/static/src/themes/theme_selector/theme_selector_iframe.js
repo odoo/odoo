@@ -2,6 +2,7 @@ import { loadIframe, loadIframeBundles } from "@mail/convert_inline/iframe_utils
 import {
     asyncComputed,
     Component,
+    computed,
     markup,
     onMounted,
     onWillUnmount,
@@ -36,12 +37,10 @@ export class ThemeSelectorIframe extends Component {
 
     iframeRef = signal.ref();
     show = signal(false);
+    filterTemplates = computed(() => this.props.config.filterTemplates);
+    mailingModelId = computed(() => this.props.config.mailingModelId);
     templates = asyncComputed(
-        () =>
-            this.fetchTemplateThemes(
-                this.props.config.filterTemplates,
-                this.props.config.mailingModelId
-            ),
+        () => this.fetchTemplateThemes(this.filterTemplates(), this.mailingModelId()),
         {
             initial: [],
         }
