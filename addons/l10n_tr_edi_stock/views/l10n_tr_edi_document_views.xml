@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_tr_edi_document_view_list" model="ir.ui.view">
+        <field name="name">l10n_tr_edi.document.list.inherit.l10n_tr_edi_stock</field>
+        <field name="model">l10n_tr_edi.document</field>
+        <field name="inherit_id" ref="l10n_tr_edi.l10n_tr_edi_document_view_list"/>
+        <field name="arch" type="xml">
+            <field name="move_id" position="after">
+                <field name="picking_id"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="l10n_tr_edi_document_view_form" model="ir.ui.view">
+        <field name="name">l10n_tr_edi.document.form.inherit.l10n_tr_edi_stock</field>
+        <field name="model">l10n_tr_edi.document</field>
+        <field name="inherit_id" ref="l10n_tr_edi.l10n_tr_edi_document_view_form"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button name="action_open_picking"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="local_shipping"
+                        invisible="not picking_id">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Transfer</span>
+                    </div>
+                </button>
+            </div>
+            <field name="move_id" position="after">
+                <field name="picking_id" invisible="not picking_id"/>
+            </field>
+            <field name="move_id" position="attributes">
+                <attribute name="invisible">not move_id</attribute>
+            </field>
+        </field>
+    </record>
+
+    <record id="l10n_tr_edi_document_view_search" model="ir.ui.view">
+        <field name="name">l10n_tr_edi.document.search.inherit.l10n_tr_edi_stock</field>
+        <field name="model">l10n_tr_edi.document</field>
+        <field name="inherit_id" ref="l10n_tr_edi.l10n_tr_edi_document_view_search"/>
+        <field name="arch" type="xml">
+            <field name="move_id" position="after">
+                <field name="picking_id"/>
+            </field>
+            <filter name="invoices" position="after">
+                <filter name="edispatch"
+                        string="e-Dispatches"
+                        domain="[('document_type', 'in', ('edispatch', 'edispatch_response'))]"/>
+            </filter>
+        </field>
+    </record>
+
+    <record id="l10n_tr_edi_document_action" model="ir.actions.act_window">
+        <field name="name">e-Documents</field>
+        <field name="res_model">l10n_tr_edi.document</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_edispatch': 1}</field>
+    </record>
+
+    <menuitem
+        id="l10n_tr_edi_document_menu"
+        action="l10n_tr_edi_document_action"
+        parent="l10n_tr_edi_stock_menu"
+        sequence="300"
+        groups="base.group_no_one"/>
+</odoo>
