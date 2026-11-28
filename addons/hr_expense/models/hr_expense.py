@@ -8,7 +8,6 @@ import werkzeug
 
 from odoo import api, fields, Command, models, _
 from odoo.exceptions import AccessError, RedirectWarning, UserError, ValidationError
-from odoo.fields import Domain
 from odoo.tools import clean_context, email_normalize, float_repr, float_round, format_date, is_html_empty, parse_version
 
 
@@ -1284,7 +1283,7 @@ class HrExpense(models.Model):
 
     @api.model
     def get_expense_dashboard(self):
-        expense_state = {
+        expense_filters = {
             'draft': {
                 'description': _("To Submit"),
                 'amount': 0.0,
@@ -1295,30 +1294,31 @@ class HrExpense(models.Model):
                 'amount': 0.0,
                 'currency': self.env.company.currency_id.id,
             },
-            'approved': {
+            'to_pay': {
                 'description': _("Waiting Reimbursement"),
                 'amount': 0.0,
                 'currency': self.env.company.currency_id.id,
             }
         }
         if not self.env.user.employee_ids:
-            return expense_state
+            return expense_filters
         # Counting the expenses to display in the dashboard:
         # - To Submit: contains the expenses paid either by the employee or by the company, and that are draft or reported
         # - Waiting approval: contains expenses paid by the employee or paid by the company, and that have been submitted but still need to be approved/refused
-        # - To be reimbursed: contains ONLY expenses paid by the employee that are approved or posted, the payment has not yet been made
+        # - Waiting Reimbursement: contains ONLY expenses paid by the employee that are approved or posted, the payment has not yet been made
         base_domain = [
-            ('employee_id', 'child_of', self.env.user.employee_ids.ids),
+            ('employee_id', 'in', self.env.user.employee_ids.ids),
             '|', ('state', 'in', ('draft', 'submitted')),
             '&', ('payment_mode', '=', 'own_account'), ('state', 'in', {'approved', 'posted'})
         ]
-        if domain := self.env.context.get('domain'):
-            base_domain = Domain.AND([base_domain, domain])
 
         fetched_expenses = self._read_group(base_domain, ['state'], ['total_amount:sum'])
         for state, total_amount_sum in fetched_expenses:
-            expense_state['approved' if state == 'posted' else state]['amount'] += total_amount_sum
-        return expense_state
+            if state in ('approved', 'posted'):
+                expense_filters['to_pay']['amount'] += total_amount_sum
+            else:
+                expense_filters[state]['amount'] += total_amount_sum
+        return expense_filters
 
     def action_approve_duplicates(self):
         root = self.env['ir.model.data']._xmlid_to_res_id("base.partner_root")
