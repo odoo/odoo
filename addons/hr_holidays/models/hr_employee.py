@@ -832,8 +832,14 @@ class HrEmployee(models.Model):
                 allocations_with_date_to, accrual_allocations, other_allocations = allocations_per_employee_type[employee][work_entry_type].partitioned(
                     'date_to', 'accrual_plan_id',
                 )
-                # Defines the order in which allocation will be used to take the leaves in priority
-                sorted_leave_allocations = allocations_with_date_to.sorted(key='date_to') + accrual_allocations + other_allocations
+                # Defines the order in which allocation will be used to take the leaves in priority:
+                # expiring ones first (earliest end date first), then accruals, then the others,
+                # the oldest first (FIFO) when tied
+                sorted_leave_allocations = (
+                    allocations_with_date_to.sorted(lambda a: (a.date_to, a.date_from, a.id))
+                    + accrual_allocations.sorted(lambda a: (a.date_from, a.id))
+                    + other_allocations.sorted(lambda a: (a.date_from, a.id))
+                )
 
                 for leave in leaves_per_employee_type[employee][work_entry_type].sorted('date_from'):
                     if leave.date_from.date() > target_date and sorted_leave_allocations.filtered(lambda a:
