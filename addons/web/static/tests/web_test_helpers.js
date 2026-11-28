@@ -40,6 +40,7 @@ import { globalCachedFetch } from "./_framework/module_set.hoot";
  */
 
 export {
+    addResourceWithCleanup,
     assignDialogTestEnv,
     assignTestEnv,
     clearRegistry,
