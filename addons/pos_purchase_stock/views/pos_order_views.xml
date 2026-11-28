@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pos_pos_form_inherit_purchase" model="ir.ui.view">
+        <field name="name">pos.order.form.inherit.purchase</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button name="action_view_purchase_orders"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="credit_card"
+                    invisible="purchase_order_count == 0"
+                    groups="purchase.group_purchase_user">
+                    <field name="purchase_order_count" widget="statinfo" string="Purchase"/>
+                </button>
+            </div>
+        </field>
+    </record>
+</odoo>
