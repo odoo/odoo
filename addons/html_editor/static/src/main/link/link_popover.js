@@ -4,6 +4,7 @@ import { Component, useState, onMounted, onWillUnmount, useRef, useEffect } from
 import { useService } from "@web/core/utils/hooks";
 import { browser } from "@web/core/browser/browser";
 import { cleanZWChars, deduceURLfromText } from "./utils";
+import { isAbsoluteURLInCurrentDomain } from "@html_editor/utils/url";
 
 function useContentChange(el, callback) {
     onMounted(() => {
@@ -62,6 +63,10 @@ export class LinkPopover extends Component {
         this.notificationService = useService("notification");
         this.uploadService = useService("uploadLocalFiles");
 
+        this.linkPreviewTarget =
+            this.props.linkEl.hash?.length && isAbsoluteURLInCurrentDomain(this.props.linkEl.href)
+                ? "_self"
+                : "_blank";
         this.state = useState({
             editing: this.props.LinkPopoverState.editing,
             url: this.props.linkEl.href || "",
