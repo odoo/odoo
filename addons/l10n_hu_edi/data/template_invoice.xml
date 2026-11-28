@@ -52,7 +52,7 @@
                         </customerInfo>
                         <invoiceDetail>
                             <invoiceCategory t-translation="off">NORMAL</invoiceCategory>
-                            <invoiceDeliveryDate t-out="invoice.delivery_date or invoice.invoice_date"/>
+                            <invoiceDeliveryDate t-out="invoice.taxable_supply_date or invoice.invoice_date"/>
                             <smallBusinessIndicator t-out="format_bool(smallBusinessIndicator)"/>
                             <currencyCode t-out="invoice.currency_id.name"/>
                             <exchangeRate t-out="float_repr(exchangeRate, 6)"/>

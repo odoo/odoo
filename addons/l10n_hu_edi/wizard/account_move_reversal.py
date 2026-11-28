@@ -8,7 +8,7 @@ class AccountMoveReversal(models.TransientModel):
         res = super()._prepare_default_reversal(move)
         if move.company_id.account_fiscal_country_id.code == "HU":
             res.update({
-                'delivery_date': move.delivery_date
+                'taxable_supply_date': move.taxable_supply_date,
             })
         return res
 

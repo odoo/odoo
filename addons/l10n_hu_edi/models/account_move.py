@@ -158,10 +158,6 @@ class AccountMove(models.Model):
             ):
                 move.invoice_cash_rounding_id = False
 
-    @api.depends('delivery_date')
-    def _compute_expected_currency_rate(self):
-        super()._compute_expected_currency_rate()
-
     def _l10n_hu_edi_get_payment_mode(self):
         """ The NAV payment mode of the invoice: the one set on the invoice, otherwise the one of the journal of its
         payment method for customer invoices (cash journal: cash, bank journal: transfer). """
@@ -169,18 +165,6 @@ class AccountMove(models.Model):
         if self.l10n_hu_payment_mode or not self.is_sale_document():
             return self.l10n_hu_payment_mode
         return {'cash': 'CASH', 'bank': 'TRANSFER'}.get(self.preferred_payment_method_line_id.journal_id.type, False)
-
-    def _get_invoice_currency_rate_date(self):
-        self.ensure_one()
-        if self.country_code == 'HU' and self.delivery_date:
-            return self.delivery_date
-        return super()._get_invoice_currency_rate_date()
-
-    def _get_default_currency_rate_date(self):
-        self.ensure_one()
-        if self.country_code == 'HU' and self.delivery_date:
-            return self.delivery_date
-        return super()._get_default_currency_rate_date()
 
     @api.depends('l10n_hu_edi_messages')
     def _compute_message_html(self):
@@ -204,12 +188,6 @@ class AccountMove(models.Model):
     def _compute_l10n_hu_edi_attachment_filename(self):
         for move in self:
             move.l10n_hu_edi_attachment_filename = f'{(move.ref or move.name or "nav30").replace("/", "_")}.xml'
-
-    # === Inverses === #
-
-    def _inverse_delivery_date(self):
-        super()._inverse_delivery_date()
-        self._conditional_add_to_compute('invoice_currency_rate', lambda m: m.country_code == 'HU')
 
     # === Overrides === #
 
@@ -1279,7 +1257,7 @@ class AccountMove(models.Model):
             'company_id': company.id,
             'l10n_hu_invoice_chain_index': -1 if invoice_reference is None else int(invoice_reference.findtext('{*}modificationIndex')),
             'l10n_hu_payment_mode': invoice_detail.findtext('{*}paymentMethod'),
-            'delivery_date': invoice_detail.findtext('{*}invoiceDeliveryDate'),
+            'taxable_supply_date': invoice_detail.findtext('{*}invoiceDeliveryDate'),
             'invoice_date_due': invoice_detail.findtext('{*}paymentDate'),
             'currency_id': currency.id if currency else None,
             'invoice_currency_rate': float(invoice_detail.findtext('{*}exchangeRate')),

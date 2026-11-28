@@ -325,7 +325,7 @@ class L10nHuEdiTestCommon(AccountTestInvoicingCommon):
             'partner_id': self.partner_company.id,
             'invoice_date': self.yesterday,
             'invoice_date_due': self.today,
-            'delivery_date': self.today,
+            'taxable_supply_date': self.today,
             'l10n_hu_payment_mode': 'TRANSFER',
             'invoice_line_ids': [
                 Command.create({

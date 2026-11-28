@@ -37,3 +37,14 @@ class TestL10nHuEdiInvoiceReport(L10nHuEdiTestCommon):
         if debit_note.state == 'draft':
             debit_note.action_post()
         self.assertEqual(self._get_invoice_date_label(debit_note), 'Debit Note Date')
+
+    def test_invoice_report_delivery_date(self):
+        """ The delivery date is only printed when it differs from the taxable supply date. """
+        invoices = self.create_invoice_simple() + self.create_invoice_simple()
+        invoices[1].taxable_supply_date = self.yesterday
+        invoices.action_post()
+        for invoice, expected_delivery_date_count in zip(invoices, (0, 1)):
+            report_html = self.env['ir.actions.report']._render_qweb_html('account.account_invoices', invoice.ids)[0]
+            report_tree = html.fromstring(report_html)
+            self.assertEqual(len(report_tree.xpath("//div[@name='taxable_supply_date']")), 1)
+            self.assertEqual(len(report_tree.xpath("//div[@name='delivery_date']")), expected_delivery_date_count)
