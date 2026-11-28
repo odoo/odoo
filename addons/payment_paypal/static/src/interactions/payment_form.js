@@ -21,13 +21,28 @@ patch(PaymentForm.prototype, {
      * @override
      */
     async willStart() {
-        // Suffix the button IDs to prevent collisions when multiple button containers are present.
-        const paypalEnabledButtons = [...document.querySelectorAll('#o_paypal_enabled_button')];
-        const paypalDisabledButtons = [...document.querySelectorAll('#o_paypal_disabled_button')];
-        paypalEnabledButtons.forEach((button, index) => button.id += `_${index}`);
-        paypalDisabledButtons.forEach((button, index) => button.id += `_${index}`);
-
+        if (!document.body.classList.contains('editor_enable')) {
+            // Suffix the button IDs to prevent collisions when multiple button containers are present.
+            const paypalEnabledButtons = [...document.querySelectorAll('#o_paypal_enabled_button')];
+            const paypalDisabledButtons = [...document.querySelectorAll('#o_paypal_disabled_button')];
+            paypalEnabledButtons.forEach((button, index) => button.id += `_${index}`);
+            paypalDisabledButtons.forEach((button, index) => button.id += `_${index}`);
+        }
         await super.willStart(...arguments);
+    },
+
+    /**
+     * @override
+     */
+    destroy() {
+        for (const paypalButtonData of Object.values(this.paypalData)) {
+            paypalButtonData.enabledButtons?.forEach(btn => { try { btn.close(); } catch {} });
+            paypalButtonData.disabledButtons?.forEach(btn => { try { btn.close(); } catch {} });
+        }
+        document.querySelectorAll(
+            '[id^="o_paypal_enabled_button"], [id^="o_paypal_disabled_button"]'
+        ).forEach(el => { el.innerHTML = ''; });
+        super.destroy();
     },
 
     /**
@@ -72,6 +87,9 @@ patch(PaymentForm.prototype, {
     async _prepareInlineForm(providerId, providerCode, paymentOptionId, paymentMethodCode, flow) {
         if (providerCode !== 'paypal') {
             await super._prepareInlineForm(...arguments);
+            return;
+        }
+        if (document.body.classList.contains('editor_enable')) {
             return;
         }
 
