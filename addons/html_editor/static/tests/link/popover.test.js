@@ -1939,6 +1939,30 @@ describe("link popover with empty URL", () => {
         await waitForNone(".o-we-linkpopover", { timeout: 1500 });
         expect(getContent(el)).toBe('<p>[]\ufeff<a href="#">\ufeffabcd\ufeff</a>\ufeff</p>');
     });
+    test("should keep the chosen link type when the link is created by clicking outside", async () => {
+        const { el } = await setupEditor("<p>[abc]</p>");
+        await waitFor(".o-we-toolbar");
+        await click(".o-we-toolbar .fa-link");
+        await waitFor(".o-we-linkpopover");
+        await click('select[name="link_type"]');
+        await select("secondary");
+        await animationFrame();
+
+        await click(el);
+        // Simulate click outside
+        const pNode = queryOne("p");
+        setSelection({
+            anchorNode: pNode,
+            anchorOffset: 0,
+            focusNode: pNode,
+            focusOffset: 0,
+        });
+        await tick(); // wait for selection change.
+        await waitForNone(".o-we-linkpopover", { timeout: 1500 });
+        expect(cleanLinkArtifacts(getContent(el))).toBe(
+            '<p>[]<a href="#" class="btn btn-secondary">abc</a></p>'
+        );
+    });
     test("when edit a link URL to '', and clicking outside the link popover should set href to '#'", async () => {
         const { el } = await setupEditor('<p>this is a <a href="http://test.com/">li[]nk</a></p>');
         await waitFor(".o-we-linkpopover");
