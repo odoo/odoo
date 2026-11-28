@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, _
+from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 
 
@@ -14,7 +14,14 @@ class ResCompany(models.Model):
     l10n_fr_reference_work_entry_type = fields.Many2one(
         'hr.work.entry.type',
         string='Company Paid Time Type',
-        default=_default_work_entry_type_id)
+        compute='_compute_l10n_fr_reference_work_entry_type', store=True, readonly=False)
+
+    @api.depends('country_id')
+    def _compute_l10n_fr_reference_work_entry_type(self):
+        default_type = self._default_work_entry_type_id()
+        for company in self:
+            if company.country_code == 'FR' and not company.l10n_fr_reference_work_entry_type:
+                company.l10n_fr_reference_work_entry_type = default_type
 
     def _get_fr_reference_work_entry_type(self):
         self.ensure_one()
