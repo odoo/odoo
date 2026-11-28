@@ -240,7 +240,7 @@ class AccountMove(models.Model):
                 }
 
             if move.l10n_in_is_self_invoice and any(
-                line.l10n_in_gstr_section != 'purchase_b2c_rcm'
+                line.l10n_in_gstr_section not in ('purchase_b2c_rcm', 'purchase_imp_services')
                 for line in move.invoice_line_ids
                 if line._origin
             ):
