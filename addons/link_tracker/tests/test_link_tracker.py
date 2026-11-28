@@ -165,6 +165,28 @@ class TestLinkTracker(common.TransactionCase, MockLinkTracker):
         self.assertEqual(link_tracker_utm.source_id, utm_source)
         self.assertEqual(link_tracker_utm.utm_reference, utm_reference)
 
+    def test_search_or_create_empty_label(self):
+        """ Empty labels ('' or False) match existing trackers. """
+        LinkTracker = self.env['link.tracker']
+        tracker_empty = LinkTracker.create({'url': 'https://test.com', 'label': ''})
+        tracker_test, tracker_new = LinkTracker.search_or_create([
+            {'url': 'https://test.com'},
+            {'url': 'https://test.be'},
+        ])
+        self.assertEqual(tracker_test, tracker_empty)
+        self.assertEqual(tracker_new.url, 'https://test.be')
+
+        # legacy data may hold several trackers for the same values
+        tracker_null = LinkTracker.create({'url': 'https://test.com', 'label': 'Legacy'})
+        self.env.cr.execute("UPDATE link_tracker SET label = NULL WHERE id = %s", [tracker_null.id])
+        tracker_null.invalidate_recordset(['label'])
+        tracker_test, tracker_new = LinkTracker.search_or_create([
+            {'url': 'https://test.com'},
+            {'url': 'https://test.org'},
+        ])
+        self.assertIn(tracker_test, tracker_empty + tracker_null)
+        self.assertEqual(tracker_new.url, 'https://test.org')
+
     def test_constraint(self):
         campaign_id = self.env['utm.campaign'].search([], limit=1)
 
