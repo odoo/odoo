@@ -29,6 +29,7 @@ This is the module to manage the accounting chart, bank information for Vietnam 
     ],
     'auto_install': ['account'],
     'data': [
+        'data/account.account.tag.csv',
         'data/account_tax_report_data.xml',
         'security/ir.access.csv',
         'views/account_move_views.xml',
