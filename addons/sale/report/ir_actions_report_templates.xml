@@ -95,16 +95,17 @@
                 </div>
             </div>
 
-            <!-- Is there a discount on at least one line? -->
-            <t t-set="lines_to_report" t-value="doc._get_order_lines_to_report()"/>
-            <t t-set="display_discount" t-value="any(l.discount > 0 for l in lines_to_report)"/>
-            <t t-set="display_uom" t-value="doc.env['res.groups']._is_feature_enabled('uom.group_uom')"/>
-            <!-- Hide taxes AND show taxed amounts on lines -->
-            <t t-set="hide_taxes_details" t-value="False"/>
-            <t t-set="display_taxes" t-value="not hide_taxes_details and any(l._has_taxes() for l in lines_to_report)"/>
-
+            <t id="order_lines_variables">
+                <!-- Is there a discount on at least one line? -->
+                <t t-set="lines_to_report" t-value="doc._get_order_lines_to_report()"/>
+                <t t-set="display_discount" t-value="any(l.discount > 0 for l in lines_to_report) and not hide_prices"/>
+                <t t-set="display_uom" t-value="doc.env['res.groups']._is_feature_enabled('uom.group_uom')"/>
+                <!-- Hide taxes AND show taxed amounts on lines -->
+                <t t-set="hide_taxes_details" t-value="False"/>
+                <t t-set="display_taxes" t-value="not hide_taxes_details and any(l._has_taxes() for l in lines_to_report) and not hide_prices"/>
+                <t t-if="doc.company_id.show_sol_numbers" t-set="line_counter" t-value="1"/>
+            </t>
             <div class="oe_structure"></div>
-            <t t-if="doc.company_id.show_sol_numbers" t-set="line_counter" t-value="1"/>
             <table class="o_has_total_table table o_main_table table-borderless">
                 <!-- In case we want to repeat the header, remove "display: table-row-group" -->
                 <thead style="display: table-row-group">
@@ -123,7 +124,7 @@
                         <th name="th_quantity" class="text-end text-nowrap" aria-label="Quantity">
                             <t t-set="colspan_count" t-value="colspan_count + 1"/>
                         </th>
-                        <th name="th_priceunit" class="text-end text-nowrap">
+                        <th t-if="not hide_prices" name="th_priceunit" class="text-end text-nowrap">
                             <t t-set="colspan_count" t-value="colspan_count + 1"/>
                             Unit Price
                         </th>
@@ -135,7 +136,7 @@
                             <t t-set="colspan_count" t-value="colspan_count + 1"/>
                             <span>Taxes</span>
                         </th>
-                        <th name="th_subtotal" class="text-end">
+                        <th t-if="not hide_prices" name="th_subtotal" class="text-end">
                             <span>Amount</span>
                         </th>
                     </tr>
@@ -177,7 +178,7 @@
                         </t>
 
                         <t t-set="padding_style" t-value="line_padding and ('padding-left:' + str(line_padding * 8) + 'px') or ''"/>
-                        <t t-set="show_section_total" t-value="is_section or not line.parent_id.collapse_prices"/>
+                        <t t-set="show_section_total" t-value="(is_section or not line.parent_id.collapse_prices) and not hide_prices"/>
 
                         <t t-if="not line.collapse_composition">
                             <tr
@@ -193,6 +194,7 @@
                                             or not line.parent_id.collapse_prices
                                         )
                                         and not line.is_downpayment
+                                        and not hide_prices
                                     )"
                                 />
                                 <t
@@ -280,6 +282,7 @@
                                 </td>
                                 <td
                                     name="td_combo_price"
+                                    t-if="not hide_prices"
                                     t-att-colspan="colspan_count - 1"
                                     class="text-end o_price_total"
                                 >
@@ -324,7 +327,7 @@
                                     <span t-field="line.product_uom_qty" class="text-nowrap">3</span>
                                     <span t-if="display_uom" t-field="line.product_uom_id">units</span>
                                 </td>
-                                <td name="td_product_priceunit" class="text-end text-nowrap">
+                                <td t-if="not hide_prices" name="td_product_priceunit" class="text-end text-nowrap">
                                     <span
                                         t-if="not collapse_prices and line.discount &lt; 0"
                                         t-out="(1 - line.discount / 100.0) * line.price_unit"
@@ -347,7 +350,7 @@
                                 <td t-if="display_taxes" name="td_product_taxes" t-attf-class="text-end {{ 'text-nowrap' if len(taxes) &lt; 12 else '' }}">
                                     <span t-out="taxes">Tax 15%</span>
                                 </td>
-                                <td name="td_product_subtotal" class="text-end o_price_total">
+                                <td t-if="not hide_prices" name="td_product_subtotal" class="text-end o_price_total">
                                     <t t-if="not line.is_downpayment and not collapse_prices">
                                         <span
                                             t-if="price_field == 'price_subtotal'"
@@ -386,7 +389,7 @@
                                     <span t-field="line.section_qty"/>
                                     <span t-if="display_uom" t-field="line.section_uom_id"/>
                                 </td>
-                                <td name="td_section_group_priceunit" class="text-end text-nowrap">
+                                <td t-if="not hide_prices" name="td_section_group_priceunit" class="text-end text-nowrap">
                                     <span
                                         t-if="show_section_total"
                                         name="price_subtotal_section_grouped"
@@ -410,7 +413,7 @@
                                         Tax 15%
                                     </span>
                                 </td>
-                                <td name="td_section_group_total" class="text-end o_price_total">
+                                <td t-if="not hide_prices" name="td_section_group_total" class="text-end o_price_total">
                                     <span
                                         t-if="show_section_total"
                                         t-out="section_line[price_field]"
@@ -424,7 +427,7 @@
                     </t>
                 </tbody>
             </table>
-            <div class="clearfix" name="so_total_summary">
+            <div t-if="not hide_prices" class="clearfix" name="so_total_summary">
                 <div id="total" class="row mt-n3" name="total">
                     <div>
                         <table class="o_total_table table table-borderless ms-auto w-auto">
