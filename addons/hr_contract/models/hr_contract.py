@@ -301,6 +301,7 @@ class Contract(models.Model):
 
     def write(self, vals):
         old_state = {c.id: c.state for c in self}
+        old_employees = {c.id: c.employee_id for c in self} if 'employee_id' in vals else {}
         res = super(Contract, self).write(vals)
         new_state = {c.id: c.state for c in self}
         if vals.get('state') == 'open':
@@ -324,6 +325,13 @@ class Contract(models.Model):
         if self.env.context.get('close_contract', True) and date_end and fields.Date.from_string(date_end) < fields.Date.context_today(self):
             for contract in self.filtered(lambda c: c.state == 'open'):
                 contract.state = 'close'
+
+        if 'employee_id' in vals:
+            for contract in self:
+                old_employee = old_employees[contract.id]
+                if old_employee != contract.employee_id and old_employee.sudo().contract_id == contract:
+                    old_employee.sudo().contract_id = False
+            self.filtered(lambda c: c.state == 'open')._assign_open_contract()
 
         if 'resource_calendar_id' in vals:
             calendar = vals['resource_calendar_id']

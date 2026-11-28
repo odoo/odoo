@@ -351,3 +351,22 @@ class TestHrContracts(TestContractCommon):
 
         leave_form.date_from = datetime(2018, 1, 1, 0, 0, 0)
         self.assertEqual(leave_form.calendar_id, contract.resource_calendar_id)
+
+    def test_employee_change_on_running_contract(this):
+        """
+        Test assigning a running contract to another employee. Reference to the contract should not stay in the previous employee record
+        """
+        # New employee
+        new_employee = this.env['hr.employee'].create({'name': 'Trevor'})
+
+        # Running contract with previous employee
+        contract = this.create_contract('draft', 'normal', date(2012, 12, 21))
+        contract.state = 'open'
+        this.assertEqual(this.employee.contract_id, contract)
+
+        # Assign contract to the new employee
+        contract.employee_id = new_employee
+        # Old employee reference to the contract must be cleaned
+        this.assertFalse(this.employee.contract_id)
+        # New employee must have the new contract as his current one
+        this.assertEqual(new_employee.contract_id, contract)
