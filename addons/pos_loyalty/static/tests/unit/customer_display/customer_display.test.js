@@ -1,12 +1,41 @@
-import { expect, test } from "@odoo/hoot";
+import { expect, test, runAllTimers } from "@odoo/hoot";
 import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
 import {
     setupCustomerDisplay,
     CustomerDisplayAssertions as Assert,
 } from "@point_of_sale/../tests/unit/customer_display/utils";
-import { deactivateAllProgramsExcept } from "@pos_loyalty/../tests/unit/utils";
+import { deactivateAllProgramsExcept, mockAccessRight } from "@pos_loyalty/../tests/unit/utils";
 
 definePosModels();
+
+test("loyalty points visibility on customer display", async () => {
+    const [store, order, display] = await setupCustomerDisplay();
+    const canApplyRewards = mockAccessRight(store, "canApplyRewards", true);
+    deactivateAllProgramsExcept(store, [7]);
+    order.setPartner(store.models["res.partner"].get(1));
+
+    const product = store.models["product.template"].get(5);
+    await store.addLineToCurrentOrder({ product_tmpl_id: product });
+    await runAllTimers();
+    expect(".loyalty-points-title").toHaveText("Loyalty Program Future");
+    expect(".loyalty-points-balance").toHaveText("3");
+    expect(".loyalty-points-won").toHaveText("+ 1");
+    expect(".loyalty-points-total").toHaveText("4");
+
+    canApplyRewards.set(false);
+    store.sendOrderToCustomerDisplay();
+    await runAllTimers();
+    expect(display.data().loyaltyPrograms).toBeEmpty();
+    expect(".loyalty-points-title").toHaveCount(0);
+
+    canApplyRewards.set(true);
+    store.sendOrderToCustomerDisplay();
+    await runAllTimers();
+    expect(".loyalty-points-title").toHaveText("Loyalty Program Future");
+    expect(".loyalty-points-balance").toHaveText("3");
+    expect(".loyalty-points-won").toHaveText("+ 1");
+    expect(".loyalty-points-total").toHaveText("4");
+});
 
 test("[Old Tour] test_customer_display_loyalty_points", async () => {
     const [store, order] = await setupCustomerDisplay();

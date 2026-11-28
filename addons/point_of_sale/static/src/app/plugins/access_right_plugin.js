@@ -168,6 +168,10 @@ export class PosAccessRightPlugin extends Plugin {
         return true;
     }
 
+    get canSeeExpectedCash() {
+        return true;
+    }
+
     get allowProductEdition() {
         return true;
     }

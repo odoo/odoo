@@ -1,10 +1,21 @@
+import { usePlugin } from "@odoo/owl";
 import { patch } from "@web/core/utils/patch";
 import { CustomerDisplayTerminalPlugin } from "@point_of_sale/app/plugins/customer_display_terminal_plugin";
+import { PosAccessRightPlugin } from "@point_of_sale/app/plugins/access_right_plugin";
 
 patch(CustomerDisplayTerminalPlugin.prototype, {
+    setup() {
+        super.setup(...arguments);
+        this.accessRight = usePlugin(PosAccessRightPlugin);
+    },
     _buildDisplayPayload(order) {
+        const payload = super._buildDisplayPayload(order);
+        payload.loyaltyPrograms = [];
+        if (!this.accessRight.canApplyRewards) {
+            return payload;
+        }
+
         const round = (value) => parseFloat(value.toFixed(2));
-        const loyaltyPrograms = [];
         for (const program of order.models["loyalty.program"].filter(
             (program) => program.program_type === "loyalty"
         )) {
@@ -15,7 +26,7 @@ patch(CustomerDisplayTerminalPlugin.prototype, {
             if (!won && !spent && !balance) {
                 continue;
             }
-            loyaltyPrograms.push({
+            payload.loyaltyPrograms.push({
                 id: program.id,
                 name: program.name,
                 won: round(won),
@@ -24,9 +35,6 @@ patch(CustomerDisplayTerminalPlugin.prototype, {
                 total: round(total),
             });
         }
-        return {
-            ...super._buildDisplayPayload(order),
-            loyaltyPrograms,
-        };
+        return payload;
     },
 });
