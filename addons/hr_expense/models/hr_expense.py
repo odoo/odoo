@@ -1454,11 +1454,13 @@ class HrExpense(models.Model):
         moves_sudo = self.sudo().account_move_id
         draft_moves_sudo = moves_sudo.filtered(lambda m: m.state == 'draft')
         non_draft_moves_sudo = moves_sudo - draft_moves_sudo
+        debt_transfer_moves_sudo = self._get_debt_transfer_moves().sudo()
         non_draft_moves_sudo._reverse_moves(
             default_values_list=[{'invoice_date': fields.Date.context_today(move_sudo)} for move_sudo in non_draft_moves_sudo],
             cancel=True
         )
-        draft_moves_sudo.unlink()
+        draft_moves_sudo._unlink_or_reverse()
+        debt_transfer_moves_sudo._reverse_moves(cancel=True)
         self._do_reset_approval()
 
     def action_cap_reimbursement_to_policy(self):
@@ -1826,7 +1828,9 @@ class HrExpense(models.Model):
             raise UserError(_("You cannot cancel an expense linked to a journal entry"))
 
         if draft_moves_sudo:
-            draft_moves_sudo.unlink()  # Else we have lingering moves
+            debt_transfer_moves_sudo = self._get_debt_transfer_moves().sudo()
+            draft_moves_sudo._unlink_or_reverse()  # Else we have lingering moves
+            debt_transfer_moves_sudo._reverse_moves(cancel=True)
 
         self.approval_state = 'refused'
         subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
@@ -1837,6 +1841,14 @@ class HrExpense(models.Model):
                 render_values={'reason': reason, 'name': expense.name},
             )
         self.update_activities_and_mails()
+
+    def _get_debt_transfer_moves(self):
+        """ Return the debt transfer entries of the expenses paid by the employee whose bill is sent separately.
+        They are posted when the expense is approved and only linked to its payment entry by their reconciliation.
+        """
+        return self.sudo().filtered(
+            lambda expense: expense.payment_mode == 'own_account' and expense.has_existing_bill,
+        ).account_move_id._get_reconciled_amls().move_id.with_env(self.env)
 
     def _get_split_values(self):
         self.ensure_one()

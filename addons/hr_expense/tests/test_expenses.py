@@ -1400,6 +1400,60 @@ class TestExpenses(TestExpenseCommon):
         (bank_line_to_reconcile + payment_line_to_reconcile).reconcile()
         self.assertEqual(expense.state, 'paid')
 
+    def test_expense_paid_by_employee_with_linked_bill_reset_and_refuse(self):
+        """ Resetting or refusing an approved expense paid by the employee whose bill is sent separately must reverse its
+        debt transfer entry, else the vendor and the employee keep an open balance and approving it again doubles it
+        """
+        vendor = self.env['res.partner'].create({'name': 'test partner'})
+        employee_partner = self.expense_employee.user_id.partner_id
+        expense_to_reset, expense_to_refuse = [self.create_expenses({
+            'name': name,
+            'payment_mode': 'own_account',
+            'total_amount_currency': amount,
+            'has_existing_bill': True,
+            'vendor_id': vendor.id,
+        }) for name, amount in (('Expense to reset', 100.0), ('Expense to refuse', 200.0))]
+        expenses = expense_to_reset + expense_to_refuse
+        expenses.action_submit()
+        # The approver is not an accountant
+        expenses.with_user(self.expense_user_manager).action_approve()
+        self.assertRecordValues(expenses, [{'state': 'approved'}] * 2)
+        payment_moves = expenses.account_move_id
+        debt_transfer_moves = payment_moves.line_ids.reconciled_lines_excluding_exchange_diff_ids.move_id - payment_moves
+        self.assertEqual(len(debt_transfer_moves), 2)
+
+        expense_to_reset.with_user(self.expense_user_manager).action_reset()
+        expense_to_refuse.with_user(self.expense_user_manager)._do_refuse('Wrong expense')
+        self.assertRecordValues(expenses, [{'state': 'draft'}, {'state': 'refused'}])
+        self.assertFalse(payment_moves.exists(), "The draft payment entries should be deleted")
+        self.assertEqual(
+            debt_transfer_moves.reversal_move_ids.reversed_entry_id, debt_transfer_moves,
+            "The posted debt transfer entries should be reversed",
+        )
+
+        def get_payable_balance_and_residual(partner):
+            lines = self.env['account.move.line'].search([
+                ('partner_id', '=', partner.id),
+                ('account_id.account_type', '=', 'liability_payable'),
+                ('parent_state', '=', 'posted'),
+            ])
+            return sum(lines.mapped('balance')), sum(lines.mapped('amount_residual'))
+
+        self.assertEqual(get_payable_balance_and_residual(vendor), (0.0, 0.0), "The vendor should have no outstanding debit left")
+        self.assertEqual(get_payable_balance_and_residual(employee_partner), (0.0, 0.0), "Nothing should be owed to the employee anymore")
+
+        # Approving the expense again only transfers its debt once
+        expense_to_reset.action_submit()
+        expense_to_reset.with_user(self.expense_user_manager).action_approve()
+        self.assertEqual(get_payable_balance_and_residual(vendor), (100.0, 100.0), "The vendor debit waits for the bill")
+        self.assertEqual(
+            get_payable_balance_and_residual(employee_partner), (-100.0, 0.0),
+            "The debt towards the employee is already matched with the draft payment entry",
+        )
+
+        self.post_expenses(expense_to_reset)
+        self.assertEqual(get_payable_balance_and_residual(employee_partner), (0.0, 0.0), "The payment settles the debt towards the employee")
+
     def test_expense_team_approver_refuse_mixed_selection(self):
         """
         - Set up a team approver and a subordinate, creating one submitted expense for each.
