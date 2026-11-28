@@ -80,6 +80,7 @@ class ResConfigSettings(models.TransientModel):
     module_l10n_in_edi = fields.Boolean("Indian Electronic Invoicing")
     module_l10n_in_ewaybill = fields.Boolean("Indian Electronic Waybill")
     module_l10n_in_boe = fields.Boolean("Bill of Entry")
+    module_l10n_in_itc04_report = fields.Boolean("ITC-04 Report")
 
     def set_values(self):
         super().set_values()
