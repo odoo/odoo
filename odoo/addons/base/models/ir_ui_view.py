@@ -255,7 +255,10 @@ actual arch.
                 if path_info:
                     data['arch_fs'] = '/'.join(path_info[0:2])
                     data['arch_updated'] = False
-            view.write(data)
+            # This function runs as part of write on "arch". At this point,
+            # "arch_updated" has already been settled according to the logic in
+            # `self.write`. "no_arch_updated" to avoid overriding that value.
+            view.with_context(no_arch_updated=True).write(data)
             # the xml_translate will clean the arch_db when write (e.g. ('<div>') -> ('<div></div>'))
             # view.arch should be reassigned here
             view.arch = view.arch_db
@@ -646,7 +649,12 @@ actual arch.
     def write(self, vals):
         # Keep track if view was modified. That will be useful for the --dev mode
         # to prefer modified arch over file arch.
-        if 'arch_updated' not in vals and ('arch' in vals or 'arch_base' in vals) and 'install_filename' not in self.env.context:
+        if (
+            'arch_updated' not in vals
+            and ('arch' in vals or 'arch_base' in vals or 'arch_db' in vals)
+            and 'install_filename' not in self.env.context
+            and not self.env.context.get('no_arch_updated')
+        ):
             vals['arch_updated'] = True
 
         # drop the corresponding view customizations (used for dashboards for example), otherwise
@@ -679,7 +687,33 @@ actual arch.
         return super().unlink()
 
     def _update_field_translations(self, field_name, translations, digest=None, source_lang=''):
-        return super(IrUiView, self.with_context(no_save_prev=True))._update_field_translations(field_name, translations, digest=digest, source_lang=source_lang)
+        # A translation should not mark a view as updated (`arch_updated`).
+        # Otherwise, a view that has only been translated (with no structural
+        # changes) would be marked as modified and it would be skipped by flows
+        # that exclude modified views (e.g. theme updates).
+        # Exception: `arch_updated=True` is set when translating an en_US
+        # view (it can happen if en_US is not the default website language).
+        # Otherwise, in `dev=xml` mode, a translated view with
+        # `arch_updated=False` would be sourced from its xml file, and other
+        # languages would be broken too, because the translation dictionary
+        # would not match the en_US view.
+        self.ensure_one()
+        check_en_us = (
+            field_name == 'arch_db'
+            and not self.arch_updated
+            and 'install_filename' not in self.env.context
+            and not self.env.context.get('no_arch_updated')
+        )
+        if check_en_us:
+            old_en_us_arch = self.with_context(lang='en_US').arch_db
+        res = super(IrUiView, self.with_context(no_save_prev=True, no_arch_updated=True))._update_field_translations(field_name, translations, digest=digest, source_lang=source_lang)
+        if check_en_us and self.with_context(lang='en_US').arch_db != old_en_us_arch:
+            self.arch_updated = True
+        return res
+
+    def copy_translations(self, new, excluded=()):
+        # The copy of the translations is not a change of the arch by the user.
+        return super().copy_translations(new.with_context(no_arch_updated=True), excluded=excluded)
 
     def copy_data(self, default=None):
         has_default_without_key = default and 'key' not in default
