@@ -600,7 +600,8 @@ class HrApplicant(models.Model):
                         '|',
                         ('job_ids', '=', False),
                         ('job_ids', '=', applicant.job_id.id),
-                        ('fold', '=', False)
+                        ('fold', '=', False),
+                        ('company_id', 'in', [False, applicant.job_id.company_id.id]),
                     ], order='sequence asc', limit=1).ids
                     applicant.stage_id = stage_ids[0] if stage_ids else False
             else:
@@ -1107,7 +1108,8 @@ class HrApplicant(models.Model):
                     '|',
                     ('job_ids', '=', False),
                     ('job_ids', '=', job_id.id),
-                    ('fold', '=', False)
+                    ('fold', '=', False),
+                    ('company_id', 'in', [False, job_id.company_id.id]),
                 ], order='sequence asc', limit=1).id
         for applicant in self:
             applicant.write(

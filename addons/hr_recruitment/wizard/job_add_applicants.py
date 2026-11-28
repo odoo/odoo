@@ -24,6 +24,7 @@ class JobAddApplicants(models.TransientModel):
             for job in self.job_ids:
                 job_stages = ((stage_per_job.get(job) or self.env['hr.recruitment.stage']) +
                               (stage_per_job.get(self.env['hr.job']) or self.env['hr.recruitment.stage']))
+                job_stages = job_stages.filtered(lambda stage: not stage.company_id or stage.company_id == job.company_id)
                 stage = min(job_stages, key=lambda job: job.sequence) if job_stages else self.env['hr.job']
                 new_applicant_vals = {
                     **applicant_vals,
