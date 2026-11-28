@@ -101,6 +101,9 @@ export class FloorPlanEditor extends FloorPlanBase {
                 this.selectedDOMElement = null;
                 this.updateActionMenu();
                 this.ensureBoardFits(false);
+                if (selectedFloor) {
+                    this.restoreScrollPosition(selectedFloor);
+                }
 
                 selectedFloor?.ensureBgImageLoaded().then((hasChanged) => {
                     if (hasChanged) {
@@ -330,8 +333,8 @@ export class FloorPlanEditor extends FloorPlanBase {
         const viewportCenterY = scrollTop + containerRect.height / 2;
 
         return {
-            left: viewportCenterX - width / 2,
-            top: viewportCenterY - height / 2,
+            left: viewportCenterX - this.canvasOffset.x - width / 2,
+            top: viewportCenterY - this.canvasOffset.y - height / 2,
         };
     }
 
@@ -619,7 +622,8 @@ export class FloorPlanEditor extends FloorPlanBase {
             const bounds = this.selectedElement.getBounds();
             const containerRect = this.containerRef().getBoundingClientRect();
             const scrollLeft = this.containerRef().scrollLeft;
-            const elementRightInViewport = bounds.left + bounds.width - scrollLeft;
+            const elementRightInViewport =
+                bounds.left + bounds.width + this.canvasOffset.x - scrollLeft;
             let spaceLeft = 0;
             if (elementRightInViewport < containerRect.width) {
                 spaceLeft = containerRect.width - elementRightInViewport - 20; //Some space
@@ -718,6 +722,38 @@ export class FloorPlanEditor extends FloorPlanBase {
 
     getScrollContainerStyles() {
         return `transform:translateX(${this.state.canvasTranslateX}px);${this.getContainerStyle()}`;
+    }
+
+    restoreScrollPosition(floor) {
+        const containerEl = this.containerRef();
+        const position = this.floorPlanStore.getFloorScrollPositions(floor.id);
+        if (!containerEl) {
+            return;
+        }
+        // Show the floor as the floor plan did: shift the canvas when the floor plan showed
+        // space before it, and make it large enough to reach the position it was scrolled to
+        this.canvasOffset = {
+            x: Math.max(-(position?.left || 0), 0),
+            y: Math.max(-(position?.top || 0), 0),
+        };
+        if (!position) {
+            this.canvasRef().style = this.getCanvasStyles();
+            return;
+        }
+        if (position.left > 0) {
+            this.state.canvasWidth = Math.max(
+                this.state.canvasWidth,
+                position.left + containerEl.clientWidth
+            );
+        }
+        if (position.top > 0) {
+            this.state.canvasHeight = Math.max(
+                this.state.canvasHeight,
+                position.top + containerEl.clientHeight
+            );
+        }
+        this.canvasRef().style = this.getCanvasStyles();
+        containerEl.scrollTo(position);
     }
 
     ensureBoardFits(keepCanvasSize = true) {

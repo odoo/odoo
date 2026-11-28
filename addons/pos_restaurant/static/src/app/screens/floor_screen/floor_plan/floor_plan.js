@@ -10,6 +10,7 @@ import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { _t } from "@web/core/l10n/translation";
 
 const TABLE_LINKING_DELAY = 400;
+const CANVAS_PADDING = 20;
 const TIMER_INTERVAL = 60000;
 
 export class FloorPlan extends FloorPlanBase {
@@ -72,16 +73,15 @@ export class FloorPlan extends FloorPlanBase {
         if (selectedFloor) {
             // Restore scroll position
             this.scrollFloorId = selectedFloor.id; // Track the previous floor when this method is called again (to save its position)
-            const scrollPosition = this.floorPlanStore.getFloorScrollPositions(selectedFloor.id);
-            if (scrollPosition) {
-                this.containerRef()?.scrollTo(scrollPosition);
-            } else {
-                // Scroll to first visible table
-                const firstTable = selectedFloor.getFirstVisibleTable();
-                if (firstTable) {
-                    this.scrollToElement(firstTable.uuid, "auto");
-                }
-            }
+            const { minLeft, minTop } = selectedFloor.getSize();
+            const { left, top } = this.floorPlanStore.getFloorScrollPositions(selectedFloor.id) || {
+                left: minLeft - CANVAS_PADDING,
+                top: minTop - CANVAS_PADDING,
+            };
+            this.containerRef()?.scrollTo({
+                left: left + this.canvasOffset.x,
+                top: top + this.canvasOffset.y,
+            });
         }
     }
 
@@ -91,8 +91,8 @@ export class FloorPlan extends FloorPlanBase {
         }
         const scrollContainerEl = this.containerRef();
         this.floorPlanStore.storeFloorScrollPosition(this.scrollFloorId, {
-            left: scrollContainerEl.scrollLeft,
-            top: scrollContainerEl.scrollTop,
+            left: scrollContainerEl.scrollLeft - this.canvasOffset.x,
+            top: scrollContainerEl.scrollTop - this.canvasOffset.y,
         });
     }
 
@@ -126,25 +126,38 @@ export class FloorPlan extends FloorPlanBase {
         }
 
         const size = this.selectedFloor.getSize();
-        let canvasWidth = size.width;
-        let canvasHeight = size.height;
-
-        // Add some padding if overflow
-        if (canvasWidth > scrollContainer.clientWidth) {
-            canvasWidth += 20;
-        } else {
-            canvasWidth = 0; //100% width
-        }
-        if (canvasHeight > scrollContainer.clientHeight) {
-            canvasHeight += 20;
-        } else {
-            canvasHeight = 0; //100% height
-        }
-
-        this.state.canvasWidth = canvasWidth;
-        this.state.canvasHeight = canvasHeight;
+        const canOffset = !this.selectedFloor.bgImage && size.contentRight > size.minLeft;
+        const x = this.getAxisLayout(
+            size.minLeft,
+            size.contentRight,
+            size.width,
+            scrollContainer.clientWidth,
+            canOffset
+        );
+        const y = this.getAxisLayout(
+            size.minTop,
+            size.contentBottom,
+            size.height,
+            scrollContainer.clientHeight,
+            canOffset
+        );
+        this.canvasOffset = { x: x.offset, y: y.offset };
+        this.state.canvasWidth = x.length;
+        this.state.canvasHeight = y.length;
         // Assign the size and style here to be able to scroll correctly
         this.canvasRef().style = this.getCanvasStyles();
+    }
+
+    getAxisLayout(start, end, floorLength, containerLength, canOffset) {
+        if (!canOffset) {
+            // Add some padding if overflow, else 100%
+            const length = floorLength > containerLength ? floorLength + CANVAS_PADDING : 0;
+            return { offset: 0, length };
+        }
+        if (end - start + 2 * CANVAS_PADDING <= containerLength) {
+            return { offset: Math.round((containerLength - end - start) / 2), length: end };
+        }
+        return { offset: CANVAS_PADDING - start, length: end + CANVAS_PADDING };
     }
 
     getContainerStyle() {

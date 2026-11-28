@@ -7,6 +7,8 @@ import { setupPosEnv } from "@point_of_sale/../tests/unit/utils";
 import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
 import { FloorScreen } from "@pos_restaurant/app/screens/floor_screen/floor_screen";
 import { FloorPlan } from "@pos_restaurant/app/screens/floor_screen/floor_plan/floor_plan";
+import { FloorPlanEditor } from "@pos_restaurant/app/screens/floor_screen/floor_plan_editor/floor_plan_editor";
+import { useFloorPlanStore } from "@pos_restaurant/app/hooks/floor_plan_hook";
 
 const { DateTime } = luxon;
 
@@ -48,4 +50,75 @@ test("floor plan unmounted before the background image is loaded", async () => {
     bgImageLoaded.resolve(true);
     await animationFrame();
     expect(".o_fp_canvas").toHaveCount(0);
+});
+
+async function mountFloorPlan(width) {
+    const store = await setupPosEnv();
+    store.floorPlan.storedFloorPlanStyle = "default";
+    class Parent extends Component {
+        static components = { FloorPlan };
+        static template = xml`<div style="width:${width}px;height:400px"><FloorPlan/></div>`;
+    }
+    await mountWithCleanup(Parent);
+    await waitFor(".o_fp_table");
+    await animationFrame();
+    const container = queryOne(".o_fp_canvas");
+    const { left, top } = container.getBoundingClientRect();
+    const first = queryOne(`.o_fp_table[data-table_id="2"]`).getBoundingClientRect();
+    const last = queryOne(`.o_fp_table[data-table_id="4"]`).getBoundingClientRect();
+    return {
+        container,
+        marginLeft: Math.round(first.left - left),
+        marginRight: Math.round(left + container.clientWidth - last.right),
+        marginTop: Math.round(first.top - top),
+        marginBottom: Math.round(top + container.clientHeight - last.bottom),
+    };
+}
+
+test("floor plan centers its tables when they fit in the screen", async () => {
+    const { container, marginLeft, marginRight, marginTop, marginBottom } = await mountFloorPlan(
+        800
+    );
+    expect(marginLeft).toBe(150);
+    expect(marginRight).toBe(150);
+    expect(Math.abs(marginTop - marginBottom)).toBeLessThan(2);
+    expect(container.scrollWidth).toBe(container.clientWidth);
+    expect(container.scrollHeight).toBe(container.clientHeight);
+});
+
+test("floor plan starts at its first table when they do not fit in the screen", async () => {
+    const { container, marginLeft } = await mountFloorPlan(300);
+    expect(container.scrollLeft).toBe(0);
+    expect(marginLeft).toBe(20);
+    expect(container.scrollWidth).toBe(540);
+});
+
+test("floor plan editor shows the tables where the floor plan did", async () => {
+    const store = await setupPosEnv();
+    store.floorPlan.storedFloorPlanStyle = "default";
+    class Parent extends Component {
+        static components = { FloorPlan, FloorPlanEditor };
+        static template = xml`
+            <div style="width:800px;height:400px">
+                <FloorPlanEditor t-if="this.floorPlanStore.editMode" initActionHandler="() => {}"/>
+                <FloorPlan t-else=""/>
+            </div>`;
+
+        setup() {
+            this.floorPlanStore = useFloorPlanStore();
+        }
+    }
+    await mountWithCleanup(Parent);
+    const table = store.floorPlan.selectedFloor.getTables().find((t) => t.id === 2);
+    const getTableRect = () => queryOne(`#fpe-${table.uuid}`).getBoundingClientRect();
+    await waitFor(`#fpe-${table.uuid}`);
+    await animationFrame();
+    const planRect = getTableRect();
+
+    store.floorPlan.setEditMode(true);
+    await waitFor(".o_fp_snap_guides");
+    await animationFrame();
+    const editorRect = getTableRect();
+    expect(Math.round(editorRect.left)).toBe(Math.round(planRect.left));
+    expect(Math.round(editorRect.top)).toBe(Math.round(planRect.top));
 });

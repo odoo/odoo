@@ -187,13 +187,13 @@ export class Snapping {
         }
 
         const containerRect = this.scrollContainerEl.getBoundingClientRect();
-        const scrollLeft = this.scrollContainerEl.scrollLeft;
-        const scrollTop = this.scrollContainerEl.scrollTop;
+        // The snap guides cover the canvas, so their position gives the canvas origin
+        const canvasRect = this.snapGuidesContainerEl.getBoundingClientRect();
 
-        const visibleLeft = scrollLeft;
-        const visibleRight = scrollLeft + containerRect.width;
-        const visibleTop = scrollTop;
-        const visibleBottom = scrollTop + containerRect.height;
+        const visibleLeft = containerRect.left - canvasRect.left;
+        const visibleRight = visibleLeft + containerRect.width;
+        const visibleTop = containerRect.top - canvasRect.top;
+        const visibleBottom = visibleTop + containerRect.height;
 
         return (
             bounds.right >= visibleLeft &&

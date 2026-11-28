@@ -11,6 +11,7 @@ export class FloorPlanBase extends Component {
         super.setup();
         this.floorPlanStore = useFloorPlanStore();
         this.state = proxy({ canvasWidth: 0, canvasHeight: 0 });
+        this.canvasOffset = { x: 0, y: 0 };
     }
 
     getDOMFloorElement(uuid) {
@@ -39,16 +40,17 @@ export class FloorPlanBase extends Component {
 
     getCanvasStyles() {
         const bgCssStyle = this.selectedFloor.getBackgroundStyle();
-        const width = this.formatCanvasSize(this.state.canvasWidth);
-        const height = this.formatCanvasSize(this.state.canvasHeight);
-        return `width:${width};height:${height};${bgCssStyle}`;
+        const { x, y } = this.canvasOffset;
+        const width = this.formatCanvasSize(this.state.canvasWidth, x);
+        const height = this.formatCanvasSize(this.state.canvasHeight, y);
+        return `width:${width};height:${height};margin:${y}px 0 0 ${x}px;${bgCssStyle}`;
     }
 
-    formatCanvasSize(value) {
+    formatCanvasSize(value, offset) {
         if (value > 0) {
             return `${value}px`;
         }
-        return "100%";
+        return offset > 0 ? `calc(100% - ${offset}px)` : "100%";
     }
 
     scrollToElement(uuid, behavior) {
@@ -59,8 +61,8 @@ export class FloorPlanBase extends Component {
 
         const bounds = element.getBounds();
         const containerRect = this.containerRef().getBoundingClientRect();
-        const scrollLeft = this.containerRef().scrollLeft;
-        const scrollTop = this.containerRef().scrollTop;
+        const scrollLeft = this.containerRef().scrollLeft - this.canvasOffset.x;
+        const scrollTop = this.containerRef().scrollTop - this.canvasOffset.y;
 
         const visibleArea = {
             left: scrollLeft,
@@ -78,8 +80,8 @@ export class FloorPlanBase extends Component {
 
         if (!isVisible) {
             this.containerRef().scrollTo({
-                left: bounds.left - (containerRect.width - bounds.width) / 2,
-                top: bounds.top - (containerRect.height - bounds.height) / 2,
+                left: bounds.left + this.canvasOffset.x - (containerRect.width - bounds.width) / 2,
+                top: bounds.top + this.canvasOffset.y - (containerRect.height - bounds.height) / 2,
                 behavior: behavior || "smooth",
             });
         }
