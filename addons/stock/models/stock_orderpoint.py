@@ -629,7 +629,7 @@ class StockWarehouseOrderpoint(models.Model):
             'date_order': dates_info['date_order'],
             'date_deadline': date or False,
             'warehouse_id': self.warehouse_id,
-            'orderpoint_id': self,
+            'orderpoint_id': self.trigger == 'auto' and self,
             'group_id': group or self.group_id,
         }
 

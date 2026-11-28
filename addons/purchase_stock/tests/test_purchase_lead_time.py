@@ -202,6 +202,33 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         self.assertEqual(purchase_order.picking_ids[0].move_ids_without_package.filtered(lambda x: x.product_uom_qty == 15).description_picking, t_shirt.display_name + "\n" + order_line_description + "Color (Red)", 'wrong description in picking')
         self.assertEqual(purchase_order.picking_ids[0].move_ids_without_package.filtered(lambda x: x.product_uom_qty == 10).description_picking, t_shirt.display_name + "\n" + order_line_description + "Color (Green)", 'wrong description in picking')
 
+    def test_merge_po_line_4(self):
+        product = self.env['product.product'].create({
+            'name': 'Manual orderpoint product',
+            'is_storable': True,
+            'route_ids': [(6, 0, [self.route_buy])],
+            'seller_ids': [(0, 0, {'partner_id': self.partner_1.id})],
+        })
+        Orderpoint = self.env['stock.warehouse.orderpoint']
+
+        def replenish(qty):
+            self.env['stock.move'].create({
+                'name': product.name,
+                'product_id': product.id,
+                'product_uom': product.uom_id.id,
+                'product_uom_qty': qty,
+                'location_id': self.warehouse_1.lot_stock_id.id,
+                'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+            })._action_confirm()
+            Orderpoint._get_orderpoint_action()
+            Orderpoint.search([('product_id', '=', product.id), ('trigger', '=', 'manual')]).action_replenish()
+
+        replenish(5)
+        replenish(3)
+        po_line = self.env['purchase.order.line'].search([('product_id', '=', product.id)])
+        self.assertEqual(len(po_line), 1)
+        self.assertEqual(po_line.product_qty, 8)
+
     def test_reordering_days_to_purchase(self):
         company = self.env.ref('base.main_company')
         company2 = self.env['res.company'].create({
