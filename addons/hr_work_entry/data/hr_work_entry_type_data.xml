@@ -151,6 +151,232 @@
         <field name="count_as">absence</field>
     </record>
 
+<!-- AL : Albania -->
+    <record id="al_work_entry_type_attendance" model="hr.work.entry.type">
+        <field name="name">Work</field>
+        <field name="color">0</field>
+        <field name="display_code">A</field>
+        <field name="code">002.00</field>
+        <field name="count_as">working_time</field>
+        <field name="country_id" ref="base.al"/>
+    </record>
+
+    <!-- Work at home or telework, under the same conditions as at the workplace (Labour Code, art. 15) -->
+    <record id="al_work_entry_type_telework" model="hr.work.entry.type">
+        <field name="name">Work at Home or Telework</field>
+        <field name="color">2</field>
+        <field name="display_code">TW</field>
+        <field name="code">002.08</field>
+        <field name="count_as">working_time</field>
+        <field name="country_id" ref="base.al"/>
+    </record>
+
+    <!-- Hours beyond the normal working time, paid with a premium (Labour Code, art. 88 and 91) -->
+    <record id="al_work_entry_type_overtime" model="hr.work.entry.type">
+        <field name="name">Overtime</field>
+        <field name="color">4</field>
+        <field name="display_code">OT</field>
+        <field name="code">040.00</field>
+        <field name="count_as">working_time</field>
+        <field name="country_id" ref="base.al"/>
+    </record>
+
+    <!-- Overtime on the weekly rest day or a public holiday, paid with a higher premium (Labour Code, art. 91(3)) -->
+    <record id="al_work_entry_type_overtime_rest_day" model="hr.work.entry.type">
+        <field name="name">Overtime on Rest Day or Public Holiday</field>
+        <field name="color">4</field>
+        <field name="display_code">OTH</field>
+        <field name="code">ALWORK110</field>
+        <field name="count_as">working_time</field>
+        <field name="country_id" ref="base.al"/>
+    </record>
+
+    <!-- Hours worked from 19:00 to 22:00, paid with a premium (Labour Code, art. 81(1)) -->
+    <record id="al_work_entry_type_evening_work" model="hr.work.entry.type">
+        <field name="name">Evening Work</field>
+        <field name="color">4</field>
+        <field name="display_code">EW</field>
+        <field name="code">ALWORK120</field>
+        <field name="count_as">working_time</field>
+        <field name="country_id" ref="base.al"/>
+    </record>
+
+    <!-- Hours worked from 22:00 to 06:00, paid with a premium (Labour Code, art. 80 and 81(2)) -->
+    <record id="al_work_entry_type_night_work" model="hr.work.entry.type">
+        <field name="name">Night Work</field>
+        <field name="color">4</field>
+        <field name="display_code">NW</field>
+        <field name="code">ALWORK130</field>
+        <field name="count_as">working_time</field>
+        <field name="country_id" ref="base.al"/>
+    </record>
+
+    <!-- Work on the weekly rest day, paid with a premium or compensated with rest (Labour Code, art. 87(1)) -->
+    <record id="al_work_entry_type_rest_day_work" model="hr.work.entry.type">
+        <field name="name">Work on Weekly Rest Day</field>
+        <field name="color">4</field>
+        <field name="display_code">RDW</field>
+        <field name="code">ALWORK140</field>
+        <field name="count_as">working_time</field>
+        <field name="country_id" ref="base.al"/>
+    </record>
+
+    <!-- Work on a public holiday falling on a working day, paid with a premium and a paid rest (Labour Code, art.
+        87(2)) -->
+    <record id="al_work_entry_type_public_holiday_work" model="hr.work.entry.type">
+        <field name="name">Work on Public Holiday</field>
+        <field name="color">4</field>
+        <field name="display_code">PHW</field>
+        <field name="code">ALWORK150</field>
+        <field name="count_as">working_time</field>
+        <field name="country_id" ref="base.al"/>
+    </record>
+
+    <record id="al_work_entry_type_out_of_contract" model="hr.work.entry.type">
+        <field name="name">Out Of Contract</field>
+        <field name="color">0</field>
+        <field name="display_code">OoC</field>
+        <field name="code">000.00</field>
+        <field name="country_id" ref="base.al"/>
+        <field name="amount_rate">0.0</field>
+    </record>
+
+    <!-- Public holidays are paid (Labour Code, art. 86(2)) -->
+    <record id="al_work_entry_type_public_holiday" model="hr.work.entry.type">
+        <field name="name">Public Holiday</field>
+        <field name="color">3</field>
+        <field name="display_code">PH</field>
+        <field name="code">006.00</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.al"/>
+    </record>
+
+    <!-- At least 22 working days of paid leave a year (Labour Code, art. 92 and 94) -->
+    <record id="al_work_entry_type_legal_leave" model="hr.work.entry.type">
+        <field name="name">Annual Leave</field>
+        <field name="color">5</field>
+        <field name="display_code">AL</field>
+        <field name="code">016.00</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.al"/>
+    </record>
+
+    <!-- Paid rest given instead of the overtime or rest day premium (Labour Code, art. 87(1) and 91(2)) -->
+    <record id="al_work_entry_type_compensatory" model="hr.work.entry.type">
+        <field name="name">Rest in Lieu of Overtime</field>
+        <field name="color">3</field>
+        <field name="display_code">ROT</field>
+        <field name="code">LEAVE105</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.al"/>
+    </record>
+
+    <!-- First 14 days of a sick report, paid by the employer (Labour Code, art. 130(1)) -->
+    <record id="al_work_entry_type_sick_leave" model="hr.work.entry.type">
+        <field name="name">Sick Leave (Days 1-14)</field>
+        <field name="color">5</field>
+        <field name="display_code">SL</field>
+        <field name="code">013.00</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.al"/>
+    </record>
+
+    <!-- Sick report from day 15, paid by the Social Insurance Institute (Labour Code, art. 130(1)) -->
+    <record id="al_work_entry_type_sick_leave_issh" model="hr.work.entry.type">
+        <field name="name">Sick Leave (From Day 15)</field>
+        <field name="color">5</field>
+        <field name="display_code">SLI</field>
+        <field name="code">ALLEAVE100</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.al"/>
+        <field name="amount_rate">0.0</field>
+    </record>
+
+    <!-- Paid by the Social Insurance Institute (Labour Code, art. 131) -->
+    <record id="al_work_entry_type_work_accident" model="hr.work.entry.type">
+        <field name="name">Work Accident or Occupational Disease</field>
+        <field name="color">5</field>
+        <field name="display_code">WA</field>
+        <field name="code">ALLEAVE110</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.al"/>
+        <field name="amount_rate">0.0</field>
+    </record>
+
+    <!-- At least 35 days before and 63 days after the birth, paid by the Social Insurance Institute (Labour Code,
+        art. 104 and 105) -->
+    <record id="al_work_entry_type_maternity_leave" model="hr.work.entry.type">
+        <field name="name">Maternity Leave</field>
+        <field name="color">5</field>
+        <field name="display_code">ML</field>
+        <field name="code">ALLEAVE120</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.al"/>
+        <field name="amount_rate">0.0</field>
+    </record>
+
+    <!-- 3 days of paid leave for the spouse at the birth of a child (Labour Code, art. 96(3)) -->
+    <record id="al_work_entry_type_birth_leave" model="hr.work.entry.type">
+        <field name="name">Birth Leave</field>
+        <field name="color">5</field>
+        <field name="display_code">BL</field>
+        <field name="code">ALLEAVE130</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.al"/>
+    </record>
+
+    <!-- 5 days of paid leave on marriage or the death of a close relative (Labour Code, art. 96(1)) -->
+    <record id="al_work_entry_type_family_event_leave" model="hr.work.entry.type">
+        <field name="name">Marriage or Bereavement Leave</field>
+        <field name="color">5</field>
+        <field name="display_code">MBL</field>
+        <field name="code">ALLEAVE140</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.al"/>
+    </record>
+
+    <!-- Paid care of a sick child: 12 days a year, 15 for a child under 3 (Labour Code, art. 132(1)) -->
+    <record id="al_work_entry_type_child_care_leave" model="hr.work.entry.type">
+        <field name="name">Sick Child Leave</field>
+        <field name="color">5</field>
+        <field name="display_code">SCL</field>
+        <field name="code">ALLEAVE150</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.al"/>
+    </record>
+
+    <!-- Absence for a legal duty, paid up to 14 working days (Labour Code, art. 133) -->
+    <record id="al_work_entry_type_legal_duty_leave" model="hr.work.entry.type">
+        <field name="name">Legal Duty Leave</field>
+        <field name="color">5</field>
+        <field name="display_code">LD</field>
+        <field name="code">ALLEAVE160</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.al"/>
+    </record>
+
+    <!-- Unpaid leave, e.g. up to 30 days for a serious illness in the family (Labour Code, art. 96(2)) -->
+    <record id="al_work_entry_type_unpaid_leave" model="hr.work.entry.type">
+        <field name="name">Unpaid Leave</field>
+        <field name="color">5</field>
+        <field name="display_code">UN</field>
+        <field name="code">158.00</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.al"/>
+        <field name="amount_rate">0.0</field>
+    </record>
+
+    <!-- At least 4 months of unpaid leave until the child is 6 (Labour Code, art. 132/1) -->
+    <record id="al_work_entry_type_parental_leave" model="hr.work.entry.type">
+        <field name="name">Parental Leave</field>
+        <field name="color">5</field>
+        <field name="display_code">PL</field>
+        <field name="code">ALLEAVE170</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.al"/>
+        <field name="amount_rate">0.0</field>
+    </record>
+
 <!-- AU : Australia -->
     <!-- Time Off Entries -->
     <!-- We need a unique work entry type for each time off -->

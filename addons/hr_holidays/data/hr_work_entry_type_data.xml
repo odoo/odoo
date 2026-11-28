@@ -65,6 +65,123 @@
         }"/>
     </function>
 
+<!-- AL : Albania -->
+    <!-- Premium work is encoded by HR, not requested as time off (Labour Code, art. 81, 87 and 91) -->
+    <record id="hr_work_entry.al_work_entry_type_overtime" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">hour</field>
+        <field name="time_off_selectable">False</field>
+        <field name="include_public_holidays_in_duration">True</field>
+    </record>
+
+    <record id="hr_work_entry.al_work_entry_type_overtime_rest_day" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">hour</field>
+        <field name="time_off_selectable">False</field>
+        <field name="include_public_holidays_in_duration">True</field>
+    </record>
+
+    <record id="hr_work_entry.al_work_entry_type_evening_work" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">hour</field>
+        <field name="time_off_selectable">False</field>
+        <field name="include_public_holidays_in_duration">True</field>
+    </record>
+
+    <record id="hr_work_entry.al_work_entry_type_night_work" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">hour</field>
+        <field name="time_off_selectable">False</field>
+        <field name="include_public_holidays_in_duration">True</field>
+    </record>
+
+    <record id="hr_work_entry.al_work_entry_type_rest_day_work" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">hour</field>
+        <field name="time_off_selectable">False</field>
+        <field name="include_public_holidays_in_duration">True</field>
+    </record>
+
+    <record id="hr_work_entry.al_work_entry_type_public_holiday_work" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">hour</field>
+        <field name="time_off_selectable">False</field>
+        <field name="include_public_holidays_in_duration">True</field>
+    </record>
+
+    <!-- Annual leave: at least 22 working days a year (Labour Code, art. 92(2)) -->
+    <record id="hr_work_entry.al_work_entry_type_legal_leave" model="hr.work.entry.type">
+        <field name="requires_allocation">True</field>
+        <field name="request_unit">half_day</field>
+        <field name="unit_of_measure">day</field>
+    </record>
+
+    <!-- Rest in lieu of overtime, given within 2 months (Labour Code, art. 91(2)) -->
+    <record id="hr_work_entry.al_work_entry_type_compensatory" model="hr.work.entry.type">
+        <field name="requires_allocation">True</field>
+        <field name="unit_of_measure">hour</field>
+    </record>
+
+    <!-- Sick leave on a medical report (Labour Code, art. 130(2)) -->
+    <record id="hr_work_entry.al_work_entry_type_sick_leave" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="unit_of_measure">day</field>
+        <field name="support_document">True</field>
+    </record>
+
+    <record id="hr_work_entry.al_work_entry_type_sick_leave_issh" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="support_document">True</field>
+    </record>
+
+    <record id="hr_work_entry.al_work_entry_type_work_accident" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="support_document">True</field>
+    </record>
+
+    <record id="hr_work_entry.al_work_entry_type_maternity_leave" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="support_document">True</field>
+    </record>
+
+    <record id="hr_work_entry.al_work_entry_type_birth_leave" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+    </record>
+
+    <record id="hr_work_entry.al_work_entry_type_family_event_leave" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+    </record>
+
+    <!-- Sick child leave on a medical report (Labour Code, art. 132(1)) -->
+    <record id="hr_work_entry.al_work_entry_type_child_care_leave" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="support_document">True</field>
+    </record>
+
+    <record id="hr_work_entry.al_work_entry_type_legal_duty_leave" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+    </record>
+
+    <record id="hr_work_entry.al_work_entry_type_parental_leave" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+    </record>
+
 <!-- AU : Australia -->
     <record id="hr_work_entry.l10n_au_work_entry_type_overtime_regular" model="hr.work.entry.type">
         <field name="time_off_selectable">False</field>

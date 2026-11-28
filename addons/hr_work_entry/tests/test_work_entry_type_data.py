@@ -39,6 +39,7 @@ class TestWorkEntryTypeData(TransactionCase):
             '006.00',  # Public Holiday
         }
         excluded_codes_per_country = {
+            'al': {'LEAVE100'},
             'us': {'040.00', '000.00', 'LEAVE100', 'LEAVE105'},
             'be': {'LEAVE100', 'LEAVE105'},
             'eg': {'013.00'},
