@@ -1,6 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from collections import defaultdict
+from urllib.parse import urlsplit
+
 from odoo import api, fields, models
+from odoo.exceptions import ValidationError
 from odoo.tools import format_date
 
 
@@ -12,9 +15,43 @@ class HrEmployeeSkill(models.Model):
 
     employee_id = fields.Many2one('hr.employee', required=True, index=True, ondelete='cascade')
     company_id = fields.Many2one(related='employee_id.company_id')
+    credential_url = fields.Char(string="Credential", help="Link to the online proof of the certification")
+
+    @api.constrains('credential_url')
+    def _check_credential_url(self):
+        for skill in self:
+            if skill.credential_url and self._get_url_scheme(skill.credential_url) not in ('http', 'https'):
+                raise ValidationError(self.env._("The credential link must be a web link (http or https)."))
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            self._normalize_credential_url(vals)
+        return super().create(vals_list)
+
+    def write(self, vals):
+        self._normalize_credential_url(vals)
+        return super().write(vals)
+
+    @api.model
+    def _normalize_credential_url(self, vals):
+        if vals.get('credential_url'):
+            url = vals['credential_url'].strip()
+            vals['credential_url'] = (f'https://{url}' if self._get_url_scheme(url) == '' else url) if url else False
+
+    @api.model
+    def _get_url_scheme(self, url):
+        try:
+            return urlsplit(url).scheme.lower()
+        except ValueError:
+            # malformed URL, e.g. an unclosed IPv6 bracket
+            return None
 
     def _linked_field_name(self):
         return 'employee_id'
+
+    def _get_passive_fields(self):
+        return super()._get_passive_fields() + ['credential_url']
 
     def _get_chatter_label(self):
         self.ensure_one()

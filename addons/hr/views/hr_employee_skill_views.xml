@@ -27,6 +27,8 @@
                     <group>
                         <group>
                             <field name="certificate_file" string="Certificate" invisible="not is_certification"/>
+                            <field name="credential_url" widget="url" invisible="not is_certification"
+                                placeholder="e.g. https://www.credly.com/badges/..."/>
                         </group>
                     </group>
                     <div class="alert alert-warning ps-3" role="alert" invisible="not display_warning_message">
@@ -47,6 +49,83 @@
                 <attribute name="domain">[('is_certification', '=', True)]</attribute>
                 <attribute name="invisible">certification_skill_type_count &lt;= 1</attribute>
             </field>
+        </field>
+    </record>
+
+    <record id="hr_employee_skill_view_kanban_certification" model="ir.ui.view">
+        <field name="name">hr.employee.skill.view.kanban.certification</field>
+        <field name="model">hr.employee.skill</field>
+        <field name="arch" type="xml">
+            <kanban class="o_hr_certification_kanban">
+                <field name="valid_to"/>
+                <field name="certificate_file"/>
+                <field name="credential_url"/>
+                <templates>
+                    <t t-name="card" class="flex-row">
+                        <t t-set="is_expired" t-value="record.valid_to.raw_value and luxon.DateTime.fromISO(record.valid_to.raw_value) &lt; luxon.DateTime.local().startOf('day')"/>
+                        <main t-att-class="{'opacity-50': is_expired}">
+                            <field name="skill_id" class="fw-bold fs-5"/>
+                            <div>Valid from <field name="valid_from" widget="formatted_date" class="d-inline"/></div>
+                            <div t-if="record.valid_to.raw_value">
+                                Until <field name="valid_to" widget="formatted_date" class="d-inline" options="{
+                                    'color': {
+                                        'danger': 'valid_to and valid_to &lt;= (context_today() + relativedelta(days=7)).strftime(\'%Y-%m-%d\') and valid_to &gt;= context_today().strftime(\'%Y-%m-%d\')',
+                                        'warning': 'valid_to and valid_to &lt;= (context_today() + relativedelta(months=3)).strftime(\'%Y-%m-%d\') and valid_to &gt; (context_today() + relativedelta(days=7)).strftime(\'%Y-%m-%d\')'
+                                    }
+                                }"/>
+                                <span t-if="is_expired" class="badge rounded-pill text-bg-secondary ms-1">Expired</span>
+                            </div>
+                            <div t-else="">No end date</div>
+                            <div t-if="record.credential_url.raw_value" class="mt-1">
+                                <a t-att-href="record.credential_url.raw_value" target="_blank" rel="noopener noreferrer"
+                                    class="badge rounded-pill text-bg-info">
+                                    Credentials <i class="oi" data-icon="open_in_new" role="img" aria-hidden="true"/>
+                                </a>
+                            </div>
+                        </main>
+                        <aside name="certificate" class="ms-2" t-att-class="{'opacity-50': is_expired}">
+                            <t t-if="record.certificate_file.raw_value">
+                                <a t-if="record.id.raw_value" class="o_hr_certification_kanban_certificate"
+                                    t-attf-href="/web/content/hr.employee.skill/#{record.id.raw_value}/certificate_file?download=true"
+                                    data-tooltip="Download the certificate" aria-label="Download the certificate">
+                                    <t t-call="certificate_image"/>
+                                </a>
+                                <span t-else="" class="o_hr_certification_kanban_certificate" role="img" aria-label="Certificate" title="Certificate">
+                                    <t t-call="certificate_image"/>
+                                </span>
+                            </t>
+                            <span t-else="" class="o_hr_certification_kanban_certificate o_hr_certification_kanban_placeholder text-muted">
+                                <i class="oi" data-icon="add" role="img" aria-label="No certificate" title="No certificate"/>
+                            </span>
+                        </aside>
+                    </t>
+                    <t t-name="certificate_image">
+                        <svg class="o_hr_certification_kanban_image" viewBox="0 0 64 64" aria-hidden="true">
+                            <rect class="o_hr_certification_kanban_paper" x="4" y="10" width="56" height="42" rx="3"/>
+                            <rect class="o_hr_certification_kanban_frame" x="8" y="14" width="48" height="34" rx="1.5"/>
+                            <path class="o_hr_certification_kanban_lines" d="M14 22h36M14 29h22M14 36h16"/>
+                            <path class="o_hr_certification_kanban_ribbon" d="M40 44l-3 13 5-3 3 4 2-12zM50 44l3 13-5-3-3 4-2-12z"/>
+                            <circle class="o_hr_certification_kanban_medal" cx="45" cy="40" r="8"/>
+                            <circle class="o_hr_certification_kanban_medal_center" cx="45" cy="40" r="3.5"/>
+                        </svg>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="hr_employee_skill_view_kanban_certification_public" model="ir.ui.view">
+        <field name="name">hr.employee.skill.view.kanban.certification.public</field>
+        <field name="model">hr.employee.skill</field>
+        <field name="inherit_id" ref="hr_employee_skill_view_kanban_certification"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <kanban position="attributes">
+                <attribute name="can_open">0</attribute>
+            </kanban>
+            <!-- the certificate files are not shared with the other employees -->
+            <field name="certificate_file" position="replace"/>
+            <aside name="certificate" position="replace"/>
         </field>
     </record>
 

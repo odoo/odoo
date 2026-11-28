@@ -468,8 +468,11 @@ class HrEmployee(models.Model):
 
     @api.depends('employee_skill_ids', 'company_id', 'employee_skill_ids.skill_type_id.company_id')
     def _compute_certification_ids(self):
+        today = fields.Date.context_today(self)
         for employee in self:
-            employee.certification_ids = employee.employee_skill_ids._filter_company_visible().filtered('is_certification')
+            certifications = employee.employee_skill_ids._filter_company_visible().filtered('is_certification')
+            # expired certifications last, the others keep their order
+            employee.certification_ids = certifications.sorted(lambda c: bool(c.valid_to and c.valid_to < today))
 
     def _compute_display_certification_page(self):
         self.display_certification_page = bool(self.env['hr.skill.type'].search_count([('is_certification', '=', True)], limit=1))
