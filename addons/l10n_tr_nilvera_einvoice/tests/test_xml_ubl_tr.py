@@ -217,3 +217,38 @@ class TestUBLTR(TestUBLTRCommon):
         self.assertIn(b"<cbc:Description>November work</cbc:Description>", generated_xml)
         bill = self._create_invoice_from_xml(generated_xml)
         self.assertEqual(bill.invoice_line_ids.filtered(lambda line: line.display_type == 'product').name, 'Consulting\nNovember work')
+
+    def test_xml_item_name_and_description_from_line_label(self):
+        self.product_a.write({"default_code": "SCRW-01", "description_sale": "Stainless steel screw"})
+        with freeze_time("2025-03-05"):
+            generated_xml = self._generate_invoice_xml(self.einvoice_partner, invoice_line_ids=[Command.create({
+                "product_id": self.product_a.id,
+                "name": "[SCRW-01] product_a\nBlue screw\nlarge",
+                "price_unit": 50.0,
+                "tax_ids": [Command.set(self.tax_20.ids)],
+            })])
+
+        self.assertIn(b"<cbc:Name>product_a</cbc:Name>", generated_xml)
+        self.assertIn(b"<cbc:Description>Blue screw large</cbc:Description>", generated_xml)
+        self.assertIn(b"<cbc:ID>SCRW-01</cbc:ID>", generated_xml)
+
+    def test_import_bill_description_from_xml(self):
+        product = self.env["product.product"].create({
+            "name": "Imported Product",
+            "default_code": "DECODE-1",
+            "description_purchase": "Purchased widget",
+        })
+        with file_open("l10n_tr_nilvera_einvoice/tests/test_files/import_bill.xml", "rb") as xml_file:
+            xml = xml_file.read()
+
+        attachment = self.env["ir.attachment"].create({
+            "name": "import_bill.xml",
+            "raw": xml,
+            "mimetype": "application/xml",
+        })
+
+        journal = self.company_data["default_journal_purchase"]
+        bill = journal.with_context(default_move_type="in_invoice")._create_document_from_attachment(attachment.id)
+
+        self.assertEqual(bill.invoice_line_ids.product_id, product)
+        self.assertEqual(bill.invoice_line_ids.name, "Vendor's own description")
