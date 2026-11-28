@@ -449,7 +449,10 @@ class AccountEdiProxyClientUser(models.Model):
             origin_uuid = content['origin_message_uuid']
             origin_move = uuid_to_move_map.get(origin_uuid)
             if not origin_move:
+                # The proxy sends the responses after the documents they refer to:
+                # a missing original document will not be received anymore
                 _logger.warning('The French e-invoicing response with UUID %s could not be imported: Original journal entry (UUID %s) not found.', uid, origin_uuid)
+                processed_uuids.append(uid)
                 continue
             try:
                 self._pdp_import_incoming_response(uid, content, origin_move[:1])
