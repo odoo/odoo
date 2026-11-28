@@ -464,16 +464,10 @@ class TestDocumentTaxModeCommon(AccountTestInvoicingCommon):
             'fiscal_position_ids': self.fpos_id,
             'original_tax_ids': self.tax_10_default,
         })
+
         # Changing the fiscal position by setting a customer with the equivalent fiscal position of the above tax
-        if document_type == 'invoice':
-            document.partner_id = self.fpos_partner_id
-            # Clicking on 'Update Taxes and Accounts'
-            document.action_update_fpos_values()
-        else:  # for both purchase and sale orders there is an onchange for fpos that recomputes taxes
-            form = Form(document)
-            # Changing the fiscal position by setting a customer with the equivalent fiscal position of the above tax
+        with Form(document) as form:
             form.partner_id = self.fpos_partner_id
-            form.save()
 
         # Check initial document values
         self.assertEqual(document.document_tax_mode, 'tax_excluded')

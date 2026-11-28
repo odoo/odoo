@@ -591,64 +591,13 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         })
 
     def test_out_invoice_line_onchange_partner_1(self):
+        # The starting state (original taxes, accounts and amounts, no fiscal position) is asserted in setUp.
         move_form = Form(self.invoice)
         move_form.partner_id = self.partner_b
         move_form.save()
 
-        self.assertInvoiceValues(self.invoice, [
-            {
-                **self.product_line_vals_1,
-                'partner_id': self.partner_b.id,
-            },
-            {
-                **self.product_line_vals_2,
-                'partner_id': self.partner_b.id,
-            },
-            {
-                **self.tax_line_vals_1,
-                'partner_id': self.partner_b.id,
-            },
-            {
-                **self.tax_line_vals_2,
-                'partner_id': self.partner_b.id,
-            },
-            {
-                **self.term_line_vals_1,
-                'name': 'installment #1',
-                'account_id': self.partner_b.property_account_receivable_id.id,
-                'partner_id': self.partner_b.id,
-                'amount_currency': 423.0,
-                'debit': 423.0,
-            },
-            {
-                **self.term_line_vals_1,
-                'name': 'installment #2',
-                'account_id': self.partner_b.property_account_receivable_id.id,
-                'partner_id': self.partner_b.id,
-                'amount_currency': 987.0,
-                'debit': 987.0,
-                'date_maturity': fields.Date.from_string('2019-02-28'),
-            },
-        ], {
-            **self.move_vals,
-            'partner_id': self.partner_b.id,
-            'fiscal_position_id': self.fiscal_pos_a.id,
-            'invoice_payment_term_id': self.pay_terms_b.id,
-            'amount_untaxed': 1200.0,
-            'amount_tax': 210.0,
-            'amount_total': 1410.0,
-        })
-
-        # Remove lines and recreate them to apply the fiscal position.
-        move_form = Form(self.invoice)
-        move_form.invoice_line_ids.remove(0)
-        move_form.invoice_line_ids.remove(0)
-        with move_form.invoice_line_ids.new() as line_form:
-            line_form.product_id = self.product_a
-        with move_form.invoice_line_ids.new() as line_form:
-            line_form.product_id = self.product_b
-        move_form.save()
-
+        # Changing the partner changes the fiscal position, which is now applied
+        # to the existing lines right away.
         self.assertInvoiceValues(self.invoice, [
             {
                 **self.product_line_vals_1,
@@ -5246,7 +5195,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         """Manually adjusted prices should be preserved when changing fiscal position"""
         self.invoice.invoice_line_ids[0].price_unit = 1500.0
         self.invoice.fiscal_position_id = self.fiscal_pos_a
-        self.invoice.action_update_fpos_values()
+        self.invoice._update_fpos_values()
         self.assertEqual(self.invoice.invoice_line_ids[0].price_unit, 1500.0)
 
     def test_out_invoice_fiscal_position_recomputes_price_include_taxes(self):
@@ -5293,7 +5242,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
 
         # Apply fiscal position - price should convert: 1100 / 1.10 * 1.05 = 1050
         invoice.fiscal_position_id = fiscal_position
-        invoice.action_update_fpos_values()
+        invoice._update_fpos_values()
 
         self.assertEqual(
             invoice.invoice_line_ids[0].price_unit,
@@ -5367,6 +5316,144 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             1000.00,
             msg="Price should be tax included"
         )
+
+    def test_fpos_change_updates_product_account_before_first_save(self):
+        """On an unsaved invoice, a new fiscal position also remaps the account of the product lines."""
+        income_account = self.product_a.property_account_income_id
+        mapped_account = income_account.copy({'code': '400999', 'name': 'Income (fiscal position)'})
+        self.fiscal_pos_a.account_ids = [Command.create({
+            'account_src_id': income_account.id,
+            'account_dest_id': mapped_account.id,
+        })]
+
+        form = Form(self.env['account.move'].with_context(default_move_type='out_invoice'))
+        form.partner_id = self.partner_a
+        with form.invoice_line_ids.new() as line_form:
+            line_form.product_id = self.product_a
+
+        # Before: no fiscal position, the line is on the product's income account
+        self.assertFalse(form.fiscal_position_id)
+        with form.invoice_line_ids.edit(0) as line_form:
+            self.assertEqual(line_form.account_id, income_account)
+
+        form.fiscal_position_id = self.fiscal_pos_a
+
+        # After: the line is on the mapped account, also once saved
+        invoice = form.save()
+        self.assertEqual(invoice.invoice_line_ids.account_id, mapped_account)
+
+    def test_fpos_change_updates_receivable_account(self):
+        """The customer (payment term) line follows the account mapping of the new fiscal position."""
+        receivable = self.company_data['default_account_receivable']
+        mapped_receivable = receivable.copy({'code': '121999', 'name': 'Receivable (fiscal position)'})
+        self.fiscal_pos_a.account_ids = [Command.create({
+            'account_src_id': receivable.id,
+            'account_dest_id': mapped_receivable.id,
+        })]
+
+        # Before: no fiscal position (asserted in setUp), the customer line is on the default receivable
+        self.assertFalse(self.invoice.fiscal_position_id)
+        term_line = self.invoice.line_ids.filtered(lambda l: l.display_type == 'payment_term')
+        self.assertEqual(term_line.account_id, receivable)
+
+        with Form(self.invoice) as form:
+            form.fiscal_position_id = self.fiscal_pos_a
+
+        term_line = self.invoice.line_ids.filtered(lambda l: l.display_type == 'payment_term')
+        self.assertEqual(term_line.account_id, mapped_receivable)
+
+        with Form(self.invoice) as form:
+            form.fiscal_position_id = self.env['account.fiscal.position']
+
+        term_line = self.invoice.line_ids.filtered(lambda l: l.display_type == 'payment_term')
+        self.assertEqual(term_line.account_id, receivable)
+
+    def test_fpos_change_ignores_taxes_but_maps_account_of_imported_lines(self):
+        """Imported lines keep their tax and price, but their account follows the fiscal position."""
+        income_account = self.product_a.property_account_income_id
+        mapped_account = income_account.copy({'code': '400999', 'name': 'Income (fiscal position)'})
+        self.fiscal_pos_a.account_ids = [Command.create({
+            'account_src_id': income_account.id,
+            'account_dest_id': mapped_account.id,
+        })]
+        line = self.invoice.invoice_line_ids[0]
+        line.is_imported = True
+
+        # Before: no fiscal position, the imported line has tax_sale_a, its price and the income account
+        self.assertFalse(self.invoice.fiscal_position_id)
+        self.assertRecordValues(line, [{
+            'tax_ids': self.tax_sale_a.ids,
+            'price_unit': 1000.0,
+            'account_id': income_account.id,
+        }])
+
+        with Form(self.invoice) as form:
+            form.fiscal_position_id = self.fiscal_pos_a
+
+        # After: tax and price untouched, account mapped
+        self.assertEqual(self.invoice.fiscal_position_id, self.fiscal_pos_a)
+        self.assertRecordValues(line, [{
+            'tax_ids': self.tax_sale_a.ids,
+            'price_unit': 1000.0,
+            'account_id': mapped_account.id,
+        }])
+
+    def test_fpos_change_updates_taxes_of_lines_without_product(self):
+        """A line without a product gets the account tax mapped by the fiscal position, and back when removed."""
+        account = self.company_data['default_account_revenue'].copy({
+            'code': '400998',
+            'name': 'Income with tax',
+            'tax_ids': [Command.set(self.tax_sale_a.ids)],
+        })
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2019-01-01',
+            'invoice_line_ids': [Command.create({
+                'name': 'Line without product',
+                'account_id': account.id,
+                'price_unit': 1000.0,
+                'tax_ids': [Command.set(self.tax_sale_a.ids)],
+            })],
+        })
+
+        # Before: no fiscal position, no product, the line has tax_sale_a
+        self.assertFalse(invoice.fiscal_position_id)
+        self.assertFalse(invoice.invoice_line_ids.product_id)
+        self.assertEqual(invoice.invoice_line_ids.tax_ids, self.tax_sale_a)
+
+        with Form(invoice) as form:
+            form.fiscal_position_id = self.fiscal_pos_a
+
+        # After: the line gets the mapped tax
+        self.assertEqual(invoice.invoice_line_ids.tax_ids, self.tax_sale_b)
+
+        with Form(invoice) as form:
+            form.fiscal_position_id = self.env['account.fiscal.position']
+
+        # Removed: the line goes back to the account's tax
+        self.assertEqual(invoice.invoice_line_ids.tax_ids, self.tax_sale_a)
+
+    def test_fpos_change_recomputes_price_of_lines_without_price(self):
+        """A product line with no price gets its price rebuilt from the product when the fiscal position changes."""
+        # Both taxes are price-included, so the price depends on the fiscal position's taxes
+        (self.tax_sale_a + self.tax_sale_b).price_include_override = 'tax_included'
+        self.product_a.lst_price = 1150.0
+
+        invoice = self.init_invoice('out_invoice', products=self.product_a)
+        line = invoice.invoice_line_ids
+
+        # Before: no fiscal position, the line has a price, then we remove it
+        self.assertFalse(invoice.fiscal_position_id)
+        self.assertTrue(line.price_unit)
+        line.price_unit = 0.0
+        self.assertEqual(line.price_unit, 0.0)
+
+        with Form(invoice) as form:
+            form.fiscal_position_id = self.fiscal_pos_a
+
+        # After: the price is rebuilt from the product (1150 incl. 15% -> 1150 incl. 15%)
+        self.assertEqual(line.price_unit, 1150.0)
 
     def test_catalog_with_same_product_on_multiple_lines(self):
         self._enable_uom()

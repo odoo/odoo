@@ -783,8 +783,6 @@ class AccountMove(models.Model):
     is_exact_move_duplicate = fields.Boolean(compute='_compute_duplicate_move_status')
     need_cancel_request = fields.Boolean(compute='_compute_need_cancel_request')
 
-    show_update_fpos = fields.Boolean(string="Has Fiscal Position Changed", store=False)  # True if the fiscal position was changed
-
     # used to display the various dates and amount dues on the invoice's PDF
     payment_term_details = fields.Json(compute="_compute_payment_term_details", exportable=False)
     show_payment_term_details = fields.Boolean(compute="_compute_show_payment_term_details")
@@ -2891,8 +2889,9 @@ class AccountMove(models.Model):
             self.invoice_vendor_bill_id = False
 
     @api.onchange('fiscal_position_id')
-    def _onchange_fpos_id_show_update_fpos(self):
-        self.show_update_fpos = self.line_ids and self._origin.fiscal_position_id != self.fiscal_position_id
+    def _onchange_fpos(self):
+        if self.invoice_line_ids and self.state not in ('cancel', 'posted'):
+            self._update_fpos_values()
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
@@ -6864,15 +6863,16 @@ class AccountMove(models.Model):
             'target': 'current',
         }
 
-    def action_update_fpos_values(self):
-        lines_to_recompute = self.env['account.move.line']
-        for line in self.invoice_line_ids:
-            if line.display_type in ('line_section', 'line_note'):
-                continue
-            if not line.product_id and line.account_id:
-                line.account_id = line.move_id.fiscal_position_id.map_account(line.account_id)
-            if not line.price_unit:
-                lines_to_recompute |= line
+    def _update_fpos_values(self):
+        product_type_lines = self.invoice_line_ids.filtered(lambda l: l.display_type == 'product')
+        lines_to_recompute, priced_lines = product_type_lines.partitioned(lambda l: not l.price_unit)
+
+        for line in priced_lines:
+            if not line.product_id:
+                if line.account_id:
+                    line.account_id = line.move_id.fiscal_position_id.map_account(line.account_id)
+                if computed := line.with_context(from_invoice_tab=True)._get_computed_taxes():
+                    line.tax_ids = computed
                 continue
             new_taxes = line._get_computed_taxes()
 
@@ -6889,11 +6889,13 @@ class AccountMove(models.Model):
                     product_taxes_after_fp=new_taxes,
                     document_tax_mode=line.document_tax_mode,
                 )
-        container = {'records': self}
-        with self._check_balanced(container), self._sync_dynamic_lines(container):
-            self.env.add_to_compute(lines_to_recompute._fields['price_unit'], lines_to_recompute)
-            self.env.add_to_compute(self.invoice_line_ids._fields['tax_ids'], self.invoice_line_ids)
-            self.env.add_to_compute(self.line_ids._fields['account_id'], self.line_ids)
+        account_lines = self.line_ids | product_type_lines
+        self.env.add_to_compute(product_type_lines._fields['tax_ids'], product_type_lines)
+        self.env.add_to_compute(account_lines._fields['account_id'], account_lines)
+        self.env.add_to_compute(lines_to_recompute._fields['price_unit'], lines_to_recompute)
+        self.invalidate_recordset(['tax_totals', 'amount_residual'])
+        # Notify localization fields such as l10n_tr_gib_invoice_type that the line values changed
+        product_type_lines.modified(['tax_ids'])
 
     def open_created_caba_entries(self):
         self.ensure_one()

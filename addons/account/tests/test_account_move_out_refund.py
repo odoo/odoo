@@ -245,60 +245,6 @@ class TestAccountMoveOutRefundOnchanges(AccountTestInvoicingCommon):
         self.assertInvoiceValues(self.invoice, [
             {
                 **self.product_line_vals_1,
-                'partner_id': self.partner_b.id,
-            },
-            {
-                **self.product_line_vals_2,
-                'partner_id': self.partner_b.id,
-            },
-            {
-                **self.tax_line_vals_1,
-                'partner_id': self.partner_b.id,
-            },
-            {
-                **self.tax_line_vals_2,
-                'partner_id': self.partner_b.id,
-            },
-            {
-                **self.term_line_vals_1,
-                'name': 'installment #1',
-                'partner_id': self.partner_b.id,
-                'account_id': self.partner_b.property_account_receivable_id.id,
-                'amount_currency': -423.0,
-                'credit': 423.0,
-            },
-            {
-                **self.term_line_vals_1,
-                'name': 'installment #2',
-                'partner_id': self.partner_b.id,
-                'account_id': self.partner_b.property_account_receivable_id.id,
-                'amount_currency': -987.0,
-                'credit': 987.0,
-                'date_maturity': fields.Date.from_string('2019-02-28'),
-            },
-        ], {
-            **self.move_vals,
-            'partner_id': self.partner_b.id,
-            'fiscal_position_id': self.fiscal_pos_a.id,
-            'invoice_payment_term_id': self.pay_terms_b.id,
-            'amount_untaxed': 1200.0,
-            'amount_tax': 210.0,
-            'amount_total': 1410.0,
-        })
-
-        # Remove lines and recreate them to apply the fiscal position.
-        move_form = Form(self.invoice)
-        move_form.invoice_line_ids.remove(0)
-        move_form.invoice_line_ids.remove(0)
-        with move_form.invoice_line_ids.new() as line_form:
-            line_form.product_id = self.product_a
-        with move_form.invoice_line_ids.new() as line_form:
-            line_form.product_id = self.product_b
-        move_form.save()
-
-        self.assertInvoiceValues(self.invoice, [
-            {
-                **self.product_line_vals_1,
                 'account_id': self.product_b.property_account_income_id.id,
                 'partner_id': self.partner_b.id,
                 'tax_ids': self.tax_sale_b.ids,
