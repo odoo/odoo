@@ -19,6 +19,7 @@ export class MpesaTransactionPopup extends Component {
             transactions: [],
             showQrCode: false,
             searchQuery: "",
+            searchPhoneHash: "",
         });
         this.ui = useService("ui");
         this.tx = null;
@@ -28,12 +29,40 @@ export class MpesaTransactionPopup extends Component {
             },
             () => [this.pos.lipaLastNotificationTime]
         );
+        useEffect(
+            (search) => {
+                this.hashPhone(search).then((hash) => {
+                    if (search === this.state.searchQuery) {
+                        this.state.searchPhoneHash = hash;
+                    }
+                });
+            },
+            () => [this.state.searchQuery]
+        );
+    }
+
+    async hashPhone(search) {
+        // C2B confirmations carry the SHA-256 of the 254XXXXXXXXX number as MSISDN
+        const digits = search.replace(/\D/g, "").replace(/^0+/, "");
+        if (!digits) {
+            return "";
+        }
+        const phone = digits.startsWith("254") ? digits : "254" + digits;
+        const digest = await window.crypto.subtle.digest(
+            "SHA-256",
+            new TextEncoder().encode(phone)
+        );
+        return Array.from(new Uint8Array(digest), (byte) =>
+            byte.toString(16).padStart(2, "0")
+        ).join("");
     }
 
     async updateTransactions() {
         const records = await this.pos.data.searchRead("transaction.lipa.na.mpesa", []);
+        const paidTransIds = new Set(this.pos.models["pos.payment"].map((p) => p.transaction_id));
         if (records.length > 0) {
             this.state.transactions = records
+                .filter((r) => !paidTransIds.has(r.trans_id))
                 .map((r) => ({
                     id: r.id,
                     name: r.name,
@@ -68,7 +97,7 @@ export class MpesaTransactionPopup extends Component {
         return this.state.transactions.filter(
             (transaction) =>
                 transaction.name.toLowerCase().includes(search.toLowerCase()) ||
-                transaction.phone.toLowerCase().includes(search.toLowerCase()) ||
+                transaction.phone === this.state.searchPhoneHash ||
                 transaction.trans_id.toLowerCase().includes(search.toLowerCase())
         );
     }
