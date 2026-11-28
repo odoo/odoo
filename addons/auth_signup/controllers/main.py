@@ -110,7 +110,7 @@ class AuthSignupHome(Home):
                     request.update_context(skip_captcha_login=SKIP_CAPTCHA_LOGIN)
                     qcontext['message'] = _("Your password has been reset successfully.")
                 else:
-                    login = qcontext.get('login')
+                    login = (qcontext.get('login') or '').strip()
                     assert login, _("No login provided.")
                     _logger.info(
                         "Password reset attempt for <%s> by user <%s> from %s",

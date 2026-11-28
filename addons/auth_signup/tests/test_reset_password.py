@@ -35,6 +35,32 @@ class TestResetPassword(HttpCase, MailCommon):
 
         self.assertNotIn("signup_email", url_parse(self.test_user.partner_id._get_signup_url()).decode_query(), "query should not contain 'signup_email'")
 
+    def test_login_and_reset_password_with_trailing_white_space(self):
+        """
+            Test that a user record is still found when the login or the email is passed with trailing white space during a login or a reset password
+        """
+
+        self.test_user.password = 'test_password'
+        self.env['ir.config_parameter'].sudo().set_bool('auth_signup.reset_password', True)
+        self.authenticate(None, None)
+
+        # Reset Password test
+        with self.mock_mail_gateway():
+            self.url_open('/web/reset_password', data={
+                'login': 'test   ',
+                'csrf_token': self.csrf_token(),
+            })
+        self.assertEqual(len(self._mails), 1)
+        self.assertIn(self.test_user.email, self._mails[0]['email_to'][0])
+
+        # Login test
+        response = self.url_open('/web/login', data={
+            'login': '   test',
+            'password': 'test_password',
+            'csrf_token': self.csrf_token(),
+        }, allow_redirects=False)
+        self.assertEqual(response.status_code, 303)
+
     @patch('odoo.addons.mail.models.mail_mail.MailMail.send')
     def test_reset_password_mail_server_error(self, mock_send):
         """
