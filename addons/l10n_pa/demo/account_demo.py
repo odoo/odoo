@@ -18,6 +18,9 @@ class AccountChartTemplate(models.AbstractModel):
         return move_data
 
     def _post_load_demo_data(self, chart_template):
+        # Bill added by account_reports
+        if chart_template == 'pa' and (bill := self.ref('account_reports_demo_bill_last_year', raise_if_not_found=False)):
+            bill.l10n_latam_document_number = '0000000004'
         super()._post_load_demo_data(chart_template)
         if chart_template != 'pa':
             return

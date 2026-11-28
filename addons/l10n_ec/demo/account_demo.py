@@ -23,3 +23,9 @@ class AccountChartTemplate(models.AbstractModel):
             move_data[self.company_xmlid('demo_move_auto_reconcile_6')]['l10n_latam_document_type_id'] = 'l10n_ec.ec_dt_04'
             move_data[self.company_xmlid('demo_move_auto_reconcile_7')]['l10n_latam_document_type_id'] = 'l10n_ec.ec_dt_04'
         return move_data
+
+    def _post_load_demo_data(self, template_code):
+        # Bill added by account_reports
+        if template_code == 'ec' and (bill := self.ref('account_reports_demo_bill_last_year', raise_if_not_found=False)):
+            bill.l10n_latam_document_number = '001-001-00005'
+        return super()._post_load_demo_data(template_code)

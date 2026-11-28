@@ -62,4 +62,7 @@ class AccountChartTemplate(models.AbstractModel):
     def _post_load_demo_data(self, template_code):
         if self._l10n_ar_has_static_demo():
             return None
+        # Bill added by account_reports
+        if template_code.startswith('ar') and (bill := self.ref('account_reports_demo_bill_last_year', raise_if_not_found=False)):
+            bill.l10n_latam_document_number = '1-5'
         return super()._post_load_demo_data(template_code)
