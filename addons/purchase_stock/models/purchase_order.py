@@ -48,7 +48,7 @@ class PurchaseOrder(models.Model):
         for order in self:
             order.incoming_picking_count = len(order.picking_ids)
 
-    @api.depends('picking_ids.date_done')
+    @api.depends('picking_ids.date_done', 'picking_ids.state', 'picking_ids.location_dest_id.usage')
     def _compute_effective_date(self):
         for order in self:
             pickings = order.picking_ids.filtered(lambda x: x.state == 'done' and x.location_dest_id.usage != 'supplier' and x.date_done)
