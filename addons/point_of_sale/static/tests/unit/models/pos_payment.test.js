@@ -195,18 +195,24 @@ test("adjustAmount", async () => {
 
     // no payment interface
     card.payment_interface = null;
-    paymentline.adjustAmount(20);
-    expect(paymentline.getAmount()).toBe(10);
+    expect(await paymentline.adjustAmount(20)).toBe(true);
+    expect(paymentline.getAmount()).toBe(30);
 
     // payment interface that supports adjustments
     card.payment_interface = {
         sendPaymentAdjust: (uuid) => {
             const newAmount = paymentline.getAmount() + 5;
             paymentline.setAmount(newAmount);
+            return true;
         },
     };
-    paymentline.adjustAmount(20);
-    expect(paymentline.getAmount()).toBe(35); // 10 + 20 + 5
+    expect(await paymentline.adjustAmount(20)).toBe(true);
+    expect(paymentline.getAmount()).toBe(55); // 30 + 20 + 5
+
+    // payment interface failing the adjustment
+    card.payment_interface = { sendPaymentAdjust: () => false };
+    expect(await paymentline.adjustAmount(20)).toBe(false);
+    expect(paymentline.getAmount()).toBe(55);
 });
 
 test("setAmount: config currency differs from company currency", async () => {

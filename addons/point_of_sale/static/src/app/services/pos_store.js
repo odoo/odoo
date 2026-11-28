@@ -1087,6 +1087,45 @@ export class PosStore extends WithLazyGetterTrap {
         line.setDiscount(val);
     }
 
+    async settleTip(order, amount) {
+        this.syncingOrders.add(order.uuid);
+        if (!order.uiState.pendingTipArgs) {
+            const previousOrderUuid = this.selectedOrderUuid;
+            this.selectedOrderUuid = order.uuid;
+            try {
+                order.state = "draft";
+                await this.setTip(amount);
+                order.state = "paid";
+                const line = order.lines.find((l) => l.isTipLine());
+                const payment = order.adjustableTipLine;
+                const tipAmount = (payment && line?.priceIncl) || 0;
+                let values = false;
+                if (tipAmount) {
+                    if (!(await payment.adjustAmount(tipAmount))) {
+                        await this.setTip(0);
+                        this.syncingOrders.delete(order.uuid);
+                        return false;
+                    }
+                    values = {
+                        ...line.serializeForORM(),
+                        price_subtotal: line.priceExcl,
+                        price_subtotal_incl: tipAmount,
+                    };
+                    delete values.record_dependencies;
+                    delete values.relations_uuid_mapping;
+                }
+                line?.delete();
+                order.uiState.pendingTipArgs = [[order.id], payment?.id ?? false, values];
+            } finally {
+                this.selectedOrderUuid = previousOrderUuid;
+            }
+        }
+        await this.data.callRelated("pos.order", "add_tip", order.uiState.pendingTipArgs);
+        delete order.uiState.pendingTipArgs;
+        this.syncingOrders.delete(order.uuid);
+        return true;
+    }
+
     async setTip(tip, type = "fixed", value = false) {
         const currentOrder = this.getOrder();
         const tipProduct = this.config.tip_product_id;

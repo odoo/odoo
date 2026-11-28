@@ -1070,6 +1070,18 @@ class PosOrder(models.Model):
         self.env['pos.payment'].create(data)
         self.amount_paid = self._compute_amount_paid()
 
+    def add_tip(self, payment_id, tip_line_vals):
+        self.ensure_one()
+        if self.is_tipped:
+            return self.read_pos_data([], self.config_id)
+        tip_amount = 0
+        if tip_line_vals:
+            tip_amount = self.env['pos.order.line'].create(tip_line_vals).price_subtotal_incl
+            self.payment_ids.filtered(lambda p: p.id == payment_id).amount += tip_amount
+            self._compute_prices()
+        self.write({'is_tipped': True, 'tip_amount': tip_amount})
+        return self.read_pos_data([], self.config_id)
+
     def _prepare_refund_values(self, current_session):
         self.ensure_one()
         pos_reference = current_session.config_id._get_next_order_refs()[0]

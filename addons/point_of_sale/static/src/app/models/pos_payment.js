@@ -206,10 +206,15 @@ export class PosPayment extends Base {
     }
 
     async adjustAmount(amount) {
-        if (this.payment_interface) {
-            this.amount += amount;
-            await this.payment_interface.sendPaymentAdjust(this.uuid);
+        this.amount += amount;
+        if (
+            this.payment_interface &&
+            !(await this.payment_interface.sendPaymentAdjust(this.uuid))
+        ) {
+            this.amount -= amount;
+            return false;
         }
+        return true;
     }
 }
 

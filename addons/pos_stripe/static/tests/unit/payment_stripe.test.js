@@ -14,6 +14,7 @@ let mcc;
 let intentAmount;
 let tip;
 let skipTipping;
+let captureFails;
 
 beforeEach(() => {
     captures = [];
@@ -21,6 +22,7 @@ beforeEach(() => {
     cardDetails = { type: "card_present", card_present: { brand: "visa", network: "visa" } };
     mcc = "5812";
     tip = null;
+    captureFails = false;
     patchWithCleanup(PaymentStripe.prototype, {
         async createStripeTerminal() {
             this.terminal = {
@@ -51,7 +53,7 @@ beforeEach(() => {
     onRpc("pos.payment.method", "stripe_capture_payment", ({ args, kwargs }) => {
         const rounding = kwargs.context?.stripe_currency_rounding;
         captures.push({ id: args[0], amount: kwargs.amount, rounding });
-        return { id: args[0] };
+        return captureFails ? { error: { message: "capture failed" } } : { id: args[0] };
     });
     onRpc("pos.payment.method", "stripe_account_mcc", () => mcc);
 });
@@ -119,6 +121,8 @@ test("captures the tip with the payment", async () => {
             rounding: store.currency.rounding,
         },
     ]);
+    expect(line.amount).toBe(amount + 2);
+    expect(order.is_tipped).toBe(true);
 });
 
 test("captures the payment when no tip is given", async () => {
@@ -128,6 +132,40 @@ test("captures the payment when no tip is given", async () => {
     await screen.validateTip();
     expect(captures).toEqual([{ id: "pi_1", amount: null, rounding: undefined }]);
     expect(order.is_tipped).toBe(true);
+});
+
+test("keeps the order untipped when the tip capture fails", async () => {
+    const { store, order, line } = await payWithStripe({ tipAfterPayment: true });
+    const amount = line.amount;
+    const screen = await mountTipScreen(store, order);
+    line.currency_id = store.currency;
+    captureFails = true;
+    screen.state.inputTipAmount = "2";
+    await screen.validateTip();
+    expect(captures.length).toBe(1);
+    expect(line.amount).toBe(amount);
+    expect(order.is_tipped).toBe(false);
+    expect(order.lines.some((l) => l.isTipLine())).toBe(false);
+});
+
+test("keeps the order untipped when the capture without tip fails", async () => {
+    const { store, order } = await payWithStripe({ tipAfterPayment: true });
+    const screen = await mountTipScreen(store, order);
+    captureFails = true;
+    screen.state.inputTipAmount = "";
+    await screen.validateTip();
+    expect(captures.length).toBe(1);
+    expect(order.is_tipped).toBe(false);
+});
+
+test("captures the payment settled while another order is selected", async () => {
+    const { store, order } = await payWithStripe({ tipAfterPayment: true });
+    await store.syncAllOrders();
+    const otherOrder = store.addNewOrder();
+    expect(await store.settleTip(order, 0)).toBe(true);
+    expect(captures).toEqual([{ id: "pi_1", amount: null, rounding: undefined }]);
+    expect(order.is_tipped).toBe(true);
+    expect(store.getOrder()).toBe(otherOrder);
 });
 
 test("captures right away when overcapture is not supported", async () => {

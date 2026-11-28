@@ -320,16 +320,14 @@ export class PaymentStripe extends PaymentInterface {
     }
 
     async sendPaymentAdjust(uuid) {
-        var order = this.pos.getOrder();
-        var line = order.getPaymentlineByUuid(uuid);
-        this.capturePayment(line.transaction_id, line.amount, {
+        const line = this.pos.models["pos.payment"].find((p) => p.uuid === uuid);
+        return await this.capturePayment(line.transaction_id, line.amount, {
             stripe_currency_rounding: line.currency_id.rounding,
         });
     }
 
     canBeAdjusted(uuid) {
-        var order = this.pos.getOrder();
-        var line = order.getPaymentlineByUuid(uuid);
+        const line = this.pos.models["pos.payment"].find((p) => p.uuid === uuid);
         return (
             this.pos.config.set_tip_after_payment &&
             line.payment_method_id.payment_provider === "stripe" &&
