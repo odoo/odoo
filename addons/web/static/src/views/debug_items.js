@@ -97,7 +97,7 @@ debugRegistry.category("view").add("editSearchView", editSearchView);
 // View Metadata
 // -----------------------------------------------------------------------------
 
-class GetMetadataDialog extends Component {
+export class GetMetadataDialog extends Component {
     static template = "web.DebugMenu.GetMetadataDialog";
     static components = { Dialog };
     static props = {
