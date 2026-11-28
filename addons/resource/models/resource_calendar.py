@@ -177,7 +177,7 @@ class ResourceCalendar(models.Model):
                 'two_weeks_calendar': company_calendar.two_weeks_calendar,
                 'tz': company_calendar.tz,
                 'attendance_ids': [
-                    (0, 0, attendance._copy_attendance_vals()) for attendance in company_calendar.attendance_ids if not attendance.resource_id],
+                    (0, 0, attendance._copy_attendance_vals()) for attendance in company_calendar.attendance_ids],
             })
 
     @api.onchange('attendance_ids')

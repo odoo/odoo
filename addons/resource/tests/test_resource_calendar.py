@@ -371,3 +371,27 @@ class TestResourceCalendar(TransactionCase):
             form.company_id = self.env.company
 
         self.assertEqual(work_schedule.attendance_ids, attendance_1)
+
+    def test_company_change_fills_empty_schedule(self):
+        """
+        A schedule without attendances gets the ones of its new company's
+        schedule when the company is changed.
+        """
+        company = self.env['res.company'].create({'name': 'Company B'})
+        company_attendances = company.resource_calendar_id.attendance_ids
+        self.assertTrue(company_attendances)
+        work_schedule = self.env['resource.calendar'].create({
+            'name': 'Empty Work Schedule',
+            'company_id': False,
+            'attendance_ids': False,
+        })
+        self.assertFalse(work_schedule.attendance_ids)
+        self.env.user.group_ids += self.env.ref('base.group_multi_company')
+        self.env.user.company_ids += company
+        with Form(work_schedule.with_context(allowed_company_ids=(self.env.company + company).ids)) as form:
+            form.company_id = company
+
+        self.assertEqual(
+            work_schedule.attendance_ids.mapped(lambda a: (a.dayofweek, a.hour_from, a.hour_to)),
+            company_attendances.mapped(lambda a: (a.dayofweek, a.hour_from, a.hour_to)),
+        )
