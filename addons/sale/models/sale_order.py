@@ -1020,7 +1020,7 @@ class SaleOrder(models.Model):
 
     def _get_copiable_order_lines(self):
         """Returns the order lines that can be copied to a new order."""
-        return self.order_line.filtered(lambda l: not l.is_downpayment)
+        return self.order_line.filtered(lambda l: not l.is_downpayment).sorted('id')
 
     def copy_data(self, default=None):
         default = dict(default or {})
@@ -1034,6 +1034,15 @@ class SaleOrder(models.Model):
                     for line_vals in order._get_copiable_order_lines().copy_data()
                 ]
         return vals_list
+
+    def copy_translations(self, new, excluded=()):
+        # Since we skip some lines in the copy process, we have to handle the copy of the lines
+        # ourselves, otherwise the super call would crash when trying to map lines to their copies.
+        super().copy_translations(new, excluded={*excluded, 'order_line'})
+        if 'order_line' not in excluded:
+            old_lines = self._get_copiable_order_lines()
+            for old_line, new_line in zip(old_lines, new.order_line.sorted('id')):
+                old_line.copy_translations(new_line)
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_draft_or_cancel(self):
