@@ -753,6 +753,40 @@ describe("pos_store.js", () => {
         expect(grouped[0][1].map((p) => p.id)).not.toInclude(specialProduct.id);
     });
 
+    test("productToDisplayByCateg follows the category sequence tree", async () => {
+        const store = await setupPosEnv();
+        store.config.iface_group_by_categ = true;
+        const categories = store.models["pos.category"];
+        const products = store.models["product.template"];
+        const createCateg = (name, sequence, parent) =>
+            categories.create({ name, sequence, parent_id: parent?.id });
+        const rootA = createCateg("seq_root_a", -30);
+        const rootB = createCateg("seq_root_b", -20);
+        const childA2 = createCateg("seq_child_a2", 2, rootA);
+        const childA1 = createCateg("seq_child_a1", 1, rootA);
+        const childB1 = createCateg("seq_child_b1", 1, rootB);
+        for (const categ of [rootA, rootB, childA2, childA1, childB1]) {
+            products.create({
+                name: `${categ.name}_product`,
+                pos_categ_ids: [categ.id],
+                active: true,
+                available_in_pos: true,
+            });
+        }
+        const expectedIds = [rootA, childA1, childA2, rootB, childB1].map((c) => c.id);
+        const groupedIds = (grouped) =>
+            grouped.map(([id]) => id).filter((id) => expectedIds.includes(id));
+
+        expect(groupedIds(store.productToDisplayByCateg)).toEqual(expectedIds);
+
+        store.selectedCategory = rootA;
+        expect(groupedIds(store.productToDisplayByCateg)).toEqual([
+            rootA.id,
+            childA1.id,
+            childA2.id,
+        ]);
+    });
+
     test("productToDisplayByCateg count", async () => {
         const store = await setupPosEnv();
         const createProductsAndCateg = (prefix, count) => {

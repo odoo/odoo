@@ -169,7 +169,7 @@ export class ProductListPage extends Component {
         if (!currentCategory) {
             return [];
         }
-        return (this.topSelectedCategory.child_ids || []).filter((category) =>
+        return (this.topSelectedCategory.children || []).filter((category) =>
             this.selfOrder.isCategoryAvailable(category.id)
         );
     }

@@ -1,16 +1,21 @@
 import { registry } from "@web/core/registry";
 import { Base } from "./related_models";
 
+export function compareCategories(a, b) {
+    return a.sequence - b.sequence || a.name.localeCompare(b.name);
+}
+
 export class PosCategory extends Base {
     static pythonModel = "pos.category";
     static excludedLazyGetters = ["hasProductsToShow"];
 
+    get children() {
+        return [...this.child_ids].sort(compareCategories);
+    }
+
     getAllChildren() {
         const children = [this];
-        if (this.child_ids.length === 0) {
-            return children;
-        }
-        for (const child of this.child_ids) {
+        for (const child of this.children) {
             children.push(...child.getAllChildren());
         }
         return children;
