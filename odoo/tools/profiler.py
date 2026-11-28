@@ -8,6 +8,7 @@ import threading
 import time
 from contextlib import ExitStack, nullcontext
 from datetime import datetime
+from itertools import count
 
 import psutil
 from psycopg2 import OperationalError
@@ -248,9 +249,11 @@ class _BasePeriodicCollector(Collector):
 class PeriodicCollector(_BasePeriodicCollector):
 
     name = 'traces_async'
+    _collector_id_seq = count()
 
     def __init__(self, interval=None):
         super().__init__(interval)
+        self._frame_key = f'$__PeriodicCollectorId_{next(self._collector_id_seq)}'
         self._last_frame_id = 0  # incremental identifier if the frame has been seen
         self._last_time = 0
 
@@ -274,10 +277,10 @@ class PeriodicCollector(_BasePeriodicCollector):
 
         frame = frame or get_current_frame(self.profiler.init_thread)
         frame_locals = frame.f_locals
-        if frame_locals.get('$__PeriodicCollectorId') == last_frame_id:
+        if frame_locals.get(self._frame_key) == last_frame_id:
             # don't save if the frame is exactly the same as the previous one.
             return
-        frame_locals['$__PeriodicCollectorId'] = self._last_frame_id = last_frame_id + 1
+        frame_locals[self._frame_key] = self._last_frame_id = last_frame_id + 1
         entry = {'start': now}
         if self._memory_profile:
             entry = {'memory': self._process.memory_info().rss, **(entry or {})}
