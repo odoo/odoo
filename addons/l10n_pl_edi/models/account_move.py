@@ -920,20 +920,30 @@ class AccountMove(models.Model):
                     ))
 
     def _decode_fa3_ksef(self, invoice, file_data, new):
-        xml_content = file_data.get('content')
+        xml_content = file_data.get('raw')
         move_vals = self.l10n_pl_edi_get_ksef_bill_vals_from_xml(xml_content)
 
         if move_vals:
             invoice.write(move_vals)
-            return True
+            return
 
-        return False
+        return self.env._("No bill found in the KSeF XML")
 
-    def _get_edi_decoder(self, file_data, new=False):
-        if file_data.get('type') == 'xml' and file_data.get('xml_tree') is not None:
-            tree = file_data['xml_tree']
+    def _get_import_file_type(self, file_data):
+        """ Identify the KSeF FA(3) XML files. """
+        # EXTENDS 'account'
+        tree = file_data.get('xml_tree')
+        if tree is not None:
             kod_node = tree.find('.//{*}KodFormularza')
             if kod_node is not None and kod_node.get('kodSystemowy') == 'FA (3)':
-                return self._decode_fa3_ksef
+                return 'l10n_pl_edi.fa3'
+        return super()._get_import_file_type(file_data)
 
+    def _get_edi_decoder(self, file_data, new=False):
+        # EXTENDS 'account'
+        if file_data['import_file_type'] == 'l10n_pl_edi.fa3':
+            return {
+                'priority': 20,
+                'decoder': self._decode_fa3_ksef,
+            }
         return super()._get_edi_decoder(file_data, new=new)

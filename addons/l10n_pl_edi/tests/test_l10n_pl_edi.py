@@ -145,10 +145,15 @@ class TestL10nPlEdiCommon(AccountTestInvoicingCommon, CronMixinCase):
             ae.args = (ae.args[0] + f"\nFile used for comparison: {filename}", )
             raise
 
-    def _assert_import_invoice(self, filename, expected_values):
+    def _assert_import_invoice(self, filename, expected_values, journal=None):
+        """ Upload the XML to a journal (the purchase journal by default), as a
+            user does, and check the lines of the bill it fills.
+        """
         path = f'l10n_pl_edi/tests/import_xmls/{filename}'
         with tools.file_open(path, mode='rb') as fd:
-            invoice = self.env['account.move'].create(self.env['account.move'].l10n_pl_edi_get_ksef_bill_vals_from_xml(fd.read()))
+            attachment = self.env['ir.attachment'].create({'name': filename, 'raw': fd.read()})
+        journal = journal or self.company_data['default_journal_purchase']
+        invoice = journal._create_document_from_attachment(attachment.ids)
         try:
             self.assertRecordValues(invoice.invoice_line_ids, expected_values)
         except AssertionError as ae:
