@@ -6,6 +6,15 @@ registry.category("web_tour.tours").add("event_configurator_tour", {
     steps: () => [
         ...stepUtils.goToAppSteps("sale.sale_menu_root", "Go to the Sales App"),
         ...tourUtils.createNewSalesOrder(),
+        ...tourUtils.addProduct("Event Registration"),
+        {
+            trigger: ".o_dialog .modal-header .btn-close",
+            run: "click",
+        },
+        {
+            content: "Wait the modal is closed",
+            trigger: "body:not(:has(.modal))",
+        },
         ...tourUtils.selectCustomer("Azure"),
         ...tourUtils.addProduct("Event Registration"),
         {
