@@ -6,11 +6,8 @@
         <field name="arch" type="xml">
             <form string="Point of Sale Session" create="0" edit="0">
                 <header>
-                    <widget name="pos_open_ui_button" action="open_frontend_cb" invisible="state not in ['opening_control', 'opened']"/>
-                    <button id="validate_closing_control" name="close_session_from_ui" type="object" string="Close Session &amp; Post Entries"
-                            invisible="state != 'closing_control'"
-                    class="oe_highlight"/>
-                    <field name="state" widget="statusbar" statusbar_visible="opened,closing_control,closed" nolabel="1" />
+                    <widget name="pos_open_ui_button" action="open_frontend_cb" invisible="state == 'closed'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="opened,closed" nolabel="1" />
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
@@ -43,11 +40,11 @@
                         <field name="name" invisible="name == '/'" class="oe_inline"/>
                     </h1>
                     <group>
-                        <field name="user_id" readonly="state != 'opening_control'"/>
+                        <field name="user_id" readonly="state != 'draft'"/>
                     </group>
                     <group>
                         <group>
-                            <field name="start_at" invisible="state == 'opening_control'"/>
+                            <field name="start_at" invisible="state == 'draft'"/>
                             <field name="stop_at" invisible="state != 'closed'"/>
                         </group>
                         <group>
@@ -102,10 +99,10 @@
             <list string="Point of Sale Session" create="0" sample="1">
                 <field name="name" decoration-bf="1"/>
                 <field name="config_id" />
-                <field name="user_id" widget="many2one_avatar_user" readonly="state != 'opening_control'"/>
+                <field name="user_id" widget="many2one_avatar_user" readonly="state != 'draft'"/>
                 <field name="start_at" />
                 <field name="stop_at" />
-                <field name="state" widget="badge" decoration-info="state in ('opening_control')" decoration-success="state in ('opened', 'closed')" decoration-warning="state == 'closing_control'" />
+                <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state in ('opened', 'closed')" />
             </list>
         </field>
     </record>
@@ -119,13 +116,12 @@
                     <t t-name="card">
                         <div class="d-flex">
                             <field name="config_id" class="fw-bolder mb-1"/>
-                            <field name="state" widget="label_selection" options="{'classes': {'opening_control': 'default',
-                                    'opened': 'success', 'closing_control': 'warning', 'closed': 'warning'}}" class="ms-auto"/>
+                            <field name="state" widget="label_selection" options="{'classes': {'draft': 'default', 'opened': 'success', 'closed': 'warning'}}" class="ms-auto"/>
                         </div>
                         <field name="name" />
                         <footer class="pt-1">
                             <field name="start_at" />
-                            <field name="user_id" widget="many2one_avatar_user" readonly="state != 'opening_control'" class="ms-auto"/>
+                            <field name="user_id" widget="many2one_avatar_user" readonly="state != 'draft'" class="ms-auto"/>
                         </footer>
                     </t>
                 </templates>

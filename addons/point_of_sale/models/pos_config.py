@@ -140,8 +140,6 @@ class PosConfig(models.Model):
     current_session_state = fields.Char(compute='_compute_current_session')
     current_cash_register_balance = fields.Float(compute='_compute_current_cash_register_balance', string="Cash Register")
     last_session_closing_date = fields.Date(compute='_compute_last_session')
-    pos_session_username = fields.Char(compute='_compute_current_session_user')
-    pos_session_state = fields.Char(compute='_compute_current_session_user')
     pos_session_duration = fields.Char(compute='_compute_current_session_user')
     pricelist_id = fields.Many2one('product.pricelist', string='Default Pricelist',
         help="The pricelist used if no customer is selected or if the customer has no Sale Pricelist configured if any.")
@@ -415,12 +413,10 @@ class PosConfig(models.Model):
         """
         self.session_ids.fetch(["state"])
         for pos_config in self:
-            opened_sessions = pos_config.session_ids.filtered(lambda s: s.state != 'closed')
-            session = pos_config.session_ids.filtered(lambda s: s.state != 'closed')
-            # sessions ordered by id desc
-            pos_config.has_active_session = bool(opened_sessions.filtered(lambda s: s.state != 'opening_control')) or False
-            pos_config.current_session_id = (session and session[0].id) or False
-            pos_config.current_session_state = (session and session[0].state) or False
+            session = pos_config.session_ids.filtered(lambda s: s.state != 'closed')[:1]
+            pos_config.current_session_id = session
+            pos_config.current_session_state = session.state
+            pos_config.has_active_session = session.state == 'opened'
 
     def _search_current_session(self, operator, value):
         if operator != 'in':
@@ -577,22 +573,12 @@ class PosConfig(models.Model):
             else:
                 pos_config.current_cash_register_balance = 0
 
-    @api.depends('session_ids')
+    @api.depends('current_session_id.user_id', 'current_session_id.start_at')
     def _compute_current_session_user(self):
         for pos_config in self:
-            session = pos_config.session_ids.filtered(lambda s: s.state in ['opening_control', 'opened', 'closing_control'])
-            if session:
-                pos_config.pos_session_username = session[0].user_id.sudo().name
-                pos_config.pos_session_state = session[0].state
-                pos_config.pos_session_duration = (
-                    datetime.now() - session[0].start_at
-                ).days if session[0].start_at else 0
-                pos_config.current_user_id = session[0].user_id
-            else:
-                pos_config.pos_session_username = False
-                pos_config.pos_session_state = False
-                pos_config.pos_session_duration = 0
-                pos_config.current_user_id = False
+            session = pos_config.current_session_id
+            pos_config.pos_session_duration = (datetime.now() - session.start_at).days if session.start_at else 0
+            pos_config.current_user_id = session.user_id
 
     @api.constrains('rounding_method')
     def _check_rounding_method_strategy(self):
@@ -1067,25 +1053,6 @@ class PosConfig(models.Model):
 
     def close_ui(self):
         return self.open_ui()
-
-    def open_existing_session_cb(self):
-        """ close session button
-
-        access session form to validate entries
-        """
-        self.ensure_one()
-        return self._open_session(self.current_session_id.id)
-
-    def _open_session(self, session_id):
-        self._check_pricelists()  # The pricelist company might have changed after the first opening of the session
-        return {
-            'name': _('Session'),
-            'view_mode': 'form,list',
-            'res_model': 'pos.session',
-            'res_id': session_id,
-            'view_id': False,
-            'type': 'ir.actions.act_window',
-        }
 
     def _get_limited_product_count(self):
         return self.env['ir.config_parameter'].sudo().get_int('point_of_sale.limited_product_count') or DEFAULT_LIMIT_LOAD_PRODUCT

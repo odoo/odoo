@@ -31,7 +31,7 @@ export class PosOpenUIButton extends Component {
             return data.current_session_state === "opened";
         }
 
-        return ["opening_control", "opened"].includes(data.state);
+        return data.state !== "closed";
     }
 
     get label() {

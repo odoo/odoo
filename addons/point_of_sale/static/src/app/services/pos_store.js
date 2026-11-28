@@ -2306,14 +2306,14 @@ export class PosStore extends WithLazyGetterTrap {
             this.redirectToBackend();
         }
 
-        if (this.session.state === "opening_control") {
+        if (this.session.state === "draft") {
             try {
                 await this.data.call("pos.session", "delete_opening_control_session", [
                     this.session.id,
                 ]);
             } catch (error) {
                 if (error instanceof RPCError) {
-                    // If the error is an RPC error, it should be "You can only cancel a session that is in opening control state and has no orders."
+                    // If the error is an RPC error, it should be "You can only cancel a session that is not opened yet and has no orders."
                     // In this case, we still go to the backend without deleting the session.
                     logPosMessage(
                         "Store",
@@ -2483,7 +2483,7 @@ export class PosStore extends WithLazyGetterTrap {
         }
     }
     shouldShowOpeningControl() {
-        return this.session.state == "opening_control";
+        return this.session.state === "draft";
     }
 
     /**

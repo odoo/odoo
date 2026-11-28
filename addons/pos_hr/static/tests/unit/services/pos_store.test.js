@@ -77,7 +77,7 @@ test("selectCashier does not list the cashier of a trusted config's order", asyn
 });
 test("shouldShowOpeningControl", async () => {
     const store = await setupPosEnv();
-    store.models["pos.session"].getFirst().state = "opening_control";
+    store.models["pos.session"].getFirst().state = "draft";
     const emp = store.models["hr.employee"].get(2);
     store.setCashier(emp);
     store.accessRight.hasLoggedIn.set(true);
