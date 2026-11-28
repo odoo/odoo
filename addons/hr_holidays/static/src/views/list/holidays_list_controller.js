@@ -1,4 +1,4 @@
-import { userHasEmployeeInCurrentCompany } from "@hr_holidays/utils";
+import { canRequestAllocation, userHasEmployeeInCurrentCompany } from "@hr_holidays/utils";
 import { exportTimeOffRecords } from "@hr_holidays/views/hr_leave_export";
 import { HrHolidaysSearchModel } from "@hr_holidays/search/hr_holidays_search_model";
 import { onWillStart } from "@odoo/owl";
@@ -37,12 +37,20 @@ export class HolidaysListController extends ListController {
         provideViewButtonHandler(this.handleViewButtonClick.bind(this));
 
         onWillStart(async () => {
-            const hasEmployee = await userHasEmployeeInCurrentCompany(this.orm);
             const ignoreActions = [
                 "hr_holidays.hr_leave_action_action_approve_department",
                 "hr_holidays.hr_leave_allocation_action_approve_department",
             ];
             const ignoreHasEmployee = ignoreActions.includes(this.env.config.actionXmlId);
+            const [hasEmployee, canRequest] = await Promise.all([
+                userHasEmployeeInCurrentCompany(this.orm),
+                this.props.resModel === "hr.leave.allocation" && this.activeActions.create
+                    ? canRequestAllocation(this.orm)
+                    : true,
+            ]);
+            if (!canRequest) {
+                this.activeActions = { ...this.activeActions, create: false };
+            }
             if (!hasEmployee && !ignoreHasEmployee) {
                 this.env.services.notification.add(
                     _t(

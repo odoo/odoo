@@ -1,4 +1,4 @@
-import { userHasEmployeeInCurrentCompany } from "@hr_holidays/utils";
+import { canRequestAllocation, userHasEmployeeInCurrentCompany } from "@hr_holidays/utils";
 import { AlertDialog, ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -23,6 +23,8 @@ export class TimeOffCalendarController extends CalendarController {
         DropdownItem,
     };
 
+    showAllocationRequest = true;
+
     setup() {
         super.setup();
 
@@ -33,8 +35,16 @@ export class TimeOffCalendarController extends CalendarController {
         this.leaveCancelWizard = useLeaveCancelWizard();
         this.newAllocRequest = useNewAllocationRequest();
 
+        this.canRequestAllocation = false;
         onWillStart(async () => {
-            this.hasEmployee = await userHasEmployeeInCurrentCompany(this.orm);
+            const [hasEmployee, canRequest] = await Promise.all([
+                userHasEmployeeInCurrentCompany(this.orm),
+                this.props.archInfo.canCreate &&
+                    this.showAllocationRequest &&
+                    canRequestAllocation(this.orm),
+            ]);
+            this.hasEmployee = hasEmployee;
+            this.canRequestAllocation = canRequest;
             if (!this.employeeId && !this.hasEmployee) {
                 this.env.services.notification.add(
                     _t(

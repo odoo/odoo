@@ -964,3 +964,74 @@ class TestAllocations(TestHrHolidaysCommon):
         self.assertEqual(
             self.work_entry_type.with_context(context, ignored_leave_ids=leave.ids).virtual_remaining_leaves, 2)
         self.assertFalse(leave.allocation_display_warning)
+
+    def test_has_requestable_work_entry_type(self):
+        aq_country = self.env.ref('base.aq')
+        be_country = self.env.ref('base.be')
+        aq_company = self.env['res.company'].create({'name': 'Antarctic Company', 'country_id': aq_country.id})
+        generic_company = self.env['res.company'].create({'name': 'Generic Company', 'country_id': False})
+        self.user_employee.company_ids = [(4, aq_company.id), (4, generic_company.id)]
+        self.user_hruser.company_ids = [(4, aq_company.id)]
+
+        WorkEntryType = self.env['hr.work.entry.type']
+        Allocation = self.env['hr.leave.allocation']
+
+        # Disable employee requests on any pre-existing generic types
+        WorkEntryType.search([('country_id', '=', False), ('employee_requests', '=', True)]).employee_requests = False
+
+        aq_type = WorkEntryType.create({
+            'name': 'AQ Allocation Type',
+            'code': 'AQ_ALLOC',
+            'count_as': 'absence',
+            'country_id': aq_country.id,
+            'requires_allocation': True,
+            'time_off_selectable': True,
+            'employee_requests': False,
+        })
+        WorkEntryType.create({
+            'name': 'BE Requestable Type',
+            'code': 'BE_REQ',
+            'count_as': 'absence',
+            'country_id': be_country.id,
+            'requires_allocation': True,
+            'time_off_selectable': True,
+            'employee_requests': True,
+        })
+
+        self.env.invalidate_all()
+        self.assertFalse(
+            Allocation.with_user(self.user_employee).with_company(aq_company).has_requestable_work_entry_type(),
+            "Employee should not be able to request allocations when no valid type in their company's country allows requests",
+        )
+        self.env.invalidate_all()
+        self.assertTrue(
+            Allocation.with_user(self.user_hruser).with_company(aq_company).has_requestable_work_entry_type(),
+            "Time off officers are not restricted by employee_requests",
+        )
+
+        # Enabling employee_requests on a valid same-country type restores access
+        aq_type.employee_requests = True
+        self.env.invalidate_all()
+        self.assertTrue(
+            Allocation.with_user(self.user_employee).with_company(aq_company).has_requestable_work_entry_type(),
+        )
+        # Company without country still cannot use country-specific types
+        self.env.invalidate_all()
+        self.assertFalse(
+            Allocation.with_user(self.user_employee).with_company(generic_company).has_requestable_work_entry_type(),
+        )
+
+        # Generic type makes allocations requestable for company without country
+        WorkEntryType.create({
+            'name': 'Generic Requestable Type',
+            'code': 'GEN_REQ',
+            'count_as': 'absence',
+            'country_id': False,
+            'requires_allocation': True,
+            'time_off_selectable': True,
+            'employee_requests': True,
+        })
+        self.env.invalidate_all()
+        self.assertTrue(
+            Allocation.with_user(self.user_employee).with_company(generic_company).has_requestable_work_entry_type(),
+        )
