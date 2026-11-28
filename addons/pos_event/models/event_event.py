@@ -35,10 +35,19 @@ class EventEvent(models.Model):
         return ['event.event.ticket']
 
     @api.model
+    def _load_pos_metadata(self, data, search_params={}):
+        result = super()._load_pos_metadata(data, search_params)
+        if search_params.get('domain') or 'res.partner' not in data:
+            return result
+        venues = data['event.event']['records'].address_id
+        result['res.partner']['records'] |= venues._filtered_access('read')
+        return result
+
+    @api.model
     def _load_pos_data_fields(self, config):
         return ['id', 'name', 'seats_available', 'event_ticket_ids', 'registration_ids', 'seats_limited', 'write_date',
                 'question_ids', 'general_question_ids', 'specific_question_ids', 'seats_max',
-                'is_multi_slots', 'event_slot_ids', 'image_1024']
+                'is_multi_slots', 'event_slot_ids', 'image_1024', 'description', 'date_begin', 'date_end', 'address_id', 'tag_ids']
 
     def get_slot_tickets_availability_pos(self, slot_ticket_ids):
         self.ensure_one()

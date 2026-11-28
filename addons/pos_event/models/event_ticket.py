@@ -23,4 +23,4 @@ class EventEventTicket(models.Model):
     @api.model
     def _load_pos_data_fields(self, config):
         return ['id', 'name', 'event_id', 'seats_used', 'seats_available', 'limit_max_per_order',
-                'price', 'product_id', 'seats_max', 'start_sale_datetime', 'end_sale_datetime']
+                'price', 'product_id', 'seats_max', 'start_sale_datetime', 'end_sale_datetime', 'color']

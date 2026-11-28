@@ -18,7 +18,7 @@ import { Base } from "./base";
 import { processModelDefs } from "./model_defs";
 import { createExtraField, processModelClasses } from "./model_classes";
 import { ormSerialization } from "./serialization";
-import { toRaw, proxy } from "@odoo/owl";
+import { markup, toRaw, proxy } from "@odoo/owl";
 const AVAILABLE_EVENT = ["create", "update", "delete"];
 
 export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
@@ -370,6 +370,8 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                             rawData[field.name] = rawValue;
                         }
                     }
+                } else if (field.type === "html" && serverData && value) {
+                    rawData[fieldName] = markup(value);
                 } else {
                     rawData[fieldName] = DATE_TIME_TYPE.has(field.type)
                         ? field.type === "datetime"
