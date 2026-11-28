@@ -739,7 +739,6 @@ class ProductTemplate(models.Model):
 
         combination = combination or self.env["product.template.attribute.value"]
         website = request.website.with_context(self.env.context)
-        uom = self.env["uom.uom"].browse(uom_id) or self._get_main_uom()
 
         if not product_id and not combination and not only_template:
             combination = self._get_first_possible_combination()
@@ -766,6 +765,14 @@ class ProductTemplate(models.Model):
 
         price_context = product_or_template._get_product_price_context(combination)
         product_or_template = product_or_template.with_context(**price_context)
+
+        # When the variant changes, the packaging selector is re-rendered with the main UoM selected,
+        # the price must be computed with that UoM as well.
+        variant_changed = product_id and product.id != product_id
+        if variant_changed or uom_id not in product_or_template._get_available_uoms().ids:
+            uom = product_or_template._get_main_uom()
+        else:
+            uom = self.env["uom.uom"].browse(uom_id)
 
         combination_info = {
             "combination": combination,
