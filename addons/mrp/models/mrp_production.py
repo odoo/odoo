@@ -974,8 +974,12 @@ class MrpProduction(models.Model):
                 if production.state in ('cancel', 'done'):
                     continue
                 if picking_type != production.picking_type_id:
+                    old_name = production.name
                     production.name = picking_type.sequence_id.next_by_id()
                     moves_to_reassign |= production.move_raw_ids
+                    production.picking_ids.filtered(
+                        lambda p: p.origin == old_name
+                    ).write({'origin': production.name})
 
         if 'qty_producing' in vals:
             res = super(MrpProduction, self.with_context(auto_conso=True)).write(vals)
