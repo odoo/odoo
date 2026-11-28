@@ -18,3 +18,17 @@ test("url query params of FileModel returns proper params", () => {
     const fileModel = Object.assign(new FileModel(), attachmentData);
     expect(fileModel.urlQueryParams).toEqual(expectedQueryParams);
 });
+
+test("downloadUrl percent-encodes apostrophes in the filename param", () => {
+    const attachmentData = {
+        name: "test'.xml",
+        id: 123456789,
+        checksum: "f6a9d2bcbb34ce90a73785d8c8d1b82e5cdf0b5b",
+        access_token: "4b52e31e-a155-4598-8d15-538f64f0fb7b",
+        extension: "xlsx",
+        mimetype: "'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'",
+    };
+    const encodedFilename = "filename=test%2527";
+    const fileModel = Object.assign(new FileModel(), attachmentData);
+    expect(fileModel.downloadUrl).toInclude(encodedFilename);
+});
