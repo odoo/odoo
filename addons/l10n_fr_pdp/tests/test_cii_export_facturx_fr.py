@@ -92,6 +92,23 @@ class TestL10nFrPdpXmlCii(TestL10nFrPdpCommon):
         self._generate_invoice_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'facturx_fr_out_invoice_tax_unit')
 
+    def test_invoice_chorus_pro(self):
+        self.partner_a.write({
+            'peppol_eas': '0009',
+            'peppol_endpoint': '11000201100044',
+        })
+        invoice = self._create_invoice_one_line(
+            partner_id=self.partner_a,
+            product_id=self.product,
+            tax_ids=self.percent_tax(20.0, tax_scope='consu'),
+            partner_bank_id=self.recipient_bank,
+            narration="Test narration",
+            post=True,
+        )
+
+        self._generate_invoice_ubl_file(invoice)
+        self._assert_invoice_ubl_file(invoice, 'test_invoice_chorus_pro')
+
     def test_invoice_profile_id(self):
         tax_goods = self.percent_tax(20.0, tax_scope='consu')
         tax_services = self.percent_tax(20.0, tax_scope='service')
