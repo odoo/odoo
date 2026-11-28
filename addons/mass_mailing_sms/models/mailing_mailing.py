@@ -5,12 +5,17 @@ import logging
 
 from urllib.parse import urljoin
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, tools, _
 from odoo.addons.link_tracker.models.link_tracker import LINK_TRACKER_MIN_CODE_LENGTH
 from odoo.exceptions import UserError
 from odoo.osv import expression
 
 _logger = logging.getLogger(__name__)
+
+# sms.composer stores recipient IDs as repr() in a Char field and decodes them
+# with ast.literal_eval, which rejects strings over 100 KiB. Batch so the
+# encoded list stays well under that limit.
+SMS_RECIPIENT_BATCH_SIZE = 1000
 
 
 class Mailing(models.Model):
@@ -243,13 +248,38 @@ class Mailing(models.Model):
             mass_sms.action_send_sms(res_ids=res_ids)
         return super(Mailing, self - mass_sms)._action_send_mail(res_ids=res_ids)
 
+    def _get_duplicate_sms_recipient_ids(self, res_ids):
+        """Return the res_ids whose phone number is already used by an earlier
+        recipient in ``res_ids``."""
+        self.ensure_one()
+        records = self.env[self.mailing_model_real].browse(res_ids)
+        recipients_info = records._sms_get_recipients_info()
+        seen_numbers, duplicate_ids = set(), []
+        for record in records:
+            sanitized = recipients_info[record.id]['sanitized']
+            if not sanitized:
+                continue
+            if sanitized in seen_numbers:
+                duplicate_ids.append(record.id)
+            else:
+                seen_numbers.add(sanitized)
+        return duplicate_ids
+
     def action_send_sms(self, res_ids=None):
         for mailing in self:
             if not res_ids:
                 res_ids = mailing._get_remaining_recipients()
             if res_ids:
-                composer = self.env['sms.composer'].with_context(active_id=False).create(mailing._send_sms_get_composer_values(res_ids))
-                composer._action_send_sms()
+                # Duplicate numbers must be spotted across the whole list before
+                # batching, as each composer only sees the records of its batch.
+                duplicate_ids = frozenset(mailing._get_duplicate_sms_recipient_ids(res_ids))
+
+                for batch_ids in tools.split_every(SMS_RECIPIENT_BATCH_SIZE, res_ids, list):
+                    composer = self.env['sms.composer'].with_context(
+                        active_id=False,
+                        mailing_sms_duplicate_res_ids=duplicate_ids,
+                    ).create(mailing._send_sms_get_composer_values(batch_ids))
+                    composer._action_send_sms()
         return True
 
     # ------------------------------------------------------
