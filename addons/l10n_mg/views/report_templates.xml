@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- CPF art. IV-21: documents show the NIF and the statistical number (STAT) of the company.
+         The layout prints the Tax ID as NIF: print the NIF identifier only when the Tax ID is empty. -->
+    <template id="company_address_list" inherit_id="web.company_address_list">
+        <xpath expr="//ul[@name='company_address_list']" position="inside">
+            <t t-if="company.account_fiscal_country_id.code == 'MG'">
+                <t t-set="l10n_mg_nif" t-value="company.partner_id._get_additional_identifier('MG_NIF')"/>
+                <t t-set="l10n_mg_stat" t-value="company.partner_id._get_additional_identifier('MG_STAT')"/>
+                <li t-if="l10n_mg_nif and not company.vat and not forced_vat">NIF: <span t-out="l10n_mg_nif"/></li>
+                <li t-if="l10n_mg_stat">STAT: <span t-out="l10n_mg_stat"/></li>
+            </t>
+        </xpath>
+    </template>
+</odoo>
