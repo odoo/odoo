@@ -18,6 +18,7 @@ import {
     serializeDateTime,
 } from "@web/core/l10n/dates";
 import wUtils from "@website/js/utils";
+import { verifyHttpsUrl } from "@website/utils/misc";
 
 const { DateTime } = luxon;
 
@@ -475,7 +476,13 @@ export class Form extends Interaction {
                                 }
                                 break;
                             }
-                            window.location.href = successPage;
+                            const successUrl =
+                                verifyHttpsUrl(successPage) || verifyHttpsUrl("/");
+                            const redirectWindow =
+                                window.frameElement && successUrl.origin !== window.location.origin
+                                    ? window.parent
+                                    : window;
+                            redirectWindow.location.href = successUrl.href;
                             return;
                         }
                         case "message": {
