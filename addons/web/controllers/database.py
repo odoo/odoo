@@ -27,6 +27,14 @@ DBNAME_PATTERN = '^[a-zA-Z0-9][a-zA-Z0-9_.-]+$'
 
 class Database(http.Controller):
 
+    def _validate_database_name(self, name):
+        if not re.match(DBNAME_PATTERN, name):
+            raise Exception(_('Houston, we have a database naming issue! Make sure you only use letters, numbers, underscores, hyphens, or dots in the database name, and you\'ll be golden.'))
+        if odoo.tools.config['dbfilter'] and name not in http.db_filter([name]):
+            raise Exception("Database name does not match the configured database filter.")
+        if odoo.tools.config['db_name'] and name not in odoo.tools.config['db_name']:
+            raise Exception("Database name is not allowed by the configured database list.")
+
     def _render_template(self, **d):
         d.setdefault('manage', True)
         d['insecure'] = odoo.tools.config.verify_admin_password('admin')
@@ -74,8 +82,7 @@ class Database(http.Controller):
         if insecure and master_pwd:
             dispatch_rpc('db', 'change_admin_password', ["admin", master_pwd])
         try:
-            if not re.match(DBNAME_PATTERN, name):
-                raise Exception(_('Houston, we have a database naming issue! Make sure you only use letters, numbers, underscores, hyphens, or dots in the database name, and you\'ll be golden.'))
+            self._validate_database_name(name)
             # country code could be = "False" which is actually True in python
             country_code = post.get('country_code') or False
             dispatch_rpc('db', 'create_database', [master_pwd, name, bool(post.get('demo')), lang, password, post['login'], country_code, post['phone']])
