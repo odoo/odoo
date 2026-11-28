@@ -15,7 +15,7 @@
             <field name="model">res.partner</field>
             <field eval="8" name="priority"/>
             <field name="arch" type="xml">
-                <list string="Contacts" sample="1" multi_edit="1">
+                <list string="Contacts" sample="1" multi_edit="1" js_class="next_list">
                     <field name="create_date" optional="hide"/>
                     <field name="avatar_128" widget="image" options="{'size': [24, 24], 'img_class': 'o_avatar rounded border object-fit-contain'}" width="30" nolabel="1"/>
                     <field name="complete_name" string="Name"/>
@@ -102,7 +102,7 @@
             <field name="model">res.partner</field>
             <field name="priority" eval="1"/>
             <field name="arch" type="xml">
-                <form string="Partners">
+                <form string="Partners" js_class="next_form">
                 <div class="alert alert-warning oe_edit_only" role="alert" name="warning_tax" invisible="not same_vat_partner_id">
                     Potential duplicates:
                     <field name="same_vat_partner_id" context="{'show_address': False, 'show_identifier': False}"/>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.next.FormController">
+        <div t-att-class="this.props.className">
+            <Layout display="this.props.display">
+                <t t-set-slot="control-panel-buttons">
+                    <t t-if="this.model.isDirty(this.model.record())">
+                        <button type="button" class="btn btn-primary o_form_button_save" t-on-click="() => this.model.save(this.model.record())">Save</button>
+                        <button type="button" class="btn btn-secondary o_form_button_cancel" t-on-click="() => this.model.discard(this.model.record())">Discard</button>
+                    </t>
+                </t>
+                <t t-component="this.props.Renderer"
+                   record="this.model.record()"
+                   archInfo="this.props.archInfo"/>
+            </Layout>
+        </div>
+    </t>
+
+</templates>

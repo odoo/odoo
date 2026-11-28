@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.next.ListRenderer">
+        <div class="o_list_renderer o_renderer table-responsive">
+            <table class="o_list_table table table-sm table-hover position-relative mb-0 o_list_table_ungrouped table-striped">
+                <thead>
+                    <tr>
+                        <th t-foreach="this.props.columns" t-as="column" t-key="column.id"
+                            class="align-middle"
+                            t-att-data-name="column.name">
+                            <span class="d-block min-w-0 text-truncate" t-out="column.string"/>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr t-foreach="this.props.records" t-as="record" t-key="record.id"
+                        class="o_data_row"
+                        t-att-class="{ 'cursor-pointer': this.props.openRecord }"
+                        t-on-click="() => this.props.openRecord?.(record)">
+                        <td t-foreach="this.props.columns" t-as="column" t-key="column.id"
+                            class="o_data_cell o_field_cell"
+                            t-att-name="column.name">
+                            <Field record="record" node="column" readonly="true"/>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </t>
+
+</templates>

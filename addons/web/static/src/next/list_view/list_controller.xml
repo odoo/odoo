@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.next.ListController">
+        <div t-att-class="this.props.className">
+            <Layout display="this.props.display">
+                <t t-set-slot="control-panel-buttons">
+                    <button t-if="this.props.createRecord" type="button" class="btn btn-primary o_list_button_add" t-on-click="() => this.props.createRecord()">New</button>
+                </t>
+                <t t-component="this.props.Renderer"
+                   records="this.model.records()"
+                   columns="this.props.columns"
+                   openRecord="(record) => this.openRecord(record)"/>
+            </Layout>
+        </div>
+    </t>
+
+</templates>

@@ -94,6 +94,7 @@ This module provides the core of the Odoo Web Client.
             'base/static/src/css/modules.css',
 
             'web/static/src/model/**/*',
+            'web/static/src/next/**/*',
             'web/static/src/search/**/*',
             'web/static/src/webclient/icons.scss', # variables required in list_controller.scss
             'web/static/src/views/**/*',

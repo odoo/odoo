@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.next.Field">
+        <div class="o_field_widget"
+             t-att-class="this.classNames()"
+             t-att-name="this.props.node.name"
+             t-att-style="this.props.node.style">
+            <t t-component="this.props.node.Widget"
+               record="this.props.record"
+               name="this.props.node.name"
+               id="this.props.id"
+               readonly="this.isReadonly()"
+               node="this.props.node"/>
+        </div>
+    </t>
+
+</templates>
