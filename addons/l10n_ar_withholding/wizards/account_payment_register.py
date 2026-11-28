@@ -6,6 +6,10 @@ from odoo.fields import Command
 class AccountPaymentRegister(models.TransientModel):
     _inherit = 'account.payment.register'
 
+    # The withholding lines derive from the payment amount, which the checks determine: create the lines after the
+    # checks, so that their manual amounts are protected while creating the checks triggers their recomputation.
+    withholding_line_ids = fields.One2many(write_sequence=30)
+
     @api.model
     def _get_default_withhold(self, moves):
         """ EXTENDS 'l10n_account_withholding_tax' """
