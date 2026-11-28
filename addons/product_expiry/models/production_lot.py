@@ -21,14 +21,21 @@ class StockLot(models.Model):
     product_expiry_alert = fields.Boolean(compute='_compute_product_expiry_alert', help="The Expiration Date has been reached.")
     product_expiry_reminded = fields.Boolean(string="Expiry has been reminded")
 
-    @api.depends('expiration_date')
+    def action_lot_open_quants(self):
+        # Override to hide the expiration columns if the product doesn't use them.
+        if not self.product_id.use_expiration_date:
+            self = self.with_context(hide_removal_date=True)
+        return super().action_lot_open_quants()
+
+    @api.depends('expiration_date', 'product_id.use_expiration_date')
     def _compute_product_expiry_alert(self):
         current_date = fields.Datetime.now()
         for lot in self:
-            if lot.expiration_date:
-                lot.product_expiry_alert = lot.expiration_date <= current_date
-            else:
-                lot.product_expiry_alert = False
+            lot.product_expiry_alert = bool(
+                lot.product_id.use_expiration_date
+                and lot.expiration_date
+                and lot.expiration_date <= current_date
+            )
 
     @api.depends('product_id')
     def _compute_expiration_date(self):
