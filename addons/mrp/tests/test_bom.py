@@ -1948,6 +1948,40 @@ class TestBoM(TestMrpCommon):
             {'product_id': component_2.id, 'product_uom_qty': 24, 'product_uom': uom_unit.id}
         ])
 
+    def test_link_bom_draft_mo_with_workorders(self):
+        """ Checks updating or switching a BoM on a draft MO with workorders does not raise MissingError
+        and properly updates raw move quantities and workorders.
+        """
+        finished_product = self.env['product.product'].create({'name': 'Finished', 'is_storable': True})
+        component = self.env['product.product'].create({'name': 'Component', 'is_storable': True})
+        bom_1 = self.env['mrp.bom'].create({
+            'product_tmpl_id': finished_product.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'bom_line_ids': [Command.create({'product_id': component.id, 'product_qty': 2.0})],
+            'operation_ids': [Command.create({'name': 'Op 1', 'workcenter_id': self.workcenter_1.id})],
+        })
+        bom_2 = self.env['mrp.bom'].create({
+            'product_tmpl_id': finished_product.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'bom_line_ids': [Command.create({'product_id': component.id, 'product_qty': 5.0})],
+            'operation_ids': [Command.create({'name': 'Op 2', 'workcenter_id': self.workcenter_1.id})],
+        })
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = bom_1
+        mo_form.product_qty = 3.0
+        mo = mo_form.save()
+
+        bom_1.bom_line_ids.product_qty = 4.0
+        mo.action_update_bom()
+        self.assertEqual(mo.move_raw_ids.mapped('product_uom_qty'), [12.0])
+        self.assertEqual(mo.workorder_ids.operation_id, bom_1.operation_ids)
+
+        mo._link_bom(bom_2)
+        self.assertEqual(mo.bom_id, bom_2)
+        self.assertEqual(mo.move_raw_ids.mapped('product_uom_qty'), [15.0])
+        self.assertEqual(mo.workorder_ids.operation_id, bom_2.operation_ids)
+
     def test_bom_updates_mo_after_updating_operations(self):
         """ Creates a Manufacturing Order using a BoM with operations and checks the raw moves are
         correctly linked to the right operation/workorder. Then modifies the BoM and updates the MO
