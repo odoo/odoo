@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_barcode_label_pdf">
+        <t t-call="web.basic_layout">
+            <t t-foreach="range(0, len(docs), 28)" t-as="page_start">
+                <div class="o_label_sheet" style="padding: 14mm 3mm">
+                    <table class="my-0 table table-sm table-borderless">
+                        <tr t-foreach="range(page_start, page_start + 28, 4)" t-as="row_start">
+                            <t t-foreach="range(row_start, row_start + 4)" t-as="index">
+                                <t t-set="doc" t-value="index &lt; len(docs) and docs[index]"/>
+                                <td t-att-style="not doc and 'visibility:hidden;'">
+                                    <div class="o_label_full o_label_4x7">
+                                        <t t-if="doc">
+                                            <t t-call="product.report_label_contour_marks"/>
+                                            <div class="o_label_centering_table">
+                                                <div class="o_label_centered_content">
+                                                    <div class="o_label_name" t-out="doc.display_name"/>
+                                                    <div class="o_label_content">
+                                                        <div class="o_label_barcode_block">
+                                                            <t t-call="product.report_label_barcode"
+                                                               label="{'barcode_value': doc.barcode}"
+                                                               barcode_size="'width:100%;height:8mm'"/>
+                                                            <div class="o_label_barcode_text" t-out="doc.barcode"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </div>
+                                </td>
+                            </t>
+                        </tr>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <template id="report_barcode_label_zpl">
+        <t t-set="zpl_translate" t-value="{ord(char): '_%02X' % ord(char) for char in '_^~&lt;&gt;&amp;&quot;\''}"/>
+        <t t-foreach="docs" t-as="doc">
+            <t t-set="name" t-value="doc.display_name.translate(zpl_translate)"/>
+            <t t-set="barcode_value" t-value="(doc.barcode or '').translate(zpl_translate)"/>
+            <t t-translation="off">
+^XA^CI28
+^PW406
+^LL297
+^FO5,60^A0N,30,24^FB396,1,0,C^FH^FD<t t-out="name"/>\&amp;^FS
+                <t t-if="barcode_value">
+^FO14,100^BY2^BCN,110,N,N,N^FH^FD<t t-out="barcode_value"/>^FS
+^FO5,215^A0N,22,17^FB396,1,0,C^FH^FD<t t-out="barcode_value"/>\&amp;^FS
+                </t>
+^XZ
+            </t>
+        </t>
+    </template>
+
+    <template id="report_location_barcode_label_pdf">
+        <t t-call="stock.report_barcode_label_pdf"/>
+    </template>
+
+    <template id="report_location_barcode_label_zpl">
+        <t t-call="stock.report_barcode_label_zpl"/>
+    </template>
+
+    <template id="report_picking_type_barcode_label_pdf">
+        <t t-call="stock.report_barcode_label_pdf"/>
+    </template>
+
+    <template id="report_picking_type_barcode_label_zpl">
+        <t t-call="stock.report_barcode_label_zpl"/>
+    </template>
+
+    <template id="report_package_type_barcode_label_pdf">
+        <t t-call="stock.report_barcode_label_pdf"/>
+    </template>
+
+    <template id="report_package_type_barcode_label_zpl">
+        <t t-call="stock.report_barcode_label_zpl"/>
+    </template>
+</odoo>

@@ -340,23 +340,4 @@
             </kanban>
         </field>
     </record>
-    <record id="action_print_picking_type_label_pdf" model="ir.actions.server">
-        <field name="name">Operation type (PDF)</field>
-        <field name="model_id" ref="stock.model_stock_picking_type"/>
-        <field name="binding_model_id" ref="stock.model_stock_picking_type"/>
-        <field name="binding_view_types">list,kanban,form</field>
-        <field name="binding_type">report</field>
-        <field name="state">code</field>
-        <field name="code">action = env['stock.picking.type.label.layout']._process_picking_type_labels(records, '4x7')</field>
-    </record>
-
-    <record id="action_print_picking_type_label_zpl" model="ir.actions.server">
-        <field name="name">Operation type (ZPL)</field>
-        <field name="model_id" ref="stock.model_stock_picking_type"/>
-        <field name="binding_model_id" ref="stock.model_stock_picking_type"/>
-        <field name="binding_view_types">list,kanban,form</field>
-        <field name="binding_type">report</field>
-        <field name="state">code</field>
-        <field name="code">action = env['stock.picking.type.label.layout']._process_picking_type_labels(records, 'zpl')</field>
-    </record>
 </odoo>
