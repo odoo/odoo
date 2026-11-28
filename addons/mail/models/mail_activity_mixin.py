@@ -156,10 +156,15 @@ class MailActivityMixin(models.AbstractModel):
     def _search_activity_exception_decoration(self, operator, operand):
         if operator in Domain.NEGATIVE_OPERATORS:
             return NotImplemented
-        domain = Domain('activity_ids.activity_type_id.decoration_type', operator, operand)
-        if operator == 'in' and False in operand:  # relation may be falsy
-            domain |= Domain('activity_ids', '=', False)
-        return domain
+        if operator != 'in' or False not in operand:
+            return Domain('activity_ids.activity_type_id.decoration_type', operator, operand)
+        # False: no ongoing activity of a decorated type. Done activities are
+        # archived, and other ongoing activities do not hide the exception.
+        decorations = [value for value, _label in self._fields['activity_exception_decoration'].selection]
+        return (
+            Domain('activity_ids.activity_type_id.decoration_type', 'in', [value for value in operand if value])
+            | Domain('activity_ids', 'not any', [('activity_type_id.decoration_type', 'in', decorations)])
+        )
 
     @api.depends('activity_ids.state')
     def _compute_activity_state(self):
