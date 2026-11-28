@@ -49,15 +49,15 @@ class PosSelfOrderController(http.Controller):
                     order.tracking_number,
                 )
 
-        if preset_id and preset_id.service_at == 'delivery':
-            self._ensure_delivery_fee(order_ids, preset_id)
-
         if preset_id:
             self._ensure_service_fee(order_ids, preset_id)
 
         # Recompute all prices from newly created lines to ensure price correctness and
         # avoid potential manipulation from the frontend
         order_ids.recompute_prices()
+
+        if preset_id and preset_id.service_at == 'delivery' and self._ensure_delivery_fee(order_ids, preset_id):
+            order_ids.recompute_prices()
 
         # A negative line (a price_extra configured below the product price) would offset
         # the other lines of the order. A line priced at exactly 0 is still accepted: it can
@@ -101,10 +101,11 @@ class PosSelfOrderController(http.Controller):
         return result
 
     def _ensure_delivery_fee(self, order, preset):
-        """Add or remove the delivery fee line based on the order total and preset configuration."""
+        """Add or remove the delivery fee line based on the order total and preset configuration.
+        Return whether a line was added or removed."""
         delivery_product = preset.delivery_product_id
         if not delivery_product:
-            return
+            return False
 
         non_delivery_lines = order.lines.filtered(
             lambda l: l.product_id != delivery_product
@@ -119,10 +120,11 @@ class PosSelfOrderController(http.Controller):
         existing_delivery_lines = order.lines.filtered(
             lambda l: l.product_id == delivery_product
         )
-        if delivery_is_free:
+        if delivery_is_free and existing_delivery_lines:
             existing_delivery_lines.unlink()
-        elif not existing_delivery_lines:
-            new_line = order.env['pos.order.line'].sudo().create({
+            return True
+        if not delivery_is_free and not existing_delivery_lines:
+            order.env['pos.order.line'].sudo().create({
                 'order_id': order.id,
                 'product_id': delivery_product.id,
                 'qty': 1,
@@ -130,7 +132,8 @@ class PosSelfOrderController(http.Controller):
                 'price_subtotal_incl': 0.0,
                 'full_product_name': delivery_product.name,
             })
-            order._compute_line_price(new_line, price=preset.delivery_product_price)
+            return True
+        return False
 
     def _ensure_service_fee(self, order, preset):
         """Add or remove the service fee line based on the preset configuration."""

@@ -44,19 +44,23 @@ function checkPosOrder(deviceType, order) {
     return order;
 }
 
+export function processSelfOrder(deviceType, order) {
+    if (order.amount_total == 0) {
+        order.state = "paid";
+    }
+    checkPosOrder(deviceType, order);
+    const response = MockServer.env["pos.order"].sync_from_ui([order]);
+    const models = MockServer.env["pos.config"]._load_self_data_models();
+    return Object.fromEntries(Object.entries(response).filter(([key]) => models.includes(key)));
+}
+
 export function initMockRpc() {
     onRpc("/pos-self/data/1", () => MockServer.env["pos.config"].load_self_data());
 
     const mockProcssOrder = async (request) => {
         const { params } = await request.json();
         const deviceType = request.url.includes("/kiosk") ? "kiosk" : "mobile";
-        if (params.order.amount_total == 0) {
-            params.order.state = "paid";
-        }
-        checkPosOrder(deviceType, params.order);
-        const response = MockServer.env["pos.order"].sync_from_ui([params.order]);
-        const models = MockServer.env["pos.config"]._load_self_data_models();
-        return Object.fromEntries(Object.entries(response).filter(([key]) => models.includes(key)));
+        return processSelfOrder(deviceType, params.order);
     };
 
     const mockSyncOrder = async (request) => {

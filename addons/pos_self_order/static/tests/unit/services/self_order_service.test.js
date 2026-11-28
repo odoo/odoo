@@ -8,6 +8,7 @@ import {
     addComboProduct,
     getFilledSelfOrder,
     mockLNAPermissionCheck,
+    processSelfOrder,
     setupSelfPosEnv,
 } from "../utils";
 
@@ -925,6 +926,24 @@ test("sendDraftOrderToServer returns the synced order when local orders are rese
     expect(syncOrder.uuid).toBe(order.uuid);
     expect(syncOrder.id).toBeOfType("number");
     expect(store.models["pos.order"].getBy("uuid", order.uuid)).toBe(syncOrder);
+});
+
+test("sendDraftOrderToServer drops the local lines removed by the server", async () => {
+    const store = await setupSelfPosEnv("mobile", "table", "each");
+    const order = await getFilledSelfOrder(store);
+    const droppedLine = order.lines.at(-1);
+    onRpc("/pos-self-order/process-order/mobile", async (request) => {
+        const { params } = await request.json();
+        params.order.lines = params.order.lines.filter(
+            (command) => command[2].uuid !== droppedLine.uuid
+        );
+        return processSelfOrder("mobile", params.order);
+    });
+
+    const syncedOrder = await store.sendDraftOrderToServer();
+    expect(syncedOrder.lines).toHaveLength(1);
+    expect(syncedOrder.lines[0].isSynced).toBe(true);
+    expect(store.models["pos.order.line"].getBy("uuid", droppedLine.uuid)).toBe(undefined);
 });
 
 test("sendDraftOrderToServer updateLastOrderChange", async () => {

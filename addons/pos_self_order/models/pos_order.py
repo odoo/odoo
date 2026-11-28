@@ -267,8 +267,8 @@ class PosOrder(models.Model):
                 raise UserError(_("Error while creating the order. Please try again."))
             order['session_id'] = pos_config.current_session_id.id
 
-        fiscal_position_id = preset_id.fiscal_position_id if preset_id else pos_config.default_fiscal_position_id
-        pricelist_id = preset_id.pricelist_id if preset_id else pos_config.pricelist_id
+        fiscal_position_id = preset_id and preset_id.fiscal_position_id or pos_config.default_fiscal_position_id
+        pricelist_id = preset_id and preset_id.pricelist_id or pos_config.pricelist_id
         lines = [self._check_pos_order_lines(pos_config, order, line, fiscal_position_id) for line in order.get('lines', [])]
         lines = [line for line in lines if len(line)]
         payment_lines = self._check_pos_order_payment(device_type, order, order.get("payment_ids"))

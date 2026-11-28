@@ -552,23 +552,19 @@ export class SelfOrder extends Reactive {
         const autoSelectedPresets =
             this.models["pos.preset"].length === 1 && this.config.use_presets;
 
-        const fiscalPosition = autoSelectedPresets
-            ? this.config.default_preset_id?.fiscal_position_id
-            : this.config.default_fiscal_position_id;
-
-        const pricelist = autoSelectedPresets
-            ? this.config.default_preset_id?.pricelist_id
-            : this.config.pricelist_id;
-
-        return this.models["pos.order"].create({
+        const order = this.models["pos.order"].create({
             company_id: this.company,
             ticket_code: random5Chars(),
             session_id: this.session,
             config_id: this.config,
-            fiscal_position_id: fiscalPosition,
-            pricelist_id: pricelist,
-            preset_id: autoSelectedPresets ? this.config.default_preset_id : false,
+            fiscal_position_id: this.config.default_fiscal_position_id,
+            pricelist_id: this.config.pricelist_id,
+            preset_id: false,
         });
+        if (autoSelectedPresets && this.config.default_preset_id) {
+            order.setPreset(this.config.default_preset_id);
+        }
+        return order;
     }
 
     get kioskMode() {
@@ -855,6 +851,7 @@ export class SelfOrder extends Reactive {
             if (this.shouldUpdateLastOrderChange()) {
                 order.updateLastOrderChange();
             }
+            const sentLineUuids = new Set(order.lines.map((line) => line.uuid));
             const data = await rpc(
                 `/pos-self-order/process-order/${this.config.self_ordering_mode}`,
                 {
@@ -863,6 +860,15 @@ export class SelfOrder extends Reactive {
                     table_identifier: tableIdentifier, // Always trust URL one, is the one user scanned
                 }
             );
+            const returnedLineUuids = new Set(data["pos.order.line"].map((line) => line.uuid));
+            order.lines
+                .filter(
+                    (line) =>
+                        !line.isSynced &&
+                        sentLineUuids.has(line.uuid) &&
+                        !returnedLineUuids.has(line.uuid)
+                )
+                .forEach((line) => line.delete());
             const syncedOrder = this.models.connectNewData(data)["pos.order"][0];
             if (syncedOrder.uuid !== order.uuid) {
                 this.orderTakeAwayState[syncedOrder.uuid] = this.orderTakeAwayState[order.uuid];
