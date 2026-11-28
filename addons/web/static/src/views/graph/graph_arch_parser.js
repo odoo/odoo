@@ -52,8 +52,8 @@ export class GraphArchParser {
                     }
 
                     const options = node.getAttribute("options");
-                    archInfo.fieldAttrs[fieldName].options = options ? evaluateExpr(options): {};
-                    
+                    archInfo.fieldAttrs[fieldName].options = options ? evaluateExpr(options) : {};
+
                     const string = node.getAttribute("string");
                     if (string) {
                         archInfo.fieldAttrs[fieldName].string = string;
@@ -69,7 +69,8 @@ export class GraphArchParser {
                     const isMeasure = node.getAttribute("type") === "measure";
                     if (isMeasure) {
                         archInfo.measures.push(fieldName);
-                        // the last field with type="measure" (if any) will be used as measure else __count
+                        // the last field with type="measure" (if any) will be used as
+                        // default active measure else __count
                         archInfo.measure = fieldName;
                     } else {
                         const { type } = archInfo.fields[fieldName]; // exists (rng validation)
