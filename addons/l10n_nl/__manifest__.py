@@ -3,7 +3,7 @@
     'name': 'Netherlands - Accounting',
     'icon': '/account/static/description/l10n.png',
     'countries': ['nl'],
-    'version': '3.4',
+    'version': '3.5',
     'category': 'Accounting/Localizations/Account Charts',
     'author': 'Onestein (http://www.onestein.eu)',
     'website': 'https://www.odoo.com/documentation/latest/applications/finance/fiscal_localizations/netherlands.html',
@@ -15,6 +15,7 @@
     ],
     'auto_install': ['account'],
     'data': [
+        'data/account.account.tag.csv',
         'data/account_account_tag.xml',
         'data/account_tax_report_data.xml',
         'data/res_country_group.xml',
