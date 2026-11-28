@@ -5,6 +5,7 @@ from odoo import api, fields, models
 
 class ProductAttribute(models.Model):
     _inherit = "product.attribute"
+    _clear_cache_name = "default"
 
     category_id = fields.Many2one(
         string="Category",

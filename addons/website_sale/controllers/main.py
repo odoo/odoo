@@ -406,7 +406,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
                     tags=tags if filter_by_tags_enabled else None,
                 )
         shop_query = self.env["product.template"]._search(shop_domain)
-        filters_query = self.env["product.template"]._search(filters_domain)
 
         filter_by_price_enabled = website.is_view_active("website_sale.filter_products_price")
         if filter_by_price_enabled:
@@ -451,9 +450,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 Domain("list_price", ">=", (min_price or available_min_price) / conversion_rate),
                 Domain("list_price", "<=", (max_price or available_max_price) / conversion_rate),
             ])
-            filters_query = request.env["product.template"]._search(
-                Domain.AND([filters_domain, price_domain])
-            )
+            filters_domain = Domain.AND([filters_domain, price_domain])
 
         # Dynamic ribbon filters ("On sale" / "In stock")
         ribbon_filter_enabled = website.is_view_active("website_sale.ribbon_filter_pills")
@@ -477,16 +474,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         ProductTag = self.env["product.tag"]
         if filter_by_tags_enabled:
-            all_tags = ProductTag.search_fetch(
-                Domain.AND([
-                    Domain("visible_to_customers", "=", True),
-                    Domain.OR([
-                        Domain("product_template_ids", "in", filters_query),
-                        Domain("product_product_ids.product_tmpl_id", "in", filters_query),
-                    ]),
-                    website_domain,
-                ])
+            tag_ids = self.env["product.template"]._get_shop_tags(
+                website, filters_domain, request.env.lang
             )
+            all_tags = ProductTag.browse(tag_ids)
         else:
             all_tags = ProductTag
 
@@ -555,22 +546,21 @@ class WebsiteSale(payment_portal.PaymentPortal):
             zip(products, (variant_by_id.get(vid, Product) for vid in product_variant_ids))
         )
 
-        ProductAttribute = self.env["product.attribute"]
-        ProductAttributeValue = self.env["product.attribute.value"]
-        pavs_per_attribute = defaultdict(lambda: ProductAttributeValue)
-
-        grouped_pavs = ProductAttributeValue._read_group(
-            domain=[
-                ("pav_attribute_line_ids.product_tmpl_id", "in", filters_query),
-                ("attribute_id.visibility", "=", "visible"),
-            ],
-            groupby=["attribute_id"],
-            order="attribute_id",
-            aggregates=["id:recordset"],
+        shop_attributes = self.env["product.template"]._get_shop_attributes(
+            website, filters_domain, request.env.lang
         )
-        pavs_per_attribute.update({attribute: pavs.sorted() for attribute, pavs in grouped_pavs})
+        ProductAttributeValue = self.env["product.attribute.value"]
+        pavs_per_attribute = defaultdict(
+            lambda: ProductAttributeValue,
+            {
+                self.env["product.attribute"].browse(attribute_id): ProductAttributeValue.browse(
+                    value_ids
+                )
+                for attribute_id, value_ids in shop_attributes["value_ids_per_attribute_id"].items()
+            },
+        )
         # Return attributes as recordset of `product.attribute`
-        attributes = ProductAttribute.union(pavs_per_attribute.keys())
+        attributes = self.env["product.attribute"].browse(shop_attributes["attribute_ids"])
         products_prices = products._get_sales_prices(
             # Make sure latest context is applied (see update_context calls in overrides)
             request.pricelist.with_context(self.env.context),

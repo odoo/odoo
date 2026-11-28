@@ -2,7 +2,7 @@
 
 from collections import defaultdict
 
-from odoo.fields import Command
+from odoo.fields import Command, Domain
 from odoo.tests.common import warmup
 
 from odoo.addons.product.tests.common import ProductVariantsCommon
@@ -69,7 +69,6 @@ class TestWebsiteSalePerformanceNoPricelist(WebsiteSaleCommon, UtilPerf, Product
             "product_product": 1,
             "product_public_category": 1,
             "product_ribbon": 1,
-            "product_tag": 1,
             "product_template": 2,
             "product_template_attribute_line": 2,
             "res_company": 1,
@@ -92,6 +91,56 @@ class TestWebsiteSalePerformanceNoPricelist(WebsiteSaleCommon, UtilPerf, Product
         self._check_url_hot_query(
             "/shop", sum(select_queries.values()), select_tables_perf=select_queries
         )
+
+    def test_shop_tags_cache(self):
+        """`_get_shop_tags` must not hit the database again for an identical
+        (website, domain, lang), and must be invalidated as soon as the catalog
+        changes."""
+        ProductTemplate = self.env["product.template"]
+        tag = self.env["product.tag"].sudo().create({"name": "Facet Cache Test Tag"})
+        self.heavy_product.sudo().product_tag_ids = [Command.link(tag.id)]
+        domain = Domain([("id", "in", self.heavy_product.ids)])
+
+        first = ProductTemplate._get_shop_tags(self.website, domain, self.env.lang)
+        self.assertIn(tag.id, first)
+
+        # Same (website, domain, lang): served from the ormcache, no additional query.
+        with self.assertQueryCount(0):
+            second = ProductTemplate._get_shop_tags(self.website, domain, self.env.lang)
+        self.assertEqual(first, second)
+
+        # A tracked field changes: the cache for this domain must be invalidated, and the
+        # next call must reflect the change (not the stale, previously-cached tag).
+        other_tag = self.env["product.tag"].sudo().create({"name": "Facet Cache Test Tag 2"})
+        self.heavy_product.sudo().product_tag_ids = [Command.set([other_tag.id])]
+
+        third = ProductTemplate._get_shop_tags(self.website, domain, self.env.lang)
+        self.assertIn(other_tag.id, third)
+        self.assertNotIn(tag.id, third)
+
+    def test_shop_attributes_cache(self):
+        """`_get_shop_attributes` must not hit the database again for an identical
+        (website, domain, lang), and must be invalidated as soon as the catalog
+        changes."""
+        ProductTemplate = self.env["product.template"]
+        domain = Domain([("id", "in", self.heavy_product.ids)])
+
+        first = ProductTemplate._get_shop_attributes(self.website, domain, self.env.lang)
+        self.assertIn(self.size_attribute.id, first["attribute_ids"])
+
+        # Same (website, domain, lang): served from the ormcache, no additional query.
+        with self.assertQueryCount(0):
+            second = ProductTemplate._get_shop_attributes(self.website, domain, self.env.lang)
+        self.assertEqual(first, second)
+
+        # A tracked field changes (the color attribute line is removed): the cache for
+        # this domain must be invalidated, and the next call must reflect the change.
+        self.heavy_product.sudo().attribute_line_ids.filtered(
+            lambda line: line.attribute_id == self.color_attribute
+        ).unlink()
+
+        third = ProductTemplate._get_shop_attributes(self.website, domain, self.env.lang)
+        self.assertNotIn(self.color_attribute.id, third["attribute_ids"])
 
     # === PRODUCT PAGE === #
 

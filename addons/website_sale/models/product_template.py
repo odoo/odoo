@@ -48,6 +48,8 @@ class ProductTemplate(models.Model):
     _mail_post_access = "read"
     _check_company_auto = True
     _add_seo_rels = True
+    _clear_cache_name = "default"
+    _clear_cache_on_fields = {"list_price", "is_published", "public_categ_ids", "product_tag_ids"}
 
     # === DEFAULT METHODS ===#
 
@@ -1525,6 +1527,72 @@ class ProductTemplate(models.Model):
             [("attribute_line_ids.value_ids", "in", attribute_value_ids)]
             for attribute_value_ids in attribute_value_dict.values()
         ]
+
+    @api.ormcache("website.id", "repr(filters_domain)", "lang")
+    def _get_shop_tags(self, website, filters_domain, lang):  # noqa: ARG002
+        """Return the ids of the tags available as filters on `/shop`, for the products
+        matching `filters_domain` (i.e. ignoring the attribute values currently selected).
+
+        :param website: The website the shop is browsed on.
+        :param Domain filters_domain: The product.template domain to compute the tags for.
+        :param str lang: The language of the visitor, kept in the cache key as tag ordering
+            may depend on translated names.
+        :rtype: list[int]
+        """
+        filters_query = self.sudo()._search(filters_domain)
+        return (
+            self
+            .env["product.tag"]
+            .sudo()
+            .search_fetch(
+                Domain.AND([
+                    Domain("visible_to_customers", "=", True),
+                    Domain.OR([
+                        Domain("product_template_ids", "in", filters_query),
+                        Domain("product_product_ids.product_tmpl_id", "in", filters_query),
+                    ]),
+                    website.website_domain(),
+                ])
+            )
+            .ids
+        )
+
+    @api.ormcache("website.id", "repr(filters_domain)", "lang")
+    def _get_shop_attributes(self, website, filters_domain, lang):  # noqa: ARG002
+        """Return the attribute values available as filters on `/shop`, for the products
+        matching `filters_domain` (i.e. ignoring the attribute values currently selected,
+        so that every value the visitor could still switch to is proposed).
+
+        :param website: The website the shop is browsed on.
+        :param Domain filters_domain: The product.template domain to compute the attributes for.
+        :param str lang: The language of the visitor, kept in the cache key as attribute
+            ordering may depend on translated names.
+        :return: {'attribute_ids': list[int], 'value_ids_per_attribute_id': dict[int, list[int]]}
+        :rtype: dict
+        """
+        filters_query = self.sudo()._search(filters_domain)
+
+        grouped_pavs = (
+            self
+            .env["product.attribute.value"]
+            .sudo()
+            ._read_group(
+                domain=[
+                    ("pav_attribute_line_ids.product_tmpl_id", "in", filters_query),
+                    ("attribute_id.visibility", "=", "visible"),
+                ],
+                groupby=["attribute_id"],
+                order="attribute_id",
+                aggregates=["id:recordset"],
+            )
+        )
+
+        return {
+            "attribute_ids": [attribute.id for attribute, _pavs in grouped_pavs],
+            "value_ids_per_attribute_id": {
+                attribute.id: pavs.sorted().ids for attribute, pavs in grouped_pavs
+            },
+        }
 
     @api.model
     def _get_website_sale_search_fields(self, search_in_description=True):

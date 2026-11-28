@@ -7,6 +7,7 @@ from odoo import models
 
 class ProductTemplateAttributeLine(models.Model):
     _inherit = "product.template.attribute.line"
+    _clear_cache_name = "default"
 
     def _prepare_single_value_for_display(self):
         """Display single-value product template attribute lines in the specs table.
