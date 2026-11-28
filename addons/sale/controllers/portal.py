@@ -161,12 +161,15 @@ class CustomerPortal(payment_portal.PaymentPortal):
             and order_sudo.state in ["draft", "sent"]
         ):
             # If a public/portal user accesses the order which is in draft or sent state with the
-            # access token. Log a note on the chatter.
-            today = fields.Date.today().isoformat()
-            session_obj_date = request.session.get('view_quote_%s' % order_sudo.id)
-            if session_obj_date != today:
-                # store the date as a string in the session to allow serialization
-                request.session['view_quote_%s' % order_sudo.id] = today
+            # access token. Log a note on the chatter, at most once a day, independently of the session.
+            mt_order_viewed = order_sudo.env.ref('sale.mt_order_viewed')
+            already_viewed_today = order_sudo.env['mail.message'].search_count([
+                ('model', '=', order_sudo._name),
+                ('res_id', '=', order_sudo.id),
+                ('subtype_id', '=', mt_order_viewed.id),
+                ('date', '>=', fields.Datetime.today()),
+            ], limit=1)
+            if not already_viewed_today:
                 # The "Quotation viewed by customer" log note is an information
                 # dedicated to the salesman and shouldn't be translated in the customer/website lgg
                 context = {'lang': order_sudo.user_id.partner_id.lang or order_sudo.company_id.partner_id.lang}
