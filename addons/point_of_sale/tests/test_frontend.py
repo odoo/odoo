@@ -1396,7 +1396,7 @@ class TestUi(TestPointOfSaleHttpCommon):
                 'default_code': 'TESTPROD2',
             },
             {
-                'name': 'Apple',
+                'name': 'Big Green Apple',
                 'list_price': 100,
                 'taxes_id': False,
                 'available_in_pos': True,

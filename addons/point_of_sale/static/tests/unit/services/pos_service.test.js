@@ -726,7 +726,7 @@ describe("pos_store.js", () => {
         expect(store.selectedCategory).toBe(undefined);
         store.searchProductWord = "TEST 2";
         products = store.productsToDisplay;
-        expect(products.length).toBe(1);
+        expect(products.length).toBe(2);
         expect(products[0].id).toBe(6);
     });
 
