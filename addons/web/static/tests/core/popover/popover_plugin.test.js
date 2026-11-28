@@ -33,6 +33,51 @@ test("simple use", async () => {
     expect(".o_popover #comp").toHaveCount(0);
 });
 
+test("the body is flagged while a popover is open", async () => {
+    class Comp extends Component {
+        static template = xml`<div id="comp">in popover</div>`;
+    }
+
+    expect(document.body).not.toHaveClass("o-popover-open");
+
+    const removeFirst = getService(PopoverPlugin).add(target, Comp);
+    const removeSecond = getService(PopoverPlugin).add(
+        target,
+        Comp,
+        {},
+        { closeOnClickAway: false }
+    );
+    await animationFrame();
+    expect(".o_popover").toHaveCount(2);
+    expect(document.body).toHaveClass("o-popover-open");
+
+    removeFirst();
+    await animationFrame();
+    expect(".o_popover").toHaveCount(1);
+    expect(document.body).toHaveClass("o-popover-open");
+
+    removeSecond();
+    await animationFrame();
+    expect(".o_popover").toHaveCount(0);
+    expect(document.body).not.toHaveClass("o-popover-open");
+});
+
+test("the body is not flagged while a tooltip is open", async () => {
+    class Comp extends Component {
+        static template = xml`<div id="comp">in popover</div>`;
+    }
+
+    const remove = getService(PopoverPlugin).add(target, Comp, {}, { role: "tooltip" });
+    await animationFrame();
+    expect(".o_popover[role=tooltip]").toHaveCount(1);
+    expect(document.body).not.toHaveClass("o-popover-open");
+
+    remove();
+    await animationFrame();
+    expect(".o_popover").toHaveCount(0);
+    expect(document.body).not.toHaveClass("o-popover-open");
+});
+
 test("close on click away", async () => {
     class Comp extends Component {
         static template = xml`<div id="comp">in popover</div>`;

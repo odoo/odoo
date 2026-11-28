@@ -1,4 +1,13 @@
-import { Component, proxy, signal, t, useEffect, useProps } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    onWillDestroy,
+    proxy,
+    signal,
+    t,
+    useEffect,
+    useProps,
+} from "@odoo/owl";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { downloadFile } from "@web/core/network/download";
 import { useAutofocus, useBackButton, useService } from "@web/core/utils/hooks";
@@ -74,6 +83,8 @@ export class FileViewer extends Component {
             isIframeLoaded: false,
         });
         this.ui = useService("ui");
+        onMounted(() => document.body.classList.add("o-file-viewer-open"));
+        onWillDestroy(() => document.body.classList.remove("o-file-viewer-open"));
         useEffect(() => {
             if (this.iframeViewerPdfRef()) {
                 hidePDFJSButtons(this.iframeViewerPdfRef(), {

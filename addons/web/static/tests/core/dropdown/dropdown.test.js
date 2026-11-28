@@ -1627,6 +1627,22 @@ test("dropdown: no BottomSheet", async () => {
     expect(".o_bottom_sheet").toHaveCount(0);
 });
 
+test.tags("mobile");
+test("dropdown: the body is flagged while the bottom sheet is mounted", async () => {
+    await mountWithCleanup(SimpleDropdown);
+    expect(document.body).not.toHaveClass("o-bottom-sheet-mounted");
+
+    await click(DROPDOWN_TOGGLE);
+    await animationFrame();
+    expect(".o_bottom_sheet").toHaveCount(1);
+    expect(document.body).toHaveClass("o-bottom-sheet-mounted");
+
+    await click(".o_bottom_sheet_backdrop");
+    await animationFrame();
+    expect(".o_bottom_sheet").toHaveCount(0);
+    expect(document.body).not.toHaveClass("o-bottom-sheet-mounted");
+});
+
 test("can be toggled with the UP/DOWN arrow keys", async () => {
     class Parent extends SimpleDropdown {}
 

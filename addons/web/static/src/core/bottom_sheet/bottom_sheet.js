@@ -3,7 +3,7 @@
  *
  * @class
  */
-import { Component, onMounted, proxy, signal, t, useProps } from "@odoo/owl";
+import { Component, onMounted, onWillDestroy, proxy, signal, t, useProps } from "@odoo/owl";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useBackButton } from "@web/core/utils/hooks";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
@@ -72,7 +72,10 @@ export class BottomSheet extends Component {
             () => this.state.isPositionedReady && !this.state.isDismissing
         );
 
+        onWillDestroy(() => document.body.classList.remove("o-bottom-sheet-mounted"));
+
         onMounted(() => {
+            document.body.classList.add("o-bottom-sheet-mounted");
             const isReduced =
                 browser.matchMedia(`(prefers-reduced-motion: reduce)`) === true ||
                 browser.matchMedia(`(prefers-reduced-motion: reduce)`).matches === true;
