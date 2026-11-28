@@ -13,7 +13,14 @@ patch(ControlButtons.prototype, {
             // A down payment still has to be deducted when settling the order
             "|",
             ["amount_unpaid", ">", 0],
-            ["order_line.is_downpayment", "=", true],
+            [
+                "order_line",
+                "any",
+                [
+                    ["is_downpayment", "=", true],
+                    ["qty_to_invoice", "<", 0],
+                ],
+            ],
         ];
         if (this.pos.get_order()?.get_partner()) {
             domain = [
