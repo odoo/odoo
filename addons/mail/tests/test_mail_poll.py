@@ -4,7 +4,8 @@ from datetime import timedelta
 from pprint import pformat
 
 from odoo.addons.mail.tests.common import MailCommon
-from odoo.tests.common import HttpCase, JsonRpcException, new_test_user, tagged
+from odoo.fields import Command
+from odoo.tests.common import HttpCase, JsonRpcException, RecordCapturer, new_test_user, tagged
 
 
 @tagged("mail_poll")
@@ -281,3 +282,22 @@ class TestMailPoll(MailCommon, HttpCase):
         self.env["mail.poll"]._end_expired_polls()
         self.assertTrue(poll.end_message_id)
         self.assertFalse(poll.winning_option_id)
+
+    def test_message_post_ignores_poll_values_from_client_context(self):
+        self.authenticate(self.user_employee.login, self.user_employee.login)
+        with RecordCapturer(self.env["mail.poll"]) as capture:
+            message_id = self.make_jsonrpc_request("/mail/message/post", {
+                "context": {"mail_create_poll_values": {
+                    "option_ids": [
+                        Command.create({"option_label": "Yes"}),
+                        Command.create({"option_label": "No"}),
+                    ],
+                    "poll_question": "Lunch?",
+                }},
+                "post_data": {"body": "Hello", "message_type": "comment"},
+                "thread_id": self.test_record.id,
+                "thread_model": self.test_record._name,
+            })["message_id"]
+        message = self.env["mail.message"].browse(message_id)
+        self.assertEqual(message.author_id, self.partner_employee)
+        self.assertFalse(capture.records)

@@ -2,6 +2,7 @@ from datetime import timedelta
 
 from odoo import fields
 from odoo.addons.mail.controllers.thread import ThreadController
+from odoo.addons.mail.models.mail_poll import PollValues
 from odoo.addons.mail.tools.discuss import mail_route, Store
 from odoo.fields import Command, Domain
 
@@ -23,7 +24,7 @@ class PollController(ThreadController):
         if not thread:
             return
         end_dt = fields.Datetime.now() + timedelta(minutes=duration)
-        poll_values = {
+        poll_values = PollValues({
             "allow_multiple_options": allow_multiple_options,
             "option_ids": [
                 Command.create({"option_emoji": option.get("emoji"), "option_label": option["label"]})
@@ -31,7 +32,7 @@ class PollController(ThreadController):
             ],
             "poll_end_dt": end_dt,
             "poll_question": question,
-        }
+        })
         message = thread.with_context(mail_create_poll_values=poll_values).message_post(
             body="", message_type="comment", subtype_xmlid="mail.mt_comment",
         )
