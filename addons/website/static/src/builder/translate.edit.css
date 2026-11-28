@@ -31,3 +31,9 @@ html[data-edit_translations="1"] {
         display: none !important;
     }
 }
+
+/* Keep the link a block, as in edit mode, so that the editor puts its
+   filler <br> inside it and not in the translation state span. */
+.o_file_name_container > .o_translation_state_inner_span > .o_link_readonly {
+    display: block;
+}
