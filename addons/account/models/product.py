@@ -68,14 +68,17 @@ class ProductTemplate(models.Model):
     def _get_product_accounts(self):
         # Branch users can read the parent company's products but not the parent company itself
         company = (self.company_id or self.env.company).sudo()
+        journal_account = self.env['account.account'].browse(self.env.context.get('journal_default_account_id'))
         return {
             'income': (
                 self.property_account_income_id
                 or self._get_category_account('property_account_income_categ_id')
+                or journal_account
                 or company.income_account_id.with_env(self.env)
             ), 'expense': (
                 self.property_account_expense_id
                 or self._get_category_account('property_account_expense_categ_id')
+                or journal_account
                 or company.expense_account_id.with_env(self.env)
             ),
         }

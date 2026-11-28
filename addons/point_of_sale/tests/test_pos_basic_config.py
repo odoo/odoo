@@ -854,6 +854,26 @@ class TestPoSBasicConfig(TestPoSCommon):
         self.assertEqual(session.cash_register_balance_end_real, amount_paid)
         self.assertEqual(self.config.last_session_closing_cash, amount_paid)
 
+    def test_income_account_journal_before_company_fallback(self):
+        """ PoS sale lines whose product and category have no income account use the PoS
+        journal default account before the company default income account. """
+        categ = self.env['product.category'].create({
+            'name': 'No Income Account',
+            'property_account_income_categ_id': False,
+        })
+        product = self.create_product('No Income Account Product', categ, 10.0)
+        journal_account = self.copy_account(self.sale_account)
+        self.config.journal_id.default_account_id = journal_account
+
+        self.open_new_session(0)
+        order_data = self.create_ui_order_data([(product, 1)])
+        self.env['pos.order'].sync_from_ui([order_data])
+        self.pos_session.post_closing_cash_details(order_data['amount_paid'])
+        self.pos_session.close_session_from_ui()
+
+        sale_line = self.pos_session.move_id.line_ids.filtered(lambda l: l.account_id == journal_account)
+        self.assertRecordValues(sale_line, [{'balance': -10.0}])
+
     def test_start_balance_with_two_pos(self):
         """ When having several POS with cash control, this tests ensures that each POS has its correct opening amount """
 

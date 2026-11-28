@@ -111,9 +111,11 @@ class AccountMove(models.Model):
                 if not line._eligible_for_stock_account() or line.product_id.valuation != 'real_time':
                     continue
                 # Retrieve accounts needed to generate the COGS.
-                accounts = line.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=move.fiscal_position_id)
+                accounts = line.product_id.product_tmpl_id.with_context(
+                    journal_default_account_id=move.journal_id.default_account_id.id,
+                ).get_product_accounts(fiscal_pos=move.fiscal_position_id)
                 stock_account = accounts['stock_valuation']
-                credit_expense_account = accounts['expense'] or move.journal_id.default_account_id
+                credit_expense_account = accounts['expense']
                 if not stock_account or not credit_expense_account:
                     continue
 
