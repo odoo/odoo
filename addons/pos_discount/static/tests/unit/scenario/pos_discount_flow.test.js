@@ -119,6 +119,7 @@ test("PosDiscountServiceFeePresetSwitchTour: a global discount only reaches a fe
     expect(Utils.getOrderTotal()).toInclude("88");
 
     await Utils.clickControlButton("Percent 10 after discount");
+    await Utils.selectPreset("Percent 10 before discount");
     await advanceTime(150);
 
     expect(order.preset_id.id).toBe(preDiscount.id);
@@ -128,6 +129,7 @@ test("PosDiscountServiceFeePresetSwitchTour: a global discount only reaches a fe
     expect(Utils.getOrderTotal()).toInclude("90");
 
     await Utils.clickControlButton("Percent 10 before discount");
+    await Utils.selectPreset("Percent 10 after discount");
     await advanceTime(150);
 
     expect(order.preset_id.id).toBe(postDiscount.id);
@@ -147,6 +149,7 @@ test("PosDiscountServiceFeePresetSwitchTour: a global discount only reaches a fe
     expect(Utils.doesNotHaveOrderline({ productName: "Service Fee" })).toBe(true);
 
     await Utils.clickControlButton("Percent 10 after discount");
+    await Utils.selectPreset("Percent 10 before discount");
     await advanceTime(150);
 
     expect(feeLines()).toHaveLength(1);

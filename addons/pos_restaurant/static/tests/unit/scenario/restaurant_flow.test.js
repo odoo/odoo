@@ -216,6 +216,7 @@ test("PreparationPrinterContent: guest, notes, preset, note update in preparatio
     await Utils.clickTableById(3);
     await Utils.clickDisplayedProduct("TEST");
     await Utils.clickControlButton("In");
+    await Utils.selectPreset("Out");
 
     const order3 = store.getOrder();
     expect(order3.preset_id.name).toBe("Out");
@@ -278,7 +279,7 @@ test("test_preset_timing_restaurant: select takeaway preset, name popup, pick ti
     await Utils.clickTable("1");
     await Utils.clickDisplayedProduct("TEST");
     await Utils.clickControlButton("In");
-    await animationFrame();
+    await Utils.selectPreset("Out");
     await waitFor(".modal .preset-slot-button");
 
     await contains('.modal button:contains("June 17")').click();
@@ -910,6 +911,7 @@ test("test_open_register_with_preset_takeaway: timing popup on table, cancel rem
     const preset = store.models["pos.preset"].get(2);
     preset.attendance_ids = [...preset.attendance_ids, att];
     store.config.default_preset_id = preset;
+    store.session.default_preset_id = preset;
 
     await Utils.clickTable("1");
     await waitFor(".modal .preset-slot-button");

@@ -473,6 +473,16 @@ patch(PosStore.prototype, {
             );
             if (!order) {
                 order = this.createNewOrder(data);
+            } else if (
+                this.config.use_presets &&
+                !data["preset_id"] &&
+                !order.isRefund &&
+                order.lines.length === 0
+            ) {
+                this.selectPreset(
+                    this.shouldSelectPreset(order) ? false : this.defaultPreset,
+                    order
+                );
             }
             return order;
         }
@@ -563,7 +573,7 @@ patch(PosStore.prototype, {
                     !o.isSynced &&
                     !o.floating_order_name &&
                     !o.preset_time &&
-                    (!o.preset_id || o.preset_id.id === this.config.default_preset_id?.id)
+                    (!o.preset_id || o.preset_id.id === this.defaultPreset?.id)
             );
 
             if (potentialsOrders.length) {

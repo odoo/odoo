@@ -62,6 +62,7 @@ export class PosSession extends models.ServerModel {
             "payment_method_ids",
             "state",
             "access_token",
+            "default_preset_id",
         ];
     }
 
@@ -233,6 +234,7 @@ export class PosSession extends models.ServerModel {
             payment_method_ids: [2, 1],
             state: "opened",
             access_token: "e09c4843-c913-463a-959d-b9e235881201",
+            default_preset_id: false,
             write_date: "2025-01-01 10:00:00",
         },
     ];

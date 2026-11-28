@@ -607,6 +607,10 @@ export class PosStore extends WithLazyGetterTrap {
         return this.config.company_id;
     }
 
+    get defaultPreset() {
+        return this.session.default_preset_id || this.config.default_preset_id;
+    }
+
     async processServerData() {
         // Used to identify the device when several devices are connected to the same POS
         this.device = this.data.device;
@@ -1608,7 +1612,7 @@ export class PosStore extends WithLazyGetterTrap {
         }
 
         if (this.config.use_presets && !data["preset_id"] && !order.isRefund) {
-            this.selectPreset(this.config.default_preset_id, order, this.shouldSelectPreset(order));
+            this.selectPreset(this.shouldSelectPreset(order) ? false : this.defaultPreset, order);
         }
         this.customerDisplay.rediscoverDisplays();
 
@@ -2361,35 +2365,45 @@ export class PosStore extends WithLazyGetterTrap {
             }
         }
     }
-    async selectPreset(preset = false, order = this.getOrder(), presetSelection = false) {
-        if (!preset || presetSelection) {
+    async selectPreset(preset = false, order = this.getOrder()) {
+        if (!preset) {
             const selectionList = this.config.available_preset_ids.map((preset) => ({
                 id: preset.id,
                 label: preset.name,
                 isSelected: order.preset_id && preset.id === order.preset_id.id,
                 item: preset,
                 color: preset.color,
+                isStarred: preset.id === this.defaultPreset?.id,
             }));
 
             if (selectionList.length <= 1) {
                 return;
             }
 
-            preset =
-                selectionList.length === 2 && !presetSelection
-                    ? selectionList.find((preset) => !preset.isSelected).item
-                    : await makeAwaitable(this.dialog, SelectionPopup, {
-                          title: _t("Select preset"),
-                          list: selectionList,
-                          size: "md",
-                          bodyClass: "pb-4",
-                      });
+            preset = await makeAwaitable(this.dialog, SelectionPopup, {
+                title: _t("Select preset"),
+                list: selectionList,
+                size: "md",
+                bodyClass: "pb-4",
+                stars: true,
+                onStarClick: async (presetId) => {
+                    const selectedPreset = this.config.available_preset_ids.find(
+                        (p) => p.id === presetId
+                    );
+                    if (selectedPreset) {
+                        this.session.default_preset_id = selectedPreset;
+                        await this.data.write("pos.session", [this.session.id], {
+                            default_preset_id: selectedPreset.id,
+                        });
+                    }
+                },
+            });
             // Keep the existing preset if the user cancels the selection popup.
             if (!preset && order.preset_id) {
                 return;
             }
         }
-        preset ??= this.config.default_preset_id;
+        preset ||= this.defaultPreset;
         order.setPreset(preset);
 
         if (preset.needsPartner) {

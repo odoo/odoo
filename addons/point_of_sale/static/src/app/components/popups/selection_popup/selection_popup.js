@@ -12,6 +12,8 @@ export class SelectionPopup extends Component {
         close: t.function(),
         size: t.string().optional("lg"),
         bodyClass: t.string().optional(""),
+        stars: t.boolean().optional(false),
+        onStarClick: t.function().optional(),
         displayType: t.selection(["list", "pills"]).optional("list"),
     });
 
@@ -31,7 +33,10 @@ export class SelectionPopup extends Component {
      *      }
      */
     setup() {
-        this.state = proxy({ selectedId: this.props.list.find((item) => item.isSelected) });
+        this.state = proxy({
+            selectedId: this.props.list.find((item) => item.isSelected),
+            list: this.props.list,
+        });
     }
     selectItem(itemId) {
         this.state.selectedId = itemId;
@@ -44,6 +49,17 @@ export class SelectionPopup extends Component {
     confirm() {
         this.props.getPayload(this.computePayload());
         this.props.close();
+    }
+    async star(itemId) {
+        if (!this.props.onStarClick) {
+            return;
+        }
+
+        await this.props.onStarClick(itemId);
+
+        for (const item of this.state.list) {
+            item.isStarred = item.id === itemId;
+        }
     }
     getItemBtnClass(item) {
         return {

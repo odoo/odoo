@@ -460,7 +460,7 @@ registry.category("web_tour.tours").add("test_cancel_future_order", {
             Dialog.confirm("Open Register"),
             FloorScreen.clickNewOrder(true),
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
-            ProductScreen.selectPreset("Eat in", "Takeaway", false),
+            ProductScreen.selectPreset("Eat in", "Takeaway"),
             TextInputPopup.inputText("John"),
             Dialog.confirm(),
             Chrome.selectPresetTimingSlot("Tomorrow"),
@@ -844,7 +844,7 @@ registry.category("web_tour.tours").add("test_floating_order_name_change_partner
             Dialog.confirm("Open Register"),
             FloorScreen.clickNewOrder(true),
 
-            ProductScreen.selectPreset("Eat in", "Delivery", false),
+            ProductScreen.selectPreset("Eat in", "Delivery"),
             ProductScreen.clickCustomer("Abigael"),
             ProductScreen.customerIsSelected("Abigael"),
 
