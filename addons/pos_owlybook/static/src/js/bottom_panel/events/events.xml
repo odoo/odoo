@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<templates>
+    <t t-name="pos_owlybook.events" owl="1">
+        <div class="m-3">
+            <strong>Events triggered:</strong><br/>
+            <ul>
+                <li t-foreach="storyEvents" t-as="event" t-key="event_index">
+                   <ObjectRenderer object="event.params" name="event.name"/>
+                </li>
+            </ul>
+        </div>
+    </t>
+</templates>
