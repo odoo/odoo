@@ -154,7 +154,7 @@ class AccountMove(models.Model):
         return res
 
     def _post(self, soft=True):
-        # Auto-reconcile the invoice with payments coming from transactions.
+        # Auto-reconcile the invoice with payments coming from transactions or from its orders.
         # It's useful when you have a "paid" sale order (using a payment transaction) and you
         # invoice it later.
         posted = super()._post(soft)
@@ -163,6 +163,16 @@ class AccountMove(models.Model):
             payments = invoice.mapped("transaction_ids.payment_id").filtered(
                 lambda x: x.state in ("paid", "reconciled")
             )
+            if invoice.move_type == "out_invoice":
+                order_payments = invoice.line_ids.sale_line_ids.order_id.payment_ids.filtered(
+                    lambda payment: (
+                        payment.payment_type == "inbound"
+                        and payment.state in ("paid", "reconciled")
+                        and not payment.invoice_ids.filtered(lambda move: move.state != "cancel")
+                    )
+                )
+                invoice.matched_payment_ids |= order_payments
+                payments |= order_payments
             move_lines = payments.move_id.line_ids.filtered(
                 lambda line: (
                     line.account_type in ("asset_receivable", "liability_payable")
