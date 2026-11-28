@@ -181,9 +181,9 @@ class AccountChartTemplate(models.AbstractModel):
         res = super()._load(template_code, company, install_demo, force_create)
         if is_indian_template:
             if company.l10n_in_tds_feature:
-                company._activate_l10n_in_taxes(['tds_it_act_25_group'], company)
+                company._l10n_in_set_tds_tcs_feature_active('tds', True)
             if company.l10n_in_tcs_feature:
-                company._activate_l10n_in_taxes(['tcs_it_act_25_group'], company)
+                company._l10n_in_set_tds_tcs_feature_active('tcs', True)
         return res
 
     @template('in', 'account.journal')
