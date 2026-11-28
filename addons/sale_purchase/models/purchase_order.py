@@ -13,14 +13,17 @@ class PurchaseOrder(models.Model):
         groups='sales_team.group_sale_salesman')
     has_sale_order = fields.Boolean(
         "Technical field for whether the purchase order has associated sale orders",
-        compute='_compute_sale_order_count',
-        groups='sales_team.group_sale_salesman')
+        compute='_compute_has_sale_order')
 
     @api.depends('order_line.sale_order_id')
     def _compute_sale_order_count(self):
         for purchase in self:
             purchase.sale_order_count = len(purchase._get_sale_orders())
-            purchase.has_sale_order = bool(purchase.sale_order_count)
+
+    @api.depends('order_line.sale_line_id')
+    def _compute_has_sale_order(self):
+        for purchase in self:
+            purchase.has_sale_order = bool(purchase.order_line.sale_line_id)
 
     @api.depends('order_line.sale_order_id.partner_shipping_id')
     def _compute_dest_address_id(self):

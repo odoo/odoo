@@ -9,7 +9,8 @@
             </field>
             <field name="dest_address_id" position="attributes">
                 <attribute name="invisible">default_location_dest_id_usage != 'customer' and not default_location_dest_id_is_subcontracting_loc</attribute>
-                <attribute name="required">default_location_dest_id_usage == 'customer' or default_location_dest_id_is_subcontracting_loc</attribute>
+                <attribute name="required">default_location_dest_id_usage == 'customer'</attribute>
+                <attribute name="placeholder">Company subcontracting location</attribute>
             </field>
         </field>
     </record>
