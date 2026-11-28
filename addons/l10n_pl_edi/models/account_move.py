@@ -655,6 +655,18 @@ class AccountMove(models.Model):
                     return tax
                 raise UserError(self.env._("Purchase tax corresponding to '%s' required for the KSeF import was not found in the system.", tax_name))
 
+        def get_discounted_unit_price(price, discount, quantity, line_total):
+            """ Apply the P_10 discount per unit, or per line if it better matches the line total (P_11/P_11A),
+                as the FA(3) specification does not define it.
+            """
+            price_unit_discount = price - discount
+            if line_total is None or not quantity or quantity == 1:
+                return price_unit_discount
+            price_line_discount = price - discount / quantity
+            if abs(quantity * price_line_discount - line_total) < abs(quantity * price_unit_discount - line_total):
+                return price_line_discount
+            return price_unit_discount
+
         def parse_fa3_bill_xml(xml_content):
             root = etree.fromstring(xml_content)
 
@@ -680,24 +692,39 @@ class AccountMove(models.Model):
                 name = get_value(line_node, '{*}P_7') or '/'
                 tax_name = get_value(line_node, '{*}P_12') or ''
 
+                quantity = Decimal(get_value(line_node, '{*}P_8B') or '0')
+                is_gross_price = False
                 if P_9A := get_value(line_node, '{*}P_9A'):
-                    price_unit = float(P_9A)
+                    price = Decimal(P_9A)
+                    line_total = get_value(line_node, '{*}P_11')
                 elif P_9B := get_value(line_node, '{*}P_9B'):
+                    price = Decimal(P_9B)
+                    line_total = get_value(line_node, '{*}P_11A')
+                    is_gross_price = True
+                else:
+                    price = Decimal('0')
+                    line_total = get_value(line_node, '{*}P_11')
+
+                if P_10 := get_value(line_node, '{*}P_10'):
+                    price = get_discounted_unit_price(
+                        price,
+                        Decimal(P_10),
+                        quantity,
+                        Decimal(line_total) if line_total else None,
+                    )
+
+                price_unit = float(price)
+                if is_gross_price:
                     tax_amount = get_tax_amount_from_p12(tax_name)
                     if tax_amount is None:
                         raise UserError(self.env._("Tax corresponding to '%s' required to derive the net unit price from gross price during KSeF import could not be interpreted.", tax_name))
-                    price_unit = float(P_9B) * (1 - tax_amount / (100 + tax_amount))
-                else:
-                    price_unit = 0.0
-
-                if P_10 := get_value(line_node, '{*}P_10'):
-                    price_unit = float(Decimal(str(price_unit)) - Decimal(P_10))
+                    price_unit = price_unit * (1 - tax_amount / (100 + tax_amount))
 
                 lines.append(
                     {
                         'name': name,
                         'uom_name': get_value(line_node, '{*}P_8A') or '',
-                        'quantity': float(get_value(line_node, '{*}P_8B') or 0.0),
+                        'quantity': float(quantity),
                         'price_unit': price_unit,
                         'tax_name': tax_name,
                     }

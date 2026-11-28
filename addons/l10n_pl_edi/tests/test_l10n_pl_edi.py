@@ -1005,15 +1005,18 @@ class TestL10nPlEdi(TestL10nPlEdiCommon):
         self.assertEqual(self._get_xml_value(xml, "//ns:Podmiot2/ns:DaneIdentyfikacyjne/ns:NIP"), '1111111111')
 
     def test_import_invoice_discount_is_correctly_set(self):
-        self._assert_import_invoice('invoice_with_discount.xml', [
-            {
-                "price_unit": 41.37,
-                "price_subtotal": 103.43
-            },
-            {
-                "price_unit": 118.3,
-                "price_subtotal": 1064.7
-            }
+        # Net prices: lines 1-2 discount per unit, lines 3-4 per line
+        self._assert_import_invoice('invoice_with_net_discount.xml', [
+            {'price_unit': 41.37, 'price_subtotal': 103.43},
+            {'price_unit': 900.0, 'price_subtotal': 18000.0},
+            {'price_unit': 41.368, 'price_subtotal': 103.42},
+            {'price_unit': 118.3, 'price_subtotal': 1064.7},
+        ])
+        # Gross prices: line 1 discount per unit, line 2 per line, line 3 without P_11A
+        self._assert_import_invoice('invoice_with_gross_discount.xml', [
+            {'price_unit': 80.0, 'price_subtotal': 160.0},
+            {'price_unit': 80.0, 'price_subtotal': 160.0},
+            {'price_unit': 9.0, 'price_subtotal': 27.0},
         ])
 
     def test_cron_creates_empty_move_on_parsing_error(self):
