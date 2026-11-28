@@ -13,7 +13,15 @@ import {
     watchListeners,
 } from "@odoo/hoot";
 
+<<<<<<< 314100a8860e1361d67ad0af36f4175daac50a4e
 import { mockAssetsFactory } from "./mock_assets.hoot";
+||||||| 3eeaca8ece38fe2ad86b7bdd7aea133019412676
+import { disposeBootstrapInstances } from "./bootstrap.hoot";
+import { mockAssetsFactory } from "./mock_assets.hoot";
+=======
+import { disposeBootstrapInstances } from "./bootstrap.hoot";
+import { mockAssetsFactory, mockEmojiLoaderFactory } from "./mock_assets.hoot";
+>>>>>>> 9df0335ae510df80ab0a5fcc6b5ea79d2472aa3c
 import { mockBrowserFactory } from "./mock_browser.hoot";
 import { mockCurrencyFactory } from "./mock_currency.hoot";
 import { mockFunctionsFactory } from "./mock_functions.hoot";
@@ -531,12 +539,12 @@ const CSRF_TOKEN = odoo.csrf_token;
 const DEFAULT_ADDONS = ["base", "web"];
 const MODULE_MOCKS_BY_NAME = new Map([
     // Fixed modules
-    ["@web/core/emoji_picker/emoji_loader", mockFixedFactory],
     ["@web/core/template_inheritance", mockFixedFactory],
     // Other mocks
     ["@web/core/assets", mockAssetsFactory],
     ["@web/core/browser/browser", mockBrowserFactory],
     ["@web/core/currency", mockCurrencyFactory],
+    ["@web/core/emoji_picker/emoji_loader", mockEmojiLoaderFactory],
     ["@web/core/templates", mockTemplatesFactory],
     ["@web/core/user", mockUserFactory],
     ["@web/core/utils/functions", mockFunctionsFactory],

@@ -1,5 +1,6 @@
 import {
     animationFrame,
+    before,
     beforeEach,
     describe,
     expect,
@@ -11,6 +12,7 @@ import {
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { assets, loadBundle, loadCSS, loadJS } from "@web/core/assets";
+import { emojiLoader } from "@web/core/emoji_picker/emoji_loader";
 
 describe.current.tags("headless");
 
@@ -188,3 +190,111 @@ test("loadBundle: load same bundles in 2 iframes", async () => {
         [secondDoc, "SCRIPT", "text/javascript", "file2.js"],
     ]);
 });
+<<<<<<< 314100a8860e1361d67ad0af36f4175daac50a4e
+||||||| 3eeaca8ece38fe2ad86b7bdd7aea133019412676
+
+describe("cache shared by 2 tests", () => {
+    const globalCache = new Map();
+
+    beforeEach(() => {
+        patchWithCleanup(assets, { globalCache });
+    });
+
+    test("loadBundle: bundle still pending at the end of the test", async () => {
+        mockFetch((route) => {
+            expect.step(`fetch bundle: ${route.pathname}`);
+            // Simulate a response that comes after the end of the test.
+            return new Promise(() => {});
+        });
+
+        loadBundle("test.bundle");
+        await animationFrame();
+        expect.verifySteps(["fetch bundle: /web/bundle/test.bundle"]);
+    });
+
+    test("loadBundle: load bundle left pending by the previous test", async () => {
+        after(() => globalCache.clear());
+        stepOnAssetAppended(document);
+
+        loadBundle("test.bundle");
+        await animationFrame();
+        expect.verifySteps([
+            "fetch bundle: /web/bundle/test.bundle",
+            [document, "LINK", "text/css", "file1.css"],
+            [document, "LINK", "text/css", "file2.css"],
+            [document, "SCRIPT", "text/javascript", "file1.js"],
+            [document, "SCRIPT", "text/javascript", "file2.js"],
+        ]);
+    });
+});
+=======
+
+describe("cache shared by 2 tests", () => {
+    const globalCache = new Map();
+
+    beforeEach(() => {
+        patchWithCleanup(assets, { globalCache });
+    });
+
+    test("loadBundle: bundle still pending at the end of the test", async () => {
+        mockFetch((route) => {
+            expect.step(`fetch bundle: ${route.pathname}`);
+            // Simulate a response that comes after the end of the test.
+            return new Promise(() => {});
+        });
+
+        loadBundle("test.bundle");
+        await animationFrame();
+        expect.verifySteps(["fetch bundle: /web/bundle/test.bundle"]);
+    });
+
+    test("loadBundle: load bundle left pending by the previous test", async () => {
+        after(() => globalCache.clear());
+        stepOnAssetAppended(document);
+
+        loadBundle("test.bundle");
+        await animationFrame();
+        expect.verifySteps([
+            "fetch bundle: /web/bundle/test.bundle",
+            [document, "LINK", "text/css", "file1.css"],
+            [document, "LINK", "text/css", "file2.css"],
+            [document, "SCRIPT", "text/javascript", "file1.js"],
+            [document, "SCRIPT", "text/javascript", "file2.js"],
+        ]);
+    });
+});
+
+describe("emoji loader shared by 2 tests", () => {
+    let loadingPromise;
+
+    before(() => {
+        loadingPromise = emojiLoader._loadingPromise;
+        emojiLoader._loadingPromise = null;
+    });
+
+    after(() => {
+        emojiLoader._loadingPromise = loadingPromise;
+    });
+
+    beforeEach(() => {
+        patchWithCleanup(assets, { globalCache: new Map() });
+        mockFetch((route) => {
+            expect.step(`fetch bundle: ${route.pathname}`);
+            // Simulate a response that comes after the end of the test.
+            return new Promise(() => {});
+        });
+    });
+
+    test("emojiLoader: bundle still pending at the end of the test", async () => {
+        emojiLoader.load();
+        await animationFrame();
+        expect.verifySteps(["fetch bundle: /web/bundle/web.assets_emoji"]);
+    });
+
+    test("emojiLoader: load bundle left pending by the previous test", async () => {
+        emojiLoader.load();
+        await animationFrame();
+        expect.verifySteps(["fetch bundle: /web/bundle/web.assets_emoji"]);
+    });
+});
+>>>>>>> 9df0335ae510df80ab0a5fcc6b5ea79d2472aa3c
