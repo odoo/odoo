@@ -60,12 +60,22 @@ class HrLeave(models.Model):
                 if leave.work_entry_type_request_unit == 'day':
                     leave_from = datetime.combine(leave.request_date_from, time.min, tzinfo=employee_timezone)
                     leave_to = datetime.combine(leave.request_date_to, time.max, tzinfo=employee_timezone)
+                calendar = leave_version_sudo.resource_calendar_id
                 work_hours_data = employee._list_work_time_per_day(
                     leave_from,
                     leave_to,
                     domain=[('id', 'not in', ignored_resource_calendar_leaves)] if ignored_resource_calendar_leaves else None,
-                    calendar=leave_version_sudo.resource_calendar_id,
+                    calendar=calendar,
                 )[employee.id]
+                if (
+                    leave.work_entry_type_request_unit == 'half_day'
+                    and leave.request_date_from != leave.request_date_to
+                    and any(calendar.attendance_ids.mapped('duration_based'))
+                ):
+                    work_hours_data = [
+                        (day, leave._get_half_day_leave_hours_on_date(day, calendar=calendar)[1] if calendar._is_duration_based_on_date(day) else hours)
+                        for day, hours in work_hours_data
+                    ]
             for index, (day_date, work_hours_count) in enumerate(work_hours_data):
                 vals_list.append(leave._timesheet_prepare_line_values(index, work_hours_data, day_date, work_hours_count, project, task))
 
