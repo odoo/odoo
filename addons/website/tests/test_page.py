@@ -927,6 +927,7 @@ class TestUrlDependencies(TransactionCaseWithUserDemo):
             'operation': 'r',
         } for model in ['ir.ui.view', 'website.page']])
 
+<<<<<<< 73ab2ca1845c9cd40a1c5cf0a3f8b793b97c179b
         website = website.with_user(self.user_demo)
         with self.assertRaises(AccessError):
             website.robots_txt
@@ -936,3 +937,41 @@ class TestUrlDependencies(TransactionCaseWithUserDemo):
             dependencies['Website'][0]['record_name'],
             website.display_name,
         )
+||||||| f4a2fa622d662be2a84ae93c895a51bba7c25a77
+            dependencies = website.search_url_dependencies('website.page', page.ids)
+            self.assertEqual(
+                dependencies['Website'][0]['record_name'],
+                website.display_name,
+            )
+=======
+            dependencies = website.search_url_dependencies('website.page', page.ids)
+            self.assertEqual(
+                dependencies['Website'][0]['record_name'],
+                website.display_name,
+            )
+
+    def test_search_url_dependencies_form_redirect(self):
+        website = self.env['website'].search([], limit=1)
+        target_page, form_page = self.env['website.page'].create([{
+            'name': 'Target Page',
+            'url': '/target-page',
+            'type': 'qweb',
+            'arch': '<div>Target</div>',
+            'website_id': website.id,
+        }, {
+            'name': 'Form Page',
+            'url': '/form-page',
+            'type': 'qweb',
+            'arch': '''
+                <form data-success-mode="redirect" data-success-page="/target-page">
+                    <button type="submit">Send</button>
+                </form>
+            ''',
+            'website_id': website.id,
+        }])
+        dependencies = website.search_url_dependencies('website.page', target_page.ids)
+        self.assertEqual(
+            [dep['record_name'] for dep in dependencies.get('Page', [])],
+            [form_page.name],
+        )
+>>>>>>> 085524aa9f13f9e31462c9d55ff54cef70921d42

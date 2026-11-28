@@ -1448,7 +1448,10 @@ class Website(models.CachedModel):
             domains = []
             for url, website_domain in search_criteria:
                 domains.append(Domain.AND([
-                    [(field_name, 'ilike', f'href=%{url}')],
+                    Domain.OR([
+                        [(field_name, 'ilike', f'href=%{url}')],
+                        [(field_name, 'ilike', f'data-success-page=%{url}')],
+                    ]),
                     website_domain if hasattr(Model, 'website_id') else [],
                 ]))
 
