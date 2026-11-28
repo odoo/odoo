@@ -2075,7 +2075,7 @@ class Website(models.Model):
         best_word = None
         enumerate_words = self._trigram_enumerate_words if self.env.registry.has_trigram else self._basic_enumerate_words
         for word in word_list or enumerate_words(search_details, search, limit):
-            if search in word:
+            if search in word or search.replace('-', '') in word.replace('-', ''):
                 return search
             if word[0] == search[0] and word not in words:
                 similarity = similarity_score(search, word)
