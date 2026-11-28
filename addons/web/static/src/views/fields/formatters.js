@@ -309,7 +309,7 @@ export function formatInteger(value, options = {}) {
         return "";
     }
     if (options.isPassword) {
-        return "*".repeat(value.length);
+        return "*".repeat(String(value).length);
     }
     if (options.humanReadable) {
         return humanNumber(value, options);

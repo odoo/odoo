@@ -90,6 +90,8 @@ test("formatJson", () => {
 test("formatInteger", () => {
     expect(formatInteger(false)).toBe("");
     expect(formatInteger(0)).toBe("0");
+    expect(formatInteger(1234, { isPassword: true })).toBe("****");
+    expect(formatInteger(0, { isPassword: true })).toBe("*");
 
     patchWithCleanup(localization, { grouping: [3, 3, 3, 3] });
     expect(formatInteger(1000000)).toBe("1,000,000");
