@@ -4188,6 +4188,20 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             message.body == "<p>The move could not be posted for the following reason: You need to add a line before posting.</p>"
             for message in invalid_invoice_2.message_ids))
 
+    def test_post_invoice_without_product_line(self):
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2023-01-01',
+            'invoice_line_ids': [Command.create({
+                'display_type': 'line_note',
+                'name': 'Phase 1',
+            })],
+        })
+        with self.assertRaisesRegex(UserError, "You need to add a line before posting."):
+            invoice.action_post()
+        self.assertEqual(invoice.state, 'draft')
+
     def test_no_taxes_on_payment_term_line(self):
         ''' No tax should be set on payment_term lines'''
 
