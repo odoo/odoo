@@ -264,7 +264,7 @@ export class CallPreview extends Component {
             this.disableMicrophone();
             return;
         }
-        if (this.rtc.microphonePermission === "prompt") {
+        if (this.rtc.shouldShowMediaPermissionDialog("microphone")) {
             this.dialog.add(CallPermissionDialog, {
                 media: "microphone",
                 useMicrophone: () => this.enableMicrophone(),
@@ -288,7 +288,7 @@ export class CallPreview extends Component {
             this.disableCamera();
             return;
         }
-        if (this.rtc.cameraPermission === "prompt") {
+        if (this.rtc.shouldShowMediaPermissionDialog("camera")) {
             this.dialog.add(CallPermissionDialog, {
                 media: "camera",
                 useMicrophone: () => this.enableMicrophone(),

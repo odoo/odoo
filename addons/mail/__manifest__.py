@@ -241,6 +241,7 @@ For more specific needs, you may also assign custom-defined actions
         ],
         'mail.assets_discuss_public_test_tours': [
             ('include', 'web_tour.assets'),
+            "mail/static/tests/tours/media_capture_elements_tour_patch.js",
             'mail/static/tests/tours/discuss_channel_public_tour.js',
             'mail/static/tests/tours/discuss_channel_as_guest_tour.js',
             'mail/static/tests/tours/discuss_channel_call_action.js',
