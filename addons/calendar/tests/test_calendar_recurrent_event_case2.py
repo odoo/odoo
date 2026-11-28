@@ -69,7 +69,7 @@ class TestRecurrentEvent(common.TransactionCase):
             'recurrency': True,
         }
         for rrule_type, name, expected_count in (
-            ('daily', 'Daily Meeting', 720),
+            ('daily', 'Daily Meeting', 730),
             ('monthly', 'Monthly Meeting', 180),
             ('yearly', 'Yearly Meeting', 15),
         ):
@@ -85,7 +85,7 @@ class TestRecurrentEvent(common.TransactionCase):
         # Edit the max recurrence years
         self.env['ir.config_parameter'].sudo().set_int('calendar.max_recurrence_years', 5)
         for rrule_type, name, expected_count in (
-            ('daily', 'Custom Daily Meeting', 720),
+            ('daily', 'Custom Daily Meeting', 730),
             ('monthly', 'Custom Monthly Meeting', 60),
             ('yearly', 'Custom Yearly Meeting', 5),
         ):
@@ -99,7 +99,7 @@ class TestRecurrentEvent(common.TransactionCase):
                 )
 
         # Weekly 'forever' must honor the limit too (instead of always hitting the
-        # 720 hard cap), and the number of occurrences scales with the number of
+        # hard cap), and the number of occurrences scales with the number of
         # selected weekdays and inversely with the interval. The counts are exact:
         # the start (2026-04-01) is a Wednesday and a 2-year horizon is 365 // 7 * 2
         # = 104 weeks.
@@ -111,7 +111,7 @@ class TestRecurrentEvent(common.TransactionCase):
 
         # One weekday: one occurrence per week over the 104-week horizon.
         self.assertEqual(weekly_count('Weekly One Day', wed=True), 104,
-                         "weekly forever should respect max_recurrence_years (104 weeks), not the 720 cap")
+                         "weekly forever should respect max_recurrence_years (104 weeks), not the hard cap")
         # Three weekdays: three per week, minus the Monday preceding the Wednesday start.
         self.assertEqual(weekly_count('Weekly Three Days', mon=True, wed=True, fri=True), 311,
                          "weekly count must scale with the number of selected weekdays")

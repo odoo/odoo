@@ -18,7 +18,7 @@ from odoo.addons.microsoft_account.models.microsoft_service import TIMEOUT
 
 _logger = logging.getLogger(__name__)
 
-MAX_RECURRENT_EVENT = 720
+MAX_RECURRENT_EVENT = 730
 
 # API requests are sent to Microsoft Calendar after the current transaction ends.
 # This ensures changes are sent to Microsoft only if they really happened in the Odoo database.
