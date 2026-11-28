@@ -14,7 +14,6 @@ class TestMethodsOverrideTranslatedFields(RegistryLintCase):
         'point_of_sale': ['product.template.public_description', 'product.tag.pos_description'],
         'project': ['project.project.name'],
         'account': ['account.journal.name'],
-        'documents': ['documents.document.name'],
         'im_livechat': ['chatbot.script.title'],
         'documents_project': ['project.project.name'],
         'website_slides': ['slide.channel.description'],
