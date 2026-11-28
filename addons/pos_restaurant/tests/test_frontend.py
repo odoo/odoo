@@ -871,3 +871,23 @@ class TestFrontend(TestFrontendCommon):
     def test_table_merging_with_pos_user(self):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_table_merging_with_pos_user')
+
+    def test_tip_after_payment_close_session(self):
+        self.pos_config.write({'set_tip_after_payment': True, 'iface_tipproduct': True})
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('PosResTipScreenTour')
+
+        session = self.pos_config.current_session_id
+        tip_product = self.pos_config.tip_product_id
+        # tips added after payment: 0.4 on order 1, 1.5 on order 3 and 1.0 on order 4, all paid by Bank
+        tipped_orders = session.order_ids.filtered(lambda o: o.tip_amount and o.payment_ids.payment_method_id.type == 'bank')
+        self.assertEqual(sorted(tipped_orders.mapped('amount_total')), [2.4, 7.5, 9.0])
+        for order in tipped_orders:
+            tip_line = order.lines.filtered(lambda l: l.product_id == tip_product)
+            self.assertEqual(tip_line.price_subtotal_incl, order.tip_amount)
+            self.assertEqual(order.amount_total, sum(order.lines.mapped('price_subtotal_incl')))
+            self.assertEqual(order.amount_paid, order.amount_total)
+            self.assertEqual(sum(order.payment_ids.mapped('amount')), order.amount_total)
+
+        session.close_session_from_ui()
+        self.assertEqual(session.state, 'closed')
