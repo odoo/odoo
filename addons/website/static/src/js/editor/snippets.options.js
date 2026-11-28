@@ -1155,12 +1155,23 @@ options.Class.include({
         const disableDataKeys = allDataKeys.filter(value => !enableDataKeys.includes(value));
         const resetViewArch = !!params.resetViewArch;
 
-        return rpc('/website/theme_customize_data', {
+        const resetViewIds = await rpc('/website/theme_customize_data', {
             'is_view_data': isViewData,
             'enable': enableDataKeys,
             'disable': disableDataKeys,
             'reset_view_arch': resetViewArch,
         });
+        // The pending changes are saved after this call (e.g. on reload): drop
+        // the ones made on the views that were just reset, otherwise they would
+        // be written back on those views and show again once re-enabled.
+        if (resetViewIds && resetViewIds.length) {
+            const selector = resetViewIds
+                .map(id => `[data-oe-model="ir.ui.view"][data-oe-id="${id}"].o_dirty`)
+                .join(", ");
+            for (const el of this.ownerDocument.querySelectorAll(selector)) {
+                el.classList.remove("o_dirty");
+            }
+        }
     },
     /**
      * @private

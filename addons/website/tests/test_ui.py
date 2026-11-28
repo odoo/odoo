@@ -800,6 +800,19 @@ class TestUi(odoo.tests.HttpCase):
     def test_header_color_and_undo_redo_issue(self):
         self.start_tour("/", "undo_redo_header_oriented_issue", login="admin")
 
+    def test_header_text_element_reset(self):
+        self.start_tour("/", "header_text_element_reset", login="admin")
+        views = self.env['ir.ui.view'].with_context(active_test=False).search([
+            ('key', '=', 'website.header_text_element'),
+        ])
+        specific_view = views.filtered('website_id')
+        self.assertTrue(specific_view, "Hiding the element should create a website-specific view")
+        self.assertFalse(specific_view.active, "The header text element should be hidden")
+        self.assertFalse(
+            any('EDITED' in arch for arch in views.mapped('arch_db')),
+            "The pending changes should not be saved on the reset view",
+        )
+
     def test_website_edit_megamenu_visibility(self):
         self.start_tour("/", 'edit_megamenu_visibility', login='admin')
 

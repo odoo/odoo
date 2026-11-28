@@ -57,9 +57,10 @@ class Website(main.Website):
 
     @route()
     def theme_customize_data(self, is_view_data, enable=None, disable=None, reset_view_arch=False):
-        super().theme_customize_data(is_view_data, enable, disable, reset_view_arch)
+        reset_view_ids = super().theme_customize_data(is_view_data, enable, disable, reset_view_arch)
         if any(key in enable or key in disable for key in ['website_sale.products_list_view', 'website_sale.add_grid_or_list_option']):
             request.session.pop('website_sale_shop_layout_mode', None)
+        return reset_view_ids
 
     @route()
     def get_current_currency(self, **kwargs):
