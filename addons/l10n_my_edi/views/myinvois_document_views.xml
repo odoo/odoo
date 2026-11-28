@@ -21,11 +21,18 @@
                                 type="object"
                                 string="Cancel Submission"
                                 invisible="myinvois_state not in ['valid', 'rejected']"/>
-                        <field name="myinvois_state" widget="statusbar" statusbar_visible="in_progress,valid"/>
+                        <button name="action_create_received_bills"
+                                type="object"
+                                string="Create Bill"
+                                class="oe_highlight"
+                                invisible="myinvois_state != 'received' or invoice_ids"/>
+                        <field name="myinvois_state" widget="statusbar" statusbar_visible="in_progress,valid" invisible="is_received_document"/>
+                        <field name="myinvois_state" widget="statusbar" statusbar_visible="received" invisible="not is_received_document"/>
                     </header>
                     <sheet>
                         <widget name="web_ribbon" title="Processing" bg_color="text-bg-info" invisible="myinvois_state != 'in_progress'"/>
                         <widget name="web_ribbon" title="Rejected" bg_color="text-bg-warning" invisible="myinvois_state != 'rejected'"/>
+                        <widget name="web_ribbon" title="Received" bg_color="text-bg-success" invisible="myinvois_state != 'received'"/>
                         <div class="oe_button_box" name="button_box">
                             <button name="action_view_linked_invoices" type="object" icon="edit_square" class="oe_stat_button" invisible="linked_invoice_count == 0">
                                  <field name="linked_invoice_count" string="Source Documents" widget="statinfo"/>
@@ -38,6 +45,11 @@
                         </div>
                         <group>
                             <group>
+                                <field name="myinvois_document_type" invisible="not is_received_document"/>
+                                <field name="myinvois_supplier_name" invisible="not is_received_document"/>
+                                <field name="myinvois_supplier_tin" invisible="not is_received_document"/>
+                                <field name="myinvois_amount_total" invisible="not is_received_document"/>
+                                <field name="currency_id" invisible="1"/>
                                 <field name="myinvois_issuance_date"/>
                                 <field name="myinvois_submission_uid"/>
                                 <field name="myinvois_external_uuid"/>
@@ -76,6 +88,30 @@
             </field>
         </record>
 
+        <record id="myinvois_received_document_list_view" model="ir.ui.view">
+            <field name="name">myinvois.received.document.list.view</field>
+            <field name="model">myinvois.document</field>
+            <field name="arch" type="xml">
+                <list string="Received from MyInvois" create="false" sample="0" decoration-muted="myinvois_state == 'cancelled'">
+                    <header>
+                        <button name="action_open_document_sync_wizard" string="Sync MyInvois" type="object" display="always" class="btn-primary"/>
+                        <button name="action_create_received_bills" string="Create Bills" type="object"/>
+                    </header>
+                    <field name="name" readonly="1"/>
+                    <field name="myinvois_document_type" optional="hide"/>
+                    <field name="myinvois_supplier_name"/>
+                    <field name="myinvois_supplier_tin" optional="show"/>
+                    <field name="myinvois_issuance_date"/>
+                    <field name="myinvois_validation_time" optional="show"/>
+                    <field name="currency_id" column_invisible="True"/>
+                    <field name="myinvois_amount_total" sum="Total"/>
+                    <field name="myinvois_state" widget="badge"
+                           decoration-success="myinvois_state == 'received'"
+                           decoration-danger="myinvois_state == 'cancelled'"/>
+                </list>
+            </field>
+        </record>
+
         <record id="myinvois_document_search_view" model="ir.ui.view">
             <field name="name">myinvois.document.search.view</field>
             <field name="model">myinvois.document</field>
@@ -94,6 +130,23 @@
                     <group>
                         <filter string="Type" name="groupby_move_type" domain="[]" context="{'group_by':'move_type'}"/>
                         <filter string="State" name="groupby_myinvois_state" domain="[]" context="{'group_by':'myinvois_state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="myinvois_received_document_search_view" model="ir.ui.view">
+            <field name="name">myinvois.received.document.search.view</field>
+            <field name="model">myinvois.document</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="myinvois_supplier_name"/>
+                    <field name="myinvois_supplier_tin"/>
+                    <field name="journal_id"/>
+                    <filter string="Without Bill" name="filter_received_without_bill" domain="[('myinvois_state', '=', 'received'), ('invoice_ids', '=', False)]"/>
+                    <group>
+                        <filter string="Issuance Month" name="groupby_issuance_month" domain="[]" context="{'group_by': 'myinvois_issuance_date:month'}"/>
                     </group>
                 </search>
             </field>

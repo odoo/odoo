@@ -9,6 +9,9 @@
                     <a t-if="journal_type == 'sale'" type="object" name="open_myinvois_document">MyInvois Documents</a>
                     <a t-if="journal_type == 'purchase'" type="object" name="open_myinvois_document">MyInvois Documents</a>
                 </div>
+                <div t-if="journal_type == 'purchase'" invisible="country_code != 'MY'">
+                    <a type="object" name="open_myinvois_received_documents">Received from MyInvois</a>
+                </div>
             </div>
         </field>
     </record>

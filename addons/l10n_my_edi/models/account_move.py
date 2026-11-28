@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import Command, api, fields, models
 from odoo.exceptions import UserError
+from odoo.tools.sql import column_exists, create_column
 
 
 class AccountMove(models.Model):
@@ -36,11 +37,26 @@ class AccountMove(models.Model):
             ('rejected', 'Rejected'),
             ('invalid', 'Invalid'),
             ('cancelled', 'Cancelled'),
+            ('received', 'Received'),
         ],
         compute='_compute_l10n_my_edi_state',
         store=True,
         tracking=True,
         export_string_translation=False,
+    )
+    l10n_my_edi_received_document_id = fields.Many2one(
+        comodel_name='myinvois.document',
+        string="Received MyInvois Document",
+        help="The document issued by the supplier on MyInvois for this bill.",
+        compute='_compute_l10n_my_edi_received_document_id',
+        store=True,
+        index='btree_not_null',
+        check_company=True,
+    )
+    l10n_my_edi_document_type = fields.Selection(
+        related='l10n_my_edi_received_document_id.myinvois_document_type',
+        string="MyInvois Document Type",
+        store=True,
     )
     l10n_my_edi_validation_time = fields.Datetime(
         string='MyInvois Validation Date',
@@ -65,7 +81,10 @@ class AccountMove(models.Model):
     @api.depends('l10n_my_edi_document_ids.myinvois_state', 'l10n_my_edi_document_ids.is_superseded')
     def _compute_l10n_my_edi_state(self):
         for move in self:
-            myinvois_document = move._get_active_myinvois_document(including_in_progress=True)
+            myinvois_document = (
+                move._get_active_myinvois_document(including_in_progress=True)
+                or move.l10n_my_edi_document_ids.filtered(lambda d: d.myinvois_state == 'received')
+            )
             if not myinvois_document:
                 # Invalid/cancelled documents are terminal: they must still be reflected here, otherwise the invoice
                 # looks as if it was never sent to MyInvois. Resending is still possible from these states (see
@@ -80,7 +99,16 @@ class AccountMove(models.Model):
     @api.depends('l10n_my_edi_document_ids.myinvois_state', 'l10n_my_edi_document_ids.myinvois_validation_time')
     def _compute_l10n_my_edi_validation_time(self):
         for move in self:
-            move.l10n_my_edi_validation_time = move._get_active_myinvois_document().myinvois_validation_time
+            myinvois_document = (
+                move._get_active_myinvois_document()
+                or move.l10n_my_edi_document_ids.filtered(lambda d: d.myinvois_state == 'received')
+            )
+            move.l10n_my_edi_validation_time = myinvois_document.myinvois_validation_time
+
+    @api.depends('l10n_my_edi_document_ids.is_received_document')
+    def _compute_l10n_my_edi_received_document_id(self):
+        for move in self:
+            move.l10n_my_edi_received_document_id = move.l10n_my_edi_document_ids.filtered('is_received_document')[:1]
 
     @api.depends('l10n_my_edi_state')
     def _compute_need_cancel_request(self):
@@ -117,7 +145,7 @@ class AccountMove(models.Model):
                 should_display = proxy_user and any(tax.l10n_my_tax_type == 'E' for tax in move.invoice_line_ids.tax_ids)
                 move.l10n_my_edi_display_tax_exemption_reason = should_display
 
-    @api.depends('move_type', 'state', 'country_code', 'company_id')
+    @api.depends('move_type', 'state', 'country_code', 'company_id', 'l10n_my_edi_received_document_id')
     def _compute_l10n_my_edi_is_applicable(self):
         """ Whether MyInvois is relevant for this invoice at all, regardless of the state of its document(s).
         Callers that care about the document's state check 'l10n_my_edi_state' on top of this. """
@@ -126,12 +154,54 @@ class AccountMove(models.Model):
                 move.is_invoice()
                 and move.state == 'posted'
                 and move.country_code == 'MY'
+                and not move.l10n_my_edi_received_document_id
                 and move._l10n_my_edi_get_proxy_user(),
             )
 
     # -----------------------
     # CRUD, inherited methods
     # -----------------------
+
+    def _auto_init(self):
+        """Create the columns of the stored `l10n_my_edi_received_document_id` and `l10n_my_edi_document_type` fields to
+        avoid computing them for every existing move during the installation of the module: no received document exists yet.
+        """
+        if not column_exists(self.env.cr, 'account_move', 'l10n_my_edi_received_document_id'):
+            create_column(self.env.cr, 'account_move', 'l10n_my_edi_received_document_id', 'int4')
+        if not column_exists(self.env.cr, 'account_move', 'l10n_my_edi_document_type'):
+            create_column(self.env.cr, 'account_move', 'l10n_my_edi_document_type', 'varchar')
+
+        return super()._auto_init()
+
+    def _get_import_file_type(self, file_data):
+        """ Identify the MyInvois documents: their type code carries the version of the MyInvois document type. """
+        # EXTENDS 'account_edi_ubl_cii'
+        tree = file_data['xml_tree']
+        if tree is not None and tree.find('{*}InvoiceTypeCode[@listVersionID]') is not None:
+            return 'account.edi.xml.ubl_myinvois_my'
+        return super()._get_import_file_type(file_data)
+
+    def write(self, vals):
+        # EXTENDS 'account'
+        if 'move_type' in vals and any(move.l10n_my_edi_received_document_id and move.move_type != vals['move_type'] for move in self):
+            raise UserError(self.env._("The type of a bill received from MyInvois cannot be changed."))
+        return super().write(vals)
+
+    def _post(self, soft=True):
+        # EXTENDS 'account'
+        mismatched_bills = self.env['account.move']
+        for move in self.filtered(lambda m: m.l10n_my_edi_state == 'received'):
+            document = move.l10n_my_edi_received_document_id
+            total = move.currency_id._convert(move.amount_total, document.currency_id, move.company_id, move.invoice_date or move.date)
+            if document.currency_id.compare_amounts(total, document.myinvois_amount_total):
+                mismatched_bills |= move
+        if mismatched_bills:
+            raise UserError(self.env._(
+                "The total of these bills no longer matches the e-invoice received from MyInvois: %(bills)s\n"
+                "Please adjust their lines before confirming them.",
+                bills=mismatched_bills.mapped('display_name'),
+            ))
+        return super()._post(soft)
 
     def button_request_cancel(self):
         # EXTENDS 'account'
@@ -200,7 +270,8 @@ class AccountMove(models.Model):
         """
         invoice_needing_new_document = self.env['account.move']
         myinvois_documents = self.env['myinvois.document']
-        for move in self.filtered(lambda m: m.state == 'posted' and m.is_invoice()):
+        # Bills received from MyInvois were issued by the supplier; sending them would issue a self-billed invoice.
+        for move in self.filtered(lambda m: m.state == 'posted' and m.is_invoice() and not m.l10n_my_edi_received_document_id):
             # It already has a document active on the platform, we don't want to send it again. Invalid/cancelled
             # documents are terminal and don't block resending, they're not active on the platform anymore.
             if move.l10n_my_edi_state not in (False, 'invalid', 'cancelled'):
