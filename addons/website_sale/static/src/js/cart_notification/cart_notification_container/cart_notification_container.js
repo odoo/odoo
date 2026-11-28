@@ -1,5 +1,5 @@
-import { Component, onMounted, onWillUnmount, proxy, t, useProps } from '@odoo/owl';
-import { useService } from "@web/core/utils/hooks";
+import { Component, onMounted, onWillUnmount, proxy, t, usePlugin, useProps } from '@odoo/owl';
+import { WebsiteMenusPlugin } from "@website/core/website_menus_plugin";
 import { ItemAddedNotification } from '@website_sale/js/cart_notification/item_added_notification/item_added_notification';
 import { WarningNotification } from '@website_sale/js/cart_notification/warning_notification/warning_notification';
 
@@ -15,7 +15,7 @@ export class CartNotificationContainer extends Component {
             notifications: this.props.notifications,
             topOffset: 0,
         });
-        this.website_menus = useService('website_menus');
+        this.website_menus = usePlugin(WebsiteMenusPlugin);
 
         // Ensure the notification is never on top of any header.
         let cleanup;

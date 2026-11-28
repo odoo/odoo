@@ -1158,6 +1158,7 @@ SERVICES_MAPPING = {
     "translation_mode": ['TranslationModePlugin', '@test_translation_mode/translation_mode_plugin'],
     "ui": ['UIPlugin', '@web/core/ui/ui_plugin'],
     "view": ['ViewPlugin', '@web/views/view_plugin'],
+    "website_menus": ['WebsiteMenusPlugin', '@website/core/website_menus_plugin'],
     "worker_service": ['WorkerPlugin', '@bus/services/worker_plugin'],
 }
 
