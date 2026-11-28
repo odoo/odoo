@@ -125,6 +125,33 @@ test("Linked record rendering", async () => {
     expect("li a[href='#']").toHaveText(display_name);
 });
 
+test("Popover of a non-editable event the user attends has no answer buttons", async () => {
+    const pyEnv = MockServer.current.env;
+    onRpc("res.users", "has_group", () => true);
+    onRpc("res.users", "check_synchronization_status", () => ({}));
+    onRpc("/calendar/check_credentials", () => ({}));
+    const eventId = pyEnv["calendar.event"].create({
+        name: "Read-only meeting",
+        start: "2016-12-14 09:00:00",
+        stop: "2016-12-14 10:00:00",
+        partner_ids: [serverState.partnerId, serverData.partnerId_1],
+    });
+    onRpc("res.partner", "get_attendee_detail", () => [
+        { id: serverState.partnerId, status: "accepted", event_id: eventId, attendee_id: 1 },
+        { id: serverData.partnerId_1, status: "accepted", event_id: eventId, attendee_id: 2 },
+    ]);
+    // The status labels are only fetched for editable events: the arch does not
+    // load user_can_edit, so the popover never gets them.
+    onRpc("calendar.event", "get_state_selections", () => {
+        expect.step("get_state_selections");
+    });
+    await mountView({ type: "calendar", resModel: "calendar.event", arch });
+    await clickEvent(eventId);
+    expect(".o_popover .o_cw_popover_edit").toHaveText("View");
+    expect(".o_popover button:contains(Maybe)").toHaveCount(0);
+    expect.verifySteps([]);
+});
+
 test("Default duration rendering", async () => {
     onRpc("res.users", "has_group", () => true);
     onRpc("res.users", "check_synchronization_status", () => ({}));
