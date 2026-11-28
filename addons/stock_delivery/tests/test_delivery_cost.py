@@ -126,3 +126,27 @@ class TestDeliveryCost(common.TransactionCase):
         picking._action_done()
         self.assertEqual(picking.carrier_price, 40.0)
         self.assertEqual(delivery_line.price_unit, picking.carrier_price)
+
+    def test_delivery_real_cost_locked_so_carrier_set_on_picking(self):
+        """The real shipping cost must be added on a locked SO when the carrier is only set
+        on the delivery, so that the delivery line has to be created."""
+        self.env.user.groups_id += self.env.ref("sale.group_auto_done_setting")
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_18.id,
+            'order_line': [(0, 0, {
+                'product_id': self.product_4.id,
+                'product_uom_qty': 1,
+                'price_unit': 120.00,
+            })],
+        })
+        so.action_confirm()
+        self.assertTrue(so.locked)
+
+        picking = so.picking_ids
+        picking.carrier_id = self.delivery_carrier
+        picking.move_ids.quantity = 1.0
+        picking.move_ids.picked = True
+        picking._action_done()
+        self.assertEqual(picking.carrier_price, 40.0)
+        delivery_line = so.order_line.filtered('is_delivery')
+        self.assertRecordValues(delivery_line, [{'price_unit': 40.0, 'name': self.delivery_carrier.name}])
