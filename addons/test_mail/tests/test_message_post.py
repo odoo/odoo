@@ -274,10 +274,10 @@ class TestMailNotifyAPI(TestMessagePostCommon):
     def test_notify_by_email_add_signature_no_author_user_or_no_user(self):
         test_record = self.env['mail.test.simple'].browse(self.test_record.ids)
         test_message = self.env['mail.message'].browse(self.test_message.ids)
-        test_message.write({
+        test_message.sudo().write({
             'author_id': self.env['res.partner'].sudo().create({
                 'name': 'Steve',
-            }).id
+            }).id,
         })
         # TOFIX: the test is actually broken because test_message cannot be
         # read; this populates the cache to make it work, but that's cheating...

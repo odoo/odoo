@@ -98,7 +98,7 @@ class TestDiscussChannelReadonly(MailCommon, HttpCase):
         self.assertEqual(
             str(message.body),
             '<p>Edited message <span class="o-mail-Message-edited" '
-            'data-o-datetime="2026-01-01 12:00:00"></span></p>',
+            f'data-o-datetime="2026-01-01 12:00:00" data-o-edited-by="{self.test_user.partner_id.id}"></span></p>',
         )
 
     def test_readonly_channel_user_can_star_message(self):

@@ -174,6 +174,12 @@ class TestDiscussAttachmentController(MailControllerAttachmentCommon):
                                 lambda res: (
                                     res.attr("attachment_ids", (posted + added).ids, version=False),
                                     res.attr("translationValue", False, version=False),
+                                    res.one(
+                                        "edited_by_partner_id",
+                                        ["name"],
+                                        value=lambda m: self.env["res.partner"] if guest else user.partner_id,
+                                        version=False,
+                                    ),
                                 ),
                             )
                             ._build_result(),

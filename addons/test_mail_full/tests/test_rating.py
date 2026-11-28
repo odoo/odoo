@@ -100,7 +100,7 @@ class TestRatingFlow(TestRatingCommon):
 
                 # give a feedback: send notifications (notify_delay_send set to False)
                 with self.mock_mail_gateway(mail_unlink_sent=False), self.mock_mail_app():
-                    record_rating.rating_apply(1, token=access_token, feedback='Bad Feedback')
+                    record_rating.sudo().rating_apply(1, token=access_token, feedback='Bad Feedback')
 
                 # check posted message: message is updated
                 update_message = record_rating.message_ids[0]

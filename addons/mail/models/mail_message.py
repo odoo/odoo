@@ -9,8 +9,9 @@ import typing
 from binascii import Error as binascii_error
 from collections import defaultdict
 from html import escape
-from lxml import html
+from lxml import etree, html
 from typing import Self
+from markupsafe import Markup
 
 from odoo import _, api, fields, models, modules, tools
 from odoo.exceptions import AccessError, MissingError, UserError
@@ -906,9 +907,29 @@ class MailMessage(models.Model):
         if not (self.env.su or self.env.user.has_group('base.group_user')):
             vals.pop('author_id', None)
             vals.pop('email_from', None)
+        if not self.env.su:
+            # who wrote a message, when and on which document is set at creation;
+            # only internal flows running as superuser (e.g. message_change_thread)
+            # may rewrite it, not even administrators through Manage Messages or RPC
+            if locked_fnames := [fname for fname in self._get_write_locked_fields() if fname in vals]:
+                raise AccessError(_(
+                    "The following message fields cannot be modified: %(fields)s",
+                    fields=", ".join(self._fields[fname]._description_string(self.env) for fname in locked_fnames),
+                ))
+            if not self.env.user._is_admin():
+                # only administrators can modify the content of messages written by others
+                content_changed = any(fname in vals for fname in (
+                    'attachment_ids', 'body', 'message_type', 'subject', 'subtype_id',
+                ))
+                if content_changed and any(message.author_id != self.env.user.partner_id for message in self):
+                    raise AccessError(_("You can only modify the content of your own messages."))
+            elif vals.get('body'):
+                if len(self) != 1:
+                    for message in self:
+                        message.write(vals)
+                    return True
+                vals = dict(vals, body=self._get_body_with_edited_marker(vals['body']))
         record_changed = 'model' in vals or 'res_id' in vals
-        if record_changed and not (self.env.su or self.env.user._is_system()):
-            raise AccessError(_("Only administrators can modify 'model' and 'res_id' fields."))
         if record_changed or 'message_type' in vals:
             self._invalidate_documents()
         res = super().write(vals)
@@ -917,6 +938,12 @@ class MailMessage(models.Model):
         if 'notification_ids' in vals or record_changed:
             self._invalidate_documents()
         return res
+
+    @api.model
+    def _get_write_locked_fields(self):
+        """ Fields that can only be written as superuser: they define the
+        authorship, timestamp and document of a message. """
+        return ['author_guest_id', 'author_id', 'date', 'email_from', 'model', 'res_id']
 
     def unlink(self):
         messages_by_partner = defaultdict(lambda: self.env['mail.message'])
@@ -1273,6 +1300,12 @@ class MailMessage(models.Model):
             dynamic_fields="_store_author_dynamic_fields",
             sudo=True,
         )
+        res.one(
+            "edited_by_partner_id", ["name"],
+            value=lambda m: m._get_edited_by_partner(),
+            predicate=lambda m: m.body and "data-o-edited-by" in m.body,
+            version=False,
+        )
         res.extend(["body", "create_date", "date"])
         res.attr(
             "email_from",
@@ -1557,6 +1590,50 @@ class MailMessage(models.Model):
         return self.filtered_domain(self._get_empty_domain()).filtered(
             lambda m: tools.is_html_empty(m.body)
         )
+
+    def _get_body_with_edited_marker(self, body):
+        self.ensure_one()
+        marker_attrs = {
+            "class": "o-mail-Message-edited",
+            "data-o-datetime": fields.Datetime.to_string(fields.Datetime.now()),
+        }
+        if not self.env.user._is_public():
+            marker_attrs["data-o-edited-by"] = str(self.env.user.partner_id.id)
+        tree = html.fragment_fromstring(body, create_parent="div")
+        for old_marker in tree.xpath(".//span[contains(@class, 'o-mail-Message-edited')]"):
+            old_marker.drop_tree()
+        children = tree.getchildren()
+        if children:  # body is a valid html
+            # If the last element is a div or p, add the edited span inside it to avoid the edit
+            # markup to be on its own line. Otherwise, append it to the end of the last element.
+            target_index = -2 if not self.email_add_signature and len(children) >= 2 else -1
+            last_div_element = (
+                children[target_index] if children[target_index].tag in ["div", "p"] else tree
+            )
+            if len(last_div_element):
+                last_child = last_div_element[-1]
+                if last_child.tail and not last_child.tail.endswith(" "):
+                    last_child.tail += " "
+            elif last_div_element.text and not last_div_element.text.endswith(" "):
+                last_div_element.text += " "
+        else:  # body is plain text: no extra space, as before
+            last_div_element = tree
+        etree.SubElement(last_div_element, "span", attrib=marker_attrs)
+        # markup: it is considered safe, as coming from html.fragment_fromstring
+        return (tree.text or "") + Markup("".join(etree.tostring(child, encoding="unicode") for child in tree))
+
+    def _get_edited_by_partner(self):
+        self.ensure_one()
+        Partner = self.env["res.partner"]
+        if not self.body or "data-o-edited-by" not in self.body:
+            return Partner
+        tree = html.fragment_fromstring(self.body, create_parent="div")
+        marker = next(iter(tree.xpath(".//span[@data-o-edited-by]")), None)
+        partner_id = marker.get("data-o-edited-by", "") if marker is not None else ""
+        if not partner_id.isdigit():
+            return Partner
+        partner = Partner.browse(int(partner_id)).exists()
+        return partner if partner.has_access("read") else Partner
 
     def _get_empty_domain(self):
         """Return a domain matching messages considered empty."""

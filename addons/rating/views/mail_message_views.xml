@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//page[@name='recipients']" position="after">
                 <page string="Ratings" name="page_rating">
-                    <field name="rating_ids"/>
+                    <field name="rating_ids" readonly="1"/>
                 </page>
             </xpath>
         </field>

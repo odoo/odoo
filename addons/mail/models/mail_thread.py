@@ -23,7 +23,7 @@ from email import message_from_string
 from email.message import EmailMessage
 from xmlrpc import client as xmlrpclib
 
-from lxml import etree, html
+from lxml import etree
 from markupsafe import Markup, escape
 from werkzeug import urls
 
@@ -5020,32 +5020,8 @@ class MailThread(models.AbstractModel):
         msg_values = {}
         if body is not None:
             if body or not message._filter_empty():
-                tree = html.fragment_fromstring(escape(body), create_parent="div")
-                for edited_span in tree.xpath('.//span[@class="o-mail-Message-edited"]'):
-                    edited_span.drop_tree()
-                children = tree.getchildren()
-                if len(children) > 0:  # body is a valid html
-                    # If the last element is a div or p, add the edited span inside it to avoid the edit markup
-                    # to be on its own line. Otherwise, append it to the end of the last element.
-                    target_index = -2 if not message.email_add_signature and len(children) >= 2 else -1
-                    last_div_element = (
-                        children[target_index] if children[target_index].tag in ["div", "p"] else tree
-                    )
-                    if len(last_div_element):
-                        last_child = last_div_element[-1]
-                        if last_child.tail and not last_child.tail.endswith(" "):
-                            last_child.tail += " "
-                    elif last_div_element.text and not last_div_element.text.endswith(" "):
-                        last_div_element.text += " "
-                    etree.SubElement(last_div_element, "span", attrib={"class": "o-mail-Message-edited", "data-o-datetime": fields.Datetime.to_string(fields.Datetime.now())})
-                    msg_values["body"] = (
-                        # markup: it is considered safe, as coming from html.fragment_fromstring
-                        (tree.text or "") + Markup("".join(etree.tostring(child, encoding="unicode") for child in tree))
-                    )
-                else:  # body is plain text
-                    msg_values["body"] = escape(tree.text or "") + Markup(
-                        "<span class='o-mail-Message-edited' data-o-datetime='%s'/>"
-                    ) % fields.Datetime.to_string(fields.Datetime.now())
+                # escape: plain str bodies are text, Markup bodies are kept as html
+                msg_values["body"] = message._get_body_with_edited_marker(escape(body))
             else:
                 msg_values["body"] = ""
         if attachment_ids is not None:  # None means "no update"
@@ -5098,6 +5074,12 @@ class MailThread(models.AbstractModel):
                 res.attr("pinned_at"),
                 res.attr("subject"),
                 res.attr("write_date"),
+                res.one(
+                    "edited_by_partner_id",
+                    ["name"],
+                    value=lambda m: m._get_edited_by_partner(),
+                    version=False,
+                ),
                 res.from_method("_store_linked_messages_fields"),
                 self._store_message_update_extra_fields(res),
                 res.attr(

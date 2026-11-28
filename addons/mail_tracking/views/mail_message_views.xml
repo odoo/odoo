@@ -19,12 +19,12 @@
             <field name="inherit_id" ref="mail.mail_message_view_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='parent_id']" position="after">
-                    <field name="source_template_id" string="Src Template"/>
-                    <field name="source_view_id" string="Src View"/>
+                    <field name="source_template_id" string="Src Template" readonly="1"/>
+                    <field name="source_view_id" string="Src View" readonly="1"/>
                 </xpath>
                 <xpath expr="//page[@name='recipients']" position="after">
                     <page string="Tracking" name="page_tracking">
-                        <field name="tracking_value_ids"/>
+                        <field name="tracking_value_ids" readonly="1"/>
                     </page>
                 </xpath>
             </field>

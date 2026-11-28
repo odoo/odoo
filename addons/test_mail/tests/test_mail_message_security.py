@@ -728,10 +728,11 @@ class TestMailMessageAccess(MessageAccessCommon):
     # ------------------------------------------------------------
 
     def test_access_write(self):
-        """ Test updating message content as internal user """
+        """ Test updating message content as internal user: only the author can
+        modify the content, whatever the access on the record or the recipients. """
         for msg, msg_vals, should_crash, reason in [
             # document based
-            (self.record_internal.message_ids[0], {}, False, 'W Access on record'),
+            (self.record_internal.message_ids[0], {}, True, 'W Access on record'),
             (self.record_internal_ro.message_ids[0], {}, True, 'No W Access on record'),
             (self.record_admin.message_ids[0], {}, True, 'No access on record'),
             # author
@@ -741,17 +742,17 @@ class TestMailMessageAccess(MessageAccessCommon):
             # Recipients To
             (self.record_admin.message_ids[0], {
                 'partner_ids': [(4, self.user_employee.partner_id.id)],
-            }, False, 'Recipients To > no access on record'),
+            }, True, 'Recipients To > no access on record'),
             # Recipients Cc
             (self.record_admin.message_ids[0], {
                 'partner_cc_ids': [(4, self.user_employee.partner_id.id)],
-            }, False, 'Recipients Cc > no access on record'),
+            }, True, 'Recipients Cc > no access on record'),
             # notified
             (self.record_admin.message_ids[0], {
                 'notification_ids': [(0, 0, {
                     'res_partner_id': self.user_employee.partner_id.id,
                 })],
-            }, False, 'Notified > no access on record'),
+            }, True, 'Notified > no access on record'),
         ]:
             original_vals = {
                 'author_id': msg.author_id.id,
@@ -773,7 +774,8 @@ class TestMailMessageAccess(MessageAccessCommon):
     def test_access_write_envelope(self):
         """ Test updating message envelope require some privileges """
         message = self.record_internal.with_user(self.user_employee).message_ids[0]
-        message.write({'body': 'Update Me'})
+        with self.assertRaises(AccessError):
+            message.write({'body': 'Update Me'})
         with self.assertRaises(AccessError):
             message.write({'model': 'res.partner'})
         # To change in 18+
@@ -794,7 +796,8 @@ class TestMailMessageAccess(MessageAccessCommon):
         with self.assertRaises(AccessError):
             test_record.with_user(self.user_portal_2).fetch(['name'])
         message = test_record.message_ids[0].with_user(self.user_portal)
-        message.write({'body': 'Updated'})
+        with self.assertRaises(AccessError):
+            message.write({'body': 'Updated'})
         with self.assertRaises(AccessError):
             message.with_user(self.user_portal_2).fetch(['subject'])
 
