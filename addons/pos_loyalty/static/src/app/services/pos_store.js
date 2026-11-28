@@ -32,9 +32,9 @@ patch(PosStore.prototype, {
         await this.updateOrder(this.getOrder());
     },
     async afterProcessServerData() {
-        // Remove reward lines that have no reward anymore (could happen if the program got archived)
+        // Remove reward lines whose reward or program is no longer loaded (e.g. archived program)
         this.models["pos.order.line"]
-            .filter((order) => order.is_reward_line && !order.reward_id)
+            .filter((line) => line.is_reward_line && !line.reward_id?.program_id)
             .map((line) => line.delete());
         await super.afterProcessServerData(...arguments);
     },
