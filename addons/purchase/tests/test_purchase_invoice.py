@@ -1355,6 +1355,37 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         self.assertEqual(po.order_line[-1:].product_id, self.product_order_other_price)
         self.assertListEqual(po.order_line.mapped('price_total'), (bill + bill_2).invoice_line_ids.mapped('price_total'))
 
+    def test_add_bill_to_po_without_uom(self):
+        bill = self.init_invoice(
+            'in_invoice',
+            partner=self.partner_a,
+            products=[self.product_order_var_name],
+            post=False,
+        )
+        bill.invoice_line_ids.product_uom_id = False
+        bill.action_post()
+        self.env['account.move.line'].flush_model()
+
+        match_lines = self.env['purchase.bill.line.match'].search([
+            ('partner_id', '=', self.partner_a.id)
+        ])
+        action = match_lines.action_add_to_po()
+        wizard = self.env['bill.to.po.wizard'].with_context({
+            **action['context'],
+            'active_ids': match_lines.ids
+        }).create({})
+
+        action = wizard.action_add_to_po()
+        po = self.env['purchase.order'].browse(action['res_id'])
+
+        self.assertEqual(len(po.order_line), 1)
+        self.assertEqual(po.order_line.product_id, self.product_order_var_name)
+        self.assertEqual(po.order_line.product_uom_id, self.product_order_var_name.uom_id)
+        self.assertEqual(po.order_line.price_unit_product_uom, po.order_line.price_unit)
+
+        po.button_confirm()
+        self.assertEqual(po.state, 'purchase')
+
     def test_onchange_partner_currency(self):
         """
         Test that the currency of the Bill is correctly set when the partner is changed
