@@ -13,7 +13,7 @@ class PosOrderReceipt(models.AbstractModel):
 
     def _order_receipt_generate_line_data(self):
         lines = super()._order_receipt_generate_line_data()
-        for line, data in zip(self.lines, lines):
+        for line, data in zip(self._get_receipt_lines(), lines):
             # Add custom code here to always get the price including tax for the receipt
             data['price_subtotal_incl_custom'] = self._order_receipt_format_currency(line.price_subtotal_incl)
             data['price_unit_incl_custom'] = self._order_receipt_format_currency(line.price_subtotal_incl / data['qty'] if line.qty else 0)

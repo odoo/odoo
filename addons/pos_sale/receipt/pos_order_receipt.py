@@ -9,8 +9,7 @@ class PosOrderReceipt(models.AbstractModel):
     def _order_receipt_generate_line_data(self):
         line_data = super()._order_receipt_generate_line_data()
 
-        for idx, line in enumerate(self.lines):
-            data = line_data[idx]
+        for line, data in zip(self._get_receipt_lines(), line_data):
             data['sale_order_name'] = line.sale_order_origin_id.name if line.sale_order_origin_id else False
 
         return line_data

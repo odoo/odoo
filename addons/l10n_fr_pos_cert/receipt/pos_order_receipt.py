@@ -8,7 +8,7 @@ class PosOrderReceipt(models.AbstractModel):
 
     def _order_receipt_generate_line_data(self):
         lines_data = super()._order_receipt_generate_line_data()
-        for line, line_data in zip(self.lines, lines_data):
+        for line, line_data in zip(self._get_receipt_lines(), lines_data):
             line_data['show_old_unit_price'] = self._show_old_unit_price(line)
         return lines_data
 
