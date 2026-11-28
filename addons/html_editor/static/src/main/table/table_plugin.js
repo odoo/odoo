@@ -36,7 +36,7 @@ import {
     isTableWrapper,
     wrapTableInScrollContainer,
 } from "@html_editor/utils/table";
-import { isBrowserFirefox } from "@web/core/browser/feature_detection";
+import { isBrowserFirefox, isIOS } from "@web/core/browser/feature_detection";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { BG_CLASSES_REGEX } from "@html_editor/utils/color";
@@ -44,6 +44,7 @@ import { _t } from "@web/core/l10n/translation";
 
 export const BORDER_SENSITIVITY = 5;
 const LONG_PRESS_DELAY = 200;
+const MULTI_TAP_DELAY = 500;
 
 const tableInnerComponents = new Set(["THEAD", "TBODY", "TFOOT", "TR", "TH", "TD"]);
 function isUnremovableTableComponent(node, root) {
@@ -1813,16 +1814,28 @@ export class TablePlugin extends Plugin {
         delete this.lastFocusCell;
     }
 
+    getEventDetail(ev, el) {
+        if (!isIOS() || ev.detail > 1 || !el) {
+            return ev.detail;
+        }
+        const isMultiTap =
+            this._lastTap?.el === el && ev.timeStamp - this._lastTap.timeStamp < MULTI_TAP_DELAY;
+        const count = isMultiTap ? (this._lastTap.count % 3) + 1 : 1;
+        this._lastTap = { el, timeStamp: ev.timeStamp, count };
+        return count;
+    }
+
     onMousedown(ev) {
         this._currentMouseState = ev.type;
         this._lastMousedownPosition = [ev.x, ev.y];
         const isPointerInsideCell = this.isPointerInsideCell(ev);
         const td = closestElement(ev.target, isTableCell);
+        const clickCount = this.getEventDetail(ev, td);
         if (isPointerInsideCell) {
             if (
                 !isProtected(td) &&
                 !isProtecting(td) &&
-                ((isEmptyBlock(td) && ev.detail === 2) || ev.detail === 3)
+                ((isEmptyBlock(td) && clickCount === 2) || clickCount === 3)
             ) {
                 this.handleFirefoxSelection();
                 this.selectTableCells(this.dependencies.selection.getEditableSelection());
@@ -1833,14 +1846,14 @@ export class TablePlugin extends Plugin {
                     // to keep it selected.
                     this._isFirefoxDoubleMousedown = true;
                 }
-                if (ev.detail === 2) {
+                if (clickCount === 2) {
                     // Specifically for double click on empty cell, to trigger
                     // selectionchange event and update the toolbar button states.
                     this.dependencies.selection.setSelection(
                         this.dependencies.selection.getEditableSelection()
                     );
                 }
-                if (ev.detail === 3) {
+                if (clickCount === 3) {
                     // Doing a tripleclick on a text will change the selection.
                     // In such case updateSelectionTable should not do anything.
                     this._isTripleClickInTable = true;
