@@ -2,7 +2,6 @@ import {
     clickOnSave,
     insertSnippet,
     registerWebsitePreviewTour,
-    changeImageShape,
     openPowerbox,
 } from "@website/js/tours/tour_utils";
 
@@ -130,20 +129,24 @@ registerWebsitePreviewTour(
             name: "Social Media",
         }),
         {
-            content: "Open MediaDialog from a snippet icon",
+            content: "Open the icon picker from a snippet icon",
             trigger: ":iframe .s_social_media [data-icon='oi_instagram']",
             run: "dblclick",
         },
         {
             content: "Check that every listed icon renders correctly",
-            trigger: ".o_select_media_dialog .font-icons-icons .font-icons-icon",
+            trigger: ".o-IconPicker .o-IconPicker-icon",
             async run() {
                 await document.fonts.ready;
-                const ICON_WIDTH = 21;
-                const failures = [...this.anchor
-                    .closest(".font-icons-icons")
-                    .querySelectorAll(".font-icons-icon")]
-                    .filter((iconEl) => parseInt(getComputedStyle(iconEl, '::before').width) !== ICON_WIDTH)
+                // A glyph is as wide as the font size, whereas an icon missing
+                // from the font shows its name instead.
+                const failures = [
+                    ...this.anchor.closest(".o-IconPicker").querySelectorAll(".o-IconPicker-icon"),
+                ]
+                    .filter((iconEl) => {
+                        const width = parseFloat(getComputedStyle(iconEl, "::before").width);
+                        return Math.abs(width - parseFloat(getComputedStyle(iconEl).fontSize)) > 1;
+                    })
                     .map((iconEl) => iconEl.dataset.icon);
 
                 if (failures.length) {
@@ -153,7 +156,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Pick the same icon",
-            trigger: ".o_select_media_dialog .o_we_attachment_selected[data-icon='oi_instagram']",
+            trigger: ".o-IconPicker .o-IconPicker-icon.o-selected[data-icon='oi_instagram']",
             run: "click",
         },
         {
@@ -161,61 +164,20 @@ registerWebsitePreviewTour(
             trigger: ":iframe .s_social_media [data-icon='oi_instagram']",
         },
         {
-            content: "Open MediaDialog again",
+            content: "Open the icon picker again",
             trigger: ":iframe .s_social_media [data-icon='oi_instagram']",
             run: "dblclick",
         },
         {
-            content: "Click on the ADD button",
-            trigger: ".o_select_media_dialog .btn:contains(Add)",
-            run: "click",
+            content: "Close it without picking an icon",
+            trigger: ".o-IconPicker input[role=combobox]",
+            run: "press Escape",
         },
         {
             content: "Check if the icon remains the same",
             trigger: ":iframe .s_social_media [data-icon='oi_instagram']",
         },
         ...clickOnSave(),
-    ]
-);
-
-registerWebsitePreviewTour(
-    "website_media_dialog_image_shape",
-    {
-        edition: true,
-    },
-    () => [
-        ...insertSnippet({
-            id: "s_text_image",
-            name: "Text - Image",
-            groupName: "Content",
-        }),
-        {
-            content: "Click on the image",
-            trigger: ":iframe .s_text_image img:not(:visible), :iframe .s_text_image img",
-            run: "click",
-        },
-        ...changeImageShape(),
-        {
-            content: "Open MediaDialog from an image",
-            trigger: ".btn-success[data-action-id='replaceMedia']",
-            run: "click",
-        },
-        {
-            content: "Click on the 'Icons' tab",
-            trigger:
-                '.o_select_media_dialog .o_notebook_headers .nav-item button:contains("Icons")',
-            run: "click",
-        },
-        {
-            content: "Select an icon",
-            trigger:
-                ".o_select_media_dialog:has(.nav-link.active:contains('Icons')) .tab-content span[data-icon='favorite']",
-            run: "click",
-        },
-        {
-            content: "Checks that the icon doesn't have a shape",
-            trigger: ":iframe .s_text_image [data-icon='favorite']:not([data-shape])",
-        },
     ]
 );
 
@@ -237,18 +199,13 @@ registerWebsitePreviewTour(
         },
         openPowerbox(":iframe .s_text_block p:last-child"),
         {
-            content: "Click on the media item from powerbox",
-            trigger: "div.o-we-command-name:contains('Media')",
-            run: "click",
-        },
-        {
-            content: "Click on the 'Icons' tab",
-            trigger: ".o_select_media_dialog button.nav-link:contains('Icons')",
+            content: "Click on the icon item from powerbox",
+            trigger: "div.o-we-command-name:contains('Icon')",
             run: "click",
         },
         {
             content: "Click on the first icon",
-            trigger: ".o_select_media_dialog .font-icons-icon",
+            trigger: ".o-IconPicker .o-IconPicker-icon",
             run: "click",
         },
         {

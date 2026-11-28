@@ -23,6 +23,7 @@ test("Icon List Snippet", async () => {
     );
 
     await contains(".o_hb_options_container button[data-action-id='replaceListIcon']").click();
-    await contains(".modal-dialog [data-icon='close']").click();
+    await contains(".o-IconPicker-icon[data-icon='close']").click();
+    expect(".o-IconPicker").toHaveCount(0);
     expect(":iframe .s_icon_list").toHaveStyle('--icon-list-icon-content: "close"');
 });

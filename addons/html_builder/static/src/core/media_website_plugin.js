@@ -1,5 +1,5 @@
 import { Plugin, shared } from "@html_editor/plugin";
-import { MEDIA_SELECTOR, isProtected } from "@html_editor/utils/dom_info";
+import { MEDIA_SELECTOR, isIconElement, isProtected } from "@html_editor/utils/dom_info";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { shouldEditableMediaBeEditable } from "@html_builder/utils/utils_css";
 import { _t } from "@web/core/l10n/translation";
@@ -7,7 +7,7 @@ import { Tooltip } from "@web/core/tooltip/tooltip";
 
 export class MediaWebsitePlugin extends Plugin {
     static id = "media_website";
-    static dependencies = ["media", "selection", "builderOptions", "operation"];
+    static dependencies = ["media", "icon", "selection", "builderOptions", "operation"];
     static shared = shared(["onDblClickEditableMedia", "openImageTooltip", "replaceMedia"]);
 
     /** @type {import("plugins").BuilderResources} */
@@ -85,11 +85,16 @@ export class MediaWebsitePlugin extends Plugin {
     }
 
     /**
-     * Opens the media dialog to replace the selected media.
+     * Opens the media dialog to replace the selected media, or the icon picker
+     * to replace an icon.
      *
      * @param {HTMLElement} mediaEl the media element to replace
      */
     async replaceMedia(mediaEl) {
+        if (isIconElement(mediaEl)) {
+            this.dependencies.icon.openIconPicker({ iconEl: mediaEl });
+            return;
+        }
         const sel = this.dependencies.selection.getEditableSelection();
         const editableEl =
             closestElement(mediaEl || sel.startContainer, ".o_savable") || this.editable;

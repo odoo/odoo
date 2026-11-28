@@ -2,10 +2,10 @@
 
 from unittest.mock import patch
 
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import HttpCase, TransactionCase, tagged
 from odoo.tools.translate import LazyGettext
 
-from odoo.addons.html_editor.tools import search_icons, translated_icon_tags
+from odoo.addons.html_editor.tools import icons_catalog, search_icons, translated_icon_tags
 from odoo.addons.web.icons import ICONS
 
 
@@ -60,3 +60,49 @@ class TestIconsSearch(TransactionCase):
                 search_icons(env, 'eto'), ['alt_route', 'bluetooth', 'star'],
                 "a needle matches the translated tags of an icon and the English tags of another",
             )
+
+
+class TestIconsCatalog(TransactionCase):
+
+    def test_icons_catalog(self):
+        catalog = icons_catalog('en_US')
+        self.assertEqual([icon['name'] for icon in catalog], list(ICONS))
+        shopping_cart = next(icon for icon in catalog if icon['name'] == 'shopping_cart')
+        self.assertEqual(shopping_cart['has_fill'], ICONS['shopping_cart']['has_fill'])
+        self.assertEqual(
+            shopping_cart['tags'], ICONS['shopping_cart']['tags']._source.split('|'),
+            "the English tags are listed one by one",
+        )
+
+    def test_icons_catalog_translated(self):
+        """Translated tags follow the English ones, without duplicates."""
+        def translate(tags, lang=''):
+            if tags._source == ICONS['star']['tags']._source:
+                return 'étoile|star'
+            return tags._source
+
+        icons_catalog.cache_clear()
+        self.addCleanup(icons_catalog.cache_clear)
+        with patch.object(LazyGettext, '_translate', translate):
+            catalog = {icon['name']: icon for icon in icons_catalog('fr_FR')}
+        english_tags = ICONS['star']['tags']._source.split('|')
+        self.assertIn('star', english_tags)
+        self.assertEqual(catalog['star']['tags'], [*english_tags, 'étoile'])
+        self.assertEqual(
+            catalog['shopping_cart']['tags'],
+            ICONS['shopping_cart']['tags']._source.split('|'),
+            "untranslated tags are not repeated",
+        )
+
+
+@tagged('-at_install', 'post_install')
+class TestIconsRoute(HttpCase):
+
+    def test_icons_route(self):
+        self.authenticate('admin', 'admin')
+        catalog = self.make_jsonrpc_request('/html_editor/icons', {'lang': 'en_US'})
+        self.assertEqual(catalog, icons_catalog('en_US'))
+        self.assertEqual(
+            self.make_jsonrpc_request('/html_editor/icons', {'lang': '../xx'}), catalog,
+            "an inactive language falls back to the user's one",
+        )

@@ -1,9 +1,10 @@
 import { Plugin } from "@html_editor/plugin";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 
 export class MassMailingIconSnippetOptionPlugin extends Plugin {
     static id = "mass_mailing.iconSnippetOption";
-    static dependencies = ["media", "dom"];
+    static dependencies = ["icon", "dom"];
     resources = {
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
     };
@@ -12,17 +13,17 @@ export class MassMailingIconSnippetOptionPlugin extends Plugin {
         if (!snippetEl.matches("p:has(> .s_icon)")) {
             return;
         }
-        let iconInserted = false;
-        await this.dependencies.media.openMediaDialog({
-            activeTab: "ICONS",
-            save: async (selectedIconEl) => {
-                iconInserted = true;
-                snippetEl.insertAdjacentElement("afterend", selectedIconEl);
-                snippetEl.remove();
-                this.dependencies.dom.wrapInlinesInBlocks(selectedIconEl.parentElement);
-            },
+        const selectedIconEl = await this.dependencies.icon.pickIcon({
+            target: snippetEl,
+            label: _t("Insert an icon"),
         });
-        return !iconInserted;
+        if (!selectedIconEl) {
+            return true;
+        }
+        snippetEl.insertAdjacentElement("afterend", selectedIconEl);
+        snippetEl.remove();
+        this.dependencies.dom.wrapInlinesInBlocks(selectedIconEl.parentElement);
+        return false;
     }
 }
 

@@ -17,9 +17,12 @@
                             <button t-else=""
                                 class="btn btn-light"
                                 t-att-class="{
-                                    active: button.isActive,
+                                    active: button.isActive or !!button.popupId?.(),
                                     disabled: button.isDisabled,
                                 }"
+                                t-att-aria-haspopup="button.popup"
+                                t-att-aria-expanded="button.popup ? (button.popupId?.() ? 'true' : 'false') : undefined"
+                                t-att-aria-controls="button.popupId?.() || undefined"
                                 t-att-disabled="button.isDisabled"
                                 t-att-title="button.description"
                                 t-att-name="button.id"

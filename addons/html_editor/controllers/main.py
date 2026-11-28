@@ -19,7 +19,7 @@ from odoo.tools.image import image_process
 from odoo.tools.mimetypes import guess_mimetype
 
 from ..models.ir_attachment import SUPPORTED_IMAGE_MIMETYPES
-from ..tools import search_icons
+from ..tools import icons_catalog, search_icons
 from .svg_utils import get_shape_svg, make_shaped_image, update_svg_colors
 from odoo.addons.iap.tools import iap_tools
 from odoo.addons.mail.tools import link_preview
@@ -823,6 +823,9 @@ class HTML_Editor(Controller):
         else:
             return {'error': response.status_code}
 
+    # TODO: remove with the IconSelector component, once Studio no longer uses
+    # it (task-5469997); the icon picker uses `/html_editor/icons` instead.
+    # `search_icons` itself stays: enterprise ai_website uses it.
     @route('/html_editor/icons_search', type='jsonrpc', auth='user', replica=True)
     def icons_search(self, needle=''):
         """Search icons by name and tags.
@@ -835,3 +838,17 @@ class HTML_Editor(Controller):
             {'name': name, 'has_fill': ICONS[name]['has_fill']}
             for name in search_icons(self.env, needle or '')
         ]
+
+    @route('/html_editor/icons', type='jsonrpc', auth='user', replica=True)
+    def icons(self, lang=None):
+        """Return the catalog of the icon picker, which searches it on the
+        client side.
+
+        :param str lang: the language of the translated tags, the user's one
+            when not given or inactive.  It is part of the parameters so that
+            the client caches one catalog per language.
+        :returns: a list of ``{name, has_fill, tags}`` dicts, where ``tags``
+            holds the English tags followed by the translated ones.
+        """
+        lang = request.env['res.lang']._get_code(lang) or self.env.lang or 'en_US'
+        return icons_catalog(lang)

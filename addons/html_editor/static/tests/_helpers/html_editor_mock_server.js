@@ -12,3 +12,16 @@ onRpc("/html_editor/icons_search", async (request) => {
         .filter((name) => !needle || name.includes(needle))
         .map((name) => ({ name, has_fill: true }));
 });
+
+onRpc("/html_editor/icons", () => [
+    { name: "check", has_fill: false, tags: ["done", "ok", "validate"] },
+    { name: "close", has_fill: false, tags: ["cancel", "x"] },
+    { name: "diamond", has_fill: true, tags: ["gem", "jewel"] },
+    { name: "favorite", has_fill: true, tags: ["heart", "love", "coeur"] },
+    { name: "home", has_fill: true, tags: ["house"] },
+    { name: "search", has_fill: false, tags: ["find", "magnifying glass"] },
+    { name: "mail", has_fill: true, tags: ["email", "envelope"] },
+    { name: "local_bar", has_fill: false, tags: ["drink", "cocktail"] },
+    { name: "bug_report", has_fill: true, tags: ["insect"] },
+    { name: "oi_view-kanban", has_fill: false, tags: ["view"] },
+]);

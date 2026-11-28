@@ -638,9 +638,6 @@ class TestUi(HttpCaseWithWebsiteUser):
     def test_34_website_page_breadcrumb(self):
         self.start_tour(self.env['website'].get_client_action_url("/contactus", False), 'website_page_breadcrumb', login='admin')
 
-    def test_website_media_dialog_image_shape(self):
-        self.start_tour(self.env['website'].get_client_action_url("/", True), 'website_media_dialog_image_shape', login='admin')
-
     def test_website_media_dialog_insert_media(self):
         self.start_tour(self.env['website'].get_client_action_url("/", True), "website_media_dialog_insert_media", login="admin")
 

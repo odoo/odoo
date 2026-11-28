@@ -11,7 +11,7 @@ import {
 } from "@html_editor/utils/dom_info";
 import { _t } from "@web/core/l10n/translation";
 import { MediaDialog } from "./media_dialog/media_dialog";
-import { TABS } from "./media_dialog/media_dialog_utils";
+import { TABS, renderMedia } from "./media_dialog/media_dialog_utils";
 import { boundariesOut, rightPos } from "@html_editor/utils/position";
 import { withSequence } from "@html_editor/utils/resource";
 import { closestElement } from "@html_editor/utils/dom_traversal";
@@ -37,7 +37,7 @@ export function extractUnmappedAttachmentsIds(content) {
  * @typedef {((arg: { newMediaEl: HTMLElement }) => void)[]} on_media_replaced_handlers
  *
  * @typedef {{
- *      id: "DOCUMENTS" | "ICONS" | "IMAGES" | "VIDEOS";
+ *      id: "DOCUMENTS" | "IMAGES" | "VIDEOS";
  *      title: import("plugins").LazyTranslatedString;
  *      Component: import("@odoo/owl").Component;
  *      sequence: number;
@@ -65,8 +65,8 @@ export class MediaPlugin extends Plugin {
                 id: "insertMedia",
                 title: _t("Media"),
                 description: this.config.allowVideo
-                    ? _t("Insert image, icon or video")
-                    : _t("Insert image or icon"),
+                    ? _t("Insert image or video")
+                    : _t("Insert image"),
                 icon: "image",
                 run: (params, context = {}) =>
                     this.openMediaDialog({
@@ -89,6 +89,8 @@ export class MediaPlugin extends Plugin {
         powerbox_categories: withSequence(40, { id: "media", name: _t("Media") }),
         ...(this.config.allowImage && {
             powerbox_items: this.getInsertMediaPowerboxItem(),
+            replace_icon_by_image_handlers: ({ iconEl, file, sourceEl }) =>
+                this.replaceByUploadedImage(iconEl, file, { sourceEl }),
         }),
         power_buttons: withSequence(1, { commandId: "insertMedia" }),
         closest_savable_providers: withSequence(20, (el) => this.editable),
@@ -230,6 +232,54 @@ export class MediaPlugin extends Plugin {
         this.dependencies.selection.setSelection({ anchorNode, anchorOffset });
         this.trigger("on_media_dialog_saved_handlers", element);
         this.dependencies.history.commit();
+    }
+
+    /**
+     * Uploads an image and replaces the given media by it, through the same
+     * steps as the media dialog (conversion, optimization, handlers...).
+     *
+     * @param {HTMLElement} node the media to replace
+     * @param {File} file the image to upload
+     * @param {Object} [options]
+     * @param {HTMLElement} [options.sourceEl] the element whose classes and
+     *  style the image takes over, the replaced media by default
+     */
+    async replaceByUploadedImage(node, file, { sourceEl = node } = {}) {
+        const { resModel, resId } = this.getRecordInfo(this.getClosestSavable(node));
+        let attachment;
+        await this.services.upload.uploadFiles(
+            [file],
+            { resModel, resId, isImage: true },
+            (uploadedAttachment) => (attachment = uploadedAttachment)
+        );
+        if (!attachment || !node.isConnected) {
+            return;
+        }
+        const [imageEl] = await renderMedia({
+            orm: this.services.orm,
+            activeTab: TABS.IMAGES.id,
+            availableTabs: { [TABS.IMAGES.id]: TABS.IMAGES },
+            document: this.document,
+            oldMediaNode: sourceEl,
+            selectedMedia: [{ ...attachment, mediaType: "attachment" }],
+            extraClassesToAdd: [],
+        });
+        await this.triggerAsync("on_will_save_media_dialog_handlers", [imageEl], { node });
+        await this.onSaveMediaDialog(imageEl, { node });
+    }
+
+    /**
+     * @param {HTMLElement} el
+     * @returns {HTMLElement} the element whose record the given one is saved
+     *  in, see `closest_savable_providers`
+     */
+    getClosestSavable(el) {
+        for (const provider of this.getResource("closest_savable_providers")) {
+            const savableEl = provider(el);
+            if (savableEl) {
+                return savableEl;
+            }
+        }
     }
 
     async addMedia(element) {

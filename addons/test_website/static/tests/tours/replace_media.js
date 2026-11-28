@@ -84,40 +84,6 @@ registerWebsitePreviewTour(
             run: "click",
         },
         {
-            content: "go to pictogram tab",
-            trigger: ".o_select_media_dialog .nav-link:contains('Icons')",
-            run: "click",
-        },
-        {
-            content: "select an icon",
-            trigger:
-                ".o_select_media_dialog:has(.nav-link.active:contains('Icons')) .tab-content span[data-icon='favorite']",
-            run: "click",
-        },
-        {
-            content: "ensure icon block is displayed",
-            trigger: ".o_customize_tab [data-container-title='Icon']",
-        },
-        {
-            content: "select footer",
-            trigger: ":iframe footer",
-            run: "click",
-        },
-        {
-            content: "select icon",
-            trigger: ":iframe .s_picture figure span[data-icon='favorite']",
-            run: "click",
-        },
-        {
-            content: "ensure icon block is still displayed",
-            trigger: ".o_customize_tab [data-container-title='Icon']",
-        },
-        {
-            content: "replace icon",
-            trigger: "button[data-action-id='replaceMedia']",
-            run: "click",
-        },
-        {
             content: "go to video tab",
             trigger: ".o_select_media_dialog .nav-link:contains('Video')",
             run: "click",
@@ -144,38 +110,30 @@ registerWebsitePreviewTour(
             trigger: ".o_customize_tab [data-container-title='Video']",
         },
         {
-            content: "replace image",
+            content: "replace video",
             trigger: ".btn-success[data-action-id='replaceMedia']",
             run: "click",
         },
         {
-            content: "go to pictogram tab",
-            trigger: ".o_select_media_dialog .nav-link:contains('Icons')",
+            content: "go to images tab",
+            trigger: ".o_select_media_dialog .nav-link:contains('Images')",
             run: "click",
         },
         {
-            content: "select an icon",
-            trigger:
-                ".o_select_media_dialog:has(.nav-link.active:contains('Icons')) .tab-content span[data-icon='favorite']",
+            trigger: ".o_select_media_dialog .o_load_done_msg",
+        },
+        {
+            content: "select svg",
+            trigger: ".o_select_media_dialog .o_button_area[aria-label='sample.svg']",
             run: "click",
         },
         {
-            content: "ensure icon block is displayed",
-            trigger: ".o_customize_tab [data-container-title='Icon']",
+            content: "ensure the video is replaced by the image",
+            trigger: ":iframe .s_picture figure:not(:has(.media_iframe_video)) img",
         },
         {
-            content: "select footer",
-            trigger: ":iframe footer",
-            run: "click",
-        },
-        {
-            content: "select icon",
-            trigger: ":iframe .s_picture figure span[data-icon='favorite']",
-            run: "click",
-        },
-        {
-            content: "ensure icon block is still displayed",
-            trigger: ".o_customize_tab [data-container-title='Icon']",
+            content: "ensure image option block is displayed",
+            trigger: ".o_customize_tab [data-container-title='Image']",
         },
     ]
 );

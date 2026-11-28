@@ -58,26 +58,34 @@ test("change rating score", async () => {
         </div>`
     );
 });
-test("Ensure order of operations when clicking very fast on two options", async () => {
+test("Pick a custom icon from the icon picker", async () => {
     await setupHTMLBuilder(websiteContent);
     await contains(":iframe .s_rating").click();
     await waitFor("[data-label='Icon']");
     expect("[data-label='Icon'] .dropdown-toggle").toHaveText("Stars");
     expect(":iframe .s_rating").not.toHaveAttribute("data-active-custom-icon");
     await click(".o_hb_options_container [data-action-id='customIcon']");
-    await click(".o_hb_options_container [data-class-action='oi-2x']");
-    await animationFrame();
-    expect(":iframe .s_rating_icons").not.toHaveClass("oi-2x");
-    await contains(".modal-dialog [data-icon='local_bar']").click();
+    await contains(".o-IconPicker-icon[data-icon='local_bar']").click();
+    expect(".o-IconPicker").toHaveCount(0);
     expect(":iframe .s_rating").toHaveAttribute("data-active-custom-icon", "local_bar");
     expect("[data-label='Icon'] .dropdown-toggle").toHaveText("Custom");
-    expect(":iframe .s_rating_icons").toHaveClass("oi-2x");
-    await contains(".o_hb_snippets_top_actions [data-icon='undo']").click();
-    expect("[data-label='Icon'] .dropdown-toggle").toHaveText("Custom");
-    expect(":iframe .s_rating").toHaveAttribute("data-active-custom-icon", "local_bar");
-    expect(":iframe .s_rating_icons").not.toHaveClass("oi-2x");
     await contains(".o_hb_snippets_top_actions [data-icon='undo']").click();
     expect("[data-label='Icon'] .dropdown-toggle").toHaveText("Stars");
     expect(":iframe .s_rating").not.toHaveAttribute("data-active-custom-icon");
+});
+
+test("Clicking another option while picking a custom icon cancels the pick", async () => {
+    await setupHTMLBuilder(websiteContent);
+    await contains(":iframe .s_rating").click();
+    await waitFor("[data-label='Icon']");
+    await click(".o_hb_options_container [data-action-id='customIcon']");
+    await waitFor(".o-IconPicker");
+    await click(".o_hb_options_container [data-class-action='oi-2x']");
+    await animationFrame();
+    expect(".o-IconPicker").toHaveCount(0);
+    expect(":iframe .s_rating").not.toHaveAttribute("data-active-custom-icon");
+    expect("[data-label='Icon'] .dropdown-toggle").toHaveText("Stars");
+    expect(":iframe .s_rating_icons").toHaveClass("oi-2x");
+    await contains(".o_hb_snippets_top_actions [data-icon='undo']").click();
     expect(":iframe .s_rating_icons").not.toHaveClass("oi-2x");
 });

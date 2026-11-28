@@ -23,11 +23,14 @@ async function searchIcons(needle = "") {
     }));
 }
 
+/**
+ * Formerly the Icons tab of the media dialog, which the icon picker replaced.
+ *
+ * TODO: remove it, with the `/html_editor/icons_search` route it relies on
+ * (but not the `search_icons` helper, used elsewhere), once Studio no longer
+ * uses it (task-5469997).
+ */
 export class IconSelector extends Component {
-    static mediaSpecificClasses = ["oi"];
-    static mediaSpecificStyles = ["color", "background-color"];
-    static mediaExtraClasses = [/^text-\S+$/, /^bg-\S+$/, /^fa-\S+$/];
-    static tagNames = ["SPAN", "I"];
     static template = "html_editor.IconSelector";
     static components = {
         SearchMedia,
@@ -105,21 +108,5 @@ export class IconSelector extends Component {
             initialIconChanged: this.iconHasChanged(icon, filled),
         });
         await this.props.save();
-    }
-
-    /**
-     * Utility methods, used by the MediaDialog component.
-     */
-    static createElements(selectedMedia, { document = window.document } = {}) {
-        return selectedMedia.map((icon) => {
-            const iconEl = document.createElement("span");
-            // Material Symbols and Odoo UI icons: icon is identified by data-icon attribute
-            iconEl.classList.add("oi");
-            if (icon.filled) {
-                iconEl.classList.add("oi-filled");
-            }
-            iconEl.dataset.icon = icon.dataIcon;
-            return iconEl;
-        });
     }
 }

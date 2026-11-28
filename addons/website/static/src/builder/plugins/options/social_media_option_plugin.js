@@ -232,7 +232,7 @@ export class SocialMediaOptionPlugin extends Plugin {
             params.node?.nodeType === Node.ELEMENT_NODE &&
             params.node.closest(".s_social_media, .s_share")
         ) {
-            params.visibleTabs = ["IMAGES", "ICONS"];
+            params.visibleTabs = ["IMAGES"];
         }
         return params;
     }

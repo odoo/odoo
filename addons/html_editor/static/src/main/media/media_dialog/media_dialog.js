@@ -48,8 +48,6 @@ export class MediaDialog extends Component {
 
         this.selectedMedia = proxy({});
 
-        this.initialIconClasses = [];
-
         this.notebookPages = [];
         this.addTabs();
         this.notebookPages.sort((a, b) => sequence(a) - sequence(b));
@@ -138,34 +136,6 @@ export class MediaDialog extends Component {
         if (onlyImages) {
             return;
         }
-        const addIcons = !this.props.visibleTabs || this.props.visibleTabs.includes(TABS.ICONS.id);
-        if (addIcons) {
-            this.addTab(TABS.ICONS);
-
-            if (
-                this.props.media &&
-                TABS.ICONS.Component.tagNames.includes(this.props.media.tagName)
-            ) {
-                // Material Symbols or Odoo UI icon: identified by the data-icon
-                // attribute. The icon list is fetched lazily by the IconSelector,
-                // so the pre-selection is rebuilt directly from the media element.
-                const dataIcon = this.props.media.dataset.icon;
-                if (dataIcon) {
-                    this.selectMedia(
-                        {
-                            id: dataIcon,
-                            name: dataIcon,
-                            dataIcon,
-                            source: dataIcon.startsWith("oi_") ? "oi" : "ms",
-                            filled: this.props.media.classList.contains("oi-filled"),
-                        },
-                        TABS.ICONS.id
-                    );
-                }
-                // No initialIconClasses needed: data-icon is overwritten by createElements,
-                // and "oi" is the shared base class preserved across icon changes.
-            }
-        }
         this.props.extraTabs.forEach((tab) => this.addTab(tab));
     }
 
@@ -207,16 +177,8 @@ export class MediaDialog extends Component {
         }
         await this.preProcessSave();
         const selectedMedia = this.selectedMedia[tab];
-        // TODO In master: clean the save method so it performs the specific
-        // adaptation before saving from the active media selector and find a
-        // way to simply close the dialog if the media element remains the same.
-        const saveSelectedMedia =
-            selectedMedia.length &&
-            (this.activeTab() !== TABS.ICONS.id ||
-                selectedMedia[0].initialIconChanged ||
-                !this.props.media);
         this.isSaving.set(true);
-        if (saveSelectedMedia) {
+        if (selectedMedia.length) {
             let elements = await renderMedia({
                 orm: this.orm,
                 activeTab: this.activeTab(),
@@ -224,7 +186,6 @@ export class MediaDialog extends Component {
                 oldMediaNode: this.props.media,
                 selectedMedia: selectedMedia,
                 extraClassesToAdd: this.extraClassesToAdd(),
-                extraClassesToRemove: this.initialIconClasses,
                 document: this.props.document,
             });
             elements = this.props.multiImages ? elements : elements[0];

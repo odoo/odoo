@@ -19,6 +19,8 @@ const genericButtonSchema = {
     isActive: t.boolean(),
     isDisabled: t.boolean(),
     opensUi: t.boolean().optional(),
+    popup: t.selection(["dialog", "listbox", "menu"]).optional(),
+    popupId: t.function().optional(),
     run: t.function(),
     text: t.string().optional(),
 };

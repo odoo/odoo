@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="html_editor.IconPicker">
+    <div
+        class="o-IconPicker d-flex flex-column"
+        role="dialog"
+        t-att-id="this.props.id"
+        t-att-aria-label="this.props.label"
+        t-att-style="this.iconsStyle"
+        t-on-keydown="this.onKeydown"
+    >
+        <t t-set="frequentIcons" t-value="this.frequentIcons()"/>
+        <t t-set="otherIcons" t-value="this.otherIcons()"/>
+        <t t-set="hasIcons" t-value="frequentIcons.length or otherIcons.length"/>
+        <t t-set="showSections" t-value="frequentIcons.length and !this.searchTerm()"/>
+        <div class="o-IconPicker-search d-flex align-items-center gap-2 mx-2 mt-2">
+            <span class="o-IconPicker-searchContour d-flex flex-grow-1 align-items-center rounded-pill border bg-view">
+                <i class="oi ps-2 py-1 fs-7 opacity-50" data-icon="search" aria-hidden="true"/>
+                <input
+                    class="form-control border-0 flex-grow-1 rounded-pill lh-1"
+                    role="combobox"
+                    aria-label="Search an icon"
+                    aria-autocomplete="list"
+                    aria-expanded="true"
+                    t-att-aria-controls="this.listboxId"
+                    t-att-aria-activedescendant="this.activeDescendant"
+                    t-att-placeholder="this.placeholder"
+                    t-model="this.searchTerm"
+                    t-ref="this.inputRef"
+                    t-on-input="this.onInput"
+                />
+                <button
+                    t-if="this.searchTerm()"
+                    type="button"
+                    class="btn btn-sm btn-link p-0 px-1 opacity-50 opacity-100-hover"
+                    title="Clear search"
+                    aria-label="Clear search"
+                    t-on-click="this.clearSearch"
+                >
+                    <i class="oi oi-filled" data-icon="cancel" aria-hidden="true"/>
+                </button>
+            </span>
+            <t t-if="this.props.onUploadImage">
+                <span class="text-muted">or</span>
+                <button
+                    type="button"
+                    class="o-IconPicker-upload btn btn-light btn-sm"
+                    title="Upload an image"
+                    aria-label="Upload an image"
+                    t-on-click="this.openFileSelector"
+                >
+                    <i class="oi" data-icon="upload" aria-hidden="true"/>
+                </button>
+                <input type="file" class="d-none" accept="image/*" t-ref="this.uploadInputRef" t-on-change="this.onFileSelected"/>
+            </t>
+        </div>
+        <span t-if="this.loadFailed" class="o-IconPicker-empty mt-5 text-center">Failed to load icons...</span>
+        <span t-elif="!hasIcons" class="o-IconPicker-empty mt-5 text-center" role="status">No icons match your search</span>
+        <div
+            class="o-IconPicker-content flex-grow-1 overflow-auto user-select-none mt-1"
+            t-att-class="{ 'd-none': !hasIcons }"
+            role="listbox"
+            aria-label="Icons"
+            t-att-id="this.listboxId"
+            t-ref="this.gridRef"
+        >
+            <div
+                t-if="frequentIcons.length"
+                class="d-flex flex-wrap align-content-start"
+                t-att-role="showSections ? 'group' : undefined"
+                t-att-aria-labelledby="showSections ? this.listboxId + '-frequent' : undefined"
+            >
+                <span
+                    t-if="showSections"
+                    class="o-IconPicker-section w-100 px-2 py-1 position-sticky top-0"
+                    role="presentation"
+                    t-att-id="this.listboxId + '-frequent'"
+                >
+                    <small class="text-uppercase opacity-50">Frequently used</small>
+                </span>
+                <t t-foreach="frequentIcons" t-as="icon" t-key="'frequent_' + icon.id">
+                    <t t-call="html_editor.IconPicker.icon" index="icon_index"/>
+                </t>
+            </div>
+            <div
+                class="d-flex flex-wrap align-content-start"
+                t-att-role="showSections ? 'group' : undefined"
+                t-att-aria-labelledby="showSections ? this.listboxId + '-all' : undefined"
+            >
+                <span
+                    t-if="showSections"
+                    class="o-IconPicker-section w-100 px-2 py-1 position-sticky top-0"
+                    role="presentation"
+                    t-att-id="this.listboxId + '-all'"
+                >
+                    <small class="text-uppercase opacity-50">All icons</small>
+                </span>
+                <t t-foreach="otherIcons" t-as="icon" t-key="icon.id">
+                    <t t-call="html_editor.IconPicker.icon" index="frequentIcons.length + icon_index"/>
+                </t>
+            </div>
+        </div>
+    </div>
+</t>
+
+<t t-name="html_editor.IconPicker.icon">
+    <span
+        class="o-IconPicker-icon oi d-flex justify-content-center align-items-center rounded-3 cursor-pointer"
+        t-att-class="{
+            'oi-filled': icon.filled,
+            'o-active': this.activeIndex() === index,
+            'o-selected': this.isCurrentIcon(icon),
+        }"
+        role="option"
+        t-att-id="this.getOptionId(index)"
+        t-att-aria-selected="this.activeIndex() === index ? 'true' : 'false'"
+        t-att-aria-label="icon.label"
+        t-att-title="icon.label"
+        t-att-data-icon="icon.name"
+        t-att-data-index="index"
+        t-on-click="() => this.selectIcon(icon)"
+        t-on-mouseenter="() => this.hoveredIcon.set(icon)"
+        t-on-mouseleave="() => this.hoveredIcon.set(null)"
+    />
+</t>
+
+</templates>

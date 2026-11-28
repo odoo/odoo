@@ -1,6 +1,6 @@
 import { EDITABLE_MEDIA_CLASS } from "@html_editor/utils/dom_info";
 import { describe, expect, test } from "@odoo/hoot";
-import { click, dblclick, press, waitFor, waitForNone } from "@odoo/hoot-dom";
+import { click, dblclick, press, queryAllTexts, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
 import { onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { cleanHints } from "../_helpers/dispatch";
@@ -65,27 +65,6 @@ test("Replace an image with link by a document should remove the link", async ()
     expect("p a[href='http://test.com']").toHaveCount(0);
 });
 
-test("Replace an image by icon should remove invalid classes", async () => {
-    onRpc("ir.attachment", "search_read", () => []);
-    await setupEditor(`<p><img class="img-fluid w-100" src="/web/static/img/logo.png"></p>`);
-    expect("img[src='/web/static/img/logo.png']").toHaveCount(1);
-    expect("img[src='/web/static/img/logo.png']").toHaveClass("img-fluid w-100");
-    await click("img");
-    await tick(); // selectionchange
-    await waitFor(".o-we-toolbar");
-    expect("button[name='replace_image']").toHaveCount(1);
-    await click("button[name='replace_image']");
-    await animationFrame();
-    await click(".nav-link:contains('Icons')");
-    await animationFrame();
-    await click("span[data-icon='mail']");
-    await animationFrame();
-    expect("img[src='/web/static/img/logo.png']").toHaveCount(0);
-    expect("p > span[data-icon='mail']").toHaveCount(1);
-    expect("p > span[data-icon='mail']").not.toHaveClass("img-fluid");
-    expect("p > span[data-icon='mail']").not.toHaveClass("w-100");
-});
-
 test.tags("focus required");
 test("Selection is collapsed after the image after replacing it", async () => {
     onRpc("ir.attachment", "search_read", () => [
@@ -109,47 +88,6 @@ test("Selection is collapsed after the image after replacing it", async () => {
     await click(".o_existing_attachment_cell .o_button_area");
     await animationFrame();
     expect(getContent(el).replace(/<img.*?>/, "<img>")).toBe("<p>abc<img>[]def</p>");
-});
-
-test("should not preserve image styles when replacing an image with an icon", async () => {
-    onRpc("ir.attachment", "search_read", () => []);
-    const { el } = await setupEditor(
-        `<p><img class="img-fluid" src="/web/static/img/logo.png" style="width: 25%; transform: scaleX(2) scaleY(1);"></p>`
-    );
-    expect("img[src='/web/static/img/logo.png']").toHaveCount(1);
-    await click("img");
-    await tick(); // selectionchange
-    await waitFor(".o-we-toolbar");
-    expect("button[name='replace_image']").toHaveCount(1);
-    await click("button[name='replace_image']");
-    await animationFrame();
-    await click(".nav-link:contains('Icons')");
-    await animationFrame();
-    await click("[data-icon='local_bar']");
-    await animationFrame();
-    expect(getContent(el).replace(/<img.*?>/, "<img>")).toBe(
-        `<p>\ufeff[<span class="oi" data-icon="local_bar" style="" contenteditable="false">\u200b</span>]\ufeff</p>`
-    );
-});
-
-test("should not preserve image shape classes when replacing an image with an icon", async () => {
-    onRpc("ir.attachment", "search_read", () => []);
-    const { el } = await setupEditor(
-        `<p><img class="img-fluid rounded rounded-circle shadow img-thumbnail" src="/web/static/img/logo.png"></p>`
-    );
-    expect("img[src='/web/static/img/logo.png']").toHaveCount(1);
-    await click("img");
-    await tick(); // selectionchange
-    await expectElementCount(".o-we-toolbar button[name='replace_image']", 1);
-    await click("button[name='replace_image']");
-    await animationFrame();
-    await click(".nav-link:contains('Icons')");
-    await animationFrame();
-    await click("[data-icon='local_bar']");
-    await animationFrame();
-    expect(getContent(el).replace(/<img.*?>/, "<img>")).toBe(
-        `<p>\ufeff[<span class="oi" data-icon="local_bar" contenteditable="false">\u200b</span>]\ufeff</p>`
-    );
 });
 
 test.tags("focus required");
@@ -192,19 +130,30 @@ test("press escape to close media dialog", async () => {
 });
 
 describe("Powerbox search keywords", () => {
-    test("Image and Icon are keywords for the Media command", async () => {
+    test("Image is a keyword for the Media command, but not Icon", async () => {
         const { editor } = await setupEditor("<p>[]<br></p>");
         await insertText(editor, "/");
-        for (const word of ["image", "icon"]) {
+        for (const [word, command] of [
+            ["image", "Media"],
+            ["icon", "Icon"],
+            ["icons", "Icon"],
+        ]) {
             await insertText(editor, word);
             await animationFrame();
-            expect(".active .o-we-command-name").toHaveText("Media");
+            expect(".active .o-we-command-name").toHaveText(command);
             // delete the keyword to try the next one
             for (let i = 0; i < word.length; i++) {
                 await press("backspace");
             }
         }
     });
+});
+
+test("No Icon command where media cannot be inserted", async () => {
+    const { editor } = await setupEditor("<p>[]<br></p>", { config: { allowImage: false } });
+    await insertText(editor, "/icon");
+    await animationFrame();
+    expect(queryAllTexts(".o-we-command-name")).not.toInclude("Icon");
 });
 
 describe("(non-)editable media", () => {
