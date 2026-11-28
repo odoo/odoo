@@ -366,6 +366,25 @@ class ProductProduct(models.Model):
         )
         return self.with_context(location=valued_locations.ids, owners=[False, self.env.company.partner_id.id], strict=True)
 
+    def _get_lot_valued_qty(self, lot, at_date=None):
+        """ Return the quantity of ``lot`` in the valued locations of the company.
+
+        Without a location in the context, ``lot.product_qty`` only counts the
+        locations of the warehouses. Valued internal locations that are not part
+        of any warehouse (e.g. the rental location) would then be ignored, and the
+        lot would be considered as out of stock while it is still valued.
+        """
+        company_product = self.with_context(allowed_company_ids=self.env.company.ids)
+        valuation_context = company_product._with_valuation_context().env.context
+        lot = lot.with_context(
+            location=valuation_context['location'],
+            owners=valuation_context['owners'],
+            strict=True,
+        )
+        if at_date:
+            lot = lot.with_context(to_date=at_date)
+        return lot.product_qty
+
     def _get_remaining_moves(self):
         moves_qty_by_product = {}
         for product in self:
@@ -523,7 +542,7 @@ class ProductProduct(models.Model):
         for product in self:
             quantity = product.qty_available
             if lot:
-                quantity = lot.product_qty
+                quantity = product._get_lot_valued_qty(lot, at_date=at_date)
             value = product._run_fifo(quantity, lot, at_date, location)
             std_price = value / quantity if quantity else 0
             std_price_by_product_id[product.id] = std_price
@@ -582,7 +601,7 @@ class ProductProduct(models.Model):
         if location:
             self = self.with_context(location=location.ids)  # noqa: PLW0642
         if lot:
-            fifo_stack_size = lot.product_qty
+            fifo_stack_size = self._get_lot_valued_qty(lot, at_date=at_date)
         else:
             fifo_stack_size = self._with_valuation_context().with_context(to_date=at_date).qty_available
         if self.env.context.get('fifo_qty_already_processed'):
