@@ -742,6 +742,8 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
             'employee_id': self.employee_manager.id,
         })
 
+        # 8 hours exceed the upsell threshold (90% of 1 day), the salesperson sells half a day more
+        sale_order_line.product_uom_qty = 1.5
         sale_order._create_invoices()
         last_message_id = self.env['mail.message'].search([('model', '=', 'sale.order'), ('res_id', '=', sale_order.id)], limit=1).id or 0
         self.env['account.analytic.line'].create({
@@ -806,6 +808,8 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
             'employee_id': self.employee_manager.id,
         })
 
+        # 8 hours exceed the upsell threshold (90% of 1 day), the salesperson sells half a day more
+        sale_order_line.product_uom_qty = 1.5
         sale_order._create_invoices()
         last_message_id = self.env['mail.message'].search([('model', '=', 'sale.order'), ('res_id', '=', sale_order.id)], limit=1).id or 0
         self.env['account.analytic.line'].create({
