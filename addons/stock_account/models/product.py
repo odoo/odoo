@@ -210,15 +210,16 @@ class ProductProduct(models.Model):
         product_ids_lot_valuated = set()
         date = valuation_date or fields.Datetime.now()
         for product in self:
+            company = product.company_id or self.env.company
             old_value = old_price.get(product)
-            value = product.standard_price
+            value = product.with_company(company).standard_price
             if not product.is_storable or product.cost_method == 'fifo' or value == old_value:
                 continue
 
             if product.lot_valuated:
                 product_ids_lot_valuated.add(product.id)
 
-            quantity = product.with_context(to_date=date).sudo().qty_available
+            quantity = product.with_company(company).with_context(to_date=date, allowed_company_ids=company.ids).sudo().qty_available
             product_values.append({
                 'product_id': product.id,
                 'quantity': quantity,
@@ -227,7 +228,7 @@ class ProductProduct(models.Model):
                 'old_value': (old_value or 0) * quantity,
                 'new_value': value * quantity,
                 'value': value,
-                'company_id': product.company_id.id or self.env.company.id,
+                'company_id': company.id,
                 'date': date,
                 'description': self.env._('Cost update from %(old_value)s to %(new_value)s for %(quantity)s by %(user)s',
                     old_value=old_value, new_value=value, quantity=quantity, user=self.env.user.name)

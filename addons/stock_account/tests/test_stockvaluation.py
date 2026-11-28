@@ -4213,3 +4213,101 @@ class TestStockValuation(TestStockValuationCommon):
             'qty_available': 3,
             'avg_cost': 23.33,
         }])
+
+    def test_multi_company_standard_price_update_product_value(self):
+        """Ensure manual standard_price updates on a shared product only revalue
+        the active company's stock, even when multiple companies are selected in
+        allowed_company_ids.
+        """
+        other_warehouse = self.env['stock.warehouse'].with_company(self.other_company).search(
+            [('company_id', '=', self.other_company.id)], limit=1
+        )
+        self.category_standard.with_company(self.other_company).property_cost_method = 'standard'
+        product = self.env['product.product'].create({
+            **self.product_common_vals,
+            'name': 'Shared Multi-Company Product',
+            'categ_id': self.category_standard.id,
+            'company_id': False,
+            'standard_price': 0.0,
+        })
+
+        # Main company only: 10.0 units on hand at 100.0 cost
+        product_main = product.with_company(self.company).with_context(allowed_company_ids=[self.company.id])
+        self.env['stock.quant'].with_company(self.company)._update_available_quantity(
+            product_main, self.warehouse.lot_stock_id, 10.0
+        )
+        product_main.standard_price = 100.0
+
+        # Other company only: 5.0 units on hand at 100.0 cost
+        product_other = product.with_company(self.other_company).with_context(
+            allowed_company_ids=[self.other_company.id])
+        self.env['stock.quant'].with_company(self.other_company)._update_available_quantity(
+            product_other, other_warehouse.lot_stock_id, 5.0
+        )
+        product_other.standard_price = 100.0
+
+        product_value = self.env['product.value'].sudo()
+        existing_values = product_value.search([('product_id', '=', product.id)])
+
+        # Select both companies with main company active: update cost 100.0 -> 150.0
+        product_both = product.with_company(self.company).with_context(
+            allowed_company_ids=[self.company.id, self.other_company.id]
+        )
+        self.assertEqual(product_both.qty_available, 15.0)
+        product_both.standard_price = 150.0
+
+        value_main = product_value.search([
+            ('product_id', '=', product.id),
+            ('id', 'not in', existing_values.ids),
+        ])
+        self.assertRecordValues(value_main, [{
+            'company_id': self.company.id,
+            'quantity': 10.0,
+            'old_value': 1000.0,
+            'new_value': 1500.0,
+            'adjustment': 500.0,
+        }])
+        self.assertEqual(product_other.standard_price, 100.0)
+
+        # Switch to other company only: update cost 100.0 -> 150.0
+        product_other.standard_price = 150.0
+
+        value_other = product_value.search([
+            ('product_id', '=', product.id),
+            ('id', 'not in', (existing_values | value_main).ids),
+        ])
+        self.assertRecordValues(value_other, [{
+            'company_id': self.other_company.id,
+            'quantity': 5.0,
+            'old_value': 500.0,
+            'new_value': 750.0,
+            'adjustment': 250.0,
+        }])
+        self.assertEqual(sum((value_main | value_other).mapped('adjustment')), 750.0)
+
+        # AVCO shared product: verify product_value.create() isolates _get_fifo_stack()
+        self.category_avco.with_company(self.other_company).property_cost_method = 'average'
+        avco_product = self.env['product.product'].create({
+            **self.product_common_vals,
+            'name': 'Shared Multi-Company AVCO Product',
+            'categ_id': self.category_avco.id,
+            'company_id': False,
+            'standard_price': 0.0,
+        })
+        self._make_in_move(avco_product, 10.0, unit_cost=100.0, company=self.company)
+        self._make_in_move(
+            avco_product, 5.0, unit_cost=100.0,
+            location_dest_id=other_warehouse.lot_stock_id.id,
+            company=self.other_company,
+        )
+
+        avco_both = avco_product.with_company(self.company).with_context(
+            allowed_company_ids=[self.company.id, self.other_company.id]
+        )
+        avco_both.standard_price = 150.0
+
+        avco_main = avco_product.with_company(self.company).with_context(allowed_company_ids=[self.company.id])
+        avco_other = avco_product.with_company(self.other_company).with_context(allowed_company_ids=[self.other_company.id])
+        self.assertEqual(avco_main.total_value, 1500.0)
+        self.assertEqual(avco_other.total_value, 500.0)
+        self.assertEqual(avco_other.standard_price, 100.0)
