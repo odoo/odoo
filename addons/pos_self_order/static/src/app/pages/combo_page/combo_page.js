@@ -478,7 +478,7 @@ export class ComboPage extends Component {
     }
 
     getComboSelection() {
-        return this.getSelection().flatMap((choice) =>
+        const selectedItems = this.getSelection().flatMap((choice) =>
             choice.combo_items.map((item) => ({
                 combo_item_id: item.combo_item_id,
                 qty: item.qty,
@@ -492,6 +492,32 @@ export class ComboPage extends Component {
                 },
             }))
         );
+        // Fixed choices (a single item without attributes) are not shown as a
+        // selection step, so they have to be added to the selection explicitly.
+        const fixedItems = this.props.productTemplate.combo_ids.flatMap((choice) => {
+            const [item] = choice.combo_item_ids;
+            const product = item?.product_id;
+            const isFixed =
+                choice.qty_max <= 1 &&
+                choice.combo_item_ids.length === 1 &&
+                !product.attribute_line_ids.length &&
+                product.self_order_available &&
+                !this.selfOrder.isProductSnoozed(product.product_tmpl_id);
+            return isFixed
+                ? [
+                      {
+                          combo_item_id: item,
+                          qty: 1,
+                          configuration: {
+                              attribute_custom_values: [],
+                              attribute_value_ids: [],
+                              price_extra: 0,
+                          },
+                      },
+                  ]
+                : [];
+        });
+        return [...selectedItems, ...fixedItems];
     }
 
     addToCart() {
