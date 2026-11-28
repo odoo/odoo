@@ -152,14 +152,6 @@ export function removeRewardLine(name) {
     return [selectRewardLine(name), ProductScreen.clickNumpad("⌫")].flat();
 }
 
-export function checkAddedLoyaltyPoints(points) {
-    return [
-        {
-            trigger: `.loyalty-points-won:contains("${points}")`,
-        },
-    ];
-}
-
 export function useExistingLoyaltyCard(code, valid = true) {
     const steps = [
         {
