@@ -10,6 +10,4 @@ class DecimalPrecision(models.Model):
         if stackmap.get('ignore_discount_precision'):
             if application == 'Discount':
                 return 13
-            if application == 'Product Unit':
-                return 10
         return super().precision_get(application)
