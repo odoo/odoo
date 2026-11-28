@@ -409,13 +409,14 @@ class MailActivityMixin(models.AbstractModel):
                         "We were not able to fetch value of field '%s'.",
                         activity_user_id_fname,
                     )
-                if not isinstance(user, self.pool['res.users']):
-                    _logger.warning(
-                        'The field "%s" must be related to the res.users model.',
-                        activity_user_id_fname,
-                    )
-                if user:
-                    create_vals['user_id'] = user.ids[0]
+                else:
+                    if not isinstance(user, self.pool['res.users']):
+                        _logger.warning(
+                            'The field "%s" must be related to the res.users model.',
+                            activity_user_id_fname,
+                        )
+                    elif user:
+                        create_vals['user_id'] = user.ids[0]
             if not create_vals.get('user_id') and activity_type.default_user_id:
                 create_vals['user_id'] = activity_type.default_user_id.id
             create_vals_list.append(create_vals)
