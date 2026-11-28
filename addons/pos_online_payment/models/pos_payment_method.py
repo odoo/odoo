@@ -156,12 +156,14 @@ class PosPaymentMethod(models.Model):
         """
         self.ensure_one()
         pos_receivable = session._get_receivable_account()
-        online_orders = session.order_ids.filtered_domain([
-            ('payment_ids.payment_method_id', '=', self.id),
-        ])
+        # Only the online payments of the orders booked in the closing entry
+        # being created, they are not linked to an entry yet.
+        online_payments = session._get_closed_orders().filtered(
+            lambda order: not order.account_move,
+        ).payment_ids.filtered(lambda payment: payment.payment_method_id == self)
 
-        total_amount = sum(pay.amount for pay in online_orders.payment_ids)
-        account_payment = online_orders.payment_ids.online_account_payment_id
+        total_amount = sum(online_payments.mapped('amount'))
+        account_payment = online_payments.online_account_payment_id
         ref = _(
             "Transfer Online payment %(account_name)s => %(pos_receivable_name)s",
             account_name=account_payment.destination_account_id.name,
