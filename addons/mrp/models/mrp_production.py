@@ -1867,7 +1867,7 @@ class MrpProduction(models.Model):
                 # Flatten the BoM lines into only the ones that are supposed to correspond to moves in the MO (ie those
                 # of the current MO's BoM and of the components that are kits), stash the BoMs' normalised factors (the
                 # values expected after layers of UoM conversions).
-                for bom, data in order.bom_id.explode(order.bom_id.product_id, order.product_qty)[0]:
+                for bom, data in order.bom_id.explode(order.product_id, order.product_qty)[0]:
                     if bom.type == 'phantom' or bom == order.bom_id:
                         bom_factors[bom.id] = bom_factor * data['qty'] / data['original_qty']
                         all_lines |= bom.bom_line_ids.filtered(lambda line:
