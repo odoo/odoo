@@ -115,7 +115,7 @@ class MicrosoftSync(models.AbstractModel):
     def unlink(self):
         synced = self._get_synced_events()
         if self.env.user._get_microsoft_sync_status() != "sync_paused":
-            for ev in synced:
+            for ev in synced.filtered('microsoft_id'):
                 ev._microsoft_delete(ev._get_organizer(), ev.microsoft_id)
         return super().unlink()
 
@@ -139,7 +139,7 @@ class MicrosoftSync(models.AbstractModel):
         updated_records = records_to_sync._get_synced_events()
         new_records = records_to_sync - updated_records
 
-        for record in cancelled_records._get_synced_events():
+        for record in cancelled_records._get_synced_events().filtered('microsoft_id'):
             record._microsoft_delete(record._get_organizer(), record.microsoft_id)
         for record in new_records:
             values = record._microsoft_values(self._get_microsoft_synced_fields())
@@ -151,7 +151,11 @@ class MicrosoftSync(models.AbstractModel):
             else:
                 for value in values:
                     record._microsoft_insert(value)
-        for record in updated_records.filtered('need_sync_m'):
+        updated_records = updated_records.filtered('need_sync_m')
+        missing_id_records = updated_records.filtered(lambda record: not record.microsoft_id)
+        if missing_id_records:
+            _logger.warning("Skipping Outlook synchronization for Odoo records %s: missing microsoft_id.", missing_id_records.ids)
+        for record in updated_records.filtered('microsoft_id'):
             values = record._microsoft_values(self._get_microsoft_synced_fields())
             if not values:
                 continue

@@ -50,6 +50,24 @@ class TestUpdateEvents(TestCommon):
         mock_patch.assert_not_called()
         self.assertEqual(self.simple_event.need_sync_m, False)
 
+    @freeze_time('2021-09-22')
+    @patch.object(MicrosoftCalendarService, 'get_events')
+    @patch.object(MicrosoftCalendarService, 'insert')
+    @patch.object(MicrosoftCalendarService, 'patch')
+    def test_sync_synced_event_without_microsoft_id(self, mock_patch, mock_insert, mock_get_events):
+        """Handle edge case of event with ms_universal_event_id but no microsoft_id."""
+        self.simple_event.write({'microsoft_id': False, 'need_sync_m': True})
+        self.organizer_user.microsoft_calendar_sync_token = 'last_token'
+        mock_get_events.return_value = ([], 'next_token')
+
+        with self.assertLogs('odoo.addons.microsoft_calendar.models.microsoft_sync', level='WARNING'):
+            self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar()
+        self.call_post_commit_hooks()
+
+        mock_patch.assert_not_called()
+        mock_insert.assert_not_called()
+        self.assertTrue(self.simple_event.need_sync_m)
+
     @patch.object(MicrosoftCalendarService, 'patch')
     def test_update_simple_event_from_odoo(self, mock_patch):
         """
