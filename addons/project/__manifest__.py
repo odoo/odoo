@@ -54,6 +54,7 @@
         'wizard/project_task_share_wizard_views.xml',
         'wizard/project_project_stage_delete_views.xml',
         'wizard/project_template_create_wizard.xml',
+        'wizard/mail_activity_schedule_views.xml',
         'views/project_menus.xml',
         'security/ir.access.csv',
     ],

@@ -11,7 +11,9 @@ from . import calendar_attendee
 from . import calendar_filter
 from . import calendar_event_type
 from . import calendar_recurrence
+from . import discuss_call_history
 from . import discuss_channel
+from . import discuss_channel_member
 from . import mail_activity
 from . import mail_activity_mixin
 from . import mail_activity_type

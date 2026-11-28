@@ -84,6 +84,7 @@ safe_attrs = defs.safe_attrs | frozenset(
      'data-oe-zws-empty-inline',
      'data-bs-toggle',  # support nav-tabs
      'data-icon',
+     'data-tooltip',
      ])
 
 defs.link_attrs |= {'xlink:href'}
