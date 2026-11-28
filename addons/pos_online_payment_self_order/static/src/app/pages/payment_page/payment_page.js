@@ -27,6 +27,9 @@ patch(PaymentPage.prototype, {
             order = await this.selfOrder.sendDraftOrderToServer();
         }
 
+        this.state.qrCode = null;
+        this.state.paymentCancelled = false;
+        this.selfOrder.paymentError = false;
         if (device === "kiosk") {
             const url = this.selfOrder.getOnlinePaymentUrl(order, false);
             this.generateQrcodeImg(url);
