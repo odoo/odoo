@@ -11,6 +11,12 @@ class PosOrderReceipt(models.AbstractModel):
         data['conditions']['from_self'] = self.source in ['mobile', 'kiosk']
         return data
 
+    def order_receipt_generate_html(self, basic_receipt=False, printer_style=False):
+        lang = self.self_ordering_lang_id.filtered('active').code
+        if lang and self.env.lang != lang:
+            return self.with_context(lang=lang).order_receipt_generate_html(basic_receipt, printer_style)
+        return super().order_receipt_generate_html(basic_receipt, printer_style)
+
     def _generate_preparation_receipt_data(self, order_change, is_split_per_product=False):
         data = super()._generate_preparation_receipt_data(order_change, is_split_per_product)
         if self.source not in ['mobile', 'kiosk']:

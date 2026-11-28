@@ -237,12 +237,13 @@ class SelfOrderCommonTest(odoo.tests.HttpCase):
         # This is important in the test because the added tax should not be used in the tour.
         self._add_tax_to_product_from_different_company()
 
-    def make_request_to_controller(self, url, params):
+    def make_request_to_controller(self, url, params, cookies=None, headers=None):
         response = self.url_open(
             url,
             json.dumps({'jsonrpc': '2.0', 'params': params}),
             method='POST',
-            headers={'Content-Type': 'application/json'},
+            headers={'Content-Type': 'application/json', **(headers or {})},
+            cookies=cookies,
         )
         return response.json().get('result')
 
