@@ -400,8 +400,6 @@ export class BackgroundShapeOptionPlugin extends Plugin {
         const json = editingElement.dataset.oeShapeData;
         if (json) {
             Object.assign(defaultData, JSON.parse(json.replace(/'/g, '"')));
-            // Compatibility with old shapes.
-            defaultData.shape = defaultData.shape.replace("web_editor", "html_builder");
         }
         return defaultData;
     }
