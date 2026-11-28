@@ -77,7 +77,9 @@ TRANSLATED_ELEMENTS = {
     'abbr', 'b', 'bdi', 'bdo', 'br', 'cite', 'code', 'data', 'del', 'dfn', 'em',
     'font', 'i', 'ins', 'kbd', 'keygen', 'mark', 'math', 'meter', 'output',
     'progress', 'q', 'ruby', 's', 'samp', 'small', 'span', 'strong', 'sub',
-    'sup', 'time', 'u', 'var', 'wbr', 'text',
+    'sup', 'time', 'u', 'var', 'wbr',
+    # SVG
+    'tspan',
 }
 
 # Attributes from QWeb views that must be translated.
@@ -176,6 +178,20 @@ def translate_format_string_expression(term, callback):
     if translated_value:
         return FORMAT_REGEX.sub(lambda g: expressions.get(g.group(0)[2:-2], 'None'), translated_value)
 
+
+def local_name(node):
+    """ Return the tag of ``node`` without its namespace (e.g. an SVG element
+        with a ``xmlns`` declaration), or ``None`` for a comment or a processing
+        instruction.
+    """
+    return etree.QName(node).localname if isinstance(node.tag, str) else None
+
+
+def is_in_svg(node):
+    """ Return whether ``node`` is an element of an inline SVG. """
+    return any(local_name(elem) == 'svg' for elem in (node, *node.iterancestors()))
+
+
 def translate_xml_node(node, callback, parse, serialize):
     """ Return the translation of the given XML/HTML node.
 
@@ -204,7 +220,7 @@ def translate_xml_node(node, callback, parse, serialize):
         # translated as a whole using the `o_translate_inline` class.
         force_inline = force_inline or is_force_inline(node)
         return (
-            (force_inline or node.tag in TRANSLATED_ELEMENTS)
+            (force_inline or local_name(node) in TRANSLATED_ELEMENTS)
             # Nodes with directives are not translatable. Directives usually
             # start with `t-`, but this prefix is optional for `groups` (see
             # `_compile_directive_groups` which reads `t-groups` and `groups`)
@@ -257,14 +273,21 @@ def translate_xml_node(node, callback, parse, serialize):
             # check for some text to translate at the given position
             if hastext(node, pos):
                 # move all translatable children nodes from the given position
-                # into a <div> element
-                div = etree.Element('div')
+                # into a <div> element, in the default namespace of the node
+                # (e.g. an SVG with a xmlns declaration), so that the term is
+                # serialized without namespace prefixes
+                namespace = etree.QName(node).namespace
+                if namespace:
+                    div = etree.Element(etree.QName(namespace, 'div'), nsmap={None: namespace})
+                else:
+                    div = etree.Element('div')
                 div.text = (node[pos-1].tail if pos else node.text) or ''
                 while pos < len(node) and translatable(node[pos], is_force_inline(node)):
                     div.append(node[pos])
 
                 # translate the content of the <div> element as a whole
-                content = serialize(div)[5:-6]
+                content = serialize(div)
+                content = content[content.index('>') + 1:content.rindex('<')]
                 original = content.strip()
                 translated = callback(original)
                 if translated:
@@ -274,6 +297,15 @@ def translate_xml_node(node, callback, parse, serialize):
                     # change the tag to <span/> which is one of TRANSLATED_ELEMENTS
                     # so that 'result_elem' can be checked by translatable and hastext
                     result_elem.tag = 'span'
+                    if namespace:
+                        for elem in result_elem.iterdescendants(tag=etree.Element):
+                            elem.tag = etree.QName(namespace, elem.tag).text
+                    if is_in_svg(node):
+                        # HTML elements are invalid in an SVG: e.g. the <span>
+                        # wrapping a term in translation mode becomes a <tspan>
+                        for elem in result_elem.iterdescendants(tag=etree.Element):
+                            if local_name(elem) == 'span':
+                                elem.tag = etree.QName(etree.QName(elem).namespace, 'tspan').text
                     if translatable(result_elem) and hastext(result_elem):
                         div = result_elem
                         if pos:

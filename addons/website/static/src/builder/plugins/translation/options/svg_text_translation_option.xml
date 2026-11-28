@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.TranslateSvgTextOption">
+    <t t-foreach="this.state.labels" t-as="label" t-key="label_index">
+        <BuilderRow label="label">
+            <BuilderTextInput action="'translateSvgText'" actionParam="label_index"/>
+        </BuilderRow>
+    </t>
+</t>
+
+<t t-inherit="website.TranslationBuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='translation_options']" position="after">
+        <translate_svg_text_option
+            t-att-selector="this.translateSvgTextOptionSelector"
+            editableOnly="false"/>
+    </xpath>
+</t>
+
+</templates>

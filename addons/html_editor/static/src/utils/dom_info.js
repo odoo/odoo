@@ -286,6 +286,8 @@ export function isVisible(node) {
             isSelfClosingElement(node) ||
             // @todo: handle it in resources?
             isMediaElement(node) ||
+            // SVG elements are visible even without text (e.g. shapes).
+            isSvgElement(node) ||
             hasVisibleContent(node) ||
             isProtecting(node) ||
             isEmbeddedComponent(node) ||
@@ -431,7 +433,6 @@ const phrasingTagNames = new Set([
     "KBD",
     "LABEL",
     "MARK",
-    "MATH",
     "METER",
     "NOSCRIPT",
     "OBJECT",
@@ -450,7 +451,6 @@ const phrasingTagNames = new Set([
     "STRONG",
     "SUB",
     "SUP",
-    "SVG",
     "TEMPLATE",
     "TEXTAREA",
     "TIME",
@@ -468,6 +468,9 @@ const phrasingTagNames = new Set([
     "LINK",
     "MAP",
     "META",
+    // Not in the HTML namespace: their nodeName is not uppercased.
+    "math",
+    "svg",
 ]);
 
 export function isPhrasingContent(node) {
@@ -908,8 +911,47 @@ export function isElement(node) {
     return node?.nodeType === Node.ELEMENT_NODE;
 }
 
+const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
+
+/**
+ * @param {Node} node
+ * @returns {boolean} whether the node is an SVG element (inline `<svg>` or one
+ * of its descendant elements)
+ */
+export function isSvgElement(node) {
+    return node?.namespaceURI === SVG_NAMESPACE;
+}
+
+/**
+ * @param {Node} node
+ * @returns {SVGSVGElement|null} the outermost `<svg>` containing the node
+ */
+export function closestSvgRoot(node) {
+    let element = isTextNode(node) ? node.parentElement : node;
+    let svg = null;
+    while (isSvgElement(element)) {
+        if (element.nodeName === "svg") {
+            svg = element;
+        }
+        element = element.parentElement;
+    }
+    return svg;
+}
+
 export function isContentEditable(node) {
-    const element = isTextNode(node) ? node.parentElement : node;
+    let element = isTextNode(node) ? node.parentElement : node;
+    if (isSvgElement(element)) {
+        // An inline SVG is edited as a whole, except for its texts.
+        if (!element.closest("text")) {
+            return false;
+        }
+        element = closestSvgRoot(element).parentElement;
+    }
+    // `isContentEditable` only exists on HTML elements: e.g. MathML elements
+    // inherit the editability of their closest HTML ancestor.
+    while (element && element.isContentEditable === undefined) {
+        element = element.parentElement;
+    }
     return element && element.isContentEditable;
 }
 

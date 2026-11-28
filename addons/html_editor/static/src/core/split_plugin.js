@@ -5,6 +5,7 @@ import { isBlock, closestBlock } from "../utils/blocks";
 import { fillEmpty, splitTextNode } from "../utils/dom";
 import {
     allowsParagraphRelatedElements,
+    isContentEditable,
     isPhrasingContent,
     isTextNode,
     isVisible,
@@ -112,7 +113,7 @@ export class SplitPlugin extends Plugin {
             // this.shared.collapseIfZWS();
             this.dependencies.delete.deleteSelection();
             selection = this.dependencies.selection.getEditableSelection();
-        } else if (!closestElement(selection.anchorNode).isContentEditable) {
+        } else if (!isContentEditable(closestElement(selection.anchorNode))) {
             selection = this.dependencies.selection.getEditableSelection();
         }
 

@@ -269,6 +269,58 @@ test("translate attribute", async () => {
     expect(resultSave[0]).toBe("titre");
 });
 
+test("translate the texts of an inline SVG in the options", async () => {
+    const resultSave = [];
+    onRpc("/website/field/translation/update", async (data) => {
+        const { params } = await data.json();
+        resultSave.push(params.translations.fr_BE);
+        return true;
+    });
+    onRpc("ir.ui.view", "save", ({ args }) => true);
+    const translationAttrs = (sha) =>
+        `data-oe-model="ir.ui.view" data-oe-id="544" data-oe-field="arch_db" data-oe-translation-state="to_translate" data-oe-translation-source-sha="${sha}"`;
+    await setupSidebarBuilderForTranslation({
+        websiteContent: `
+            <p>
+                <svg width="200" height="40">
+                    <circle cx="5" cy="5" r="5"></circle>
+                    <text x="0" y="15"><tspan ${translationAttrs(
+                        "sha1"
+                    )}>Pay <tspan font-weight="bold">now</tspan></tspan></text>
+                    <text x="0" y="35"><tspan ${translationAttrs("sha2")}>Receive</tspan></text>
+                </svg>
+            </p>
+        `,
+    });
+    await contains(".modal .btn:contains(Ok, never show me this again)").click();
+    await contains(":iframe svg text").click();
+    expect(".o_hb_options_container [data-action-id='translateSvgText'] input").toHaveCount(2);
+    expect(".o_hb_options_container [data-label='SVG Text 1']").toHaveCount(1);
+    expect(".o_hb_options_container [data-label='SVG Text 2']").toHaveCount(1);
+    await contains(
+        ".o_hb_options_container [data-action-id='translateSvgText'][data-action-param='1'] input"
+    ).edit("Recevoir");
+    expect(":iframe tspan[data-oe-translation-source-sha='sha2']").toHaveText("Recevoir");
+    await contains(".o_hb_snippets_top_actions button:contains(Save)").click();
+    expect(resultSave).toEqual([{ sha2: "Recevoir" }]);
+});
+
+test("translate the only text of an inline SVG in the options", async () => {
+    await setupSidebarBuilderForTranslation({
+        websiteContent: `
+            <p>
+                <svg width="200" height="40">
+                    <text x="0" y="15"><tspan data-oe-model="ir.ui.view" data-oe-id="544" data-oe-field="arch_db" data-oe-translation-state="to_translate" data-oe-translation-source-sha="sha1">Receive</tspan></text>
+                </svg>
+            </p>
+        `,
+    });
+    await contains(".modal .btn:contains(Ok, never show me this again)").click();
+    await contains(":iframe svg text").click();
+    expect(".o_hb_options_container [data-action-id='translateSvgText'] input").toHaveCount(1);
+    expect(".o_hb_options_container [data-label='SVG Text']").toHaveCount(1);
+});
+
 test("translate attribute translate the complete term (and allows surrounding spaces)", async () => {
     await setupSidebarBuilderForTranslation({
         websiteContent: `

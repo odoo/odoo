@@ -2,6 +2,7 @@ import { closestBlock, isBlock } from "@html_editor/utils/blocks";
 import {
     getDeepestEditablePosition,
     getDeepestPosition,
+    isContentEditable,
     isEmptyTextNode,
     isMediaElement,
     isProtected,
@@ -1321,7 +1322,7 @@ export class SelectionPlugin extends Plugin {
     isNodeEditable(node) {
         return (
             this.dependencies.properties.get(node, "editable") ??
-            !!node.parentElement?.isContentEditable
+            !!isContentEditable(node.parentElement)
         );
     }
 
