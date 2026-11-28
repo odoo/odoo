@@ -43,5 +43,21 @@ class TestJPSaleReport(AccountTestInvoicingCommon):
 
         self.assertEqual(self._get_unit_price_cells(html), ['220.00', '108.15', '300.00'])
 
+    def test_invoice_of_several_orders_shows_the_order_of_each_line(self):
+        self.product_a.invoice_policy = 'order'
+        orders = self.env['sale.order'].concat(
+            self.env['sale.order'].create({
+                'partner_id': self.partner_a.id,
+                'order_line': [Command.create({'product_id': self.product_a.id})],
+            })
+            for _order in range(2)
+        )
+        orders.action_confirm()
+        invoice = orders._create_invoices()
+        html = self.env['ir.actions.report']._render_qweb_html('account.report_invoice', invoice.ids)[0]
+
+        cells = lxml.html.fromstring(html).xpath("//td[@name='td_sale_order']")
+        self.assertEqual([cell.text_content().strip() for cell in cells], orders.mapped('name'))
+
     def _get_unit_price_cells(self, html):
         return [cell.text_content().strip() for cell in lxml.html.fromstring(html).xpath("//td[@name='td_product_priceunit']")]

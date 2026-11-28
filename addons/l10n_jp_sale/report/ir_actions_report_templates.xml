@@ -37,4 +37,28 @@
             <t t-elif="doc.country_code == 'JP'" t-call="l10n_jp_sale.report_saleorder_document" t-lang="doc.partner_id.lang"/>
         </xpath>
     </template>
+
+    <template id="report_invoice_document" inherit_id="l10n_jp.report_invoice_document">
+        <xpath expr="//t[@t-set='display_discount']" position="after">
+            <t t-set="display_sale_orders" t-value="len(o.invoice_line_ids.sale_line_ids.order_id) &gt; 1"/>
+        </xpath>
+        <xpath expr="//th[@name='th_description']" position="after">
+            <th name="th_sale_order" t-if="display_sale_orders" t-attf-class="text-start {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}"><span>Sales Order</span></th>
+        </xpath>
+        <xpath expr="//td[@name='account_invoice_line_name']" position="after">
+            <td name="td_sale_order" t-if="display_sale_orders" t-attf-class="text-nowrap {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
+                <span t-out="', '.join(line.sale_line_ids.order_id.mapped('name'))">S00001</span>
+            </td>
+        </xpath>
+        <!-- Section rows and collapsed lines span the new column. -->
+        <xpath expr="(//t[@t-set='line_colspan'])[1]" position="attributes">
+            <attribute name="t-value" add="(1 if display_sale_orders else 0)" separator=" + "/>
+        </xpath>
+        <xpath expr="(//t[@t-set='line_colspan'])[2]" position="attributes">
+            <attribute name="t-value" add="(1 if display_sale_orders else 0)" separator=" + "/>
+        </xpath>
+        <xpath expr="(//t[@t-set='line_colspan'])[3]" position="attributes">
+            <attribute name="t-value" add="(1 if display_sale_orders else 0)" separator=" + "/>
+        </xpath>
+    </template>
 </odoo>

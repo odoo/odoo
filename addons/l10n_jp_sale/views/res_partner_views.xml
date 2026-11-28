@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_property_form" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.l10n_jp_sale</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="account.view_partner_property_form"/>
+        <field name="arch" type="xml">
+            <group id="invoice_send_settings" position="after">
+                <group string="Summary Invoice" name="l10n_jp_summary_invoice" invisible="'JP' not in fiscal_country_codes">
+                    <field name="l10n_jp_closing_day_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                    <field name="l10n_jp_pay_at_next_closing" invisible="not l10n_jp_closing_day_ids"/>
+                </group>
+            </group>
+        </field>
+    </record>
+</odoo>
