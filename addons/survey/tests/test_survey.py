@@ -206,6 +206,12 @@ class TestSurveyInternals(common.TestSurveyCommon, MailCase):
             {}
         )
 
+        question.validation_required = True
+        self.assertEqual(
+            question.validate_question('email@example.com'),
+            {}
+        )
+
     @users('survey_manager')
     def test_answer_validation_char_box_length(self):
         question = self._add_question(
@@ -222,6 +228,13 @@ class TestSurveyInternals(common.TestSurveyCommon, MailCase):
             {question.id: 'ValidationError'}
         )
 
+        self.assertEqual(
+            question.validate_question('valid'),
+            {}
+        )
+
+        # no max length set: length is not checked
+        question.write({'validation_length_min': 0, 'validation_length_max': 0})
         self.assertEqual(
             question.validate_question('valid'),
             {}
