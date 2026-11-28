@@ -82,6 +82,14 @@ class TestUtm(TestUTMCommon):
         campaign = self.env['utm.mixin']._find_or_create_record('utm.campaign', 'Archived Campaign')
         self.assertEqual(archived_campaign, campaign, "An archived record must be found instead of re-created.")
 
+    def test_source_archive(self):
+        """Sources that cannot be deleted (required by the code, used by
+        mailings, ...) can be archived to hide them from the dropdowns."""
+        source = self.env['utm.mixin']._utm_ref('utm.utm_source_mailing')
+        source.action_archive()
+        self.assertFalse(self.env['utm.source'].name_search(source.name, operator='='))
+        self.assertEqual(self.env['utm.mixin']._find_or_create_record('utm.source', source.name), source)
+
     def test_name_generation(self):
         """Test that the name is always unique. A counter must be added at the
         end of the name if it's not the case."""

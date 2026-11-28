@@ -6,6 +6,7 @@
         <field name="arch" type="xml">
             <list string="Source" editable="bottom" sample="1">
                 <field name="name" placeholder='e.g. "Christmas Mailing"'/>
+                <field name="active" column_invisible="True"/> <!-- Kept for archive/unarchive actions and the Archived search filter -->
             </list>
         </field>
     </record>
@@ -18,9 +19,22 @@
                 <sheet>
                     <group>
                         <field name="name"/>
+                        <field name="active" widget="boolean_toggle"/>
                     </group>
                 </sheet>
             </form>
+        </field>
+    </record>
+
+    <record id="utm_source_view_search" model="ir.ui.view">
+        <field name="name">utm.source.view.search</field>
+        <field name="model">utm.source</field>
+        <field name="arch" type="xml">
+            <search string="Search UTM Source">
+                <field name="name"/>
+                <separator/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+            </search>
         </field>
     </record>
 
@@ -28,6 +42,7 @@
         <field name="name">Sources</field>
         <field name="res_model">utm.source</field>
         <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="utm_source_view_search"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 No Sources yet!

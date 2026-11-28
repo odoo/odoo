@@ -9,6 +9,7 @@ class UtmSource(models.Model):
     _description = 'UTM Source'
 
     name = fields.Char(string='Source Name', required=True, translate=False, copy=True)
+    active = fields.Boolean(default=True)
 
     _unique_name = models.Constraint(
         'UNIQUE(name)',
