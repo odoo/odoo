@@ -73,62 +73,72 @@ class TestUblImportBis3InvoiceBERetrieveTax(TestUblImportBis3InvoiceBE):
         )
 
     def test_partial_import_tax_charge_to_fixed_tax(self):
+        def assert_invoice_values(invoice):
+            self.assertRecordValues(invoice.invoice_line_ids, [{
+                'quantity': 5.0,
+                'price_unit': 199.0,
+                'discount': 0.0,
+                'tax_ids': (tax_21 + created_tax).ids,
+            }])
+            self.assertRecordValues(invoice, [{
+                'amount_untaxed': 995.0,
+                'amount_tax': 215.0,
+                'amount_total': 1210.0,
+            }])
+
         tax_21 = self.percent_tax(21.0)
 
-        # Fail to retrieve the tax.
-        invoice = self._import_invoice_as_attachment_on(
-            test_name='test_partial_import_tax_charge_to_fixed_tax',
-            journal=self.company_data['default_journal_sale'],
-        )
-        self.assertRecordValues(
-            invoice.invoice_line_ids,
-            [
-                {
-                    'quantity': 5.0,
-                    'price_unit': 200.0,
-                    'discount': 0.0,
-                    'tax_ids': tax_21.ids,
-                },
-            ],
-        )
-        self.assertRecordValues(
-            invoice,
-            [
-                {
-                    'amount_untaxed': 1000.0,
-                    'amount_tax': 210.0,
-                    'amount_total': 1210.0,
-                },
-            ],
-        )
+        # Ensure no fixed tax matching 'RECUPEL (1.00 €)' exists before import.
+        fixed_tax_domain = [
+            ('name', '=', 'RECUPEL (1.00 €)'),
+            ('amount_type', '=', 'fixed'),
+            ('amount', '=', 1.0),
+            ('company_id', '=', self.company_data['company'].id),
+        ]
+        self.assertFalse(self.env['account.tax'].search(fixed_tax_domain))
 
-        # Lines are linked to a single tax, the tax amount has been fixed
-        recupel = self.fixed_tax(1.0, name='RECUPEL', include_base_amount=True, sequence=0)
+        # Fail to retrieve the tax: a new fixed tax is auto-created.
         invoice = self._import_invoice_as_attachment_on(
             test_name='test_partial_import_tax_charge_to_fixed_tax',
             journal=self.company_data['default_journal_sale'],
         )
-        self.assertRecordValues(
-            invoice.invoice_line_ids,
-            [
-                {
-                    'quantity': 5.0,
-                    'price_unit': 199.0,
-                    'discount': 0.0,
-                    'tax_ids': (recupel + tax_21).ids,
-                },
-            ],
+        created_tax = self.env['account.tax'].search(fixed_tax_domain, limit=1)
+        self.assertTrue(created_tax, "The import should have auto-created the fixed tax 'RECUPEL (1.00 €)'.")
+
+        assert_invoice_values(invoice)
+
+        # Successfully retrieve the already created fixed tax on re-import.
+        # The cursor cache still holds the failed search: the tax must not be created twice.
+        invoice = self._import_invoice_as_attachment_on(
+            test_name='test_partial_import_tax_charge_to_fixed_tax',
+            journal=self.company_data['default_journal_sale'],
         )
-        self.assertRecordValues(
-            invoice,
-            [
-                {
-                    'amount_untaxed': 995.0,
-                    'amount_tax': 215.0,
-                    'amount_total': 1210.0,
-                },
-            ],
+        assert_invoice_values(invoice)
+
+    def test_partial_import_tax_charge_to_fixed_tax_multiple_lines(self):
+        """ Two lines carrying the same charge must share a single auto-created fixed tax. """
+        tax_21 = self.percent_tax(21.0)
+
+        invoice = self._import_invoice_as_attachment_on(
+            test_name='test_partial_import_tax_charge_to_fixed_tax_multiple_lines',
+            journal=self.company_data['default_journal_sale'],
         )
+        created_tax = self.env['account.tax'].search([
+            ('name', '=', 'RECUPEL (1.00 €)'),
+            ('amount_type', '=', 'fixed'),
+            ('amount', '=', 1.0),
+            ('company_id', '=', self.company_data['company'].id),
+        ])
+        self.assertEqual(len(created_tax), 1)
+        self.assertRecordValues(invoice.invoice_line_ids, [
+            {'quantity': 5.0, 'price_unit': 199.0, 'tax_ids': (tax_21 + created_tax).ids},
+            {'quantity': 5.0, 'price_unit': 199.0, 'tax_ids': (tax_21 + created_tax).ids},
+        ])
+        self.assertRecordValues(invoice, [{
+            'amount_untaxed': 1990.0,
+            'amount_tax': 430.0,
+            'amount_total': 2420.0,
+        }])
 
     @freeze_time('2020-01-01')
     def test_partial_import_tax_manual_tax_amounts_invoice_predictive(self):
