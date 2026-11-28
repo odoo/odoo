@@ -179,6 +179,29 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
             {'date_planned': date_p},
         ])
 
+    def test_04_order_date_different_vendor_delays(self):
+        """ Two procurements for the same vendor, with different lead times, run together.
+        Each line is planned at now + its own lead time, so the order deadline must be now."""
+        products = self.env['product.product'].create([{
+            'name': name,
+            'is_storable': True,
+            'route_ids': [Command.link(self.route_buy.id)],
+            'seller_ids': [Command.create({'partner_id': self.vendor.id, 'delay': delay})],
+        } for name, delay in [('Short Lead Time', 10), ('Long Lead Time', 160)]])
+        now = fields.Datetime.now()
+        self.env['stock.rule'].run([
+            self.env['stock.rule'].Procurement(
+                product, 1, self.uom, self.stock_location, product.name, '/', self.env.company, {
+                    'warehouse_id': self.warehouse,
+                    'date_planned': now + timedelta(days=product.seller_ids.delay),
+                })
+            for product in products
+        ])
+        purchase = self.env['purchase.order.line'].search([('product_id', 'in', products.ids)]).order_id
+        self.assertEqual(len(purchase), 1)
+        self.assertEqual(purchase.date_order, now)
+        self.assertEqual(purchase.date_planned, now + timedelta(days=10))
+
     def test_merge_po_line(self):
         """Change that merging po line for same procurement is done."""
 
