@@ -111,7 +111,10 @@ class StockWarehouse(models.Model):
             else:
                 buy_route.warehouse_ids = [Command.unlink(warehouse.id)]
 
-    def _create_or_update_route(self):
+    def _create_or_update_route(self, target_route=None):
+        if target_route:
+            # Only the given warehouse route is updated, not the global routes
+            return super()._create_or_update_route(target_route)
         purchase_route = self._find_or_create_global_route('purchase_stock.route_warehouse0_buy', _('Buy'))
         for warehouse in self:
             if warehouse.buy_to_resupply:

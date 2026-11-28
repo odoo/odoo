@@ -11,6 +11,12 @@ class StockRoute(models.Model):
     _inherit = "stock.route"
     sale_selectable = fields.Boolean("Selectable on Sales Order Line")
 
+    @api.model
+    def _get_standard_global_routes_values(self):
+        values = super()._get_standard_global_routes_values()
+        values['stock.route_warehouse0_mto']['sale_selectable'] = True
+        return values
+
 
 class StockMove(models.Model):
     _inherit = "stock.move"

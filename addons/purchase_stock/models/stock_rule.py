@@ -422,3 +422,10 @@ class StockRoute(models.Model):
         rule_actions = super()._get_non_push_pull_rule_actions()
         rule_actions.append('buy')
         return rule_actions
+
+    @api.model
+    def _get_standard_global_routes_values(self):
+        return {
+            **super()._get_standard_global_routes_values(),
+            'purchase_stock.route_warehouse0_buy': {'sequence': 10, 'product_selectable': False, 'warehouse_selectable': True},
+        }

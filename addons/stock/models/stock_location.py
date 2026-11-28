@@ -640,6 +640,72 @@ class StockRoute(models.Model):
                         route_company=route.company_id.display_name,
                     ))
 
+    def action_open_reset_to_default_warning(self):
+        self.ensure_one()
+        self.check_access('write')
+        self._get_default_values()  # raises if the route isn't a standard one
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _("Reset route to standard default"),
+            'res_model': 'stock.route',
+            'res_id': self.id,
+            'views': [(self.env.ref('stock.stock_route_view_form_reset_to_default').id, 'form')],
+            'target': 'new',
+        }
+
+    def action_reset_to_default(self):
+        """ Restore this standard route as generated from the warehouses configuration: reset its values
+        and replace its rules by new ones. It isn't run as sudo, so that only the rules the user can edit
+        (i.e. the ones of the companies selected in the switcher) are reset. """
+        self.ensure_one()
+        self.write(self._get_default_values())
+        # Archive the whole route as a copy with the rules, so that if settings deactivate/activate that route
+        # later, the archived (broken) rules are not back with it
+        archived_route = self.copy({
+            'name': _("%s (archived after route reset)", self.name),
+            'rule_ids': self.rule_ids.ids,
+            'supplied_wh_id': False,
+            'supplier_wh_id': False,
+        })
+        archived_route.action_archive()
+        self.env['stock.warehouse'].search([])._recreate_default_route_rules(self)
+
+    @api.model
+    def _get_standard_global_routes_values(self):
+        """ Return, by xml id, the values of the standard routes shared by all the warehouses, as set
+        in their data files. """
+        return {
+            'stock.route_warehouse0_mto': {'sequence': 5, 'product_categ_selectable': True},
+        }
+
+    def _get_default_values(self):
+        """ Return the values of this route as originally generated, raise error if it isn't a standard route,
+        i.e. neither a global route of `_get_standard_global_routes_values`, an inter-warehouse resupply
+        route nor a route owned by a warehouse `stock_warehouse._get_routes_values`. """
+        self.ensure_one()
+        values = {
+            fname: field.default(self) if field.default else False
+            for fname, field in self._fields.items() if fname.endswith('_selectable')
+        }
+        # global routes reset
+        if route_values := self._get_standard_global_routes_values().get(self.get_external_id()[self.id]):
+            values |= route_values
+            if values['warehouse_selectable']:
+                values['warehouse_ids'] = [Command.link(warehouse.id) for warehouse in self.env['stock.warehouse'].search([])]
+            return values
+        # inter_warehouse supply route reset
+        if self.supplier_wh_id and self.supplier_wh_id in self.supplied_wh_id.sudo().resupply_wh_ids:
+            return values | self.supplied_wh_id.sudo()._get_inter_warehouse_route_values(self.supplier_wh_id.sudo()) | {'warehouse_ids': [Command.clear()]}
+        # warehouse routes reset
+        for warehouse in self.env['stock.warehouse'].search([]):
+            for route_field, route_data in warehouse._get_routes_values().items():
+                if warehouse[route_field] == self:
+                    values |= route_data['route_create_values'] | route_data['route_update_values']
+                    if values['warehouse_selectable']:
+                        values['warehouse_ids'] = [Command.link(warehouse.id)]
+                    return values
+        raise UserError(_("Only the standard routes generated from the warehouses configuration can be reset to default."))
+
     def _is_valid_resupply_route_for_product(self, product):
         return False
 

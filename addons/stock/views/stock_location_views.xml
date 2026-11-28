@@ -276,6 +276,36 @@
             </field>
         </record>
 
+        <!-- Confirmation dialog opened by `action_open_reset_to_default_warning` -->
+        <record id="stock_route_view_form_reset_to_default" model="ir.ui.view">
+            <field name="name">stock.route.form.reset.to.default</field>
+            <field name="model">stock.route</field>
+            <field name="priority">99</field>
+            <field name="arch" type="xml">
+                <form>
+                    <div class="alert alert-danger" role="alert">
+                        <i class="oi me-2" data-icon="warning" aria-hidden="true"/>Danger zone
+                    </div>
+                    <p>The changes you made to this route will be archived so that the standard default route is restored.</p>
+                    <p>Are you sure you want to apply this reset?</p>
+                    <footer>
+                        <button special="cancel" data-hotkey="x" string="Oops, no!" class="btn-primary"/>
+                        <button name="action_reset_to_default" string="Yes, I understand the risks" type="object" class="btn-secondary" data-hotkey="q"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_route_reset_to_default" model="ir.actions.server">
+            <field name="name">Reset to default</field>
+            <field name="model_id" ref="stock.model_stock_route"/>
+            <field name="binding_model_id" ref="stock.model_stock_route"/>
+            <field name="binding_view_types">form</field>
+            <field name="group_ids" eval="[Command.link(ref('base.group_no_one'))]"/>
+            <field name="state">code</field>
+            <field name="code">action = record.action_open_reset_to_default_warning()</field>
+        </record>
+
         <record id="stock_location_route_view_search" model="ir.ui.view">
             <field name="name">stock.location.route.search</field>
             <field name="model">stock.route</field>

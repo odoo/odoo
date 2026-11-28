@@ -265,3 +265,10 @@ class StockRoute(models.Model):
         rule_actions = super()._get_non_push_pull_rule_actions()
         rule_actions.append('manufacture')
         return rule_actions
+
+    @api.model
+    def _get_standard_global_routes_values(self):
+        return {
+            **super()._get_standard_global_routes_values(),
+            'mrp.route_warehouse0_manufacture': {'sequence': 5, 'product_selectable': False, 'warehouse_selectable': True},
+        }

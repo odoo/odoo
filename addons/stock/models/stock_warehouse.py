@@ -224,8 +224,8 @@ class StockWarehouse(models.Model):
             # 'depends'.
             global_rules = warehouse._get_global_route_rules_values()
             depends = [depend for depends in [value.get('depends', []) for value in global_rules.values()] for depend in depends]
-            if any(rule in vals for rule in global_rules) or\
-                    any(depend in vals for depend in depends):
+            if not self.env.context.get('bypass_global_route_sync') and (
+                    any(rule in vals for rule in global_rules) or any(depend in vals for depend in depends)):
                 warehouse._create_or_update_global_routes_rules()
 
             if 'active' in vals:
@@ -373,15 +373,18 @@ class StockWarehouse(models.Model):
             PickingType.browse(warehouse_data['in_type_id']).write({'return_picking_type_id': warehouse_data.get('out_type_id', False)})
         return warehouse_data
 
-    def _create_or_update_global_routes_rules(self):
+    def _create_or_update_global_routes_rules(self, route=None):
         """ Some rules are not specific to a warehouse(e.g MTO, Buy, ...)
         however they contain rule(s) for a specific warehouse. This method will
         update the rules contained in global routes in order to make them match
         with the wanted reception, delivery,... steps.
+        If `route` is given, only its rules are handled.
         """
         for rule_field, rule_details in self._get_global_route_rules_values().items():
+            if route and rule_details['create_values'].get('route_id') != route.id:
+                continue
             values = rule_details.get('update_values', {})
-            if self[rule_field]:
+            if self[rule_field] and (not route or self[rule_field].route_id == route):
                 self[rule_field].write(values)
             else:
                 values.update(rule_details['create_values'])
@@ -450,8 +453,8 @@ class StockWarehouse(models.Model):
             }
         }
 
-    def _create_or_update_route(self):
-        """ Create or update the warehouse's routes.
+    def _create_or_update_route(self, target_route=None):
+        """ Create or update the warehouse's routes, or only `target_route` if given.
         _get_routes_values method return a dict with:
             - route field name (e.g: delivery_route_id).
             - field that trigger an update on the route (key 'depends').
@@ -474,6 +477,8 @@ class StockWarehouse(models.Model):
         routes = []
         rules_dict = self.get_rules_dict()
         for route_field, route_data in self._get_routes_values().items():
+            if target_route and self[route_field] != target_route:
+                continue
             # If the route exists update it
             if self[route_field]:
                 route = self[route_field]
@@ -611,6 +616,36 @@ class StockWarehouse(models.Model):
             else:
                 existing_rule.write({'active': True})
 
+    def _recreate_default_route_rules(self, route):
+        """ Recreates the rules as they would be created by default when a warehouse generates a route.
+        """
+        rule_vals_list = []
+        for warehouse in self:
+            warehouse._create_or_update_route(route)
+            warehouse.with_context(bypass_global_route_sync=True)._create_or_update_global_routes_rules(route)
+
+        # Inter-warehouse resupply route (or mto route with inter-warehouse resupply rule)
+        if route.supplied_wh_id:
+            resupply_whs = [(route.supplied_wh_id.sudo(), route.supplier_wh_id.sudo())]
+        else:
+            resupply_whs_with_mto = self.filtered(lambda wh: wh.mto_pull_id.route_id == route)
+            resupply_whs = [
+                (supplied_wh, supplier_wh)
+                for supplied_wh in self.sudo().search([('resupply_wh_ids', 'in', resupply_whs_with_mto.ids)])
+                for supplier_wh in supplied_wh.resupply_wh_ids & resupply_whs_with_mto
+            ]
+        for supplied_wh, supplier_wh in resupply_whs:
+            internal_transit_location, external_transit_location = supplied_wh._get_transit_locations()
+            transit_location = internal_transit_location if supplier_wh.company_id == supplied_wh.company_id else external_transit_location
+            if not transit_location:
+                continue
+            mto_rule_vals, resupply_rules_vals = supplied_wh._get_resupply_rules_values(supplier_wh, transit_location, route)
+            if route.supplied_wh_id:
+                rule_vals_list += [vals for vals in resupply_rules_vals if vals['company_id'] in self.env.companies.ids]
+            elif mto_rule_vals['company_id'] in self.env.companies.ids:
+                self.env['stock.rule']._create_mto_rule_if_not_exist(mto_rule_vals)
+        self.env['stock.rule'].create(rule_vals_list)
+
     def _get_locations_values(self, vals, code=False):
         """ Update the warehouse locations. """
         def_values = self.default_get(['reception_steps', 'delivery_steps'])
@@ -690,39 +725,45 @@ class StockWarehouse(models.Model):
             if not transit_location:
                 continue
             transit_location.active = True
-            out_picking_type = supplier_wh.out_type_id if supplier_wh.delivery_steps == 'ship_only' else supplier_wh.pick_type_id
-
-            # Create extra MTO rule
-            routing = [self.Routing(supplier_wh.lot_stock_id, transit_location, out_picking_type, 'pull')]
-            mto_vals = supplier_wh._get_global_route_rules_values().get('mto_pull_id')
-            values = mto_vals['create_values']
-            mto_rule_val = supplier_wh._get_rule_values(routing, values, name_suffix='MTO')
-            Rule._create_mto_rule_if_not_exist(mto_rule_val[0])
-
             inter_wh_route = Route.create(self._get_inter_warehouse_route_values(supplier_wh))
-            rules_to_create += supplier_wh._get_supply_pull_rules_values(
-                [self.Routing(supplier_wh.lot_stock_id, transit_location, out_picking_type, 'pull')],
-                values={
-                    'route_id': inter_wh_route.id,
-                    'partner_address_id': self.partner_id.id
-                })
-            rules_to_create += self._get_supply_pull_rules_values(
-                [self.Routing(transit_location, self.lot_stock_id, self.in_type_id, 'pull_push')],
-                values={
-                    'route_id': inter_wh_route.id,
-                    'partner_address_id': supplier_wh.partner_id.id,
-                    'push_domain': f'[("partner_id", "in", [{self.partner_id.id}]), ("location_id.warehouse_id", "in", [{supplier_wh.id}])]',
-                })
-            # Handle returns
-            rules_to_create += supplier_wh._get_rule_values(
-                [self.Routing(transit_location, supplier_wh.in_type_id.default_location_dest_id, supplier_wh.in_type_id, 'push')],
-                values={
-                    'route_id': inter_wh_route.id,
-                    'partner_address_id': self.partner_id.id,
-                    'push_domain': f'[("partner_id", "in", [{supplier_wh.partner_id.id}]), ("location_id.warehouse_id", "in", [{self.id}])]',
-                })
+            mto_rule_vals, resupply_rules_vals = self._get_resupply_rules_values(supplier_wh, transit_location, inter_wh_route)
+            Rule._create_mto_rule_if_not_exist(mto_rule_vals)
+            rules_to_create += resupply_rules_vals
 
         Rule.create(rules_to_create)
+
+    def _get_resupply_rules_values(self, supplier_wh, transit_location, route):
+        """ Return the values of the extra MTO rule and of the rules of the resupply `route`, resupplying this
+        warehouse from `supplier_wh` through `transit_location`. """
+        out_picking_type = supplier_wh.out_type_id if supplier_wh.delivery_steps == 'ship_only' else supplier_wh.pick_type_id
+
+        routing = [self.Routing(supplier_wh.lot_stock_id, transit_location, out_picking_type, 'pull')]
+        mto_vals = supplier_wh._get_global_route_rules_values().get('mto_pull_id')
+        values = mto_vals['create_values']
+        mto_rule_val = supplier_wh._get_rule_values(routing, values, name_suffix='MTO')
+
+        rules_vals = supplier_wh._get_supply_pull_rules_values(
+            [self.Routing(supplier_wh.lot_stock_id, transit_location, out_picking_type, 'pull')],
+            values={
+                'route_id': route.id,
+                'partner_address_id': self.partner_id.id
+            })
+        rules_vals += self._get_supply_pull_rules_values(
+            [self.Routing(transit_location, self.lot_stock_id, self.in_type_id, 'pull_push')],
+            values={
+                'route_id': route.id,
+                'partner_address_id': supplier_wh.partner_id.id,
+                'push_domain': f'[("partner_id", "in", [{self.partner_id.id}]), ("location_id.warehouse_id", "in", [{supplier_wh.id}])]',
+            })
+        # Handle returns
+        rules_vals += supplier_wh._get_rule_values(
+            [self.Routing(transit_location, supplier_wh.in_type_id.default_location_dest_id, supplier_wh.in_type_id, 'push')],
+            values={
+                'route_id': route.id,
+                'partner_address_id': self.partner_id.id,
+                'push_domain': f'[("partner_id", "in", [{supplier_wh.partner_id.id}]), ("location_id.warehouse_id", "in", [{self.id}])]',
+            })
+        return mto_rule_val[0], rules_vals
 
     def _update_inter_warehouse_resupply_routes_values(self, partner_id):
         """Update push_domain in resupply routes when warehouse partner_id changes to given partner_id argument.
