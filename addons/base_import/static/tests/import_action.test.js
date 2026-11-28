@@ -2,6 +2,7 @@ import { useEffect } from "@odoo/owl";
 import { before, describe, expect, test } from "@odoo/hoot";
 import {
     animationFrame,
+    click,
     drag,
     queryOne,
     runAllTimers,
@@ -1834,5 +1835,49 @@ describe("Import a CSV", () => {
         expect("datalist#list-6 option:first").toHaveValue("YYYY-MM-DD HH:mm:SS");
         expect(".o_import_action .o_import_data_content").toHaveCount(1);
         expect.verifySteps(["/base_import/set_file"]);
+    });
+    test("files referenced by sub-records are sent with the import", async () => {
+        onRpc("base_import.import", "parse_preview", ({ args }) =>
+            parsePreview(args[1], {
+                fields: [
+                    { id: "name", name: "name", string: "Name", fields: [], type: "char" },
+                    {
+                        id: "child_ids",
+                        name: "child_ids",
+                        string: "Children",
+                        type: "one2many",
+                        fields: [
+                            {
+                                id: "image",
+                                name: "image",
+                                string: "Image",
+                                fields: [],
+                                type: "binary",
+                            },
+                        ],
+                    },
+                ],
+                headers: ["name", "child_ids/image"],
+                matches: { 0: ["name"], 1: ["child_ids", "image"] },
+                preview: [["Parent"], ["red.png"]],
+            })
+        );
+        onRpc("base_import.import", "execute_import", ({ args }) => {
+            expect.step("execute_import");
+            expect(args[3].binary_files_data).toEqual({ "red.png": "cmVk" });
+            return { ids: [1], messages: [], nextrow: 0 };
+        });
+        await mountWebClient();
+        await getService("action").doAction(1);
+
+        await contains(".o_control_panel_main_buttons .o_import_file").click();
+        await setInputFiles([new File(["fake_file"], "fake_file.csv", { type: "text/plain" })]);
+        await animationFrame();
+        await click(".o_import_data_sidepanel input[type=file][multiple]", { visible: false });
+        await setInputFiles([new File(["red"], "red.png", { type: "image/png" })]);
+        await animationFrame();
+
+        await contains(".o_control_panel_main_buttons button:first-child").click();
+        expect.verifySteps(["execute_import"]);
     });
 });

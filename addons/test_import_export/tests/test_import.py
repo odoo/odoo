@@ -1706,3 +1706,57 @@ class TestUrlImport(TransactionCase):
             ], limit=1)
             self.assertEqual(attachment.mimetype, 'image/svg+xml',
                 "SVG should be stored as image/svg+xml for admin users")
+
+
+@tagged('post_install', '-at_install')
+class TestLocalFilesImport(TransactionCase):
+    def test_import_local_files_on_sub_records(self):
+        img_buf = io.BytesIO()
+        Image.new('RGB', (1, 1), '#FF0000').save(img_buf, 'PNG')
+        content = (
+            'name,child_ids/name,child_ids/image_1920\n'
+            'Parent,Child 1,red.png\n'
+            ',Child 2,missing.png\n'
+        )
+        import_wizard = self.env['base_import.import'].create({
+            'res_model': 'res.partner',
+            'file': BinaryBytes(content.encode()),
+            'file_type': 'text/csv',
+        })
+        result = import_wizard.execute_import(
+            ['name', 'child_ids/name', 'child_ids/image_1920'],
+            [],
+            {
+                'has_headers': True, 'separator': ',', 'quoting': '"',
+                'binary_files_data': {'red.png': base64.b64encode(img_buf.getvalue()).decode()},
+            },
+        )
+
+        self.assertFalse(result['messages'])
+        child_1, child_2 = self.env['res.partner'].browse(result['ids']).child_ids.sorted('name')
+        self.assertEqual(child_1.image_1920.content, img_buf.getvalue())
+        self.assertFalse(child_2.image_1920, "a file not uploaded leaves the image empty")
+        self.assertNotIn("binary_filenames", result, "files of sub-records are not uploaded afterwards")
+
+    def test_import_local_files_per_record(self):
+        content = (
+            'name,image_1920,child_ids/name\n'
+            'Parent 1,red.png,Child 1\n'
+            ',,Child 2\n'
+            'Parent 2,blue.png,Child 3\n'
+        )
+        import_wizard = self.env['base_import.import'].create({
+            'res_model': 'res.partner',
+            'file': BinaryBytes(content.encode()),
+            'file_type': 'text/csv',
+        })
+        result = import_wizard.execute_import(
+            ['name', 'image_1920', 'child_ids/name'],
+            [],
+            {'has_headers': True, 'separator': ',', 'quoting': '"'},
+        )
+
+        self.assertFalse(result['messages'])
+        self.assertEqual(len(result['ids']), 2)
+        # aligned with result['ids'], so the client uploads each file on its record
+        self.assertEqual(result['binary_filenames'], {'image_1920': ['red.png', 'blue.png']})

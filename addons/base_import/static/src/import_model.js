@@ -7,6 +7,7 @@ import { checkFileSize, DEFAULT_MAX_FILE_SIZE } from "@web/core/utils/files";
 import { memoize } from "@web/core/utils/functions";
 import { useService } from "@web/core/utils/hooks";
 import { pick } from "@web/core/utils/objects";
+import { getDataURLFromFile } from "@web/core/utils/urls";
 import { session } from "@web/session";
 import { ImportBlockUI } from "./import_block_ui";
 import { BinaryFileManager } from "./binary_file_manager";
@@ -404,12 +405,32 @@ export class BaseImportModel {
     }
 
     async _executeImportStep(isTest, importRes) {
-        const importArgs = [
-            this.id,
-            importRes.fields,
-            importRes.columns,
-            this.formattedImportOptions,
-        ];
+        const options = this.formattedImportOptions;
+        // Sub-records (e.g. the extra images of a product) are created by the
+        // import: the files they reference are sent along instead of uploaded after.
+        const files = Object.values(this.binaryFilesParams.binaryFiles.value);
+        const hasNestedBinaryField = this.columns.some(
+            (col) => col.fieldInfo?.type === "binary" && col.fieldInfo.fieldPath.includes("/")
+        );
+        if (files.length && hasNestedBinaryField) {
+            const size = files.reduce((total, file) => total + file.size, 0);
+            if (size > this.binaryFilesParams.maxSizePerBatch.value * 1024 * 1024) {
+                this._addMessage("danger", [
+                    _t(
+                        "The uploaded files exceed the batch max size. Raise it or import fewer files at once."
+                    ),
+                ]);
+                importRes.hasError = true;
+                this.stopImport();
+                return false;
+            }
+            options.binary_files_data = {};
+            for (const file of files) {
+                const dataURL = await getDataURLFromFile(file);
+                options.binary_files_data[file.name] = dataURL.split(",")[1];
+            }
+        }
+        const importArgs = [this.id, importRes.fields, importRes.columns, options];
         const { ids, messages, nextrow, name, error, binary_filenames } = await this._callImport(
             isTest,
             importArgs
