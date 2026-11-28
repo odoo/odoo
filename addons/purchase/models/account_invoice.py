@@ -6,7 +6,13 @@ import time
 from markupsafe import Markup
 
 from odoo import api, fields, models, Command, _
+<<<<<<< 73e94da54b0fd74631348f1375d57e944b1e4449
 from odoo.tools import OrderedSet, SQL
+||||||| ec9a6ee2eae9ae190e8c64177b8d8c8feefc8329
+from odoo.tools import OrderedSet
+=======
+from odoo.tools import float_compare, OrderedSet
+>>>>>>> bda8fbe83b876d6630c8d322d812097056aa938c
 
 _logger = logging.getLogger(__name__)
 
@@ -316,6 +322,7 @@ class AccountMove(models.Model):
         matched_inv_lines = []
         try:
             start_time = time.time()
+            precision = self.env["decimal.precision"].precision_get("Product Price")
             for invoice_line in invoice_lines:
                 # There are no purchase order lines left. We are done matching.
                 if not purchase_lines:
@@ -329,10 +336,10 @@ class AccountMove(models.Model):
                     # The lists are sorted by unit price descendingly.
                     # When the unit price of the purchase line is lower than the unit price of the invoice line,
                     # we cannot get a match anymore.
-                    if purchase_line.price_unit < invoice_line.price_unit:
+                    if float_compare(purchase_line.price_unit, invoice_line.price_unit, precision_digits=precision) < 0:
                         break
 
-                    if (invoice_line.price_unit == purchase_line.price_unit
+                    if (float_compare(invoice_line.price_unit, purchase_line.price_unit, precision_digits=precision) == 0
                             and invoice_line.quantity <= purchase_line.product_qty - purchase_line.qty_invoiced):
                         # The current purchase line is a possible match for the current invoice line.
                         # We calculate the name match ratio and continue with other possible matches.
