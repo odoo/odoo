@@ -29,10 +29,14 @@ class SaleOrder(models.Model):
     coupon_point_ids = fields.One2many(
         comodel_name="sale.order.coupon.points", inverse_name="order_id", copy=False
     )
+    disabled_auto_rewards = fields.Many2many(
+        comodel_name="loyalty.reward", relation="sale_order_disabled_auto_rewards_rel", copy=False
+    )
     reward_amount = fields.Float(compute="_compute_reward_total")
 
     # Display Fields
     gift_card_count = fields.Integer(compute="_compute_gift_card_count")
+    claimable_reward_count = fields.Integer(compute="_compute_claimable_reward_count")
 
     @api.depends("order_line")
     def _compute_reward_total(self):
@@ -91,6 +95,17 @@ class SaleOrder(models.Model):
             )
         for order in self:
             order.gift_card_count = gift_card_data.get(order, 0)
+
+    @api.depends("state", "order_line", "coupon_point_ids", "applied_coupon_ids")
+    def _compute_claimable_reward_count(self):
+        """Compute the number of rewards the user can still claim on the order."""
+        for order in self:
+            claimable_rewards = (
+                order._get_claimable_rewards() if order.state in {"draft", "sent"} else {}
+            )
+            order.claimable_reward_count = sum(
+                len(rewards) for rewards in claimable_rewards.values()
+            )
 
     def _add_loyalty_history_lines(self):
         self.ensure_one()
@@ -188,12 +203,70 @@ class SaleOrder(models.Model):
 
         return {"point_name": point_name, "issued": issued, "cost": cost}
 
+    def web_save(self, vals, specification, next_id=None):
+        """Override to update the programs and rewards of the order when saving it from the form.
+
+        The flag is set only here, so orders written from code are left untouched.
+        """
+        return super(SaleOrder, self.with_context(loyalty_auto_update=True)).web_save(
+            vals, specification, next_id=next_id
+        )
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        orders = super().create(vals_list)
+        if self.env.context.get("loyalty_auto_update"):
+            orders._auto_update_loyalty()
+        return orders
+
+    def write(self, vals):
+        if not self.env.context.get("loyalty_auto_update"):
+            return super().write(vals)
+        if "order_line" in vals:
+            self._disable_removed_auto_rewards(vals["order_line"])
+        res = super().write(vals)
+        if {"order_line", "partner_id"} & vals.keys():
+            self._auto_update_loyalty()
+        return res
+
     def copy(self, default=None):
         new_orders = super().copy(default)
         reward_lines = new_orders.order_line.filtered("is_reward_line")
         if reward_lines:
             reward_lines.unlink()
         return new_orders
+
+    def _disable_removed_auto_rewards(self, line_commands):
+        """Disable the rewards whose lines are removed from the order by the given commands.
+
+        Only the commands sent by the user are looked at: the lines removed because their reward
+        is not applicable anymore are removed later, by `_update_programs_and_rewards`.
+        """
+        removed_line_ids = {
+            command[1]
+            for command in line_commands or ()
+            if command[0] in {Command.DELETE, Command.UNLINK}
+        }
+        if not removed_line_ids:
+            return
+        for order in self.filtered(lambda so: so.state in {"draft", "sent"}):
+            removed_rewards = order.order_line.filtered(
+                lambda line: line.id in removed_line_ids
+            ).reward_id
+            if removed_rewards:
+                order.disabled_auto_rewards |= removed_rewards
+
+    def _auto_update_loyalty(self):
+        """Update the programs and rewards of the draft orders, and apply the ones that need no
+        user input.
+
+        The loyalty records are managed here only, salespersons can't write them: the update is
+        done as superuser, `sudo` keeps the user as the author of the lines.
+        """
+        orders = self.filtered(lambda so: so.state in {"draft", "sent"} and so.order_line)
+        for order in orders.with_context(loyalty_auto_update=False).sudo():
+            order._update_programs_and_rewards()
+            order._auto_apply_rewards()
 
     def action_confirm(self):
         """Override to validate and update coupon rewards.
@@ -288,15 +361,6 @@ class SaleOrder(models.Model):
     def action_open_reward_wizard(self):
         self.ensure_one()
         self._update_programs_and_rewards()
-        claimable_rewards = self._get_claimable_rewards()
-        if len(claimable_rewards) == 1:
-            coupon = next(iter(claimable_rewards))
-            rewards = claimable_rewards[coupon]
-            if len(rewards) == 1 and not rewards.multi_product:
-                self._apply_program_reward(claimable_rewards[coupon], coupon)
-                return True
-        elif not claimable_rewards:
-            return True
         return self.env["ir.actions.actions"]._for_xml_id(
             "sale_loyalty.sale_loyalty_reward_wizard_action"
         )
@@ -1003,6 +1067,7 @@ class SaleOrder(models.Model):
         for vals, line in zip(reward_vals, old_lines):
             if vals["product_id"] == line.product_id.id:
                 vals["name"] = line.name  # Preserve custom description
+            vals["sequence"] = line.sequence  # Preserve the position chosen by the user
             command_list.append(Command.update(line.id, vals))
         if len(reward_vals) > len(old_lines):
             command_list.extend(Command.create(vals) for vals in reward_vals[len(old_lines) :])
@@ -1183,6 +1248,50 @@ class SaleOrder(models.Model):
                 if points >= reward.required_points:
                     result[coupon] |= reward
         return result
+
+    def _is_auto_claimable_program(self, program):
+        """Whether the rewards of the given program can be claimed without user input."""
+        self.ensure_one()
+        return program.program_type in ("promotion", "buy_x_get_y")
+
+    def _auto_apply_rewards(self):
+        """Try to auto apply claimable rewards.
+
+        It must answer to the following rules:
+         - Must be from an auto claimable program, see `_is_auto_claimable_program`
+         - Must not be from a nominative program
+         - The reward must be the only reward of the program
+         - The reward may not be a multi product reward
+         - The reward must not have been removed from the order by the user
+         - The order must be a draft or sent one
+
+        Returns True if any reward was claimed else False.
+        """
+        self.ensure_one()
+        if self.state not in {"draft", "sent"}:
+            return False
+
+        claimed_reward_count = 0
+        claimable_rewards = self._get_claimable_rewards()
+        for coupon, rewards in claimable_rewards.items():
+            if (
+                not self._is_auto_claimable_program(coupon.program_id)
+                or len(coupon.program_id.reward_ids) != 1
+                or coupon.program_id.is_nominative
+                or (rewards.reward_type == "product" and rewards.multi_product)
+                or rewards in self.disabled_auto_rewards
+                or rewards in self.order_line.reward_id
+            ):
+                continue
+
+            try:
+                res = self._apply_program_reward(rewards, coupon)
+                if "error" not in res:
+                    claimed_reward_count += 1
+            except UserError:
+                pass
+
+        return bool(claimed_reward_count)
 
     def _allow_nominative_programs(self):
         """Whether this order may use nominative programs."""
