@@ -6,6 +6,7 @@ from odoo import api, fields, models
 
 class StockPackageType(models.Model):
     _name = 'stock.package.type'
+    _inherit = ['barcode.uniqueness.mixin']
     _description = "Stock package type"
     _order = "sequence, id"
 
@@ -24,7 +25,6 @@ class StockPackageType(models.Model):
     packaging_length = fields.Float('Length', help="Packaging Length")
     base_weight = fields.Float(string='Weight', help='Weight of the package type')
     max_weight = fields.Float('Max Weight', help='Maximum weight shippable in this packaging')
-    barcode = fields.Char('Barcode', copy=False)
     weight_uom_name = fields.Char(string='Weight unit of measure label', compute='_compute_weight_uom_name', default=_get_default_weight_uom)
     length_uom_name = fields.Char(string='Length unit of measure label', compute='_compute_length_uom_name', default=_get_default_length_uom)
     company_id = fields.Many2one('res.company', 'Company', index=True)
@@ -120,6 +120,9 @@ class StockPackageType(models.Model):
             if seq_to_todo_ids:
                 self.env['ir.sequence'].browse(list(seq_to_todo_ids)).sudo().write(seq_vals)
         return super().write(vals)
+
+    def _group_barcodes_by_company(self):
+        return [(False, list(filter(None, self.mapped('barcode'))))]
 
     def _get_next_name_by_sequence(self):
         if len(self) == 1 and self.sequence_id:

@@ -13,6 +13,7 @@ from odoo.fields import Command, Domain
 
 class StockLocation(models.Model):
     _name = 'stock.location'
+    _inherit = ['barcode.uniqueness.mixin']
     _description = "Inventory Location"
     _parent_name = "location_id"
     _parent_store = True
@@ -78,7 +79,6 @@ class StockLocation(models.Model):
              "FEFO: products/lots with the closest removal date will be moved out first "
              "(the availability of this method depends on the \"Expiration Dates\" setting).")
     putaway_rule_ids = fields.One2many('stock.putaway.rule', 'location_in_id', 'Putaway Rules')
-    barcode = fields.Char('Barcode', copy=False)
     quant_ids = fields.One2many('stock.quant', 'location_id')
     cyclic_inventory_frequency = fields.Integer("Inventory Frequency", default=0, help=" When different than 0, inventory count date for products stored at this location will be automatically set at the defined frequency.")
     last_inventory_date = fields.Date("Last Inventory", readonly=True, help="Date of the last inventory at this location.")
