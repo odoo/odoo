@@ -23,7 +23,7 @@ class ProjectShareCollaboratorWizard(models.TransientModel):
         required=True,
         help="View: can access tasks and send messages.\n"
             "Edit: can create and update tasks.\n"
-            "Advanced Edit: create and update tasks, change their priority, and move them between stages."
+            "Advanced Edit: can create and update tasks, change their priority, and move them between stages."
     )
     send_invitation = fields.Boolean(
         string='Send Invitation',

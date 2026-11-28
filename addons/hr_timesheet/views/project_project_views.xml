@@ -28,7 +28,7 @@
                 </xpath>
                 <xpath expr="//button[@name='project_update_all_action']" position="after">
                     <t groups="hr_timesheet.group_hr_timesheet_user">
-                        <button name="action_project_timesheets" type="object" class="oe_stat_button" icon="" invisible="not allow_timesheets">
+                        <button name="action_project_timesheets" type="object" class="oe_stat_button" icon="" invisible="not allow_timesheets or not is_user_project_manager">
                             <i class="oi oi-fw o_button_icon" data-icon="schedule" title="Timesheets" invisible="stat_success_rate"/>
                             <i class="oi oi-fw o_button_icon text-success" data-icon="schedule" title="On Due" invisible="not stat_success_rate or stat_success_rate &gt;= 80"/>
                             <i class="oi oi-fw o_button_icon text-warning" data-icon="schedule" title="Warning" invisible="not stat_success_rate or stat_success_rate &gt; 100 or stat_success_rate &lt; 80"/>

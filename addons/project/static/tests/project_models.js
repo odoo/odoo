@@ -15,6 +15,7 @@ export class ProjectProject extends models.Model {
     allow_task_dependencies = fields.Boolean({ string: "Task Dependencies", default: false });
     allow_milestones = fields.Boolean({ string: "Milestones", default: false });
     allow_recurring_tasks = fields.Boolean({ string: "Recurring Tasks", default: false });
+    is_user_project_manager = fields.Boolean({ default: false });
 
     _records = [
         {
@@ -131,6 +132,7 @@ export class ProjectTask extends models.Model {
     closed_depend_on_count = fields.Integer();
     is_closed = fields.Boolean();
     is_template = fields.Boolean({ string: "Is Template", default: false });
+    is_user_project_manager = fields.Boolean({ related: "project_id.is_user_project_manager" })
 
     plan_task_in_calendar(idOrIds, values) {
         return this.write(idOrIds, values);

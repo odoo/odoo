@@ -17,6 +17,7 @@ project_project_stage_rule,Project Stage: multi-company,project.project.stage,,c
 access_project_task_type_user,project.task.type.user,project.task.type,base.group_user,r,
 task_type_manager_rule,Project/Task Type: manager sees all,project.task.type,project.group_project_manager,crud,
 task_type_own_write_rule,Project/Task Type: write own stages,project.task.type,project.group_project_user,cud,"[('user_id', '=', user.id)]"
+task_type_single_project_rule,Project/Task Type: Project manager can edit exclusive stage,project.task.type,project.group_project_user,u,"[('project_ids', 'any', [('user_id', '=', user.id)]), ('project_ids', 'not any', [('user_id', '!=', user.id)])]"
 access_project_task_type_portal,task_type_portal,project.task.type,base.group_portal,r,
 task_type_visibility_rule,Project/Task Type: see own or unowned stages,project.task.type,,crud,"[('user_id', 'in', (False, user.id))]"
 project_manager_all_project_tasks_rule,Project/Task: project manager: see all tasks linked to a project or its own tasks and all tasks templates,project.task,project.group_project_manager,crud,"[
@@ -120,14 +121,16 @@ milestone_visibility_rule_1,Project/Milestone: employees: team members only for 
 milestone_visibility_project_admin,Project/Milestone: Project manager can see all project milestones,project.milestone,project.group_project_manager,crud,
 milestone_comp_rule,Project/Milestone: multi-company,project.milestone,,crud,"['|', ('project_id.company_id', 'in', company_ids), ('project_id.company_id', '=', False)]"
 access_project_collaborator_manager,project.collaborator.manager,project.collaborator,project.group_project_manager,crud,
-access_project_collaborator_user,project.collaborator.user,project.collaborator,project.group_project_user,r,
+access_project_collaborator_user,Project User can only see if managing the project,project.collaborator,project.group_project_user,crud,
 project_collaborator_rule_portal,Project/Collaborator: portal users: can only see his own collobaroration in shared projects,project.collaborator,base.group_portal,r,"[
             ('project_id.privacy_visibility', 'in', ['invited_users', 'portal']),
             ('partner_id', '=', user.partner_id.id),
         ]"
 access_project_share_manager,project.share.wizard.manager,project.share.wizard,project.group_project_manager,cru,
+access_project_share_user,Project sharing wizard: access rights for User assigned as Project Manager,project.share.wizard,project.group_project_user,cru,
 access_project_task_share_manager,project.task.share.wizard.manager,task.share.wizard,base.group_partner_manager,cru,
 access_project_share_collaborator_manager,project.share.collaborator.wizard.manager,project.share.collaborator.wizard,project.group_project_manager,crud,
+access_project_share_collaborator_user,Project sharing wizard: additional rights for User assigned as Project Manager,project.share.collaborator.wizard,project.group_project_user,crud,
 access_project_personal_stage,project.personal.stage.user,project.task.stage.personal,base.group_user,crud,
 ir_rule_project_personal_stage_my,Project: See my own personal stage,project.task.stage.personal,,crud,"[('user_id', '=', user.id)]"
 access_mail_activity_plan_project_manager,mail.activity.plan.project.manager,mail.activity.plan,project.group_project_manager,r,
@@ -141,3 +144,4 @@ access_project_template_role_to_users_map_manager,project.template.role.to.users
 access_project_role_user,project.role.user,project.role,project.group_project_user,r,
 access_project_role_manager,project.role.manager,project.role,project.group_project_manager,crud,
 access_project_task_stage_report,project.task.stage.report,project.task.stage.report,project.group_project_manager,r,
+project_project_user_is_manager_rule,Project: User is granted additional rights for Projects where User is Manager,project.project,project.group_project_user,u,"[('user_id', '=', user.id)]"
