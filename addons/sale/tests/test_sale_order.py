@@ -467,6 +467,23 @@ class TestSaleOrder(SaleCommon):
         self.sale_order.action_unlock()
         self.assertEqual(self.sale_order.state, 'sale')
 
+    def test_mass_cancel_locked_sale_order(self):
+        """Mass cancel must refuse locked orders, same as form cancel."""
+        self.sale_order.action_confirm()
+        self.sale_order.action_lock()
+        self.assertTrue(self.sale_order.locked)
+
+        wizard = self.env['sale.mass.cancel.orders'].create({
+            'sale_order_ids': [Command.set(self.sale_order.ids)],
+        })
+        with self.assertRaisesRegex(UserError, "You cannot cancel a locked order"):
+            wizard.action_mass_cancel()
+        self.assertEqual(self.sale_order.state, 'sale')
+
+        self.sale_order.action_unlock()
+        wizard.action_mass_cancel()
+        self.assertEqual(self.sale_order.state, 'cancel')
+
     def test_sol_name_search(self):
         # Shouldn't raise
         self.env['sale.order']._search([('order_line', 'ilike', 'product')])
