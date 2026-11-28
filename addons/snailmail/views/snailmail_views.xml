@@ -8,10 +8,33 @@
                 <field name="attachment_id" string="Document"/>
                 <field name="partner_id"/>
                 <field name="user_id"/>
+                <field name="create_date" string="Created on" optional="show"/>
                 <field name="state" column_invisible="True"/> <!-- drives decoration-danger/muted of the Letters list -->
                 <field name="info_msg" widget="html"/>
                 <field name="company_id" groups="base.group_multi_company"/>
             </list>
+        </field>
+    </record>
+
+    <record id="snailmail_letter_view_search" model="ir.ui.view">
+        <field name="name">snailmail.letter.view.search</field>
+        <field name="model">snailmail.letter</field>
+        <field name="arch" type="xml">
+            <search string="Letters">
+                <field name="user_id"/>
+                <field name="partner_id"/>
+                <filter name="pending" string="Pending" domain="[('state', '=', 'pending')]"/>
+                <filter name="process" string="Processing" domain="[('state', '=', 'process')]"/>
+                <filter name="sent" string="Sent" domain="[('state', '=', 'sent')]"/>
+                <filter name="error" string="Error" domain="[('state', '=', 'error')]"/>
+                <filter name="canceled" string="Cancelled" domain="[('state', '=', 'canceled')]"/>
+                <separator/>
+                <filter name="create_date" string="Created on" date="create_date"/>
+                <group>
+                    <filter name="group_by_state" string="Status" context="{'group_by': 'state'}"/>
+                    <filter name="group_by_create_date" string="Created on" context="{'group_by': 'create_date'}"/>
+                </group>
+            </search>
         </field>
     </record>
 
