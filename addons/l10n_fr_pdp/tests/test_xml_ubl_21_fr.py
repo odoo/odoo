@@ -60,6 +60,30 @@ class TestL10nFrPdpXml(TestL10nFrPdpCommon):
         self._send_patched(invoice)
         self._assert_invoice_ubl_file(invoice, "ubl_21_fr_out_invoice_tax_unit")
 
+    def test_export_invoice_partner_fr_foreign_tax_units(self):
+        """ Tax units of other countries are not French Single Taxpayer Groups: they must be ignored. """
+        self.ensure_installed('account_reports')
+        other_company = self.env['res.company'].create({
+            'name': 'Company 2',
+            'country_id': self.env.ref('base.fr').id,
+            'currency_id': self.env.company.currency_id.id,
+        })
+        self.env['account.tax.unit'].create([  # noqa: OLS03001
+            {
+                'name': f'Unit {country_code}',
+                'country_id': self.env.ref(f'base.{country_code.lower()}').id,
+                'vat': vat,
+                'company_ids': [Command.set((self.env.company + other_company).ids)],
+                'main_company_id': self.env.company.id,
+            }
+            for country_code, vat in (('DE', 'DE123456788'), ('ES', 'ESA12345674'))
+        ])
+
+        invoice = self._create_french_invoice()
+        invoice.action_post()
+        self._send_patched(invoice)
+        self._assert_invoice_ubl_file(invoice, "ubl_21_fr_out_invoice")
+
     def test_export_invoice_partner_fr_without_pdp(self):
         """
         A French Peppol proxy user must have the BR-FR-05 mandatory notes
