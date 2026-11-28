@@ -1317,6 +1317,37 @@ class AccountPaymentRegister(models.TransientModel):
                     .reconcile()
             lines.move_id.matched_payment_ids = [Command.link(payment.id)]
 
+    def _split_batches(self, batches, lines_to_pay):
+        """ Split the batches into one batch per payment to create, when the wizard is not in edit mode.
+        Without Group Payments, each batch is split into one batch per move.
+
+        :param batches:         The batches computed by '_get_batches'.
+        :param lines_to_pay:    The account.move.line to pay.
+        :return:                A list of batches, one for each payment to create.
+        """
+        if self.group_payment:
+            return batches
+
+        new_batches = []
+        for batch_result in batches:
+            sub_batches = {}
+            for line in batch_result['lines']:
+                if line not in lines_to_pay:
+                    continue
+                if line.move_id.id in sub_batches:
+                    sub_batches[line.move_id.id]['lines'] += line
+                else:
+                    sub_batches[line.move_id.id] = {
+                        **batch_result,
+                        'payment_values': {
+                            **batch_result['payment_values'],
+                            'payment_type': 'inbound' if line.balance > 0 else 'outbound',
+                        },
+                        'lines': line,
+                    }
+            new_batches.extend(sub_batches.values())
+        return new_batches
+
     def _create_payments(self):
         self.ensure_one()
         batches = []
@@ -1354,27 +1385,7 @@ class AccountPaymentRegister(models.TransientModel):
             to_process.append(to_process_values)
         else:
             lines_to_pay = self._get_total_amounts_to_pay(batches)['lines'] if self.installments_mode in ('next', 'overdue', 'before_date') else self.line_ids
-            if not self.group_payment:
-                # Don't group payments: Create one batch per move.
-                new_batches = []
-                for batch_result in batches:
-                    sub_batches = {}
-                    for line in batch_result['lines']:
-                        if line not in lines_to_pay:
-                            continue
-                        if line.move_id.id in sub_batches:
-                            sub_batches[line.move_id.id]['lines'] += line
-                        else:
-                            sub_batches[line.move_id.id] = {
-                                **batch_result,
-                                'payment_values': {
-                                    **batch_result['payment_values'],
-                                    'payment_type': 'inbound' if line.balance > 0 else 'outbound'
-                                },
-                                'lines': line,
-                            }
-                    new_batches.extend(sub_batches.values())
-                batches = new_batches
+            batches = self._split_batches(batches, lines_to_pay)
 
             for batch_result in batches:
                 batch_result['lines'] &= lines_to_pay
