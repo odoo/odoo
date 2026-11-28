@@ -1189,6 +1189,18 @@ class TestExpenses(TestExpenseCommon):
         # CASE 8: ALLOWS Setting the amounts to 0 while unlinking the expense sheet
         expense.write({'total_amount_currency': 0.0, 'total_amount': 0.0, 'sheet_id': False})
 
+        # CASE 9: FORBIDS Adding an expense whose total is already 0.0 to a sheet, as done from the report form
+        with self.assertRaisesRegex(
+            UserError,
+            r"You cannot set the expense total to 0 if it's linked to a report\.\n"
+            r"You cannot set the expense total in currency to 0 if it's linked to a report\.",
+        ):
+            expense_sheet.expense_line_ids = [Command.link(expense.id)]
+
+        # CASE 10: ALLOWS Rewriting the expenses of a sheet that already holds an expense at 0.0
+        self.create_expense({'total_amount_currency': 0.0, 'sheet_id': expense_sheet.id})
+        expense_sheet.expense_line_ids = [Command.set(expense_sheet.expense_line_ids.ids)]
+
     def test_corner_case_expense_prevent_empty_sheet_approval_actions(self):
         """
         Test that the expenses cannot not submitted, approved or posted if the sheet has no lines and that those lines cannot be removed
