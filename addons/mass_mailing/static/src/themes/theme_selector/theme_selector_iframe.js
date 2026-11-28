@@ -39,6 +39,10 @@ export class ThemeSelectorIframe extends Component {
         this.iframeRef = useRef("iframe");
         onMounted(() => {
             this.setupIframe();
+            const iframe = this.iframeRef.el;
+            iframe.contentDocument.addEventListener("pointerdown", () => {
+                iframe.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true }, true));
+            });
         });
         onWillUnmount(() => {
             if (this.themeSelectorRoot) {
