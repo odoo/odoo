@@ -300,3 +300,35 @@ class TestMultistepManufacturing(TestMrpCommon):
         self.warehouse.manufacture_steps = 'pbm'
         self.sale_order.action_confirm()
         self.assertEqual(self.sale_order.mrp_production_ids.name, self.sale_order.mrp_production_ids.picking_ids.origin)
+
+    def test_component_picking_origin_after_mo_merge(self):
+        """
+        In a two-step manufacturing warehouse, an MTO sale order and an
+        orderpoint each create a manufacturing order. Once merged, the
+        component pickings and their moves get the merged manufacturing order
+        in place of the old one in their source document, and the delivery
+        keeps the sale order.
+        """
+        self.warehouse.manufacture_steps = 'pbm'
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'location_id': self.warehouse.lot_stock_id.id,
+            'product_id': self.product_manu.id,
+            'product_min_qty': 1,
+            'product_max_qty': 1,
+        })
+        orderpoint.action_replenish()
+        self.sale_order.action_confirm()
+        orderpoint_production = self.env['mrp.production'].search([('orderpoint_id', '=', orderpoint.id)])
+        sale_production = self.sale_order.mrp_production_ids
+        component_pickings = orderpoint_production.picking_ids | sale_production.picking_ids
+
+        merged_production = self.env['mrp.production'].browse((orderpoint_production | sale_production).action_merge()['res_id'])
+        self.assertRecordValues(component_pickings, [
+            {'origin': f'{orderpoint.name},{merged_production.name}'},
+            {'origin': merged_production.name},
+        ])
+        self.assertRecordValues(component_pickings.move_ids, [
+            {'origin': f'{orderpoint.name},{merged_production.name}'},
+            {'origin': merged_production.name},
+        ])
+        self.assertRecordValues(self.sale_order.picking_ids, [{'origin': self.sale_order.name}])

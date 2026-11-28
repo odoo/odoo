@@ -2567,9 +2567,16 @@ class MrpProduction(models.Model):
         })
 
         # update linked picking
-        self.env['stock.move'].search([
+        moves = self.env['stock.move'].search([
             ('production_group_id', 'in', self.production_group_id.ids),
-        ]).production_group_id = production.production_group_id
+        ])
+        moves.production_group_id = production.production_group_id
+        old_names = set(self.mapped('name'))
+        picking_moves = moves.filtered('picking_id')
+        for records in (picking_moves, picking_moves.picking_id):
+            for origin, records_with_origin in records.filtered('origin').grouped('origin').items():
+                new_origin = OrderedSet(production.name if name in old_names else name for name in origin.split(','))
+                records_with_origin.origin = ','.join(new_origin)
 
         # update linked mos
         production.production_group_id.parent_ids = [Command.set(self.production_group_id.parent_ids.ids)]
