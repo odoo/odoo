@@ -95,6 +95,9 @@ export class CodeEditor extends Component {
             showLineNumbers: t.boolean().optional(true),
             lineWrapping: t.boolean().optional(),
             editorState: t.instanceOf(CodeEditorState).optional(),
+            annotations: t.array().optional(),
+            // let Tab and Shift+Tab move the focus instead of indenting the code
+            tabNavigation: t.boolean().optional(false),
         });
 
         this.state = proxy({
@@ -146,6 +149,9 @@ export class CodeEditor extends Component {
                     wrap: this.props.lineWrapping,
                 });
                 this.aceEditor.$blockScrolling = true;
+                if (this.props.tabNavigation) {
+                    this.aceEditor.commands.bindKeys({ Tab: null, "Shift-Tab": null });
+                }
 
                 this.aceEditor.on("changeMode", () => {
                     this.state.activeMode = this.aceEditor.getSession().$modeId.split("/").at(-1);
@@ -192,6 +198,13 @@ export class CodeEditor extends Component {
                 return;
             }
             this.aceEditor.setTheme(this.props.theme ? `ace/theme/${this.props.theme}` : "");
+        });
+
+        useEffect(() => {
+            if (!this.aceEditor) {
+                return;
+            }
+            this.aceEditor.getSession().setAnnotations(this.props.annotations || []);
         });
 
         useEffect(() => {
@@ -255,7 +268,7 @@ export class CodeEditor extends Component {
         if (mode) {
             return {
                 path: `ace/mode/${mode}`,
-                ...(this.props.modeOptions || {}),
+                ...this.props.modeOptions,
             };
         }
         return "";
