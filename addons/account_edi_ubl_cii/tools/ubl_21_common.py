@@ -199,6 +199,10 @@ PaymentMeans = {
     'cbc:PaymentID': {},
     'cac:CardAccount': CardAccount,
     'cac:PayeeFinancialAccount': FinancialAccount,
+    'cac:PaymentMandate': {
+        'cbc:ID': {},
+        'cac:PayerFinancialAccount': FinancialAccount,
+    },
 }
 
 PaymentTerms = {
