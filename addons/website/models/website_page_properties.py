@@ -185,11 +185,6 @@ class WebsitePagePropertiesBase(models.TransientModel):
         view.ensure_one()
         return not view.visibility
 
-    def write(self, vals):
-        if 'is_published' in vals and any(self._ids):
-            self.env.transaction.invalidate_ormcache('templates')
-        return super().write(vals)
-
 
 class WebsitePageProperties(models.TransientModel):
     _name = 'website.page.properties'
