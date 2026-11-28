@@ -288,6 +288,23 @@ class TestWarehouseMrp(common.TestMrpCommon):
         self.assertRecordValues(scrap_move.move_line_ids, [{'lot_id': lot_product_2.id, 'quantity': scrap_qty}])
         self.assertRecordValues(raw_move, [{'quantity': 2, 'state': 'partially_available'}])
 
+    def test_mo_scrap_move_source_location(self):
+        """Scrapping a finished product or component from a MO preserve
+        the source location selected in the scrap wizard.
+        """
+        production = self.new_mo_laptop()
+        production.button_mark_done()
+        scrap_form = Form.from_action(self.env, production.action_scrap())
+        scrap_form.product_id = self.laptop
+        scrap_form.quantity = 1
+        scrap_form.location_id = self.depot_location
+        scrap_move = scrap_form.save()
+        scrap_move.action_scrap()
+        self.assertEqual(
+            scrap_move.location_id, self.depot_location,
+            "The scrap move preserve the source location selected in the scrap wizard.",
+        )
+
     def test_putaway_after_manufacturing_3(self):
         """ This test checks a tracked manufactured product will go to location
         defined in putaway strategy when the production is recorded with
