@@ -251,11 +251,6 @@ class PurchaseOrder(models.Model):
                 date=(order.date_order or fields.Datetime.now()).date(),
             )
 
-    @api.depends('amount_total', 'currency_rate')
-    def _compute_amount_total_cc(self):
-        for order in self:
-            order.amount_total_cc = order.amount_total / order.currency_rate
-
     @api.depends('order_line.date_planned')
     def _compute_date_planned(self):
         """ date_planned = the earliest date_planned across all order lines. """
