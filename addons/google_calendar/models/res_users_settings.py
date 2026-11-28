@@ -13,6 +13,7 @@ class ResUsersSettings(models.Model):
     _inherit = "res.users.settings"
 
     # Google Calendar tokens and synchronization information.
+    google_calendar_email = fields.Char('Google Calendar Email', copy=False, groups="base.group_system")
     google_calendar_rtoken = fields.Char('Refresh Token', copy=False, groups='base.group_system')
     google_calendar_token = fields.Char('User token', copy=False, groups='base.group_system')
     google_calendar_token_validity = fields.Datetime('Token Validity', copy=False, groups='base.group_system')
@@ -20,17 +21,20 @@ class ResUsersSettings(models.Model):
     google_calendar_cal_id = fields.Char('Calendar ID', copy=False, groups='base.group_system',
         help='Last Calendar ID who has been synchronized. If it is changed, we remove all links between GoogleID and Odoo Google Internal ID')
     google_synchronization_stopped = fields.Boolean('Google Synchronization stopped', copy=False, groups='base.group_system')
+    google_synchronization_needs_reset = fields.Boolean('Google synchronization needs reset', copy=False)
 
     @api.model
     def _get_fields_blacklist(self):
         """ Get list of google fields that won't be formatted in session_info. """
         google_fields_blacklist = [
+            'google_calendar_email',
             'google_calendar_rtoken',
             'google_calendar_token',
             'google_calendar_token_validity',
             'google_calendar_sync_token',
             'google_calendar_cal_id',
-            'google_synchronization_stopped'
+            'google_synchronization_stopped',
+            'google_synchronization_needs_reset',
         ]
         return super()._get_fields_blacklist() + google_fields_blacklist
 
@@ -39,6 +43,11 @@ class ResUsersSettings(models.Model):
             'google_calendar_rtoken': refresh_token,
             'google_calendar_token': access_token,
             'google_calendar_token_validity': fields.Datetime.now() + timedelta(seconds=ttl) if ttl else False,
+        })
+
+    def _set_google_calendar_email(self, email):
+        self.sudo().write({
+            'google_calendar_email': email,
         })
 
     def _google_calendar_authenticated(self):
