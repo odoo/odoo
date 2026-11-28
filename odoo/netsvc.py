@@ -130,7 +130,7 @@ def init_logger():
             if os.name == 'posix':
                 handler = logging.handlers.WatchedFileHandler(logf)
             else:
-                handler = logging.FileHandler(logf)
+                handler = logging.FileHandler(logf, encoding='utf-8')
         except Exception:
             sys.stderr.write("ERROR: couldn't create the logfile directory. Logging to the standard output.\n")
 
