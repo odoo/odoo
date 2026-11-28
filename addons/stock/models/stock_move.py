@@ -3027,3 +3027,7 @@ Please change the quantity done or the rounding precision in your settings.""",
 
     def _get_product_uom_field(self) -> str:
         return "uom_id"
+
+    def action_add_from_catalog_picking(self):
+        picking = self.env['stock.picking'].browse(self.env.context.get('order_id'))
+        return picking.with_context(child_field='move_ids').action_add_from_catalog()

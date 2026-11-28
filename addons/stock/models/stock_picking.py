@@ -16,7 +16,7 @@ from odoo.tools.float_utils import float_compare, float_is_zero
 
 class StockPicking(models.Model):
     _name = 'stock.picking'
-    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'product.catalog.mixin']
     _description = "Transfer"
     _explanation = "Represents a physical movement of goods, such as receiving a shipment, sending out a delivery, or moving stock internally within a warehouse. Contains multiple stock.move lines."
     _order = "priority desc, scheduled_date asc, id desc"
@@ -2182,3 +2182,33 @@ class StockPicking(models.Model):
             if moves_count > self.picking_type_id.batch_max_lines:
                 return False
         return True
+
+    # === Catalog === #
+
+    def _show_prices(self) -> bool:
+        return False
+
+    def _is_readonly(self) -> bool:
+        self.ensure_one()
+        return self.state in ('done', 'cancel')
+
+    def _get_product_catalog_domain(self) -> Domain:
+        return super()._get_product_catalog_domain() & Domain('type', '=', 'consu')
+
+    def _get_action_add_from_catalog_extra_context(self) -> dict:
+        return {
+            **super()._get_action_add_from_catalog_extra_context(),
+            'display_stock': True,
+            'hide_product_type_filters': True,
+        }
+
+    def _catalog_prepare_new_line_vals(self, *args, **kwargs) -> dict:
+        return {
+            **super()._catalog_prepare_new_line_vals(*args, **kwargs),
+            'additional': self.state != 'draft',
+        }
+
+    def _catalog_create_new_line(self, child_field, product, quantity, uom, **kwargs):
+        line = super()._catalog_create_new_line(child_field, product, quantity, uom, **kwargs)
+        self._autoconfirm_picking()
+        return line

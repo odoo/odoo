@@ -384,6 +384,8 @@
                                 <list decoration-muted="is_scrap or state == 'cancel' or (state == 'done' and is_locked == True)" string="Stock Moves" editable="bottom">
                                     <control>
                                         <create string="Add a Product" hotkey="shift+p"/>
+                                        <button name="action_add_from_catalog_picking" string="Catalog" type="object" class="px-4 btn-link" data-hotkey="shift+k"
+                                                context="{'order_id': parent.id}" invisible="parent.picking_type_code not in ('incoming', 'outgoing', 'internal')"/>
                                     </control>
                                     <field name="sequence" widget="handle"/>
                                     <field name="company_id" column_invisible="True"/> <!-- provides default_company_id used elsewhere; not meant to be shown as a column -->
