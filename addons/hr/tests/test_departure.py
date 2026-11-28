@@ -273,3 +273,11 @@ class TestDeparture(MailCase, TestHrCommon):
             'dismissal_date': (False, datetime(2025, 8, 1)),
             'departure_date': (False, datetime(2025, 8, 1)),
         })
+
+    def test_departure_display_name(self):
+        """The display name of a departure shows the employee and the departure date."""
+        departure = self.env['hr.employee.departure'].create({
+            'employee_id': self.emp_A.id,
+            'dismissal_date': date(2025, 6, 1),
+        })
+        self.assertEqual(departure.display_name, "Employee A (06/01/2025)")
