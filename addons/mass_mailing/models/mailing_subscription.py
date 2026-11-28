@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from markupsafe import Markup
 from odoo import _, api, fields, models
 
 
@@ -45,12 +46,74 @@ class MailingSubscription(models.Model):
         for vals in vals_list:
             if vals.get('opt_out_datetime') or vals.get('opt_out_reason_id'):
                 vals['opt_out'] = True
-        return super().create(vals_list)
+        subscriptions = super().create(vals_list)
+        subscription_changes = [
+            (subscription.contact_id, subscription.list_id)
+            for subscription in subscriptions if not subscription.opt_out
+        ]
+        self._log_subscription_changes(subscription_changes, subscribed=True)
+        return subscriptions
 
     def write(self, vals):
         if vals.get('opt_out_datetime') or vals.get('opt_out_reason_id'):
             vals['opt_out'] = True
-        return super().write(vals)
+
+        if not {'contact_id', 'list_id', 'opt_out'} & vals.keys():
+            return super().write(vals)
+
+        subscription_values = [
+            (subscription.contact_id, subscription.list_id, subscription.opt_out)
+            for subscription in self
+        ]
+        result = super().write(vals)
+
+        new_subscription_changes = []
+        new_unsubscription_changes = []
+
+        for subscription, (old_contact, old_list, old_opt_out) in zip(self, subscription_values):
+            relation_changed = old_contact != subscription.contact_id or old_list != subscription.list_id
+            # When the subscription was active and (1) the relation changed or (2) the subscription is now inactive
+            if not old_opt_out and (relation_changed or subscription.opt_out):
+                new_unsubscription_changes.append((old_contact, old_list))
+            # When the subscription is now active and (1) the relation changed or (2) the subscription was inactive
+            if not subscription.opt_out and (relation_changed or old_opt_out):
+                new_subscription_changes.append((subscription.contact_id, subscription.list_id))
+
+        self._log_subscription_changes(new_unsubscription_changes, subscribed=False)
+        self._log_subscription_changes(new_subscription_changes, subscribed=True)
+
+        return result
+
+    def unlink(self):
+        self._log_subscription_changes(
+            [(sub.contact_id, sub.list_id) for sub in self if not sub.opt_out],
+            subscribed=False,
+        )
+        return super().unlink()
+
+    def _log_subscription_changes(self, changes, subscribed):
+        if not changes or self.env.context.get('tracking_disable'):
+            return
+        lists_per_contact = {}
+        for contact, mailing_list in changes:
+            lists_per_contact.setdefault(contact, []).append(mailing_list.name)
+
+        bodies = {}
+        for contact, list_names in lists_per_contact.items():
+            title = _(
+                '%(contact_name)s subscribed to the following mailing list(s)',
+                contact_name=contact.display_name,
+            ) if subscribed else _(
+                '%(contact_name)s unsubscribed from the following mailing list(s)',
+                contact_name=contact.display_name,
+            )
+            bodies[contact.id] = Markup('<p>%s</p><ul>%s</ul>') % (
+                title,
+                Markup().join(Markup('<li>%s</li>') % name for name in list_names),
+            )
+
+        contacts = self.env['mailing.contact'].browse(list(bodies))
+        contacts._message_log_batch(bodies=bodies)
 
     def open_mailing_contact(self):
         action = {

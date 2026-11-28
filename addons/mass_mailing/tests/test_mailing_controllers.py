@@ -422,23 +422,15 @@ class TestMailingControllers(TestMailingControllersCommon):
         self.assertFalse(subscription_l3.opt_out)
         self.assertFalse(subscription_l3.opt_out_datetime)
 
-        # posted messages on contact record for mailing list 1: subscription update, feedback, unsubscription
-        message_update = contact_l1.message_ids[0]
-        self.assertMessageFields(
-            message_update, {
-                'body': f'<p>{contact_l1.display_name} subscribed to the following mailing list(s)</p>'
-                        f'<ul><li>{self.mailing_list_2.name}</li></ul>',
-                'tracking_values': [],
-            }
-        )
-        message_feedback = contact_l1.message_ids[1]
+        # posted messages on contact record for mailing list 1: feedback, unsubscription
+        # (List2 subscription is created on contact_l3, hence not logged here)
+        message_feedback, message_unsub, _message_create = contact_l1.message_ids
         self.assertMessageFields(
             message_feedback, {
                 'body': f'<p>Feedback from {contact_l1.email_normalized}<br>{test_feedback}</p>',
                 'tracking_values': [],
             }
         )
-        message_unsub = contact_l1.message_ids[2]
         self.assertMessageFields(
             message_unsub, {
                 'body': f'<p>{contact_l1.display_name} unsubscribed from the following mailing list(s)</p>'
@@ -447,12 +439,19 @@ class TestMailingControllers(TestMailingControllersCommon):
             }
         )
 
-        # posted messages on contact record for mailing list 3: subscription
-        message_sub = contact_l3.message_ids[0]
+        # posted messages on contact record for mailing list 3: new List2 subscription, List3 opt-in
+        message_sub_l2, message_sub_l3 = contact_l3.message_ids[:2]
         self.assertMessageFields(
-            message_sub, {
+            message_sub_l2, {
                 'body': f'<p>{contact_l3.display_name} subscribed to the following mailing list(s)</p>'
-                        f'<ul><li>{self.mailing_list_3.name}</li><li>{self.mailing_list_2.name}</li></ul>',
+                        f'<ul><li>{self.mailing_list_2.name}</li></ul>',
+                'tracking_values': [],
+            }
+        )
+        self.assertMessageFields(
+            message_sub_l3, {
+                'body': f'<p>{contact_l3.display_name} subscribed to the following mailing list(s)</p>'
+                        f'<ul><li>{self.mailing_list_3.name}</li></ul>',
                 'tracking_values': [],
             }
         )
@@ -583,32 +582,38 @@ class TestMailingControllers(TestMailingControllersCommon):
         self.assertFalse(subscription_l3.opt_out_datetime,
                          'Subscription: opt-in during test, datetime should have been reset')
         self.assertFalse(subscription_l3.opt_out_reason_id)
-        # message on contact for list 1: opt-out L1, join L2
-        msg_fb, msg_sub, msg_uns, _create_log = contact_l1.message_ids
+        # message on contact for list 1: opt-out L1 (L2 subscription is created on contact_l3)
+        msg_fb, msg_uns, _create_log = contact_l1.message_ids
         self.assertEqual(
             msg_fb.body,
             f'<p>Feedback from {portal_user.name} ({test_email_normalized})<br>{test_feedback}</p>'
-        )
-        self.assertEqual(
-            msg_sub.body,
-            f'<p>{contact_l1.name} subscribed to the following mailing list(s)</p>'
-            f'<ul><li>{self.mailing_list_2.name}</li></ul>'
         )
         self.assertEqual(
             msg_uns.body,
             f'<p>{contact_l1.name} unsubscribed from the following mailing list(s)</p>'
             f'<ul><li>{self.mailing_list_1.name}</li></ul>'
         )
-        # message on contact for list 2: opt-in L3 and L2
-        msg_fb, msg_sub, _create_log = contact_l3.message_ids
+        # message on contact for list 2/3: join L2 (creation), opt-in L3 (update),
+        # (setup: opt-out L3 when creating the lists)
+        msg_fb, msg_sub_l2, msg_sub_l3, msg_setup_uns_l3, _create_log = contact_l3.message_ids
         self.assertEqual(
             msg_fb.body,
             f'<p>Feedback from {portal_user.name} ({test_email_normalized})<br>{test_feedback}</p>'
         )
         self.assertEqual(
-            msg_sub.body,
+            msg_sub_l2.body,
             f'<p>{contact_l3.name} subscribed to the following mailing list(s)</p>'
-            f'<ul><li>{self.mailing_list_3.name}</li><li>{self.mailing_list_2.name}</li></ul>'
+            f'<ul><li>{self.mailing_list_2.name}</li></ul>'
+        )
+        self.assertEqual(
+            msg_sub_l3.body,
+            f'<p>{contact_l3.name} subscribed to the following mailing list(s)</p>'
+            f'<ul><li>{self.mailing_list_3.name}</li></ul>'
+        )
+        self.assertEqual(
+            msg_setup_uns_l3.body,
+            f'<p>{contact_l3.name} unsubscribed from the following mailing list(s)</p>'
+            f'<ul><li>{self.mailing_list_3.name}</li></ul>'
         )
 
         # block list record created, feedback logged

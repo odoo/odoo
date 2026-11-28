@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from markupsafe import Markup
-
 from odoo import _, api, Command, fields, models, tools
 from odoo.exceptions import UserError
 from odoo.tools.sql import SQL
@@ -393,24 +391,6 @@ class MailingList(models.Model):
                 contacts_to_unsubscribe |= contact
             else:
                 contacts_to_subscribe |= contact
-            if force_message is False:
-                continue
-            if force_message:
-                body = force_message
-            elif opt_out:
-                body = Markup('<p>%s</p><ul>%s</ul>') % (
-                    _('%(contact_name)s unsubscribed from the following mailing list(s)', contact_name=contact.display_name),
-                    Markup().join(Markup('<li>%s</li>') % name for name in updated.mapped('name')),
-                )
-            else:
-                body = Markup('<p>%s</p><ul>%s</ul>') % (
-                    _('%(contact_name)s subscribed to the following mailing list(s)', contact_name=contact.display_name),
-                    Markup().join(Markup('<li>%s</li>') % name for name in updated.mapped('name')),
-                )
-            contact.with_context(mail_post_autofollow_author_skip=True).message_post(
-                body=body,
-                subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
-            )
         self._post_subscribe_hook(contacts_to_subscribe, contacts_to_unsubscribe)
         return contacts
 
