@@ -200,6 +200,7 @@
             applyTo="`input[type='file']`"
             unit="'MB'"
             applyWithUnit="false"
+            max="this.maxFileSizeLimit"
         />
     </BuilderRow>
     <BuilderRow t-if="this.state.valueList and (!(this.domState.fieldName === 'state_id' and this.isActiveItem('link_state_to_country_opt')))">
