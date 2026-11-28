@@ -7,8 +7,6 @@ from . import template_fr
 from . import template_fr_asso
 from . import template_fr_comp
 from . import template_gf
-from . import template_gp
 from . import template_mc
-from . import template_mq
 from . import template_re
 from . import template_yt
