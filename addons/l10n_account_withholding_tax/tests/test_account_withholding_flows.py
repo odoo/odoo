@@ -1255,6 +1255,50 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
             'withholding_net_residual_amount_currency': 0.00,
         }])
 
+    def test_grouped_payment_withholding_per_bill(self):
+        """
+        Test that a grouped payment registers one payment per bill with its own withholding, unless it is a
+        "Withhold and Pay" of bills with the same withholding ratio.
+        """
+        wth_tax_10, wth_tax_2 = (
+            self.percent_tax(-amount, type_tax_use="purchase", is_withholding_tax=True, withholding_sequence_id=self.withholding_sequence.id)
+            for amount in (10, 2)
+        )
+
+        # (taxes of the bills, steps of (withhold mode, payment amounts, residual / withheld / withholding residual of each bill))
+        scenarios = (
+            ((wth_tax_10, wth_tax_2), [('withhold_pay', [1000.0, 2000.0], [(0.0, 100.0, 0.0), (0.0, 40.0, 0.0)])]),
+            ((wth_tax_10, wth_tax_2), [
+                ('withhold', [100.0, 40.0], [(900.0, 100.0, 0.0), (1960.0, 40.0, 0.0)]),
+                ('payment', [2860.0], [(0.0, 100.0, 0.0), (0.0, 40.0, 0.0)]),
+            ]),
+            ((wth_tax_10, wth_tax_10), [('withhold_pay', [3000.0], [(0.0, 100.0, 0.0), (0.0, 200.0, 0.0)])]),
+            ((wth_tax_10, self.env['account.tax']), [('withhold', [100.0], [(900.0, 100.0, 0.0), (2000.0, 0.0, 0.0)])]),
+            ((wth_tax_10, wth_tax_2), [('payment', [900.0, 1960.0], [(100.0, 0.0, 100.0), (40.0, 0.0, 40.0)])]),
+        )
+        for taxes, steps in scenarios:
+            with self.subTest(taxes=taxes, steps=[step[0] for step in steps]):
+                bills = self.env['account.move'].union(
+                    self._create_invoice_one_line(move_type='in_invoice', price_unit=price_unit, tax_ids=tax, post=True)
+                    for price_unit, tax in zip((1000.0, 2000.0), taxes)
+                )
+                for withhold, payment_amounts, expected_bills in steps:
+                    self.assertEqual(self._register_payment(bills, withhold=withhold).mapped('amount'), payment_amounts)
+                    self.assertRecordValues(bills, [{
+                        'amount_residual': residual,
+                        'withholding_deducted_amount_currency': deducted,
+                        'withholding_residual_amount_currency': withholding_residual,
+                    } for residual, deducted, withholding_residual in expected_bills])
+
+        # Once the net amounts are paid, only the withholdings are left to register.
+        with self.assertRaisesRegex(UserError, "nothing to register"):
+            self._register_payment(bills, withhold='payment')
+        self.assertEqual(self._register_payment(bills, withhold='withhold').mapped('amount'), [100.0, 40.0])
+        self.assertRecordValues(bills, [
+            {'amount_residual': 0.0, 'withholding_deducted_amount_currency': 100.0, 'withholding_residual_amount_currency': 0.0},
+            {'amount_residual': 0.0, 'withholding_deducted_amount_currency': 40.0, 'withholding_residual_amount_currency': 0.0},
+        ])
+
     def test_withhold_on_discounted_price(self):
         """ Test that the withholding tax is computed on the discounted price """
         withholding_tax = self.percent_tax(-10, type_tax_use="purchase", is_withholding_tax=True, withholding_sequence_id=self.withholding_sequence.id)

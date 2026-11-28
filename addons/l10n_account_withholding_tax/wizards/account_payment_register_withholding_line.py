@@ -50,13 +50,12 @@ class AccountPaymentRegisterWithholdingLine(models.TransientModel):
 
             if wizard.withhold == 'withhold':
                 moves = wizard._get_batches()[0]['lines'].move_id
-                payment_register = self.payment_register_id
                 total_withholding = sum(
                     move.currency_id._convert(
                         from_amount=move.withholding_total_amount_currency,
-                        to_currency=payment_register.currency_id,
-                        company=payment_register.company_id,
-                        date=payment_register.payment_date,
+                        to_currency=wizard.currency_id,
+                        company=wizard.company_id,
+                        date=wizard.payment_date,
                     )
                     for move in moves
                 )
