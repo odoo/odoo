@@ -81,7 +81,9 @@
                             </div>
                             <div class="col" t-if="o.ref" name="reference">
                                 <strong>Reference</strong>
-                                <div t-field="o.ref">INV/2023/00001</div>
+                                <t t-set="ref_parts" t-value="o._get_report_reference_parts()"/>
+                                <div t-out="ref_parts['ref']">INV/2023/00001</div>
+                                <div t-if="ref_parts['note']" t-out="ref_parts['note']"/>
                             </div>
                             <div class="col" t-if="o.invoice_incoterm_id" name="incoterm_id">
                                 <strong>Incoterm</strong>
@@ -283,7 +285,7 @@
                             <div id="right-elements" class="float-end ms-5">
                                 <div id="total" class="clearfix">
                                     <div class="ms-auto">
-                                        <table class="o_total_table table table-borderless avoid-page-break-inside">
+                                        <table class="o_total_table table table-borderless avoid-page-break-inside w-auto ms-auto">
 
                                             <!-- Tax totals summary (invoice currency) -->
                                             <t t-if="o.tax_totals" t-call="account.document_tax_totals"
@@ -419,7 +421,7 @@
                                     </div>
                                 </div>
                                 <!--terms and conditions-->
-                                <div class="text-muted mb-3" t-if="not is_html_empty(o.narration)" name="comment">
+                                <div class="text-muted mb-3 avoid-page-break-inside" t-if="not is_html_empty(o.narration)" name="comment">
                                     <span t-field="o.narration"/>
                                 </div>
                                 <div class="oe_structure"></div>

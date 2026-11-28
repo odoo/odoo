@@ -113,6 +113,10 @@
             </div>
         </xpath>
 
+        <xpath expr="//p[@name='note']/span[@t-field='o.fiscal_position_id.note']" position="before">
+            <strong t-if="o.company_id.account_fiscal_country_id.code == 'IN'" class="d-block">DECLARATION</strong>
+        </xpath>
+
         <xpath expr="//div[@id='payment_term']" position="after">
             <t t-if="o.company_id.account_fiscal_country_id.code == 'IN' and o.company_id.l10n_in_gst_registration_type">
                 <t t-set="hsn_summary" t-value="o._l10n_in_get_hsn_summary_table()"/>

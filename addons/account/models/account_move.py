@@ -8469,6 +8469,19 @@ class AccountMove(models.Model):
         self.ensure_one()
         return 'account.report_invoice_document'
 
+    def _get_report_reference_parts(self):
+        """Split the reference of credit/debit notes into the origin reference and the reason,
+        so the reason can be displayed on its own line in the invoice report.
+
+        :return: dict with keys 'ref' (origin reference) and 'note' (reason, empty if none)
+        """
+        self.ensure_one()
+        ref = self.ref or ''
+        if (self.reversed_entry_id or self.is_debit_note()) and ', ' in ref:
+            ref_number, note = ref.split(', ', 1)
+            return {'ref': f'{ref_number},', 'note': note}
+        return {'ref': ref, 'note': ''}
+
     def _is_downpayment(self):
         ''' Return true if the invoice is a downpayment.
         Down-payments can be created from a sale order. This method is overridden in the sale order module.
