@@ -20,6 +20,7 @@ export class Activity extends Component {
 
     setup() {
         super.setup();
+        this.action = useService("action");
         this.store = useService("mail.store");
         this.props = usePropsPlus({
             activity: propComputed(t.instanceOf(this.store["mail.activity"])),
