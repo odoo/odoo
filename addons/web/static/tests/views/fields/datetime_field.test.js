@@ -491,7 +491,7 @@ test("DateTimeField with label opens datepicker on click", async () => {
 });
 
 test("datetime field: use picker with arabic numbering system", async () => {
-    defineParams({ lang: "ar_001" }); // Select Arab language
+    defineParams({ lang: "ar_001", lang_parameters: { numbering: "arab" } }); // Select Arab language
 
     await mountView({
         type: "form",

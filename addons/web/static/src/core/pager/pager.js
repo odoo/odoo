@@ -1,6 +1,7 @@
 import { Component, EventBus, proxy, signal, t, useEffect, useListener, useProps } from "@odoo/owl";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { clamp } from "@web/core/utils/numbers";
+import { localizeDigits, normalizeDigits } from "@web/core/l10n/numbering";
 
 export const PAGER_UPDATED_EVENT = "PAGER:UPDATED";
 export const pagerBus = new EventBus();
@@ -71,7 +72,13 @@ export class Pager extends Component {
         if (this.props.limit > 1) {
             parts.push(this.maximum);
         }
-        return parts.join("-");
+        return localizeDigits(parts.join("-"));
+    }
+    /**
+     * @returns {string}
+     */
+    get formattedTotal() {
+        return localizeDigits(this.props.total);
     }
     /**
      * Note: returns false if we received the props "updateTotal", as in this case we don't know
@@ -109,7 +116,7 @@ export class Pager extends Component {
      * @returns {{ minimum: number, maximum: number }}
      */
     async parse(value) {
-        let [minimum, maximum] = value.trim().split(/\s*[-\s,;]\s*/);
+        let [minimum, maximum] = normalizeDigits(value).trim().split(/\s*[-\s,;]\s*/);
         minimum = parseInt(minimum, 10);
         maximum = maximum ? parseInt(maximum, 10) : minimum;
         if (this.props.updateTotal) {

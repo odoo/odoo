@@ -2,9 +2,13 @@ import { registry } from "@web/core/registry";
 import { standardFieldProps } from "../standard_field_props";
 import { _t } from "@web/core/l10n/translation";
 import { Component, useProps } from "@odoo/owl";
+import { localizeDigits } from "@web/core/l10n/numbering";
 
 export class ContactStatisticsField extends Component {
     static template = "web.ContactStatisticsField";
+
+    localizeDigits = localizeDigits;
+
     props = useProps({
         ...standardFieldProps,
     });

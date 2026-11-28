@@ -97,3 +97,12 @@ export function getFullCalendarTimeZone() {
     const zone = luxon.Settings.defaultZone;
     return zone.isUniversal ? zone.formatOffset(0, "short") : zone.name;
 }
+
+/**
+ * @returns {string} the locale given to FullCalendar, with the numbering system
+ *  of the user language as FullCalendar formats the numbers with Intl
+ */
+export function getFullCalendarLocale() {
+    const { defaultLocale, defaultNumberingSystem } = luxon.Settings;
+    return `${defaultLocale}-u-nu-${defaultNumberingSystem || "latn"}`;
+}

@@ -222,7 +222,7 @@
                 <small t-if="section.enableCounters and value.__count gt 0"
                     class="o_search_panel_counter mx-2 fw-bold"
                     t-att-class="{'text-muted': this.state.active[section.id] !== valueId}"
-                    t-out="value.__count"
+                    t-out="this.localizeDigits(value.__count)"
                 />
             </header>
             <ul t-if="value.childrenIds.length and this.state.expanded[section.id][valueId]"
@@ -262,7 +262,7 @@
                 <span class="o_search_panel_label_title lh-base text-truncate" t-out="value.display_name"/>
                 <span t-if="section.enableCounters and value.__count gt 0"
                     class="o_search_panel_counter text-muted mx-2 small"
-                    t-out="value.__count"
+                    t-out="this.localizeDigits(value.__count)"
                 />
             </label>
         </div>

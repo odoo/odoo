@@ -32,7 +32,7 @@
                             </t>
                             <t t-if="this.state.isValid">
                                 <button class="btn btn-sm btn-link o_domain_show_selection_button" data-tooltip="Show matching records" type="button" t-on-click.stop="this.onButtonClick">
-                                    <t t-out="this.state.recordCount" /><t t-if="this.state.hasLimitedCount">+</t> record(s)
+                                    <t t-out="this.localizeDigits(this.state.recordCount)" /><t t-if="this.state.hasLimitedCount">+</t> record(s)
                                 </button>
                             </t>
                         </div>
@@ -61,7 +61,7 @@
                         <t t-else="">
                             <t t-if="this.state.isValid">
                                 <button class="btn btn-sm btn-link o_domain_show_selection_button" type="button" t-on-click.stop="this.onButtonClick">
-                                    <t t-out="this.state.recordCount" /><t t-if="this.state.hasLimitedCount">+</t> record(s)
+                                    <t t-out="this.localizeDigits(this.state.recordCount)" /><t t-if="this.state.hasLimitedCount">+</t> record(s)
                                 </button>
                             </t>
                             <t t-else="">

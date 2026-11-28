@@ -113,7 +113,7 @@
                             <i class="oi" data-icon="arrow_forward" role="img" title="Domain"/>
                             <button class="btn btn-sm btn-secondary" type="button"
                                 t-on-click.stop="this.onButtonDomainClick">
-                                <t t-out="this.state.matchingRecordsCount"/> record(s)
+                                <t t-out="this.localizeDigits(this.state.matchingRecordsCount)"/> record(s)
                             </button>
                         </div>
                     </div>

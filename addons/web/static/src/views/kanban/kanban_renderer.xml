@@ -60,13 +60,13 @@
                             </t>
                             <t t-set="unloadedCount" t-value="this.getGroupUnloadedCount(group)" />
                             <div t-if="unloadedCount > 0" class="o_kanban_load_more o_sample_data_disabled" t-key="unloadedCount">
-                                <button class="btn btn-outline-primary w-100 mt-4" t-on-click="() => this.loadMore(group)">Load more... (<t t-out="unloadedCount"/> remaining)</button>
+                                <button class="btn btn-outline-primary w-100 mt-4" t-on-click="() => this.loadMore(group)">Load more... (<t t-out="this.localizeDigits(unloadedCount)"/> remaining)</button>
                             </div>
                         </t>
                         <t t-elif="this.uiService.isSmall">
                             <t t-set="unloadedCount" t-value="this.getGroupUnloadedCount(group)" />
                             <div t-if="unloadedCount > 0" class="o_kanban_load_more o_sample_data_disabled">
-                                <button class="btn btn-outline-primary w-100 mt-4" t-on-click="() => this.toggleGroup(group)">Load more... (<t t-out="unloadedCount"/> remaining)</button>
+                                <button class="btn btn-outline-primary w-100 mt-4" t-on-click="() => this.toggleGroup(group)">Load more... (<t t-out="this.localizeDigits(unloadedCount)"/> remaining)</button>
                             </div>
                         </t>
                     </div>

@@ -5,6 +5,7 @@ import { useBus, useService } from "@web/core/utils/hooks";
 import { exprToBoolean } from "@web/core/utils/strings";
 import { render } from "@web/owl2/utils";
 import { useSetupAction } from "@web/search/action_hook";
+import { localizeDigits } from "@web/core/l10n/numbering";
 
 //-------------------------------------------------------------------------
 // Helpers
@@ -46,6 +47,8 @@ export class SearchPanel extends Component {
         category: "web.SearchPanel.Category",
         filtersGroup: "web.SearchPanel.FiltersGroup",
     };
+
+    localizeDigits = localizeDigits;
 
     root = signal.ref();
 

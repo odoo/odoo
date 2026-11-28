@@ -362,55 +362,80 @@ test("luxon is configured in the correct lang", async () => {
 });
 
 test.tags("headless");
-test("arabic has the correct numbering system (generic)", async () => {
+test("numbering system is given by the language parameters", async () => {
+    defineParams({ lang_parameters: { numbering: "arab" } });
     await mockLang("ar_001");
+    expect(luxon.Settings.defaultNumberingSystem).toBe("arab");
     expect(DateTime.utc(2021, 12, 10).toFormat("dd/MM/yyyy hh:mm:ss")).toBe("١٠/١٢/٢٠٢١ ١٢:٠٠:٠٠");
 });
 
-test.tags("headless");
-test("arabic has the correct numbering system (Algeria)", async () => {
-    await mockLang("ar_DZ");
-    expect(DateTime.utc(2021, 12, 10).toFormat("dd/MM/yyyy hh:mm:ss")).toBe("10/12/2021 12:00:00");
+test("[cache] numbering system is updated when the cache is outdated", async () => {
+    patchWithCleanup(session, {
+        translation_hash: "new hash", // the server serves other language parameters
+    });
+    const translationDB = new IndexedDB("localization");
+    translationDB.write("/web/webclient/translations", '{"lang":"en"}', {
+        lang: "en",
+        lang_parameters: {
+            date_format: "%m/%d/%Y",
+            decimal_point: ".",
+            direction: "ltr",
+            grouping: "[3,0]",
+            numbering: "latn",
+            time_format: "%H:%M:%S",
+            thousands_sep: ",",
+            week_start: 7,
+        },
+        modules: {},
+        multi_lang: false,
+        hash: "old hash",
+    });
+    const def = Promise.withResolvers();
+    onRpc("/web/webclient/translations", async () => {
+        await def.promise;
+    });
+    defineParams({ lang_parameters: { numbering: "arab" } });
+    await makeTestApp();
+    // The cached language parameters are used
+    expect(luxon.Settings.defaultNumberingSystem).toBe("latn");
+
+    def.resolve();
+    await animationFrame();
+    expect(luxon.Settings.defaultNumberingSystem).toBe("arab");
+    expect(DateTime.utc(2021, 12, 10).toFormat("dd/MM/yyyy")).toBe("١٠/١٢/٢٠٢١");
 });
 
 test.tags("headless");
-test("arabic has the correct numbering system (Lybia)", async () => {
-    await mockLang("ar_LY");
-    expect(DateTime.utc(2021, 12, 10).toFormat("dd/MM/yyyy hh:mm:ss")).toBe("10/12/2021 12:00:00");
-});
-
-test.tags("headless");
-test("arabic has the correct numbering system (Morocco)", async () => {
-    await mockLang("ar_MA");
-    expect(DateTime.utc(2021, 12, 10).toFormat("dd/MM/yyyy hh:mm:ss")).toBe("10/12/2021 12:00:00");
-});
-
-test.tags("headless");
-test("arabic has the correct numbering system (Saudi Arabia)", async () => {
+test("numbering system defaults to latin digits", async () => {
     await mockLang("ar_SA");
-    expect(DateTime.utc(2021, 12, 10).toFormat("dd/MM/yyyy hh:mm:ss")).toBe("١٠/١٢/٢٠٢١ ١٢:٠٠:٠٠");
-});
-
-test.tags("headless");
-test("arabic has the correct numbering system (Tunisia)", async () => {
-    await mockLang("ar_TN");
+    expect(luxon.Settings.defaultNumberingSystem).toBe("latn");
     expect(DateTime.utc(2021, 12, 10).toFormat("dd/MM/yyyy hh:mm:ss")).toBe("10/12/2021 12:00:00");
 });
 
 test.tags("headless");
-test("bengalese has the correct numbering system", async () => {
+test("latin numbering system", async () => {
+    defineParams({ lang_parameters: { numbering: "latn" } });
+    await mockLang("ar_SA");
+    expect(DateTime.utc(2021, 12, 10).toFormat("dd/MM/yyyy hh:mm:ss")).toBe("10/12/2021 12:00:00");
+});
+
+test.tags("headless");
+test("bengali numbering system", async () => {
+    defineParams({ lang_parameters: { numbering: "beng" } });
     await mockLang("bn");
     expect(DateTime.utc(2021, 12, 10).toFormat("dd/MM/yyyy hh:mm:ss")).toBe("১০/১২/২০২১ ১২:০০:০০");
 });
 
 test.tags("headless");
-test("punjabi (gurmukhi) has the correct numbering system", async () => {
+test("gurmukhi numbering system", async () => {
+    defineParams({ lang_parameters: { numbering: "guru" } });
     await mockLang("pa_IN");
     expect(DateTime.utc(2021, 12, 10).toFormat("dd/MM/yyyy hh:mm:ss")).toBe("੧੦/੧੨/੨੦੨੧ ੧੨:੦੦:੦੦");
 });
 
 test.tags("headless");
-test("tamil has the correct numbering system", async () => {
+test("tamil numbering system", async () => {
+    defineParams({ lang_parameters: { numbering: "tamldec" } });
     await mockLang("ta");
     expect(DateTime.utc(2021, 12, 10).toFormat("dd/MM/yyyy hh:mm:ss")).toBe("௧௦/௧௨/௨௦௨௧ ௧௨:௦௦:௦௦");
 });

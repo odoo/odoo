@@ -25,6 +25,7 @@ import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog
 import { PropertyDefinitionSelection } from "./property_definition_selection";
 import { PropertyTags } from "./property_tags";
 import { PropertyValue } from "./property_value";
+import { localizeDigits } from "@web/core/l10n/numbering";
 
 export const PROPERTIES_INFO = {
     char: {
@@ -126,6 +127,9 @@ export class PropertyDefinition extends Component {
         PropertyTags,
         SelectMenu,
     };
+
+    localizeDigits = localizeDigits;
+
     props = useProps(propertyDefinitionProps);
 
     propertyDefinitionRef = signal.ref();

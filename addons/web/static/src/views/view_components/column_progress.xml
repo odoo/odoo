@@ -18,7 +18,7 @@
                     t-att-aria-valuemax="this.props.group.count"
                     t-att-aria-valuenow="bar.count"
                     aria-label="Progress bar"
-                    t-attf-data-tooltip="{{ bar.count }} {{ bar.string }}"
+                    t-attf-data-tooltip="{{ this.localizeDigits(bar.count) }} {{ bar.string }}"
                     t-att-data-tooltip-delay="bar.count > 0 ? 0 : undefined"
                     t-on-click="() => bar.count > 0 and this.onBarClick(bar)"
                 />

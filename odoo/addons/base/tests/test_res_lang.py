@@ -122,6 +122,24 @@ class test_res_lang(TransactionCase):
             # raise error for querying a not cached field of the dummy language
             ResLang._get_data(code='dummy').flag_image
 
+    def test_numbering(self):
+        ResLang = self.env['res.lang']
+        self.assertEqual(self.env.ref('base.lang_ar').numbering, 'latn')
+        self.assertEqual(self.env.ref('base.lang_ar_SY').numbering, 'arab')
+        ar_lang = ResLang._activate_lang('ar_SY')
+
+        # the numbering is part of the cached data of the language...
+        self.assertEqual(ResLang._get_data(code='ar_SY').numbering, 'arab')
+        # ... and sent to the web client with the other language parameters
+        _translations, lang_params = self.env['ir.http']._get_translations_for_webclient([], 'ar_SY')
+        self.assertEqual(lang_params['numbering'], 'arab')
+
+        # the cached data is updated when the numbering changes
+        ar_lang.numbering = 'latn'
+        self.assertEqual(ResLang._get_data(code='ar_SY').numbering, 'latn')
+        _translations, lang_params = self.env['ir.http']._get_translations_for_webclient([], 'ar_SY')
+        self.assertEqual(lang_params['numbering'], 'latn')
+
     def test_lang_url_code_shortening(self):
         # Setup and initial checks
         ResLang = self.env['res.lang']

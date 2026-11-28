@@ -6,9 +6,13 @@ import { useService } from "@web/core/utils/hooks";
 import { Component, onWillStart, proxy, useProps } from "@odoo/owl";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 import { rpc } from "@web/core/network/rpc";
+import { localizeDigits } from "@web/core/l10n/numbering";
 
 class ResConfigInviteUsers extends Component {
     static template = "res_config_invite_users";
+
+    localizeDigits = localizeDigits;
+
     props = useProps({
         ...standardWidgetProps,
     });

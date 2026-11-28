@@ -1,9 +1,13 @@
 import { Component, proxy, t, useProps } from "@odoo/owl";
 import { BadgeTag } from "@web/core/tags_list/badge_tag";
+import { localizeDigits } from "@web/core/l10n/numbering";
 
 export class TagsList extends Component {
     static template = "web.TagsList";
     static components = { BadgeTag };
+
+    localizeDigits = localizeDigits;
+
     props = useProps({
         slots: t.object(),
         tags: t.array(t.object()),

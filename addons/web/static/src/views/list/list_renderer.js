@@ -56,6 +56,7 @@ import { MOVABLE_RECORD_TYPES } from "@web/model/relational_model/dynamic_group_
 import { ActionHelper } from "@web/views/action_helper";
 import { GroupConfigMenu } from "@web/views/view_components/group_config_menu";
 import { MultiCurrencyPopover } from "@web/views/view_components/multi_currency_popover";
+import { localizeDigits } from "@web/core/l10n/numbering";
 
 /**
  * @typedef {import('@web/model/relational_model/dynamic_list').DynamicList} DynamicList
@@ -1539,10 +1540,11 @@ export class ListRenderer extends Component {
     }
 
     getGroupText(group) {
+        const count = localizeDigits(group.count);
         if (group.count <= 1) {
-            return `${group.count} record`;
+            return `${count} record`;
         } else {
-            return `${group.count} records`;
+            return `${count} records`;
         }
     }
 

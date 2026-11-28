@@ -10,6 +10,7 @@ import {
     convertRecordToEvent,
     getColor,
     getPaletteColor,
+    getFullCalendarLocale,
     getFullCalendarTimeZone,
     joinClasses,
 } from "@web/views/calendar/utils";
@@ -19,6 +20,7 @@ import { useSquareSelection } from "@web/views/calendar/hooks/square_selection_h
 import { TOUCH_SELECTION_THRESHOLD } from "@web/views/utils";
 
 import { Component, signal, t, useProps } from "@odoo/owl";
+import { localizeDigits } from "@web/core/l10n/numbering";
 
 const SCALE_TO_FC_VIEW = {
     day: "timeGridDay",
@@ -157,7 +159,7 @@ export class CalendarCommonRenderer extends Component {
             firstDay: this.props.model.firstDayOfWeek,
             headerToolbar: false,
             height: "100%",
-            locale: luxon.Settings.defaultLocale,
+            locale: getFullCalendarLocale(),
             navLinks: false,
             nowIndicator: true,
             nowIndicatorLineContent: {
@@ -533,7 +535,7 @@ export class CalendarCommonRenderer extends Component {
         return {
             weekdayShort,
             weekdayLong,
-            day,
+            day: localizeDigits(day),
             scale,
         };
     }

@@ -1,4 +1,5 @@
 import { localization as l10n } from "@web/core/l10n/localization";
+import { localizeDigits } from "@web/core/l10n/numbering";
 import { _t } from "@web/core/l10n/translation";
 import { intersperse } from "@web/core/utils/strings";
 
@@ -176,7 +177,7 @@ export function humanNumber(number, options = { decimals: 0, minDigits: 1 }) {
         // we do not use number.toExponential(decimals) because we want to
         // avoid the possible useless O decimals: 1e.+24 preferred to 1.0e+24
         number = Math.round(number * Math.pow(10, decimals - numberMagnitude)) / d2;
-        return `${number}e+${numberMagnitude}`;
+        return localizeDigits(`${number}e+${numberMagnitude}`);
     }
     // note: we need to call toString here to make sure we manipulate the resulting
     // string, not an object with a toString method.
@@ -200,9 +201,9 @@ export function humanNumber(number, options = { decimals: 0, minDigits: 1 }) {
     const [integerPart, decimalPart] = formatFixedDecimals(number, decimalsToKeep).split(".");
     const int = insertThousandsSep(integerPart, thousandsSep, grouping);
     if (!decimalPart) {
-        return int + symbol;
+        return localizeDigits(int + symbol);
     }
-    return int + decimalPoint + decimalPart + symbol;
+    return localizeDigits(int + decimalPoint + decimalPart + symbol);
 }
 
 /**
@@ -260,7 +261,7 @@ export function formatFloat(value, options = {}) {
             formatted[1] = formatted[1].padEnd(minPrecision, "0");
         }
     }
-    return formatted[1] ? formatted.join(decimalPoint) : formatted[0];
+    return localizeDigits(formatted[1] ? formatted.join(decimalPoint) : formatted[0]);
 }
 
 const _INVERTDICT = Object.freeze({

@@ -352,3 +352,14 @@ test("monetary (parseFloat)", () => {
     expect(parseFloat("=1000,00 + 11122,00")).toBe(12122);
     expect(parseFloat("=1000 + 11123")).toBe(12123);
 });
+
+test("parse numbers typed with the numbering system of the language", () => {
+    patchWithCleanup(luxon.Settings, { defaultNumberingSystem: "arab" });
+    expect(parseFloat("١,٢٣٤.٥٠")).toBe(1234.5);
+    expect(parseFloat("١٢٫٥")).toBe(12.5);
+    expect(parseInteger("١,٢٣٤")).toBe(1234);
+    expect(parsePercentage("١٢.٥")).toBe(0.125);
+    expect(parseFloatTime("١:٣٠")).toBe(1.5);
+    // latin digits can still be typed
+    expect(parseFloat("12.5")).toBe(12.5);
+});

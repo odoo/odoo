@@ -82,6 +82,23 @@ test("default params", async () => {
     }
 });
 
+test("days, week numbers and title use the numbering system of the language", async () => {
+    defineParams({ lang_parameters: { numbering: "arab" } });
+    await mountWithCleanup(DateTimePicker);
+
+    expect(".o_datetime_picker_header").toHaveText("Apr ٢٠٢٣");
+    expect(queryAllTexts(".o_week_number_cell")).toEqual(["١٣", "١٤", "١٥", "١٦", "١٧", "١٨"]);
+    expect(queryAllTexts(".o_date_item_cell").slice(0, 7)).toEqual([
+        "٢٦",
+        "٢٧",
+        "٢٨",
+        "٢٩",
+        "٣٠",
+        "٣١",
+        "١",
+    ]);
+});
+
 test("minDate: correct days/month/year/decades are disabled", async () => {
     serverState.lang = "en-US";
     // necessary to configure the lang before minDate/maxDate are created

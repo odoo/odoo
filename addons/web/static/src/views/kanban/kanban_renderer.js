@@ -29,6 +29,7 @@ import { KanbanRecord } from "./kanban_record";
 import { KanbanRecordQuickCreate } from "./kanban_record_quick_create";
 import { Widget } from "@web/views/widgets/widget";
 import { ActionHelper } from "@web/views/action_helper";
+import { localizeDigits } from "@web/core/l10n/numbering";
 
 const DRAGGABLE_GROUP_TYPES = ["many2one"];
 
@@ -77,6 +78,9 @@ export class KanbanRenderer extends Component {
         Widget,
         ActionHelper,
     };
+
+    localizeDigits = localizeDigits;
+
     props = useProps(kanbanRendererProps);
 
     rootRef = signal.ref();

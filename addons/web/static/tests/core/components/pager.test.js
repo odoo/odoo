@@ -3,7 +3,12 @@ import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import { click, press } from "@odoo/hoot-dom";
 import { Pager } from "@web/core/pager/pager";
 import { Component, proxy, useProps, xml } from "@odoo/owl";
-import { contains, mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import {
+    contains,
+    defineParams,
+    mountWithCleanup,
+    patchWithCleanup,
+} from "@web/../tests/web_test_helpers";
 import { config as transitionConfig } from "@web/core/transition";
 
 class PagerController extends Component {
@@ -457,4 +462,31 @@ test("updateTotal props: click previous", async () => {
     expect(".o_pager_value").toHaveText("21-23");
     expect(".o_pager_limit").toHaveText("23");
     expect(".o_pager_limit").not.toHaveClass("o_pager_limit_fetch");
+});
+
+test.tags("desktop");
+test("pager uses the numbering system of the language", async () => {
+    defineParams({ lang_parameters: { numbering: "arab" } });
+    const pager = await mountWithCleanup(PagerController, {
+        props: {
+            offset: 0,
+            limit: 4,
+            total: 10,
+            async onUpdate(data) {
+                await pager.updateProps(data);
+            },
+        },
+    });
+    expect(".o_pager_counter .o_pager_value").toHaveText("١-٤");
+    expect(".o_pager_counter .o_pager_limit").toHaveText("١٠");
+
+    await click(".o_pager_value");
+    await animationFrame();
+    expect("input.o_pager_value").toHaveValue("١-٤");
+
+    await contains("input.o_pager_value").edit("١-٦");
+    await click(document.body);
+    await animationFrame();
+    // the value typed with arabic digits is parsed
+    expect(".o_pager_counter .o_pager_value").toHaveText("١-٦");
 });

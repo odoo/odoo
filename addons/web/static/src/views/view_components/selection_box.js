@@ -1,9 +1,13 @@
 import { Component, t, useProps } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
+import { localizeDigits } from "@web/core/l10n/numbering";
 
 export class SelectionBox extends Component {
     static components = {};
     static template = "web.SelectionBox";
+
+    localizeDigits = localizeDigits;
+
     props = useProps({
         root: t.object(),
     });

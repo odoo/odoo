@@ -24,6 +24,7 @@ import { Component, proxy, t, useProps, useScope } from "@odoo/owl";
 import { hasTouch, isMobileOS } from "@web/core/browser/feature_detection";
 import { addFieldDependencies, extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
 import { omit } from "@web/core/utils/objects";
+import { localizeDigits } from "@web/core/l10n/numbering";
 
 const { DateTime } = luxon;
 
@@ -152,7 +153,7 @@ export class CalendarController extends Component {
             } else if (scale === "month") {
                 text = date.toFormat("LLLL");
             }
-            return ` - ${text} ${date.year}`;
+            return localizeDigits(` - ${text} ${date.year}`);
         } else {
             return "";
         }
@@ -171,10 +172,16 @@ export class CalendarController extends Component {
     }
 
     get dayHeader() {
-        return `${this.date.toFormat("d")} ${this.date.toFormat("MMMM")} ${this.date.year}`;
+        return localizeDigits(
+            `${this.date.toFormat("d")} ${this.date.toFormat("MMMM")} ${this.date.year}`
+        );
     }
 
     get weekHeader() {
+        return localizeDigits(this._getWeekHeader());
+    }
+
+    _getWeekHeader() {
         const { start, end } = this.model.visibleRange;
         if (start.year != end.year) {
             return `${start.toFormat(isMobileOS() ? "MMM" : "MMMM")} ${start.year} - ${end.toFormat(isMobileOS() ? "MMM" : "MMMM")} ${end.year}`;
@@ -186,11 +193,11 @@ export class CalendarController extends Component {
     }
 
     get currentMonth() {
-        return `${this.date.toFormat("MMMM")} ${this.date.year}`;
+        return localizeDigits(`${this.date.toFormat("MMMM")} ${this.date.year}`);
     }
 
     get currentWeek() {
-        return getLocalYearAndWeek(this.model.visibleRange.start).week;
+        return localizeDigits(getLocalYearAndWeek(this.model.visibleRange.start).week);
     }
 
     get rendererProps() {

@@ -1,3 +1,4 @@
+import { localizeDigits } from "@web/core/l10n/numbering";
 import { formatList } from "@web/core/l10n/utils";
 import { isIterable } from "@web/core/utils/arrays";
 import { htmlSprintf, isMarkup } from "@web/core/utils/html";
@@ -25,6 +26,8 @@ function isNotBlank(value) {
  * - If any of the provided values is a markup, it will escape all non-markup
  *   content before performing the interpolation, then wraps the result in a
  *   markup.
+ * - If any of the provided values is a number, it is written with the digits
+ *   of the numbering system of the user language.
  *
  * @param {string} str
  * @param {Substitutions} substitutions
@@ -43,6 +46,8 @@ function translationSprintf(str, substitutions) {
         // objects as iterables, since they are both subclasses of `String`.
         if (isIterable(value) && !(value instanceof String)) {
             return formatList(value);
+        } else if (typeof value === "number") {
+            return localizeDigits(value);
         } else {
             return value;
         }

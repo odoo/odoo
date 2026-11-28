@@ -18,6 +18,7 @@ import {
     isConvertedAggregateUsed,
 } from "@web/model/currency_aggregates";
 import { orderByToString } from "@web/search/utils/order_by";
+import { localizeDigits } from "@web/core/l10n/numbering";
 
 const granularityToInterval = {
     hour: { hours: 1 },
@@ -617,7 +618,11 @@ function getDisplayNameFromGroupData(field, rawValue) {
             return rawValue ? _t("Yes") : _t("No");
         }
         case "integer": {
-            return rawValue ? String(rawValue) : "0";
+            return localizeDigits(rawValue ? String(rawValue) : "0");
+        }
+        case "float":
+        case "monetary": {
+            return rawValue ? localizeDigits(String(rawValue)) : field.falsy_value_label || _t("None");
         }
         case "many2one":
         case "many2many":

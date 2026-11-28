@@ -1,4 +1,5 @@
 import { _t } from "@web/core/l10n/translation";
+import { localizeDigits } from "@web/core/l10n/numbering";
 
 /**
  * @param {number} size number of bytes
@@ -11,5 +12,5 @@ export function humanSize(size) {
         size /= 1024;
         ++i;
     }
-    return `${i === 0 ? size : size.toFixed(2)} ${units[i].trim()}`;
+    return localizeDigits(`${i === 0 ? size : size.toFixed(2)} ${units[i].trim()}`);
 }
