@@ -45,7 +45,10 @@ export class HtmlComposerMessageField extends HtmlMailField {
     getConfig() {
         const config = super.getConfig(...arguments);
         config.Plugins = [...config.Plugins, MentionPlugin];
-        if (!this.props.record.data.composition_batch) {
+        if (
+            !this.props.record.data.composition_batch &&
+            this.props.record.data.composition_mode !== "mass_mail"
+        ) {
             config.Plugins = config.Plugins.filter(
                 (plugin) => !DYNAMIC_PLACEHOLDER_PLUGINS.includes(plugin)
             );

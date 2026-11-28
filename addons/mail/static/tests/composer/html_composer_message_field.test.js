@@ -27,6 +27,7 @@ import {
     serverState,
 } from "@web/../tests/web_test_helpers";
 import { click, defineMailModels, mailModels, onRpcBefore, openFormView, start, startServer } from "../mail_test_helpers";
+import { DYNAMIC_PLACEHOLDER_PLUGINS } from "@html_editor/plugin_sets";
 
 // Need this hack to use the arch in mountView(...)
 mailModels.MailComposeMessage._views = {};
@@ -337,4 +338,45 @@ test("prevent sending message when attachments are uploading", async function ()
     await click(".o_mail_send:enabled");
     await mailSent;
     expect.verifySteps(["action_send_mail"]);
+});
+
+test("dynamic placeholder plugins are loaded in single-record mass_mail mode", async () => {
+    const { env } = await makeMockServer();
+    const massMailId = env["mail.compose.message"].create({
+        body: "Hello",
+        composition_batch: false,
+        composition_mode: "mass_mail",
+    });
+    const commentId = env["mail.compose.message"].create({
+        body: "Hello",
+        composition_batch: false,
+        composition_mode: "comment",
+    });
+
+    const arch = `
+        <form>
+            <field name="composition_batch" invisible="1"/>
+            <field name="composition_mode" invisible="1"/>
+            <field name="body" type="html" widget="html_composer_message" options="{'dynamic_placeholder': true}"/>
+        </form>`;
+
+    await mountView({
+        type: "form",
+        resId: massMailId,
+        resModel: "mail.compose.message",
+        arch,
+    });
+    for (const plugin of DYNAMIC_PLACEHOLDER_PLUGINS) {
+        expect(htmlEditor.config.Plugins).toInclude(plugin);
+    }
+
+    await mountView({
+        type: "form",
+        resId: commentId,
+        resModel: "mail.compose.message",
+        arch,
+    });
+    for (const plugin of DYNAMIC_PLACEHOLDER_PLUGINS) {
+        expect(htmlEditor.config.Plugins).not.toInclude(plugin);
+    }
 });
