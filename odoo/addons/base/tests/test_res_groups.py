@@ -144,6 +144,49 @@ class TestGroups(TransactionCase):
         self.assertIn(u2, e.all_user_ids)
         self.assertNotIn(p, e.all_user_ids)
 
+    def test_all_implied_records_count(self):
+        """ The audit counters include the records of the implied groups,
+        directly or indirectly, and count each record once. """
+        Groups = self.env['res.groups']
+        # new groups imply a user type group by default, which has its own records
+        default = Groups.create({'name': 'Default'})
+        group_c = Groups.create({'name': 'C'})
+        group_b = Groups.create({'name': 'B', 'implied_ids': [Command.link(group_c.id)]})
+        group_a = Groups.create({'name': 'A', 'implied_ids': [Command.link(group_b.id)]})
+        partner_model = self.env['ir.model']._get('res.partner')
+        self.env['ir.access'].create([
+            {'name': 'A access', 'model_id': partner_model.id, 'group_id': group_a.id, 'operation': 'r'},
+            {'name': 'C access', 'model_id': partner_model.id, 'group_id': group_c.id, 'operation': 'r'},
+        ])
+        self.env['ir.ui.menu'].create({
+            'name': 'B and C menu',
+            'group_ids': [Command.set([group_b.id, group_c.id])],
+        })
+        self.env['ir.ui.view'].create({
+            'name': 'C view',
+            'model': 'res.partner',
+            'arch': '<list><field name="name"/></list>',
+            'group_ids': [Command.link(group_c.id)],
+        })
+
+        def counts(implied, access, menu, view):
+            return {
+                'all_implied_count': default.all_implied_count + implied,
+                'all_access_count': default.all_access_count + access,
+                'all_menu_count': default.all_menu_count + menu,
+                'all_view_count': default.all_view_count + view,
+            }
+
+        self.assertRecordValues(group_a | group_b | group_c, [
+            counts(implied=2, access=2, menu=1, view=1),
+            counts(implied=1, access=1, menu=1, view=1),
+            counts(implied=0, access=1, menu=1, view=1),
+        ])
+        self.assertEqual(
+            self.env['ir.ui.menu'].search_count(group_a.action_view_all_menu_ids()['domain']),
+            group_a.all_menu_count,
+        )
+
 
 class TestResGroupForm(TransactionCase):
     def test_create_res_group(self):

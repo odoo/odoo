@@ -2,7 +2,7 @@
 
 from collections import defaultdict
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.tools import SetDefinitions, SQL
@@ -28,9 +28,12 @@ class ResGroups(models.Model):
         compute='_compute_all_users_count', compute_sudo=True)
 
     access_ids = fields.One2many('ir.access', 'group_id', string="Access Rules", copy=True)
-    access_count = fields.Integer(
-        compute="_compute_access_count"
-    )
+    all_access_count = fields.Integer('# Implied Rights', compute='_compute_all_implied_records_count',
+        help="Number of access rights granted by this group and the groups it implies")
+    all_menu_count = fields.Integer('# Implied Menus', compute='_compute_all_implied_records_count',
+        help="Number of menus restricted to this group or the groups it implies")
+    all_view_count = fields.Integer('# Implied Views', compute='_compute_all_implied_records_count',
+        help="Number of views restricted to this group or the groups it implies")
     menu_access = fields.Many2many('ir.ui.menu', 'ir_ui_menu_group_rel', 'gid', 'menu_id', string='Access Menu')
     view_access = fields.Many2many('ir.ui.view', 'ir_ui_view_group_rel', 'group_id', 'view_id', string='Views')
     comment = fields.Text(string='Notes', translate=True)
@@ -74,14 +77,13 @@ class ResGroups(models.Model):
     """
     implied_ids = fields.Many2many('res.groups', 'res_groups_implied_rel', 'gid', 'hid',
         string='Implied Groups', help='Users in the current group are implicitly part of the implied groups')
-    implied_count = fields.Integer(compute="_compute_implied_count"
-    )
     all_implied_ids = fields.Many2many('res.groups', string='Transitively Implied Groups', recursive=True,
         compute='_compute_all_implied_ids', compute_sudo=True, search='_search_all_implied_ids',
         help="The group itself with all its implied groups.")
+    all_implied_count = fields.Integer('# Implied Groups', compute='_compute_all_implied_count',
+        help="Number of groups implied by this group, directly or indirectly")
     implied_by_ids = fields.Many2many('res.groups', 'res_groups_implied_rel', 'hid', 'gid',
         string='Implying Groups', help="Users in implying groups are implicitly part of the current group")
-    implied_by_count = fields.Integer(compute="_compute_implied_by_count")
     all_implied_by_ids = fields.Many2many('res.groups', string='Transitively Implying Groups', recursive=True,
         compute='_compute_all_implied_by_ids', compute_sudo=True, search='_search_all_implied_by_ids')
     disjoint_ids = fields.Many2many('res.groups', string='Disjoint Groups',
@@ -355,17 +357,17 @@ class ResGroups(models.Model):
             return NotImplemented
         return Domain('all_implied_by_ids.user_ids', operator, value)
 
-    @api.depends('implied_ids')
-    def _compute_implied_count(self):
-        for group in self:
-            group.implied_count = len(group.implied_ids)
-
     @api.depends('implied_ids.all_implied_ids')
     def _compute_all_implied_ids(self):
         """ Compute the reflexive transitive closure of implied_ids. """
         group_definitions = self._get_group_definitions()
         for g in self:
             g.all_implied_ids = g.ids + group_definitions.get_superset_ids(g.ids)
+
+    @api.depends('all_implied_ids')
+    def _compute_all_implied_count(self):
+        for group in self:
+            group.all_implied_count = len(group.all_implied_ids - group)
 
     def _search_all_implied_ids(self, operator, value):
         """ Compute the search on the reflexive transitive closure of implied_ids. """
@@ -374,11 +376,6 @@ class ResGroups(models.Model):
         group_definitions = self._get_group_definitions()
         ids = [*value, *group_definitions.get_subset_ids(value)]
         return [('id', operator, ids)]
-
-    @api.depends('implied_by_ids')
-    def _compute_implied_by_count(self):
-        for group in self:
-            group.implied_by_count = len(group.implied_by_ids)
 
     @api.depends('implied_by_ids.all_implied_by_ids')
     def _compute_all_implied_by_ids(self):
@@ -602,10 +599,30 @@ class ResGroups(models.Model):
         for group in self:
             group.all_users_count = len(group.all_user_ids)
 
-    @api.depends('access_ids')
-    def _compute_access_count(self):
-        for group in self:
-            group.access_count = len(group.access_ids)
+    @api.depends('all_implied_ids')
+    def _compute_all_implied_records_count(self):
+        """ Count the access rights, menus and views granted by the groups, or
+        by the groups they imply, without counting twice a record linked to
+        several of those groups.
+        """
+        implied_group_ids = self.all_implied_ids.ids
+        for model_name, groupby, count_field in (
+            ('ir.access', 'group_id', 'all_access_count'),
+            ('ir.ui.menu', 'group_ids', 'all_menu_count'),
+            ('ir.ui.view', 'group_ids', 'all_view_count'),
+        ):
+            record_ids_by_group = {
+                group.id: record_ids
+                for group, record_ids in self.env[model_name].sudo()._read_group(
+                    [(groupby, 'in', implied_group_ids)], [groupby], ['id:array_agg'],
+                )
+            }
+            for group in self:
+                group[count_field] = len({
+                    record_id
+                    for group_id in group.all_implied_ids.ids
+                    for record_id in record_ids_by_group.get(group_id, ())
+                })
 
     def action_show_all_users(self):
         self.ensure_one()
@@ -619,32 +636,43 @@ class ResGroups(models.Model):
             'target': 'current',
         }
 
-    def action_view_implied_ids(self):
+    def action_view_all_implied_ids(self):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
-            'name': _("Implying Groups"),
+            'name': self.env._("Groups implied by %(group)s", group=self.display_name),
             'res_model': 'res.groups',
             'views': [[False, 'list'], [False, 'form']],
-            'domain': [('implied_by_ids', 'in', self.ids)],
+            'domain': [('id', 'in', (self.all_implied_ids - self).ids)],
         }
 
-    def action_view_implied_by_ids(self):
+    def action_view_all_access_ids(self):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
-            'name': _("Implied Groups"),
-            'res_model': 'res.groups',
-            'views': [[False, 'list'], [False, 'form']],
-            'domain': [('implied_ids', 'in', self.ids)],
-        }
-
-    def action_view_access_ids(self):
-        self.ensure_one()
-        return {
-            'type': 'ir.actions.act_window',
-            'name': _("Access Rules"),
+            'name': self.env._("Access rights implied by %(group)s", group=self.display_name),
             'res_model': 'ir.access',
             'views': [[False, 'list'], [False, 'kanban'], [False, 'form']],
-            'domain': [('group_id', 'in', self.ids)],
+            'domain': [('group_id', 'in', self.all_implied_ids.ids)],
+        }
+
+    def action_view_all_menu_ids(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': self.env._("Menus implied by %(group)s", group=self.display_name),
+            'res_model': 'ir.ui.menu',
+            'views': [[False, 'list'], [False, 'form']],
+            'context': {'ir.ui.menu.full_list': True},
+            'domain': [('group_ids', 'in', self.all_implied_ids.ids)],
+        }
+
+    def action_view_all_view_ids(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': self.env._("Views implied by %(group)s", group=self.display_name),
+            'res_model': 'ir.ui.view',
+            'views': [[False, 'list'], [False, 'form']],
+            'domain': [('group_ids', 'in', self.all_implied_ids.ids)],
         }
