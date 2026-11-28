@@ -17,7 +17,7 @@
             <span t-elif="this.props.type == 'byproducts'" t-out="this.formatFloat(this.data.byproducts_total, {'digits': [false, this.precision]})"/>
         </td>
         <td name="uom" t-if="this.showUom" class="text-start"/>
-        <td name="free_to_use" t-if="this.forecastMode"/>
+        <td name="on_hand_forecasted" t-if="this.forecastMode"/>
         <td name="status" t-if="this.forecastMode"/>
         <td name="lead_time" t-if="this.forecastMode"/>
         <td name="route" t-if="this.forecastMode"/>

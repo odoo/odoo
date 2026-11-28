@@ -38,8 +38,12 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
             qty += quantities_info.get('subcontract_free_qty', 0)
         return qty
 
-    def _get_bom_data(self, bom, warehouse, product=False, line_qty=False, bom_line=False, level=0, parent_bom=False, parent_product=False, index=0, product_info=False, ignore_stock=False, simulated_leaves_per_workcenter=False):
-        res = super()._get_bom_data(bom, warehouse, product, line_qty, bom_line, level, parent_bom, parent_product, index, product_info, ignore_stock, simulated_leaves_per_workcenter)
+    @api.model
+    def _get_forecasted_qty(self, quantities_info):
+        return super()._get_forecasted_qty(quantities_info) + quantities_info.get('subcontract_forecasted_qty', 0)
+
+    def _get_bom_data(self, bom, warehouse, product=False, line_qty=False, demand_qty=False, bom_line=False, level=0, parent_bom=False, parent_product=False, index=0, product_info=False, ignore_stock=False, simulated_leaves_per_workcenter=False):
+        res = super()._get_bom_data(bom, warehouse, product, line_qty, demand_qty, bom_line, level, parent_bom, parent_product, index, product_info, ignore_stock, simulated_leaves_per_workcenter)
         if (bom.type == 'subcontract' or (parent_bom and parent_bom.type == 'subcontract')) and not self.env.context.get('minimized', False):
             seller_info = {}
             if not res['product']:
@@ -58,8 +62,9 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
             if not ignore_stock:
                 quantities_info = self._get_quantities_info(res.get('product'), bom.uom_id, product_info, bom=bom, parent_bom=parent_bom, parent_product=parent_product)
                 if quantities_info.get('subcontracting_loc'):
-                    res['subcontract_free_qty'] = quantities_info.get('subcontract_free_qty', 0)
-                    res['subcontract_qty_on_hand'] = quantities_info.get('subcontract_qty_on_hand', 0)
+                    res['subcontract_free_qty'] = quantities_info['subcontract_free_qty']
+                    res['subcontract_qty_on_hand'] = quantities_info['subcontract_qty_on_hand']
+                    res['subcontract_forecasted_qty'] = quantities_info['subcontract_forecasted_qty']
                     if res['subcontract_qty_on_hand'] >= line_qty:
                         res['status'] = self._format_date_display('available', 0)
                         res['availability_state'] = 'available'
@@ -68,23 +73,14 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
         return res
 
     @api.model
-    def _get_component_data(self, parent_bom, parent_product, warehouse, bom_line, line_quantity, level, index, product_info, ignore_stock=False):
-        res = super()._get_component_data(parent_bom, parent_product, warehouse, bom_line, line_quantity, level, index, product_info, ignore_stock)
+    def _get_component_data(self, parent_bom, parent_product, bom_line, line_quantity, demand_qty, level, index, product_info, ignore_stock=False):
+        res = super()._get_component_data(parent_bom, parent_product, bom_line, line_quantity, demand_qty, level, index, product_info, ignore_stock)
         if parent_bom and parent_bom.type == 'subcontract' and not ignore_stock and (product_info.get(parent_product.id, {}).get(parent_bom.id, {}).get('route_type') == 'subcontract'):
             quantities_info = self._get_quantities_info(bom_line.product_id, bom_line.uom_id, product_info, parent_bom=parent_bom, parent_product=parent_product)
             if quantities_info.get('subcontracting_loc'):
-                res['subcontract_free_qty'] = quantities_info.get('subcontract_free_qty', 0)
-                res['subcontract_qty_on_hand'] = quantities_info.get('subcontract_qty_on_hand', 0)
-                if res.get('route_name') and bom_line.product_id.is_storable:
-                    combined_qty = res['free_to_manufacture_qty'] + res['subcontract_free_qty']
-                    missing_qty = max(line_quantity - combined_qty, 0)
-                    if missing_qty:
-                        res['status'] = self.env._("%(qty)s To %(route)s", qty=self._format_number_display(missing_qty), route=res['route_name'])
-                        res['availability_state'] = 'unavailable'
-                    else:
-                        res['status'] = self._format_date_display('available', 0)
-                        res['availability_state'] = 'available'
-                        res['availability_delay'] = 0
+                res['subcontract_free_qty'] = quantities_info['subcontract_free_qty']
+                res['subcontract_qty_on_hand'] = quantities_info['subcontract_qty_on_hand']
+                res['subcontract_forecasted_qty'] = quantities_info['subcontract_forecasted_qty']
         return res
 
     def _get_bom_array_lines(self, data, level, unfolded_ids, unfolded, parent_unfolded=True):
@@ -93,8 +89,9 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
         for line in lines:
             comp = component_map.get(line.get('name'))
             if comp and comp.get('subcontract_free_qty') is not None:
-                line['subcontract_free_qty'] = comp.get('subcontract_free_qty', 0)
-                line['subcontract_qty_on_hand'] = comp.get('subcontract_qty_on_hand', 0)
+                line['subcontract_free_qty'] = comp['subcontract_free_qty']
+                line['subcontract_qty_on_hand'] = comp['subcontract_qty_on_hand']
+                line['subcontract_forecasted_qty'] = comp['subcontract_forecasted_qty']
 
         if data.get('subcontracting'):
             subcontract_info = data['subcontracting']
@@ -174,8 +171,8 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
                 product_info[product.id]['consumptions'][stock_loc] = 0
             quantities_info['subcontract_free_qty'] = max(product.uom_id._compute_quantity(subloc_product.free_qty, bom_uom), 0)
             quantities_info['subcontract_qty_on_hand'] = product.uom_id._compute_quantity(subloc_product.qty_available, bom_uom)
+            quantities_info['subcontract_forecasted_qty'] = product.uom_id._compute_quantity(subloc_product.virtual_available, bom_uom)
             quantities_info['stock_loc'] = quantities_info['subcontracting_loc'] = stock_loc
-            quantities_info['forecasted_qty'] = subloc_product.virtual_available
         return quantities_info
 
     @api.model
