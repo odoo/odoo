@@ -118,6 +118,56 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
         self.assertAlmostEqual(cogs_aml.debit, 1.53, msg="Should not include the value of consumable component")
         self.assertEqual(cogs_aml.credit, 0)
 
+    def test_sale_mrp_kit_cogs_bom_changed_after_delivery(self):
+        """ The COGS of a delivered kit must be computed with the BoM the
+        components were actually delivered with, even if another kit BoM
+        became the preferred one between the delivery and the invoice. """
+        component_1 = self._create_product(name='Comp 1', is_storable=True, standard_price=10.0)
+        component_2 = self._create_product(name='Comp 2', is_storable=True, standard_price=20.0)
+        kit = self._create_product(name='Kit', is_storable=True, standard_price=0.0, invoice_policy='delivery')
+        kit.write({
+            'property_account_expense_id': self.company_data['default_account_expense'].id,
+            'property_account_income_id': self.company_data['default_account_revenue'].id,
+        })
+        bom_1 = self.env['mrp.bom'].create({
+            'product_tmpl_id': kit.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'sequence': 10,
+            'bom_line_ids': [
+                Command.create({'product_id': component_1.id, 'product_qty': 1.0}),
+                Command.create({'product_id': component_2.id, 'product_qty': 1.0}),
+            ],
+        })
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': kit.id,
+                'product_uom_qty': 1.0,
+                'price_unit': 100.0,
+                'tax_ids': False,
+            })],
+        })
+        so.action_confirm()
+        picking = so.picking_ids
+        self.assertEqual(picking.move_ids.bom_line_id, bom_1.bom_line_ids)
+        picking.move_ids.quantity = 1.0
+        picking.move_ids.picked = True
+        picking.button_validate()
+        self.assertEqual(picking.state, 'done')
+
+        # A new version of the kit BoM (same composition) becomes the preferred one
+        bom_1.copy({'sequence': 5})
+
+        invoice = so.with_context(default_journal_id=self.company_data['default_journal_sale'].id)._create_invoices()
+        invoice.action_post()
+
+        cogs_aml = invoice.line_ids.filtered(lambda aml: aml.account_id == self.company_data['default_account_expense'])
+        stock_out_aml = invoice.line_ids.filtered(lambda aml: aml.account_id == self.company_data['default_account_stock_valuation'])
+        self.assertRecordValues(cogs_aml, [{'debit': 30.0, 'credit': 0.0}])
+        self.assertRecordValues(stock_out_aml, [{'debit': 0.0, 'credit': 30.0}])
+
     def test_sale_mrp_anglo_saxon_variant(self):
         """Test the price unit of kit with variants"""
         # Check that the correct bom are selected when computing price_unit for COGS

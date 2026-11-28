@@ -72,7 +72,19 @@ class StockMove(models.Model):
                 include_consigned=include_consigned, product=product, include_consumable=include_consumable,
             )
 
-        root_bom = self.env['mrp.bom']._bom_find(product, bom_type='phantom')[product]
+        # Prefer the kit BoM the moves were created from: the BoM may have changed
+        # (new version, other sequence) between the delivery and the valuation.
+        root_bom = kit_moves.bom_line_id.bom_id.filtered(
+            lambda bom: bom.type == 'phantom' and (
+                bom.product_id == product
+                or (not bom.product_id and bom.product_tmpl_id == product.product_tmpl_id)
+            )
+        )[:1]
+        if not root_bom:
+            # The kit has no direct component in the moves (e.g. kit of kits)
+            root_bom = self.env['mrp.bom']._bom_find(
+                product, bom_type='phantom', company_id=kit_moves.company_id[:1].id,
+            )[product]
         if not root_bom:
             return product.standard_price
 
