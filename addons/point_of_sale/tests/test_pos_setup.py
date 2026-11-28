@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from unittest.mock import patch
+
 from odoo import tools
 import odoo
+from odoo.addons.account.models.res_partner_bank import ResPartnerBank
 from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 from odoo.exceptions import ValidationError
 
@@ -118,3 +121,64 @@ class TestPoSSetup(TestPoSCommon):
         )
         with self.assertRaises(ValidationError):
             journal.action_archive()
+
+    def test_batch_qr_code_payment_method(self):
+        bank_acc_1, bank_acc_2 = self.env['res.partner.bank'].create([
+            {'acc_number': '1111111111', 'partner_id': self.company.partner_id.id},
+            {'acc_number': '2222222222', 'partner_id': self.company.partner_id.id},
+        ])
+        journal_1, journal_2 = self.env['account.journal'].create([
+            {
+                'name': 'QR Bank 1',
+                'company_id': self.company.id,
+                'code': 'QRB1',
+                'type': 'bank',
+                'bank_account_id': bank_acc_1.id,
+            },
+            {
+                'name': 'QR Bank 2',
+                'company_id': self.company.id,
+                'code': 'QRB2',
+                'type': 'bank',
+                'bank_account_id': bank_acc_2.id,
+            },
+        ])
+        checked = []
+
+        def fake_available_qr_methods(recordset):
+            return [('test_qr_1', 'Test QR 1', 10), ('test_qr_2', 'Test QR 2', 20)]
+
+        def fake_error_messages(bank_account, qr_method, debtor_partner, currency):
+            bank_account.ensure_one()
+            checked.append((bank_account.id, qr_method))
+            if qr_method == 'test_qr_2' and bank_account == bank_acc_2:
+                return 'Invalid QR configuration'
+            return None
+
+        with (
+            patch.object(ResPartnerBank, '_get_available_qr_methods', fake_available_qr_methods),
+            patch.object(ResPartnerBank, '_get_error_messages_for_qr', fake_error_messages),
+        ):
+            pm1, pm2 = self.env['pos.payment.method'].create([
+                {
+                    'name': 'QR 1',
+                    'journal_id': journal_1.id,
+                    'payment_method_type': 'qr_code',
+                    'qr_code_method': 'test_qr_1',
+                },
+                {
+                    'name': 'QR 2',
+                    'journal_id': journal_2.id,
+                    'payment_method_type': 'qr_code',
+                    'qr_code_method': 'test_qr_1',
+                },
+            ])
+            self.assertEqual(checked, [(bank_acc_1.id, 'test_qr_1'), (bank_acc_2.id, 'test_qr_1')])
+
+            with self.assertRaises(ValidationError):
+                (pm1 | pm2).write({'qr_code_method': 'test_qr_2'})
+
+            pm1.write({'qr_code_method': 'test_qr_2'})
+            checked.clear()
+            (pm1 | pm2).write({'journal_id': journal_1.id})
+            self.assertEqual(checked, [(bank_acc_1.id, 'test_qr_2'), (bank_acc_1.id, 'test_qr_1')])
