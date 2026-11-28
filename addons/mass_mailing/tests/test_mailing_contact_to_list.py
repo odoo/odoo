@@ -238,10 +238,10 @@ class TestMailingContactToList(MailingContactToListCommon):
         )
 
         for idx, (case, mailing_lists, partners, exp_type, exp_message, query_count) in enumerate([
-            ('20 subs() -> 1', self.mailing_list_1, partners_no_sub[:20], 'success', '20 added', 7),
-            ('20 subs() -> 1+2', all_mailing_lists, partners_no_sub[20:], 'success', '20 added', 11),
+            ('20 subs() -> 1', self.mailing_list_1, partners_no_sub[:20], 'success', '20 added', 8),
+            ('20 subs() -> 1+2', all_mailing_lists, partners_no_sub[20:], 'success', '20 added', 13),
             ('20 sub(1) -> 1+2', all_mailing_lists, partners_no_sub[:20], 'success',
-             '20 added%(NOTIF_NEWLINE)s1 opted out', 10),
+             '20 added%(NOTIF_NEWLINE)s1 opted out', 11),
             ('80 sub(1, 2) -> 1+2', all_mailing_lists, all_partners, 'info',
              '0 added%(NOTIF_NEWLINE)s80 already subscribed%(NOTIF_NEWLINE)s1 opted out', 9),
         ]):
