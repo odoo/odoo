@@ -146,7 +146,7 @@ class MailingMailing(models.Model):
         help='Preferred Reply-To Address')
     # recipients
     mailing_model_real = fields.Char(
-        string='Recipients Real Model', compute='_compute_mailing_model_real')
+        string='Recipients Real Model', compute='_compute_mailing_model_real', search='_search_mailing_model_real')
     mailing_model_id = fields.Many2one(
         'ir.model', string='Recipients Model',
         ondelete='cascade', required=True,
@@ -451,6 +451,15 @@ class MailingMailing(models.Model):
     def _compute_mailing_model_real(self):
         for mailing in self:
             mailing.mailing_model_real = 'mailing.contact' if mailing.mailing_model_id.model == 'mailing.list' else mailing.mailing_model_id.model
+
+    def _search_mailing_model_real(self, operator, value):
+        if operator != 'in':
+            return NotImplemented
+        # mailing.list is never a real model: its mailings target mailing.contact
+        models = set(value) - {'mailing.list'}
+        if 'mailing.contact' in models:
+            models.add('mailing.list')
+        return [('mailing_model_name', 'in', list(models))]
 
     def _compute_mailing_model_id(self):
         """Compute acts as default, this avoids issues when the field is made compute stored in overrides."""

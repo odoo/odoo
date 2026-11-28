@@ -235,6 +235,31 @@ class TestMassMailValues(MassMailCommon):
         self.assertFalse(mailing.reply_to)
 
     @users('user_marketing')
+    def test_mailing_search_mailing_model_real(self):
+        """ Searching on the real model matches the computed value: mailings on
+        mailing.list target mailing.contact, including for negative operators. """
+        mailing_contact, mailing_list, mailing_partner = self.env['mailing.mailing'].create([
+            {'subject': f'On {model}', 'mailing_model_id': self.env['ir.model']._get_id(model)}
+            for model in ('mailing.contact', 'mailing.list', 'res.partner')
+        ])
+        mailings = mailing_contact + mailing_list + mailing_partner
+        for operator, value, expected in [
+            ('=', 'mailing.contact', mailing_contact + mailing_list),
+            ('in', ['mailing.contact'], mailing_contact + mailing_list),
+            ('!=', 'mailing.contact', mailing_partner),
+            ('not in', ['mailing.contact'], mailing_partner),
+            ('=', 'mailing.list', self.env['mailing.mailing']),
+            ('!=', 'mailing.list', mailings),
+            ('=', 'res.partner', mailing_partner),
+            ('!=', 'res.partner', mailing_contact + mailing_list),
+        ]:
+            with self.subTest(operator=operator, value=value):
+                self.assertEqual(
+                    self.env['mailing.mailing'].search([('id', 'in', mailings.ids), ('mailing_model_real', operator, value)]),
+                    expected,
+                )
+
+    @users('user_marketing')
     def test_mailing_computed_fields_domain_w_filter(self):
         """ Test domain update, involving mailing.filters added in 15.1. """
         # Create on res.partner, with default values for computed fields
