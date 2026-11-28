@@ -10,7 +10,7 @@ from zoneinfo import ZoneInfo
 from odoo import api, fields, models
 from odoo.fields import Domain
 from odoo.addons.base.models.res_partner import _tz_get
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools import SQL, get_lang, babel_locale_parse
 from odoo.tools.intervals import Intervals
 
@@ -375,6 +375,105 @@ class HrVersion(models.Model):
         """
         if self.contract_date_start and not self.contract_date_end:
             raise ValidationError(self.env._("Before creating a new contract, close the current one by setting an end date."))
+
+    @api.model
+    def _get_version_update_ignored_fields(self):
+        """
+        Return the ignored fields whose change never triggers how to apply it
+        """
+        return {'contract_date_start', 'contract_date_end', 'final_yearly_costs'}
+
+    def get_version_update_warnings(self, version_changes, selection, new_version_date=False):
+        """
+        Return the warnings shown when applying the updates of this version with ``selection``
+        (``new_version_date``: the start date of the new version, as a ``'YYYY-MM-DD'`` string)
+        Overridden on hr_payroll to add warnings about the validated payslips
+        """
+        self.ensure_one()
+        return []
+
+    def _get_version_update_selections(self, version_changes):
+        """
+        Return dictionary with how the updates of this version can be applied:
+            - selections:
+                . 'current', apply the updates only on this version
+                . 'next_versions', apply the updates only on this version & the next ones
+                . 'new_version', create a new version from a specified date with the updates
+            - next_version_ids: the versions starting after this version
+            - new_version_date: the default start date of a new version
+        Overridden on hr_payroll & l10n_be_hr_payroll modules
+        """
+        self.ensure_one()
+
+        next_versions = self.employee_id.version_ids.filtered(lambda v: v.date_version > self.date_version)
+        info = {
+            'selections': ['current'],
+            'next_version_ids': next_versions.ids
+        }
+        if not next_versions:
+            return info
+
+        info['selections'] += ['next_versions', 'new_version']
+        info['new_version_date'] = fields.Date.context_today(self).replace(day=1)
+        return info
+
+    def get_version_update_info(self, version_changes):
+        """
+        Return dictionary with the version updates info used by the employee form controller,
+            - version_id
+            - warnings
+            - version_changes
+            - changes_display
+        """
+        self.ensure_one()
+
+        ignored_fields = self._get_version_update_ignored_fields()
+        version_changes = {
+            field_name: value
+            for field_name, value in version_changes.items()
+            if field_name in self._fields and field_name not in ignored_fields
+        }
+
+        if not self.employee_id or not version_changes:
+            return False
+
+        info = self._get_version_update_selections(version_changes)
+        if len(info['selections']) < 2:
+            return False
+
+        info['version_id'] = self.id
+        # the date as sent by the dialog when the user selects another option or date
+        info['warnings'] = self.get_version_update_warnings(
+            version_changes, info['selections'][0], fields.Date.to_string(info.get('new_version_date', False)))
+        info['version_changes'] = version_changes
+        info['changes_display'] = self.employee_id.with_context(version_id=self.id).get_multi_version_changes(version_changes)
+        return info
+
+    def action_create_version_from_update(self, new_date_start_str, record_changes=None):
+        """
+        Create a new version starting at new_date_start_str, as a copy of
+        the version in effect on that date with the record_changes applied.
+        """
+        self.ensure_one()
+        record_changes = record_changes or {}
+        new_start = fields.Date.from_string(new_date_start_str)
+
+        if new_start <= self.date_start:
+            raise UserError(self.env._(
+                "The effective start date of the new version %(new_start)s "
+                "must be after the current version's start date %(current_start)s.",
+                new_start=new_start,
+                current_start=self.date_start,
+            ))
+
+        if new_start in self.employee_id.version_ids.mapped('date_version'):
+            raise UserError(self.env._(
+                "A version of the employee already starts on %(new_start)s.", new_start=new_start))
+
+        if self.employee_id:
+            self.employee_id.create_version({'date_version': new_start, **record_changes})
+
+        return True
 
     @api.model_create_multi
     def create(self, vals_list):
