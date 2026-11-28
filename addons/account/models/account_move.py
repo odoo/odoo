@@ -1725,7 +1725,7 @@ class AccountMove(models.Model):
                 all_values,
                 id=grouping_key,
                 tax_ids=self.env['account.tax'].browse(all_values['tax_ids'][0][2]),
-                price_unit=sign * values['amount_currency'],
+                price_unit=sign * float(values['amount_currency']),
                 quantity=1.0,
                 currency_id=self.currency_id,
                 sign=1,
@@ -2403,12 +2403,12 @@ class AccountMove(models.Model):
                   WINDOW invoice AS (PARTITION BY this.id ORDER BY other.invoice_date DESC)
             ), stats AS (
                   SELECT id,
-                         MAX(invoice_date)          OVER invoice AS last_invoice_date,
-                         AVG(date_diff)             OVER invoice AS date_diff_mean,
-                         STDDEV_SAMP(date_diff)     OVER invoice AS date_diff_deviation,
-                         AVG(amount_total)          OVER invoice AS amount_mean,
-                         STDDEV_SAMP(amount_total)  OVER invoice AS amount_deviation,
-                         ROW_NUMBER()               OVER invoice AS row_number
+                         MAX(invoice_date)                OVER invoice AS last_invoice_date,
+                         AVG(date_diff)                   OVER invoice AS date_diff_mean,
+                         STDDEV_SAMP(date_diff)           OVER invoice AS date_diff_deviation,
+                         AVG(amount_total::float)         OVER invoice AS amount_mean,
+                         STDDEV_SAMP(amount_total::float) OVER invoice AS amount_deviation,
+                         ROW_NUMBER()                     OVER invoice AS row_number
                     FROM previous_invoices
                   WINDOW invoice AS (PARTITION BY id ORDER BY invoice_date DESC)
             )
@@ -8122,7 +8122,9 @@ class AccountMove(models.Model):
         if field.type == 'one2many':
             return True
         if field.type == 'monetary' and record[field.get_currency_field(record)]:
-            return not record[field.get_currency_field(record)].is_zero(record[field_name] - vals[field_name])
+            record_value = field.convert_to_cache(record[field_name], record)
+            to_write_value = field.convert_to_cache(vals[field_name], record)
+            return not record[field.get_currency_field(record)].is_zero(record_value - to_write_value)
         if field.type == 'float':
             record_value = field.convert_to_cache(record[field_name], record)
             to_write_value = field.convert_to_cache(vals[field_name], record)

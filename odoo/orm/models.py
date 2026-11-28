@@ -35,6 +35,7 @@ import uuid
 import warnings
 from collections import defaultdict, deque
 from collections.abc import Callable, Iterable, Mapping
+from decimal import InvalidOperation
 from inspect import getmembers
 from operator import call, itemgetter
 
@@ -327,7 +328,7 @@ MAGIC_COLUMNS = ['id'] + LOG_ACCESS_COLUMNS
 # valid SQL aggregation functions
 READ_GROUP_AGGREGATE = {
     'sum': lambda table, expr: SQL('SUM(%s)', expr),
-    'avg': lambda table, expr: SQL('AVG(%s)', expr),
+    'avg': lambda table, expr: SQL('AVG(%s)::float', expr),
     'max': lambda table, expr: SQL('MAX(%s)', expr),
     'min': lambda table, expr: SQL('MIN(%s)', expr),
     'bool_and': lambda table, expr: SQL('BOOL_AND(%s)', expr),
@@ -1556,7 +1557,7 @@ class BaseModel(metaclass=MetaModel):
             elif isinstance(value, COLLECTION_TYPES):
                 typed_value = []
                 for v in value:
-                    with contextlib.suppress(ValueError, TypeError):
+                    with contextlib.suppress(ValueError, TypeError, InvalidOperation):
                         typed_value.append(field.convert_to_write(v, self))
                 domains.append([(field_name, operator, typed_value)])
             else:
@@ -2108,7 +2109,7 @@ class BaseModel(metaclass=MetaModel):
 
             currency_field_name = field.get_currency_field(self)
             rate_sql = self.env['res.currency']._current_rate_sql(table, currency_field_name)
-            return SQL("SUM(%s / %s)", table[fname], rate_sql)
+            return SQL("SUM(%s / %s)::float", table[fname], rate_sql)
 
         if func not in READ_GROUP_AGGREGATE:
             raise ValueError(f"Invalid aggregate method {func!r} for {aggregate_spec!r}.")
@@ -2117,7 +2118,14 @@ class BaseModel(metaclass=MetaModel):
             raise ValueError(f"Aggregate method {func!r} can be only used on relational field (or id) (for {aggregate_spec!r}).")
 
         sql_field = table[fname]
-        return READ_GROUP_AGGREGATE[func](table, sql_field)
+        sql_aggregate = READ_GROUP_AGGREGATE[func](table, sql_field)
+        if field.type in ('float', 'monetary') and field.is_decimal:
+            # Aggregate exactly in numeric, return floats like other numeric aggregates.
+            if func in ('sum', 'max', 'min'):
+                return SQL("(%s)::float", sql_aggregate)
+            if func.startswith('array_agg'):
+                return SQL("(%s)::float[]", sql_aggregate)
+        return sql_aggregate
 
     def _read_group_groupby(self, table: TableSQL, groupby_spec: str) -> SQL:
         """ Return <SQL expression> corresponding to the given groupby element.
@@ -2157,6 +2165,9 @@ class BaseModel(metaclass=MetaModel):
                 raise ValueError(f"Granularity not set on a date(time) field: {groupby_spec!r}")
             sql_expr = table[fname][granularity]
             granularity = None
+
+        elif field.type in ('float', 'monetary') and field.is_decimal:
+            sql_expr = SQL("%s::float", table[fname])
 
         elif field.type == 'boolean':
             sql_expr = SQL("COALESCE(%s, FALSE)", table[fname])

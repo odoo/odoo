@@ -2202,12 +2202,12 @@ class TestFormattedReadGroupMonetary(common.TransactionCase):
 
         with self.assertQueries(["""
             SELECT
-                SUM("test_read_group_aggregate_monetary"."total_in_currency_id"),
+                (SUM("test_read_group_aggregate_monetary"."total_in_currency_id"))::float,
                 ARRAY_AGG(
                     DISTINCT "test_read_group_aggregate_monetary"."currency_id"
                     ORDER BY "test_read_group_aggregate_monetary"."currency_id"
                 ),
-                SUM("test_read_group_aggregate_monetary"."total_in_currency_id" / COALESCE("test_read_group_aggregate_monetary__currency_id__rate"."rate", 1.0))
+                SUM("test_read_group_aggregate_monetary"."total_in_currency_id" / COALESCE("test_read_group_aggregate_monetary__currency_id__rate"."rate", 1.0))::float
             FROM
                 "test_read_group_aggregate_monetary"
             LEFT JOIN LATERAL (SELECT * FROM UNNEST(%s, %s) AS v(currency_id, rate)) AS "test_read_group_aggregate_monetary__currency_id__rate"
@@ -2289,12 +2289,12 @@ class TestFormattedReadGroupMonetary(common.TransactionCase):
         self.MonetaryAgg.formatted_read_group([], [], aggregates)
         with self.assertQueries(["""
             SELECT
-                SUM("test_read_group_aggregate_monetary"."total_in_currency_id"),
+                (SUM("test_read_group_aggregate_monetary"."total_in_currency_id"))::float,
                 ARRAY_AGG(
                     DISTINCT "test_read_group_aggregate_monetary"."currency_id"
                     ORDER BY "test_read_group_aggregate_monetary"."currency_id"
                 ),
-                SUM("test_read_group_aggregate_monetary"."total_in_currency_id" / COALESCE("test_read_group_aggregate_monetary__currency_id__rate"."rate", 1.0))
+                SUM("test_read_group_aggregate_monetary"."total_in_currency_id" / COALESCE("test_read_group_aggregate_monetary__currency_id__rate"."rate", 1.0))::float
             FROM
                 "test_read_group_aggregate_monetary"
             LEFT JOIN LATERAL (SELECT * FROM UNNEST(%s, %s) AS v(currency_id, rate)) AS "test_read_group_aggregate_monetary__currency_id__rate"

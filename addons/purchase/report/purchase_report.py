@@ -123,7 +123,7 @@ class PurchaseReport(models.Model):
         if aggregate_spec != 'price_average:avg':
             return super()._read_group_select(table, aggregate_spec)
         return SQL(
-            'SUM(%(f_price)s * %(f_qty)s) / NULLIF(SUM(%(f_qty)s), 0.0)',
+            '(SUM(%(f_price)s * %(f_qty)s) / NULLIF(SUM(%(f_qty)s), 0.0))::float',
             f_price=table.price_average,
             f_qty=table.qty_ordered,
         )

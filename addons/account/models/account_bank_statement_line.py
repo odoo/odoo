@@ -208,7 +208,7 @@ class AccountBankStatementLine(models.Model):
             self.env['account.bank.statement'].flush_model(['first_line_index', 'journal_id', 'balance_start'])
             self.env.cr.execute(
                 """
-                    SELECT first_line_index, COALESCE(balance_start, 0.0)
+                    SELECT first_line_index, COALESCE(balance_start, 0.0)::float
                     FROM account_bank_statement
                     WHERE
                         first_line_index < %s
@@ -232,9 +232,9 @@ class AccountBankStatementLine(models.Model):
                 """
                     SELECT
                         st_line.id,
-                        st_line.amount,
+                        st_line.amount::float,
                         st.first_line_index = st_line.internal_index AS is_anchor,
-                        COALESCE(st.balance_start, 0.0),
+                        COALESCE(st.balance_start, 0.0)::float,
                         move.state
                     FROM account_bank_statement_line st_line
                     JOIN account_move move ON move.id = st_line.move_id

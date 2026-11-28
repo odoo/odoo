@@ -1,9 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from decimal import Decimal
 from math import log10
 
 from odoo.tests.common import TransactionCase, tagged
 from odoo.tools import (
+    convert_to_decimal,
     float_compare,
     float_div,
     float_is_zero,
@@ -261,6 +263,44 @@ class TestFloatPrecision(TransactionCase):
         # remainder (0.95 % 0.1 == 0.0499...) would also wrongly report 9 and 25
         try_div(0.95, 0.1, (10, 0.0), rounding=0.1)
         try_div(2.55, 0.1, (26, 0.0), rounding=0.1)
+
+    def test_convert_to_decimal(self):
+        # Compare str() as Decimal equality ignores the exponent: Decimal('1.00') == Decimal('1').
+        cases = [
+            # (value, digits, expected)
+            # no digits: converted as is, falsy values give 0
+            (None, None, '0'),
+            (False, None, '0'),
+            ('', None, '0'),
+            (3, None, '3'),
+            (0.1, None, '0.1'),  # shortest repr, not the binary expansion
+            ('1.25', None, '1.25'),
+            (Decimal('1.230'), None, '1.230'),
+            # digits: rounded half-up, padded to `digits` decimals
+            (None, 2, '0.00'),
+            (1, 2, '1.00'),
+            (2.674, 2, '2.67'),
+            (2.675, 2, '2.68'),
+            (-2.675, 2, '-2.68'),
+            (1.5, 0, '2'),
+            (1.5, False, '2'),  # digits=(16, False) means 0 decimals
+            # same number: float noise is absorbed, str and Decimal are rounded as given
+            (0.015 * 11, 2, '0.17'),  # 0.16499999999999998
+            (0.16499999999999998, 2, '0.17'),
+            ('0.16499999999999998', 2, '0.16'),
+            (Decimal('0.16499999999999998'), 2, '0.16'),
+            # float with digits beyond its precision: noise kept
+            (0.015 * 11, 17, '0.16499999999999998'),
+            (0.1, 20, '0.10000000000000000555'),
+            # large float: rounded without float arithmetic
+            (123456789012345.675, 2, '123456789012345.67'),
+            (1e20, 2, '100000000000000000000.00'),
+        ]
+        for value, digits, expected in cases:
+            with self.subTest(value=value, digits=digits):
+                result = convert_to_decimal(value, digits)
+                self.assertIsInstance(result, Decimal)
+                self.assertEqual(str(result), expected)
 
     def test_rounding_invalid(self):
         """ verify that invalid parameters are forbidden """

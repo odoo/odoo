@@ -4,10 +4,14 @@ from typing import Literal, overload
 
 import builtins
 import math
+from decimal import ROUND_HALF_UP, Decimal
+
+SIGNIFICANT_DIGITS = 15  # float precision; digits beyond are binary noise
 
 RoundingMethod = Literal['UP', 'DOWN', 'HALF-UP', 'HALF-DOWN', 'HALF-EVEN']
 
 __all__ = [
+    "convert_to_decimal",
     "float_compare",
     "float_div",
     "float_is_zero",
@@ -151,6 +155,28 @@ def float_round(
             raise ValueError(msg)
 
     return denormalize(result)
+
+
+def convert_to_decimal(value: Number | str | None, digits: int | None = None) -> Decimal:
+    """Return ``value`` as a :class:`~decimal.Decimal`, rounded half-up to
+    ``digits`` decimal places if given.
+
+    :param value: the value to convert; falsy values give ``Decimal(0)``
+    :param digits: number of decimal places to round to, or ``None`` to keep
+        all significant digits
+    :return: the converted value
+    """
+    if digits is None:
+        if isinstance(value, float):
+            return Decimal(repr(value))
+        return value if isinstance(value, Decimal) else Decimal(value or 0)
+    if not value:
+        return Decimal(0).scaleb(-digits)
+    if isinstance(value, float):
+        value = Decimal(value)
+        noise_exp = min(value.adjusted() - SIGNIFICANT_DIGITS + 1, -digits)
+        value = value.quantize(Decimal(1).scaleb(noise_exp), ROUND_HALF_UP)
+    return Decimal(value).quantize(Decimal(1).scaleb(-digits), ROUND_HALF_UP)
 
 
 @overload

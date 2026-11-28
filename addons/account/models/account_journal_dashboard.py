@@ -176,8 +176,8 @@ class AccountJournal(models.Model):
         table = query.table
 
         cash_in, cash_out = self.env.execute_query(query.select(
-            SQL("COALESCE(SUM(%(balance)s) FILTER (WHERE %(amount)s > 0 AND %(balance)s > 0), 0.0)", balance=table.consolidation_balance, amount=table.statement_line_id.amount),
-            SQL("COALESCE(SUM(-%(balance)s) FILTER (WHERE %(amount)s < 0 AND %(balance)s < 0), 0.0)", balance=table.consolidation_balance, amount=table.statement_line_id.amount),
+            SQL("COALESCE(SUM(%(balance)s) FILTER (WHERE %(amount)s > 0 AND %(balance)s > 0), 0.0)::float", balance=table.consolidation_balance, amount=table.statement_line_id.amount),
+            SQL("COALESCE(SUM(-%(balance)s) FILTER (WHERE %(amount)s < 0 AND %(balance)s < 0), 0.0)::float", balance=table.consolidation_balance, amount=table.statement_line_id.amount),
         ))[0]
         return cash_in - cash_out
 
@@ -466,7 +466,7 @@ class AccountJournal(models.Model):
         query = """
             SELECT move.journal_id,
                    move.date,
-                   SUM(st_line.amount) AS amount
+                   SUM(st_line.amount)::float AS amount
               FROM account_bank_statement_line st_line
               JOIN account_move move ON move.id = st_line.move_id
              WHERE move.journal_id = ANY(%s)
@@ -527,11 +527,11 @@ class AccountJournal(models.Model):
                    move.company_id,
                    move.currency_id,
                    date_trunc('month', move.invoice_date)::date AS invoice_month,
-                   COALESCE(SUM(move.amount_total_signed), 0) AS total_amount_company,
+                   COALESCE(SUM(move.amount_total_signed), 0)::float AS total_amount_company,
                    COALESCE(SUM(
                        (CASE WHEN move.move_type = 'in_invoice' THEN -1 ELSE 1 END)
                        * move.amount_total
-                   ), 0) AS total_amount
+                   ), 0)::float AS total_amount
               FROM account_move move
              WHERE move.journal_id = ANY(%(journal_ids)s)
                AND move.state = 'posted'
@@ -916,8 +916,8 @@ class AccountJournal(models.Model):
     def _get_bills_field_list(self):
         return [
             SQL("account_move.journal_id"),
-            SQL("(CASE WHEN account_move.move_type IN ('out_refund', 'in_refund') THEN -1 ELSE 1 END) * account_move.amount_total AS amount_total"),
-            SQL("(CASE WHEN account_move.move_type IN ('in_invoice', 'in_refund', 'in_receipt') THEN -1 ELSE 1 END) * account_move.amount_total_signed AS amount_total_company"),
+            SQL("((CASE WHEN account_move.move_type IN ('out_refund', 'in_refund') THEN -1 ELSE 1 END) * account_move.amount_total)::float AS amount_total"),
+            SQL("((CASE WHEN account_move.move_type IN ('in_invoice', 'in_refund', 'in_receipt') THEN -1 ELSE 1 END) * account_move.amount_total_signed)::float AS amount_total_company"),
             SQL("account_move.currency_id AS currency"),
             SQL("account_move.move_type"),
             SQL("account_move.invoice_date"),
@@ -951,8 +951,8 @@ class AccountJournal(models.Model):
             SQL("company_id"),
             SQL("currency_id AS currency"),
             SQL("invoice_date_due < %s AS late", fields.Date.context_today(self)),
-            SQL("SUM(amount_residual_signed) AS amount_total_company"),
-            SQL("SUM((CASE WHEN move_type IN ('out_refund', 'in_invoice', 'in_receipt') THEN -1 ELSE 1 END) * amount_residual) AS amount_total"),
+            SQL("SUM(amount_residual_signed)::float AS amount_total_company"),
+            SQL("SUM((CASE WHEN move_type IN ('out_refund', 'in_invoice', 'in_receipt') THEN -1 ELSE 1 END) * amount_residual)::float AS amount_total"),
             SQL("COUNT(*)"),
             self._get_to_pay_select(),
         ]
@@ -971,8 +971,8 @@ class AccountJournal(models.Model):
             SQL("company_id"),
             SQL("currency_id AS currency"),
             SQL("invoice_date_due < %s AS late", fields.Date.context_today(self)),
-            SQL("SUM(amount_total_signed) AS amount_total_company"),
-            SQL("SUM((CASE WHEN move_type IN ('out_refund', 'in_invoice', 'in_receipt') THEN -1 ELSE 1 END) * amount_total) AS amount_total"),
+            SQL("SUM(amount_total_signed)::float AS amount_total_company"),
+            SQL("SUM((CASE WHEN move_type IN ('out_refund', 'in_invoice', 'in_receipt') THEN -1 ELSE 1 END) * amount_total)::float AS amount_total"),
             SQL("COUNT(*)"),
             SQL("TRUE AS to_pay")
         ]
@@ -1065,8 +1065,8 @@ class AccountJournal(models.Model):
                    SUM(CASE
                        WHEN payment.payment_type = 'outbound' THEN -payment.amount
                        ELSE payment.amount
-                   END) AS amount_total,
-                   SUM(amount_company_currency_signed) AS amount_total_company
+                   END)::float AS amount_total,
+                   SUM(amount_company_currency_signed)::float AS amount_total_company
               FROM account_payment payment
               JOIN account_move move ON move.origin_payment_id = payment.id
               JOIN account_journal journal ON move.journal_id = journal.id
@@ -1093,8 +1093,8 @@ class AccountJournal(models.Model):
                    SUM(CASE
                        WHEN payment.payment_type = 'outbound' THEN -payment.amount
                        ELSE payment.amount
-                   END) AS amount_total,
-                   SUM(amount_company_currency_signed) AS amount_total_company
+                   END)::float AS amount_total,
+                   SUM(amount_company_currency_signed)::float AS amount_total_company
               FROM account_payment payment
               JOIN account_move move ON move.origin_payment_id = payment.id
              WHERE payment.is_matched IS NOT TRUE

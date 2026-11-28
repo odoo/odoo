@@ -53,7 +53,7 @@ class ResCurrency(models.Model):
             """
                 SELECT source_company.id,
                        date.date,
-                       %(target_rate)s / %(source_rate)s AS rate
+                       (%(target_rate)s / %(source_rate)s)::float AS rate
                   FROM (SELECT generate_series(%(date_from)s::timestamp, %(date_to)s::timestamp, '1 day')::date AS date) AS date,
                        res_company source_company,
                        res_company target_company

@@ -453,7 +453,7 @@ class PosConfig(models.Model):
         self.env.cr.execute("""
             SELECT o.config_id,
                    DATE(o.date_order AT TIME ZONE 'UTC') AS order_date,
-                   SUM(o.amount_total) AS total
+                   SUM(o.amount_total)::float AS total
               FROM pos_order o
              WHERE o.config_id = ANY(%s)
                AND o.state IN ('done', 'paid', 'invoiced')
