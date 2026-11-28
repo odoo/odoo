@@ -1,6 +1,7 @@
 import { Component, onWillStart, proxy, useProps, t } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { Dialog } from "@web/core/dialog/dialog";
+import { serializeDate } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { getDisplayDateInfo } from "@point_of_sale/utils";
 
@@ -18,9 +19,7 @@ export class PresetSlotsPopup extends Component {
         this.pos = usePos();
         this.state = proxy({
             selectedPresetId: this.pos.getOrder().preset_id.id,
-            selectedDate: (this.pos.getOrder().preset_time || DateTime.now()).toFormat(
-                "yyyy-MM-dd"
-            ),
+            selectedDate: serializeDate(this.pos.getOrder().preset_time || DateTime.now()),
         });
 
         onWillStart(async () => {
