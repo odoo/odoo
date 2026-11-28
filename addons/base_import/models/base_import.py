@@ -830,6 +830,23 @@ class Base_ImportImport(models.TransientModel):
             headers_types[(column_index, header_name)] = type_field
         return headers_types
 
+    def _get_exact_match_field(self, header, fields_tree):
+        """ Return the field whose technical name matches ``header``, else whose
+        label in the user language matches, else whose english label matches. """
+        folded_header = header.casefold()
+        for field in fields_tree:
+            if field['name'].casefold() == folded_header:
+                return field
+        for field in fields_tree:
+            if field['string'].casefold() == folded_header:
+                return field
+        IrModelFieldsUs = self.with_context(lang='en_US').env['ir.model.fields']
+        for field in fields_tree:
+            field_string_en = IrModelFieldsUs.get_field_string(field['model_name']).get(field['name'])
+            if field_string_en and field_string_en.casefold() == folded_header:
+                return field
+        return None
+
     def _get_mapping_suggestion(self, header, fields_tree, header_types, mapping_fields):
         """ Attempts to match a given header to a field of the imported model.
 
@@ -851,8 +868,9 @@ class Base_ImportImport(models.TransientModel):
             Mapping suggestion is found using the following heuristic:
 
             - first we check if there was a saved mapping by the user
-            - then try to make an exact match on the field technical name /
-              english label / translated label
+            - then try to make an exact match on the technical name of all the
+              fields, then on their translated label, then on their english
+              label (see :meth:`_get_exact_match_field`)
             - finally, try the "fuzzy match": word distance between the header
               title and the field technical name / english label / translated
               label, using the lowest result. The field used for the fuzzy match
@@ -905,20 +923,7 @@ class Base_ImportImport(models.TransientModel):
 
         if '/' not in header:
             IrModelFieldsUs = self.with_context(lang='en_US').env['ir.model.fields']
-            for field in fields_tree:
-                fname = field['name']
-                # exact match found based on the field technical name
-                if header.casefold() == fname.casefold():
-                    break
-                # match found using either user translation, either model defined field label
-                if header.casefold() == field['string'].casefold():
-                    break
-                field_strings_en = IrModelFieldsUs.get_field_string(field['model_name'])
-                if fname in field_strings_en and header.casefold() == field_strings_en[fname].casefold():
-                    break
-            else:
-                field = None
-
+            field = self._get_exact_match_field(header, fields_tree)
             if field:  # found an exact match, no need to go further
                 return {
                     'field_path': [field['name']],
