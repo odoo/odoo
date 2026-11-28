@@ -150,6 +150,38 @@ describe("AccountMoveUploadKanbanView", () => {
     });
 });
 
+describe("BillGuide", () => {
+    test("is_sample_action_available is fetched once for all cards", async () => {
+        Partner._records = [
+            { id: 1, name: "Purchases 1", type: "purchase" },
+            { id: 2, name: "Purchases 2", type: "purchase" },
+            { id: 3, name: "Purchases 3", type: "purchase" },
+        ];
+        Partner._views.kanban = `
+            <kanban>
+                <templates>
+                    <t t-name="card">
+                        <field name="name"/>
+                        <widget name="bill_upload_guide"/>
+                    </t>
+                </templates>
+            </kanban>
+        `;
+        onRpc("account.journal", "is_sample_action_available", () => {
+            expect.step("is_sample_action_available");
+            return true;
+        });
+        await mountView({
+            type: "kanban",
+            resModel: "partner",
+        });
+
+        expect(".bill_guide_container").toHaveCount(3);
+        expect(".bill_guide_container a[name=action_create_vendor_bill]").toHaveCount(3);
+        expect.verifySteps(["is_sample_action_available"]);
+    });
+});
+
 describe("PaymentTermsLineWidget", () => {
     test("records don't get abandoned after clicking globally or on an exisiting record", async () => {
         await mountView({
