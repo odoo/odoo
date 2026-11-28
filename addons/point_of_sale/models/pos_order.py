@@ -155,6 +155,11 @@ class PosOrder(models.Model):
 
     def _process_saved_order(self, draft):
         self.ensure_one()
+        if not self.to_invoice and self.refunded_order_id.account_move:
+            self.write({
+                'to_invoice': True,
+                'partner_id': self.partner_id.id or self.refunded_order_id.partner_id.id,
+            })
         if not draft and self.state != 'cancel':
             self.action_pos_order_paid()
             self._create_order_picking()
@@ -290,7 +295,7 @@ class PosOrder(models.Model):
         return invoice_lines
 
     def _get_pos_anglo_saxon_price_unit(self, product, partner_id, quantity):
-        moves = self.mapped('picking_ids.move_ids')\
+        moves = (self.mapped('picking_ids.move_ids') | self._get_closing_stock_moves(product))\
             .filtered(lambda m: m.is_valued and m.product_id.valuation == 'real_time' and m.product_id.id == product.id)\
             .sorted(lambda x: x.date)
         if moves:
@@ -1053,32 +1058,42 @@ class PosOrder(models.Model):
                     total_amount_currency += amount_currency
                     total_balance += balance
         # Stock.
+        stock_balances = []
         if self.picking_ids.ids:
             stock_moves = self.env['stock.move'].sudo().search([
                 ('picking_id', 'in', self.picking_ids.ids),
                 ('product_id.valuation', '=', 'real_time'),
             ])
             for stock_move in stock_moves:
-                product_accounts = stock_move.with_company(stock_move.company_id).product_id._get_product_accounts()
-                expense_account = product_accounts['expense']
-                stock_account = product_accounts['stock_valuation']
                 balance = stock_move.value if stock_move.is_out else -stock_move.value
-                aml_vals_list_per_nature['stock'].append({
-                    'name': _("Stock variation for %s", stock_move.product_id.name),
-                    'account_id': expense_account.id,
-                    'partner_id': commercial_partner.id,
-                    'currency_id': self.company_id.currency_id.id,
-                    'amount_currency': balance,
-                    'balance': balance,
-                })
-                aml_vals_list_per_nature['stock'].append({
-                    'name': _("Stock variation for %s", stock_move.product_id.name),
-                    'account_id': stock_account.id,
-                    'partner_id': commercial_partner.id,
-                    'currency_id': self.company_id.currency_id.id,
-                    'amount_currency': -balance,
-                    'balance': -balance,
-                })
+                stock_balances.append((stock_move.product_id, balance))
+        elif self._is_stock_valued_at_closing():
+            lines = self.lines.filtered(
+                lambda line: line.product_id.is_storable and line.product_id.valuation == 'real_time',
+            )
+            for line in lines:
+                price_unit = self._get_closing_stock_moves(line.product_id)._get_price_unit()
+                stock_balances.append((line.product_id, company_currency.round(line.qty * price_unit)))
+        for product, balance in stock_balances:
+            product_accounts = product.with_company(self.company_id)._get_product_accounts()
+            expense_account = product_accounts['expense']
+            stock_account = product_accounts['stock_valuation']
+            aml_vals_list_per_nature['stock'].append({
+                'name': _("Stock variation for %s", product.name),
+                'account_id': expense_account.id,
+                'partner_id': commercial_partner.id,
+                'currency_id': self.company_id.currency_id.id,
+                'amount_currency': balance,
+                'balance': balance,
+            })
+            aml_vals_list_per_nature['stock'].append({
+                'name': _("Stock variation for %s", product.name),
+                'account_id': stock_account.id,
+                'partner_id': commercial_partner.id,
+                'currency_id': self.company_id.currency_id.id,
+                'amount_currency': -balance,
+                'balance': -balance,
+            })
 
         # sort self.payment_ids by is_split_transaction:
         for payment_id in self.payment_ids:
@@ -1347,6 +1362,24 @@ class PosOrder(models.Model):
     def _get_refunded_orders(self, order):
         refunded_orderline_ids = [line[2]['refunded_orderline_id'] for line in order['lines'] if line[0] in [0, 1] and line[2].get('refunded_orderline_id')]
         return self.env['pos.order.line'].browse(refunded_orderline_ids).mapped('order_id')
+
+    def _is_stock_valued_at_closing(self):
+        self.ensure_one()
+        return (
+            self.company_id.anglo_saxon_accounting
+            and self.session_id.state == 'closed'
+            and self.session_id.update_stock_at_closing
+            and not self.picking_ids
+            and not self.shipping_date
+        )
+
+    def _get_closing_stock_moves(self, product):
+        moves = self.env['stock.move']
+        for order in self.filtered(lambda o: o._is_stock_valued_at_closing()):
+            moves |= order.session_id.sudo().picking_ids.filtered(lambda p: not p.pos_order_id).move_ids.filtered(
+                lambda m: m.product_id == product and (m.is_in if order.is_refund else m.is_out),
+            )
+        return moves
 
     def _should_create_picking_real_time(self):
         return not self.session_id.update_stock_at_closing or self._force_create_picking_real_time()
