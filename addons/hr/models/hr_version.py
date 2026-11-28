@@ -151,7 +151,7 @@ class HrVersion(models.Model):
                 ('country_id', '=', False),
                 ('country_id', '=', company_country_id)
         ]""")
-    tz = fields.Selection(_tz_get, string='Timezone', required=True, default=lambda self: self.env.context.get('tz') or self.env.user.tz or 'UTC')
+    tz = fields.Selection(_tz_get, string='Timezone', required=True, default=lambda self: self.env.company.tz or self.env.context.get('tz') or self.env.user.tz or 'UTC')
 
     # Contract Information
     contract_date_start = fields.Date('Contract Start Date', tracking=1, groups="hr.group_hr_user")

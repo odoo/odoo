@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_city_tree" model="ir.ui.view">
+        <field name="name">res.city.list.timezone</field>
+        <field name="model">res.city</field>
+        <field name="inherit_id" ref="base_address_extended.view_city_tree"/>
+        <field name="arch" type="xml">
+            <field name="state_id" position="after">
+                <field name="tz" optional="show"/>
+                <field name="latitude" optional="hide"/>
+                <field name="longitude" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="res_city_view_form" model="ir.ui.view">
+        <field name="name">res.city.view.form.timezone</field>
+        <field name="model">res.city</field>
+        <field name="inherit_id" ref="base_address_extended.res_city_view_form"/>
+        <field name="arch" type="xml">
+            <group name="city_data" position="inside">
+                <group>
+                    <field name="tz"/>
+                    <field name="latitude"/>
+                    <field name="longitude"/>
+                    <field name="geonames_id" invisible="not geonames_id"/>
+                </group>
+            </group>
+        </field>
+    </record>
+</odoo>

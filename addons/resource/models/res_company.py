@@ -16,15 +16,28 @@ class ResCompany(models.Model):
         _tz_get, string='Timezone',
         compute='_compute_tz', store=True, readonly=False)
 
-    @api.depends('country_id')
+    @api.depends('country_id', 'state_id', 'city')
     def _compute_tz(self):
         country_tz = _country_timezones()
+        default_tz = self.env.context.get('tz') or self.env.user.tz or 'UTC'
         for company in self:
-            company.tz = self.env.context.get('tz') or self.env.user.tz or 'UTC'
+            tz = False
             if company.country_id:
                 country_timezones = country_tz.get(company.country_id.code, [])
                 if len(country_timezones) == 1:
-                    company.tz = country_timezones[0]
+                    tz = country_timezones[0]
+                elif country_timezones:
+                    tz = company._get_address_tz()
+            company.tz = tz or default_tz
+
+    def _get_address_tz(self):
+        """Hook to find the timezone of the company's address when its country
+        has several timezones (e.g. from its state or city).
+
+        :returns: the timezone name, or ``False`` if it cannot be determined
+        """
+        self.ensure_one()
+        return False
 
     @api.model
     def _init_data_resource_calendar(self):
