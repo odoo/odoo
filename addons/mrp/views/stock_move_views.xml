@@ -46,6 +46,17 @@
             </field>
         </record>
 
+        <record id="view_stock_move_operations" model="ir.ui.view">
+            <field name="name">stock.move.operations.form.inherit.mrp</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="stock.view_stock_move_operations" />
+            <field name="arch" type="xml">
+                <field name="quantity" position="after">
+                    <field name="production_id" invisible="1"/>
+                </field>
+            </field>
+        </record>
+
         <record id="view_stock_move_line_operation_tree_finished" model="ir.ui.view">
             <field name="name">stock.move.line.operation.list.finished</field>
             <field name="model">stock.move.line</field>
@@ -58,6 +69,9 @@
                         'default_product_id': parent.product_id,
                         }
                     </attribute>
+                </xpath>
+                <xpath expr="//field[@name='location_dest_id'][last()]" position="attributes">
+		            <attribute name="column_invisible" add="not parent.production_id" separator="and"/>
                 </xpath>
             </field>
         </record>
