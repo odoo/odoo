@@ -109,6 +109,10 @@ DEFAULT_BLOCKED_THIRD_PARTY_DOMAINS = '\n'.join([  # noqa: FLY002
 
 CTA_PRIORITY_DEFAULT = 10
 
+FONT_FACE_RE = re.compile(r'@font-face\s*\{([^}]*)\}')
+FONT_WEIGHT_KEYWORDS = {'normal': 400, 'bold': 700}
+FONT_RANGE_ITEM_RE = re.compile(r'u\+([0-9a-f?]{1,6})(?:-([0-9a-f]{1,6}))?', re.IGNORECASE)
+
 
 class Website(models.CachedModel):
     _name = 'website'
@@ -1472,8 +1476,97 @@ class Website(models.CachedModel):
             raise
 
     def _get_font_urls(self):
-        """Return the list of font URLs to emit as <link> tags in <head>."""
-        return re.findall(r'--o-font-url-\d+:\s*"([^"]*)"', self._get_scss_exports())
+        """Return the list of font URLs to emit as <link> tags in <head>.
+
+        Local font URLs get the attachment checksum as `unique` parameter so
+        they can be cached long-term by browsers.
+        """
+        # (url, attachment_id), attachment_id being '' for non-local fonts
+        urls = re.findall(
+            r'--o-font-url-\d+:\s*"((?:/web/content/(\d+)/)?[^"]*)"',
+            self._get_scss_exports(),
+        )
+        attachment_ids = {int(attachment_id) for _url, attachment_id in urls if attachment_id}
+        checksums = {
+            str(attachment.id): attachment.checksum
+            for attachment in self.env['ir.attachment'].sudo().browse(attachment_ids).exists()
+        }
+        return [
+            f'{url}?unique={checksums[attachment_id]}' if attachment_id in checksums else url
+            for url, attachment_id in urls
+        ]
+
+    @tools.conditional(
+        'xml' not in tools.config['dev_mode'],
+        api.ormcache(
+            'self.id',
+            "tuple(sorted(self.env['ir.asset']._get_asset_params().items()))",
+            cache='assets',
+        ),
+    )
+    def _get_fonts_to_preload(self):
+        """Return the list of font URLs and types to emit as <link> tags in <head>."""
+        result = []
+
+        def is_within_unicode_range(codepoint, unicode_range):
+            for item in unicode_range.split(','):
+                match = FONT_RANGE_ITEM_RE.fullmatch(item.strip())
+                if not match:
+                    return True  # invalid descriptor: ignored, so the initial value applies
+                start, end = match.groups()
+                if '?' in start:
+                    low, high = int(start.replace('?', '0'), 16), int(start.replace('?', 'F'), 16)
+                else:
+                    low = int(start, 16)
+                    high = int(end, 16) if end else low
+                if low <= codepoint <= high:
+                    return True
+            return False
+
+        for (attachment_id, weight) in re.findall(r'--o-font-preload-\d+:\s*"([^"]*):([^"]*)"', self._get_scss_exports()):
+            weight = FONT_WEIGHT_KEYWORDS.get(weight) or (int(weight) if weight.isdigit() else 400)
+            attachment = self.env['ir.attachment'].sudo().browse(int(attachment_id))
+            if not attachment.exists():
+                continue
+            css = attachment.raw.decode()
+            definitions = []
+            for face in FONT_FACE_RE.findall(css):
+                style = re.search(r'font-style:\s*(\w+)', face)
+                if style and style[1] != 'normal':
+                    continue
+                unicode_range = re.search(r'unicode-range:\s*([^;]+)', face)
+                if unicode_range and not is_within_unicode_range(ord('a'), unicode_range[1]):
+                    continue
+                url = re.search(r'url\(\s*["\']?([^"\')]+)', face)
+                extension = url and url[1].partition('?')[0].rsplit('.', 1)[-1].lower()
+                if extension not in ('ttf', 'otf', 'woff', 'woff2'):
+                    continue
+                weights = re.search(r'font-weight:\s*(\w+)(?:\s+(\d+))?', face)
+                lightest, boldest = weights.groups() if weights else ('400', None)
+                lightest = FONT_WEIGHT_KEYWORDS.get(lightest) or (int(lightest) if lightest.isdigit() else 400)
+                boldest = FONT_WEIGHT_KEYWORDS.get(boldest) or (int(boldest) if boldest else lightest)
+                definitions.append({'weights': (lightest, boldest), 'url': url[1], 'extension': extension})
+
+            def font_matching_order(face):
+                # See https://www.w3.org/TR/css-fonts-4/#font-style-matching
+                lightest, boldest = face['weights']
+                if lightest <= weight <= boldest:
+                    return (0, 0)
+                if boldest < weight:
+                    return (1 if weight < 400 else 2, weight - boldest)
+                if weight < 400:
+                    return (2, lightest - weight)
+                if weight > 500 or lightest <= 500:
+                    return (1, lightest - weight)
+                return (3, lightest - weight)
+
+            if not definitions:
+                continue
+            font = min(definitions, key=font_matching_order)
+            if all(preloaded['url'] != font['url'] for preloaded in result):
+                result.append(font)
+
+        return result
 
     def _get_icon_font_family(self):
         """Return the icon font the website renders with, empty if the default

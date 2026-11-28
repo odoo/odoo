@@ -90,12 +90,13 @@ class TestWebsiteFontUrls(odoo.tests.HttpCase):
         attachment = self._create_font_attachment('Roboto')
         self._set_fonts({
             'font': "'Roboto'",
-            'headings-font': "'SYSTEM_FONTS'",
+            'headings-font': "'Roboto'",
             'google-local-fonts': f"('Roboto': {attachment.id})",
         })
         self.assertEqual(
             self._get_font_urls(),
-            [f'/web/content/{attachment.id}/google-font-Roboto'],
+            # Font definitions are deduplicated
+            [f'/web/content/{attachment.id}/google-font-Roboto?unique={attachment.checksum}'],
         )
 
     def test_google_font_made_local_stores_each_file_once(self):
@@ -207,6 +208,44 @@ class TestWebsiteFontUrls(odoo.tests.HttpCase):
         page = self.url_open('/').text
         self.assertNotIn('<link rel="preconnect" href="https://fonts.googleapis.com"/>', page)
         self.assertNotIn('<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>', page)
+
+    def test_page_head_preloads_local_font_file(self):
+        # Only the file the headings render with is preloaded: normal style,
+        # latin unicode range, and the closest weight to the headings' (500).
+        latin = 'U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD'
+        font_faces = ''.join(
+            f"/* {comment} */\n@font-face {{\n  font-family: 'Arvo';\n"
+            f"  font-style: {style};\n  font-weight: {weight};\n"
+            f"  src: url(https://fonts.gstatic.com/s/arvo/v23/{file}.woff2) format('woff2');\n"
+            f"  unicode-range: {unicode_range};\n}}\n"
+            for comment, style, weight, file, unicode_range in (
+                ('wrong font style', 'italic', 400, 'italic', latin),
+                ('wrong unicode range', 'normal', 400, 'other-range', 'U+FFFF'),
+                ('the one we want', 'normal', 400, 'the-one', latin),
+                ('wrong font weight', 'normal', 700, 'bold', latin),
+            )
+        )
+
+        def fake_get(url, **kwargs):
+            return Mock(content=font_faces.encode() if 'fonts.googleapis.com' in url else url.encode())
+
+        with patch('requests.Session.get', side_effect=fake_get):
+            self._set_fonts({
+                'headings-font': "'Arvo'",
+                'google-local-fonts': "('Arvo': '')",
+            })
+
+        font_file = self.env['ir.attachment'].search([('name', '=', 'google-font-s-arvo-v23-the-one.woff2')])
+        page = self.url_open('/').text
+        preload_links = [
+            tag for tag in re.findall(r'<link\b[^>]*>', page)
+            if 'rel="preload"' in tag and '/web/content/' in tag
+        ]
+        self.assertEqual(preload_links, [
+            ('<link rel="preload" as="font" crossorigin="" '
+            f'href="/web/content/{font_file.id}/s-arvo-v23-the-one.woff2?unique={font_file.checksum}" '
+            'type="font/woff2"/>'),
+        ])
 
 
 @odoo.tests.common.tagged('post_install', '-at_install')

@@ -275,9 +275,13 @@ class WebsiteAssets(models.AbstractModel):
                             })
                             nonlocal font_family_attachments
                             font_family_attachments += attachment
-                        return 'src: url(/web/content/%s/%s) %s' % (
+                        # Font files are never modified, only deleted with
+                        # their CSS: the checksum can be baked in the URL so
+                        # browsers cache them long-term.
+                        return 'src: url(/web/content/%s/%s?unique=%s) %s' % (
                             attachment.id,
                             name,
+                            attachment.checksum,
                             font_format,
                         )
 

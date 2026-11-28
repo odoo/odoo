@@ -183,6 +183,7 @@
         <!-- TODO: Once we have style in DB, add this preconnect only if a
         google font is actually used. Note that if no font is used, the
         preconnect is actually not connecting to the google servers. -->
+        <t t-call="website.font_preload"/>
         <t t-call="website.font_links"/>
         <link rel="apple-touch-icon" t-att-href="x_icon"/>
         <!-- JSON-LD structured data: page-specific payload or fall back to the website's Organization schema. -->
@@ -438,6 +439,14 @@
         <link t-att-href="url" rel="stylesheet"/>
     </t>
 </template>
+
+<template id="font_preload" name="Font Preload">
+    <t t-set="fonts_to_preload" t-value="website._get_fonts_to_preload()"/>
+    <t t-foreach="fonts_to_preload" t-as="font">
+        <link rel="preload" as="font" t-att-href="font['url']" t-attf-type="font/{{font['extension']}}" crossorigin=""/>
+    </t>
+</template>
+
 
 <template id="icons_fonts_preload" name="Icons fonts preload" inherit_id="web.frontend_layout">
     <xpath expr="//t[@t-call-assets='web.material_symbols_outlined']" position="replace">
