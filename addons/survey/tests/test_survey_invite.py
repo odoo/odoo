@@ -144,6 +144,29 @@ class TestSurveyInvite(common.TestSurveyCommon, MailCommon):
                              'The following customers have already received an invite: Caroline Customer.')
 
     @users('survey_manager')
+    def test_survey_invite_resend_new_deadline(self):
+        """ Resending an invite with a new deadline should postpone the deadline of the
+        existing participation, as the same token is sent again. """
+        self.survey.write({'access_mode': 'token', 'users_login_required': False})
+        old_deadline = fields.Datetime.now() - relativedelta(days=1)
+        new_deadline = fields.Datetime.now() + relativedelta(days=7)
+        answer = self.survey._create_answer(partner=self.customer, deadline=old_deadline)
+
+        invite_form = Form.from_action(self.env, self.survey.action_send_survey())
+        invite_form.partner_ids.add(self.customer)
+        self.assertEqual(invite_form.existing_mode, 'resend')
+        invite_form.deadline = new_deadline
+        invite = invite_form.save()
+        with self.mock_mail_gateway():
+            invite.action_invite()
+
+        self.assertEqual(self.env['survey.user_input'].search([('survey_id', '=', self.survey.id)]), answer,
+                         'The existing participation should be reused')
+        self.assertEqual(answer.deadline, new_deadline)
+        self.assertEqual(len(self._new_mails), 1)
+        self.assertIn(answer.access_token, self._new_mails.body_html)
+
+    @users('survey_manager')
     def test_survey_invite_authentication_nosignup(self):
         Answer = self.env['survey.user_input']
 
