@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <div t-name="fleet_training.FleetStatCard" class="o_fleet_stat_card card shadow-sm">
+        <div class="card-body d-flex align-items-center gap-3">
+            <i class="oi fs-1" t-att-data-icon="this.props.icon" t-attf-class="text-{{this.color}}"/>
+            <div>
+                <div class="fs-3 fw-bold" t-out="this.props.value"/>
+                <div class="text-muted" t-out="this.props.label"/>
+            </div>
+        </div>
+    </div>
+</templates>
