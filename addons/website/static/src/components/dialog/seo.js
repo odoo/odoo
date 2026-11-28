@@ -612,7 +612,7 @@ class TitleDescription extends Component {
     }
 
     get pathname() {
-        return new URL(this.props.url).pathname;
+        return decodeURI(new URL(this.props.url).pathname);
     }
 
     get url() {
@@ -969,7 +969,7 @@ export class OptimizeSEODialog extends Component {
             this.canEditTitle = this.canEditSeo && "website_meta_title" in this.data;
             // The URL must not be customizable if it does not contain an editable slug.
             const editableSlugPattern = new RegExp(`.*/(${this.data.seo_name || ""}|${this.data.seo_name_default || ""})-\\d+.*`);
-            this.canEditUrl = this.canEditSeo && Boolean(new URL(path).pathname.match(editableSlugPattern));
+            this.canEditUrl = this.canEditSeo && Boolean(decodeURI(new URL(path).pathname).match(editableSlugPattern));
             seoContext.title = this.canEditTitle && this.data.website_meta_title;
 
             // If website.page, hide the google preview & tell user his page is currently unindexed
@@ -987,7 +987,7 @@ export class OptimizeSEODialog extends Component {
             );
             this.defaultTitle = this.getMeta({ name: "default_title" }) || "";
             seoContext.defaultTitle = this.defaultTitle;
-            this.url = path;
+            this.url = decodeURI(path);
 
             seoContext.metaImage =
                 this.data.website_meta_og_img || this.getMeta({ property: "og:image" });
