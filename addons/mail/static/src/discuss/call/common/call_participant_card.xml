@@ -46,6 +46,8 @@
                     'o-small': this.isSmall,
                 }"/>
             </div>
+            <!-- below the overlay, so that the name and the menu stay above the ink -->
+            <ScreenAnnotationOverlay t-if="this.showsScreenAnnotation" session="this.rtcSession"/>
             <!-- overlay -->
             <t t-if="this.isActiveCall and this.rtcSession">
                 <!-- Bottom Left -->

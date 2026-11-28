@@ -1,6 +1,7 @@
 import { CallContextMenu } from "@mail/discuss/call/common/call_context_menu";
 import { CallParticipantVideo } from "@mail/discuss/call/common/call_participant_video";
 import { CONNECTION_TYPES } from "@mail/discuss/call/common/connection_types";
+import { ScreenAnnotationOverlay } from "@mail/discuss/call/common/screen_annotation_overlay";
 import { TalkingAudioBars } from "@mail/discuss/call/common/talking_audio_bars";
 import { useHover } from "@mail/utils/common/hooks";
 import { extractAccentColor } from "@mail/utils/common/misc";
@@ -29,7 +30,13 @@ import { useAncestors } from "@mail/core/common/ancestor_plugin";
 const HIDDEN_CONNECTION_STATES = new Set(["connected", "completed"]);
 
 export class CallParticipantCard extends Component {
-    static components = { CallParticipantVideo, CallContextMenu, Dropdown, TalkingAudioBars };
+    static components = {
+        CallParticipantVideo,
+        CallContextMenu,
+        Dropdown,
+        ScreenAnnotationOverlay,
+        TalkingAudioBars,
+    };
     static template = "discuss.CallParticipantCard";
     /** @type {import("models").Rtc} */
     rtc;
@@ -211,6 +218,24 @@ export class CallParticipantCard extends Component {
 
     get hasVideo() {
         return Boolean(this.props.cardData.videoStream);
+    }
+
+    /** Only the large view of a shared screen can be drawn on. */
+    get showsScreenAnnotation() {
+        const isOwnScreenPaused =
+            this.rtcSession?.eq(this.rtc.selfSession) &&
+            this.rtc.screenTrack &&
+            !this.rtc.screenTrack.enabled;
+        return Boolean(
+            this.props.cardData.type === "screen" &&
+                this.rtcSession &&
+                this.hasVideo &&
+                this.isActiveCall &&
+                !this.props.minimized &&
+                !this.props.inset &&
+                !this.props.isSidebarItem &&
+                !isOwnScreenPaused
+        );
     }
 
     get isTalking() {

@@ -29,6 +29,10 @@ import { ACTION_TAGS } from "@mail/core/common/action";
 import { MailFullscreenPlugin } from "@mail/core/common/mail_fullscreen";
 import { PttExtensionPlugin } from "@mail/discuss/call/common/ptt_extension_plugin";
 import { PipPlugin } from "@mail/discuss/call/common/pip_plugin";
+import {
+    ANNOTATION_MESSAGE_TYPE,
+    ScreenAnnotationPlugin,
+} from "@mail/discuss/call/common/screen_annotation_plugin";
 import { CONNECTION_TYPES } from "@mail/discuss/call/common/connection_types";
 
 let sequence = 1;
@@ -269,6 +273,19 @@ export class Network {
     updateInfo(info, options = {}) {
         this.p2p.updateInfo(info);
         this.sfu?.updateInfo(info, options);
+    }
+    /**
+     * Sends a message to the other call participants, through the SFU when connected and
+     * through the peer-to-peer connections, which are also used as a fallback for the
+     * participants who cannot reach the SFU.
+     *
+     * @param {Object} message JSON serializable
+     */
+    broadcast(message) {
+        if (this.sfu?.state === "connected") {
+            this.sfu.broadcast(message);
+        }
+        this.p2p.broadcast(message);
     }
     disconnect() {
         for (const { name, f } of this._listeners.splice(0)) {
@@ -569,6 +586,8 @@ export class Rtc extends Record {
         this.pip = undefined;
         /** @type {PttExtensionPlugin} */
         this.pttExtService = undefined;
+        /** @type {ScreenAnnotationPlugin} */
+        this.screenAnnotation = undefined;
         /** @type {import("@mail/core/common/sound_effects_plugin").SoundEffectsPlugin} */
         this.soundEffects = undefined;
         this.linkVoiceActivationDebounce = debounce(this.linkVoiceActivation, 500);
@@ -1750,10 +1769,12 @@ export class Rtc extends Record {
         switch (name) {
             case "broadcast":
                 {
-                    const {
-                        senderId,
-                        message: { sequence },
-                    } = payload;
+                    const { senderId, message } = payload;
+                    if (message?.type === ANNOTATION_MESSAGE_TYPE) {
+                        this.screenAnnotation.receive(senderId, message);
+                        return;
+                    }
+                    const sequence = message?.sequence;
                     if (!sequence) {
                         return;
                     }
@@ -3019,6 +3040,7 @@ export const rtcService = {
         rtc.pttExtService = usePlugin(PttExtensionPlugin);
         usePlugin(CallInvitationsPlugin);
         rtc.pip = usePlugin(PipPlugin);
+        rtc.screenAnnotation = usePlugin(ScreenAnnotationPlugin);
         rtc.onChange(
             () => [rtc.pip.isActive()],
             function onChangePipMode(isPipMode) {
