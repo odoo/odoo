@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-13 17:37+0000\n"
+"POT-Creation-Date: 2026-11-27 18:35+0000\n"
 "PO-Revision-Date: 2026-10-28 00:33+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-18/"
@@ -320,6 +320,14 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 msgid ""
+"Could not retrieve a partner corresponding to '%s' with the same endpoint. A "
+"new partner was created."
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+msgid ""
 "Could not retrieve a partner corresponding to '%s'. A new partner was "
 "created."
 msgstr ""
@@ -339,6 +347,14 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+msgid ""
+"Could not retrieve the tax for line '%(line)s': a new tax '%(tax_name)s' was "
+"created."
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 msgid "Could not retrieve the tax: %(amount)s %% for line '%(line)s'."
 msgstr ""
 "Não foi possível recuperar o imposto: %(amount)s %% na linha '%(line)s'."
@@ -346,18 +362,10 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
-msgid "Could not retrieve the tax: %(tax_percentage)s %% for line '%(line)s'."
+msgid ""
+"Could not retrieve the tax: %(amount)s %% for the document level allowance/"
+"charge."
 msgstr ""
-"Não foi possível recuperar o imposto: %(tax_percentage)s %% na linha '%"
-"(line)s'."
-
-#. module: account_edi_ubl_cii
-#. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
-msgid "Could not retrieve the tax: %s for the document level allowance/charge."
-msgstr ""
-"Não foi possível recuperar o imposto: %s do subsídio/taxa no nível do "
-"documento."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9934
@@ -1409,6 +1417,18 @@ msgstr "fx"
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
 msgstr "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
+
+#~ msgid ""
+#~ "Could not retrieve the tax: %(tax_percentage)s %% for line '%(line)s'."
+#~ msgstr ""
+#~ "Não foi possível recuperar o imposto: %(tax_percentage)s %% na linha '%"
+#~ "(line)s'."
+
+#~ msgid ""
+#~ "Could not retrieve the tax: %s for the document level allowance/charge."
+#~ msgstr ""
+#~ "Não foi possível recuperar o imposto: %s do subsídio/taxa no nível do "
+#~ "documento."
 
 #~ msgid "Factur-x/XRechnung CII 2.2.0"
 #~ msgstr "Factur-x/XRechnung CII 2.2.0"

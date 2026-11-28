@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:38+0000\n"
-"PO-Revision-Date: 2026-11-19 15:22+0000\n"
+"PO-Revision-Date: 2026-11-25 13:50+0000\n"
 "Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-18/"
 "stock_account/sv/>\n"
@@ -129,7 +129,7 @@ msgstr "Verifikation"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "Account Stock Properties"
-msgstr "Konto Egenskaper för lager"
+msgstr "Bokföringsegenskaper för lager"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_quant__accounting_date
@@ -189,12 +189,12 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_analytic_account
 msgid "Analytic Account"
-msgstr "Analytiskt konto"
+msgstr "Kostnadsredovisningskonto"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__analytic_account_line_ids
 msgid "Analytic Account Line"
-msgstr "Analytisk kontorad"
+msgstr "Kostnadsredovisningskonto"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_analytic_plan
@@ -609,9 +609,9 @@ msgid ""
 "inventory when a product enters or leaves the company.\n"
 "        "
 msgstr ""
-"Manuell: Verifikaten för att värdera lagret bokförs inte automatiskt.\n"
-"        Automatiserad: En verifikat skapas automatiskt för att värdera "
-"lagret när en produkt kommer in i eller lämnar företaget.\n"
+"Manuell: Lagervärderingsverifikationer bokförs inte automatiskt.\n"
+"        Automatisk: Lagervärderingsverifikationer skapas automatiskt när en "
+"produkt kommer in i eller skickas ut från företaget.\n"
 "        "
 
 #. module: stock_account
@@ -727,7 +727,7 @@ msgstr "Mängd"
 #: model:ir.model.fields,field_description:stock_account.field_product_product__quantity_svl
 #: model:ir.model.fields,field_description:stock_account.field_stock_lot__quantity_svl
 msgid "Quantity Svl"
-msgstr "Kvantitet Svl"
+msgstr "Mängd Svl"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_quant
@@ -970,8 +970,9 @@ msgid ""
 "intercompany in a single step while they should go through the intercompany "
 "transit location."
 msgstr ""
-"Flyttrader är inte i konsekventa tillstånd: de genomför ett internt "
-"företagsbyte i ett enda steg när de borde gå genom företagets transitplats."
+"Transportraderna är inte i konsekventa tillstånd: de genomför en intern "
+"transport mellan företag i ett enda steg när de borde gå genom en intern "
+"interimsplats."
 
 #. module: stock_account
 #. odoo-python
@@ -980,8 +981,8 @@ msgid ""
 "The move lines are not in a consistent states: they do not share the same "
 "origin or destination company."
 msgstr ""
-"Flyttrader är inte i konsekventa tillstånd: de delar inte samma ursprung "
-"eller destination för företaget."
+"Transportraderna är inte i konsekventa tillstånd: de delar inte samma "
+"ursprungs- eller destinationsföretag."
 
 #. module: stock_account
 #. odoo-python
@@ -1013,8 +1014,8 @@ msgid ""
 "The value of a stock valuation layer cannot be negative. Landed cost could "
 "be use to correct a specific transfer."
 msgstr ""
-"Värdet på ett lagervärderingslager kan inte vara negativt. Landat "
-"anskaffningsvärde kan användas för att korrigera en specifik överföring."
+"Värdet på ett lagervärderingslager kan inte vara negativt. "
+"Hemtagningskostnaden kan användas för att korrigera en specifik transport."
 
 #. module: stock_account
 #: model_terms:ir.actions.act_window,help:stock_account.stock_valuation_layer_action
@@ -1267,12 +1268,11 @@ msgid ""
 "category.\n"
 "                It can also directly be set on each product."
 msgstr ""
-"När automatisk lagerutvärdering utförs kommer motpostverifikat för alla "
-"utgående lagerflyttningar att postas på detta konto,\n"
-"                om det inte finns ett specifikt utvärderingskonto inställt "
-"på destinationen. Detta är standardvärdet för alla produkter i denna "
-"kategori.\n"
-"                Det kan också direkt ställas in på varje produkt."
+"Vid automatiserad lagervärdering, kommer motsvarande verifikationsrader för "
+"alla utgående lagertransporter att publiceras på detta konto,\n"
+"                om det inte finns ett specifikt värderingskonto angivet för "
+"destinationen. Detta är standardvärdet för alla produkter i denna kategori.\n"
+"                Det kan också anges direkt på varje enskild produkt."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_journal
@@ -1309,8 +1309,8 @@ msgid ""
 "You cannot change the costing method of product valuated by lot/serial "
 "number."
 msgstr ""
-"Du kan inte ändra kalkylmetoden för en produkt som värderas per lot/"
-"serialnummer."
+"Det är inte möjligt att ändra kalkyleringsmetod för en produkt som värderas "
+"per parti/serienummer."
 
 #. module: stock_account
 #. odoo-python
@@ -1351,9 +1351,9 @@ msgid ""
 "to the creation of a journal entry, for which you don't have the access "
 "rights."
 msgstr ""
-"Du kan inte uppdatera anskaffningsvärdet för en produkt i automatiserad "
-"värdering eftersom det leder till att en verifikat skapas, för vilken du "
-"inte har åtkomsträttigheter."
+"Det är inte möjligt att uppdatera anskaffningsvärdet för en produkt vid "
+"automatiserad lagervärdering eftersom detta leder till att en verifikation "
+"skapas automatiskt, och du har inte behörighet att göra detta."
 
 #. module: stock_account
 #. odoo-python
@@ -1362,8 +1362,8 @@ msgid ""
 "You don't have any input valuation account defined on your product category. "
 "You must define one before processing this operation."
 msgstr ""
-"Du har ingen värderingskontodefinition för din produktkategori. Du måste "
-"definiera en innan du fortsätter med denna operation."
+"Det finns inget ingångsvärderingskonto angivet för din produktkategori. "
+"Vänligen definiera ett innan du fortsätter med operationen."
 
 #. module: stock_account
 #. odoo-python
@@ -1372,8 +1372,8 @@ msgid ""
 "You don't have any output valuation account defined on your product "
 "category. You must define one before processing this operation."
 msgstr ""
-"Du har inte definierat något utdatavärderingskonto för din produktkategori. "
-"Du måste definiera ett innan du bearbetar denna operation."
+"Det finns inget utgångsvärderingskonto angivet för din produktkategori. "
+"Vänligen definiera ett innan du fortsätter med operationen."
 
 #. module: stock_account
 #. odoo-python
@@ -1382,8 +1382,8 @@ msgid ""
 "You don't have any stock input account defined on your product category. You "
 "must define one before processing this operation."
 msgstr ""
-"Du har ingen lagersaldokontodefinition för din produktkategori. Du måste "
-"definiera en innan du fortsätter med denna operation."
+"Det finns inget konto för ingående lager för din produktkategori. Vänligen "
+"definiera ett innan du fortsätter med operationen."
 
 #. module: stock_account
 #. odoo-python
@@ -1392,8 +1392,8 @@ msgid ""
 "You don't have any stock journal defined on your product category, check if "
 "you have installed a chart of accounts."
 msgstr ""
-"Du har ingen lagerjournal definierad för din produktkategori, kontrollera om "
-"du har installerat en kontoplan."
+"Det finns ingen lagerjournal angiven för din produktkategori, vänligen "
+"kontrollera om du har installerat en kontoplan."
 
 #. module: stock_account
 #. odoo-python
@@ -1404,8 +1404,8 @@ msgid ""
 "You don't have any stock valuation account defined on your product category. "
 "You must define one before processing this operation."
 msgstr ""
-"Du har inte definierat något lagervärderingskonto för din produktkategori. "
-"Du måste definiera ett innan du bearbetar denna operation."
+"Det finns inget lagervärderingskonto angivet för din produktkategori. "
+"Vänligen definiera ett innan du fortsätter med operationen."
 
 #. module: stock_account
 #. odoo-python

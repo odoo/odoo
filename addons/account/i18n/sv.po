@@ -48,7 +48,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-24 17:37+0000\n"
-"PO-Revision-Date: 2026-11-17 09:52+0000\n"
+"PO-Revision-Date: 2026-11-25 12:33+0000\n"
 "Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-18/account/"
 "sv/>\n"
@@ -93,15 +93,16 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"\t- Skattegrupp: Skatten är en samling av skatter.\n"
-"\t- Fast summa: Skattebeloppet är detsamma oavsett grundbeloppet.\n"
-"\t- Procentuell skatt: Skattebeloppet är en procentandel av grundbeloppet:\n"
-"\t\tt.ex. 100 * (1 + 10%) = 110 (pris exklusive skatt)\n"
-"\t\tt.ex. 110 / (1 + 10%) = 100 (pris inklusive skatt)\n"
-"\t- Procentuell skatt inkluderad: Skattebeloppet är en andel av priset:\n"
-"\t\tt.ex. 180 / (1 - 10%) = 200 (pris exklusive skatt)\n"
-"\t\tt.ex. 200 * (1 - 10%) = 180 (pris inklusive skatt)\n"
-"\t\t"
+"    - Skattegrupp: Skatten är en samling av skatter.\n"
+"     - Fast summa: Skattebeloppet är detsamma oavsett grundbeloppet.\n"
+"     - Procentuell skatt: Skattebeloppet är en procentandel av "
+"grundbeloppet:\n"
+"        t.ex. 100 * (1 + 10%) = 110 (pris exklusive skatt)\n"
+"        t.ex. 110 / (1 + 10%) = 100 (pris inklusive skatt)\n"
+"     - Procentuell skatt inkluderad: Skattebeloppet är en andel av priset:\n"
+"        t.ex. 180 / (1 - 10%) = 200 (pris exklusive skatt)\n"
+"        t.ex. 200 * (1 - 10%) = 180 (pris inklusive skatt)\n"
+"        "
 
 #. module: account
 #. odoo-python
@@ -298,7 +299,7 @@ msgstr "%s, eller / om ej tillämplig"
 #. module: account
 #: model:ir.actions.server,name:account.action_move_block_payment
 msgid "(Un)Block Payment"
-msgstr "(Av)blockera betalning"
+msgstr "Blockera betalning"
 
 #. module: account
 #. odoo-python
@@ -427,7 +428,7 @@ msgstr "15 dagar"
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_30days_early_discount
 msgid "2/7 Net 30"
-msgstr "2/7 netto 30"
+msgstr "2 % rabatt inom 7 dagar eller hela beloppet inom 30 dagar"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_21days
@@ -452,7 +453,7 @@ msgstr "30 dagar"
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_advance
 msgid "30% Advance End of Following Month"
-msgstr "30 % förskott vid nästkommande månadsslut"
+msgstr "30 % nu, hela beloppet vid nästa månadsslut"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_advance_60days
@@ -477,7 +478,7 @@ msgstr "50,00 EUR"
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_90days_on_the_10th
 msgid "90 days, on the 10th"
-msgstr "90 dagar, på den 10:e"
+msgstr "Om 90 dagar, på den 10:e"
 
 #. module: account
 #. odoo-python
@@ -942,8 +943,8 @@ msgid ""
 "<span class=\"figure-caption\">Never miss a deadline, with automated "
 "statements and alerts.</span>"
 msgstr ""
-"<span class=\"figure-caption\">Missa aldrig en deadline med automatiserade "
-"rapporter och påminnelser.</span>"
+"<span class=\"figure-caption\">Missa aldrig en tidsgräns med automatiserade "
+"kontoutdrag och varningar.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1032,7 +1033,7 @@ msgstr "<span class=\"o_stat_text\">Verifikat enligt kontantmetoden</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
 msgid "<span class=\"o_stat_text\">Invoiced</span>"
-msgstr "<span class=\"o_stat_text\">Fakturerad</span>"
+msgstr "<span class=\"o_stat_text\">Fakturerat</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -1067,7 +1068,7 @@ msgid ""
 "                            </span>"
 msgstr ""
 "<span class=\"text-muted ms-2\">\n"
-"                                <i>för att göra dem oföränderliga</i>\n"
+"                                <i>, för att göra dem oföränderliga</i>\n"
 "                            </span>"
 
 #. module: account
@@ -1078,7 +1079,7 @@ msgid ""
 "                            </span>"
 msgstr ""
 "<span class=\"text-muted\">\n"
-"                                <i>Säkra verifikationer till och med</i>\n"
+"                                <i>Säkra verifikat till och med</i>\n"
 "                            </span>"
 
 #. module: account
@@ -1179,7 +1180,7 @@ msgstr "<span role=\"separator\">Skapa</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span role=\"separator\">View</span>"
-msgstr "<span role=\"separator\">Vy</span>"
+msgstr "<span role=\"separator\">Visa</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -1324,7 +1325,7 @@ msgstr "<span>Referens</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Reporting</span>"
-msgstr "<span>Rapportering</span>"
+msgstr "<span>Rapporter</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1368,7 +1369,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>Unit Price</span>"
-msgstr "<span>Enhetspris</span>"
+msgstr "<span>Styckpris</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -1559,7 +1560,7 @@ msgid ""
 "                should receive this periodically from your bank."
 msgstr ""
 "Ett kontoutdrag är en sammanfattning av alla finansiella transaktioner\n"
-"                som skett på ett bankkonto under en viss tidsperiod. Du\n"
+"                som skett på ett bankkonto under en viss tid. Du\n"
 "                bör få regelbundna utdrag från din bank."
 
 #. module: account
@@ -1572,7 +1573,7 @@ msgid ""
 msgstr ""
 "Ett kreditkontoutdrag är en sammanställning av alla finansiella "
 "transaktioner\n"
-"                som skett på ett kreditkonto under en viss tidsperiod. Du\n"
+"                som skett på ett kreditkonto under en viss tid. Du\n"
 "                bör få regelbundna utdrag från din bank."
 
 #. module: account
@@ -1604,7 +1605,8 @@ msgstr ""
 #: code:addons/account/models/account_report.py:0
 msgid "A line cannot have both children and a groupby value (line '%s')."
 msgstr ""
-"En rad kan inte ha både underordnade rader och \"groupby\"-värden (rad ’%s’)."
+"En rad kan inte ha både underordnade rader och \"grupperaefter\" värden (rad "
+"’%s’)."
 
 #. module: account
 #. odoo-python
@@ -2771,7 +2773,7 @@ msgstr "Gör det möjligt att använda Storno-bokföring."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Allows you to use the analytic accounting."
-msgstr "Aktiverar funktionen för analytisk redovisning."
+msgstr "Aktiverar funktionen för kostnadsredovisning."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
@@ -2840,7 +2842,7 @@ msgstr "Clearingnummer till American Bankers Association"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
 msgid "Amount"
-msgstr "Belopp"
+msgstr "Totalt"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__amount_company_currency_signed
@@ -2892,7 +2894,7 @@ msgstr "Typ av belopp"
 #: model:ir.model.fields,field_description:account.field_account_move_line__amount_currency
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_tree
 msgid "Amount in Currency"
-msgstr "Belopp i valuta"
+msgstr "Ursprungsvaluta"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__source_amount
@@ -2988,39 +2990,39 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
 msgid "Analytic"
-msgstr "Analys"
+msgstr "Kostnadsredovisning"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_account
 msgid "Analytic Account"
-msgstr "Analytiskt konto"
+msgstr "Kostnadsredovisningskonto"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_analytic_accounting
 msgid "Analytic Accounting"
-msgstr "Analytisk redovisning"
+msgstr "Kostnadsredovisning"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_analytic_def_account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Analytic Accounts"
-msgstr "Analytiska konton"
+msgstr "Kostnadsredovisningskonton"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__analytic_distribution
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__analytic_distribution
 msgid "Analytic Distribution"
-msgstr "Analytisk fördelning"
+msgstr "Fördelning i kostnadsredovisning"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_distribution_model
 msgid "Analytic Distribution Model"
-msgstr "Analytiska fördelningsmodeller"
+msgstr "Fördelningsmodeller för kostnadsredovisning"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_analytic__distribution_model
 msgid "Analytic Distribution Models"
-msgstr "Analytiska fördelningsmodeller"
+msgstr "Fördelningsmodeller för kostnadsredovisning"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_analytic
@@ -3030,53 +3032,53 @@ msgstr "Analytiska filter"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_analytic_lines_tree
 msgid "Analytic Items"
-msgstr "Analytiska objekt"
+msgstr "Kostnadsredovisningsrader"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_line
 msgid "Analytic Line"
-msgstr "Analytisk objektrad"
+msgstr "Kostnadsredovisningsrad"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
 msgid "Analytic Lines"
-msgstr "Analytiska rader"
+msgstr "Kostnadsredovisningsrader"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_applicability
 msgid "Analytic Plan's Applicabilities"
-msgstr "Analytiska planers användningsgrad"
+msgstr "Användbarhet för kostnadsredovisningsplaner"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_analytic_plan_menu
 msgid "Analytic Plans"
-msgstr "Analytiska planer"
+msgstr "Kostnadsredovisningsplaner"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__analytic_precision
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__analytic_precision
 msgid "Analytic Precision"
-msgstr "Analytisk precision"
+msgstr "Precision i kostnadsredovisningen"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_analytic_reporting
 msgid "Analytic Report"
-msgstr "Analytiska rapporter"
+msgstr "Kostnadsredovisningsrapport"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_analytic_reporting
 msgid "Analytic Reporting"
-msgstr "Analytisk rapportering"
+msgstr "Kostnadsredovisningsrapportering"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__analytic_line_ids
 msgid "Analytic lines"
-msgstr "Analytiska rader"
+msgstr "Kostnadsredovisningsrader"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Analytics"
-msgstr "Analyser"
+msgstr "Kostnadsredovisning"
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_unique_name
@@ -3163,7 +3165,7 @@ msgstr "Användningsområde"
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding_sale_tax
 #: model_terms:ir.ui.view,arch_db:account.setup_financial_year_opening_form
 msgid "Apply"
-msgstr "Bekräfta"
+msgstr "Verkställ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -3214,7 +3216,7 @@ msgstr "april"
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_search
 msgid "Archived"
-msgstr "Arkiverad"
+msgstr "Arkiverade"
 
 #. module: account
 #. odoo-python
@@ -3247,7 +3249,7 @@ msgstr "Tillgångar"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__auto_post__at_date
 msgid "At Date"
-msgstr "Vid datum"
+msgstr "På bokföringsdatum"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__date_scope__to_beginning_of_fiscalyear
@@ -3365,7 +3367,7 @@ msgstr "Automatiskt genererade betalningar"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__auto_post
 #: model:ir.model.fields,field_description:account.field_account_move__auto_post
 msgid "Auto-post"
-msgstr "Publicera automatiskt"
+msgstr "Bokför automatiskt"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__autopost_bills
@@ -3377,7 +3379,7 @@ msgstr "Automatisk bokföring av fakturor"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__auto_post_until
 #: model:ir.model.fields,field_description:account.field_account_move__auto_post_until
 msgid "Auto-post until"
-msgstr "Publicera automatiskt fram till"
+msgstr "Bokför automatiskt fram till"
 
 #. module: account
 #. odoo-python
@@ -4065,22 +4067,22 @@ msgstr "CAMT-import"
 #. module: account
 #: model:account.incoterms,name:account.incoterm_CIP
 msgid "CARRIAGE AND INSURANCE PAID TO"
-msgstr "FRAKT- OCH FÖRSÄKRINGSKOSTNADER BETALDA TILL"
+msgstr "CARRIAGE AND INSURANCE PAID TO (CIP)"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_CPT
 msgid "CARRIAGE PAID TO"
-msgstr "FRAKTKOSTNADER BETALDA TILL"
+msgstr "CARRIAGE PAID TO (CPT)"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_CFR
 msgid "COST AND FREIGHT"
-msgstr "KOSTNAD OCH FRAKT"
+msgstr "COST AND FREIGHT (CFR)"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_CIF
 msgid "COST, INSURANCE AND FREIGHT"
-msgstr "KOSTNADER, FÖRSÄKRINGAR OCH FRAKT"
+msgstr "COST, INSURANCE AND FREIGHT (CIF)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -4143,7 +4145,7 @@ msgstr "Avbruten"
 #: model:ir.model.fields.selection,name:account.selection__account_move__status_in_payment__cancel
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Cancelled"
-msgstr "Avbruten"
+msgstr "Avbrutet"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -4901,7 +4903,7 @@ msgstr "Konfigurera"
 #: code:addons/account/models/onboarding_onboarding_step.py:0
 #: model:ir.actions.act_window,name:account.action_base_document_layout_configurator
 msgid "Configure your document layout"
-msgstr "Konfigurera din egen dokumentlayout"
+msgstr "Konfigurera dokumentets layout"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_resequence_view
@@ -5503,7 +5505,7 @@ msgstr "Kreditfaktura skapad"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_out_credit_note_tree
 msgid "Credit Note Currency"
-msgstr "Kreditfaktura med valuta"
+msgstr "Valuta"
 
 #. module: account
 #: model:mail.template,name:account.email_template_edi_credit_note
@@ -5736,7 +5738,7 @@ msgstr "Kundfaktura"
 #: model_terms:ir.ui.view,arch_db:account.res_partner_view_search
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Customer Invoices"
-msgstr "Kundfakturor"
+msgstr "Kunder"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_discount_expense_allocation_id
@@ -5843,7 +5845,7 @@ msgstr "D"
 #. module: account
 #: model:account.incoterms,name:account.incoterm_DAP
 msgid "DELIVERED AT PLACE"
-msgstr "LEVERERAS PÅ PLATS"
+msgstr "DELIVERED AT PLACE (DAP)"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_DPU
@@ -5853,7 +5855,7 @@ msgstr "DELIVERED AT PLACE UNLOADED (DPU)"
 #. module: account
 #: model:account.incoterms,name:account.incoterm_DDP
 msgid "DELIVERED DUTY PAID"
-msgstr "LEVERERAT - TULL BETALD"
+msgstr "DELIVERED DUTY PAID (DDP)"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.open_account_journal_dashboard_kanban
@@ -5984,7 +5986,7 @@ msgstr "Dagar efter fakturadatumet"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__delay_type__days_end_of_month_on_the
 msgid "Days end of month on the"
-msgstr "Dagar till slutet av månaden på"
+msgstr "Dagar, efter följande månadsslut den"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__days_next_month
@@ -6659,7 +6661,7 @@ msgstr "Distribution"
 #: model:ir.model.fields,field_description:account.field_account_move_line__distribution_analytic_account_ids
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__distribution_analytic_account_ids
 msgid "Distribution Analytic Account"
-msgstr "Analytisk kontofördelning"
+msgstr "Fördelning av kostnadsredovisningskonton"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__invoice_repartition_line_ids
@@ -6865,7 +6867,7 @@ msgstr "Släpp för att importera dina fakturor."
 #: code:addons/account/models/account_journal_dashboard.py:0
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__value_amount
 msgid "Due"
-msgstr "Att betala senast"
+msgstr "Att betala"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -6890,7 +6892,7 @@ msgstr "Förfallodatum"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
 msgid "Due Terms"
-msgstr "Förfallovillkor"
+msgstr "Villkor för beräkning av förfallodatum"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__duplicate_bank_partner_ids
@@ -7017,8 +7019,8 @@ msgstr "Rabatt vid förtidsbetalning av"
 msgid ""
 "Early Payment Discount: <b>%(amount)s</b> if paid before <b>%(date)s</b>"
 msgstr ""
-"Rabatt vid förskottsbetalning: <b>%(amount)s</b> vid betalning innan <b>%"
-"(date)s</b>"
+"Rabatt vid tidig betalning: <b>%(amount)s</b> vid betalning innan <b>%(date)"
+"s</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -7115,7 +7117,7 @@ msgstr "Slutdatum"
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_end_following_month
 msgid "End of Following Month"
-msgstr "Slutet av följande månad"
+msgstr "Nästa månadsslut"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__balance_end_real
@@ -7333,7 +7335,7 @@ msgstr "Kostnad"
 #: model:ir.model.fields,field_description:account.field_product_product__property_account_expense_id
 #: model:ir.model.fields,field_description:account.field_product_template__property_account_expense_id
 msgid "Expense Account"
-msgstr "Utgiftskonto"
+msgstr "Konto för kostnader"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__expense_accrual_account
@@ -7621,7 +7623,7 @@ msgstr "Skatteområde"
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_form
 #: model:ir.ui.menu,name:account.menu_action_account_fiscal_position_form
 msgid "Fiscal Positions"
-msgstr "Skattepositioner"
+msgstr "Skatteområden"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_financial_year_opening_form
@@ -7988,7 +7990,7 @@ msgstr "Skapade verifikat"
 #. module: account
 #: model:account.report,name:account.generic_tax_report
 msgid "Generic Tax report"
-msgstr "Allmänn skatterapport"
+msgstr "Allmän skatterapport"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -8472,9 +8474,9 @@ msgid ""
 "If set, the amount computed by this tax will be assigned to the same "
 "analytic account as the invoice line (if any)"
 msgstr ""
-"Om angivet, så kommer beloppet som beräknas för denna skatt att tilldelas "
-"till samma analytiska konto som fakturaraden (såvida detta är angivet för "
-"fakturaraden)"
+"När detta är aktiverat, så kommer beloppet som beräknas för skatten att "
+"hamna på samma kostnadsredovisningskonto som fakturaraden (såvida ett sådant "
+"är angivet för fakturaraden)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -8737,7 +8739,7 @@ msgstr "Betalningsmetoder för inkommande betalningar"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__analytic
 msgid "Include in Analytic Cost"
-msgstr "Inkludera i analytisk kostnadsberäkning"
+msgstr "Inkludera i kostnadsredovisning"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__price_include_override
@@ -8758,7 +8760,7 @@ msgstr "Intäkt"
 #: model:ir.model.fields,field_description:account.field_product_product__property_account_income_id
 #: model:ir.model.fields,field_description:account.field_product_template__property_account_income_id
 msgid "Income Account"
-msgstr "Intäktskonto"
+msgstr "Konto för intäkter"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -9146,7 +9148,7 @@ msgstr "Onlinebetalning av fakturor"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_outstanding_credits_debits_widget
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_outstanding_credits_debits_widget
 msgid "Invoice Outstanding Credits Debits Widget"
-msgstr "Widget för utestående kredit och debet på fakturor"
+msgstr "Widget för obetalda fordringar och skulder på fakturor"
 
 #. module: account
 #: model:ir.actions.report,name:account.account_invoices
@@ -9307,7 +9309,7 @@ msgstr "Fakturerat"
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_graph
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
 msgid "Invoices"
-msgstr "Fakturor"
+msgstr "Kundfakturor"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
@@ -9599,7 +9601,7 @@ msgstr "Det var tidigare \"%(previous)s\" och är nu \"%(current)s\"."
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "Items With Missing Analytic Distribution"
-msgstr "Objekt som saknar analytisk fördelning"
+msgstr "Rader som saknar fördelning i kostnadsredovisningen"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__1
@@ -9919,7 +9921,7 @@ msgstr "Totala intäkter för KPI-konto"
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Label"
-msgstr "Etikett"
+msgstr "Beskrivning"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_label_param
@@ -10618,7 +10620,7 @@ msgstr "maj"
 #: model:ir.model.fields,field_description:account.field_account_payment_register__communication
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "Memo"
-msgstr "Memo"
+msgstr "Meddelande"
 
 #. module: account
 #. odoo-javascript
@@ -10670,7 +10672,7 @@ msgstr "Meddelande"
 #: model:ir.model.fields,field_description:account.field_res_company__message_has_error
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__message_has_error
 msgid "Message Delivery error"
-msgstr "Leveransfel för meddelande"
+msgstr "Leveransfel för meddelanden"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__invoice_warn_msg
@@ -10714,7 +10716,7 @@ msgstr "Övrig verksamhet"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Miscellaneous"
-msgstr "Diverse"
+msgstr "Övrigt"
 
 #. module: account
 #. odoo-python
@@ -10795,7 +10797,7 @@ msgstr "Håll koll på produktmarginaler direkt från fakturor"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__auto_post__monthly
 msgid "Monthly"
-msgstr "Månadsvis"
+msgstr "Per månad"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__move_id
@@ -11223,7 +11225,7 @@ msgstr "Ej säkrad"
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Not Sent"
-msgstr "Ej skickad"
+msgstr "Ej skickat"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_secure_entries_wizard
@@ -11455,7 +11457,7 @@ msgstr "Äldsta först"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term__early_pay_discount_computation__included
 msgid "On early payment"
-msgstr "Vid förtidsbetalning"
+msgstr "Vid tidig betalning"
 
 #. module: account
 #: model:onboarding.onboarding.step,step_image_alt:account.onboarding_onboarding_step_fiscal_year
@@ -11519,7 +11521,8 @@ msgstr "En eller flera fakturor kunde inte behandlas."
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "One or more lines require a 100% analytic distribution."
-msgstr "En eller flera rader kräver en analytisk fördelning på 100 %."
+msgstr ""
+"En eller flera rader kräver en fördelning i kostnadsredovisningen på 100 %."
 
 #. module: account
 #: model:ir.ui.menu,name:account.root_payment_menu
@@ -11821,20 +11824,20 @@ msgstr "Konto för pågående inbetalningar"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Outstanding credits"
-msgstr "Utestående krediteringar"
+msgstr "Obetalda fordringar"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Outstanding debits"
-msgstr "Utestående debiteringar"
+msgstr "Obetalda skulder"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_payment_filter
 msgid "Overdue"
-msgstr "Förfallen"
+msgstr "Förfallet"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_register__installments_mode__overdue
@@ -12252,7 +12255,7 @@ msgstr "Betalningsmetod"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Payment Method Line"
-msgstr "Rad för betalningsmetod"
+msgstr "Betalningsmetod"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_method_line_tree
@@ -12283,7 +12286,7 @@ msgstr "Betalning med QR-kod"
 #: model:ir.actions.report,name:account.action_report_payment_receipt
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "Payment Receipt"
-msgstr "Betalningskvitto"
+msgstr "Kvitto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__payment_receipt_title
@@ -12354,7 +12357,7 @@ msgstr "Typ av betalningstolerans"
 #: model:ir.model.fields,field_description:account.field_account_payment_method_line__payment_type
 #: model:ir.model.fields,field_description:account.field_account_payment_register__payment_type
 msgid "Payment Type"
-msgstr "Typ av betalning"
+msgstr "Betalningstyp"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -12406,7 +12409,7 @@ msgstr "Betalningsvillkor: 45 dagar"
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_90days_on_the_10th
 msgid "Payment terms: 90 days, on the 10th"
-msgstr "Betalningsvillkor: inom 90 dagar, på den 10:e"
+msgstr "Betalningsvillkor: Om 90 dagar, på den 10:e"
 
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_end_following_month
@@ -12630,7 +12633,7 @@ msgstr "Bokför betalningar"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_payment_filter
 msgid "Posted"
-msgstr "Publicerad"
+msgstr "Bokfört"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__posted_before
@@ -12658,7 +12661,7 @@ msgstr "Föregående delbelopp"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__preferred_payment_method_line_id
 #: model:ir.model.fields,field_description:account.field_account_move__preferred_payment_method_line_id
 msgid "Preferred Payment Method Line"
-msgstr "Rad med föredragen betalningsmetod"
+msgstr "Föredragen betalningsmetod"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_outbound_payment_method_line_id
@@ -13003,7 +13006,7 @@ msgstr "Antal:"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__auto_post__quarterly
 msgid "Quarterly"
-msgstr "Kvartalsvis"
+msgstr "Per kvartal"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__quick_edit_mode
@@ -13086,7 +13089,7 @@ msgstr "Fordringar"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment__payment_type__inbound
 msgid "Receive"
-msgstr "Ta emot"
+msgstr "Utgående"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_register__payment_type__inbound
@@ -13220,7 +13223,7 @@ msgstr "Referens"
 #: model:ir.model.fields,field_description:account.field_account_move_line__ref
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Reference"
-msgstr "Referensnummer"
+msgstr "Beskrivning"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__payment_reference
@@ -13259,7 +13262,7 @@ msgstr "Återbetalningsvaluta"
 #: model_terms:ir.ui.view,arch_db:account.view_account_bill_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_payment_filter
 msgid "Refunds"
-msgstr "Återbetalningar"
+msgstr "Kreditfakturor"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -13375,7 +13378,7 @@ msgstr "Rapportradens namn"
 #: model:ir.ui.menu,name:account.account_report_folder
 #: model:ir.ui.menu,name:account.menu_finance_reports
 msgid "Reporting"
-msgstr "Rapportering"
+msgstr "Rapporter"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_cash_rounding__rounding
@@ -13562,21 +13565,21 @@ msgstr "Rätta och skapa faktura"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Reversed"
-msgstr "Rättad"
+msgstr "Återkallade"
 
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Reversed on"
-msgstr "Rättad den"
+msgstr "Återkallad den"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_secure_entries_wizard.py:0
 #: model:onboarding.onboarding.step,button_text:account.onboarding_onboarding_step_chart_of_accounts
 msgid "Review"
-msgstr "Granskningar"
+msgstr "Granskning"
 
 #. module: account
 #: model:onboarding.onboarding.step,title:account.onboarding_onboarding_step_chart_of_accounts
@@ -13909,7 +13912,7 @@ msgstr "Sök efter skatter"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Search a name or Tax ID..."
-msgstr "Sök efter namn eller skatteregistreringsnummer..."
+msgstr "Sök efter namn eller skattenummer..."
 
 #. module: account
 #. odoo-javascript
@@ -13961,7 +13964,7 @@ msgstr "Sektioner"
 #: model:ir.ui.menu,name:account.menu_action_secure_entries
 #: model_terms:ir.ui.view,arch_db:account.view_account_secure_entries_wizard
 msgid "Secure Entries"
-msgstr "Lås verifikationer"
+msgstr "Säkra verifikationer"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_account_secure_entries_wizard
@@ -14025,10 +14028,10 @@ msgid ""
 "analytic default (e.g. create new customer invoice or Sales order if we "
 "select this product, it will automatically take this as an analytic account)"
 msgstr ""
-"Välj ett specifikt analytiskt konto för en viss produktkategori, baserat på "
-"den analytiska standarden (vilket t.ex. innebär att när en ny kundfaktura "
-"eller försäljningsorder skapas och en produkt från den här kategorin "
-"inkluderas, så kopplas det automatiskt till rätt analytiska konto)"
+"Välj ett specifikt kostnadsredovisningskonto för en viss produktkategori, "
+"baserat på standarden (vilket t.ex. innebär att när en ny kundfaktura eller "
+"försäljningsorder skapas och en produkt från den här kategorin inkluderas, "
+"så kopplas det automatiskt till rätt kostnadsredovisningskonto)"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_distribution_model__product_id
@@ -14037,10 +14040,10 @@ msgid ""
 "create new customer invoice or Sales order if we select this product, it "
 "will automatically take this as an analytic account)"
 msgstr ""
-"Välj en specifik produkt för vilken den analytiska fördelningen kommer att "
+"Välj en specifik produkt för vilken kostnadsredovisningen kommer att "
 "användas (vilket t.ex. innebär att när en ny kundfaktura eller "
 "försäljningsorder skapas och en produkt från den här kategorin inkluderas, "
-"så kopplas det automatiskt till rätt analytiska konto)"
+"så kopplas det automatiskt till rätt kostnadsredovisningskonto)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -14213,7 +14216,7 @@ msgstr "Skickar fakturor"
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
 msgid "Sent"
-msgstr "Skickad"
+msgstr "Skickat"
 
 #. module: account
 #. odoo-python
@@ -14407,7 +14410,7 @@ msgstr "Anslut bankkonto"
 #. module: account
 #: model:ir.actions.server,name:account.model_account_move_action_share
 msgid "Share"
-msgstr "Andel"
+msgstr "Dela"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__code
@@ -14526,7 +14529,7 @@ msgstr "Visa inaktiva skatter"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__display_on_invoice
 msgid "Show installment dates"
-msgstr "Visa delbetalningsdatum"
+msgstr "Visa datum för delbetalningar"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__show_on_dashboard
@@ -14593,7 +14596,7 @@ msgstr "Ursprungsvaluta"
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Source Document"
-msgstr "Källdokument"
+msgstr "Ursprungsdokument"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_source_email
@@ -14997,7 +15000,7 @@ msgstr "Skattetabell"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 msgid "Tax Grids"
-msgstr "Skattetabeller"
+msgstr "Skattetaggar"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_group
@@ -15015,7 +15018,7 @@ msgstr "Skattegrupper"
 #: model:ir.model.fields,field_description:account.field_base_document_layout__vat
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Tax ID"
-msgstr "Momsregistreringsnummer"
+msgstr "Skattenummer"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax__price_include_override__tax_included
@@ -15846,7 +15849,7 @@ msgstr "De dagar som läggs till måste vara mellan 0 och 31."
 #: model:ir.model.fields,help:account.field_account_move__partner_shipping_id
 msgid ""
 "The delivery address will be used in the computation of the fiscal position."
-msgstr "Leveransadressen kommer att användas vid beräkningen av skatteområdet."
+msgstr "Leveransadressen kommer att användas för att avgöra skatteområde."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__invoice_origin
@@ -16787,9 +16790,10 @@ msgid ""
 "master budgets and the budgets are defined, the project managers can set the "
 "planned amount on each analytic account."
 msgstr ""
-"Detta gör det möjligt för revisorer att hantera analytiska budgetar och "
-"samlingsbudgetar. När flera olika budgetar har definierats kan "
-"projektledarna ställa in det planerade beloppet för varje analytiskt konto."
+"Detta gör det möjligt för revisorer att hantera kostnadsredovisningsbudgetar "
+"och samlingsbudgetar. När flera olika budgetar har definierats kan "
+"projektledarna ställa in det planerade beloppet för varje "
+"kostnadsredovisningskonto."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__module_account_batch_payment
@@ -16808,8 +16812,8 @@ msgid ""
 "This analytic distribution will apply to all financial accounts sharing the "
 "prefix specified."
 msgstr ""
-"Den analytiska fördelningen gäller för alla finansiella konton som delar det "
-"angivna prefixet."
+"Fördelningen i kostnadsredovisningen gäller för alla finansiella konton som "
+"delar det angivna prefixet."
 
 #. module: account
 #. odoo-python
@@ -17572,12 +17576,12 @@ msgstr "Unikt identifieringsnummer för denna rad."
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__price_unit
 msgid "Unit Price"
-msgstr "Enhetspris"
+msgstr "Styckpris"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Unit Price:"
-msgstr "Enhetspris:"
+msgstr "Styckpris:"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__product_uom_id
@@ -17627,7 +17631,7 @@ msgstr "Att betala"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Unposted"
-msgstr "Ej bokförda"
+msgstr "Ej bokfört"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
@@ -18411,7 +18415,7 @@ msgstr "XML-format"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__auto_post__yearly
 msgid "Yearly"
-msgstr "Årsvis"
+msgstr "Per år"
 
 #. module: account
 #. odoo-javascript
@@ -19019,8 +19023,8 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot post an entry with an archived analytic account: %s"
 msgstr ""
-"Det är inte möjligt att bokföra ett verifikat kopplat till ett arkiverat "
-"analytiskt konto: %s"
+"Det är inte möjligt att bokföra en verifikation kopplad till ett arkiverat "
+"kostnadsredovisningskonto: %s"
 
 #. module: account
 #. odoo-python
@@ -19241,7 +19245,7 @@ msgstr "Du har inte behörighet att publicera en faktura."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "You have"
-msgstr "Du har"
+msgstr "Det finns"
 
 #. module: account
 #. odoo-python
@@ -19643,7 +19647,7 @@ msgstr "lag."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "listed below for this customer."
-msgstr "som anges nedan för denna kund."
+msgstr "för denna kund, se nedan."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -19669,7 +19673,7 @@ msgstr "av skatt"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
 msgid "on"
-msgstr "på"
+msgstr "den"
 
 #. module: account
 #. odoo-javascript
@@ -19685,12 +19689,12 @@ msgstr "utifrån"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "outstanding credits"
-msgstr "utestående krediteringar"
+msgstr "obetalda fordringar"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "outstanding debits"
-msgstr "utestående debiteringar"
+msgstr "obetalda skulder"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
@@ -19725,7 +19729,7 @@ msgid ""
 "the sum remaining due."
 msgstr ""
 "förbehåller sig rätten att begära en räntebetalning på en fast summa som "
-"uppgår till 10 % av det återstående beloppet."
+"uppgår till 10% av det återstående beloppet."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__tag_ids_domain
@@ -19757,7 +19761,7 @@ msgstr "betrodd"
 #. odoo-javascript
 #: code:addons/account/static/src/components/bill_guide/bill_guide.xml:0
 msgid "try our sample"
-msgstr "testa ett smakprov"
+msgstr "visa ett exempel"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
