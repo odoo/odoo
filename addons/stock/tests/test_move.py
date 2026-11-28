@@ -7,18 +7,18 @@ from json import loads
 
 from odoo import Command, fields
 from odoo.exceptions import UserError
-from odoo.tests import tagged, Form, new_test_user
+from odoo.tests import tagged, Form, new_test_user, users
 from odoo.addons.stock.tests.common import TestStockCommon
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install Fails in post install
 class TestStockMove(TestStockCommon):
     _test_user_groups = (
-        'product.group_product_manager',  # FIXME: use base.group_user
-        'stock.group_stock_manager',  # FIXME: stock.group_stock_user
+        'product.group_product_manager',
+        'stock.group_stock_user',
     )
 
-    _test_user_name = 'Test Stock & Product Manager'
+    _test_user_name = 'Test Stock User & Product Manager'
 
     @classmethod
     def setUpClass(cls):
@@ -667,7 +667,7 @@ class TestStockMove(TestStockCommon):
         """
             multi step reciept update done quantity
         """
-        self.warehouse_1.reception_steps = 'two_steps'
+        self.warehouse_1.sudo().reception_steps = 'two_steps'
 
         move_input = self.env['stock.move'].create({
             'location_id': self.supplier_location.id,
@@ -760,11 +760,11 @@ class TestStockMove(TestStockCommon):
         """
         # This test will apply a putaway strategy on the stock location to put
         # everything incoming from stock in the sublocation shelf_1.
-        putaway = self.env['stock.putaway.rule'].create({
+        putaway = self.env['stock.putaway.rule'].sudo().create({
             'location_in_id': self.stock_location.id,
             'location_out_id': self.shelf_1.id,
         })
-        self.stock_location.write({
+        self.stock_location.sudo().write({
             'putaway_rule_ids': [(4, putaway.id, 0)]
         })
 
@@ -789,12 +789,12 @@ class TestStockMove(TestStockCommon):
         """
         # This test will apply a putaway strategy by product on the stock location
         # to put everything incoming from stock in the sublocation shelf_1.
-        putaway = self.env['stock.putaway.rule'].create({
+        putaway = self.env['stock.putaway.rule'].sudo().create({
             'product_id': self.productA.id,
             'location_in_id': self.stock_location.id,
             'location_out_id': self.shelf_1.id,
         })
-        self.stock_location.write({
+        self.stock_location.sudo().write({
             'putaway_rule_ids': [(4, putaway.id, 0)],
         })
 
@@ -824,7 +824,7 @@ class TestStockMove(TestStockCommon):
             'name': 'Categorized Product',
             'categ_id': category.id,
         })
-        rule_a, rule_parent, rule_category, rule_categorized = self.env['stock.putaway.rule'].create([{
+        rule_a, rule_parent, rule_category, rule_categorized = self.env['stock.putaway.rule'].sudo().create([{
             'product_id': self.productA.id,
             'location_in_id': self.stock_location.id,
             'location_out_id': self.shelf_1.id,
@@ -860,16 +860,16 @@ class TestStockMove(TestStockCommon):
         """
         # This test will apply both the putaway strategy by product and category.
         # We check here that the putaway by product takes precedence.
-        putaway_category = self.env['stock.putaway.rule'].create({
+        putaway_category = self.env['stock.putaway.rule'].sudo().create({
             'location_in_id': self.supplier_location.id,
             'location_out_id': self.shelf_1.id,
         })
-        putaway_product = self.env['stock.putaway.rule'].create({
+        putaway_product = self.env['stock.putaway.rule'].sudo().create({
             'product_id': self.productA.id,
             'location_in_id': self.supplier_location.id,
             'location_out_id': self.shelf_2.id,
         })
-        self.stock_location.write({
+        self.stock_location.sudo().write({
             'putaway_rule_ids': [(6, 0, [
                 putaway_category.id,
                 putaway_product.id
@@ -898,16 +898,16 @@ class TestStockMove(TestStockCommon):
         # This test will apply both the putaway strategy by product and category. We check here
         # that if a putaway by product is not matched, the fallback to the category is correctly
         # done.
-        putaway_category = self.env['stock.putaway.rule'].create({
+        putaway_category = self.env['stock.putaway.rule'].sudo().create({
             'location_in_id': self.stock_location.id,
             'location_out_id': self.shelf_1.id,
         })
-        putaway_product = self.env['stock.putaway.rule'].create({
+        putaway_product = self.env['stock.putaway.rule'].sudo().create({
             'product_id': self.product_consu.id,
             'location_in_id': self.stock_location.id,
             'location_out_id': self.shelf_2.id,
         })
-        self.stock_location.write({
+        self.stock_location.sudo().write({
             'putaway_rule_ids': [(6, 0, [
                 putaway_category.id,
                 putaway_product.id,
@@ -936,11 +936,11 @@ class TestStockMove(TestStockCommon):
         # This test will apply putaway strategy by category.
         # We check here that the putaway by category works when the category is
         # set on parent category of the product.
-        putaway = self.env['stock.putaway.rule'].create({
+        putaway = self.env['stock.putaway.rule'].sudo().create({
             'location_in_id': self.supplier_location.id,
             'location_out_id': self.shelf_1.id,
         })
-        self.stock_location.write({
+        self.stock_location.sudo().write({
             'putaway_rule_ids': [(6, 0, [
                 putaway.id,
             ])],
@@ -971,16 +971,16 @@ class TestStockMove(TestStockCommon):
             'name': 'child_category',
             'parent_id': self.ref('product.product_category_goods'),
         })
-        putaway_category_all = self.env['stock.putaway.rule'].create({
+        putaway_category_all = self.env['stock.putaway.rule'].sudo().create({
             'location_in_id': self.supplier_location.id,
             'location_out_id': self.shelf_1.id,
         })
-        putaway_category_office_furn = self.env['stock.putaway.rule'].create({
+        putaway_category_office_furn = self.env['stock.putaway.rule'].sudo().create({
             'category_id': child_category.id,
             'location_in_id': self.supplier_location.id,
             'location_out_id': self.shelf_2.id,
         })
-        self.stock_location.write({
+        self.stock_location.sudo().write({
             'putaway_rule_ids': [(6, 0, [
                 putaway_category_all.id,
                 putaway_category_office_furn.id,
@@ -1007,16 +1007,16 @@ class TestStockMove(TestStockCommon):
         """
         Putaway with one package type and one product
         """
-        self.warehouse_1.reception_steps = 'two_steps'
+        self.warehouse_1.sudo().reception_steps = 'two_steps'
         child_loc = self.stock_location.child_ids[0]
 
-        package_type = self.env['stock.package.type'].create({
+        package_type = self.env['stock.package.type'].sudo().create({
             'name': 'Super Package Type',
         })
 
         package = self.env['stock.package'].create({'package_type_id': package_type.id})
 
-        self.env['stock.putaway.rule'].create({
+        self.env['stock.putaway.rule'].sudo().create({
             'product_id': self.productA.id,
             'package_type_ids': [(6, 0, package_type.ids)],
             'location_in_id': self.stock_location.id,
@@ -1045,16 +1045,16 @@ class TestStockMove(TestStockCommon):
         Putaway with product P
         Receive 1 x P in a package with a specific type
         """
-        self.warehouse_1.reception_steps = 'two_steps'
+        self.warehouse_1.sudo().reception_steps = 'two_steps'
         child_loc = self.stock_location.child_ids[0]
 
-        package_type = self.env['stock.package.type'].create({
+        package_type = self.env['stock.package.type'].sudo().create({
             'name': 'Super Package Type',
         })
 
         package = self.env['stock.package'].create({'package_type_id': package_type.id})
 
-        self.env['stock.putaway.rule'].create({
+        self.env['stock.putaway.rule'].sudo().create({
             'product_id': self.productA.id,
             'location_in_id': self.stock_location.id,
             'location_out_id': child_loc.id,
@@ -1084,14 +1084,14 @@ class TestStockMove(TestStockCommon):
         Receive one C-type product in a package with a specific type
         The putaway should be selected
         """
-        self.warehouse_1.reception_steps = 'two_steps'
+        self.warehouse_1.sudo().reception_steps = 'two_steps'
 
         basic_category = self.env.ref('product.product_category_goods')
         child_locations = self.env['stock.location']
         categs = self.env['product.category']
 
         for i in range(3):
-            loc = self.env['stock.location'].create({
+            loc = self.env['stock.location'].sudo().create({
                 'name': 'shelf %s' % i,
                 'usage': 'internal',
                 'location_id': self.stock_location.id,
@@ -1104,7 +1104,7 @@ class TestStockMove(TestStockCommon):
             })
             categs |= categ
 
-            self.env['stock.putaway.rule'].create({
+            self.env['stock.putaway.rule'].sudo().create({
                 'category_id': categ.id,
                 'location_in_id': self.stock_location.id,
                 'location_out_id': loc.id,
@@ -1114,7 +1114,7 @@ class TestStockMove(TestStockCommon):
         second_categ = categs[1]
         self.productA.categ_id = second_categ
 
-        package_type = self.env['stock.package.type'].create({
+        package_type = self.env['stock.package.type'].sudo().create({
             'name': 'Super Package Type',
         })
         package = self.env['stock.package'].create({
@@ -1143,14 +1143,14 @@ class TestStockMove(TestStockCommon):
         Putaway with product P
         Receive 1 x P in a packaging with a specific type
         """
-        package_type = self.env['stock.package.type'].create({
+        package_type = self.env['stock.package.type'].sudo().create({
             'name': 'Super Package Type',
         })
 
         child_loc = self.stock_location.child_ids[:1]
         self.uom_dozen.package_type_id = package_type
 
-        self.env['stock.putaway.rule'].create({
+        self.env['stock.putaway.rule'].sudo().create({
             'location_in_id': self.stock_location.id,
             'location_out_id': child_loc.id,
             'package_type_ids': [(6, 0, package_type.ids)],
@@ -1173,23 +1173,23 @@ class TestStockMove(TestStockCommon):
         with correct storage category.
         """
         # storage category
-        storage_category = self.env['stock.storage.category'].create({
+        storage_category = self.env['stock.storage.category'].sudo().create({
             'name': "storage category"
         })
 
-        self.shelf_2.storage_category_id = storage_category
+        self.shelf_2.sudo().storage_category_id = storage_category
         self.env['stock.quant']._update_available_quantity(self.productA, self.shelf_1, 1.0)
 
         # putaway from stock to child location with storage_category with the parent having the same storage_category
         # the parent shouldn't be included in the search since we select a sublocation strategy
-        putaway = self.env['stock.putaway.rule'].create({
+        putaway = self.env['stock.putaway.rule'].sudo().create({
             'product_id': self.productA.id,
             'location_in_id': self.stock_location.id,
             'location_out_id': self.stock_location.id,
             'storage_category_id': storage_category.id,
             'sublocation': 'closest_location',
         })
-        self.stock_location.write({
+        self.stock_location.sudo().write({
             'putaway_rule_ids': [(4, putaway.id, 0)],
             'storage_category_id': storage_category.id,
         })
@@ -1212,7 +1212,7 @@ class TestStockMove(TestStockCommon):
         """Receive a product twice. Test first time the putaway applied since we
         have enough space, and second time it is not since the location is full.
         """
-        storage_category = self.env['stock.storage.category'].create({
+        storage_category = self.env['stock.storage.category'].sudo().create({
             'name': "storage category"
         })
         # set the capacity for the product in this storage category to be 100
@@ -1222,16 +1222,16 @@ class TestStockMove(TestStockCommon):
             line.quantity = 100
         storage_category = storage_category_form.save()
 
-        self.shelf_1.storage_category_id = storage_category
+        self.shelf_1.sudo().storage_category_id = storage_category
         # putaway from stock to child location with storage_category
-        putaway = self.env['stock.putaway.rule'].create({
+        putaway = self.env['stock.putaway.rule'].sudo().create({
             'product_id': self.productA.id,
             'location_in_id': self.stock_location.id,
             'location_out_id': self.stock_location.id,
             'storage_category_id': storage_category.id,
             'sublocation': 'closest_location',
         })
-        self.stock_location.write({
+        self.stock_location.sudo().write({
             'putaway_rule_ids': [(4, putaway.id, 0)],
         })
 
@@ -1270,21 +1270,21 @@ class TestStockMove(TestStockCommon):
         product when empty. Check the first time putaway rule applied and second
         time not.
         """
-        storage_category = self.env['stock.storage.category'].create({
+        storage_category = self.env['stock.storage.category'].sudo().create({
             'name': "storage category",
             'allow_new_product': "empty",
         })
 
-        self.shelf_1.storage_category_id = storage_category
+        self.shelf_1.sudo().storage_category_id = storage_category
         # putaway from stock to child location with storage_category
-        putaway = self.env['stock.putaway.rule'].create({
+        putaway = self.env['stock.putaway.rule'].sudo().create({
             'product_id': self.productA.id,
             'location_in_id': self.stock_location.id,
             'location_out_id': self.stock_location.id,
             'storage_category_id': storage_category.id,
             'sublocation': 'closest_location',
         })
-        self.stock_location.write({
+        self.stock_location.sudo().write({
             'putaway_rule_ids': [(4, putaway.id, 0)],
         })
 
@@ -1328,21 +1328,21 @@ class TestStockMove(TestStockCommon):
         Check the putaway rule can't be applied when the location has different
         products.
         """
-        storage_category = self.env['stock.storage.category'].create({
+        storage_category = self.env['stock.storage.category'].sudo().create({
             'name': "storage category",
             'allow_new_product': "same",
         })
 
-        self.shelf_1.storage_category_id = storage_category
+        self.shelf_1.sudo().storage_category_id = storage_category
         # putaway from stock to child location with storage_category
-        putaway = self.env['stock.putaway.rule'].create({
+        putaway = self.env['stock.putaway.rule'].sudo().create({
             'product_id': self.productA.id,
             'location_in_id': self.stock_location.id,
             'location_out_id': self.stock_location.id,
             'storage_category_id': storage_category.id,
             'sublocation': 'closest_location',
         })
-        self.stock_location.write({
+        self.stock_location.sudo().write({
             'putaway_rule_ids': [(4, putaway.id, 0)],
         })
 
@@ -1385,18 +1385,18 @@ class TestStockMove(TestStockCommon):
         # Required for `result_package_id` to be visible in the view
         self.env.user.group_ids += self.env.ref("stock.group_tracking_lot")
         # storage category
-        storage_category = self.env['stock.storage.category'].create({
+        storage_category = self.env['stock.storage.category'].sudo().create({
             'name': "storage category"
         })
 
-        package_type = self.env['stock.package.type'].create({
+        package_type = self.env['stock.package.type'].sudo().create({
             'name': "package type",
         })
 
-        self.shelf_2.storage_category_id = storage_category
+        self.shelf_2.sudo().storage_category_id = storage_category
 
         # putaway from stock to child location with storage_category
-        putaway = self.env['stock.putaway.rule'].create({
+        putaway = self.env['stock.putaway.rule'].sudo().create({
             'product_id': self.productA.id,
             'location_in_id': self.stock_location.id,
             'location_out_id': self.stock_location.id,
@@ -1404,7 +1404,7 @@ class TestStockMove(TestStockCommon):
             'package_type_ids': [(4, package_type.id, 0)],
             'sublocation': 'closest_location',
         })
-        self.stock_location.write({
+        self.stock_location.sudo().write({
             'putaway_rule_ids': [(4, putaway.id, 0)],
         })
 
@@ -1440,11 +1440,11 @@ class TestStockMove(TestStockCommon):
         # Required for `result_package_id` to be visible in the view
         self.env.user.group_ids += self.env.ref("stock.group_tracking_lot")
         # storage category
-        storage_category = self.env['stock.storage.category'].create({
+        storage_category = self.env['stock.storage.category'].sudo().create({
             'name': "storage category"
         })
 
-        package_type = self.env['stock.package.type'].create({
+        package_type = self.env['stock.package.type'].sudo().create({
             'name': "package type",
         })
 
@@ -1455,10 +1455,10 @@ class TestStockMove(TestStockCommon):
             line.quantity = 1
         storage_category = storage_category_form.save()
 
-        self.shelf_2.storage_category_id = storage_category
+        self.shelf_2.sudo().storage_category_id = storage_category
 
         # putaway from stock to child location with storage_category
-        putaway = self.env['stock.putaway.rule'].create({
+        putaway = self.env['stock.putaway.rule'].sudo().create({
             'product_id': self.productA.id,
             'location_in_id': self.stock_location.id,
             'location_out_id': self.stock_location.id,
@@ -1466,7 +1466,7 @@ class TestStockMove(TestStockCommon):
             'package_type_ids': [(4, package_type.id, 0)],
             'sublocation': 'closest_location',
         })
-        self.stock_location.write({
+        self.stock_location.sudo().write({
             'putaway_rule_ids': [(4, putaway.id, 0)],
         })
 
@@ -1534,12 +1534,12 @@ class TestStockMove(TestStockCommon):
         # Required for `result_package_id` to be visible in the view
         self.env.user.group_ids += self.env.ref("stock.group_tracking_lot")
         # storage category
-        storage_category = self.env['stock.storage.category'].create({
+        storage_category = self.env['stock.storage.category'].sudo().create({
             'name': "storage category",
             'allow_new_product': "empty",
         })
 
-        package_type = self.env['stock.package.type'].create({
+        package_type = self.env['stock.package.type'].sudo().create({
             'name': "package type",
         })
 
@@ -1550,10 +1550,10 @@ class TestStockMove(TestStockCommon):
             line.quantity = 100
         storage_category = storage_category_form.save()
 
-        self.shelf_2.storage_category_id = storage_category
+        self.shelf_2.sudo().storage_category_id = storage_category
 
         # putaway from stock to child location with storage_category
-        putaway = self.env['stock.putaway.rule'].create({
+        putaway = self.env['stock.putaway.rule'].sudo().create({
             'product_id': self.productA.id,
             'location_in_id': self.stock_location.id,
             'location_out_id': self.stock_location.id,
@@ -1561,7 +1561,7 @@ class TestStockMove(TestStockCommon):
             'package_type_ids': [(4, package_type.id, 0)],
             'sublocation': 'closest_location',
         })
-        self.stock_location.write({
+        self.stock_location.sudo().write({
             'putaway_rule_ids': [(4, putaway.id, 0)],
         })
 
@@ -1629,12 +1629,12 @@ class TestStockMove(TestStockCommon):
         # Required for `result_package_id` to be visible in the view
         self.env.user.group_ids += self.env.ref("stock.group_tracking_lot")
         # storage category
-        storage_category = self.env['stock.storage.category'].create({
+        storage_category = self.env['stock.storage.category'].sudo().create({
             'name': "storage category",
             'allow_new_product': "same",
         })
 
-        package_type = self.env['stock.package.type'].create({
+        package_type = self.env['stock.package.type'].sudo().create({
             'name': "package type",
         })
 
@@ -1645,17 +1645,17 @@ class TestStockMove(TestStockCommon):
             line.quantity = 100
         storage_category = storage_category_form.save()
 
-        self.shelf_2.storage_category_id = storage_category
+        self.shelf_2.sudo().storage_category_id = storage_category
 
         # putaway from stock to child location for package type
-        putaway = self.env['stock.putaway.rule'].create({
+        putaway = self.env['stock.putaway.rule'].sudo().create({
             'location_in_id': self.stock_location.id,
             'location_out_id': self.stock_location.id,
             'storage_category_id': storage_category.id,
             'package_type_ids': [(4, package_type.id, 0)],
             'sublocation': 'closest_location',
         })
-        self.stock_location.write({
+        self.stock_location.sudo().write({
             'putaway_rule_ids': [(4, putaway.id, 0)],
         })
 
@@ -1725,21 +1725,21 @@ class TestStockMove(TestStockCommon):
         time it is not since the products violate the max_weight limitaion.
         """
         self.productA.weight = 1
-        storage_category = self.env['stock.storage.category'].create({
+        storage_category = self.env['stock.storage.category'].sudo().create({
             'name': "storage category",
             'max_weight': 100,
         })
 
-        self.shelf_1.storage_category_id = storage_category
+        self.shelf_1.sudo().storage_category_id = storage_category
         # putaway from stock to child location with storage_category
-        putaway = self.env['stock.putaway.rule'].create({
+        putaway = self.env['stock.putaway.rule'].sudo().create({
             'product_id': self.productA.id,
             'location_in_id': self.stock_location.id,
             'location_out_id': self.stock_location.id,
             'storage_category_id': storage_category.id,
             'sublocation': 'closest_location',
         })
-        self.stock_location.write({
+        self.stock_location.sudo().write({
             'putaway_rule_ids': [(4, putaway.id, 0)],
         })
 
@@ -1783,13 +1783,13 @@ class TestStockMove(TestStockCommon):
         6. Assert the destination location of move line is set to 'shelf_1'
         '''
         # putaway from stock to child location with storage_category
-        putaway = self.env['stock.putaway.rule'].create({
+        putaway = self.env['stock.putaway.rule'].sudo().create({
             'product_id': self.productA.id,
             'location_in_id': self.stock_location.id,
             'location_out_id': self.stock_location.id,
         })
 
-        self.stock_location.write({
+        self.stock_location.sudo().write({
             'putaway_rule_ids': [(4, putaway.id, 0)],
         })
 
@@ -4402,8 +4402,8 @@ class TestStockMove(TestStockCommon):
         # should raise because no serial numbers were specified
         self.assertRaises(UserError, picking.button_validate)
 
-        self.picking_type_in.use_create_lots = False
-        self.picking_type_in.use_existing_lots = False
+        self.picking_type_in.sudo().use_create_lots = False
+        self.picking_type_in.sudo().use_existing_lots = False
         picking = self._create_picking_test_immediate_validate_5(self.picking_type_in, product_id)
         picking.button_validate()
         self.assertEqual(picking.state, 'done')
@@ -4417,8 +4417,8 @@ class TestStockMove(TestStockCommon):
         will open another wizard asking for the creation of a backorder. Now, if the user processed
         on the second move more than the reservation, a wizard will ask him to confirm.
         """
-        self.picking_type_in.use_create_lots = True
-        self.picking_type_in.use_existing_lots = False
+        self.picking_type_in.sudo().use_create_lots = True
+        self.picking_type_in.sudo().use_existing_lots = False
         picking = self.env['stock.picking'].create({
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
@@ -4532,8 +4532,8 @@ class TestStockMove(TestStockCommon):
         """When trying to validate a picking as an immediate transfer, the done
         quantity of tracked move should be automatically fulfilled if the
         picking type doesn't use new or existing LN/SN."""
-        self.picking_type_in.use_create_lots = False
-        self.picking_type_in.use_existing_lots = False
+        self.picking_type_in.sudo().use_create_lots = False
+        self.picking_type_in.sudo().use_existing_lots = False
 
         receipt_transfer = self.env['stock.picking'].create({
             'state': 'draft',
@@ -4558,8 +4558,8 @@ class TestStockMove(TestStockCommon):
             immediate transfer, and ensure that the backorder wizard is
             not triggered when the qty is reserved.
         """
-        self.picking_type_int.use_create_lots = True
-        self.picking_type_int.use_existing_lots = True
+        self.picking_type_int.sudo().use_create_lots = True
+        self.picking_type_int.sudo().use_existing_lots = True
         lot = self.env['stock.lot'].create({
             'name': 'Lot 1',
             'product_id': self.product_lot.id,
@@ -4658,7 +4658,7 @@ class TestStockMove(TestStockCommon):
         storable product.
         """
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 1)
-        alternate_location = self.env['stock.location'].create({
+        alternate_location = self.env['stock.location'].sudo().create({
             'name': 'alternate_location',
             'usage': 'inventory',
         })
@@ -4680,7 +4680,7 @@ class TestStockMove(TestStockCommon):
         """ Check the created stock move and the impact on quants when we scrap a
         consumable product.
         """
-        alternate_location = self.env['stock.location'].create({
+        alternate_location = self.env['stock.location'].sudo().create({
             'name': 'alternate_location',
             'usage': 'internal',
         })
@@ -4864,7 +4864,7 @@ class TestStockMove(TestStockCommon):
         Suppose a user wants to scrap some products thanks to internal moves.
         This test checks the state of the picking based on few cases
         """
-        self.picking_type_int.active = True
+        self.picking_type_int.sudo().active = True
 
         product01 = self.productA
         product02 = self.env['product.product'].create({
@@ -6424,15 +6424,15 @@ class TestStockMove(TestStockCommon):
     def test_storage_category_restriction(self):
         product = self.productA
 
-        storage_category = self.env['stock.storage.category'].create({
+        storage_category = self.env['stock.storage.category'].sudo().create({
             'name': 'test_storage_category_restriction storage categ',
             'product_capacity_ids': [Command.create({
                 'product_id': product.id,
                 'quantity': 5,
             })],
         })
-        self.shelf_1.storage_category_id = storage_category
-        self.env['stock.putaway.rule'].create({
+        self.shelf_1.sudo().storage_category_id = storage_category
+        self.env['stock.putaway.rule'].sudo().create({
             'product_id': product.id,
             'location_in_id': self.stock_location.id,
             'location_out_id': self.shelf_1.id,
@@ -6552,8 +6552,8 @@ class TestStockMove(TestStockCommon):
         `quant` is displayed when the picking type has `use_create_lots`
         and `use_existing_lots` set to True.
         """
-        self.picking_type_in.use_create_lots = True
-        self.picking_type_in.use_existing_lots = True
+        self.picking_type_in.sudo().use_create_lots = True
+        self.picking_type_in.sudo().use_existing_lots = True
         move1 = self.env['stock.move'].create({
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
@@ -6588,7 +6588,7 @@ class TestStockMove(TestStockCommon):
 
     def test_internal_picking_uses_shipping_policy_from_picking_type(self):
         for move_type in ["direct", "one"]:
-            self.picking_type_int.move_type = move_type
+            self.picking_type_int.sudo().move_type = move_type
 
             picking = self.env['stock.picking'].create({
                 'picking_type_id': self.picking_type_int.id,
@@ -6701,8 +6701,8 @@ class TestStockMove(TestStockCommon):
         'done' with a positive `quantity` but no move line and no serial
         number recorded (phantom delivery, broken traceability).
         """
-        self.picking_type_out.use_existing_lots = True
-        self.picking_type_out.use_create_lots = False
+        self.picking_type_out.sudo().use_existing_lots = True
+        self.picking_type_out.sudo().use_create_lots = False
         lots = self.env['stock.lot'].create([
             {'name': 'SN-PHANTOM-%d' % i, 'product_id': self.product_serial.id}
             for i in range(1, 7)
@@ -7092,8 +7092,8 @@ class TestStockMove(TestStockCommon):
         lot-tracked product and True for a non-tracked one.
         """
         picking_type_out = self.picking_type_out
-        picking_type_out.use_create_lots = True
-        picking_type_out.use_existing_lots = False
+        picking_type_out.sudo().use_create_lots = True
+        picking_type_out.sudo().use_existing_lots = False
         untracked_move, tracked_move = self.env['stock.move'].create([{
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
@@ -7105,11 +7105,12 @@ class TestStockMove(TestStockCommon):
         self.assertTrue(untracked_move.show_quant)
         self.assertFalse(tracked_move.show_quant)
 
+    @users('julie')
     def test_multicompany_orderpoint_horizon_and_deadline(self):
         """Test that the orderpoint's company determines the receipt deadline
         and horizon days displayed in replenishment information."""
         company_b = self.env['res.company'].sudo().create({'name': 'company B', 'horizon_days': 30})
-        product = self.env['product.product'].create({
+        product = self.env['product.product'].sudo().create({
             'name': 'Test Storable Product',
             'is_storable': True,
             'company_id': self.env.company.id,
