@@ -33,6 +33,7 @@ if typing.TYPE_CHECKING:
         methods: typing.NotRequired[Sequence[HTTPMethods] | None]
         type: typing.NotRequired[str]
         auth: typing.NotRequired[str]
+        bearer_scope: typing.NotRequired[str]
         cors: typing.NotRequired[str]
         csrf: typing.NotRequired[bool]
         readonly: typing.NotRequired[bool | Callable[[typing.Any, werkzeug.routing.Rule, typing.Any], bool]]  # controller, rule, args
