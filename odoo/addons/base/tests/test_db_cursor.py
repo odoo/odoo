@@ -3,14 +3,14 @@
 import json
 import logging
 from functools import partial
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_REPEATABLE_READ
 
 import odoo
 from odoo.modules.registry import Registry
-from odoo.sql_db import db_connect, TestCursor
+from odoo.sql_db import Connection, ConnectionPool, db_connect, TestCursor
 from odoo.tests import common
 from odoo.tests.common import BaseCase, HttpCase
 from odoo.tools.misc import config
@@ -63,6 +63,44 @@ class TestRealCursor(BaseCase):
             cr.execute('SHOW transaction_read_only')
             self.assertEqual(cr.fetchone(), ('on',))
             self.assertTrue(cr._cnx.readonly)
+
+
+class TestFailover(BaseCase):
+    def test_cursor_after_primary_demotion(self):
+        """ Pooled connections to a demoted primary are dropped until the new one is up. """
+        in_recovery = False
+        connections = []
+
+        def connect(**kwargs):
+            cnx = MagicMock(closed=False, readonly=False, encoding='utf8', leaked=False, dsn='dbname=failover_db')
+            cnx.cursor.return_value.connection = cnx
+            cnx.close.side_effect = lambda: setattr(cnx, 'closed', True)
+            cnx.set_session.side_effect = set_session
+            connections.append(cnx)
+            return cnx
+
+        def set_session(readonly=None, **kwargs):
+            if in_recovery and not readonly:
+                raise psycopg2.errors.FeatureNotSupported(
+                    "cannot set transaction read-write mode during recovery")
+
+        def promote_new_primary(seconds):
+            nonlocal in_recovery
+            in_recovery = False
+
+        pool = ConnectionPool()
+        self.addCleanup(pool.close_all)
+        db = Connection(pool, 'failover_db', {'database': 'failover_db'})
+        with patch('psycopg2.connect', connect), \
+                patch('odoo.sql_db.time.sleep', promote_new_primary):
+            db.cursor().close()  # leaves an idle connection to the primary in the pool
+            in_recovery = True  # the primary is demoted to a standby
+            cr = db.cursor()
+        self.addCleanup(cr.close)
+
+        self.assertTrue(connections[0].closed)
+        self.assertFalse(cr.closed)
+        self.assertFalse(cr._cnx.closed)
 
 
 class TestHTTPCursor(HttpCase):
