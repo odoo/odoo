@@ -371,16 +371,14 @@ export class ProductScreen extends Component {
             return;
         }
 
-        const allocation = this.pos.autoCourseAllocation(product);
-        const line = await this.pos.addLineToCurrentOrder(
+        const result = await this.pos.addLineToCurrentOrder(
             { product_id: product, product_tmpl_id: product.product_tmpl_id },
             { code },
             product.needToConfigure()
         );
-        this.pos.cleanAutoCourseAllocation(line, allocation);
 
         this.numberBuffer.reset();
-        if (line) {
+        if (result) {
             this.showOptionalProductPopupIfNeeded(product);
         }
     }

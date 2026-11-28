@@ -94,10 +94,13 @@ patch(PosOrder.prototype, {
         return super.setPartner(...arguments);
     },
     removeOrderline(line, deep = true) {
-        const course = line.course_id;
+        const linesToRemove = deep ? line.getAllLinesInCombo() : [line];
+        const courses = new Set(linesToRemove.map((l) => l.course_id).filter(Boolean));
         const result = super.removeOrderline(...arguments);
-        if (course?.isEmpty()) {
-            course.delete();
+        for (const course of courses) {
+            if (course.isEmpty()) {
+                course.delete();
+            }
         }
         return result;
     },
@@ -117,9 +120,7 @@ patch(PosOrder.prototype, {
         const removedCourses = [];
         const cleanedCourses = courses
             .filter((course, index) => {
-                const hasLines = this.lines.some(
-                    (line) => !line.combo_parent_id && line.course_id === course
-                );
+                const hasLines = this.lines.some((line) => line.course_id === course);
                 const shouldKeep = index <= lastFiredIndex || (hasLines && !course.isEmpty());
                 if (!shouldKeep) {
                     removedCourses.push(course);
