@@ -53,6 +53,11 @@ const messagingMenuModelPatch = {
                                   },
                               ]
                             : []),
+                        {
+                            id: "livechat_my_chats",
+                            text: _t("My Sessions"),
+                            includesChannel: (c) => c.livechat_agent_history_ids.map(a => a.partner_id.id).includes(user.partnerId),
+                        },
                     ],
                     includesChannel: (c) =>
                         c.channel_type === "livechat" &&
