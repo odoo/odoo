@@ -132,7 +132,8 @@ class StockMove(models.Model):
             if not move.is_in:
                 move.remaining_value = 0
                 continue
-            ratio = move.remaining_qty / move.quantity if move.quantity else 0
+            valued_qty = move._get_valued_qty()
+            ratio = 0 if move.product_id.uom_id.is_zero(valued_qty) else move.remaining_qty / valued_qty
             if move.product_id.cost_method == 'fifo':
                 move.remaining_value = ratio * move.value if ratio else 0
             else:
