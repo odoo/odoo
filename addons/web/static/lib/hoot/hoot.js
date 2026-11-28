@@ -68,6 +68,7 @@ export const stop = runner.exportFn(runner.stop);
 
 export { makeExpect } from "./core/expect";
 export { destroy } from "./core/fixture";
+export { trackObject } from "./core/gc";
 export { defineTags } from "./core/tag";
 export { createJobScopedGetter } from "./hoot_utils";
 
