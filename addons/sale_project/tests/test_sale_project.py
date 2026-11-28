@@ -1350,3 +1350,18 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
         })
         so.action_confirm()
         self.assertEqual(sol.task_id.allocated_hours, 10, "The allocated hours should be 10.")
+
+    def test_create_milestone_from_so_milestone_action_form_view(self):
+        self.product_service_delivered_milestone.service_tracking = 'project_only'
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [Command.create({'product_id': self.product_service_delivered_milestone.id})],
+        })
+        so.action_confirm()
+        action = so.action_view_milestone()
+        self.assertIn((False, 'form'), action['views'], "The milestone action should have a form view to keep its context.")
+
+        milestone_form = Form(self.env['project.milestone'].with_context(action['context']))
+        milestone_form.name = 'Milestone from SO'
+        milestone = milestone_form.save()
+        self.assertEqual(milestone.project_id, so.project_ids)

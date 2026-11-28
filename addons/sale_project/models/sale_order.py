@@ -255,8 +255,8 @@ class SaleOrder(models.Model):
             'name': _('Milestones'),
             'domain': [('sale_line_id', 'in', self.order_line.ids)],
             'res_model': 'project.milestone',
-            'views': [(self.env.ref('sale_project.sale_project_milestone_view_tree').id, 'list')],
-            'view_mode': 'list',
+            'views': [(self.env.ref('sale_project.sale_project_milestone_view_tree').id, 'list'), (False, 'form')],
+            'view_mode': 'list,form',
             'help': _("""
                 <p class="o_view_nocontent_smiling_face">
                     No milestones found. Let's create one!
