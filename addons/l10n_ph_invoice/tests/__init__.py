@@ -3,3 +3,4 @@
 from . import common
 from . import test_discount_privilege_wizard
 from . import test_invoice_report
+from . import test_partner_identifiers

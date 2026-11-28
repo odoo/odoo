@@ -23,6 +23,20 @@
                     />
                 </div>
             </xpath>
+            <!-- The ID of the privilege holder, right under the customer address -->
+            <xpath expr="//group[@id='header_left_group']//field[@name='partner_id']/parent::div" position="after">
+                <field name="l10n_ph_privilege_id_no"
+                       invisible="not l10n_ph_has_discount_privilege"
+                       readonly="state != 'draft'"/>
+            </xpath>
+            <xpath expr="//group[@id='other_tab_group']" position="inside">
+                <group string="Discount Privilege"
+                       name="l10n_ph_privilege_group"
+                       invisible="not l10n_ph_has_discount_privilege">
+                    <field name="l10n_ph_privilege_representative_name" readonly="state != 'draft'"/>
+                    <field name="l10n_ph_privilege_representative_id_no" readonly="state != 'draft'"/>
+                </group>
+            </xpath>
             <xpath expr="//field[@name='invoice_line_ids']/list/field[@name='discount']" position="after">
                 <field name="l10n_ph_regular_discount_amount" readonly="1" optional="hide"
                        column_invisible="parent.country_code != 'PH'"/>
