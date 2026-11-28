@@ -48,7 +48,7 @@ export class Chatbot extends Record {
      * @param {import("models").Message} message
      */
     async processAnswer(message) {
-        if (this.thread.notEq(message.thread) || !this.currentStep?.expectAnswer) {
+        if (!message || this.thread.notEq(message.thread) || !this.currentStep?.expectAnswer) {
             return;
         }
         if (this.currentStep.type === "free_input_multi") {

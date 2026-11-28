@@ -30,6 +30,25 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_test_page_tour
         },
         {
             trigger: messagesContain("Can you give us your email please?"),
+        },
+        {
+            trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
+            run: "edit /help",
+        },
+        {
+            trigger: ".o-livechat-root:shadow .o-mail-Composer-send:enabled",
+            run: "click",
+        },
+        {
+            trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
+            run: "edit okfine@fakeemail.com",
+        },
+        {
+            trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
+            run: "press Enter",
+        },
+        {
+            trigger: messagesContain("Your email is validated, thank you!"),
             run() {
                 window.location.reload();
             },
