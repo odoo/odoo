@@ -1,0 +1,614 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="tax_report" model="account.report">
+        <field name="name">Tax Report</field>
+        <field name="name@fr">Déclaration de TVA</field>
+        <field name="name@it">Dichiarazione IVA</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.mc"/>
+        <field name="allow_foreign_vat" eval="True"/>
+        <field name="availability_condition">country</field>
+        <!-- Ordonnance Souveraine no. 13.844 (Art. 1), Code des taxes Art. 41: the bases and the VAT are rounded to the nearest euro -->
+        <field name="integer_rounding">HALF-UP</field>
+        <field name="column_ids">
+            <record id="tax_report_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="name@fr">Solde</field>
+                <field name="name@it">Saldo</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="tax_report_section_a" model="account.report.line">
+                <field name="name">A. Amount of operations carried out</field>
+                <field name="name@fr">A. Montant des opérations réalisées</field>
+                <field name="name@it">A. Ammontare delle operazioni effettuate</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="tax_report_01" model="account.report.line">
+                        <field name="name">01 - Sales, provision of services</field>
+                        <field name="name@fr">01 - Ventes, prestations de services</field>
+                        <field name="name@it">01 - Vendite, prestazioni di servizi</field>
+                        <field name="code">box_01</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_01_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-01</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_08" model="account.report.line">
+                        <field name="name">08 - Disposals of fixed assets</field>
+                        <field name="name@fr">08 - Cessions d'immobilisations</field>
+                        <field name="name@it">08 - Cessioni di immobilizzazioni</field>
+                        <field name="code">box_08</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_08_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-08</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_09" model="account.report.line">
+                        <field name="name">09 - Other taxable operations</field>
+                        <field name="name@fr">09 - Autres opérations imposables</field>
+                        <field name="name@it">09 - Altre operazioni imponibili</field>
+                        <field name="code">box_09</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_09_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">09</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_15" model="account.report.line">
+                        <field name="name">15 - Turnover</field>
+                        <field name="name@fr">15 - Chiffre d'affaires</field>
+                        <field name="name@it">15 - Volume d'affari</field>
+                        <field name="code">box_15</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_15_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">box_01.balance + box_08.balance + box_15._tag</field>
+                            </record>
+                            <record id="tax_report_15_tag" model="account.report.expression">
+                                <field name="label">_tag</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-15</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_17" model="account.report.line">
+                        <field name="name">17 - Real estate works carried out in France</field>
+                        <field name="name@fr">17 - Travaux immobiliers réalisés en France</field>
+                        <field name="name@it">17 - Lavori immobiliari eseguiti in Francia</field>
+                        <field name="code">box_17</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_17_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable;rounding=0</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_section_b" model="account.report.line">
+                <field name="name">B. Settlement of the VAT to be paid</field>
+                <field name="name@fr">B. Décompte de la TVA à payer</field>
+                <field name="name@it">B. Liquidazione dell'IVA da versare</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="tax_report_section_gross_vat" model="account.report.line">
+                        <field name="name">Gross VAT</field>
+                        <field name="name@fr">TVA brute</field>
+                        <field name="name@it">IVA lorda</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="children_ids">
+                            <record id="tax_report_30" model="account.report.line">
+                                <field name="name">30 - VAT at the current rates</field>
+                                <field name="name@fr">30 - TVA aux taux en vigueur</field>
+                                <field name="name@it">30 - IVA alle aliquote vigenti</field>
+                                <field name="code">box_30</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_30_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_30_20.balance + box_30_10.balance + box_30_55.balance + box_30_21.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="tax_report_30_20" model="account.report.line">
+                                        <field name="name">Standard rate 20%</field>
+                                        <field name="name@fr">Taux normal 20 %</field>
+                                        <field name="name@it">Aliquota ordinaria 20%</field>
+                                        <field name="code">box_30_20</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_30_20_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">-30_20</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="tax_report_30_10" model="account.report.line">
+                                        <field name="name">Intermediate rate 10%</field>
+                                        <field name="name@fr">Taux intermédiaire 10 %</field>
+                                        <field name="name@it">Aliquota intermedia 10%</field>
+                                        <field name="code">box_30_10</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_30_10_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">-30_10</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="tax_report_30_55" model="account.report.line">
+                                        <field name="name">Reduced rate 5.5%</field>
+                                        <field name="name@fr">Taux réduit 5,5 %</field>
+                                        <field name="name@it">Aliquota ridotta 5,5%</field>
+                                        <field name="code">box_30_55</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_30_55_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">-30_55</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="tax_report_30_21" model="account.report.line">
+                                        <field name="name">Special rate 2.1%</field>
+                                        <field name="name@fr">Taux particulier 2,1 %</field>
+                                        <field name="name@it">Aliquota particolare 2,1%</field>
+                                        <field name="code">box_30_21</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_30_21_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">-30_21</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_31" model="account.report.line">
+                                <field name="name">31 - VAT at former rates</field>
+                                <field name="name@fr">31 - TVA aux anciens taux</field>
+                                <field name="name@it">31 - IVA alle aliquote precedenti</field>
+                                <field name="code">box_31</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_31_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=0</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_34" model="account.report.line">
+                                <field name="name">34 - VAT previously deducted to be repaid</field>
+                                <field name="name@fr">34 - TVA antérieurement déduite à reverser</field>
+                                <field name="name@it">34 - IVA precedentemente detratta da riversare</field>
+                                <field name="code">box_34</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_34_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_34._tag - box_44._negative - box_45._negative</field>
+                                    </record>
+                                    <record id="tax_report_34_tag" model="account.report.expression">
+                                        <field name="label">_tag</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">34</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_B1" model="account.report.line">
+                                <field name="name">B1 - Total gross VAT</field>
+                                <field name="name@fr">B1 - Total de la TVA brute</field>
+                                <field name="name@it">B1 - Totale IVA lorda</field>
+                                <field name="code">box_B1</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_B1_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_30.balance + box_31.balance + box_34.balance</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_35" model="account.report.line">
+                                <field name="name">35 - Of which VAT on intra-community acquisitions</field>
+                                <field name="name@fr">35 - Dont TVA sur acquisitions intracommunautaires</field>
+                                <field name="name@it">35 - Di cui IVA sugli acquisti intracomunitari</field>
+                                <field name="code">box_35</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_35_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-35</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_36" model="account.report.line">
+                                <field name="name">36 - Of which VAT on operations destined for France</field>
+                                <field name="name@fr">36 - Dont TVA sur opérations à destination de la France</field>
+                                <field name="name@it">36 - Di cui IVA sulle operazioni destinate alla Francia</field>
+                                <field name="code">box_36</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_36_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-36</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_section_deductible_vat" model="account.report.line">
+                        <field name="name">Deductible VAT</field>
+                        <field name="name@fr">TVA déductible</field>
+                        <field name="name@it">IVA detraibile</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="children_ids">
+                            <record id="tax_report_20" model="account.report.line">
+                                <field name="name">20 - Credit carried forward from line 29 of the previous return</field>
+                                <field name="name@fr">20 - Report du crédit de la ligne 29 de la déclaration précédente</field>
+                                <field name="name@it">20 - Riporto del credito del rigo 29 della dichiarazione precedente</field>
+                                <field name="code">box_20</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_20_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_20._applied_carryover_balance</field>
+                                    </record>
+                                    <record id="tax_report_20_applied_carryover_balance" model="account.report.expression">
+                                        <field name="label">_applied_carryover_balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">most_recent</field>
+                                        <field name="date_scope">previous_return_period</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_22" model="account.report.line">
+                                <field name="name">22 - Omitted deductible VAT</field>
+                                <field name="name@fr">22 - TVA déductible omise</field>
+                                <field name="name@it">22 - IVA detraibile omessa</field>
+                                <field name="code">box_22</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_22_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=0</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_23" model="account.report.line">
+                                <field name="name">23 - Additional credit</field>
+                                <field name="name@fr">23 - Crédit complémentaire</field>
+                                <field name="name@it">23 - Credito supplementare</field>
+                                <field name="code">box_23</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_23_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=0</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_24" model="account.report.line">
+                                <field name="name">24 - Transferred deduction rights</field>
+                                <field name="name@fr">24 - Droits à déduction transférés</field>
+                                <field name="name@it">24 - Diritti a detrazione trasferiti</field>
+                                <field name="code">box_24</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_24_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=0</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_44" model="account.report.line">
+                                <field name="name">44 - Goods constituting fixed assets</field>
+                                <field name="name@fr">44 - Biens constituant des immobilisations</field>
+                                <field name="name@it">44 - Beni costituenti immobilizzazioni</field>
+                                <field name="code">box_44</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_44_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_44._tag</field>
+                                        <field name="subformula">if_above(EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_44_tag" model="account.report.expression">
+                                        <field name="label">_tag</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">44</field>
+                                    </record>
+                                    <record id="tax_report_44_negative" model="account.report.expression">
+                                        <field name="label">_negative</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_44._tag</field>
+                                        <field name="subformula">if_below(EUR(0))</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_45" model="account.report.line">
+                                <field name="name">45 - Other goods and services</field>
+                                <field name="name@fr">45 - Autres biens et services</field>
+                                <field name="name@it">45 - Altri beni e servizi</field>
+                                <field name="code">box_45</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_45_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_45._tag</field>
+                                        <field name="subformula">if_above(EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_45_tag" model="account.report.expression">
+                                        <field name="label">_tag</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">45</field>
+                                    </record>
+                                    <record id="tax_report_45_negative" model="account.report.expression">
+                                        <field name="label">_negative</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_45._tag</field>
+                                        <field name="subformula">if_below(EUR(0))</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_B2" model="account.report.line">
+                                <field name="name">B2 - Total deductible VAT</field>
+                                <field name="name@fr">B2 - Total de la TVA déductible</field>
+                                <field name="name@it">B2 - Totale IVA detraibile</field>
+                                <field name="code">box_B2</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_B2_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_20.balance + box_22.balance + box_23.balance + box_24.balance + box_44.balance + box_45.balance</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_section_result" model="account.report.line">
+                        <field name="name">VAT credit or VAT due</field>
+                        <field name="name@fr">Crédit de TVA ou TVA due</field>
+                        <field name="name@it">Credito IVA o IVA dovuta</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="children_ids">
+                            <record id="tax_report_B3" model="account.report.line">
+                                <field name="name">B3 - VAT credit</field>
+                                <field name="name@fr">B3 - Crédit de TVA</field>
+                                <field name="name@it">B3 - Credito IVA</field>
+                                <field name="code">box_B3</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_B3_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_B2.balance - box_B1.balance</field>
+                                        <field name="subformula">if_above(EUR(0))</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_27" model="account.report.line">
+                                <field name="name">27 - Refund of the VAT credit requested</field>
+                                <field name="name@fr">27 - Remboursement de crédit de TVA demandé</field>
+                                <field name="name@it">27 - Rimborso del credito IVA richiesto</field>
+                                <field name="code">box_27</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_27_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=0</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_28" model="account.report.line">
+                                <field name="name">28 - VAT credit offset</field>
+                                <field name="name@fr">28 - Crédit de TVA imputé</field>
+                                <field name="name@it">28 - Credito IVA compensato</field>
+                                <field name="code">box_28</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_28_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=0</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_29" model="account.report.line">
+                                <field name="name">29 - VAT credit to be carried forward</field>
+                                <field name="name@fr">29 - Crédit de TVA à reporter</field>
+                                <field name="name@it">29 - Credito IVA da riportare</field>
+                                <field name="code">box_29</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_29_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_B3.balance - box_27.balance - box_28.balance</field>
+                                        <field name="subformula">if_above(EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_29_carryover_balance" model="account.report.expression">
+                                        <field name="label">_carryover_balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_29.balance</field>
+                                        <field name="carryover_target">box_20._applied_carryover_balance</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_48" model="account.report.line">
+                                <field name="name">48 - Net VAT due</field>
+                                <field name="name@fr">48 - TVA nette due</field>
+                                <field name="name@it">48 - IVA netta dovuta</field>
+                                <field name="code">box_48</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_48_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_B1.balance - box_B2.balance</field>
+                                        <field name="subformula">if_above(EUR(0))</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_49" model="account.report.line">
+                                <field name="name">49 - Adjustments</field>
+                                <field name="name@fr">49 - Régularisations</field>
+                                <field name="name@it">49 - Rettifiche</field>
+                                <field name="code">box_49</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_49_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=0</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_52" model="account.report.line">
+                                <field name="name">52 - Prepayments</field>
+                                <field name="name@fr">52 - Acomptes versés</field>
+                                <field name="name@it">52 - Acconti versati</field>
+                                <field name="code">box_52</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_52_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=0</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_53" model="account.report.line">
+                                <field name="name">53 - Penalties</field>
+                                <field name="name@fr">53 - Pénalités</field>
+                                <field name="name@it">53 - Sanzioni</field>
+                                <field name="code">box_53</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_53_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=0</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_60" model="account.report.line">
+                                <field name="name">60 - Total payable</field>
+                                <field name="name@fr">60 - Total à payer</field>
+                                <field name="name@it">60 - Totale da versare</field>
+                                <field name="code">box_60</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_60_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_48.balance + box_49.balance - box_52.balance + box_53.balance</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_section_c" model="account.report.line">
+                <field name="name">C. Breakdown of the VAT invoiced to the company</field>
+                <field name="name@fr">C. Ventilation de la TVA facturée à l'entreprise</field>
+                <field name="name@it">C. Ripartizione dell'IVA fatturata all'impresa</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="tax_report_70" model="account.report.line">
+                        <field name="name">70 - VAT deducted on invoices from suppliers established in Monaco</field>
+                        <field name="name@fr">70 - TVA déduite sur factures de fournisseurs implantés en Principauté de Monaco</field>
+                        <field name="name@it">70 - IVA detratta su fatture di fornitori stabiliti nel Principato di Monaco</field>
+                        <field name="code">box_70</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_70_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">70</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_71" model="account.report.line">
+                        <field name="name">71 - VAT deducted on invoices from suppliers established in France</field>
+                        <field name="name@fr">71 - TVA déduite sur factures de fournisseurs implantés en France</field>
+                        <field name="name@it">71 - IVA detratta su fatture di fornitori stabiliti in Francia</field>
+                        <field name="code">box_71</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_71_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">71</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_72" model="account.report.line">
+                        <field name="name">72 - VAT deducted on imports from outside the EU</field>
+                        <field name="name@fr">72 - TVA déduite sur importations hors UE</field>
+                        <field name="name@it">72 - IVA detratta sulle importazioni da paesi extra UE</field>
+                        <field name="code">box_72</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_72_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">72</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_73" model="account.report.line">
+                        <field name="name">73 - VAT deducted on the other reverse charge operations</field>
+                        <field name="name@fr">73 - TVA déduite sur les autres opérations après autoliquidation</field>
+                        <field name="name@it">73 - IVA detratta sulle altre operazioni in inversione contabile</field>
+                        <field name="code">box_73</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_73_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">73</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_74" model="account.report.line">
+                        <field name="name">74 - Non-deductible VAT on invoices from French companies or paid at customs</field>
+                        <field name="name@fr">74 - TVA non déductible sur factures d'entreprises françaises ou payée en douane</field>
+                        <field name="name@it">74 - IVA non detraibile su fatture di imprese francesi o pagata in dogana</field>
+                        <field name="code">box_74</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_74_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">74</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_75" model="account.report.line">
+                        <field name="name">75 - VAT deducted on intra-community acquisitions of goods</field>
+                        <field name="name@fr">75 - TVA déduite sur acquisitions intracommunautaires de biens</field>
+                        <field name="name@it">75 - IVA detratta sugli acquisti intracomunitari di beni</field>
+                        <field name="code">box_75</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_75_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">75</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

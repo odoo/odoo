@@ -498,7 +498,7 @@ class ResCompany(models.Model):
     @api.depends('country_id')
     def _compute_vat_disabled_available(self):
         for company in self:
-            company.vat_disabled_available = 'EU' in company.account_fiscal_country_group_codes or company.country_code == 'CH'
+            company.vat_disabled_available = 'EU' in company.account_fiscal_country_group_codes or company.country_code == 'CH' or company.country_code == 'MC'
 
     @api.depends('parent_id')
     def _compute_vat_disabled(self):

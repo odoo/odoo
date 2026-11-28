@@ -14,13 +14,13 @@ class ResCompany(models.Model):
 
     def _get_default_vat_disabled_tax(self):
         self.ensure_one()
-        if self.account_fiscal_country_id.code != 'FR':
+        if self.account_fiscal_country_id.code not in ('FR', 'MC'):
             return super()._get_default_vat_disabled_tax()
         return self._get_or_create_chart_template_record('account.tax', 'tva_sale_non_assujetti_0_biens', {})
 
     def _inverse_vat_disabled(self):
         super()._inverse_vat_disabled()
-        for company in self.filtered(lambda c: c.vat_disabled_available and c.account_fiscal_country_id.code == 'FR' and c.chart_template):
+        for company in self.filtered(lambda c: c.vat_disabled_available and c.account_fiscal_country_id.code in ('FR', 'MC') and c.chart_template):
             ChartTemplate = company.env['account.chart.template'].with_company(company)
             chart_template_data = ChartTemplate._get_chart_template_data(company.chart_template)
 
