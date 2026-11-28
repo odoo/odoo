@@ -10,12 +10,15 @@ export const calendarNotificationService = {
     start(env, { action, bus_service, notification }) {
         let calendarNotifTimeouts = {};
         let nextCalendarNotifTimeout = null;
+        let busUpdateCount = 0;
         const displayedNotifications = new Set();
 
         bus_service.subscribe("calendar.alarm", (payload) => {
+            busUpdateCount++;
             displayCalendarNotification(payload);
         });
         bus_service.start();
+        getNextCalendarNotif();
 
         /**
          * Displays the Calendar notification on user's screen
@@ -80,9 +83,12 @@ export const calendarNotificationService = {
         }
 
         async function getNextCalendarNotif() {
+            const previousBusUpdateCount = busUpdateCount;
             try {
                 const result = await rpc("/calendar/notify", {}, { silent: true });
-                displayCalendarNotification(result);
+                if (previousBusUpdateCount === busUpdateCount) {
+                    displayCalendarNotification(result);
+                }
             } catch (error) {
                 if (!(error instanceof ConnectionLostError)) {
                     throw error;
