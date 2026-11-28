@@ -4821,3 +4821,59 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'request_date_to': '2026-08-15',
         })
         self.assertTrue(leave.action_validate())
+
+    def test_accrual_plans_batch_different_timezones(self):
+        """ Assert that when processing accruals in batch, date_to is computed
+            per employee timezone and not leaked across allocations in the batch.
+        """
+        emp_tokyo = self.env['hr.employee'].create({'name': 'Tokyo Emp', 'tz': 'Asia/Tokyo'})
+        emp_la = self.env['hr.employee'].create({'name': 'LA Emp', 'tz': 'America/Los_Angeles'})
+
+        plan = self.env['hr.leave.accrual.plan'].create({
+            'name': 'Monthly End Accrual Plan',
+            'accrued_gain_time': 'end',
+            'level_ids': [
+                Command.create({
+                    'start_count': 0,
+                    'added_value': 2,
+                    'added_value_type': 'day',
+                    'frequency': 'monthly',
+                    'first_day': 1,
+                }),
+            ],
+        })
+
+        with freeze_time('2025-01-01 12:00:00'):
+            alloc_tokyo = self.env['hr.leave.allocation'].create({
+                'name': 'Tokyo Allocation',
+                'employee_id': emp_tokyo.id,
+                'holiday_status_id': self.leave_type_day.id,
+                'allocation_type': 'accrual',
+                'accrual_plan_id': plan.id,
+                'date_from': '2025-01-01',
+                'number_of_days': 0,
+            })
+            alloc_la = self.env['hr.leave.allocation'].create({
+                'name': 'LA Allocation',
+                'employee_id': emp_la.id,
+                'holiday_status_id': self.leave_type_day.id,
+                'allocation_type': 'accrual',
+                'accrual_plan_id': plan.id,
+                'date_from': '2025-01-01',
+                'number_of_days': 0,
+            })
+            (alloc_tokyo | alloc_la).action_validate()
+
+        # At 2025-01-31 18:00:00 UTC:
+        # - Tokyo (UTC+9) is 2025-02-01 03:00 (due for accrual)
+        # - LA (UTC-8) is 2025-01-31 10:00 (not due yet)
+        with freeze_time('2025-01-31 18:00:00'):
+            (alloc_tokyo | alloc_la)._process_accrual_plans()
+            self.assertEqual(alloc_tokyo.number_of_days, 2.0)
+            self.assertEqual(alloc_la.number_of_days, 0.0)
+
+        # Later, when LA local time reaches 2025-02-01 (e.g. at 2025-02-01 10:00:00 UTC = 02:00 LA)
+        with freeze_time('2025-02-01 10:00:00'):
+            (alloc_tokyo | alloc_la)._process_accrual_plans()
+            self.assertEqual(alloc_tokyo.number_of_days, 2.0)
+            self.assertEqual(alloc_la.number_of_days, 2.0)
