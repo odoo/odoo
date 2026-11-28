@@ -1,4 +1,4 @@
-import { animationFrame } from "@odoo/hoot-mock";
+import { animationFrame, mockTimeZone } from "@odoo/hoot-mock";
 import { describe, expect, test } from "@odoo/hoot";
 
 import { ChartDataSource } from "@spreadsheet/chart/data_source/chart_data_source";
@@ -1223,6 +1223,131 @@ test("See records when clicking on a geo chart country", async () => {
         { datasetIndex: 0, index: 0, element: mockElement },
     ]);
     expect.verifySteps(["do-action"]);
+});
+
+function getCalendarChartDefinition(groupBy = ["date:month"]) {
+    return {
+        type: "calendar",
+        horizontalGroupBy: "year",
+        verticalGroupBy: "month_number",
+        dataSource: {
+            type: "odoo",
+            metaData: { groupBy, measure: "probability", resModel: "partner", order: null },
+            searchParams: { context: {}, domain: [], groupBy: [], orderBy: [] },
+        },
+        title: { text: "Partners" },
+        dataSourceId: "42",
+        id: "42",
+    };
+}
+
+test("Odoo calendar chart groups the values by the calendar groupBys", async () => {
+    const { model } = await createSpreadsheetWithChart({
+        type: "calendar",
+        serverData: cumulativeDateServerData,
+        definition: getCalendarChartDefinition(),
+    });
+    const chartId = model.getters.getChartIds(model.getters.getActiveSheetId())[0];
+    await waitForDataLoaded(model);
+    const { data } = model.getters.getChartRuntime(chartId).chartJsConfig;
+    expect(data.labels).toEqual(["2020", "2021", "2022"]);
+    expect(data.datasets.map((ds) => ds.label)).toEqual(["June", "March", "January"]);
+    expect(data.datasets.map((ds) => ds.values)).toEqual([
+        [undefined, undefined, 5],
+        [undefined, undefined, 4],
+        [10, 2, 3],
+    ]);
+});
+
+test("Odoo calendar chart data source with only date is grouped by the date only, as finely as needed", async () => {
+    onRpc("partner", "formatted_read_group", ({ kwargs }) => {
+        expect.step(kwargs.groupby.join(","));
+    });
+    const { model } = await createSpreadsheetWithChart({
+        type: "calendar",
+        serverData: cumulativeDateServerData,
+        definition: getCalendarChartDefinition(["date:year", "bar"]),
+    });
+    const sheetId = model.getters.getActiveSheetId();
+    const chartId = model.getters.getChartIds(sheetId)[0];
+    await waitForDataLoaded(model);
+    expect.verifySteps(["date:month"]);
+
+    for (const verticalGroupBy of ["day_of_week", "hour_number"]) {
+        model.dispatch("UPDATE_CHART", {
+            definition: { ...model.getters.getChartDefinition(chartId), verticalGroupBy },
+            chartId,
+            figureId: model.getters.getFigureIdFromChartId(chartId),
+            sheetId,
+        });
+        await waitForDataLoaded(model);
+    }
+    // a date field can't be grouped by hour
+    expect.verifySteps(["date:day", "date:day"]);
+
+    model.dispatch("UPDATE_CHART", {
+        definition: { ...model.getters.getChartDefinition(chartId), type: "bar" },
+        chartId,
+        figureId: model.getters.getFigureIdFromChartId(chartId),
+        sheetId,
+    });
+    await waitForDataLoaded(model);
+    expect.verifySteps(["date:year,bar"]);
+});
+
+test("Odoo calendar chart data source granularity for each calendar groupBy", async () => {
+    onRpc("partner", "formatted_read_group", ({ kwargs }) => {
+        expect.step(kwargs.groupby.join(","));
+    });
+    const { model } = await createSpreadsheetWithChart({
+        type: "calendar",
+        serverData: cumulativeDateServerData,
+        definition: { ...getCalendarChartDefinition(), verticalGroupBy: "year" },
+    });
+    const sheetId = model.getters.getActiveSheetId();
+    const chartId = model.getters.getChartIds(sheetId)[0];
+    await waitForDataLoaded(model);
+    expect.verifySteps(["date:year"]);
+
+    const cases = [
+        ["quarter_number", "year", "date:quarter"],
+        ["month_number", "year", "date:month"],
+        ["day_of_week", "year", "date:day"],
+        [undefined, undefined, "date:day"],
+    ];
+    for (const [horizontalGroupBy, verticalGroupBy, expected] of cases) {
+        model.dispatch("UPDATE_CHART", {
+            definition: {
+                ...model.getters.getChartDefinition(chartId),
+                horizontalGroupBy,
+                verticalGroupBy,
+            },
+            chartId,
+            figureId: model.getters.getFigureIdFromChartId(chartId),
+            sheetId,
+        });
+        await waitForDataLoaded(model);
+        expect.verifySteps([expected]);
+    }
+});
+
+test("Odoo calendar chart uses the user timezone for datetime fields", async () => {
+    mockTimeZone(+2);
+    Partner._records = [{ id: 1, create_date: "2024-01-15 08:30:00", probability: 10 }];
+    const { model } = await createSpreadsheetWithChart({
+        type: "calendar",
+        definition: {
+            ...getCalendarChartDefinition(["create_date:month"]),
+            horizontalGroupBy: "day_of_month",
+            verticalGroupBy: "hour_number",
+        },
+    });
+    const chartId = model.getters.getChartIds(model.getters.getActiveSheetId())[0];
+    await waitForDataLoaded(model);
+    const { data } = model.getters.getChartRuntime(chartId).chartJsConfig;
+    expect(data.labels).toEqual(["15"]);
+    expect(data.datasets.map((ds) => ds.label)).toEqual(["10 AM"]);
+    expect(data.datasets.map((ds) => ds.values)).toEqual([[10]]);
 });
 
 test("See records when clicking on a sunburst chart slice", async () => {
