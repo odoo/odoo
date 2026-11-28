@@ -1,6 +1,6 @@
 import { HtmlField, htmlField } from "@html_editor/fields/html_field";
 import { registry } from "@web/core/registry";
-import { getCSSRules, toInline } from "./convert_inline";
+import { convertWebpImages, getCSSRules, toInline } from "./convert_inline";
 import { ColumnPlugin } from "@html_editor/main/column_plugin";
 
 const cssRulesByElement = new WeakMap();
@@ -34,6 +34,9 @@ export class HtmlMailField extends HtmlField {
     }
 
     async getEditorContent() {
+        await convertWebpImages(this.editor.editable);
+        // Save the images in place, as `super` only syncs the src of the img back.
+        await this.editor.shared.media?.savePendingImages(this.editor.editable);
         const el = await super.getEditorContent();
         await HtmlMailField.getInlinedEditorContent(cssRulesByElement, this.editor, el);
         return el;
