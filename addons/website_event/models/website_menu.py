@@ -104,10 +104,19 @@ class WebsiteMenu(models.Model):
                     if not menu_record_url or menu_record_url == '#':
                         # prevent blank URLs, use 't' prefix to avoid slug syntax
                         menu_record_url = f"t{int(datetime.now().timestamp())}"
+                    menu_record_url = self.env['ir.http']._slugify(menu_record_url, max_length=1024, path=True)
 
-                    menu_record.write({
-                        'url': f'{event_url}/page/{menu_record_url}'
-                    })
+                    base_url = url = f'{event_url}/page/{menu_record_url}'
+                    inc = 0
+                    while self.search_count([
+                        ('website_id', '=', website_id),
+                        ('url', '=', url),
+                        ('id', '!=', menu_record.id),
+                    ], limit=1):
+                        inc += 1
+                        url = f'{base_url}-{inc}'
+
+                    menu_record.write({'url': url})
                     event_menu_values.append({
                         'menu_id': menu_record.id,
                         'event_id': parent_event_menu.event_id.id,

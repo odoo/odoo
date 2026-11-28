@@ -10,7 +10,8 @@ import { expectElementCount } from "@html_editor/../tests/_helpers/ui_expectatio
 import { patchWithCleanup, mockService, onRpc, contains } from "@web/../tests/web_test_helpers";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { MenuDataPlugin } from "@website/builder/plugins/menu_data_plugin";
-import { MenuDialog } from "@website/components/dialog/edit_menu";
+import { EditMenuDialog, MenuDialog } from "@website/components/dialog/edit_menu";
+import { AddPageDialog } from "@website/components/dialog/add_page_dialog";
 import { SavePlugin } from "@html_builder/core/save_plugin";
 import { insertText } from "@html_editor/../tests/_helpers/user_actions";
 import { browser } from "@web/core/browser/browser";
@@ -454,6 +455,67 @@ describe("EditMenuDialog", () => {
             await expect.waitForSteps(["check existing"]);
             await animationFrame();
             expect("button:contains('Create Page')").toHaveCount(1);
+        });
+
+        test("creating a page for a new menu saves the menus first and uses the saved menu url", async () => {
+            const builder = await setupWebsiteBuilder("", {
+                headerContent: `<header>header</header>`,
+            });
+            await contains(":iframe header").click();
+
+            const savedMenuUrl = "/event/some-event-1/page/top-menu-url";
+            let menuData = { ...sampleMenuData, children: [] };
+            onRpc("website.menu", "get_tree", () => menuData);
+            onRpc("website.menu", "save", () => {
+                menuData = {
+                    ...sampleMenuData,
+                    children: [
+                        {
+                            ...sampleMenuData.children[0],
+                            fields: { ...sampleMenuData.children[0].fields, url: savedMenuUrl },
+                        },
+                    ],
+                };
+                return true;
+            });
+            onRpc("/website/check_existing_link", () => false);
+            patchWithCleanup(EditMenuDialog.prototype, {
+                setup() {
+                    super.setup();
+                    const add = this.dialogs.add;
+                    this.dialogs = {
+                        ...this.dialogs,
+                        add: (Component, props) => {
+                            if (Component === AddPageDialog) {
+                                expect.step(`add page ${props.forcedURL}`);
+                                return;
+                            }
+                            return add(Component, props);
+                        },
+                    };
+                },
+            });
+            await contains("button:contains('Edit Menu')").click();
+
+            patchWithCleanup(MenuDialog.prototype, {
+                setup() {
+                    super.setup();
+                    this.website.pageDocument = builder.getEditableContent().ownerDocument;
+                },
+                onClickOk() {
+                    this.props.isMegaMenu = true;
+                    super.onClickOk();
+                    this.props.isMegaMenu = false;
+                },
+            });
+
+            await contains("a:contains('Add Menu Item')").click();
+            await contains("label:contains('Title') + * input").fill("New menu name");
+            await contains("label:contains('Url') + * input").fill(topMenuUrl);
+            await contains("button:contains('Continue')").click();
+            await contains("button:contains('Create Page')").click();
+
+            await expect.waitForSteps([`add page ${savedMenuUrl}`]);
         });
     });
 });
