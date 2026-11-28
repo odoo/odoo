@@ -20,8 +20,8 @@ class MailingMailing(models.Model):
     card_requires_sync_count = fields.Integer(compute="_compute_card_requires_sync_count")
     card_campaign_id = fields.Many2one('card.campaign', index='btree_not_null')
 
-    @api.constrains('card_campaign_id', 'mailing_domain', 'mailing_model_id')
-    def _check_mailing_domain(self):
+    @api.constrains('card_campaign_id', 'mailing_model_id')
+    def _check_mailing_model_matches_card_model(self):
         for mailing in self:
             if mailing.card_campaign_id:
                 if mailing.sudo().mailing_model_id.model != mailing.card_campaign_id.res_model:
