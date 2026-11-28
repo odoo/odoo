@@ -900,25 +900,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         attribute_value_dict = self._get_attribute_value_dict(attribute_value_params)
         attribute_value_ids = set(itertools.chain.from_iterable(attribute_value_dict.values()))
         if attribute_value_ids:
-            combination = product.attribute_line_ids.mapped(
-                lambda ptal: (
-                    (
-                        ptal.product_template_value_ids.filtered(
-                            lambda ptav: (
-                                ptav.ptav_active
-                                and ptav.product_attribute_value_id.id in attribute_value_ids
-                            )
-                        )[:1]
-                    )
-                    or (
-                        ptal.product_template_value_ids.filtered(
-                            lambda ptav: (
-                                ptav.ptav_active and ptal.attribute_id.display_type != "multi"
-                            )
-                        )[:1]
-                    )
-                )
-            )
+            combination = product._get_combination_from_attribute_values(attribute_value_ids)
             combination_info = product._get_combination_info(
                 combination=combination.with_env(self.env)
             )

@@ -1634,7 +1634,16 @@ class ProductTemplate(models.Model):
         website_domain = self.env.website.website_domain()
 
         for product, data in zip(self, results_data):
-            combination_info = product._get_combination_info(only_template=True)
+            combination = self.env["product.template.attribute.value"]
+            if search_term:
+                search_term_values = product._get_attribute_values_from_search_term(search_term)
+                if search_term_values:
+                    combination = product._get_combination_from_attribute_values(
+                        search_term_values.ids
+                    )
+            combination_info = product._get_combination_info(
+                combination=combination, only_template=not combination
+            )
             values = product.attribute_line_ids.value_ids
             tags = product.product_tag_ids.filtered("visible_to_customers").read(["name"])
             categories = product.public_categ_ids.filtered_domain(website_domain).read(["name"])
@@ -1642,11 +1651,36 @@ class ProductTemplate(models.Model):
             price = self._search_render_results_prices(mapping, combination_info)
             if price:
                 data["price"] = price
-            data["image_url"] = "/web/image/product.template/%s/image_128" % data["id"]
+            if variant_id := combination_info["product_id"]:
+                data["image_url"] = "/web/image/product.product/%s/image_128" % variant_id
+            else:
+                data["image_url"] = "/web/image/product.template/%s/image_128" % data["id"]
 
             if search_term:
                 data["website_url"] = product._get_product_url(query_params={"search": search_term})
         return results_data
+
+    def _get_combination_from_attribute_values(self, attribute_value_ids):
+        """Return the possible combination closest to the given attribute values.
+
+        Matched values that can't be combined are dropped, and the other attribute lines are
+        completed with their first possible value (`multi` attributes are left empty).
+
+        :param typing.Iterable[int] attribute_value_ids: The ids of the `product.attribute.value`
+            records to select.
+        :return: The closest possible combination, or an empty recordset if none is possible.
+        :rtype: product.template.attribute.value
+        """
+        self.ensure_one()
+        matched_values = self.attribute_line_ids.mapped(
+            lambda ptal: ptal.product_template_value_ids.filtered(
+                lambda ptav: (
+                    ptav.ptav_active
+                    and ptav.product_attribute_value_id.id in attribute_value_ids
+                )
+            )[:1]
+        )
+        return self._get_closest_possible_combination(matched_values)
 
     def _get_attribute_values_from_search_term(self, search_term):
         """Return attribute values to preselect the matching product variant.
@@ -1668,9 +1702,8 @@ class ProductTemplate(models.Model):
         if matched_variant:
             return matched_variant.product_template_attribute_value_ids.product_attribute_value_id
 
-        # Fall back to matching attribute values by name.
         search_words = search_term.lower().split()
-        values = self.attribute_line_ids.value_ids
+        values = self.attribute_line_ids.value_ids._without_no_variant_attributes()
         return values.filtered(
             lambda attribute_value: any(
                 word in (attribute_value.name or "").lower() for word in search_words
