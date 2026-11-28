@@ -8,6 +8,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.fields import Domain
 from odoo.addons.resource.models.utils import HOURS_PER_DAY
 from odoo.addons.mail.tools.discuss import Store
 from odoo.tools import OrderedSet, float_round
@@ -48,12 +49,12 @@ class HrEmployee(models.Model):
     def _compute_current_work_entry_type_id(self):
         self.current_work_entry_type_id = False
 
-        holidays = self.env['hr.leave'].sudo().search([
+        holidays = self.env['hr.leave'].sudo().search(Domain([
             ('employee_id', 'in', self.ids),
             ('date_from', '<=', fields.Datetime.now()),
             ('date_to', '>=', fields.Datetime.now()),
             ('state', '=', 'validate'),
-        ])
+        ]) & self.env['hr.leave']._get_absence_domain())
         for holiday in holidays:
             employee = self.filtered(lambda e: e.id == holiday.employee_id.id)
             employee.current_work_entry_type_id = holiday.work_entry_type_id.id
@@ -216,12 +217,12 @@ class HrEmployee(models.Model):
         """
         # Used SUPERUSER_ID to forcefully get status of other user's leave, to bypass record rule
         now = fields.Datetime.now()
-        holidays = self.env['hr.leave'].sudo().search([
+        holidays = self.env['hr.leave'].sudo().search(Domain([
             ('employee_id', 'in', self.ids),
             ('date_from', '<=', now),
             ('date_to', '>=', now),
             ('state', '=', 'validate'),
-        ], order='date_to desc')
+        ]) & self.env['hr.leave']._get_absence_domain(), order='date_to desc')
 
         holidays_by_employee_id = holidays.grouped(lambda leave: leave.employee_id.id)
         leave_end_by_employee_id = {
@@ -297,12 +298,12 @@ class HrEmployee(models.Model):
         # this only returns employees that are absent right now.
         today_start = date.today()
         today_end = today_start + timedelta(1)
-        holidays = self.env['hr.leave'].sudo().search([
+        holidays = self.env['hr.leave'].sudo().search(Domain([
             ('employee_id', '!=', False),
             ('state', '=', 'validate'),
             ('date_from', '<', today_end),
             ('date_to', '>=', today_start),
-        ])
+        ]) & self.env['hr.leave']._get_absence_domain())
         return [('id', 'in', holidays.employee_id.ids)]
 
     def _search_part_of_department(self, operator, value):
