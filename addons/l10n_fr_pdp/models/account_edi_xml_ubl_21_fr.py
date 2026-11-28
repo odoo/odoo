@@ -43,6 +43,42 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
         # Use new helpers
         return self._export_invoice_new(invoice)
 
+    def _ubl_add_invoice_line_node(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        super()._ubl_add_invoice_line_node(vals)
+        self._l10n_fr_pdp_ubl_add_line_trade_reference_nodes(vals)
+
+    def _ubl_add_credit_note_line_node(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        super()._ubl_add_credit_note_line_node(vals)
+        self._l10n_fr_pdp_ubl_add_line_trade_reference_nodes(vals)
+
+    def _l10n_fr_pdp_ubl_add_line_trade_reference_nodes(self, vals):
+        # Order, delivery order and delivery address per line (multi-order / multi-delivery invoices).
+        line_node = vals['line_node']
+        trade_references = self._get_line_trade_references(vals['line_vals']['base_line'])
+        if trade_references.get('order_ref'):
+            line_node['cac:OrderLineReference'] = {
+                'cbc:LineID': {'_text': 'NA'},
+                'cac:OrderReference': {
+                    'cbc:ID': {'_text': trade_references['order_ref']},
+                },
+            }
+        if trade_references.get('despatch_ref'):
+            line_node['cac:DespatchLineReference'] = {
+                'cbc:LineID': {'_text': trade_references.get('despatch_line_ref') or 'NA'},
+                'cac:DocumentReference': {
+                    'cbc:ID': {'_text': trade_references['despatch_ref']},
+                },
+            }
+        # Only when the line is delivered elsewhere than the invoice's delivery address.
+        ship_to = trade_references.get('ship_to')
+        if ship_to and ship_to != vals.get('delivery'):
+            delivery_node = self._ubl_get_delivery_node_from_delivery_address({**vals, 'delivery': ship_to})
+            # The invoice's delivery date belongs to the header, not to each line.
+            delivery_node['cbc:ActualDeliveryDate'] = None
+            line_node['cac:Delivery'] = [delivery_node]
+
     def _export_invoice_constraints_new(self, invoice, vals):
         # EXTENDS account.edi.xml.ubl_bis3
         constraints = super()._export_invoice_constraints_new(invoice, vals)
