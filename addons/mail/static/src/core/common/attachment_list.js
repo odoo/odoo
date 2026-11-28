@@ -30,9 +30,11 @@ class Actions extends Component {
             t.object({
                 label: t.string(),
                 icon: t.string(),
+                iconClass: t.string().optional(),
                 onSelect: t.function([t.instanceOf(Event)]),
             })
         ),
+        compact: t.boolean().optional(false),
     });
 
     setup() {
@@ -215,14 +217,29 @@ export class AttachmentList extends Component {
     }
 
     /**
-     * Compute the action items for the given attachment.
+     * Compute the action items for the given attachment. The first one is shown
+     * as a direct button, the others in the "More Actions" menu, unless
+     * `showCompactActions` groups them all in the menu.
      *
      * @param {import("models").Attachment} attachment - The representative attachment for the actions.
      * @param {import("models").Attachment[]} [duplicates] - Array of duplicate attachments the action may operate on.
-     * @returns {{label: TranslatedString, icon: string, icon_class?: string, onSelect: function}[]} Array of action descriptors.
+     * @returns {{label: TranslatedString, icon: string, iconClass?: string, onSelect: function}[]} Array of action descriptors.
      */
     getActions(attachment, duplicates = [attachment]) {
         const res = [];
+        if (!attachment.isImage && attachment.type === "url") {
+            res.push({
+                label: _t("Open Link"),
+                icon: "open_in_new",
+                onSelect: () => window.open(attachment.url, "_blank", "noopener,noreferrer"),
+            });
+        } else if (this.canDownload(attachment)) {
+            res.push({
+                label: _t("Download"),
+                icon: "download",
+                onSelect: () => this.onClickDownload(attachment),
+            });
+        }
         if (this.showDelete(attachment)) {
             res.push({
                 label: _t("Remove"),
@@ -231,14 +248,7 @@ export class AttachmentList extends Component {
                 onSelect: () => this.onClickUnlink(attachment, duplicates),
             });
         }
-        if (this.canDownload(attachment)) {
-            res.push({
-                label: _t("Download"),
-                icon: "download",
-                onSelect: () => this.onClickDownload(attachment),
-            });
-        }
-        if (this.canShowInConversation(attachment)) {
+        if (this.canShowInConversation(attachment) && duplicates.length === 1) {
             res.push({
                 label: this.showInConversationTooltip,
                 icon: "chat_paste_go_2",
@@ -246,6 +256,11 @@ export class AttachmentList extends Component {
             });
         }
         return res;
+    }
+
+    /** @param {import("models").Attachment} attachment */
+    showCompactActions(attachment) {
+        return false;
     }
 
     showDelete(attachment) {
