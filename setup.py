@@ -21,7 +21,7 @@ setup(
     classifiers=[c for c in classifiers.split('\n') if c],
     license=license,
     scripts=['setup/odoo'],
-    packages=find_namespace_packages(),
+    packages=find_namespace_packages(include=("odoo", "odoo.*")),
     package_dir={'%s' % lib_name: 'odoo'},
     include_package_data=True,
     install_requires=[
