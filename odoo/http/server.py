@@ -343,8 +343,9 @@ class HTTPSocket:
             reason=reason,
             headers=response_headers,
         )
-        self.sock.sendall(self.conn.send(self.h11response))
-        self._log(logging.DEBUG, '[RES] ')  # response line + headers
+        with suppress(ConnectionError):
+            self.sock.sendall(self.conn.send(self.h11response))
+            self._log(logging.DEBUG, '[RES] ')  # response line + headers
 
 
 class HTTPBodyReader(io.RawIOBase):
