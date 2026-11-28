@@ -577,6 +577,42 @@ class TestMailingControllers(TestMailingControllersCommon):
         self.assertTracking(msg_fb, [('opt_out_reason_id', 'many2one', False, opt_out_reasons[0])])
         self.assertEqual(msg_bl.body, Markup('<p>Blocklist request from portal</p>'))
 
+    def test_mailing_subscribe_creates_contact_for_logged_user(self):
+        """ Check that a logged user can subscribe to a mailing list (using the
+            `/mailing/my` route) even when no mailing contact exists for them.
+            In that case, a mailing contact is automatically created for the user. """
+        portal_user = mail_new_test_user(
+            self.env,
+            email='charlie@example.com',
+            groups='base.group_portal',
+            login='charlie',
+            name='Charlie',
+        )
+        public_list = self.env['mailing.list'].create({
+            'name': 'Public Mailing List',
+            'is_public': True,
+        })
+        self.assertFalse(self.env['mailing.contact'].search([
+            ('email_normalized', '=', portal_user.email_normalized),
+        ]))
+
+        self.authenticate(portal_user.login, portal_user.login)
+        with freeze_time(self._reference_now):
+            self.start_tour(
+                "/mailing/my",
+                "mailing_portal_subscribe_to_public_list",
+                login=portal_user.login,
+            )
+
+        contact = self.env['mailing.contact'].search([
+            ('email_normalized', '=', portal_user.email_normalized),
+        ])
+        self.assertEqual(len(contact), 1, "A mailing contact should be created for the portal user")
+        self.assertEqual(contact.name, portal_user.name)
+        subscription = public_list.subscription_ids.filtered(lambda sub: sub.contact_id == contact)
+        self.assertEqual(len(subscription), 1)
+        self.assertFalse(subscription.opt_out)
+
     @mute_logger('odoo.http', 'odoo.addons.website.models.ir_ui_view')
     def test_mailing_view(self):
         """ Test preview of mailing. It requires either a token, either being
