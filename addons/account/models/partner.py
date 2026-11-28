@@ -34,7 +34,9 @@ class AccountFiscalPosition(models.Model):
     _check_company_auto = True
     _check_company_domain = models.check_company_domain_parent_of
 
-    sequence = fields.Integer()
+    # Default to 0 rather than NULL: NULL sorts last in the list while being
+    # ranked first in _get_fiscal_position, 0 is consistent in both.
+    sequence = fields.Integer(default=0)
     name = fields.Char(string='Fiscal Position', required=True, translate=True)
     active = fields.Boolean(default=True,
         help="By unchecking the active field, you may hide a fiscal position without deleting it.")
