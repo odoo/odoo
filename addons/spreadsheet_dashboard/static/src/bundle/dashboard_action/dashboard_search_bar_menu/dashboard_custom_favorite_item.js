@@ -20,6 +20,10 @@ export class DashboardCustomFavoriteItem extends CustomFavoriteItem {
         this.state.description = this.loader.getDashboard(this.loader.activeDashboardId).data.name;
     }
 
+    get showSaveFavorite() {
+        return true;
+    }
+
     async saveFavorite(ev) {
         // TODO: state.description does not update when user type and press Enter -> it gives the old value.
         // Reading from descriptionRef directly as a workaround.
