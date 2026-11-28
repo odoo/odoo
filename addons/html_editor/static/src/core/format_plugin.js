@@ -4,17 +4,23 @@ import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { _t } from "@web/core/l10n/translation";
 import { Plugin } from "../plugin";
 import { closestBlock, isBlock } from "../utils/blocks";
+import {
+    BG_CLASSES_REGEX,
+    COLOR_COMBINATION_CLASSES_REGEX,
+    TEXT_CLASSES_REGEX,
+} from "../utils/color";
 import { cleanTextNode, fillEmpty, splitTextNode, unwrapContents } from "../utils/dom";
 import {
+    hasClassesSubset,
     hasPseudoElementContent,
     hasSameClasses,
     hasSameStyleAttributes,
     isBold,
     isContentEditable,
-    isContentEditableAncestor,
     isElement,
     isEmpty,
     isEmptyBlock,
+    isEmptyTextNode,
     isItalic,
     isPhrasingContent,
     isSelfClosingElement,
@@ -31,6 +37,7 @@ import {
     childNodes,
     closestElement,
     descendants,
+    findFurthest,
     findUpTo,
     selectElements,
 } from "../utils/dom_traversal";
@@ -43,7 +50,9 @@ const NOT_A_NUMBER = /[^\d]/g;
 /**
  * @typedef {Object} FormatShared
  * @property { FormatPlugin['canFormatContent'] } canFormatContent
+ * @property { FormatPlugin['distributeFormats'] } distributeFormats
  * @property { FormatPlugin['getOrCreateZws'] } getOrCreateZws
+ * @property { FormatPlugin['isRedundantElement'] } isRedundantElement
  * @property { FormatPlugin['mergeAdjacentInlines'] } mergeAdjacentInlines
  * @property { FormatPlugin['removeSelectionFormats'] } removeSelectionFormats
  * @property { FormatPlugin['requestFormat'] } requestFormat
@@ -93,7 +102,9 @@ export class FormatPlugin extends Plugin {
     static shared = [
         "areSimilarElements",
         "canFormatContent",
+        "distributeFormats",
         "getOrCreateZws",
+        "isRedundantElement",
         "mergeAdjacentInlines",
         "removeSelectionFormats",
         "requestFormat",
@@ -675,16 +686,6 @@ export class FormatPlugin extends Plugin {
                     currentNode = newLastAncestorInlineFormat;
                 }
                 parentNode = currentNode.parentElement;
-            } else if (
-                this.dependencies.split.isUnsplittable(parentNode) &&
-                this.dependencies.selection.areNodeContentsFullySelected(parentNode) &&
-                !isContentEditableAncestor(parentNode)
-            ) {
-                // Special case: if the parent node is unsplittable and
-                // fully selected, we should make sure the span is applied
-                // outside of it.
-                inlineAncestor = parentNode;
-                break;
             } else {
                 break;
             }
@@ -975,6 +976,156 @@ export class FormatPlugin extends Plugin {
             !+nodeStyle.margin.replace(NOT_A_NUMBER, "") &&
             !+node2Style.margin.replace(NOT_A_NUMBER, "")
         );
+    }
+
+    /**
+     * Checks if a node is redundant based on its closest element with same tag,
+     * or based on its parent's visual formatting / styles.
+     *
+     * @param {Node} node - The DOM node to evaluate.
+     * @returns {boolean} True if the node is redundant, false otherwise.
+     */
+    isRedundantElement(node) {
+        // Ignore invalid nodes, non-elements, nodes without a parent, or nodes outside the document.
+        if (
+            !node ||
+            node.nodeType !== Node.ELEMENT_NODE ||
+            !node.parentElement ||
+            !node.isConnected
+        ) {
+            return false;
+        }
+
+        // Semantic formatting tags without attributes whose visual formatting is
+        // already inherited from their parent.
+        if (!node.hasAttributes()) {
+            const formatSpec = this.formatSpecs.find((spec) => spec.isTag?.(node));
+            if (formatSpec) {
+                return formatSpec.isFormatted(node.parentElement);
+            }
+            // Other tags without attributes are only redundant inside the same tag.
+            return !!closestElement(node.parentElement, node.tagName);
+        }
+
+        // Check if inline styles or color classes are already provided by ancestors.
+        if (node.tagName === "SPAN" || node.tagName === "FONT") {
+            const hasStyle = node.hasAttribute("style");
+            const hasClass = node.hasAttribute("class");
+
+            // Only handle nodes with style or class, not exotic attributes (e.g. id).
+            const expectedAttrCount = (hasStyle ? 1 : 0) + (hasClass ? 1 : 0);
+            if (node.attributes.length !== expectedAttrCount) {
+                return false;
+            }
+
+            // Check if inline styles match the parent's computed styles.
+            // Bolder font weights stack numerically, so judge a format style
+            // (bold, italic, ...) as boolean: the node and its parent must have it.
+            let styleRedundant = !hasStyle;
+            const formatSpec = this.formatSpecs.find((spec) => spec.isTag && spec.hasStyle(node));
+            if (formatSpec) {
+                styleRedundant =
+                    formatSpec.isFormatted(node) && formatSpec.isFormatted(node.parentElement);
+            } else if (hasStyle) {
+                const parentElement = node.parentElement;
+                const nodeStyle = getComputedStyle(node);
+                const parentStyle = getComputedStyle(parentElement);
+                styleRedundant = [...node.style].every((styleKey) => {
+                    const nodeStyleValue = nodeStyle.getPropertyValue(styleKey);
+                    return (
+                        nodeStyleValue && nodeStyleValue === parentStyle.getPropertyValue(styleKey)
+                    );
+                });
+            }
+
+            // Check if color classes are covered by a closer ancestor span/font.
+            let classRedundant = !hasClass;
+            if (hasClass) {
+                const COLOR_CLASS_REGEXES = [
+                    TEXT_CLASSES_REGEX,
+                    BG_CLASSES_REGEX,
+                    COLOR_COMBINATION_CLASSES_REGEX,
+                ];
+                const nodeClasses = [...node.classList];
+                // All classes must be recognized color classes.
+                if (
+                    !nodeClasses.every((nodeClass) =>
+                        COLOR_CLASS_REGEXES.some((colorRegex) => colorRegex.test(nodeClass))
+                    )
+                ) {
+                    return false;
+                }
+                const blockBoundary = closestBlock(node);
+                let ancestor = node.parentElement;
+                while (ancestor && ancestor !== blockBoundary) {
+                    if (ancestor.tagName === "SPAN" || ancestor.tagName === "FONT") {
+                        const ancestorClasses = [...ancestor.classList];
+                        // Check if this node overrides a color class of the ancestor.
+                        const isOverridingAncestor = nodeClasses.some((nodeClass) => {
+                            const sameTypeRegex = COLOR_CLASS_REGEXES.find((colorRegex) =>
+                                colorRegex.test(nodeClass)
+                            );
+                            return ancestorClasses.some(
+                                (ancestorClass) =>
+                                    ancestorClass !== nodeClass &&
+                                    sameTypeRegex?.test(ancestorClass)
+                            );
+                        });
+                        if (isOverridingAncestor) {
+                            return false;
+                        } else if (
+                            hasClassesSubset(
+                                node.getAttribute("class"),
+                                ancestor.getAttribute("class")
+                            )
+                        ) {
+                            classRedundant = true;
+                            break;
+                        }
+                    }
+                    ancestor = ancestor.parentElement;
+                }
+            }
+            return styleRedundant && classRedundant;
+        }
+
+        return false;
+    }
+
+    /**
+     * Moves the format tags wrapping the element (bold, italic, underline,
+     * strikethrough) inside it, so that they apply to its content and can be
+     * removed from it: `<s>a<a>b</a>c</s>` becomes
+     * `<s>a</s><a><s>b</s></a><s>c</s>`. Only the formats inside the closest
+     * block or unsplittable ancestor (e.g. a QWeb directive) are moved.
+     *
+     * @param {HTMLElement} element
+     */
+    distributeFormats(element) {
+        const isFormat = (node) => this.formatSpecs.some((spec) => spec.isTag?.(node));
+        const limitAncestor = closestElement(
+            element.parentElement,
+            (ancestor) => isBlock(ancestor) || this.dependencies.split.isUnsplittable(ancestor)
+        );
+        const outerFormat = findFurthest(element.parentElement, limitAncestor, isFormat);
+        if (!outerFormat) {
+            return;
+        }
+        const cursors = this.dependencies.selection.preserveSelection();
+        // Remove the empty text nodes around the element, so that the split
+        // leaves no empty format.
+        for (const node of childNodes(element.parentElement).filter(isEmptyTextNode)) {
+            cursors.update(callbacksForCursorUpdate.remove(node));
+            node.remove();
+        }
+        const formats = this.dependencies.split.splitAroundUntil(element, outerFormat);
+        cursors.update(callbacksForCursorUpdate.unwrap(element));
+        unwrapContents(element);
+        cursors.update(callbacksForCursorUpdate.before(formats, element));
+        formats.before(element);
+        cursors.update(callbacksForCursorUpdate.append(element, formats));
+        element.append(formats);
+        cursors.restore();
     }
 
     canFormatContent(selection) {

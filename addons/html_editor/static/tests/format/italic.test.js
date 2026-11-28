@@ -257,3 +257,11 @@ test("removing italic on list item should remove neutral style from its nested l
         contentAfter: "<ul><li><p>[A]</p><ul><li>B</li></ul></li></ul>",
     });
 });
+
+test("should apply italic inside a link", async () => {
+    const { el, editor } = await setupEditor(`<p><a href="test">[abc]</a></p>`);
+    italic(editor);
+    expect(getContent(el)).toBe(
+        `<p>\ufeff<a href="test" class="o_link_in_selection"><em>\ufeff[abc]\ufeff</em></a>\ufeff</p>`
+    );
+});

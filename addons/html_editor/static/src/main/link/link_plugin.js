@@ -13,6 +13,7 @@ import {
     isProtected,
     isProtecting,
     isVisible,
+    isVisibleTextNode,
     isZwnbsp,
     isContentEditable,
     ICON_SELECTOR,
@@ -211,6 +212,7 @@ export class LinkPlugin extends Plugin {
         "baseContainer",
         "feff",
         "delete",
+        "format",
     ];
     static defaultConfig = {
         allowStripDomain: true,
@@ -346,29 +348,6 @@ export class LinkPlugin extends Plugin {
                 return false;
             }
         },
-        // When the selection fully covers a link, we consider that the link is selected.
-        is_node_fully_selected_predicates: (node, selection) => {
-            if (
-                node.nodeName === "A" &&
-                cleanZWChars(selection.toString()) === cleanZWChars(node.innerText)
-            ) {
-                return true;
-            }
-        },
-
-        formattable_node_providers: (node, { formatSpec }) => {
-            // Links often have styles applied to them by css which can only be
-            // overriden by applying the style to the link itself.
-            const closestLink = closestElement(node, "A");
-            if (
-                closestLink &&
-                formatSpec.addNeutralStyle &&
-                this.dependencies.selection.areNodeContentsFullySelected(closestLink)
-            ) {
-                return closestLink;
-            }
-        },
-
         /** Handlers */
         on_beforeinput_handlers: [
             withSequence(5, this.onBeforeInputPrepareConvertToLink.bind(this)),
@@ -462,10 +441,8 @@ export class LinkPlugin extends Plugin {
                 const isFirstFeff = !caretPosition.offsetNode.previousSibling;
                 if (isFirstFeff && caretPosition.offset === 0) {
                     ev.preventDefault();
-                    this.dependencies.selection.setSelection({
-                        anchorNode: clickedEl,
-                        anchorOffset: 1,
-                    });
+                    const [anchorNode, anchorOffset] = rightPos(caretPosition.offsetNode);
+                    this.dependencies.selection.setSelection({ anchorNode, anchorOffset });
                     this.dependencies.selection.focusEditable();
                 }
             } else if (!clickedEl.closest("a") && link) {
@@ -570,6 +547,7 @@ export class LinkPlugin extends Plugin {
         } else {
             link = this.createLink(url, label);
             this.dependencies.dom.insert(link);
+            this.dependencies.format.distributeFormats(link);
         }
         this.dependencies.history.commit();
         const linkParent = link.parentElement;
@@ -594,8 +572,7 @@ export class LinkPlugin extends Plugin {
                     "on_will_paste_handlers",
                     this.dependencies.selection.getEditableSelection()
                 );
-                this.dependencies.dom.insert(this.createLink(url, text));
-                this.dependencies.history.commit();
+                this.insertLink(url, text);
             },
         };
         return pasteAsURLCommand;
@@ -759,10 +736,17 @@ export class LinkPlugin extends Plugin {
                 this.applyAttributes(this.linkInDocument, attributes);
                 if (!isImage) {
                     if (
-                        this.linkInDocument.childElementCount == 0 &&
+                        !this.linkInDocument.querySelector(`img, ${ICON_SELECTOR}`) &&
                         cleanZWChars(this.linkInDocument.textContent) !== label
                     ) {
-                        this.linkInDocument.textContent = label;
+                        // A label in a single text keeps the formats wrapping
+                        // it, any other label replaces the link content.
+                        const textNodes = descendants(this.linkInDocument).filter(
+                            isVisibleTextNode
+                        );
+                        const labelNode =
+                            textNodes.length === 1 ? textNodes[0] : this.linkInDocument;
+                        labelNode.textContent = label;
                         context.cursorsToRestore = null;
                     }
                 }
@@ -804,6 +788,7 @@ export class LinkPlugin extends Plugin {
                             );
                         }
                         this.dependencies.dom.insert(link);
+                        this.dependencies.format.distributeFormats(link);
                     }
                     this.linkInDocument = link;
                 } else if (label) {
@@ -812,6 +797,7 @@ export class LinkPlugin extends Plugin {
                     this.linkInDocument = link;
                     context.cursorsToRestore = null;
                     this.dependencies.dom.insert(link);
+                    this.dependencies.format.distributeFormats(link);
                 }
             }
             if (attachmentId) {
@@ -924,7 +910,7 @@ export class LinkPlugin extends Plugin {
                 anchorEl.style.removeProperty("color");
                 const font =
                     anchorEl.nodeName === "FONT" ? anchorEl : anchorEl.querySelector("font");
-                if (font && cleanZWChars(anchorEl.textContent) === font.textContent) {
+                if (font && cleanZWChars(anchorEl.textContent) === cleanZWChars(font.textContent)) {
                     continue;
                 }
                 const newFont = this.document.createElement("font");
@@ -1423,6 +1409,7 @@ export class LinkPlugin extends Plugin {
                 return () => {
                     textNodeToReplace.splitText(match[0].length); // this will keep the space (that will have been added in the meantime)
                     textNodeToReplace.parentNode.replaceChild(link, textNodeToReplace);
+                    this.dependencies.format.distributeFormats(link);
                     if (link.getAttribute("href") === link.textContent) {
                         this.newlyInsertedLinks.add(link);
                     }
@@ -1498,10 +1485,12 @@ export class LinkPlugin extends Plugin {
             return;
         }
         // Move before inner FEFF of the button.
-        this.dependencies.selection.setSelection({
-            anchorNode: startContainer.previousSibling,
-            anchorOffset: startContainer.previousSibling.childNodes.length - 1,
-        });
+        const innerFeff = descendants(previousSibling).findLast(isZwnbsp);
+        if (!innerFeff) {
+            return;
+        }
+        const [anchorNode, anchorOffset] = leftPos(innerFeff);
+        this.dependencies.selection.setSelection({ anchorNode, anchorOffset });
         return true;
     }
 
@@ -1580,6 +1569,14 @@ export class LinkPlugin extends Plugin {
 
             const { anchorNode, focusNode, anchorOffset, focusOffset } =
                 this.dependencies.selection.getEditableSelection();
+            // The label is between the inner FEFFs, which can be in its formats.
+            const innerFeffs = descendants(clickedLink).filter(isZwnbsp);
+            const [labelStartNode, labelStartOffset] = innerFeffs.length
+                ? rightPos(innerFeffs[0])
+                : [clickedLink, 0];
+            const [labelEndNode, labelEndOffset] = innerFeffs.length
+                ? leftPos(innerFeffs.at(-1))
+                : [clickedLink, nodeSize(clickedLink)];
 
             // We reset the word selection of double click to be inside the current clicked link
             // when it spreads over different links. Because it's a word selection, we need to keep
@@ -1588,22 +1585,22 @@ export class LinkPlugin extends Plugin {
                 this.dependencies.selection.setSelection({
                     anchorNode,
                     anchorOffset,
-                    focusNode: clickedLink,
-                    focusOffset: nodeSize(clickedLink) - 1, // -1 to avoid the FEFF char
+                    focusNode: labelEndNode,
+                    focusOffset: labelEndOffset,
                 });
             } else if (!clickedLink.contains(anchorNode) && clickedLink.contains(focusNode)) {
                 this.dependencies.selection.setSelection({
-                    anchorNode: clickedLink,
-                    anchorOffset: 1, // 1 to avoid the FEFF char
+                    anchorNode: labelStartNode,
+                    anchorOffset: labelStartOffset,
                     focusNode,
                     focusOffset,
                 });
             } else if (!clickedLink.contains(anchorNode) && !clickedLink.contains(focusNode)) {
                 this.dependencies.selection.setSelection({
-                    anchorNode: clickedLink,
-                    anchorOffset: 1, // 1 to avoid the FEFF char
-                    focusNode: clickedLink,
-                    focusOffset: nodeSize(clickedLink) - 1, // -1 to avoid the FEFF char
+                    anchorNode: labelStartNode,
+                    anchorOffset: labelStartOffset,
+                    focusNode: labelEndNode,
+                    focusOffset: labelEndOffset,
                 });
             } else {
                 this.dependencies.selection.setSelection({

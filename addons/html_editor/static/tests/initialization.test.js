@@ -2,6 +2,7 @@ import { describe, test } from "@odoo/hoot";
 import { testEditor } from "./_helpers/editor";
 import { unformat } from "./_helpers/format";
 import { FORMATTABLE_TAGS } from "@html_editor/utils/formatting";
+import { QWebPlugin } from "@html_editor/others/qweb_plugin";
 
 /**
  * content of the "init" sub suite in editor.test.js
@@ -305,6 +306,14 @@ describe("color normalization", () => {
             `),
         });
     });
+
+    test("should unwrap nested identical <font> tags inside a QWeb directive", async () => {
+        await testEditor({
+            config: { includePlugins: [QWebPlugin] },
+            contentBefore: `<p><font style="color: red;">a<t t-if="test"><font style="color: red;">b</font></t></font></p>`,
+            contentAfter: `<p><font style="color: red;">a<t t-if="test">b</t></font></p>`,
+        });
+    });
 });
 
 describe("formatting normalization", () => {
@@ -377,6 +386,85 @@ describe("formatting normalization", () => {
             });
         });
     }
+
+    test("should not unwrap font-weight: normal inside a bold parent", async () => {
+        await testEditor({
+            styleContent: `.boldClass { font-weight: bold; }`,
+            contentBefore: `<p class="boldClass">a<font style="font-weight: normal;">b</font>c</p>`,
+            contentAfter: `<p class="boldClass">a<font style="font-weight: normal;">b</font>c</p>`,
+        });
+    });
+
+    test("should unwrap nested bold tags inside a QWeb directive", async () => {
+        await testEditor({
+            config: { includePlugins: [QWebPlugin] },
+            contentBefore: `<p><strong>a<t t-if="test"><strong>b</strong></t></strong></p>`,
+            contentAfter: `<p><strong>a<t t-if="test">b</t></strong></p>`,
+        });
+    });
+
+    test("should not unwrap intermediate color style override", async () => {
+        await testEditor({
+            contentBefore: `<p><font style="color: red;"><span style="color: blue;"><font style="color: red;">text</font></span></font></p>`,
+            contentAfter: `<p><font style="color: red;"><span style="color: blue;"><font style="color: red;">text</font></span></font></p>`,
+        });
+    });
+
+    test("should unwrap a bold tag only inside a bold parent", async () => {
+        await testEditor({
+            contentBefore: `<p style="font-weight: bold;"><b>boldText</b></p><p style="font-style: italic;"><b>boldText</b></p>`,
+            contentAfter: `<p style="font-weight: bold;">boldText</p><p style="font-style: italic;"><b>boldText</b></p>`,
+        });
+    });
+
+    test("should not unwrap a font with attributes other than style and class", async () => {
+        await testEditor({
+            contentBefore: `<p style="color: red;"><font style="color: red;" id="my-font" data-test="123" lang="en">text</font></p>`,
+            contentAfter: `<p style="color: red;"><font style="color: red;" id="my-font" data-test="123" lang="en">text</font></p>`,
+        });
+    });
+
+    test("should unwrap a font whose style matches the computed style of its parent", async () => {
+        await testEditor({
+            contentBefore: `<p style="color: rgb(255, 0, 0);"><font style="color: red;">text</font></p>`,
+            contentAfter: `<p style="color: rgb(255, 0, 0);">text</p>`,
+        });
+    });
+
+    test("should not unwrap a font whose style only partly matches its parent", async () => {
+        await testEditor({
+            contentBefore: `<p><font style="color: red;"><font style="color: red; background-color: blue;">text</font></font></p>`,
+            contentAfter: `<p><font style="color: red;"><font style="color: red; background-color: blue;">text</font></font></p>`,
+        });
+    });
+
+    test("should not unwrap a font whose color class is overridden by an intermediate font", async () => {
+        await testEditor({
+            contentBefore: `<p><font class="text-danger"><font class="text-primary"><font class="text-danger">text</font></font></font></p>`,
+            contentAfter: `<p><font class="text-danger"><font class="text-primary"><font class="text-danger">text</font></font></font></p>`,
+        });
+    });
+
+    test("should not unwrap a font with a class that is not a color class", async () => {
+        await testEditor({
+            contentBefore: `<p><font class="text-danger"><font class="text-danger my-custom-class">text</font></font></p>`,
+            contentAfter: `<p><font class="text-danger"><font class="text-danger my-custom-class">text</font></font></p>`,
+        });
+    });
+
+    test("should not unwrap a font whose color class matches its parent but whose style differs", async () => {
+        await testEditor({
+            contentBefore: `<p><font style="color: red;" class="bg-danger"><font style="color: blue;" class="bg-danger">text</font></font></p>`,
+            contentAfter: `<p><font style="color: red;" class="bg-danger"><font style="color: blue;" class="bg-danger">text</font></font></p>`,
+        });
+    });
+
+    test("should keep the selection inside an unwrapped font", async () => {
+        await testEditor({
+            contentBefore: `<p><font style="color: red;">a<font style="color: red;">b[]c</font></font></p>`,
+            contentAfter: `<p><font style="color: red;">ab[]c</font></p>`,
+        });
+    });
 });
 
 describe("Editor config initialization", () => {

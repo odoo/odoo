@@ -398,7 +398,7 @@ test("should not apply the style on the link itself because it can't be neutrali
     const { el, editor } = await setupEditor(`<p><a href="test">[abc]</a></p>`);
     underline(editor);
     expect(getContent(el)).toBe(
-        `<p>\ufeff<a href="test" class="o_link_in_selection">\ufeff<u>[abc]</u>\ufeff</a>\ufeff</p>`
+        `<p>\ufeff<a href="test" class="o_link_in_selection"><u>\ufeff[abc]\ufeff</u></a>\ufeff</p>`
     );
     underline(editor);
     expect(getContent(el)).toBe(

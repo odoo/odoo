@@ -1,8 +1,13 @@
 import { Plugin } from "@html_editor/plugin";
 import { cleanEmptyAncestors, cleanTextNode } from "@html_editor/utils/dom";
-import { isTextNode, isZwnbsp } from "@html_editor/utils/dom_info";
+import { isElement, isEmptyTextNode, isTextNode, isZwnbsp } from "@html_editor/utils/dom_info";
 import { prepareUpdate } from "@html_editor/utils/dom_state";
-import { closestElement, descendants, selectElements } from "@html_editor/utils/dom_traversal";
+import {
+    childNodes,
+    closestElement,
+    descendants,
+    selectElements,
+} from "@html_editor/utils/dom_traversal";
 import { leftPos, rightPos } from "@html_editor/utils/position";
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { withSequence } from "../utils/resource";
@@ -12,6 +17,7 @@ import { withSequence } from "../utils/resource";
 /**
  * @typedef { Object } FeffShared
  * @property { FeffPlugin['addFeff'] } addFeff
+ * @property { FeffPlugin['getDeepestFeffContainer'] } getDeepestFeffContainer
  * @property { FeffPlugin['removeFeffs'] } removeFeffs
  * @property { FeffPlugin['surroundWithFeffs'] } surroundWithFeffs
  */
@@ -32,7 +38,7 @@ import { withSequence } from "../utils/resource";
 export class FeffPlugin extends Plugin {
     static id = "feff";
     static dependencies = ["selection"];
-    static shared = ["addFeff", "removeFeffs", "surroundWithFeffs"];
+    static shared = ["addFeff", "getDeepestFeffContainer", "removeFeffs", "surroundWithFeffs"];
 
     /** @type {import("plugins").EditorResources} */
     resources = {
@@ -54,7 +60,7 @@ export class FeffPlugin extends Plugin {
             const previousSibling = node.previousSibling;
             const nextSibling = node.nextSibling;
             if (this.hasFeff(previousSibling) || this.hasFeff(nextSibling)) {
-                return false;
+                return;
             } else {
                 if (
                     closestElement(previousSibling)?.matches(this.feffProvidersSelector) ||
@@ -109,9 +115,7 @@ export class FeffPlugin extends Plugin {
                 (this.checkPredicates("would_feff_be_legit_predicates", node) ?? false);
         }
         const isEditable = (node) => node.parentElement.isContentEditable;
-        const isFocusedLink = (node) => closestElement(node, "a.o_link_in_selection");
-        const composedFilter = (node) =>
-            this.hasFeff(node) && isEditable(node) && !exclude(node) && !isFocusedLink(node);
+        const composedFilter = (node) => this.hasFeff(node) && isEditable(node) && !exclude(node);
 
         for (const node of descendants(root).filter(composedFilter)) {
             // Remove all FEFF within a `prepareUpdate` to make sure to make <br>
@@ -143,26 +147,78 @@ export class FeffPlugin extends Plugin {
         return feff;
     }
 
+    /**
+     * Returns the element that gets the inner FEFF of the given element, at the
+     * start or at the end of its content: the deepest splittable inline element
+     * holding this edge.
+     *
+     * Such an element emptied of its text gets a zero-width space, as the other
+     * empty inlines do, so that it is removed on save if no text is typed in it.
+     *
+     * @param {Element} element
+     * @param {0|-1} index 0 for the start of the content, -1 for its end
+     * @returns {Element}
+     */
+    getDeepestFeffContainer(element, index) {
+        const { anchorNode } = this.dependencies.selection.getEditableSelection();
+        // Skip the FEFFs, the empty text nodes, and the nodes holding only
+        // FEFFs unless the selection is in them.
+        const getContentNodes = (parent) =>
+            childNodes(parent).filter(
+                (node) =>
+                    !isZwnbsp(node) &&
+                    !isEmptyTextNode(node) &&
+                    (!/^\ufeff+$/.test(node.textContent) || node.contains(anchorNode))
+            );
+        let container = element;
+        let edgeNode = getContentNodes(container).at(index);
+        while (
+            isElement(edgeNode) &&
+            edgeNode.hasChildNodes() &&
+            // Not in unsplittable elements (e.g. non-editable elements, QWeb
+            // directives), nor in the empty inlines waiting for text.
+            (this.checkPredicates("is_node_splittable_predicates", edgeNode) ?? true) &&
+            !edgeNode.matches("[data-oe-zws-empty-inline]")
+        ) {
+            const innerEdgeNode = getContentNodes(edgeNode).at(index);
+            if (!innerEdgeNode) {
+                edgeNode.append(this.document.createTextNode("\u200B"));
+                edgeNode.setAttribute("data-oe-zws-empty-inline", "");
+                break;
+            }
+            container = edgeNode;
+            edgeNode = innerEdgeNode;
+        }
+        return container;
+    }
+
+    /**
+     * Adds FEFFs around the node and at the inner edges of its content.
+     *
+     * @param {Element} node
+     * @param {Cursors} [cursors]
+     * @returns {Node[]}
+     */
     surroundWithFeffs(node, cursors) {
-        const addFeff = (position) => {
+        const addFeff = (element, position) => {
             // skip cursor update for append, we want to keep it before
             // the added FEFF
             const c = position === "append" ? null : cursors;
-            return this.addFeff(node, position, c);
+            return this.addFeff(element, position, c);
         };
 
         const zwnbspNodes = [];
-        for (const [position, relation] of [
-            ["before", "previousSibling"],
-            ["after", "nextSibling"],
-            ["prepend", "firstChild"],
-            ["append", "lastChild"],
+        for (const [element, position, relation] of [
+            [node, "before", "previousSibling"],
+            [node, "after", "nextSibling"],
+            [this.getDeepestFeffContainer(node, 0), "prepend", "firstChild"],
+            [this.getDeepestFeffContainer(node, -1), "append", "lastChild"],
         ]) {
-            const candidate = node[relation];
+            const candidate = element[relation];
             const feff =
                 isZwnbsp(candidate) && !zwnbspNodes.includes(candidate)
                     ? candidate
-                    : addFeff(position);
+                    : addFeff(element, position);
             zwnbspNodes.push(feff);
         }
         return zwnbspNodes;
