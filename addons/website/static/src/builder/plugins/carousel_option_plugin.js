@@ -23,6 +23,10 @@ const carouselWrapperSelector =
     ".s_carousel_wrapper, .s_carousel_intro_wrapper, .s_carousel_cards_wrapper, .s_quotes_carousel_wrapper";
 const carouselControlsSelector =
     ".carousel-control-prev, .carousel-control-next, .carousel-indicators";
+// Image galleries dropped before 18.0 have navigation arrows among their
+// indicators, which must never be the active indicator.
+const carouselIndicatorsSelector =
+    ".carousel-indicators > :not(.o_indicators_left, .o_indicators_right)";
 
 const carouselItemOptionSelector =
     ".s_carousel .carousel-item, .s_quotes_carousel .carousel-item, .s_carousel_intro .carousel-item, .s_carousel_cards .carousel-item";
@@ -102,13 +106,7 @@ export class CarouselOptionPlugin extends Plugin {
                 itemEl.classList.remove("next", "prev", "left", "right");
                 itemEl.classList.toggle("active", i === 0);
             });
-            carouselEl.querySelectorAll(".carousel-indicators > *").forEach((indicatorEl, i) => {
-                indicatorEl.classList.toggle("active", i === 0);
-                indicatorEl.removeAttribute("aria-current");
-                if (i === 0) {
-                    indicatorEl.setAttribute("aria-current", "true");
-                }
-            });
+            updateCarouselIndicators(carouselEl, 0);
         }
     }
 
@@ -333,11 +331,14 @@ export class CarouselOptionPlugin extends Plugin {
  * @param {Number} newPosition the index
  */
 export function updateCarouselIndicators(carouselEl, newPosition) {
+    const activeIndicatorEl = carouselEl.querySelectorAll(carouselIndicatorsSelector)[newPosition];
+    // Also go through the navigation arrows, to fix the ones wrongly saved as
+    // active.
     const indicatorEls = carouselEl.querySelectorAll(".carousel-indicators > *");
-    indicatorEls.forEach((indicatorEl, i) => {
-        indicatorEl.classList.toggle("active", i === newPosition);
+    indicatorEls.forEach((indicatorEl) => {
+        indicatorEl.classList.toggle("active", indicatorEl === activeIndicatorEl);
         indicatorEl.removeAttribute("aria-current");
-        if (i === newPosition) {
+        if (indicatorEl === activeIndicatorEl) {
             indicatorEl.setAttribute("aria-current", "true");
         }
     });
