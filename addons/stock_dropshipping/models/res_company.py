@@ -75,7 +75,12 @@ class ResCompany(models.Model):
     # Stock rules
     # -------------------------------------------------------------------------
     def _create_dropship_rule(self):
-        dropship_route = self.env.ref('stock_dropshipping.route_drop_shipping')
+        dropship_route = self.env.ref(
+            "stock_dropshipping.route_drop_shipping",
+            raise_if_not_found=False,
+        )
+        if not dropship_route:
+            return
         supplier_location = self.env.ref('stock.stock_location_suppliers')
         customer_location = self.env.ref('stock.stock_location_customers')
 

@@ -531,6 +531,22 @@ class TestDropshipPostInstall(common.TransactionCase):
             'route_ids': [Command.link(cls.env.ref('stock_dropshipping.route_drop_shipping').id)],
         })
 
+    def test_replenish_after_dropship_route_deleted(self):
+        self.env.ref("stock_dropshipping.route_drop_shipping").unlink()
+        replenish = Form(
+            self.env["product.replenish"].with_context(
+                default_product_tmpl_id=self.dropship_product.product_tmpl_id.id,
+            ),
+        )
+        self.assertIn(
+            self.env.ref("purchase_stock.route_warehouse0_buy"),
+            replenish.allowed_route_ids,
+        )
+
+    def test_create_company_after_dropship_route_deleted(self):
+        self.env.ref("stock_dropshipping.route_drop_shipping").unlink()
+        self.env["res.company"].create({"name": "New Company"})
+
     def test_dropshipping_tracked_product(self):
         supplier, customer = self.supplier, self.customer
         product_lot = self.dropship_product

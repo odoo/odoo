@@ -181,7 +181,7 @@ class TestControllers(tests.HttpCase):
         different action types and returns the expected results.
         """
         self.authenticate("admin", "admin")
-        self.env['ir.actions.server'].create({
+        action = self.env['ir.actions.server'].create({
             'name': 'Test Action',
             'website_published': True,
             'website_path': 'my_test_action',
@@ -195,6 +195,20 @@ class TestControllers(tests.HttpCase):
         res = self.url_open('/website/action/my_test_action')
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.text, "{'message': 'Succeeded'}")
+
+        self.env["ir.model.data"].create({
+            "model": "ir.actions.server",
+            "module": "website",
+            "name": "my_test_action",
+            "res_id": action.id,
+        })
+        res = self.url_open("/website/action/website.my_test_action")
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.text, "{'message': 'Succeeded'}")
+        res = self.url_open("/website/action/website.unknown_action", allow_redirects=False)
+        self.assertEqual(res.status_code, 303)
+        res = self.url_open("/website/action/base.main_company", allow_redirects=False)
+        self.assertEqual(res.status_code, 303)
 
     def test_website_force_domain_redirect(self):
         """

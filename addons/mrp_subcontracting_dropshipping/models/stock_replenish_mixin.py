@@ -9,4 +9,10 @@ class ProductReplenishMixin(models.AbstractModel):
 
     def _get_allowed_route_domain(self):
         domains = super()._get_allowed_route_domain()
-        return expression.AND([domains, [('id', '!=', self.env.ref('mrp_subcontracting_dropshipping.route_subcontracting_dropshipping', raise_if_not_found=False).id)]])
+        route = self.env.ref(
+            "mrp_subcontracting_dropshipping.route_subcontracting_dropshipping",
+            raise_if_not_found=False,
+        )
+        if route:
+            domains = expression.AND([domains, [("id", "!=", route.id)]])
+        return domains
