@@ -135,7 +135,7 @@
                                                 'event_track h-100' if track else '',
                                                 'o_location_size_%d' % len(locations),
                                             )"/>
-                                        <t t-if="track.location_id and track.location_id == location">
+                                        <t t-if="track.location_id and (track.location_id == location or location in track.extra_location_ids)">
                                             <td t-att-rowspan="tracks[track]['rowspan']"
                                                 t-att-class="_classes">
                                                 <t t-call="website_event_track.agenda_main_track"/>
@@ -187,6 +187,9 @@
                 </div>
                 <div class="opacity-75 text-center" t-if="track.partner_tag_line">
                     <small t-out="track.partner_tag_line"/>
+                </div>
+                <div t-if="location and location in track.extra_location_ids" class="text-center">
+                    <small class="badge text-bg-secondary">Live from <t t-out="track.location_id.name"/></small>
                 </div>
             </div>
             <div class="o_we_agenda_card_filter_badges justify-content-center align-items-end pb-1">

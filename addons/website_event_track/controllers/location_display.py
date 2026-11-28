@@ -29,7 +29,7 @@ class EventTrackLocationDisplayController(http.Controller):
             ('date_end', '!=', False),
             ('event_id', '=', event.id),
             ('is_published', '=', True),
-            ('location_id', '=', location.id),
+            ('all_location_ids', 'in', location.ids),
         ]
         tracks = event.env['event.track'].search([
             *track_domain,

@@ -97,6 +97,7 @@
                     <div class="text-muted">
                         <t t-if="track.location_id">
                             <strong>Location:</strong> <span t-field="track.location_id"/>
+                            <span t-if="track.extra_location_ids" class="small">(also shown in <t t-out="', '.join(track.extra_location_ids.mapped('name'))"/>)</span>
                             <span> - </span>
                         </t>
                         <t t-if="track.date">

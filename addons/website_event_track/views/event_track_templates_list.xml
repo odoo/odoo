@@ -351,6 +351,9 @@
                 <span t-if="tracks_date and today_tz &lt;= tracks_date and track.location_id">-</span>
                 <div t-if="track.location_id">
                     <i class="oi" data-icon="location_on" role="img" aria-label="Location"/> <span t-field="track.location_id"/>
+                    <small t-if="track.extra_location_ids" class="text-muted">
+                        + <t t-out="', '.join(track.extra_location_ids.mapped('name'))"/>
+                    </small>
                 </div>
             </div>
             <!-- reminder -->
