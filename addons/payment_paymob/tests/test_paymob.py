@@ -77,3 +77,15 @@ class PaymobTest(PaymobCommon, PaymentHttpCommon):
         )
         tx._process("paymob", payment_data)
         self.assertEqual(tx.state, "error")
+
+    def test_other_providers_receive_the_request_flags(self):
+        with patch(
+            'odoo.addons.payment.models.payment_provider.PaymentProvider._build_request_headers',
+            return_value={},
+        ) as build_headers_mock:
+            self.dummy_provider._build_request_headers(
+                'POST', '/token', None, is_refresh_token_request=True, is_client_request=True
+            )
+        kwargs = build_headers_mock.call_args.kwargs
+        self.assertTrue(kwargs.get('is_refresh_token_request'))
+        self.assertTrue(kwargs.get('is_client_request'))

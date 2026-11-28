@@ -229,7 +229,12 @@ class PaymentProvider(models.Model):
     ):
         """Override of `payment` to build the request headers."""
         if self.code != 'paymob':
-            return super()._build_request_headers(*args, **kwargs)
+            return super()._build_request_headers(
+                *args,
+                is_refresh_token_request=is_refresh_token_request,
+                is_client_request=is_client_request,
+                **kwargs,
+            )
         auth = ''
         if not is_refresh_token_request and is_client_request:
             auth = self.paymob_secret_key
