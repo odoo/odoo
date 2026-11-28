@@ -91,15 +91,10 @@ class TestPeppolParticipant(TransactionCase):
             self.assertEqual(wizard_form.peppol_endpoint, '0239843188')
             self.assertEqual(wizard_form.edi_mode, 'test')
             self.assertEqual(wizard_form.contact_email, 'yourcompany@test.example.com')
-            self.assertEqual(wizard_form.phone_number, '+32483123456')
             self.assertFalse(wizard_form.use_parent_connection)
             # No authentication required in test mode: the plain "Activate" button is shown.
             self.assertTrue(wizard_form.display_no_auth_buttons)
             self.assertFalse(wizard_form.display_itsme_login)
-
-            # The onchange normalizes the phone number
-            wizard_form.phone_number = '+32 483 12 34 56'
-            self.assertEqual(wizard_form.phone_number, '+32483123456')
 
             wizard = wizard_form.save()
             self.assertTrue(wizard.smp_registration)

@@ -105,7 +105,7 @@ class AccountMoveSend(models.AbstractModel):
                 'action': invalid_partners._get_records_action(name=_("Check Partner(s)")),
             }
         not_peppol_moves = moves.filtered(lambda m: 'peppol' not in moves_data[m]['sending_methods'])
-        info_always_on_countries = {'BE', 'FI', 'LU', 'LV', 'NL', 'NO', 'SE', 'FR'}
+        info_always_on_countries = {'BE', 'FI', 'LU', 'LV', 'NL', 'NO', 'SE', 'SK', 'FR'}
         moves_not_sent_peppol = moves.filtered(lambda m: not m.peppol_is_sent)
         any_moves_not_sent_peppol = bool(moves_not_sent_peppol)
         what_is_peppol_alert = self._get_peppol_what_is_peppol_alert(moves, moves_data, moves_not_sent_peppol)
