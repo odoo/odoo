@@ -92,6 +92,11 @@ class AccountMove(models.Model):
                 move.write(vals)
         return res
 
+    def button_draft(self):
+        res = super().button_draft()
+        self._l10n_sa_reset_confirmation_datetime()
+        return res
+
     def get_l10n_sa_confirmation_datetime_sa_tz(self):
         self.ensure_one()
         return format_datetime(self.env, self.l10n_sa_confirmation_datetime, tz='Asia/Riyadh', dt_format='Y-MM-dd\nHH:mm:ss')
