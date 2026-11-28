@@ -1649,6 +1649,17 @@
     </xpath>
 </template>
 
+<!-- Footer options -->
+<template id="option_layout_hide_footer" inherit_id="website.layout" active="False">
+    <xpath expr="//footer" position="before">
+        <t t-set="no_footer" t-value="True"/>
+    </xpath>
+    <xpath expr="//footer" position="after">
+        <!-- Target of the #bottom links, otherwise they do nothing -->
+        <div id="bottom" class="o_not_editable" data-anchor="true"/>
+    </xpath>
+</template>
+
 <template id="placeholder_header_brand" name="Placeholder Header Brand">
     <span id="o_fake_navbar_brand"/><!-- Need a fake element so that the menu is still placed correctly -->
 </template>

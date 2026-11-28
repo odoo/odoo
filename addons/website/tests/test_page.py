@@ -355,6 +355,18 @@ class WithContext(HttpCase):
             'is_published': True,
         })
 
+    def test_hide_footer_on_all_pages(self):
+        r = self.url_open(self.page.url)
+        self.assertTrue(html.fromstring(r.content).xpath('//footer[@id="bottom"]'), "The footer should be shown by default")
+        # What unchecking "Show Footer" in the Theme tab does
+        self.env.ref('website.option_layout_hide_footer').active = True
+
+        r = self.url_open(self.page.url)
+        tree = html.fromstring(r.content)
+        self.assertFalse(tree.xpath('//footer[@id="bottom"]'), "The footer should be hidden on all pages")
+        self.assertTrue(tree.xpath('//div[@id="bottom"][@data-anchor="true"]'), "#bottom links should still have a target")
+        self.assertTrue(tree.xpath('//header[@id="top"]'), "Hiding the footer should not hide the header")
+
     def test_unpublished_page(self):
         specific_page = self.page.copy({'website_id': self.env.ref('base.default_website').id})
         specific_page.write({'is_published': False, 'arch': self.page.arch.replace('I am a generic page', 'I am a specific page')})
