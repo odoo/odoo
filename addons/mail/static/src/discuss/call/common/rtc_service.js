@@ -452,6 +452,8 @@ export class Rtc extends Record {
     audioContext;
     /** id of the latest camera request, older ones are discarded */
     cameraRequestId = 0;
+    /** @type {boolean|undefined} mute state to restore once the pending microphone request settles */
+    micMuteToRestore;
     /** id of the latest microphone request, older ones are discarded */
     micRequestId = 0;
     // cross tab sync
@@ -1101,12 +1103,25 @@ export class Rtc extends Record {
             this.showMediaPermissionDialog("microphone", { options });
             return;
         }
+<<<<<<< 73ab2ca1845c9cd40a1c5cf0a3f8b793b97c179b
         if (this.micAudioTrack) {
             await this.setMute(false);
         } else {
             await this.resetMicAudioTrack({ force: true }, options);
+||||||| 4a8736b8123631379bdebfacc9c3e08a1beba4da
+        if (this.micAudioTrack) {
+            await this.setMute(false);
+        } else {
+            await this.resetMicAudioTrack({ force: true });
+=======
+        if (!this.micAudioTrack) {
+            await this.resetMicAudioTrack({ force: true });
+>>>>>>> a278a766ac3b72e355ed4d6c58519c5e3ce009f5
         }
-        this.soundEffectsService.play("mic-on");
+        if (this.micAudioTrack) {
+            await this.setMute(false);
+            this.soundEffectsService.play("mic-on");
+        }
     }
 
     //----------------------------------------------------------------------
@@ -1921,6 +1936,8 @@ export class Rtc extends Record {
         this.audioContext?.close();
         this.audioContext = undefined;
         this._p2pRecoveryCount = 0;
+        this.micRequestId++;
+        this.micMuteToRestore = undefined;
         this.closeCallPermissionDialog?.();
         this.updateAndBroadcastDebounce?.cancel();
         this.disconnectAudioMonitor?.();
@@ -2370,7 +2387,13 @@ export class Rtc extends Record {
      */
     async resetMicAudioTrack({ force = false }, options = {}) {
         const micRequestId = ++this.micRequestId;
+<<<<<<< 73ab2ca1845c9cd40a1c5cf0a3f8b793b97c179b
         this.disconnectMicAudioTrackListeners?.();
+||||||| 4a8736b8123631379bdebfacc9c3e08a1beba4da
+=======
+        const wasMuted = this.micMuteToRestore ?? Boolean(this.localSession?.is_muted);
+        this.micMuteToRestore = undefined;
+>>>>>>> a278a766ac3b72e355ed4d6c58519c5e3ce009f5
         this.micAudioTrack?.stop();
         this.micAudioTrack = undefined;
         this.isMicAudioTrackMuted = false;
@@ -2385,6 +2408,7 @@ export class Rtc extends Record {
             this.setMute(true);
         }
         if (force) {
+            this.micMuteToRestore = wasMuted;
             let micAudioTrack;
             try {
                 const audioStream = await browser.navigator.mediaDevices.getUserMedia({
@@ -2395,14 +2419,22 @@ export class Rtc extends Record {
                     micAudioTrack.stop();
                     return;
                 }
+                this.micMuteToRestore = undefined;
                 if (this.localSession) {
-                    this.setMute(false);
+                    this.setMute(wasMuted);
                 }
             } catch {
                 if (micRequestId !== this.micRequestId) {
                     return;
                 }
+<<<<<<< 73ab2ca1845c9cd40a1c5cf0a3f8b793b97c179b
                 this.showMediaUnavailableWarning({ microphone: true }, options);
+||||||| 4a8736b8123631379bdebfacc9c3e08a1beba4da
+                this.showMediaUnavailableWarning({ microphone: true });
+=======
+                this.micMuteToRestore = undefined;
+                this.showMediaUnavailableWarning({ microphone: true });
+>>>>>>> a278a766ac3b72e355ed4d6c58519c5e3ce009f5
                 this.updateAudioTrack();
                 return;
             }
