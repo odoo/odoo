@@ -6,10 +6,22 @@ import { ImageFormatOption } from "@html_builder/plugins/image/image_format_opti
 import { ImageTransformOption } from "./image_transform_option";
 import { MediaSizeOption } from "./media_size_option";
 import { dynamicSVGSelector } from "../utils";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { getMimetypeBeforeShape } from "@html_builder/utils/image";
 import { isImageSupportedForProcessing } from "@html_editor/main/media/image_post_process_plugin";
 import { useProps, t } from "@odoo/owl";
+
+export const altTranslations = {
+    tooltip: _t(
+        "The description (alt attribute) is shown if the image cannot be displayed (slow connection, missing image, screen reader...)."
+    ),
+    placeholder: _t("Alt attribute"),
+};
+export const titleTranslations = {
+    tooltip: _t("The tooltip (title attribute) is shown when you hover the picture."),
+    placeholder: _t("Title attribute"),
+};
 
 export class ImageToolOption extends BaseOptionComponent {
     static id = "image_tool_option";
@@ -29,6 +41,8 @@ export class ImageToolOption extends BaseOptionComponent {
     });
     setup() {
         super.setup();
+        this.altTranslations = altTranslations;
+        this.titleTranslations = titleTranslations;
         this.state = useDomState(async (editingElement) => {
             const mimetype = await getMimetypeBeforeShape(editingElement);
             const showCropTool = await isImageSupportedForProcessing(editingElement, mimetype);
