@@ -6,19 +6,43 @@
             <field name="arch" type="xml">
                 <form string="arch">
                     <sheet>
+                        <widget
+                            title="Disabled"
+                            name="web_ribbon"
+                            bg_color="text-bg-danger"
+                            invisible="enabled"
+                        />
+                        <div class="oe_title">
+                            <label for="name"/>
+                            <h1>
+                                <field name="name" placeholder="Azure Entra"/>
+                            </h1>
+                        </div>
+
                         <group>
-                            <field name="name" />
-                            <field name="client_id" />
-                            <field name="enabled" />
-                            <field name="body" />
-                            <field name="icon" groups="base.group_no_one" />
-                            <field name="css_class" groups="base.group_no_one" />
-                        </group>
-                        <group>
-                            <field name="auth_endpoint" />
-                            <field name="scope" />
-                            <field name="validation_endpoint" />
-                            <field name="data_endpoint" />
+                            <group string="Client Information" name="client_info">
+                                <field name="enabled" widget="boolean_toggle" />
+                                <field name="flow" />
+                                <field name="client_id" />
+                                <field name="client_auth_method" invisible="flow != 'pkce'"/>
+                                <field name="client_secret" password="True"
+                                       invisible="flow != 'pkce' or client_auth_method == 'none'"
+                                       required="flow == 'pkce' and client_auth_method != 'none'"/>
+                                <field name="scope" />
+                                <field name="access_token_method" />
+                            </group>
+                            <group string="Endpoints" name="endpoints">
+                                <field name="auth_endpoint" />
+                                <field name="issuer" />
+                                <field name="token_endpoint" invisible="flow != 'pkce'" required="flow == 'pkce'"/>
+                                <field name="validation_endpoint" />
+                                <field name="data_endpoint" />
+                            </group>
+                            <group string="Login Button Layout" name="button">
+                                <field name="body" />
+                                <field name="icon" groups="base.group_no_one" />
+                                <field name="css_class" groups="base.group_no_one" />
+                            </group>
                         </group>
                     </sheet>
                 </form>
@@ -32,7 +56,7 @@
                     <field name="sequence" widget="handle"/>
                     <field name="name" />
                     <field name="client_id" />
-                    <field name="enabled" />
+                    <field name="enabled" widget="boolean_toggle"/>
                 </list>
             </field>
         </record>
