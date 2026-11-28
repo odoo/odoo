@@ -82,7 +82,7 @@ class MrpAccountWipAccounting(models.TransientModel):
         compo_value_by_account = defaultdict(float)
         company_valuation_account = self.env['product.category']._fields['property_stock_valuation_account_id'].get_company_dependent_fallback(self.env['product.category'])
         for ml in productions.move_raw_ids.move_line_ids:
-            if not ml.picked or not ml.quantity or ml.date > date:
+            if not ml.quantity or ml.date > date:
                 continue
             unit_cost = ml.product_id.lot_valuated and ml.lot_id and ml.lot_id.standard_price or ml.product_id.standard_price
             account = ml.product_id._get_product_accounts()['stock_valuation']
