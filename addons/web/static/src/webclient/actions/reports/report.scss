@@ -89,11 +89,13 @@ ul.o_checklist {
         }
         &.o_checked:after {
             content: "✓";
-            transition: opacity .5s;
             position: absolute;
             left: -18px;
             top: -1px;
             opacity: 1;
+            @media (prefers-reduced-motion: no-preference) {
+                transition: opacity .5s;
+            }
         }
     }
 }

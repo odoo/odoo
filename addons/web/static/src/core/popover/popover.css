@@ -4,8 +4,10 @@
 		--position-min: var(--safety-margin);
 		--position-center: calc(50% - var(--popover-arrow-width) / 2);
 		--position-max: calc(100% - var(--popover-arrow-width) - var(--safety-margin));
-		transition: opacity var(--animation-time), transform var(--animation-time);
 		opacity: 1;
+		@media (prefers-reduced-motion: no-preference) {
+			transition: opacity var(--animation-time), transform var(--animation-time);
+		}
 	}
 
 	&[data-popper-placement^="top"] > .popover-arrow.sucked {

@@ -1,16 +1,22 @@
 .o-NotificationAlertDialog-toggleRect {
-    animation: o-NotificationAlertDialog-toggle-fill 4.6s linear infinite;
-    animation-delay: 1.8s;
+    @media (prefers-reduced-motion: no-preference) {
+        animation: o-NotificationAlertDialog-toggle-fill 4.6s linear infinite;
+        animation-delay: 1.8s;
+    }
 }
 
 .o-NotificationAlertDialog-toggleCircle {
-    animation: o-NotificationAlertDialog-toggle-move 4.6s linear infinite;
-    animation-delay: 1.8s;
+    @media (prefers-reduced-motion: no-preference) {
+        animation: o-NotificationAlertDialog-toggle-move 4.6s linear infinite;
+        animation-delay: 1.8s;
+    }
 }
 
 .o-PermissionIllustration-mouse {
-    animation: o-PermissionIllustration-mouse-move 4.6s linear infinite;
-    animation-delay: 1s;
+    @media (prefers-reduced-motion: no-preference) {
+        animation: o-PermissionIllustration-mouse-move 4.6s linear infinite;
+        animation-delay: 1s;
+    }
 }
 
 @keyframes o-NotificationAlertDialog-toggle-fill {

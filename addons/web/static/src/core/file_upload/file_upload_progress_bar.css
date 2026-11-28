@@ -1,8 +1,10 @@
 .o-file-upload-progress-bar-value {
-    transition: width 0.1s;
     border-right: 1px solid hsl(from var(--o-brand-primary) h s calc(l - 7.5));
     background-color: var(--o-brand-primary);
     opacity: 0.5;
+    @media (prefers-reduced-motion: no-preference) {
+        transition: width 0.1s;
+    }
 }
 
 .o-file-upload-progress-bar-abort {

@@ -5,10 +5,12 @@
 .o_burger_menu, .o_app_menu_sidebar {
     width: Min(360px, 80%);
     z-index: calc(var(--o-bs-zindex-tooltip) + 10);
-    transition: transform .2s ease;
 
     /* Menu Toggle-Animations */
     transform: translateX(-100%);
+    @media (prefers-reduced-motion: no-preference) {
+        transition: transform .2s ease;
+    }
 
     &.o-burger-slide-enter, &.o-burger-slide-leave,
     &.o-app-menu-sidebar-enter, &.o-app-menu-sidebar-leave {

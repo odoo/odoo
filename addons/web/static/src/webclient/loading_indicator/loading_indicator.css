@@ -10,7 +10,9 @@
     }
 
     .o_loading_indicator {
-        transition: all .2s ease;
+        @media (prefers-reduced-motion: no-preference) {
+            transition: all .2s ease;
+        }
     }
 
     &.o_translate-leave, &.o_translate-enter {

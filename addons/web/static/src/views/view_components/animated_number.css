@@ -14,10 +14,14 @@
     transform-origin: right center;
 
     &.o_animated_grow {
-        animation: animated-counter-grow 1s ease 0s 1 normal none running;
+        @media (prefers-reduced-motion: no-preference) {
+            animation: animated-counter-grow 1s ease 0s 1 normal none running;
+        }
     }
 
     &.o_animated_grow_huge {
-        animation: animated-counter-grow-huge 1s ease 0s 1 normal none running;
+        @media (prefers-reduced-motion: no-preference) {
+            animation: animated-counter-grow-huge 1s ease 0s 1 normal none running;
+        }
     }
 }

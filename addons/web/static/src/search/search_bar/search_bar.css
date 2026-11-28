@@ -9,7 +9,9 @@
 }
 
 .o_searchview_facet {
-    animation: animate .25s ease-out;
+    @media (prefers-reduced-motion: no-preference) {
+        animation: animate .25s ease-out;
+    }
 
     &:not(.o_facet_groupby):hover {
         box-shadow: 0 0 0 1px var(--o-border-color, var(--o-bs-border-color));

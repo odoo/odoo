@@ -20,6 +20,8 @@
 }
 
 .o_touch_bounce {
-    animation: o-draggable-bounce .4s forwards;
     user-select: none;
+    @media (prefers-reduced-motion: no-preference) {
+        animation: o-draggable-bounce .4s forwards;
+    }
 }

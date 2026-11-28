@@ -5,11 +5,15 @@
 
     > div {
         background-color: rgba(0, 0, 0, .15);
-        transition: .5s;
+        @media (prefers-reduced-motion: no-preference) {
+            transition: .5s;
+        }
     }
 
     &:hover > div {
         background-color: rgba(0, 0, 0, .3);
-        transition: .5s;
+        @media (prefers-reduced-motion: no-preference) {
+            transition: .5s;
+        }
     }
 }

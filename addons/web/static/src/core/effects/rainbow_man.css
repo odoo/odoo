@@ -3,21 +3,28 @@
 
     will-change: transform;
     z-index: calc(var(--o-bs-zindex-modal) + 1);
-    animation: reward-fading calc(var(--o-reward-base-time) * 0.5) ease-in-out forwards;
+    @media (prefers-reduced-motion: no-preference) {
+        animation: reward-fading calc(var(--o-reward-base-time) * 0.5) ease-in-out forwards;
+    }
 
     .o_reward_box {
         transform-box: fill-box;
     }
 
     &.o_reward_fading {
+        /* Kept when motion is reduced: closing waits for this fade to end. */
         animation: reward-fading-reverse calc(var(--o-reward-base-time) * 0.4) ease-in-out forwards;
 
         .o_reward_face_group {
-            animation: reward-jump-reverse calc(var(--o-reward-base-time) * 0.4) ease-in-out forwards;
+            @media (prefers-reduced-motion: no-preference) {
+                animation: reward-jump-reverse calc(var(--o-reward-base-time) * 0.4) ease-in-out forwards;
+            }
         }
 
         .o_reward_rainbow_line {
-            animation: reward-rainbow-reverse calc(var(--o-reward-base-time) * 0.5) ease-out forwards;
+            @media (prefers-reduced-motion: no-preference) {
+                animation: reward-rainbow-reverse calc(var(--o-reward-base-time) * 0.5) ease-out forwards;
+            }
         }
     }
 
@@ -26,44 +33,68 @@
     }
 
     .o_reward_rainbow_line {
-        animation: reward-rainbow calc(var(--o-reward-base-time) * 0.8) ease-out 1 forwards;
+        @media (prefers-reduced-motion: no-preference) {
+            animation: reward-rainbow calc(var(--o-reward-base-time) * 0.8) ease-out 1 forwards;
+        }
+        /* The line starts hidden by its dash offset: with no drawing, show it whole. */
+        @media (prefers-reduced-motion: reduce) {
+            stroke-dashoffset: 0;
+        }
     }
 
     .o_reward_face_group {
-        animation: reward-jump calc(var(--o-reward-base-time) * 0.8) ease-in-out 1;
+        @media (prefers-reduced-motion: no-preference) {
+            animation: reward-jump calc(var(--o-reward-base-time) * 0.8) ease-in-out 1;
+        }
     }
 
     .o_reward_face_wrap {
-        animation: reward-rotate calc(var(--o-reward-base-time) * 0.8) cubic-bezier(.51,.92,.24,1.15) 1;
+        @media (prefers-reduced-motion: no-preference) {
+            animation: reward-rotate calc(var(--o-reward-base-time) * 0.8) cubic-bezier(.51,.92,.24,1.15) 1;
+        }
     }
 
     .o_reward_face {
-        animation: reward-float var(--o-reward-base-time) ease-in-out var(--o-reward-base-time) infinite alternate;
+        @media (prefers-reduced-motion: no-preference) {
+            animation: reward-float var(--o-reward-base-time) ease-in-out var(--o-reward-base-time) infinite alternate;
+        }
     }
 
     .o_reward_star_01, .o_reward_star_03 {
-        animation: reward-stars var(--o-reward-base-time) ease-in-out infinite alternate-reverse;
+        @media (prefers-reduced-motion: no-preference) {
+            animation: reward-stars var(--o-reward-base-time) ease-in-out infinite alternate-reverse;
+        }
     }
 
     .o_reward_star_02, .o_reward_star_04 {
-        animation: reward-stars calc(var(--o-reward-base-time) * 1.2) ease-in-out infinite alternate;
+        @media (prefers-reduced-motion: no-preference) {
+            animation: reward-stars calc(var(--o-reward-base-time) * 1.2) ease-in-out infinite alternate;
+        }
     }
 
     .o_reward_thumbup {
-        animation: reward-scale calc(var(--o-reward-base-time) * 0.5) ease-in-out 0s infinite alternate;
+        @media (prefers-reduced-motion: no-preference) {
+            animation: reward-scale calc(var(--o-reward-base-time) * 0.5) ease-in-out 0s infinite alternate;
+        }
     }
 
     .o_reward_shadow_container {
-        animation: reward-float var(--o-reward-base-time) ease-in-out infinite alternate;
+        @media (prefers-reduced-motion: no-preference) {
+            animation: reward-float var(--o-reward-base-time) ease-in-out infinite alternate;
+        }
     }
 
     .o_reward_shadow {
-        animation: reward-scale var(--o-reward-base-time) ease-in-out infinite alternate;
+        @media (prefers-reduced-motion: no-preference) {
+            animation: reward-scale var(--o-reward-base-time) ease-in-out infinite alternate;
+        }
     }
 
     .o_reward_msg_container {
         aspect-ratio: 1 / 1;
-        animation: reward-float-reverse var(--o-reward-base-time) ease-in-out infinite alternate-reverse;
+        @media (prefers-reduced-motion: no-preference) {
+            animation: reward-float-reverse var(--o-reward-base-time) ease-in-out infinite alternate-reverse;
+        }
     }
 }
 
