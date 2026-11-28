@@ -391,11 +391,19 @@ class AccountAccount(models.Model):
                     record.placeholder_code = f'{code} ({company.name})'
 
     def _search_placeholder_code(self, operator, value):
-        if operator != '=ilike':
+        if operator not in ('=', 'in', 'like', 'ilike', '=like', '=ilike'):
             raise NotImplementedError
         query = Query(self.env, 'account_account')
         placeholder_code_sql = self.env['account.account']._field_to_sql('account_account', 'placeholder_code', query)
-        query.add_where(SQL("%s ILIKE %s", placeholder_code_sql, value))
+        if operator == 'in':
+            query.add_where(SQL("%s IN %s", placeholder_code_sql, tuple(value)))
+        elif operator == '=':
+            query.add_where(SQL("%s = %s", placeholder_code_sql, value))
+        else:
+            if operator in ('like', 'ilike'):
+                value = f'%{value}%'
+            sql_operator = SQL('LIKE') if operator in ('like', '=like') else SQL('ILIKE')
+            query.add_where(SQL("%s %s %s", placeholder_code_sql, sql_operator, value))
         return [('id', 'in', query)]
 
     @api.depends_context('company')
