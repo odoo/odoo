@@ -5,9 +5,9 @@
         <t t-if="this.state.hasLocations">
             <BuilderRow label.translate="Zoom">
                 <BuilderSelect dataAttributeAction="'mapZoom'" preview="false">
-                    <t t-foreach="this.mapZoomOptions" t-as="zoomOption" t-key="zoomOption.value">
-                        <BuilderSelectItem dataAttributeActionValue="zoomOption.value">
-                            <t t-out="zoomOption.label" />
+                    <t t-foreach="this.mapZoomLevels" t-as="zoomLevel" t-key="zoomLevel.value">
+                        <BuilderSelectItem dataAttributeActionValue="zoomLevel.value">
+                            <t t-out="zoomLevel.label" />
                         </BuilderSelectItem>
                     </t>
                 </BuilderSelect>
