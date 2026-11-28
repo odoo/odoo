@@ -1,14 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import api, fields, models
+from odoo.fields import Domain
 from odoo.tools import SQL
-
-python_to_sql_types = {
-    'int': 'INTEGER',
-    'float': 'REAL',
-    'string': 'TEXT',
-    'datetime': 'TIMESTAMP',
-}
 
 
 class HrLeaveEmployeeReport(models.Model):
@@ -19,9 +13,9 @@ class HrLeaveEmployeeReport(models.Model):
 
     employee_id = fields.Many2one('hr.employee', string="Employee", readonly=True)
     leave_id = fields.Many2one('hr.leave', string="Time Off Request", readonly=True)
-    working_schedule_aligned_date_from = fields.Datetime('Date From', readonly=True, store=True)
-    number_of_days = fields.Float(compute='_compute_leave_duration', readonly=True, store=True)
-    number_of_hours = fields.Float(compute='_compute_leave_duration', readonly=True, store=True)
+    working_schedule_aligned_date_from = fields.Datetime('Date From', readonly=True)
+    number_of_days = fields.Float(readonly=True)
+    number_of_hours = fields.Float(readonly=True)
     description = fields.Char()
     work_entry_type_id = fields.Many2one("hr.work.entry.type", string="Time Off Type")
     state = fields.Selection([
@@ -33,106 +27,168 @@ class HrLeaveEmployeeReport(models.Model):
     ])
     color = fields.Integer(string="Color", related='work_entry_type_id.color')
 
+    @api.model
+    def _search(self, domain, *args, **kwargs):
+        query = super()._search(domain, *args, **kwargs)
+        # an array rather than a subquery, for Postgres to filter hr_leave before the split
+        domain = list(Domain(domain))
+        if '|' in domain or '!' in domain:
+            return query
+        leave_domain = Domain.AND(
+            Domain('date_to' if operator in ('>', '>=') else 'date_from', operator, value)
+            for field_expr, operator, value in (item for item in domain if isinstance(item, tuple))
+            if field_expr == 'working_schedule_aligned_date_from' and operator in ('>', '>=', '<', '<=')
+        )
+        if not query.is_empty() and not leave_domain.is_true():
+            leaves = self.env['hr.leave'].sudo()._search(leave_domain)
+            query.add_where(SQL("%s = ANY(ARRAY%s)", query.table.leave_id, leaves.subselect()))
+        return query
+
     @property
     def _table_query(self):
-        fetched_leave_field_names, leave_records = self._fetch_leave_data()
-        report_records = self._create_report_records_from_leave_records(leave_records, fetched_leave_field_names)
-        self._compute_leave_duration(report_records)
-        return self._generate_report_query(report_records)
-
-    def _fetch_leave_data(self):
-        self.env.cr.execute(SQL(
-            """
-            WITH leave_data AS (
-                SELECT
-                    ROW_NUMBER() OVER(ORDER BY employee_id, days_included_in_request) AS id,
-                    id AS leave_id, employee_id, date_from, date_to,
-                    work_entry_type_id, state, private_name AS description,
-                    DATE_TRUNC('day', days_included_in_request) AS day_start
-                FROM hr_leave hl
-                CROSS JOIN LATERAL GENERATE_SERIES(
-                    DATE_TRUNC('day', date_from),
-                    DATE_TRUNC('day', date_to),
-                    INTERVAL '1 day'
-                ) AS days_included_in_request
-                WHERE hl.employee_company_id IN %(company_ids)s
-            )
-            SELECT
-                id, leave_id, employee_id,
-                work_entry_type_id, state, description,
-                GREATEST(date_from, day_start) AS working_schedule_aligned_date_from,
-                LEAST(date_to, (day_start + INTERVAL '1 day' - INTERVAL '1 second')) AS day_aligned_date_to
-            FROM leave_data;
-            """,
-            company_ids=tuple(self.env.companies.ids),
-        ))
-        fetched_leave_field_names = [desc[0] for desc in self.env.cr.description]
-        leave_records = self.env.cr.fetchall()
-        return fetched_leave_field_names, leave_records
-
-    def _create_report_records_from_leave_records(self, leave_records, leave_field_names):
-        report_records = []
-        for leave_record in leave_records:
-            report_records.append({field_name: leave_record[index] for index, field_name in enumerate(leave_field_names)})
-        return report_records
-
-    def _compute_leave_duration(self, report_records):
-        if not report_records:
-            return
-        leave_ids = [report_record['leave_id'] for report_record in report_records]
-        leaves = self.env['hr.leave'].browse(leave_ids)
-        leave_info_by_id = {
-            leave.id: {
-                'work_entry_type_id': leave.work_entry_type_id.id,
-                'resource_calendar_id': leave.resource_calendar_id.id,
-            }
-            for leave in leaves
-        }
-        virtual_leaves_data = [{
-            'date_from': report_record['working_schedule_aligned_date_from'],
-            'date_to': report_record.pop('day_aligned_date_to'),
-            'employee_id': report_record['employee_id'],
-             **leave_info_by_id[report_record['leave_id']],
-        } for report_record in report_records]
-        virtual_leaves = self.env['hr.leave']
-        for virtual_leave_data in virtual_leaves_data:
-            virtual_leaves |= self.env['hr.leave'].new(virtual_leave_data)
-        leaves_durations = virtual_leaves._get_durations(additional_domain=[('holiday_id', 'not in', leave_ids)])
-        for report_record, virtual_leave in zip(report_records, virtual_leaves):
-            duration = leaves_durations.get(virtual_leave.id, (0, 0))
-            report_record['number_of_days'] = duration[0]
-            report_record['number_of_hours'] = duration[1]
-
-    def _generate_report_query(self, report_records):
-        report_records = [report_record for report_record in report_records if report_record.get('number_of_days', 0) > 0]
-        if not report_records:
-            return SQL("""
-                SELECT
-                    NULL::INTEGER as id,
-                    NULL::INTEGER as leave_id,
-                    NULL::INTEGER as employee_id,
-                    NULL::TIMESTAMP as working_schedule_aligned_date_from,
-                    NULL::REAL as number_of_days,
-                    NULL::REAL as number_of_hours,
-                    NULL::TEXT as description,
-                    NULL::INTEGER as work_entry_type_id,
-                    NULL::VARCHAR as state,
-                    NULL::INTEGER as color
-                WHERE FALSE
-            """)
-
-        column_names = list(report_records[0].keys())
-        report_records_tuples = []
-        for report_record in report_records:
-            report_records_tuples.append(tuple(report_record[column_name] for column_name in column_names))
-
+        # no window or aggregate at this level, for the domain to be applied to hr_leave
         return SQL(
             """
-                WITH report_records (%(columns)s) AS (
-                    VALUES %(values)s
-                )
-                SELECT * FROM report_records
+            -- sorted, for the holidays of a leave to be found by binary search (WIDTH_BUCKET)
+            WITH public_holiday AS MATERIALIZED (
+                SELECT
+                    company_id,
+                    calendar_id,
+                    ARRAY_AGG(date_from ORDER BY date_from) AS starts,
+                    ARRAY_AGG(TSRANGE(date_from, date_to) ORDER BY date_from) AS periods,
+                    MAX(date_to - date_from) AS max_duration
+                  FROM resource_calendar_leaves
+                 WHERE resource_id IS NULL
+                   AND count_as = 'absence'
+                   AND company_id IN %(company_ids)s
+                   AND date_to > date_from
+              GROUP BY company_id, calendar_id
+            )
+            SELECT
+                hl.id::BIGINT * 100000 + leave_day.day_index AS id,
+                hl.id AS leave_id,
+                hl.employee_id,
+                GREATEST(hl.date_from, leave_day.day_start) AS working_schedule_aligned_date_from,
+                hl.number_of_days * leave_day.day_share AS number_of_days,
+                hl.number_of_hours * leave_day.hour_share AS number_of_hours,
+                hl.private_name AS description,
+                hl.work_entry_type_id,
+                hl.state
+            FROM hr_leave hl
+            -- LIMIT: as a join, the laterals below would be evaluated for every (leave, resource)
+            CROSS JOIN LATERAL (
+                SELECT resource.tz
+                  FROM hr_employee employee
+                  JOIN resource_resource resource ON resource.id = employee.resource_id
+                 WHERE employee.id = hl.employee_id
+                 LIMIT 1
+            ) resource
+            -- version at the start of the leave, as hr.employee._get_version
+            LEFT JOIN LATERAL (
+                SELECT version.resource_calendar_id IS NULL AS is_flexible
+                  FROM hr_version version
+                 WHERE version.employee_id = hl.employee_id
+              ORDER BY version.active DESC,
+                       version.date_version <= hl.request_date_from DESC,
+                       CASE WHEN version.date_version <= hl.request_date_from THEN version.date_version END DESC,
+                       version.date_version
+                 LIMIT 1
+            ) version ON TRUE
+            JOIN hr_work_entry_type work_entry_type ON work_entry_type.id = hl.work_entry_type_id
+            CROSS JOIN LATERAL (
+                SELECT version.is_flexible IS TRUE
+                    OR (work_entry_type.count_as != 'absence' AND work_entry_type.request_unit = 'hour') AS calendar_time
+            ) spread
+            LEFT JOIN resource_calendar calendar ON calendar.id = hl.resource_calendar_id
+            -- an aggregate, not to be inlined in every expression using it
+            CROSS JOIN LATERAL (
+                SELECT COALESCE(ARRAY_AGG(period), '{}') AS periods
+                  FROM public_holiday
+                 CROSS JOIN LATERAL UNNEST(public_holiday.periods[
+                     WIDTH_BUCKET(hl.date_from - public_holiday.max_duration, public_holiday.starts) + 1
+                     :WIDTH_BUCKET(hl.date_to, public_holiday.starts)
+                 ]) AS period
+                 WHERE public_holiday.company_id = hl.employee_company_id
+                   AND (public_holiday.calendar_id IS NULL OR public_holiday.calendar_id = hl.resource_calendar_id)
+                   AND period && TSRANGE(hl.date_from, hl.date_to)
+                   AND work_entry_type.include_public_holidays_in_duration IS NOT TRUE
+            ) leave_public_holiday
+            CROSS JOIN LATERAL (
+                SELECT
+                    day.day_index,
+                    day.day_start,
+                    CASE WHEN SUM(day.work_days) OVER () > 0
+                        THEN day.work_days / SUM(day.work_days) OVER ()
+                        ELSE day.calendar_hours / NULLIF(SUM(day.calendar_hours) OVER (), 0)
+                    END AS day_share,
+                    CASE WHEN SUM(day.work_hours) OVER () > 0
+                        THEN day.work_hours / SUM(day.work_hours) OVER ()
+                        ELSE day.calendar_hours / NULLIF(SUM(day.calendar_hours) OVER (), 0)
+                    END AS hour_share
+                FROM (
+                    SELECT
+                        local_day.day - local_bounds.first_day AS day_index,
+                        day_bounds.day_start,
+                        COALESCE(attendance.work_hours, 0) AS work_hours,
+                        -- days counted as in hr.leave._get_durations
+                        CASE
+                            WHEN COALESCE(attendance.work_hours, 0) <= 0 THEN 0
+                            WHEN work_entry_type.request_unit = 'day' THEN 1
+                            WHEN attendance.duration_based THEN attendance.work_hours / NULLIF(attendance.day_hours, 0)
+                            WHEN attendance.work_hours <= calendar.hours_per_day * 3 / 4 THEN 0.5
+                            ELSE 1
+                        END AS work_days,
+                        EXTRACT(EPOCH FROM
+                            LEAST(hl.date_to, day_bounds.day_stop) - GREATEST(hl.date_from, day_bounds.day_start)
+                        ) / 3600 AS calendar_hours
+                    FROM (
+                        SELECT
+                            ((hl.date_from AT TIME ZONE 'UTC') AT TIME ZONE resource.tz)::DATE AS first_day,
+                            ((hl.date_to AT TIME ZONE 'UTC') AT TIME ZONE resource.tz)::DATE AS last_day
+                    ) local_bounds
+                    -- not a bare GENERATE_SERIES, estimated at 1000 rows per leave, which triggers JIT
+                    CROSS JOIN LATERAL UNNEST(ARRAY(
+                        SELECT GENERATE_SERIES(local_bounds.first_day, local_bounds.last_day, INTERVAL '1 day')
+                    )) AS local_day_ts
+                    CROSS JOIN LATERAL (SELECT local_day_ts::DATE AS day) local_day
+                    CROSS JOIN LATERAL (
+                        SELECT
+                            (local_day.day::TIMESTAMP AT TIME ZONE resource.tz) AT TIME ZONE 'UTC' AS day_start,
+                            ((local_day.day + 1)::TIMESTAMP AT TIME ZONE resource.tz) AT TIME ZONE 'UTC' AS day_stop
+                    ) day_bounds
+                    -- duration-based attendances are centered around noon
+                    LEFT JOIN LATERAL (
+                        SELECT
+                            BOOL_AND(rca.duration_based) AS duration_based,
+                            SUM(EXTRACT(EPOCH FROM slot.stop - slot.start)) / 3600 AS day_hours,
+                            SUM(GREATEST(0, EXTRACT(EPOCH FROM
+                                LEAST(hl.date_to, slot.stop) - GREATEST(hl.date_from, slot.start)
+                            ))) / 3600 AS work_hours
+                        FROM resource_calendar_attendance rca
+                        CROSS JOIN LATERAL (
+                            SELECT
+                                CASE WHEN rca.duration_based THEN 12 - rca.duration_hours / 2 ELSE rca.hour_from END AS hour_from,
+                                CASE WHEN rca.duration_based THEN 12 + rca.duration_hours / 2 ELSE rca.hour_to END AS hour_to
+                        ) hours
+                        CROSS JOIN LATERAL (
+                            SELECT
+                                ((local_day.day + hours.hour_from * INTERVAL '1 hour') AT TIME ZONE resource.tz) AT TIME ZONE 'UTC' AS start,
+                                ((local_day.day + hours.hour_to * INTERVAL '1 hour') AT TIME ZONE resource.tz) AT TIME ZONE 'UTC' AS stop
+                        ) slot
+                        WHERE NOT spread.calendar_time
+                          AND rca.calendar_id = hl.resource_calendar_id
+                          AND rca.dayofweek = (EXTRACT(ISODOW FROM local_day.day)::INTEGER - 1)::VARCHAR
+                          AND (
+                              calendar.two_weeks_calendar IS NOT TRUE
+                              OR rca.week_type = (((local_day.day - DATE '0001-01-01') / 7) %% 2)::VARCHAR
+                          )
+                          AND NOT TSRANGE(slot.start, slot.stop) && ANY(leave_public_holiday.periods)
+                    ) attendance ON TRUE
+                ) day
+            ) leave_day
+            WHERE hl.employee_company_id IN %(company_ids)s
+              AND (hl.number_of_days > 0 OR hl.number_of_hours > 0)
+              AND leave_day.day_share > 0
             """,
-            columns=SQL(', ').join(map(SQL.identifier, column_names)),
-            values=SQL(', ').join(report_records_tuples),
+            company_ids=tuple(self.env.companies.ids),
         )
