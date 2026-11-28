@@ -221,13 +221,16 @@ class ResDevice(models.Model):
             device.browser_language = browser_language or _('Unknown')
             device.device_type = 'mobile' if device.platform in self.__mobile_platform else 'computer'
 
-    @property
-    def _query(self):
+    @api.model
+    def _get_query(self, include_revoked=False):
         # Deduplicate logs to keep only the most recent one for each device.
         # - `first_activity` is propagated, so it will be correct with the most
         #   recent log.
         # - `id` is not aggregated, this allows the ORM to use relational fields
         #   with this model and use the index of `id`.
+        # - If `include_revoked` is set, revoked logs are taken into account.
+        l1_filter = SQL("TRUE") if include_revoked else SQL("L1.revoked IS NOT TRUE")
+        l2_filter = SQL("TRUE") if include_revoked else SQL("L2.revoked IS NOT TRUE")
         return SQL("""
             SELECT
                 L1.id,
@@ -242,7 +245,7 @@ class ResDevice(models.Model):
                 L1.revoked
             FROM res_device_log L1
             WHERE
-                L1.revoked IS NOT TRUE
+                %(l1)s
                 AND NOT ( EXISTS (
                     SELECT 1
                     FROM
@@ -253,9 +256,19 @@ class ResDevice(models.Model):
                         AND L2.ip_address = L1.ip_address
                         AND L2.user_agent = L1.user_agent
                         AND L2.id > L1.id
-                        AND L2.revoked IS NOT TRUE
+                        AND %(l2)s
                 ))
-        """)
+        """, l1=l1_filter, l2=l2_filter)
+
+    @property
+    def _query(self):
+        return self._get_query()
+
+    @property
+    def _table_sql(self):
+        if self.env.context.get('res_device_include_revoked'):
+            return SQL("(%s)", self._get_query(include_revoked=True))
+        return super()._table_sql
 
     def init(self):
         tools.drop_view_if_exists(self.env.cr, self._table)
@@ -324,8 +337,8 @@ class ResSession(models.Model):
             return SQL('session_identifier = %s DESC', request.session.sid[:STORED_SESSION_BYTES])
         return super()._order_field_to_sql(table, field_expr, direction, nulls)
 
-    @property
-    def _query(self):
+    @api.model
+    def _get_query(self, include_revoked=False):
         # A `res.session` record is represented with the most recent device for
         # a given `session_identifier`.
         # - The max of `last_activity` will be always the `last_activity` of the
@@ -336,6 +349,12 @@ class ResSession(models.Model):
         # - The aggregated fields will be computed (this is because the most
         #   recent log may not correspond to the current device, the latter to
         #   be used for a good user experience).
+        # - If `include_revoked` is set, the devices query including revoked
+        #   logs is used instead of the `res_device` SQL view.
+        device_table = (
+            SQL("(%s)", self.env['res.device']._get_query(include_revoked=True))
+            if include_revoked else SQL.identifier('res_device')
+        )
         return SQL("""
             SELECT
                 D1.id,
@@ -343,18 +362,18 @@ class ResSession(models.Model):
                 D1.user_id,
                 D1.last_activity,
                 D1.revoked
-            FROM res_device D1
+            FROM %(device_table)s D1
             WHERE
                 NOT ( EXISTS (
                     SELECT 1
                     FROM
-                        res_device D2
+                        %(device_table)s D2
                     WHERE
                         D2.user_id = D1.user_id
                         AND D2.session_identifier = D1.session_identifier
                         AND D2.id > D1.id
                 ))
-        """)
+        """, device_table=device_table)
 
     @check_identity
     def revoke(self):
