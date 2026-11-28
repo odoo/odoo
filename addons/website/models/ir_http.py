@@ -6,6 +6,7 @@ import unittest
 from zoneinfo import ZoneInfoNotFoundError, ZoneInfo
 
 import werkzeug
+import werkzeug.routing
 from lxml import etree
 
 import odoo
@@ -116,7 +117,7 @@ class IrHttp(models.AbstractModel):
         if not request:
             yield from super()._generate_routing_rules(modules, converters)
             return
-        website_id = self.env.website.id or self.env.context['host_id']
+        website_id = self.env.website.id or self.env.context.get('host_id')
         logger.debug("_generate_routing_rules for website: %s", website_id)
         rewrites = self._get_rewrites(website_id)
         self._rewrite_len.__cache__.add_value(self, website_id, cache_value=len(rewrites))
@@ -227,6 +228,79 @@ class IrHttp(models.AbstractModel):
                     # 403 instead of using `sudo()` for perfs as this is
                     # low level.
                     raise werkzeug.exceptions.Forbidden()
+
+        # Per-website module disabling for public users
+        if (
+            request.is_frontend
+            and rule.endpoint.routing.get('website')
+            and rule.endpoint.routing.get('type') == 'http'
+            and not rule.endpoint.routing.get('always_on')
+            and website_id
+            and not request.env.user.has_group('website.group_website_designer')
+        ):
+            addon = cls._get_route_module(rule)
+            if addon and addon in request.env['ir.http']._get_disabled_modules(website_id):
+                raise werkzeug.exceptions.NotFound()
+
+    @classmethod
+    def _get_route_module(cls, rule):
+        """Return the name of the addon that introduced the route (or None).
+
+        Computed lazily on first lookup and memoized on the endpoint's routing
+        dict, so each endpoint pays the MRO walk at most once.
+        """
+        routing = rule.endpoint.routing
+        if 'original_module' not in routing:
+            routing['original_module'] = cls._compute_route_module(rule)
+        return routing['original_module']
+
+    @classmethod
+    def _compute_route_module(cls, rule):
+        # Walk the controller MRO base-most first; the addon that introduced the
+        # route is the first ancestor whose method declares `routes` (later bare
+        # @route() overrides don't steal ownership).
+        ctrl, name = rule.endpoint.func.__self__, rule.endpoint.func.__name__
+        for klass in reversed(type(ctrl).mro()[:-2]):
+            member = klass.__dict__.get(name)
+            if member is not None and getattr(member, 'original_routing', {}).get('routes'):
+                path = klass.__module__.split('.')
+                return path[2] if path[:2] == ['odoo', 'addons'] else None
+        return None
+
+    @api.ormcache('website_id', cache='routing')
+    def _get_disabled_modules(self, website_id):
+        """Frozenset of module names that are disabled on the given
+        website. Cached in the 'routing' group: should be cleared on module
+        install/uninstall and on `website.disabled_module_ids` writes.
+        """
+        website = self.env['website'].sudo().browse(website_id)
+        return frozenset(website.disabled_module_ids.mapped('name'))
+
+    def _get_module_for_url(self, url):
+        """Return the installed, disable-eligible module that defines the website
+        route serving ``url`` (empty recordset if none). Resolved from the route
+        the URL matches.
+        """
+        Module = self.env['ir.module.module']
+        if not url or not url.startswith('/'):
+            return Module
+        router = self.routing_map().bind('')
+        try:
+            rule, _args = router.match(path_info=url, return_rule=True)
+        except (werkzeug.exceptions.NotFound, werkzeug.exceptions.MethodNotAllowed, werkzeug.routing.RequestRedirect):
+            return Module
+        if not rule.endpoint.routing.get('website'):
+            return Module
+        addon = self._get_route_module(rule)
+        if not addon:
+            return Module
+        return Module.sudo().search(
+            [
+                ('name', '=', addon),
+                *self.env['website']._get_disableable_modules_domain(),
+            ],
+            limit=1,
+        )
 
     @classmethod
     def _get_editor_context(cls):

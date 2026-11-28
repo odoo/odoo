@@ -6,4 +6,8 @@ export class Website extends models.ServerModel {
     _store_website_fields(res) {
         res.attr("name");
     }
+
+    // get_module_toggle_info() {
+    //     return false;
+    // }
 }

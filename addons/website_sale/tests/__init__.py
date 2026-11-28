@@ -17,6 +17,7 @@ from . import (
     test_delivery_carrier,
     test_delivery_controller,
     test_delivery_ui,
+    test_disable_module,
     test_donation_product_template,
     test_donation_snippets,
     test_dynamic_snippet_category,

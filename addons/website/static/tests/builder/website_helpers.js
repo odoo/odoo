@@ -43,6 +43,10 @@ import { patch } from "@web/core/utils/patch";
 
 class Website extends models.Model {
     _name = "website";
+
+    get_module_toggle_info() {
+        return false;
+    }
 }
 
 class IrUiView extends models.Model {

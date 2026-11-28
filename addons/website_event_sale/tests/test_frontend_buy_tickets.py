@@ -5,7 +5,7 @@ from datetime import timedelta
 from odoo import Command
 from odoo.exceptions import ValidationError
 from odoo.fields import Datetime
-from odoo.tests import tagged
+from odoo.tests import HttpCase, tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
@@ -257,3 +257,24 @@ class TestRoutes(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon, PaymentHttpCo
         registration.exists().write({'state': 'open'})
         self.assertEqual(self.ticket.seats_taken, 2)
         self.assertEqual(self.event.seats_taken, 3)
+
+
+@tagged('post_install', '-at_install')
+class TestCheckoutRoutesAlwaysOn(HttpCase):
+
+    def test_checkout_routes_survive_disabled_ecommerce(self):
+        """required checkout routes stay reachable to the public when eCommerce is disabled (event-ticket purchase relies on them)."""
+        website = self.env.ref('base.default_website')
+        website.sudo().disabled_module_ids = [
+            Command.link(self.env['ir.module.module']._get('website_sale').id),
+        ]
+        self.assertEqual(self.url_open('/shop', allow_redirects=False).status_code, 404)
+        dependant_routes = (
+            '/shop/cart',
+            '/shop/checkout',
+            '/shop/address',
+            '/shop/payment',
+            '/shop/confirmation',
+        )
+        for route in dependant_routes:
+            self.assertNotEqual(self.url_open(route, allow_redirects=False).status_code, 404, f"404 on required {route}")
