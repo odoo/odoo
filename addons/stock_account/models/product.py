@@ -432,10 +432,11 @@ class ProductProduct(models.Model):
             quantity_at_oldest_date = oldest_manual_value and lot.with_context(to_date=oldest_manual_value, skip_in_progress=True, allowed_company_ids=self.env.company.ids).product_qty
         else:
             products_with_manual_value = self.env['product.product'].concat(*last_manual_value_by_product.keys())
-            # scope the opening qty to the current company, like the replayed moves
+            # scope the opening qty to the current company's valued locations, like the replayed moves
+            products_in_company = products_with_manual_value.with_context(allowed_company_ids=self.env.company.ids)
             qty_by_product_id = {
                 product.id: product.qty_available
-                for product in products_with_manual_value.with_context(to_date=oldest_manual_value, allowed_company_ids=self.env.company.ids)
+                for product in products_in_company._with_valuation_context().with_context(to_date=oldest_manual_value)
             }
 
         for manual_value in last_manual_value_by_product.values():
