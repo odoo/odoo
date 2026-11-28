@@ -188,3 +188,30 @@ class TestPdf(TransactionCase):
 
         pdf_writer.convert_to_pdfa()
         self.assertTrue(pdf_writer.is_pdfa)
+
+    @mute_logger('odoo.tools.pdf')
+    def test_is_pdfa_detection(self):
+        """
+        A PDF written by pypdf (e.g. one record split from a multi-record report) starts with
+        "%PDF-1.x" followed by a 4 bytes binary comment line: it must not be mistaken for a PDF/A,
+        otherwise the PDF/A conversion (Factur-X, ZATCA) is skipped.
+        """
+        def roundtrip(writer):
+            out = io.BytesIO()
+            writer.write(out)
+            reader = pdf.OdooPdfFileReader(io.BytesIO(out.getvalue()), strict=False)
+            cloned_writer = pdf.OdooPdfFileWriter()
+            cloned_writer.cloneReaderDocumentRoot(reader)
+            return out.getvalue(), cloned_writer
+
+        split_writer = pdf.PdfFileWriter()
+        split_writer.addPage(self.minimal_pdf_reader.getPage(0))
+        _content, cloned_writer = roundtrip(split_writer)
+        self.assertFalse(cloned_writer.is_pdfa)
+
+        cloned_writer.convert_to_pdfa()
+        cloned_writer.add_file_metadata(b'<x:xmpmeta xmlns:x="adobe:ns:meta/"><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">'
+                                        b'<rdf:Description xmlns:pdfaid="http://www.aiim.org/pdfa/ns/id/"><pdfaid:part>3</pdfaid:part>'
+                                        b'<pdfaid:conformance>B</pdfaid:conformance></rdf:Description></rdf:RDF></x:xmpmeta>')
+        _content, pdfa_writer = roundtrip(cloned_writer)
+        self.assertTrue(pdfa_writer.is_pdfa)

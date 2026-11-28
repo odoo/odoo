@@ -493,20 +493,31 @@ class OdooPdfFileWriter(PdfFileWriter):
             self._header = header[0]
             # Also check the second line. If it is PDF/A, it should be a line starting by % following by four bytes + \n
             second_line = stream.readlines(1)[0]
-            if second_line.decode('latin-1')[0] == '%' and len(second_line) == 6:
-                self.is_pdfa = True
-                # This is broken in pypdf 3+ and pypdf2 has been automatically
-                # writing a binary comment since 1.27
-                # py-pdf/pypdf@036789a4664e3f572292bc7dceec10f08b7dbf62 so we
-                # only need this if running on 1.x
-                #
-                # incidentally that means the heuristic above is completely broken
-                if SUBMOD == '._pypdf2_1':
-                    self._header += second_line
+            # This is broken in pypdf 3+ and pypdf2 has been automatically
+            # writing a binary comment since 1.27
+            # py-pdf/pypdf@036789a4664e3f572292bc7dceec10f08b7dbf62 so we
+            # only need this if running on 1.x
+            if SUBMOD == '._pypdf2_1' and second_line.decode('latin-1')[0] == '%' and len(second_line) == 6:
+                self._header += second_line
+        # The binary comment line after the header can't be used to detect PDF/A: any PDF written by
+        # pypdf has it (e.g. the per-record PDFs split from a multi-record report). Look at the PDF/A
+        # markers instead: a /GTS_PDFA1 output intent and a pdfaid part in the XMP metadata.
+        self.is_pdfa = self._is_pdfa_document(reader)
         # clone_reader_document_root clones reader._ID since 3.2 (py-pdf/pypdf#1520)
         if not hasattr(self, '_ID'):
             # Look if we have an ID in the incoming stream and use it.
             self._set_id(reader.trailer.get('/ID', None))
+
+    @staticmethod
+    def _is_pdfa_document(reader):
+        root = reader.trailer['/Root'].getObject()
+        output_intents = root.get('/OutputIntents')
+        if not output_intents or not any(
+            intent.getObject().get('/S') == '/GTS_PDFA1' for intent in output_intents.getObject()
+        ):
+            return False
+        metadata = root.get('/Metadata')
+        return bool(metadata) and b'pdfaid:part' in metadata.getObject().getData()
 
     def _set_id(self, pdf_id):
         if not pdf_id:
