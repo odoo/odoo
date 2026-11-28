@@ -123,10 +123,21 @@ class PeppolRegistration(models.TransientModel):
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
 
-    @api.depends('company_id')
+    @api.depends('company_id', 'peppol_eas', 'peppol_endpoint')
     def _compute_parent_company_id(self):
         for wizard in self:
-            wizard.parent_company_id = wizard.company_id.peppol_parent_company_id or wizard.company_id
+            if peppol_parent_company := wizard.company_id.peppol_parent_company_id:
+                wizard.parent_company_id = peppol_parent_company
+            else:
+                for parent_company in wizard.company_id.parent_ids[::-1][1:]:
+                    if (
+                        (wizard.peppol_eas == parent_company.peppol_eas and wizard.peppol_endpoint == parent_company.peppol_endpoint)
+                        or (not wizard.peppol_endpoint and parent_company.peppol_eas and parent_company.peppol_endpoint)
+                    ):
+                        wizard.parent_company_id = parent_company
+                        break
+                else:
+                    wizard.parent_company_id = wizard.company_id
 
     @api.depends('company_id', 'peppol_eas', 'peppol_endpoint')
     def _compute_use_parent_connection_selection(self):
@@ -171,6 +182,13 @@ class PeppolRegistration(models.TransientModel):
                         'action_text': pdp_info['action_name'],
                         'action': pdp_info['action'],
                     }
+            if wizard.company_id.country_code == 'SK':
+                sk_module_info = self.env['res.config.settings']._get_sk_peppol_module_info()
+                if not sk_module_info['is_installed']:
+                    peppol_warnings['company_sk_module_warning'] = {
+                        'level': 'warning',
+                        'message': sk_module_info['warning_message'],
+                    }
             if (
                 wizard.peppol_eas
                 and wizard.peppol_endpoint
@@ -192,11 +210,25 @@ class PeppolRegistration(models.TransientModel):
                     'message': _("Your company is already registered on another Access Point for receiving invoices."
                                  "We will register you as a sender only.")
                 }
+            if wizard.use_parent_connection_selection == 'use_parent':
+                peppol_warnings['use_parent_company'] = {
+                    'level': 'info',
+                    'message': _(
+                        "You are about to register with the main company. Use another %s to register with your company.",
+                        dict(self.env['res.company']._fields['peppol_eas']._description_selection(self.env))[wizard.peppol_eas],
+                    )
+                }
             if wizard.peppol_eas == '9925':
                 peppol_warnings['be_9925_warning'] = {
                     'level': 'warning',
                     'message': _("You are about to register with your VAT number. Make sure you register with your "
                                 "Company Registry (BCE/KBO) first to be compliant with the new regulation."),
+                }
+            if wizard.peppol_eas == '9950':
+                peppol_warnings['sk_9950_warning'] = {
+                    'level': 'warning',
+                    'message': _("You are about to register with your Slovak VAT (IČ DPH). Make sure you register with "
+                                 "your Slovak DIČ (Tax identification number) first to be compliant with the new regulation."),
                 }
             wizard.peppol_warnings = peppol_warnings or False
 
@@ -251,11 +283,15 @@ class PeppolRegistration(models.TransientModel):
             if eas not in DEPRECATED_PEPPOL_EAS or eas == self.env.company.peppol_eas
         ]
 
+    # Contact details may already be provided by an external registration flow (e.g. national KYC)
+    def _is_email_required(self):
+        return True
+
     def _ensure_mandatory_fields(self):
         if self.use_parent_connection:
             return
-        if not self.contact_email or not self.phone_number:
-            raise ValidationError(_("Contact email and phone number are required."))
+        if self._is_email_required() and not self.contact_email:
+            raise ValidationError(_("Contact email is required."))
         if not single_email_re.match(self.contact_email):
             raise ValidationError(_("Please make sure the Contact email is a valid email address."))
         if not self.peppol_eas or not self.peppol_endpoint:
@@ -279,7 +315,50 @@ class PeppolRegistration(models.TransientModel):
             button_text=pdp_info['action_name'],
         )
 
+    def _install_sk_peppol_module_if_needed(self):
+        """ Slovak companies need l10n_sk_peppol to register on Peppol (Slovak KYC).
+        Install it for administrators, block the other users.
+
+        :return: an action reopening the registration form once the module is installed,
+                 or None if there is nothing to install.
+        """
+        company = self.company_id
+        if company.country_code != 'SK':
+            return None
+        sk_module_info = self.env['res.config.settings']._get_sk_peppol_module_info()
+        if sk_module_info['is_installed']:
+            return None
+        if not sk_module_info['can_install']:
+            raise UserError(sk_module_info['warning_message'])
+
+        self.env.user._bus_send('simple_notification', {
+            'type': 'info',
+            'title': self.env._("Installing Slovak - E-Invoicing (Peppol)"),
+            'message': self.env._(
+                "The Slovak - E-Invoicing (Peppol) module is being installed. "
+                "This can take a minute, the registration form will open afterwards."
+            ),
+        })
+
+        IrModule = self.env['ir.module.module']
+        sk_module = IrModule._get('l10n_sk_peppol')
+        if not sk_module:
+            IrModule.update_list()
+            sk_module = IrModule._get('l10n_sk_peppol')
+            if not sk_module:
+                raise UserError(self.env._("The Slovak - E-Invoicing (Peppol) module could not be found."))
+
+        sk_module.button_immediate_install()
+        registration_wizard = self.env['peppol.registration'].create({'company_id': company.id})
+        registration_action = registration_wizard._action_open_peppol_form(reopen=False)
+        # Use a new view key, otherwise the web client reuses its cached form view without the l10n_sk_peppol fields
+        registration_action['views'] = [(self.env.ref('account_peppol.peppol_registration_form').id, 'form')]
+        return registration_action
+
     def _action_open_peppol_form(self, reopen=True):
+        if registration_action := self._install_sk_peppol_module_if_needed():
+            return registration_action
+
         view = self.env.ref('account_peppol.peppol_registration_form').sudo()
         # TODO remove in master this hack to get the branches management
         if 'use_parent_connection' not in view.arch_db:
@@ -328,6 +407,8 @@ class PeppolRegistration(models.TransientModel):
             self.peppol_eas = self.company_id.peppol_eas
         self._ensure_mandatory_fields()
         self._ensure_pdp_not_sent_through_peppol()
+        if registration_action := self._install_sk_peppol_module_if_needed():
+            return registration_action
         company = self.company_id
 
         if self.use_parent_connection:
@@ -443,6 +524,14 @@ class PeppolRegistration(models.TransientModel):
         """
         pass
 
+    def _get_peppol_registration_data(self):
+        return {
+            'peppol_eas': self.peppol_eas,
+            'peppol_endpoint': self.peppol_endpoint,
+            'account_peppol_contact_email': self.contact_email,
+            'account_peppol_phone_number': self.phone_number,
+        }
+
     @handle_demo
     def button_register_peppol_participant(self):
         self.ensure_one()
@@ -451,14 +540,11 @@ class PeppolRegistration(models.TransientModel):
             self.peppol_eas = self.company_id.peppol_eas
         self._ensure_mandatory_fields()
         self._ensure_pdp_not_sent_through_peppol()
+        if registration_action := self._install_sk_peppol_module_if_needed():
+            return registration_action
 
         if self.use_parent_connection:
-            self.company_id.write({
-                'peppol_eas': self.peppol_eas,
-                'peppol_endpoint': self.peppol_endpoint,
-                'account_peppol_contact_email': self.contact_email,
-                'account_peppol_phone_number': self.phone_number,
-            })
+            self.company_id.write({**self._get_peppol_registration_data()})
         elif self.account_peppol_proxy_state in ('smp_registration', 'receiver', 'rejected'):
             raise UserError(
                 _('Cannot register a user with a %s application', self.account_peppol_proxy_state))
