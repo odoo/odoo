@@ -86,12 +86,12 @@ class AccountPaymentRegister(models.TransientModel):
     exchange_rate = fields.Float(
         compute="_compute_exchange_rate",
         digits=0,
-        readonly=True,
-        store=False
+        readonly=False,
+        store=True,
     )
     exchange_rate_currency_id = fields.Many2one(
         comodel_name='res.currency',
-        compute="_compute_exchange_rate",
+        compute="_compute_exchange_rate_currency_id",
         store=False,
     )
 
@@ -647,6 +647,14 @@ class AccountPaymentRegister(models.TransientModel):
         total_amount = 0.0
         wizard_curr = self.currency_id
         comp_curr = self.company_currency_id
+
+        def company_to_wizard_currency(amount):
+            # When paying in a foreign currency, exchange_rate is the rate of the payment currency, possibly
+            # edited by the user: convert with it so the suggested amount fully pays the company balance.
+            if self.exchange_rate:
+                return wizard_curr.round(amount * self.exchange_rate)
+            return comp_curr._convert(amount, wizard_curr, self.company_id, self.payment_date)
+
         for currency, amounts in total_per_currency.items():
             amount_residual = amounts['amount_residual']
             amount_residual_currency = amounts['amount_residual_currency']
@@ -658,10 +666,10 @@ class AccountPaymentRegister(models.TransientModel):
                 total_amount += currency._convert(amount_residual_currency, comp_curr, self.company_id, self.payment_date)
             elif currency == comp_curr and wizard_curr != comp_curr:
                 # Company currency on source line but a foreign currency one on the opposite line.
-                total_amount += comp_curr._convert(amount_residual, wizard_curr, self.company_id, self.payment_date)
+                total_amount += company_to_wizard_currency(amount_residual)
             else:
                 # Foreign currency on payment different than the one set on the journal entries.
-                total_amount += comp_curr._convert(amount_residual, wizard_curr, self.company_id, self.payment_date)
+                total_amount += company_to_wizard_currency(amount_residual)
         return total_amount
 
     def _get_total_amounts_to_pay(self, batch_results):
@@ -776,7 +784,7 @@ class AccountPaymentRegister(models.TransientModel):
 
         self.amount = self.custom_user_amount
 
-    @api.depends('can_edit_wizard', 'source_amount', 'source_amount_currency', 'source_currency_id', 'company_id', 'currency_id', 'payment_date', 'installments_mode', 'unreconciled_paid_amount')
+    @api.depends('can_edit_wizard', 'source_amount', 'source_amount_currency', 'source_currency_id', 'company_id', 'currency_id', 'payment_date', 'installments_mode', 'unreconciled_paid_amount', 'exchange_rate')
     def _compute_amount(self):
         for wizard in self:
             if not wizard.journal_id or not wizard.currency_id or not wizard.payment_date or wizard.custom_user_amount:
@@ -892,7 +900,7 @@ class AccountPaymentRegister(models.TransientModel):
                     )
                 )
 
-    @api.depends('can_edit_wizard', 'amount', 'installments_mode', 'unreconciled_paid_amount')
+    @api.depends('can_edit_wizard', 'amount', 'installments_mode', 'unreconciled_paid_amount', 'exchange_rate')
     def _compute_payment_difference(self):
         for wizard in self:
             if wizard.payment_date:
@@ -992,7 +1000,6 @@ class AccountPaymentRegister(models.TransientModel):
     def _compute_exchange_rate(self):
         for wizard in self:
             target_currency = wizard.currency_id if wizard.currency_id != wizard.company_currency_id else wizard.source_currency_id
-            wizard.exchange_rate_currency_id = target_currency
             if target_currency != wizard.company_currency_id:
                 wizard.exchange_rate = self.env['res.currency']._get_conversion_rate(
                     from_currency=wizard.company_currency_id,
@@ -1002,6 +1009,12 @@ class AccountPaymentRegister(models.TransientModel):
                 )
             else:
                 wizard.exchange_rate = 1.0
+
+    @api.depends('company_currency_id', 'source_currency_id', 'currency_id')
+    def _compute_exchange_rate_currency_id(self):
+        for wizard in self:
+            target_currency = wizard.currency_id if wizard.currency_id != wizard.company_currency_id else wizard.source_currency_id
+            wizard.exchange_rate_currency_id = target_currency
 
     def _fetch_duplicate_reference(self, matching_states=('draft', 'posted')):
         """ Retrieve move ids for possible duplicates of payments. Duplicates moves:
@@ -1101,6 +1114,7 @@ class AccountPaymentRegister(models.TransientModel):
             'journal_id': self.journal_id.id,
             'company_id': self.company_id.id,
             'currency_id': self.currency_id.id,
+            'currency_rate': self.exchange_rate if self.currency_id != self.company_currency_id else 1.0,
             'partner_id': self._get_payment_display_partner(self.line_ids, self.partner_id.id),
             'partner_bank_id': self.partner_bank_id.id,
             'payment_method_line_id': self.payment_method_line_id.id,
@@ -1147,7 +1161,12 @@ class AccountPaymentRegister(models.TransientModel):
                         'partner_id': self.partner_id.commercial_partner_id.id,
                         'currency_id': self.currency_id.id,
                         'amount_currency': write_off_amount_currency,
-                        'balance': self.currency_id._convert(write_off_amount_currency, self.company_id.currency_id, self.company_id, self.payment_date),
+                        'balance': (
+                            # exchange_rate is the rate of the payment currency only when paying in a foreign currency
+                            self.company_currency_id.round(write_off_amount_currency / self.exchange_rate)
+                            if self.currency_id != self.company_currency_id and self.exchange_rate
+                            else self.currency_id._convert(write_off_amount_currency, self.company_id.currency_id, self.company_id, self.payment_date)
+                        ),
                     })
 
         return payment_vals

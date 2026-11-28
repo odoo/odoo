@@ -198,12 +198,7 @@ class AccountWithholdingLine(models.AbstractModel):
                 base_amount = line.source_base_amount_currency
                 tax_amount = line.source_tax_amount_currency
             else:
-                rate = self.env['res.currency']._get_conversion_rate(
-                    from_currency=comp_curr,
-                    to_currency=line_curr,
-                    company=company,
-                    date=date,
-                )
+                rate = line._get_comodel_currency_rate()
                 base_amount = line.source_base_amount
                 tax_amount = line.source_tax_amount
             line.original_base_amount = line_curr.round(base_amount * rate)
@@ -267,6 +262,18 @@ class AccountWithholdingLine(models.AbstractModel):
     def _compute_comodel_currency_id(self):
         raise NotImplementedError()
 
+    def _get_comodel_currency_rate(self):
+        """ Return the rate between the company currency and the currency of the comodel, used to convert the amounts
+        of the line in company currency.
+        """
+        self.ensure_one()
+        return self.env['res.currency']._get_conversion_rate(
+            from_currency=self.comodel_company_currency_id,
+            to_currency=self.comodel_currency_id,
+            company=self.company_id,
+            date=self.comodel_date,
+        )
+
     def _update_placeholders(self):
         """ Update the placeholders for the lines in self; updating them sequentially so that the placeholders make sense. """
         lines_per_sequence = self\
@@ -316,8 +323,11 @@ class AccountWithholdingLine(models.AbstractModel):
         self.ensure_one()
         company = self.company_id
         currency = self.comodel_currency_id
-        conversion_date = self.comodel_date
-        conversion_rate = self.env['res.currency']._get_conversion_rate(company.currency_id, currency, company, conversion_date)
+        if self.source_currency_id == currency and self.source_base_amount:
+            # Computed from an invoice in the same currency: keep the rate of the invoice.
+            conversion_rate = self.source_base_amount_currency / self.source_base_amount
+        else:
+            conversion_rate = self._get_comodel_currency_rate()
         payment_type = self.comodel_payment_type
         sign = 1 if payment_type == 'inbound' else -1
         # We need to make sure that we use the actual amounts set on the line; in case of manual adjustment.

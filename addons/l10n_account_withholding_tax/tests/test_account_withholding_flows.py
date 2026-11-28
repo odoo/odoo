@@ -345,6 +345,50 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
             {'balance': -250.0,      'currency_id': foreign_curr.id,     'amount_currency': -500.0},
         ])
 
+    def test_withholding_tax_custom_currency_rate(self):
+        """ The withholding lines keep the rate of the invoice (2.0), not the one edited on the payment (2.5). """
+        withholding_tax = self.percent_tax(-1, is_withholding_tax=True, withholding_sequence_id=self.withholding_sequence.id)
+        invoice = self._create_invoice_one_line(price_unit=1000.0, tax_ids=withholding_tax, currency_id=self.foreign_currency, post=True)
+
+        payment = self._register_payment(invoice, exchange_rate=2.5)
+        self.assertRecordValues(payment.move_id.line_ids, [
+            # Liquidity line:
+            {'amount_currency': 990.0,      'balance': 396.0},
+            # Receivable line:
+            {'amount_currency': -1000.0,    'balance': -401.0},
+            # withholding line:
+            {'amount_currency': 10.0,       'balance': 5.0},
+            # base lines:
+            {'amount_currency': 1000.0,     'balance': 500.0},
+            {'amount_currency': -1000.0,    'balance': -500.0},
+        ])
+
+    def test_withholding_tax_advance_payment_custom_currency_rate(self):
+        """ Without invoice, the withholding lines use the rate edited on the payment (2.5) instead of the system one (2.0). """
+        withholding_tax = self.percent_tax(-1, is_withholding_tax=True, withholding_sequence_id=self.withholding_sequence.id)
+        payment = self.env['account.payment'].create({
+            'payment_type': 'inbound',
+            'partner_type': 'customer',
+            'partner_id': self.partner_a.id,
+            'amount': 1000.0,
+            'currency_id': self.foreign_currency.id,
+            'currency_rate': 2.5,
+            'withhold': 'withhold_pay',
+            'withholding_line_ids': [Command.create({'tax_id': withholding_tax.id, 'base_amount': 1000.0})],
+        })
+        payment.action_post()
+        self.assertRecordValues(payment.move_id.line_ids, [
+            # Liquidity line:
+            {'amount_currency': 990.0,      'balance': 396.0},
+            # Receivable line:
+            {'amount_currency': -1000.0,    'balance': -400.0},
+            # withholding line:
+            {'amount_currency': 10.0,       'balance': 4.0},
+            # base lines:
+            {'amount_currency': 1000.0,     'balance': 400.0},
+            {'amount_currency': -1000.0,    'balance': -400.0},
+        ])
+
     def test_withholding_tax_default_tax_on_product(self):
         """
         Simply test that an invoice having a product with a default withholding tax will cause

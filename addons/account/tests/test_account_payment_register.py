@@ -2378,6 +2378,41 @@ class TestAccountPaymentRegister(AccountTestInvoicingWithBanksCommon, PaymentCom
         self.assertEqual(wizard.exchange_rate, invoice.invoice_currency_rate)
         self.assertAlmostEqual(1 / wizard.exchange_rate, 3194.44, places=2)
 
+    def test_register_payment_writeoff_with_rate(self):
+        """ The write-off is converted at the rate of the payment, which is 1.0 for a payment in company currency. """
+        # 300 EUR at 2.0 = 150 USD.
+        invoice_eur, invoice_usd = (
+            self._create_invoice_one_line(price_unit=300.0, tax_ids=[], currency_id=self.other_currency, invoice_date='2017-01-01', post=True)
+            for _ in range(2)
+        )
+        writeoff_vals = {
+            'payment_date': '2017-01-01',
+            'payment_difference_handling': 'reconcile',
+            'writeoff_account_id': self.company_data['default_account_revenue'].id,
+        }
+
+        payment = self._register_payment(invoice_eur, amount=298.90, **writeoff_vals)
+        self.assertRecordValues(payment._seek_for_lines()[2], [{'amount_currency': 1.10, 'balance': 0.55}])
+
+        payment = self._register_payment(invoice_usd, currency_id=self.company_data['currency'].id, amount=145.0, **writeoff_vals)
+        self.assertRecordValues(payment, [{'currency_rate': 1.0}])
+        self.assertRecordValues(payment._seek_for_lines()[2], [{'amount_currency': 5.0, 'balance': 5.0}])
+
+    def test_register_payment_other_currency_custom_rate_amount(self):
+        """ Paying a 300 EUR (150 USD) invoice in CAD, the amount follows the edited rate so the invoice stays fully paid. """
+        invoice = self._create_invoice_one_line(price_unit=300.0, tax_ids=[], currency_id=self.other_currency, invoice_date='2017-01-01', post=True)
+        wizard = self.env['account.payment.register']\
+            .with_context(active_model='account.move', active_ids=invoice.ids)\
+            .create({'payment_date': '2017-01-01', 'currency_id': self.other_currency_2.id})
+        self.assertRecordValues(wizard, [{'amount': 1.5, 'payment_difference': 0.0}])
+
+        wizard.exchange_rate = 0.02
+        self.assertRecordValues(wizard, [{'amount': 3.0, 'payment_difference': 0.0}])
+
+        payment = wizard._create_payments()
+        self.assertRecordValues(payment, [{'amount_company_currency_signed': 150.0}])
+        self.assertIn(invoice.payment_state, ('paid', 'in_payment'))
+
     def test_register_payments_multi_partner_same_currency(self):
         """ Verify registering payment for multiple vendors with identical invoice
         currencies retains the invoice currency on the wizard.

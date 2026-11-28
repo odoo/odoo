@@ -6976,7 +6976,7 @@ class AccountMove(models.Model):
             date=next_day,
         )
 
-    def refresh_invoice_currency_rate(self):
+    def action_refresh_invoice_currency_rate(self):
         for move in self:
             move.invoice_currency_rate = move.expected_currency_rate
 
