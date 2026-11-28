@@ -1073,13 +1073,17 @@ class MailMessage(models.Model):
                 attachment_domain &= (
                     Domain("res_model", "=", thread._name) & Domain("res_id", "=", thread.id)
                 ) | Domain("res_model", "=", "mail.message")
+            # any! does not filter archived records: honour active_test as _search() does
+            author_domain = Domain("name", "ilike", search_term)
+            if self.env.context.get("active_test", True):
+                author_domain &= Domain("active", "=", True)
             message_domain = Domain.OR([
                 # any!: access to attachment is allowed if you have access to the parent model
                 Domain("attachment_ids", "any!", attachment_domain),
-                # sudo: res.partner - allow searching by author name
-                [("author_id", "in", self.env["res.partner"].sudo()._search([("name", "ilike", search_term)]))],
-                # sudo: mail.guest - allow searching by guest name
-                [("author_guest_id", "in", self.env["mail.guest"].sudo()._search([("name", "ilike", search_term)]))],
+                # any!: allow searching by author name. Joined on the scanned messages: a
+                # subquery would match the name against every partner/guest of the database.
+                Domain("author_id", "any!", author_domain),
+                Domain("author_guest_id", "any!", Domain("name", "ilike", search_term)),
                 [("body", "ilike", escape(search_term, quote=False))],
                 [("subject", "ilike", search_term)],
                 [("subtype_id.description", "ilike", search_term)],
