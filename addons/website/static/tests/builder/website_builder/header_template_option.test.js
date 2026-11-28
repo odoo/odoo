@@ -1,6 +1,6 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { queryOne, waitFor } from "@odoo/hoot-dom";
-import { contains, onRpc } from "@web/../tests/web_test_helpers";
+import { queryOne, waitFor, waitForNone } from "@odoo/hoot-dom";
+import { contains, defineModels, models, onRpc } from "@web/../tests/web_test_helpers";
 import { isHeaderBgBlurAvailable } from "@website/builder/plugins/options/header/header_template_option";
 import {
     defineWebsiteModels,
@@ -74,6 +74,54 @@ describe("header blur option", () => {
         await contains(":iframe #wrapwrap > header").click();
         await waitSidebarUpdated();
         expect("[data-label='Blur']").toBeVisible();
+    });
+
+    test("the header blur is disabled on an opaque background and restored on undo", async () => {
+        let htmlStyle;
+        class WebsiteAssets extends models.Model {
+            _name = "website.assets";
+            make_scss_customization(location, changes) {
+                expect.step(`${location.split("/").at(-1)} ${JSON.stringify(changes)}`);
+                // Simulate the assets reload.
+                for (const [key, value] of Object.entries(changes)) {
+                    if (["NULL", "null"].includes(value)) {
+                        htmlStyle.removeProperty(`--${key}`);
+                    } else {
+                        htmlStyle.setProperty(`--${key}`, value);
+                    }
+                }
+            }
+        }
+        defineModels([WebsiteAssets]);
+        onRpc("/website/theme_customize_bundle_reload", () => "");
+        await setupWebsiteBuilder("", {
+            headerContent,
+            styleContent: `:root { --400: #CED4DA; }`,
+        });
+        // Retrieved now, as the custom color tab adds another iframe.
+        htmlStyle = queryOne(":iframe html").style;
+        htmlStyle.setProperty("--menu-custom", "rgba(255, 0, 0, 0.5)");
+        htmlStyle.setProperty("--header-bg-blur", "5");
+        await contains(":iframe #wrapwrap > header").click();
+        await waitFor("[data-label='Blur']");
+
+        await contains("[data-label='Background'] button.o_we_color_preview").click();
+        await contains("button.custom-tab").click();
+        await contains("button[data-color='400']").click();
+        await expect.waitForSteps([
+            'user_color_palette.scss {"menu-custom":"#CED4DA"}',
+            'user_values.scss {"menu-gradient":"NULL"}',
+            'user_values.scss {"header-bg-blur":"null"}',
+        ]);
+        await waitForNone("[data-label='Blur']");
+
+        await contains(".o-snippets-menu button[data-icon='undo']").click();
+        await expect.waitForSteps([
+            'user_color_palette.scss {"menu-custom":"#FF000080"}',
+            'user_values.scss {"menu-gradient":"NULL"}',
+            'user_values.scss {"header-bg-blur":"5"}',
+        ]);
+        await waitFor("[data-label='Blur']");
     });
 });
 
