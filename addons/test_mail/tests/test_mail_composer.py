@@ -1372,6 +1372,34 @@ class TestComposerInternals(TestMailComposer):
                 })._action_send_mail()
 
     @users('employee')
+    def test_mail_composer_rights_update_message(self):
+        test_record = self.test_record.with_env(self.env)
+        own_message = test_record.message_post(
+            body="Own message", message_type="comment", subtype_xmlid="mail.mt_comment",
+        )
+        other_message = test_record.with_user(self.user_employee_2).message_post(
+            body="Other message", message_type="comment", subtype_xmlid="mail.mt_comment",
+        )
+        other_body = other_message.body
+        own_composer, other_composer, admin_composer = (
+            self.env['mail.compose.message'].with_user(user).with_context(
+                self._get_web_context(test_record, default_message_id=message.id),
+            ).create({'body': '<p>Edited</p>'})
+            for user, message in (
+                (self.env.user, own_message),
+                (self.env.user, other_message),
+                (self.user_admin, other_message),
+            )
+        )
+        own_composer.action_update_message()
+        self.assertIn("Edited", own_message.body)
+        with self.assertRaises(AccessError):
+            other_composer.action_update_message()
+        self.assertEqual(other_message.body, other_body)
+        admin_composer.action_update_message()
+        self.assertIn("Edited", other_message.body)
+
+    @users('employee')
     def test_mail_composer_save_template(self):
         cases = [
             ('<p>Template Body</p>', None, 'Basic template'),
