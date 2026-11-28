@@ -582,9 +582,9 @@ class ProductProduct(models.Model):
         if location:
             self = self.with_context(location=location.ids)  # noqa: PLW0642
         if lot:
-            fifo_stack_size = lot.product_qty
+            fifo_stack_size = lot.with_context(allowed_company_ids=self.env.company.ids).product_qty
         else:
-            fifo_stack_size = self._with_valuation_context().with_context(to_date=at_date).qty_available
+            fifo_stack_size = self.with_context(allowed_company_ids=self.env.company.ids)._with_valuation_context().with_context(to_date=at_date).qty_available
         if self.env.context.get('fifo_qty_already_processed'):
             # When validating multiple moves at the same time, the qty_available won't be up to date yet
             fifo_stack_size -= self.env.context['fifo_qty_already_processed']
