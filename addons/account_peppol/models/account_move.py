@@ -41,8 +41,18 @@ class AccountMove(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_peppol_sent(self):
-        if not self._context.get('force_delete') and any(move.peppol_is_sent for move in self):
-            raise UserError(_("You cannot delete an entry that has already been sent via Electronic Invoicing."))
+        if not self._context.get('force_delete') and any(
+            move._is_peppol_outgoing() and move.peppol_is_sent for move in self
+        ):
+            raise UserError(_(
+                "You cannot delete invoices that were sent via Peppol / PDP. "
+                "If you need to modify them, you must issue a credit or debit note."
+            ))
+
+    def _is_peppol_outgoing(self):
+        # To override in account_peppol_selfbilling
+        self.ensure_one()
+        return self.is_sale_document(include_receipts=True)
 
     @api.depends('state')
     def _compute_peppol_move_state(self):

@@ -8,6 +8,7 @@ from urllib import parse
 from requests import PreparedRequest, Response, Session
 
 from odoo import Command
+from odoo.exceptions import UserError
 from odoo.tests.common import tagged, freeze_time
 from odoo.tools.misc import file_open
 
@@ -689,6 +690,22 @@ class TestPeppolMessage(TestPeppolMessageCommon):
             embedded_pdfs and embedded_pdfs[0].text,
             "Peppol XML must embed the already-generated PDF"
         )
+
+    def test_delete_peppol_documents(self):
+        """Sent customer invoices cannot be deleted, unsent ones and received bills can."""
+        invoice, bill = self.env['account.move'].create([
+            {'move_type': move_type, 'partner_id': self.valid_partner.id}
+            for move_type in ('out_invoice', 'in_invoice')
+        ])
+        for state in ('ready', 'to_send', 'error'):
+            invoice.peppol_move_state = state
+            invoice._unlink_except_peppol_sent()
+        for state in ('processing', 'done'):
+            invoice.peppol_move_state = state
+            with self.assertRaisesRegex(UserError, "sent via Peppol"):
+                invoice._unlink_except_peppol_sent()
+        bill.peppol_move_state = 'done'
+        bill._unlink_except_peppol_sent()
 
 
 @freeze_time('2023-01-01')
