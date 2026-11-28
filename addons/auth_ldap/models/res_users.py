@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.exceptions import AccessDenied
+import pytz
 
-from odoo import api, models, SUPERUSER_ID
+from odoo import SUPERUSER_ID, api, models
+from odoo.exceptions import AccessDenied
+from odoo.http import request
 from odoo.modules.registry import Registry
 
 
@@ -27,8 +29,15 @@ class Users(models.Model):
                 for conf in Ldap._get_ldap_dicts():
                     entry = Ldap._authenticate(conf, login, credential['password'])
                     if entry:
+                        uid = Ldap._get_or_create_user(conf, login, entry)
+                        # first login of the created user, as done in base
+                        user = env['res.users'].browse(uid).with_user(uid)
+                        tz = request.cookies.get('tz') if request else None
+                        if tz in pytz.all_timezones and not user.tz:
+                            user.tz = tz
+                        user._update_last_login()
                         return {
-                            'uid': Ldap._get_or_create_user(conf, login, entry),
+                            'uid': uid,
                             'auth_method': 'ldap',
                             'mfa': 'default',
                         }

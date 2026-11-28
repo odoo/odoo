@@ -63,3 +63,6 @@ class TestAuthLDAP(HttpCase):
             "SELECT id FROM res_users WHERE login = %s and id = %s",
             ("test_ldap_user", session.uid))
         self.assertTrue(self.env.cr.rowcount, "User should be present")
+        self.assertTrue(
+            self.env['res.users'].browse(session.uid).login_date,
+            "The first login of the user should be recorded")
