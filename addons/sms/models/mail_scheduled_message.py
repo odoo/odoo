@@ -1,4 +1,6 @@
-from odoo import fields, models, _
+import json
+
+from odoo import _, fields, models
 from odoo.tools import html2plaintext
 
 
@@ -23,6 +25,7 @@ class MailScheduledMessage(models.Model):
                 record=record,
                 body=html2plaintext(self.body, include_references=False) if isinstance(self.body, str) else self.body,
                 subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note') if self.is_note else False,
+                number_field=json.loads(self.notification_parameters or '{}').get('number_field', False),
             )
 
         return super()._post_message_send(record)
