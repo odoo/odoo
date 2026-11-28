@@ -20,6 +20,7 @@ class PropertiesBaseDefinitionMixin(models.AbstractModel):
         "properties.base.definition",
         compute="_compute_properties_base_definition_id",
         search="_search_properties_base_definition_id",
+        exportable=False,
     )
 
     def _compute_properties_base_definition_id(self):
