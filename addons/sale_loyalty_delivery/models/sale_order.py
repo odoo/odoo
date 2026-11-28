@@ -36,6 +36,7 @@ class SaleOrder(models.Model):
         delivery_line = self.order_line.filtered(lambda line: line.is_delivery)[:1]
         taxes = delivery_line.product_id.taxes_id._filter_taxes_by_company(self.company_id)
         taxes = self.fiscal_position_id.map_tax(taxes)
+<<<<<<< f5c07525c5ccf8d6ccb37bb5f118acc16d8e9465
         max_discount = reward.discount_max_amount or float("inf")
         return [
             {
@@ -58,6 +59,41 @@ class SaleOrder(models.Model):
                 "tax_ids": [Command.clear()] + [Command.link(tax.id) for tax in taxes],
             }
         ]
+||||||| 4adf9ebea1f39dc2d42461e1a92f55cb5b64f3e8
+        max_discount = reward.discount_max_amount or float('inf')
+        return [{
+            'name': _('Free Shipping - %s', reward.description),
+            'reward_id': reward.id,
+            'coupon_id': coupon.id,
+            'points_cost': reward.required_points if not reward.clear_wallet else self._get_real_points_for_coupon(coupon),
+            'product_id': reward.discount_line_product_id.id,
+            'price_unit': -min(max_discount, delivery_line.price_unit or 0),
+            'product_uom_qty': 1,
+            'product_uom': reward.discount_line_product_id.uom_id.id,
+            'order_id': self.id,
+            'is_reward_line': True,
+            'sequence': max(self.order_line.filtered(lambda x: not x.is_reward_line).mapped('sequence'), default=0) + 1,
+            'tax_id': [(Command.CLEAR, 0, 0)] + [(Command.LINK, tax.id, False) for tax in taxes],
+        }]
+=======
+        max_discount = reward.currency_id._convert(
+            reward.discount_max_amount, self.currency_id, self.company_id,
+        ) or float('inf')
+        return [{
+            'name': _('Free Shipping - %s', reward.description),
+            'reward_id': reward.id,
+            'coupon_id': coupon.id,
+            'points_cost': reward.required_points if not reward.clear_wallet else self._get_real_points_for_coupon(coupon),
+            'product_id': reward.discount_line_product_id.id,
+            'price_unit': -min(max_discount, delivery_line.price_unit or 0),
+            'product_uom_qty': 1,
+            'product_uom': reward.discount_line_product_id.uom_id.id,
+            'order_id': self.id,
+            'is_reward_line': True,
+            'sequence': max(self.order_line.filtered(lambda x: not x.is_reward_line).mapped('sequence'), default=0) + 1,
+            'tax_id': [(Command.CLEAR, 0, 0)] + [(Command.LINK, tax.id, False) for tax in taxes],
+        }]
+>>>>>>> a225810b0dea11b1e7afeeecda2ad18a45bf0af0
 
     def _get_reward_line_values(self, reward, coupon, **kwargs):
         self.ensure_one()
