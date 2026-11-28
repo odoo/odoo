@@ -2649,6 +2649,44 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         self.assertEqual(lot.with_user(user).sale_order_count, 1)
         self.assertEqual(lot.with_user(user).sale_order_ids, sale_order_2)
 
+    def test_sale_order_count_lot_reader_without_sale_access(self):
+        """The serial number form of a user who may read serial numbers but no
+        sales orders leaves out the sales order fields, so opening it computes
+        none of them, while a stock user without sales rights still counts its
+        sale order.
+        """
+        group = self.env['res.groups'].create({'name': 'Serial Number Readers'})
+        self.env['ir.model.access'].create({
+            'name': 'stock.lot serial number reader',
+            'model_id': self.env.ref('stock.model_stock_lot').id,
+            'group_id': group.id,
+            'perm_read': True,
+        })
+        lot_reader = new_test_user(self.env, login='lot_reader', groups='base.group_user')
+        lot_reader.groups_id = [Command.link(group.id)]
+        stock_user = new_test_user(self.env, login='stock_user_no_sale', groups='stock.group_stock_user')
+        self.new_product.tracking = 'lot'
+        lot = self.env['stock.lot'].create({
+            'name': 'SN002',
+            'product_id': self.new_product.id,
+        })
+        self.env['stock.quant']._update_available_quantity(self.new_product, self.company_data['default_warehouse'].lot_stock_id, 1, lot_id=lot)
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': self.new_product.id,
+                'product_uom_qty': 1.0,
+            })],
+        })
+        sale_order.action_confirm()
+        sale_order.picking_ids.button_validate()
+        self.assertEqual(sale_order.picking_ids.state, 'done')
+        arch = lot.with_user(lot_reader).get_views([(False, 'form')])['views']['form']['arch']
+        self.assertNotIn('sale_order_ids', arch)
+        self.assertNotIn('sale_order_count', arch)
+        lot.invalidate_recordset()
+        self.assertEqual(lot.with_user(stock_user).sale_order_ids, sale_order)
+
     def test_validate_picking_creates_sale_line_for_so_with_no_sol(self):
         """Test that validating a picking creates a sale order line for a sale order with no lines"""
         warehouse = self.company_data['default_warehouse']

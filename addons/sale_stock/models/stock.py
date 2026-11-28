@@ -219,8 +219,10 @@ class StockPicking(models.Model):
 class StockLot(models.Model):
     _inherit = 'stock.lot'
 
-    sale_order_ids = fields.Many2many('sale.order', string="Sales Orders", compute='_compute_sale_order_ids')
-    sale_order_count = fields.Integer('Sale order count', compute='_compute_sale_order_ids')
+    sale_order_ids = fields.Many2many('sale.order', string="Sales Orders", compute='_compute_sale_order_ids',
+                                      groups='sales_team.group_sale_salesman,stock.group_stock_user')
+    sale_order_count = fields.Integer('Sale order count', compute='_compute_sale_order_ids',
+                                      groups='sales_team.group_sale_salesman,stock.group_stock_user')
 
     @api.depends('name')
     def _compute_sale_order_ids(self):
