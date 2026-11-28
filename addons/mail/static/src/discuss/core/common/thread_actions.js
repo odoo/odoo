@@ -8,8 +8,38 @@ import { NotificationSettings } from "@mail/discuss/core/common/notification_set
 import { PinnedMessagesPanel } from "@mail/discuss/core/common/pinned_messages_panel";
 
 import { _t } from "@web/core/l10n/translation";
+import { user } from "@web/core/user";
+
+export const expandDiscussSequenceGroup = 5;
+export const expandDiscussSequenceQuick = 0;
 
 describeThreadActionGroup(10, { tags: ACTION_GROUP_TAGS.ACTION_PANELS });
+
+registerThreadAction("expand-discuss", {
+    condition: ({ ancestors, channel, owner, store }) =>
+        user.isRegularUser &&
+        channel &&
+        ancestors.inChatWindow &&
+        !store.ui.isSmall() &&
+        !owner.isDiscussSidebarChannelActions,
+    icon: "expand_content",
+    name: _t("Open in Discuss"),
+    onSelected({ channel, store }) {
+        store.env.services.action.doAction(
+            {
+                type: "ir.actions.client",
+                tag: "mail.action_discuss",
+            },
+            {
+                clearBreadcrumbs: true,
+                additionalContext: { active_id: channel.id },
+            }
+        );
+    },
+    sequence: 10,
+    sequenceGroup: expandDiscussSequenceGroup,
+    sequenceQuick: expandDiscussSequenceQuick,
+});
 
 registerThreadAction("pinned-messages", {
     availableOffline: true,
