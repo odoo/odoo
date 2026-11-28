@@ -290,9 +290,24 @@ class TestControllers(tests.HttpCase):
         self.assertIn('Disallow: /my/', res.text)
 
         # 2. Check that the login page does not contain the noindex meta tag
+        noindex_meta_tag = 'meta name="robots" content="noindex'
         res_login = self.url_open('/web/login')
         self.assertEqual(res_login.status_code, 200)
-        self.assertNotIn('meta name="robots" content="noindex', res_login.text)
+        self.assertNotIn(noindex_meta_tag, res_login.text)
+
+        # 3. Check that portal pages are noindex.
+        self.authenticate('admin', 'admin')
+        res_portal = self.url_open('/my/home')
+        self.assertEqual(res_portal.status_code, 200)
+        self.assertIn(noindex_meta_tag, res_portal.text)
+
+        # 4. Any URL containing an access_token must be noindex
+        res_plain = self.url_open('/contactus')
+        self.assertEqual(res_plain.status_code, 200)
+        self.assertNotIn(noindex_meta_tag, res_plain.text)
+        res_token = self.url_open('/contactus?access_token=dummy')
+        self.assertEqual(res_token.status_code, 200)
+        self.assertIn(noindex_meta_tag, res_token.text)
 
     @mute_logger('odoo.addons.http_routing.models.ir_http', 'odoo.http')
     def test_error_page_flag(self):

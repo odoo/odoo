@@ -127,7 +127,9 @@
         <t t-set="website_meta" t-value="seo_object and seo_object.sudo().get_website_meta() or {}"/>
         <meta name="default_title" t-att-content="default_title" groups="website.group_website_designer"/>
         <t t-set="no_index" t-value="
-            (main_object and 'website_indexed' in main_object and not main_object.sudo().website_indexed)
+            is_portal
+            or request.httprequest.args.get('access_token')
+            or (main_object and 'website_indexed' in main_object and not main_object.sudo().website_indexed)
             or (website.domain and not website._is_indexable_url(request.httprequest.url_root))
             or (pager and isinstance(pager, dict) and pager.get('page', {}).get('num', 1) != 1)
         "/>

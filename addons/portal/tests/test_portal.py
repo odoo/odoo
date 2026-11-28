@@ -71,6 +71,13 @@ class TestUsersHttp(BaseCommon, HttpCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(bank_account.holder_name, 'Partner A Holder')
 
+    def test_portal_pages_are_noindex(self):
+        """Portal pages must carry a noindex robots meta"""
+        self.authenticate(self.portal_user.login, self.portal_user.login)
+        response = self.url_open('/my/home')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('name="robots" content="noindex"', response.text)
+
     def test_address_submit_parent_name_for_portal_partner(self):
         "Create a new partner upon entering a new Company Name"
         portal_user = self.portal_user.partner_id
