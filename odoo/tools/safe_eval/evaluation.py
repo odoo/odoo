@@ -14,10 +14,12 @@ condition/math builtins.
 import ast
 import dis
 import functools
+import logging
 import sys
 import types
 import typing
 import zoneinfo
+from importlib.util import MAGIC_NUMBER
 from opcode import opmap, opname
 from types import CodeType
 
@@ -34,6 +36,8 @@ from .runtime import (
     safe_whitelist,
     unsafe_policy,
 )
+
+_logger = logging.getLogger(__name__)
 
 unsafe_eval = eval
 
@@ -225,6 +229,40 @@ _SAFE_OPCODES = _EXPR_OPCODES.union(to_opcodes([
     'NOT_TAKEN',
 ])) - _BLACKLIST
 
+# Magic numbers of the CPython releases whose code-unit layout was verified.
+# Any bytecode format change bumps it.
+# https://github.com/python/cpython/blob/3.14/Include/internal/pycore_magic_number.h
+_KNOWN_BYTECODE_MAGICS = frozenset({
+    3531,  # CPython 3.12
+    3571,  # CPython 3.13
+    3627,  # CPython 3.14
+})
+
+_BYTECODE_MAGIC = int.from_bytes(MAGIC_NUMBER[:2], 'little')
+
+if sys.implementation.name == 'cpython' and _BYTECODE_MAGIC in _KNOWN_BYTECODE_MAGICS:
+    _CACHE = opmap['CACHE']
+
+    def _code_opcodes(code_obj):
+        # co_code is a deoptimized array of 2-byte _Py_CODEUNIT {opcode, oparg}
+        # whose inline caches are zeroed by deopt_code() (CACHE == 0), so every
+        # even byte is an instruction opcode or CACHE.
+        # Layout must be re-verified for each new CPython release.
+        opcodes = set(code_obj.co_code[::2])
+        opcodes.discard(_CACHE)
+        return opcodes
+else:
+    if sys.implementation.name == 'cpython':
+        _logger.warning(
+            "safe_eval: unknown CPython bytecode magic number %d (Python %d.%d.%d), "
+            "falling back to the slower dis-based opcode check. Verify the code-unit "
+            "layout and add it to _KNOWN_BYTECODE_MAGICS.",
+            _BYTECODE_MAGIC, *sys.version_info[:3],
+        )
+
+    def _code_opcodes(code_obj):
+        return {instr.opcode for instr in dis.get_instructions(code_obj)}
+
 
 def assert_no_dunder_name(code_obj, expr):
     """ assert_no_dunder_name(code_obj, expr) -> None
@@ -270,9 +308,7 @@ def assert_valid_codeobj(allowed_codes, code_obj, expr):
     """
     assert_no_dunder_name(code_obj, expr)
 
-    # set operations are almost twice as fast as a manual iteration + condition
-    # when loading /web according to line_profiler
-    code_codes = {i.opcode for i in dis.get_instructions(code_obj)}
+    code_codes = _code_opcodes(code_obj)
     if not allowed_codes >= code_codes:
         raise ValueError("forbidden opcode(s) in %r: %s" % (expr, ', '.join(opname[x] for x in (code_codes - allowed_codes))))
 
