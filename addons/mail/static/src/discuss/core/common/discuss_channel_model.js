@@ -408,6 +408,8 @@ export class DiscussChannel extends Record {
             if (!this.isDisplayed) {
                 this.self_member_id.new_message_separator_ui =
                     this.self_member_id.new_message_separator;
+                this.self_member_id.message_unread_counter_ui =
+                    this.self_member_id.message_unread_counter;
                 this.markedAsUnread = false;
             }
         },
