@@ -321,19 +321,24 @@ export function changeIs(amount) {
     ];
 }
 /**
+ * Build a `:contains()` regex matching exactly the given amount (e.g. "0.0"
+ * matches "$ 0.00" but neither "0.05" nor "10.00").
+ * @param {String} amount
+ */
+function exactAmountRegex(amount) {
+    const [integer, decimals = ""] = String(amount).split(".");
+    const decimalPart = decimals ? `\\.${decimals}0*` : `(\\.0*)?`;
+    return `/(^|[^\\d.,-])${integer}${decimalPart}(?![\\d.,])/`;
+}
+/**
  * Check if the remaining is the provided amount.
  * @param {String} amount
  */
 export function remainingIs(amount) {
-    const step = `.payment-status-amount .amount:contains("${amount}")`;
-    // If amount is 0 we do NOT show the payment status on the PaymentScreen
-    if (!parseFloat(amount)) {
-        return [{ trigger: negate(step) }];
-    }
     return [
         {
             content: `remaining amount is ${amount}`,
-            trigger: step,
+            trigger: `.payment-due .remaining-amount:contains(${exactAmountRegex(amount)})`,
         },
     ];
 }

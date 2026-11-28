@@ -40,7 +40,45 @@
     }
 }
 
-.paymentlines-container .total {
+.paymentlines-container.payment-due {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  column-gap: var(--o-bs-spacer-3, 1rem);
+
+  > .payment-due-label,
+  > .remaining-amount,
+  > .payment-due-total {
+    grid-column: 2;
+  }
+  > :not(.payment-due-label, .remaining-amount, .payment-due-total) {
+    grid-column: 3;
+    grid-row: 2;
+    justify-self: end;
+  }
+
+  .total .o_price_symbol {
+    margin: 0 !important;
+  }
+
+  @media (max-width: 767.98px) {
+    > :not(.payment-due-label, .remaining-amount, .payment-due-total) {
+      grid-column: 1 / -1;
+      grid-row: 4;
+      justify-self: center;
+    }
+  }
+}
+
+.center-content .paymentlines-container.payment-due {
+  padding-inline: 150px;
+}
+
+.payment-screen .paymentlines {
+  flex-grow: 0 !important;
+}
+
+.paymentlines-container .remaining-amount {
   font-size: clamp(24px, 3vw, 64px);
 }
 
