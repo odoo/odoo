@@ -1490,15 +1490,11 @@ class AccountEdiUBL(models.AbstractModel):
                     'schemeID': '0208',
                 },
             })
-        elif (
-            commercial_partner.country_code == 'DK'
-            and commercial_partner.peppol_eas == '0184'
-            and commercial_partner.peppol_endpoint
-        ):
+        elif commercial_partner.country_code == 'DK' and commercial_partner.company_registry:
             nodes.append({
                 'cbc:RegistrationName': {'_text': commercial_partner.name},
                 'cbc:CompanyID': {
-                    '_text': commercial_partner.peppol_endpoint,
+                    '_text': commercial_partner.company_registry,
                     'schemeID': '0184',
                 },
             })
