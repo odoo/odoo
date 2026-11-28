@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2026-11-20 06:05+0000\n"
+"PO-Revision-Date: 2026-11-22 10:51+0000\n"
 "Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-19/"
 "hr_presence/ro/>\n"
@@ -28,7 +28,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_presence/models/hr_employee.py:0
 msgid "%(name)s has been noted as %(state)s today"
-msgstr ""
+msgstr "Astăzi, pentru %(name)s a fost înregistrată starea %(state)s."
 
 #. module: hr_presence
 #: model:mail.template,body_html:hr_presence.mail_template_presence
@@ -48,6 +48,19 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"                    Bună ziua, <t t-out=\"object.name or ''\">Abigail "
+"Peterson</t>,<br/><br/>\n"
+"Sperăm că ești bine. Am observat că lipsești de la serviciu și nu ai "
+"înregistrat o cerere de concediu. Dacă absența se datorează unei omisiuni "
+"din partea noastră, ne cerem sincer scuze pentru orice confuzie.\n"
+"Te rugăm să iei măsurile necesare pentru a clarifica această absență "
+"neplanificată. Dacă ai întrebări sau ai nevoie de ajutor, contactează-ți "
+"managerul sau departamentul de resurse umane cât mai curând.\n"
+"Îți mulțumim pentru atenția acordată.\n"
+"                    <br/>Cu stimă,<br/><br/>\n"
+"                </div>\n"
+"            "
 
 #. module: hr_presence
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__absent
@@ -59,7 +72,7 @@ msgstr "Absent"
 #. module: hr_presence
 #: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_log
 msgid "Add a log note"
-msgstr ""
+msgstr "Adaugă o notă în jurnal"
 
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_res_company
@@ -143,7 +156,7 @@ msgstr "Afișare stare prezență HR"
 #: model:ir.model.fields,field_description:hr_presence.field_res_config_settings__id
 #: model:ir.model.fields,field_description:hr_presence.field_res_users_log__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_res_users_log__ip
@@ -173,7 +186,7 @@ msgstr "Setați manual Prezent"
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_public__hr_presence_state_display__out_of_working_hour
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_search
 msgid "Off-Hours"
-msgstr ""
+msgstr "În afara orelor"
 
 #. module: hr_presence
 #. odoo-javascript
@@ -184,7 +197,7 @@ msgstr "Controlul prezenței"
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_search
 msgid "Presence/Absence"
-msgstr ""
+msgstr "Prezență/Absență"
 
 #. module: hr_presence
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__present
@@ -206,7 +219,7 @@ msgstr "Trimite SMS"
 #. module: hr_presence
 #: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_sms
 msgid "Send a SMS"
-msgstr ""
+msgstr "Trimite SMS"
 
 #. module: hr_presence
 #: model:mail.template,description:hr_presence.mail_template_presence

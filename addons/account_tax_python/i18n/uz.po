@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"POT-Creation-Date: 2026-11-27 18:33+0000\n"
 "PO-Revision-Date: 2026-08-03 01:59+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Uzbek <https://translate.odoo.com/projects/odoo-19/"
@@ -41,28 +41,31 @@ msgid ""
 "        e.g 200 * (1 - 10%) = 180 (price included)\n"
 "        "
 msgstr ""
-"- Soliqlar guruhi: Soliq - bu kichik soliqlardan tashkil topgan "
-"to‘plam.     - Qat'iy belgilangan: Soliq miqdori narx qanday bo‘lishidan "
-"qat'i nazar o‘zgarmaydi.     - Foizli: Soliq summasi narxning foizi "
-"hisoblanadi: masalan, 100 * (1 + 10%) = 110 (narx kiritilmagan) masalan, "
-"110 / (1 + 10%) = 100 (narx kiritilgan) - Foiz solig‘i kiritilgan: Soliq "
-"summasi narxning bo‘linmasi hisoblanadi: masalan, 180 / (1 - 10%) = 200 "
-"(narx kiritilmagan) masalan, 200 * (1 - 10%) = 180 (narx kiritilgan)"
+"- Soliqlar guruhi: Soliq - bu kichik soliqlardan tashkil topgan to‘plam.     "
+"- Qat'iy belgilangan: Soliq miqdori narx qanday bo‘lishidan qat'i nazar "
+"o‘zgarmaydi.     - Foizli: Soliq summasi narxning foizi hisoblanadi: "
+"masalan, 100 * (1 + 10%) = 110 (narx kiritilmagan) masalan, 110 / (1 + 10%) "
+"= 100 (narx kiritilgan) - Foiz solig‘i kiritilgan: Soliq summasi narxning "
+"bo‘linmasi hisoblanadi: masalan, 180 / (1 - 10%) = 200 (narx kiritilmagan) "
+"masalan, 200 * (1 - 10%) = 180 (narx kiritilgan)"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax__formula
-#, fuzzy
 msgid ""
 "Compute the amount of the tax.\n"
 "\n"
 ":param base: float, actual amount on which the tax is applied\n"
 ":param price_unit: float\n"
 ":param quantity: float\n"
-":param product: A object representing the product\n"
+":param product: An object representing the product,\n"
+"read a field with product.<field>, e.g. product.weight.\n"
+":param uom: An object representing the unit of measure,\n"
+"read a field with uom.<field>, e.g. uom.factor.\n"
+"\n"
+"Examples:\n"
+"- quantity * uom.factor\n"
+"- product.weight * quantity * uom.factor"
 msgstr ""
-"Soliq miqdorini hisoblang.  :param baza: float, soliq solinadigan haqiqiy "
-"miqdor :param narx_birligi: float :param miqdor: float :param mahsulot: "
-"Mahsulotni ifodalovchi obyekt"
 
 #. module: account_tax_python
 #: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax__amount_type__code
@@ -134,7 +137,8 @@ msgstr "Faqat int, float yoki None o‘zgarmas qiymatlar sifatida ruxsat etilgan
 #: code:addons/account_tax_python/models/account_tax.py:0
 #, fuzzy
 msgid "Only primitive types are allowed in python tax formula context."
-msgstr "Python soliq formulasi kontekstida faqat sodda turlarga ruxsat beriladi"
+msgstr ""
+"Python soliq formulasi kontekstida faqat sodda turlarga ruxsat beriladi"
 
 #. module: account_tax_python
 #. odoo-python
@@ -174,3 +178,16 @@ msgstr "Noma'lum funksiya chaqiruvi"
 #, fuzzy
 msgid "Unknown identifier: %s"
 msgstr "Noma'lum identifikator: %s"
+
+#, fuzzy
+#~ msgid ""
+#~ "Compute the amount of the tax.\n"
+#~ "\n"
+#~ ":param base: float, actual amount on which the tax is applied\n"
+#~ ":param price_unit: float\n"
+#~ ":param quantity: float\n"
+#~ ":param product: A object representing the product\n"
+#~ msgstr ""
+#~ "Soliq miqdorini hisoblang.  :param baza: float, soliq solinadigan haqiqiy "
+#~ "miqdor :param narx_birligi: float :param miqdor: float :param mahsulot: "
+#~ "Mahsulotni ifodalovchi obyekt"

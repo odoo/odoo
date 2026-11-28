@@ -18,11 +18,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 17:37+0000\n"
+"POT-Creation-Date: 2026-11-27 18:32+0000\n"
 "PO-Revision-Date: 2026-11-19 14:18+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
-"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/account/"
-"nl/>\n"
+"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/account/nl/"
+">\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -158,15 +158,6 @@ msgid ""
 msgstr ""
 "%(attachment_name)s (losgemaakt door %(user)s op %(date)s)%"
 "(attachment_extension)s"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid ""
-"%(auto_post_name)s auto-posting enabled. Next accounting date: %(move_date)s."
-msgstr ""
-"%(auto_post_name)s automatisch boeken ingeschakeld. Volgende boekhouddatum: %"
-"(move_date)s."
 
 #. module: account
 #. odoo-python
@@ -4293,6 +4284,7 @@ msgstr "April"
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
+#: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_search
@@ -4461,6 +4453,14 @@ msgid ""
 msgstr ""
 "Automatisch boeken is uitgeschakeld voor deze factuur omdat er een mogelijk "
 "duplicaat is gedetecteerd."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"Auto-posting enabled: %(auto_post_name)s. Next accounting date: %"
+"(move_date)s."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__autopost_bills
@@ -16074,6 +16074,11 @@ msgid "Sanitized Account Number"
 msgstr "Opgeschoonde rekeningnummer"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__sanitized_account_number
+msgid "Sanitized Bank Account Number"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding
 #: model_terms:ir.ui.view,arch_db:account.res_company_view_form_terms
 msgid "Save"
@@ -18759,8 +18764,8 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-msgid "The recurrence will end on %s (included)."
-msgstr "De herhaling eindigt op %s (inbegrepen)."
+msgid "The recurrence will end on %(date)s (included)."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -19434,11 +19439,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid ""
-"This move is configured to be posted automatically at the accounting date: "
-"%s."
+"This move is configured to be posted automatically at the accounting date: %"
+"(date)s."
 msgstr ""
-"Deze boeking is geconfigureerd om automatisch te worden geboekt op de "
-"boekhouddatum: %s."
 
 #. module: account
 #. odoo-python
@@ -22443,6 +22446,23 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Self-billing verkoopfactuur (Ref {{ object.name "
 "or 'n/a' }})"
+
+#~ msgid ""
+#~ "%(auto_post_name)s auto-posting enabled. Next accounting date: %"
+#~ "(move_date)s."
+#~ msgstr ""
+#~ "%(auto_post_name)s automatisch boeken ingeschakeld. Volgende "
+#~ "boekhouddatum: %(move_date)s."
+
+#~ msgid "The recurrence will end on %s (included)."
+#~ msgstr "De herhaling eindigt op %s (inbegrepen)."
+
+#~ msgid ""
+#~ "This move is configured to be posted automatically at the accounting "
+#~ "date: %s."
+#~ msgstr ""
+#~ "Deze boeking is geconfigureerd om automatisch te worden geboekt op de "
+#~ "boekhouddatum: %s."
 
 #~ msgid ""
 #~ "Email addresses that will receive copy for sent and received invoices. "

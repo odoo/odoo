@@ -16,19 +16,19 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-24 17:38+0000\n"
-"PO-Revision-Date: 2026-10-13 12:33+0000\n"
-"Last-Translator: Vlad Patenko <vlad.patenko@gmail.com>\n"
+"PO-Revision-Date: 2026-11-26 11:06+0000\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>\n"
 "Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-19/"
 "product/uk/>\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
-"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
-"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
-"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
-"X-Generator: Weblate 2026.8.1\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 "
+"? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > "
+"14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % "
+"100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: product
 #. odoo-python
@@ -63,6 +63,10 @@ msgid ""
 "Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %"
 "(total_amount)s"
 msgstr ""
+"%(base)s з %(discount)s %% %(discount_type)s та %(surcharge)s додатково "
+"платою\n"
+"Приклад: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %"
+"(total_amount)s"
 
 #. module: product
 #. odoo-python
@@ -71,24 +75,26 @@ msgid ""
 "%(item_name)s: end date (%(end_date)s) should be after start date (%"
 "(start_date)s)"
 msgstr ""
+"%(item_name)s: кінцева дата (%(end_date)s) повинна бути після дати початку (%"
+"(start_date)s)"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "%(percentage)s %% %(discount_type)s on %(base)s %(extra)s"
-msgstr ""
+msgstr "%(percentage)s %% %(discount_type)s на %(base)s %(extra)s"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "%(percentage)s %% discount on %(pricelist)s"
-msgstr ""
+msgstr "%(percentage)s %% знижка на %(pricelist)s"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "%(percentage)s %% discount on sales price"
-msgstr ""
+msgstr "%(percentage)s %% знижка на ціну продажу"
 
 #. module: product
 #. odoo-python
@@ -111,7 +117,7 @@ msgstr "'Етикетки товарів - %s' % (object.name)"
 #. module: product
 #: model:ir.actions.report,print_report_name:product.report_product_packaging
 msgid "'Products packaging - %s' % (object.uom_id.name)"
-msgstr ""
+msgstr "'Пакування товарів- %s' % (object.name)"
 
 #. module: product
 #. odoo-python
@@ -123,13 +129,13 @@ msgstr "(напр: опис товару, електронна книга, юр�
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "+ %(amount)s extra fee"
-msgstr ""
+msgstr "+ %(amount)s додаткова плата"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "- %(amount)s rebate"
-msgstr ""
+msgstr "- %(amount)s знижка"
 
 #. module: product
 #. odoo-python
@@ -174,7 +180,7 @@ msgstr "10 одиниць"
 #. module: product
 #: model:product.template,description_sale:product.product_product_4_product_template
 msgid "160x80cm, with large legs"
-msgstr ""
+msgstr "160x80см, з великими ніжками"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__2x7xprice
@@ -184,12 +190,12 @@ msgstr "2 x 7 з ціною"
 #. module: product
 #: model:product.attribute.value,name:product.pav_duration_year_2
 msgid "2 years"
-msgstr ""
+msgstr "2 роки"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_size_2xl
 msgid "2XL"
-msgstr ""
+msgstr "2XL"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_duration_year_3
@@ -199,7 +205,7 @@ msgstr "3 роки"
 #. module: product
 #: model:product.attribute.value,name:product.pav_size_3xl
 msgid "3XL"
-msgstr ""
+msgstr "3XL"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__4x12
@@ -219,17 +225,17 @@ msgstr "4 x 7 з ціною"
 #. module: product
 #: model:product.attribute.value,name:product.pav_size_4xl
 msgid "4XL"
-msgstr ""
+msgstr "4XL"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_size_5xl
 msgid "5XL"
-msgstr ""
+msgstr "5XL"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_duration_month_6
 msgid "6 months"
-msgstr ""
+msgstr "6 місяців"
 
 #. module: product
 #: model_terms:product.template,website_description:product.product_product_4_product_template
@@ -237,6 +243,8 @@ msgid ""
 "<a href=\"/contactus\" class=\"mb-2 btn btn-primary "
 "o_translate_inline\">Contact Us</a>"
 msgstr ""
+"<a href=\"/contactus\" class=\"mb-2 btn btn-primary o_translate_inline\">"
+"Зв'яжіться з нами</a>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -269,12 +277,12 @@ msgstr "<span class=\"o_stat_text\"> Товари</span>"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.uom_uom_form_view_inherit
 msgid "<span class=\"o_stat_text\">Packaging Barcodes</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Штрихкоди пакування</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "<span class=\"o_stat_text\">Products</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Товари</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -317,25 +325,25 @@ msgstr "Штрих-код може бути призначений лише од
 #. odoo-python
 #: code:addons/product/models/product_combo.py:0
 msgid "A combo choice can't contain duplicate products."
-msgstr ""
+msgstr "Комбінований вибір не може містити дублікати товарів."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_combo_item.py:0
 msgid "A combo choice can't contain products of type \"combo\"."
-msgstr ""
+msgstr "Комбінований вибір не може містити товари типу \"комбо\"."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_combo.py:0
 msgid "A combo choice must contain at least 1 product."
-msgstr ""
+msgstr "Комбінований вибір повинен містити щонайменше 1 товар."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "A combo product must contain at least 1 combo choice."
-msgstr ""
+msgstr "Комбінований товар повинен містити принаймні один комбінований варіант."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__description_sale
@@ -377,6 +385,8 @@ msgid ""
 "A pricelist item with \"Other Pricelist\" as base must have a "
 "base_pricelist_id."
 msgstr ""
+"Елемент прайс-листа з базовим значенням «Інший прайс-лист» повинен мати "
+"base_pricelist_id."
 
 #. module: product
 #. odoo-python
@@ -389,6 +399,7 @@ msgstr "Товар вже викорстовує штрих-код"
 #: code:addons/product/models/product_template.py:0
 msgid "A sellable combo product can only contain sellable products."
 msgstr ""
+"Комбінований товар, що продається, може містити лише товари, що продаються."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__access_token
@@ -482,7 +493,7 @@ msgstr "Додати товари"
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 msgid "Add Products to pricelist report"
-msgstr ""
+msgstr "Додавання товарів до звіту з прайс-листом"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -502,6 +513,8 @@ msgid ""
 "Add products using the \"Add Products\" button at the top right to\n"
 "                                include them in the report."
 msgstr ""
+"Додайте товари за допомогою кнопки «Додати товари» у верхньому правому\n"
+" куті, щоб включити їх до звіту."
 
 #. module: product
 #. odoo-python
@@ -512,7 +525,7 @@ msgstr "Додати до всіх товарів"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__update_product_attribute_value__mode__add
 msgid "Add to existing products"
-msgstr ""
+msgstr "Додати до існуючих товарів"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
@@ -524,11 +537,12 @@ msgstr "Додати до товарів"
 #: model:ir.model.fields,help:product.field_product_template__uom_ids
 msgid "Additional packagings for this product which can be used for sales"
 msgstr ""
+"Додаткові пакування для цього товару, які можна використовувати для продажу"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_adidas
 msgid "Adidas"
-msgstr ""
+msgstr "Adidas"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_search
@@ -583,13 +597,13 @@ msgstr "Всі товари"
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_tree_view_from_product
 msgid "All variants"
-msgstr ""
+msgstr "Усі варіанти"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__is_custom
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__is_custom
 msgid "Allow customers to set their own value"
-msgstr ""
+msgstr "Дозвольте клієнтам встановлювати власне значення"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_legs_aluminium
@@ -638,7 +652,7 @@ msgstr "Заархівовано"
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_ariel
 msgid "Ariel"
-msgstr ""
+msgstr "Ariel"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__sequence
@@ -793,12 +807,12 @@ msgstr "Основні прайс-листи"
 #. module: product
 #: model:product.attribute.value,name:product.pav_color_beige
 msgid "Beige"
-msgstr ""
+msgstr "Бежевий"
 
 #. module: product
 #: model:product.template,description_sale:product.consu_delivery_02_product_template
 msgid "Big table seats 10–12 for team discussions"
-msgstr ""
+msgstr "Великий стіл на 10–12 місць для командних обговорень"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_color_black

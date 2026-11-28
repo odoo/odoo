@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 18:08+0000\n"
+"POT-Creation-Date: 2026-11-27 19:02+0000\n"
 "PO-Revision-Date: 2026-10-08 14:34+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-19-l10n/"
@@ -19,6 +19,14 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2;\n"
 "X-Generator: Weblate 2026.8.1\n"
+
+#. module: l10n_pl_edi
+#. odoo-python
+#: code:addons/l10n_pl_edi/models/account_move.py:0
+msgid ""
+"%(attachment_name)s (detached by %(user)s on %(date)s)%"
+"(attachment_extension)s"
+msgstr ""
 
 #. module: l10n_pl_edi
 #. odoo-python
@@ -427,6 +435,12 @@ msgstr ""
 #. module: l10n_pl_edi
 #. odoo-python
 #: code:addons/l10n_pl_edi/models/account_move.py:0
+msgid "KSeF Status: Rejected (Code: 550). Processing was canceled by KSeF."
+msgstr ""
+
+#. module: l10n_pl_edi
+#. odoo-python
+#: code:addons/l10n_pl_edi/models/account_move.py:0
 msgid "KSeF Status: Success (Code: 200). Invoice accepted."
 msgstr "Status KSeF: Powodzenie (Kod: 200). Faktura zaakceptowana."
 
@@ -618,6 +632,21 @@ msgid "The KSeF XML has been attached."
 msgstr "Plik XML KSeF został załączony."
 
 #. module: l10n_pl_edi
+#. odoo-python
+#: code:addons/l10n_pl_edi/models/account_move.py:0
+msgid ""
+"The KSeF XML was imported, but its PDF visualization could not be generated."
+msgstr ""
+
+#. module: l10n_pl_edi
+#. odoo-python
+#: code:addons/l10n_pl_edi/models/account_move.py:0
+msgid ""
+"The KSeF invoice was accepted, but its PDF visualization could not be "
+"generated."
+msgstr ""
+
+#. module: l10n_pl_edi
 #: model:ir.model.constraint,message:l10n_pl_edi.constraint_account_move_l10n_pl_edi_number_company_id_move_type_uniq
 msgid "The KSeF number must be unique per company per move_type"
 msgstr ""
@@ -629,6 +658,12 @@ msgstr ""
 #: code:addons/l10n_pl_edi/models/account_move.py:0
 msgid "The KSeF service returned empty UPO content."
 msgstr "Usługa KSeF zwróciła pustą treść UPO."
+
+#. module: l10n_pl_edi
+#. odoo-python
+#: code:addons/l10n_pl_edi/models/account_move.py:0
+msgid "The fetched KSeF XML has been attached."
+msgstr ""
 
 #. module: l10n_pl_edi
 #. odoo-python

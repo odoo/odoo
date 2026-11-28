@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 17:37+0000\n"
+"POT-Creation-Date: 2026-11-27 18:32+0000\n"
 "PO-Revision-Date: 2026-11-18 00:42+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
@@ -154,15 +154,6 @@ msgid ""
 msgstr ""
 "%(attachment_name)s (desvinculado por %(user)s el %(date)s)%"
 "(attachment_extension)s"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid ""
-"%(auto_post_name)s auto-posting enabled. Next accounting date: %(move_date)s."
-msgstr ""
-"El registro automático de %(auto_post_name)s está habilitado. Próxima fecha "
-"contable: %(move_date)s."
 
 #. module: account
 #. odoo-python
@@ -4307,6 +4298,7 @@ msgstr "Abril"
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
+#: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_search
@@ -4477,6 +4469,14 @@ msgid ""
 msgstr ""
 "Se desactivó el registro automático de esta factura porque se detectó un "
 "posible duplicado."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"Auto-posting enabled: %(auto_post_name)s. Next accounting date: %"
+"(move_date)s."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__autopost_bills
@@ -16115,6 +16115,11 @@ msgid "Sanitized Account Number"
 msgstr "Número de cuenta depurado"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__sanitized_account_number
+msgid "Sanitized Bank Account Number"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding
 #: model_terms:ir.ui.view,arch_db:account.res_company_view_form_terms
 msgid "Save"
@@ -18799,8 +18804,8 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-msgid "The recurrence will end on %s (included)."
-msgstr "La recurrencia terminará el %s (este día incluído)."
+msgid "The recurrence will end on %(date)s (included)."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -19477,11 +19482,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid ""
-"This move is configured to be posted automatically at the accounting date: "
-"%s."
+"This move is configured to be posted automatically at the accounting date: %"
+"(date)s."
 msgstr ""
-"Este movimiento está configurado para publicarse de forma automática en la "
-"fecha contable: %s."
 
 #. module: account
 #. odoo-python
@@ -22474,6 +22477,23 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Factura autofacturada (Referencia "
 "{{ object.name or 'n/a' }})"
+
+#~ msgid ""
+#~ "%(auto_post_name)s auto-posting enabled. Next accounting date: %"
+#~ "(move_date)s."
+#~ msgstr ""
+#~ "El registro automático de %(auto_post_name)s está habilitado. Próxima "
+#~ "fecha contable: %(move_date)s."
+
+#~ msgid "The recurrence will end on %s (included)."
+#~ msgstr "La recurrencia terminará el %s (este día incluído)."
+
+#~ msgid ""
+#~ "This move is configured to be posted automatically at the accounting "
+#~ "date: %s."
+#~ msgstr ""
+#~ "Este movimiento está configurado para publicarse de forma automática en "
+#~ "la fecha contable: %s."
 
 #~ msgid ""
 #~ "Email addresses that will receive copy for sent and received invoices. "

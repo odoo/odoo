@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-20 18:35+0000\n"
-"PO-Revision-Date: 2026-11-20 06:05+0000\n"
+"PO-Revision-Date: 2026-11-28 16:44+0000\n"
 "Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-19/crm/ro/>"
 "\n"
@@ -400,6 +400,112 @@ msgid ""
 "</table>\n"
 "        "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
+"16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; "
+"color: #454748; width: 100%; border-collapse:separate;\"><tr><td "
+"align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"padding: 24px; background-color: white; color: #454748; border-"
+"collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"100%\" style=\"background-color: white; padding: 0; border-"
+"collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">Pista/oportunitatea ta</"
+"span><br/>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\" t-"
+"out=\"object.name or ''\">Interes pentru produsele tale</span>\n"
+"                </td><td valign=\"middle\" align=\"right\">\n"
+"                    <img t-attf-src=\"/logo.png?company={{ "
+"object.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: 48px;\" "
+"t-att-alt=\"object.company_id.name\"/>\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                    <hr width=\"100%\" style=\"background-color:rgb"
+"(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-"
+"height:1px;line-height:0; margin:4px 0px 32px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
+"0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr>\n"
+"                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                        <div>\n"
+"                            Bună <t t-out=\"object.partner_id and "
+"object.partner_id.name or ''\">Acme Corporation</t>,<br/><br/>\n"
+"                            Bine ai venit la <t t-"
+"out=\"object.company_id.name or ''\">My Company (San Francisco)</t>.\n"
+"                            Îmi face plăcere să te cunosc! Acum că ai "
+"început colaborarea cu noi, vei descoperi ce îți poate oferi <t t-"
+"out=\"object.company_id.name or ''\">My Company (San Francisco)</t> din <t t-"
+"out=\"object.user_id.name or ''\">Marc Demo</t> și te voi ajuta să profiți "
+"la maximum de Odoo. Putem programa o scurtă demonstrație în curând?<br/>\n"
+"                            Nu ezita să mă contactezi oricând!<br/><br/>\n"
+"                            Cu bine,<br/>\n"
+"                            <t t-if=\"object.user_id\">\n"
+"                                <b><t t-out=\"object.user_id.name or ''\">"
+"Marc Demo</t></b>\n"
+"                                <br/>E-mail: <t t-out=\"object.user_id.email "
+"or ''\">mark.brown23@example.com</t>\n"
+"                                <br/>Telefon: <t t-"
+"out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
+"                            </t>\n"
+"                            <t t-else=\"\">\n"
+"                                <t t-out=\"object.company_id.name or ''\">My "
+"Company (San Francisco)</t>\n"
+"                            </t>\n"
+"                        </div>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- FOOTER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px; padding: 0 8px 0 8px; "
+"font-size:11px;\">\n"
+"            <hr width=\"100%\" style=\"background-color:rgb(204,204,204)"
+";border:medium none;clear:both;display:block;font-size:0px;min-"
+"height:1px;line-height:0; margin: 16px 0px 4px 0px;\"/>\n"
+"            <b t-out=\"object.company_id.name or ''\">My Company (San "
+"Francisco)</b><br/>\n"
+"            <div style=\"color: #999999;\">\n"
+"                <t t-out=\"object.company_id.phone or ''\">+1 650-123-4567</"
+"t>\n"
+"                <t t-if=\"object.company_id.email\">\n"
+"                    | <a t-attf-href=\"'mailto:%s' % {{ "
+"object.company_id.email }}\" style=\"text-decoration:none; color: #999999;\" "
+"t-out=\"object.company_id.email or ''\">info@yourcompany.com</a>\n"
+"                </t>\n"
+"                <t t-if=\"object.company_id.website\">\n"
+"                    | <a t-attf-href=\"'%s' % {{ object.company_id.website }}"
+"\" style=\"text-decoration:none; color: #999999;\" t-"
+"out=\"object.company_id.website or ''\">http://www.example.com</a>\n"
+"                </t>\n"
+"            </div>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POWERED BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    Cu sprijinul <a target=\"_blank\" href=\"https://"
+"www.odoo.com?utm_source=db&amp;utm_medium=email\" t-attf-style=\"color: {"
+"{object.company_id.email_secondary_color or '#875A7B'}};;\">Odoo</a>\n"
+"</td></tr>\n"
+"</table>\n"
+"        "
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_defaults
@@ -677,7 +783,7 @@ msgstr "Analiză"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__deduplicate
 msgid "Apply deduplication"
-msgstr "Aplicarea deduplicarii"
+msgstr "Aplică deduplicarea"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
@@ -955,8 +1061,8 @@ msgstr "Localitate"
 msgid ""
 "Classify and analyze your lead/opportunity categories like: Training, Service"
 msgstr ""
-"Clasifică și analizează categoriile tale de piste/oportunități ca: "
-"instruire, servicii."
+"Clasificați și analizați categoriile de piste și oportunități, de exemplu: "
+"instruire și servicii."
 
 #. module: crm
 #. odoo-javascript
@@ -1078,7 +1184,7 @@ msgstr "Consideră pistele create de la:"
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "Consulting"
-msgstr "Consultanta"
+msgstr "Consultanță"
 
 #. module: crm
 #: model:ir.model,name:crm.model_res_partner
@@ -1146,7 +1252,7 @@ msgstr "Data conversiei de la Pistă la Oportunitate"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
 msgid "Conversion Options"
-msgstr "Optiuni de conversie"
+msgstr "Opțiuni de conversie"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead2opportunity_partner_mass
@@ -1357,7 +1463,7 @@ msgstr "Client"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__commercial_partner_id
 msgid "Customer Company"
-msgstr "Companie Clienti"
+msgstr "Compania clientului"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.res_partner_menu_customer
@@ -1368,7 +1474,7 @@ msgstr "Clienți"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Date Closed"
-msgstr "Data inchiderii"
+msgstr "Data închiderii"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__rotting_days
@@ -2856,7 +2962,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/crm/models/crm_team.py:0
 msgid "No new lead allocated to the teams because no lead match their domains."
-msgstr "Nu există pistă nouă alocată echipei deoarece nicio pistă nu corespunde"
+msgstr ""
+"Nu s-a alocat nicio pistă nouă echipelor, deoarece nicio pistă nu corespunde "
+"domeniilor acestora."
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_action_forecast
@@ -3119,9 +3227,9 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
-"Id-ul optional al unei înregistrări la care vor fi atașate toate mesajele "
-"primite, chiar dacă nu i-au răspuns. Dacă este setat, acesta va dezactiva "
-"complet crearea de înregistrări noi."
+"ID-ul opțional al unui fir de discuție (înregistrare) la care se atașează "
+"toate mesajele primite, chiar dacă expeditorii nu au răspuns în fir. Dacă "
+"este specificat, se dezactivează complet crearea de înregistrări noi."
 
 #. module: crm
 #: model:crm.recurring.plan,name:crm.crm_recurring_plan_over_3_years
@@ -3757,8 +3865,8 @@ msgid ""
 "Planned: Future activities."
 msgstr ""
 "Stare bazată pe activități\n"
-"Întârziată: data scadentă este deja trecută\n"
-"Astăzi: activității pentru astăzi\n"
+"Întârziată: termenul scadent a trecut deja\n"
+"Astăzi: data activității este astăzi\n"
 "Planificate: activități viitoare."
 
 #. module: crm
@@ -3967,9 +4075,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__lang_code
 msgid "This field is used to set/get locales for user"
-msgstr ""
-"Acest camp este folosit pentru a seta/obține setări regionale pentru "
-"utilizator"
+msgstr "Acest câmp permite configurarea setărilor regionale ale utilizatorului."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__campaign_id
@@ -4018,7 +4124,8 @@ msgid ""
 "This stage is folded in the kanban view when there are no records in that "
 "stage to display."
 msgstr ""
-"Stadiul este pliat în vizualizarea kanban atunci când nu există înregistrări"
+"Stadiul este pliat în vizualizarea kanban atunci când nu există înregistrări "
+"de afișat în acel stadiu."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -4241,12 +4348,12 @@ msgid ""
 "qualified, the lead can be converted into a business opportunity and/or a "
 "new customer in your address book."
 msgstr ""
-"Folosiți piste dacă aveți nevoie de un pas de calificare înainte de a crea o "
-"oportunitate sau un client. Poate fi o carte de vizită pe care ați primit-o, "
-"un formular de contact completat în site-ul dvs., sau un fișier de prospecte "
-"ne calificate pe care le importați, etc. Odată calificate, pista poate fi "
-"convertită într-o oportunitate de afaceri și/sau un nou client în cartea "
-"dvs. de adrese."
+"Folosiți pistele dacă aveți nevoie de o etapă de calificare înainte de a "
+"crea o oportunitate sau un client. Poate fi vorba despre o carte de vizită "
+"primită, un formular de contact completat pe site-ul dvs. sau un fișier cu "
+"potențiali clienți necalificați pe care îl importați. După calificare, pista "
+"poate fi convertită într-o oportunitate și/sau într-un client nou din agenda "
+"de contacte."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
@@ -4487,7 +4594,7 @@ msgstr "Cod poștal"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__zip
 msgid "Zip"
-msgstr "Cod postal"
+msgstr "Cod poștal"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm

@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:35+0000\n"
-"PO-Revision-Date: 2026-11-20 06:05+0000\n"
+"PO-Revision-Date: 2026-11-28 16:44+0000\n"
 "Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-19/"
 "maintenance/ro/>\n"
@@ -30,7 +30,7 @@ msgstr ""
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 msgid "<span class=\"badge text-bg-warning float-end\">Cancelled</span>"
-msgstr ""
+msgstr "<span class=\"badge text-bg-warning float-end\">Anulat</span>"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
@@ -151,7 +151,7 @@ msgstr "Alias"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_contact
 msgid "Alias Contact Security"
-msgstr ""
+msgstr "Alias Contact Security"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_domain_id
@@ -166,7 +166,7 @@ msgstr "Alias Nume de domeniu"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_full_name
 msgid "Alias Email"
-msgstr ""
+msgstr "Alias Email"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_name
@@ -462,7 +462,7 @@ msgstr "Durată în ore."
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_kanban
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_kanban
 msgid "Edit..."
-msgstr "Editeaza..."
+msgstr "Editează…"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__effective_date
@@ -636,12 +636,12 @@ msgstr "Activități viitoare"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__instruction_google_slide
 #: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__instruction_type__google_slide
 msgid "Google Slide"
-msgstr ""
+msgstr "Google Slide"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 msgid "Google Slide Link"
-msgstr ""
+msgstr "Link Google Slide"
 
 #. module: maintenance
 #: model:maintenance.equipment,name:maintenance.equipment_printer1
@@ -736,7 +736,7 @@ msgstr "În desfășurare"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__instruction_type
 msgid "Instruction"
-msgstr ""
+msgstr "Instrucțiune"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
@@ -825,7 +825,7 @@ msgstr "TMIE"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__mttr
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_mixin__mttr
 msgid "MTTR"
-msgstr ""
+msgstr "MTTR"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__maintenance_ids
@@ -1062,7 +1062,7 @@ msgstr "Sumarul următoarei activități"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__activity_type_id
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__activity_type_id
 msgid "Next Activity Type"
-msgstr "Tip de activitate urmatoare"
+msgstr "Tipul activității următoare"
 
 #. module: maintenance
 #: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__priority__2
@@ -1139,9 +1139,9 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
-"Id-ul optional al unei înregistrări la care vor fi atașate toate mesajele "
-"primite, chiar dacă nu i-au răspuns. Dacă este setat, acesta va dezactiva "
-"complet crearea de înregistrări noi."
+"ID-ul opțional al unui fir de discuție (înregistrare) la care se atașează "
+"toate mesajele primite, chiar dacă expeditorii nu au răspuns în fir. Dacă "
+"este specificat, se dezactivează complet crearea de înregistrări noi."
 
 #. module: maintenance
 #: model:ir.ui.menu,name:maintenance.menu_m_reports_oee
@@ -1160,7 +1160,7 @@ msgstr "Proprietar"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__instruction_pdf
 #: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__instruction_type__pdf
 msgid "PDF"
-msgstr ""
+msgstr "PDF"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_parent_model_id
@@ -1189,6 +1189,8 @@ msgid ""
 "Paste the url of your Google Slide. Make sure the access to the document is "
 "public."
 msgstr ""
+"Lipiți adresa url a diapozitivului Google. Asigurați-vă că accesul la "
+"document este public."
 
 #. module: maintenance
 #: model:maintenance.equipment.category,name:maintenance.equipment_phone
@@ -1315,7 +1317,7 @@ msgstr "Solicitare finalizată"
 #. odoo-python
 #: code:addons/maintenance/models/maintenance.py:0
 msgid "Request planned for %s"
-msgstr ""
+msgstr "Solicitare planificată pentru %s"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
@@ -1399,7 +1401,7 @@ msgstr "Număr de serie"
 msgid ""
 "Set archive to true to hide the maintenance request without deleting it."
 msgstr ""
-"Setează arhiva pe adevarat pentru a ascunde cererea de mentenanță fără a o "
+"Setați arhiva la „adevărat” pentru a ascunde cererea de mentenanță fără a o "
 "șterge."
 
 #. module: maintenance
@@ -1446,8 +1448,8 @@ msgid ""
 "Planned: Future activities."
 msgstr ""
 "Stare bazată pe activități\n"
-"Întârziată: data scadentă este deja trecută\n"
-"Astăzi: activității pentru astăzi\n"
+"Întârziată: termenul scadent a trecut deja\n"
+"Astăzi: data activității este astăzi\n"
 "Planificate: activități viitoare."
 
 #. module: maintenance
@@ -1499,7 +1501,7 @@ msgstr "Tehnician"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__instruction_text
 #: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__instruction_type__text
 msgid "Text"
-msgstr ""
+msgstr "Text"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_team__alias_model_id
@@ -1605,7 +1607,7 @@ msgstr "Până la"
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 msgid "Upload your PDF file."
-msgstr ""
+msgstr "Încărcați fișierul PDF."
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__partner_id
@@ -1621,7 +1623,7 @@ msgstr "Referință furnizor"
 #. module: maintenance
 #: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__priority__0
 msgid "Very Low"
-msgstr "Foarte scazut(a)"
+msgstr "Foarte scăzut(ă)"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_form
@@ -1664,7 +1666,7 @@ msgstr "Instrucțiunile dumneavoastră"
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_view_form
 msgid "alias"
-msgstr ""
+msgstr "alias"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form

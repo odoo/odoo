@@ -7,15 +7,15 @@
 # Hongu Cosmin <cosmin513@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Cozmin Candea <office@terrabit.ro>, 2023
-# Dorin Hongu <dhongu@gmail.com>, 2023
+# Dorin Hongu <dhongu@gmail.com>, 2023, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:37+0000\n"
-"PO-Revision-Date: 2026-08-06 04:09+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-11-22 14:33+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-19/"
 "website_payment/ro/>\n"
 "Language: ro\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
@@ -84,6 +84,8 @@ msgid ""
 "<small class=\"text-danger d-none\" id=\"warning_message_id\">Please enter "
 "the amount to donate.</small>"
 msgstr ""
+"<small class=\"text-danger d-none\" id=\"warning_message_id\">Introdu suma "
+"pe care dorești să o donezi.</small>"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
@@ -93,11 +95,15 @@ msgid ""
 "payments.\n"
 "                        </span>"
 msgstr ""
+"<span class=\"oe_inline pe-0\">\n"
+"                            Activează un furnizor de plăți pentru a accepta "
+"plăți online.\n"
+"                        </span>"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
 msgid "<span class=\"oe_inline px-0\">or</span>"
-msgstr ""
+msgstr "<span class=\"oe_inline px-0\">sau</span>"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
@@ -128,11 +134,12 @@ msgstr "<span class=\"s_donation_currency pe-1\">$</span>50"
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
 msgid "<span>Enable a payment provider to accept online payments.</span>"
 msgstr ""
+"<span>Activează un furnizor de plăți pentru a accepta plăți online.</span>"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
 msgid "<span>or</span>"
-msgstr ""
+msgstr "<span>sau</span>"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_pay
@@ -188,7 +195,7 @@ msgstr "Sumă ("
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_input
 msgid "Amount to donate"
-msgstr ""
+msgstr "Suma donației"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
@@ -219,7 +226,7 @@ msgstr "Configurează"
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
 msgid "Configure Payment Methods"
-msgstr ""
+msgstr "Configurează metodele de plată"
 
 #. module: website_payment
 #. odoo-javascript
@@ -308,7 +315,7 @@ msgstr "Buton donație"
 #. odoo-python
 #: code:addons/website_payment/controllers/portal.py:0
 msgid "Donation Payment"
-msgstr ""
+msgstr "Plata donației"
 
 #. module: website_payment
 #. odoo-python
@@ -351,17 +358,17 @@ msgstr "Email-ul este necesar."
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_input
 msgid "Enter a valid number!"
-msgstr ""
+msgstr "Introdu un număr valid!"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
 msgid "Find a Payment Provider"
-msgstr ""
+msgstr "Găsește un furnizor de plăți"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
 msgid "Find another provider"
-msgstr ""
+msgstr "Găsește alt furnizor"
 
 #. module: website_payment
 #. odoo-javascript
@@ -441,7 +448,7 @@ msgstr "Numele este necesar."
 #. odoo-javascript
 #: code:addons/website_payment/static/src/snippets/s_supported_payment_methods/000.edit.xml:0
 msgid "No published payment methods"
-msgstr ""
+msgstr "Nu există metode de plată publicate"
 
 #. module: website_payment
 #. odoo-javascript
@@ -489,17 +496,17 @@ msgstr "Plăți"
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_information
 msgid "Please enter a valid email address."
-msgstr ""
+msgstr "Vă rugăm să introduceți o adresă de e-mail validă."
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_information
 msgid "Please provide a name."
-msgstr ""
+msgstr "Introdu un nume."
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_information
 msgid "Please select a country."
-msgstr ""
+msgstr "Selectează o țară."
 
 #. module: website_payment
 #. odoo-javascript
@@ -558,7 +565,7 @@ msgstr "Vă mulțumim pentru donația dumneavoastră de"
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_input
 msgid "The minimum donation amount is"
-msgstr ""
+msgstr "Suma minimă a donației este"
 
 #. module: website_payment
 #. odoo-javascript
@@ -575,7 +582,7 @@ msgstr "Nu există nimic de plătit."
 #. odoo-javascript
 #: code:addons/website_payment/static/src/snippets/s_supported_payment_methods/000.edit.xml:0
 msgid "View providers"
-msgstr ""
+msgstr "Vezi furnizorii"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
@@ -583,6 +590,8 @@ msgid ""
 "Visa, Mastercard, Maestro, Google Pay, Apple Pay, etc. as well as recurring "
 "charges."
 msgstr ""
+"Visa, Mastercard, Maestro, Google Pay, Apple Pay etc., precum și plăți "
+"recurente."
 
 #. module: website_payment
 #: model:ir.model.fields,field_description:website_payment.field_payment_provider__website_id

@@ -20,7 +20,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-11-19 16:59+0000\n"
+"PO-Revision-Date: 2026-11-28 16:45+0000\n"
 "Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-19/mrp/ro/>"
 "\n"
@@ -421,7 +421,7 @@ msgstr "<span class=\"o_stat_text\">Operații</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "<span class=\"o_stat_text\">Operations<br/>Performance</span>"
-msgstr "<span class=\"o_stat_text\">Performanță<br/>Performanță</span>"
+msgstr "<span class=\"o_stat_text\">Operațiuni<br/>Performanță</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -2527,7 +2527,7 @@ msgstr "Estimat %s"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__duration_expected
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__duration_expected
 msgid "Expected Duration"
-msgstr "Durată estinată"
+msgstr "Durată estimată"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_work_center_load_graph
@@ -2769,7 +2769,8 @@ msgstr ""
 msgid ""
 "Gives the sequence order when displaying a list of routing Work Centers."
 msgstr ""
-"Ofera ordinea secventei atunci cand afiseaza o lista cu Centrele de Lucru."
+"Indică ordinea secvenței la afișarea unei liste de centre de lucru pentru "
+"rutare."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__sequence
@@ -2991,8 +2992,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the production "
 "order of a MO when it is done."
 msgstr ""
-"Dacă această casetă este bifată, Odoo va tipări automat comanda de producție "
-"a unei comenzi de producție când aceasta este finalizată."
+"Dacă această casetă este bifată, Odoo va imprima automat fișa ordinului de "
+"fabricație atunci când acesta este finalizat."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
@@ -3572,7 +3573,7 @@ msgstr "Fabrică acest produs"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__manufacture_to_resupply
 msgid "Manufacture to Resupply"
-msgstr "Fabrică pentru a reaproviziona"
+msgstr "Producție pentru reaprovizionare"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__mrp_product_qty
@@ -3899,7 +3900,7 @@ msgstr "Sumarul următoarei activități"
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__activity_type_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__activity_type_id
 msgid "Next Activity Type"
-msgstr "Tip de activitate urmatoare"
+msgstr "Tipul activității următoare"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
@@ -4864,13 +4865,13 @@ msgstr "Producție în MO ciornă"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
 msgid "Production started late"
-msgstr "Producția a întărziat"
+msgstr "Producția a întârziat"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_group__production_ids
 #: model:ir.model.fields,field_description:mrp.field_stock_reference__production_ids
 msgid "Productions"
-msgstr "Productii"
+msgstr "Producții"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split_multi__production_ids
@@ -5106,8 +5107,8 @@ msgstr "Referința trebuie sa fie unică per Companie!"
 #: model:ir.model.fields,help:mrp.field_mrp_production__origin
 msgid "Reference of the document that generated this production order request."
 msgstr ""
-"Referinta documentului care a generat aceasta cerere pentru comanda de "
-"productie."
+"Referința documentului care a generat această solicitare de comandă de "
+"producție."
 
 #. module: mrp
 #. odoo-javascript
@@ -5309,7 +5310,7 @@ msgstr "Caută Comenzi de lucru"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
 msgid "Search for mrp workcenter"
-msgstr "Cauta centru de lucru mrp"
+msgstr "Căutați un centru de lucru pentru producție"
 
 #. module: mrp
 #. odoo-python
@@ -5634,8 +5635,8 @@ msgid ""
 "Planned: Future activities."
 msgstr ""
 "Stare bazată pe activități\n"
-"Întârziată: data scadentă este deja trecută\n"
-"Astăzi: activității pentru astăzi\n"
+"Întârziată: termenul scadent a trecut deja\n"
+"Astăzi: data activității este astăzi\n"
 "Planificate: activități viitoare."
 
 #. module: mrp
@@ -6451,9 +6452,7 @@ msgstr "Unitatea de măsură"
 msgid ""
 "Unit of Measure (Unit of Measure) is the unit of measurement for the "
 "inventory control"
-msgstr ""
-"Unitatea de Masura (Unitatea de Masura) este unitatea de masurare pentru "
-"controlul inventarului"
+msgstr "Unitatea de măsură este unitatea folosită pentru controlul stocului."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -7075,8 +7074,8 @@ msgid ""
 "You cannot change the quantity produced of a work order that is in done or "
 "cancel state."
 msgstr ""
-"You cannot change the quantity produced of a work order that is in done or "
-"cancel state."
+"Nu puteți modifica cantitatea produsă pentru un ordin de lucru cu starea „"
+"Finalizat” sau „Anulat”."
 
 #. module: mrp
 #. odoo-python
@@ -7254,7 +7253,8 @@ msgstr ""
 msgid ""
 "You need to generate Lot/Serial Number(s) to mark as done some productions"
 msgstr ""
-"You need to generate Lot/Serial Number(s) to mark as done some productions"
+"Pentru a finaliza anumite ordine de fabricație, trebuie să generați numere "
+"de lot sau de serie."
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_backorder

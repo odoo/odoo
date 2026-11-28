@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-24 17:37+0000\n"
-"PO-Revision-Date: 2026-08-02 17:23+0000\n"
+"PO-Revision-Date: 2026-11-22 10:51+0000\n"
 "Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-19/"
 "sale_gelato/ro/>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: sale_gelato
 #: model:mail.template,body_html:sale_gelato.order_status_update
@@ -66,6 +66,45 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                Bună ziua, <t t-out=\"object.partner_id.name or ''\">Brandon "
+"Freeman</t>,<br/><br/>\n"
+"                <!-- Order in transit body -->\n"
+"                <t t-if=\"ctx.get('tracking_data')\">\n"
+"                    Îți comunicăm că comanda ta este în tranzit.\n"
+"                    <t t-if=\"len(ctx['tracking_data']) == 1\">\n"
+"                        <t t-set=\"tracking_url\" t-value=\"list"
+"(ctx['tracking_data'].keys())[0]\"/>\n"
+"                        Numărul de urmărire este <a t-att-"
+"href=\"tracking_url\" t-out=\"ctx['tracking_data'][tracking_url]\"/>.\n"
+"                        <br/><br/>\n"
+"                    </t>\n"
+"                    <t t-else=\"\">\n"
+"                        Numerele de urmărire sunt:\n"
+"                        <ul>\n"
+"                            <li t-foreach=\"ctx['tracking_data']\" t-"
+"as=\"tracking_url\">\n"
+"                                <a t-att-href=\"tracking_url\" t-"
+"out=\"ctx['tracking_data'][tracking_url]\"/>\n"
+"                            </li>\n"
+"                        </ul>\n"
+"                    </t>\n"
+"                </t>\n"
+"                <!-- Order delivered body -->\n"
+"                <t t-if=\"ctx.get('order_delivered')\">\n"
+"                    Îți comunicăm că comanda ta a fost livrată.\n"
+"                    <br/><br/>\n"
+"                </t>\n"
+"                Îți mulțumim,\n"
+"                <t t-if=\"object.user_id.name\" data-o-mail-quote-"
+"container=\"1\">\n"
+"                    <br/>\n"
+"                    <div data-o-mail-quote=\"1\">--<br data-o-mail-"
+"quote=\"1\"/><t t-out=\"object.user_id.name or ''\" data-o-mail-quote=\"1\">"
+"Mitchell Admin</t></div>\n"
+"                </t>\n"
+"            </div>\n"
+"        "
 
 #. module: sale_gelato
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_template_form
@@ -205,7 +244,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_gelato/controlers/main.py:0
 msgid "Gelato has canceled order %(reference)s."
-msgstr ""
+msgstr "Gelato a anulat comanda %(reference)s."
 
 #. module: sale_gelato
 #. odoo-python
@@ -235,7 +274,7 @@ msgstr "ID"
 #. odoo-python
 #: code:addons/sale_gelato/models/delivery_carrier.py:0
 msgid "Invalid source document type"
-msgstr ""
+msgstr "Tipul documentului sursă este invalid."
 
 #. module: sale_gelato
 #: model:ir.model.fields,field_description:sale_gelato.field_product_document__is_gelato
@@ -384,13 +423,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_gelato/models/sale_order.py:0
 msgid "Unable to confirm the order %s on Gelato."
-msgstr ""
+msgstr "Comanda %s de la Gelato nu poate fi confirmată."
 
 #. module: sale_gelato
 #. odoo-python
 #: code:addons/sale_gelato/models/sale_order.py:0
 msgid "Unable to delete the order %s on Gelato."
-msgstr ""
+msgstr "Comanda %s de la Gelato nu poate fi ștearsă."
 
 #. module: sale_gelato
 #: model_terms:ir.ui.view,arch_db:sale_gelato.res_config_settings_form

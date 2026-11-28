@@ -15,8 +15,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:38+0000\n"
-"PO-Revision-Date: 2026-08-08 02:05+0000\n"
-"Last-Translator: Adrian Cocos <adrian.cocos@capps.ai>\n"
+"PO-Revision-Date: 2026-11-28 15:33+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-19/"
 "purchase_stock/ro/>\n"
 "Language: ro\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
@@ -36,7 +36,7 @@ msgstr "% Livrare la timp"
 #. odoo-python
 #: code:addons/purchase_stock/models/purchase_order.py:0
 msgid "%(otd)s %%"
-msgstr ""
+msgstr "%(otd)s %%"
 
 #. module: purchase_stock
 #. odoo-python
@@ -157,7 +157,7 @@ msgstr "Adaugă tot"
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
 msgid "After next month last year"
-msgstr ""
+msgstr "După luna următoare anul trecut"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
@@ -299,6 +299,15 @@ msgid ""
 "is the same week or week day\n"
 "         Always: Replenishment needs will always be grouped."
 msgstr ""
+"Definiți dacă cererile de ofertă trebuie grupate în funcție de data estimată "
+"a sosirii, cu excepția operațiunilor de livrare directă.\n"
+"         La comandă: necesarul de reaprovizionare va fi grupat, cu excepția "
+"reaprovizionării la comandă (MTO).\n"
+"         Zilnic: necesarul de reaprovizionare va fi grupat dacă sosirea "
+"estimată este în aceeași zi.\n"
+"         Săptămânal: necesarul de reaprovizionare va fi grupat dacă sosirea "
+"estimată este în aceeași săptămână sau zi a săptămânii.\n"
+"         Întotdeauna: necesarul de reaprovizionare va fi grupat întotdeauna."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_picking__delay_pass
@@ -313,7 +322,7 @@ msgstr "Livrare la"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.product_supplierinfo_replenishment_tree_view
 msgid "Delivery Time"
-msgstr ""
+msgstr "Termen de livrare"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__default_location_dest_id_usage
@@ -420,7 +429,7 @@ msgstr "Raport prognoză"
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
 msgid "Forecasted"
-msgstr ""
+msgstr "Prognozat"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__forecasted_issue
@@ -550,25 +559,25 @@ msgstr "Element jurnal"
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
 msgid "Last 12 months"
-msgstr ""
+msgstr "Ultimele 12 luni"
 
 #. module: purchase_stock
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
 msgid "Last 3 months"
-msgstr ""
+msgstr "Ultimele 2 luni"
 
 #. module: purchase_stock
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
 msgid "Last 30 days"
-msgstr ""
+msgstr "Ultimele 30 zile"
 
 #. module: purchase_stock
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
 msgid "Last 7 days"
-msgstr ""
+msgstr "Ultimele 7 zile"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_product_supplierinfo__last_purchase_date
@@ -579,7 +588,7 @@ msgstr "Ultima achiziție"
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
 msgid "Last year quarter"
-msgstr ""
+msgstr "Ultimul trimestru al anului trecut"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__location_final_id
@@ -620,7 +629,7 @@ msgstr "Cerere lunară"
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
 msgid "Next month last year"
-msgstr ""
+msgstr "Luna următoare anul trecut"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
@@ -825,7 +834,7 @@ msgstr "Recepție"
 #. odoo-python
 #: code:addons/purchase_stock/models/stock_rule.py:0
 msgid "Receipt Date"
-msgstr ""
+msgstr "Data primirii"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__receipt_status
@@ -841,7 +850,7 @@ msgstr "Primire"
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
 msgid "Receive the ordered products."
-msgstr "Primiți produsele comandate"
+msgstr "Primiți produsele comandate."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__qty_received_method
@@ -905,7 +914,7 @@ msgstr "Retur Ridicare"
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
 msgid "Same month last year"
-msgstr ""
+msgstr "Aceeași lună a anului trecut"
 
 #. module: purchase_stock
 #: model:ir.model.fields.selection,name:purchase_stock.selection__res_partner__group_on__6
@@ -984,7 +993,7 @@ msgstr "Propune"
 #: model:ir.model.fields,field_description:purchase_stock.field_res_partner__suggest_based_on
 #: model:ir.model.fields,field_description:purchase_stock.field_res_users__suggest_based_on
 msgid "Suggest Based On"
-msgstr ""
+msgstr "Sugerează pe baza"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_res_partner__suggest_days
@@ -1026,7 +1035,7 @@ msgstr "Marcaj de poziție ID furnizor"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_product_supplierinfo
 msgid "Supplier Pricelist"
-msgstr "Lista de preturi Furnizor"
+msgstr "Listă de prețuri a furnizorului"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_replenishment_info__supplierinfo_ids
@@ -1096,6 +1105,12 @@ msgid ""
 "manufacturing orders, etc. are triggered based on what way to replenish is "
 "set on the product (Buy or Manufacture route)."
 msgstr ""
+"Aceasta adaugă o rută de reaprovizionare la cerere (MTO) care se aplică "
+"produselor pentru a genera reaprovizionare la cerere legată de comenzile "
+"dvs. de vânzare (de exemplu) imediat ce acestea sunt confirmate, cu un link "
+"direct. Comenzile de achiziție, comenzile de fabricație etc. sunt declanșate "
+"pe baza modului de reaprovizionare setat pe produs (ruta Cumpără sau Fabrică)"
+"."
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
@@ -1178,7 +1193,7 @@ msgstr "Marți"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_kanban_catalog_purchase_only
 msgid "Units"
-msgstr ""
+msgstr "Unități"
 
 #. module: purchase_stock
 #. odoo-javascript
@@ -1215,7 +1230,7 @@ msgstr "Analiză Furnizor Livrare la timp"
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_replenishment_info__supplierinfo_id
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__supplier_id
 msgid "Vendor Pricelist"
-msgstr ""
+msgstr "Listă de prețuri furnizor"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__vendor_ids
@@ -1300,7 +1315,7 @@ msgstr "acest produs trebuie reaprovizionat manual."
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.xml:0
 msgid "x"
-msgstr ""
+msgstr "x"
 
 #~ msgid "Stock Valuation"
 #~ msgstr "Evaluare stoc"

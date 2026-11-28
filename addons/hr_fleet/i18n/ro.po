@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2026-11-20 06:05+0000\n"
+"PO-Revision-Date: 2026-11-28 11:33+0000\n"
 "Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-19/"
 "hr_fleet/ro/>\n"
@@ -43,12 +43,12 @@ msgstr ""
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_mail_activity_plan_template
 msgid "Activity plan template"
-msgstr ""
+msgstr "Șablon plan de activitate"
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_mail_activity_plan_template__responsible_type
 msgid "Assignment"
-msgstr ""
+msgstr "Alocare"
 
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_ir_attachment
@@ -82,7 +82,7 @@ msgstr "Istoricul mașinilor"
 #. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.hr_departure_wizard_view_form
 msgid "Company Car"
-msgstr ""
+msgstr "Mașină de serviciu"
 
 #. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_assignation_log_employee_view_list
@@ -143,7 +143,7 @@ msgstr "Angajat"
 #. odoo-python
 #: code:addons/hr_fleet/models/mail_activity_plan_template.py:0
 msgid "Employee %s is not linked to a vehicle."
-msgstr ""
+msgstr "Angajatul %s nu este asociat unui vehicul."
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle__driver_employee_name
@@ -153,18 +153,20 @@ msgstr "Nume angajat"
 #. module: hr_fleet
 #: model:ir.model.fields.selection,name:hr_fleet.selection__mail_activity_plan_template__responsible_type__fleet_manager
 msgid "Fleet Manager"
-msgstr ""
+msgstr "Manager Parc Auto"
 
 #. module: hr_fleet
 #. odoo-python
 #: code:addons/hr_fleet/models/mail_activity_plan_template.py:0
 msgid "Fleet Manager is limited to Employee plans."
 msgstr ""
+"Managerul de flotă este disponibil doar pentru planurile dedicate "
+"angajaților."
 
 #. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.view_employee_form
 msgid "Fleet Mobility Card"
-msgstr ""
+msgstr "Card de mobilitate al flotei"
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle__future_driver_employee_id
@@ -183,19 +185,19 @@ msgstr "Viitor șofer (angajat)"
 #: model:ir.model.fields,field_description:hr_fleet.field_ir_attachment__id
 #: model:ir.model.fields,field_description:hr_fleet.field_mail_activity_plan_template__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_hr_employee__license_plate
 msgid "License Plate"
-msgstr "Placuță de înmatriculare"
+msgstr "Plăcuță de înmatriculare"
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle__mobility_card
 #: model:ir.model.fields,field_description:hr_fleet.field_hr_employee__mobility_card
 #: model:ir.model.fields,field_description:hr_fleet.field_hr_employee_public__mobility_card
 msgid "Mobility Card"
-msgstr ""
+msgstr "Card de mobilitate"
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle_assignation_log__attachment_number
@@ -205,7 +207,7 @@ msgstr "Numărul de atașamente"
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_fleet_vehicle_odometer
 msgid "Odometer log for a vehicle"
-msgstr "Registrul Controrului de kilometraj pentru un vehicul"
+msgstr "Istoricul kilometrajului unui vehicul"
 
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_hr_employee_public
@@ -222,7 +224,7 @@ msgstr "Angajat asociat"
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_hr_departure_wizard__release_campany_car
 msgid "Release Company Car"
-msgstr ""
+msgstr "Eliberează mașina de serviciu"
 
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_fleet_vehicle_log_services
@@ -236,6 +238,8 @@ msgid ""
 "The vehicle of employee %(employee)s is not linked to a fleet manager, "
 "assigning to you."
 msgstr ""
+"Vehiculul angajatului %(employee)s nu este asociat unui manager de flotă. "
+"Îți este atribuit."
 
 #. module: hr_fleet
 #. odoo-javascript

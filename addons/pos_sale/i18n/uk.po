@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:38+0000\n"
-"PO-Revision-Date: 2026-10-07 18:33+0000\n"
+"PO-Revision-Date: 2026-11-26 11:06+0000\n"
 "Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>\n"
 "Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-19/"
 "pos_sale/uk/>\n"
@@ -23,19 +23,19 @@ msgstr ""
 "? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > "
 "14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % "
 "100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: pos_sale
 #. odoo-python
 #: code:addons/pos_sale/models/sale_order.py:0
 msgid "%(line_description)s (Cancelled)"
-msgstr ""
+msgstr "%(line_description)s (Скасовано)"
 
 #. module: pos_sale
 #. odoo-python
 #: code:addons/pos_sale/models/account_move.py:0
 msgid "%(old_name)s (Cancelled)"
-msgstr ""
+msgstr "%(old_name)s (Скасовано)"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -52,29 +52,31 @@ msgstr "<span style=\"margin: 0px 5px;\">:</span>"
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/app/services/pos_store.js:0
 msgid "A new order has been created."
-msgstr ""
+msgstr "Створено нове замовлення."
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order__amount_unpaid
 msgid "Amount To Pay In POS"
-msgstr ""
+msgstr "Сума до сплати на касі"
 
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_sale_order__amount_unpaid
 msgid "Amount left to pay in POS to avoid double payment or double invoicing."
 msgstr ""
+"Сума, що залишилася до сплати в POS-терміналі, щоб уникнути подвійної оплати "
+"або подвійного виставлення рахунків."
 
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/app/services/pos_store.js:0
 msgid "Apply a down payment (fixed amount)"
-msgstr ""
+msgstr "Застосувати авансовий платіж (фіксована сума)"
 
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/app/services/pos_store.js:0
 msgid "Apply a down payment (percentage)"
-msgstr ""
+msgstr "Застосувати авансовий платіж (відсоток)"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_res_config_settings
@@ -84,12 +86,12 @@ msgstr "Налаштування"
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_res_partner
 msgid "Contact"
-msgstr ""
+msgstr "Контакт"
 
 #. module: pos_sale
 #: model:ir.model,website_form_label:pos_sale.model_res_partner
 msgid "Create a Customer"
-msgstr ""
+msgstr "Створіть клієнта"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order__currency_rate
@@ -104,7 +106,7 @@ msgstr "Доставлено з"
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__qty_delivered
 msgid "Delivery Quantity"
-msgstr ""
+msgstr "Кількість доставки"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_account_move__display_name
@@ -122,7 +124,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_sale.field_sale_report__display_name
 #: model:ir.model.fields,field_description:pos_sale.field_stock_picking__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Назва для відображення"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -136,7 +138,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/app/services/pos_store.js:0
 msgid "Down Payment"
-msgstr ""
+msgstr "Попередня оплата"
 
 #. module: pos_sale
 #: model:product.template,name:pos_sale.default_downpayment_product_product_template
@@ -162,12 +164,14 @@ msgid ""
 "Down payment (ref: %(order_reference)s on \n"
 " %(date)s)"
 msgstr ""
+"Авансовий платіж (реф: %(order_reference)s на \n"
+" %(date)s)"
 
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/app/services/pos_store.js:0
 msgid "Due balance: %s"
-msgstr ""
+msgstr "Баланс боргу: %s"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.report_invoice_document
@@ -190,7 +194,7 @@ msgstr "Від"
 #: model:ir.model.fields,field_description:pos_sale.field_sale_report__id
 #: model:ir.model.fields,field_description:pos_sale.field_stock_picking__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__invoiced
@@ -204,6 +208,8 @@ msgid ""
 "It seems that you didn't configure a down payment product in your point of "
 "sale. You can go to your point of sale configuration to choose one."
 msgstr ""
+"Схоже, ви не налаштували товар авансу у своїй точці продажу. Ви можете "
+"перейти до конфігурації точки продажу, щоб вибрати його."
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_account_move
@@ -213,7 +219,7 @@ msgstr "Запис у журналі"
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_account_move_line
 msgid "Journal Item"
-msgstr ""
+msgstr "Запис у журналі"
 
 #. module: pos_sale
 #. odoo-python
@@ -257,7 +263,7 @@ msgstr "Рядки замовлення перенесені в точку пр�
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__order_reference__pos_order
 msgid "POS Order"
-msgstr ""
+msgstr "Замовлення точки продажу"
 
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__paid
@@ -302,7 +308,7 @@ msgstr "Опубліковано"
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_product_template
 msgid "Product"
-msgstr ""
+msgstr "Товар"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -359,7 +365,7 @@ msgstr "Команда продажу"
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_res_config_settings__pos_crm_team_id
 msgid "Sales Team (PoS)"
-msgstr ""
+msgstr "Команда продажу (PoS)"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
@@ -418,7 +424,7 @@ msgstr ""
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_stock_picking
 msgid "Transfer"
-msgstr ""
+msgstr "Переміщення"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.view_pos_order_form_inherit_pos_sale
@@ -426,6 +432,8 @@ msgid ""
 "Transferred<br/>\n"
 "                                from Sale"
 msgstr ""
+"Переміщено<br/>\n"
+"                                з Продажів"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.view_order_form_inherit_pos_sale
@@ -433,12 +441,14 @@ msgid ""
 "Transferred<br/>\n"
 "                            to POS"
 msgstr ""
+"Переміщено<br/>\n"
+"                                в POS"
 
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/app/services/pos_store.js:0
 msgid "Warning for %s"
-msgstr ""
+msgstr "Попередження для %s"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -451,14 +461,14 @@ msgstr "Що би ви хотіли зробити?"
 #: code:addons/pos_sale/models/pos_order.py:0
 #: code:addons/pos_sale/models/sale_order.py:0
 msgid "id"
-msgstr ""
+msgstr "id"
 
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/app/components/orderline/orderline.xml:0
 #: model_terms:ir.ui.view,arch_db:pos_sale.report_invoice_document
 msgid "x"
-msgstr ""
+msgstr "x"
 
 #~ msgid "Back"
 #~ msgstr "Назад"

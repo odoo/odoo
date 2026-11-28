@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 17:37+0000\n"
-"PO-Revision-Date: 2026-11-20 06:05+0000\n"
+"POT-Creation-Date: 2026-11-27 18:32+0000\n"
+"PO-Revision-Date: 2026-11-28 16:45+0000\n"
 "Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-19/account/"
 "ro/>\n"
@@ -88,6 +88,8 @@ msgid ""
 "\n"
 "Please contact your administrator."
 msgstr ""
+"\n"
+"Vă rugăm să contactați administratorul."
 
 #. module: account
 #. odoo-python
@@ -164,15 +166,6 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid ""
-"%(auto_post_name)s auto-posting enabled. Next accounting date: %(move_date)s."
-msgstr ""
-"%(auto_post_name)s postarea automată activată. Următoarea dată contabilă: %"
-"(move_date)s."
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/account_lock_exception.py:0
 msgid "%(exception)s for %(user)s%(end_datetime_string)s%(reason)s."
 msgstr "%(exception)s pentru %(user)s%(end_datetime_string)s%(reason)s."
@@ -187,7 +180,7 @@ msgstr "%(label)s at %(currency_amount)s"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "%(label)s at %(currency_amount)s (Draft)"
-msgstr ""
+msgstr "%(label)s la %(currency_amount)s (Draft)"
 
 #. module: account
 #. odoo-python
@@ -212,7 +205,7 @@ msgstr "Rata %(number)s pentru %(name)s"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "%(name)s%(ref)s at %(currency_amount)s"
-msgstr ""
+msgstr "%(name)s%(ref)s la %(currency_amount)s"
 
 #. module: account
 #. odoo-python
@@ -221,6 +214,8 @@ msgid ""
 "%(order)s - %(order_line)s; %(qty_invoiced)s invoiced, %(qty_delivered)s "
 "delivered at %(unit_price)s"
 msgstr ""
+"%(order)s - %(order_line)s; %(qty_invoiced)s facturat, %(qty_delivered)s "
+"livrat la prețul unitar de %(unit_price)s"
 
 #. module: account
 #. odoo-python
@@ -246,7 +241,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid "%(order)s - %(order_line)s; price difference for %(product)s"
-msgstr ""
+msgstr "%(order)s - %(order_line)s; diferență de preț pentru %(product)s"
 
 #. module: account
 #. odoo-python
@@ -1091,6 +1086,10 @@ msgid ""
 "                            <span class=\"text-danger\" "
 "invisible=\"duplicated_ref_ids.length &gt; 1\">Delete duplicate</span>"
 msgstr ""
+"<i class=\"fa fa-trash text-danger\"/> <span class=\"text-danger\" "
+"invisible=\"duplicated_ref_ids.length == 1\">Șterge toate duplicatele</span> "
+"<span class=\"text-danger\" invisible=\"duplicated_ref_ids.length &gt; "
+"1\">Șterge duplicatul</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
@@ -1281,7 +1280,7 @@ msgstr "<span class=\"o_stat_text\">Înregistrare jurnal</span>"
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "<span class=\"o_stat_text\">Journal Items</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Elemente jurnal</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1465,7 +1464,6 @@ msgstr "<span>$ <span class=\"oe_currency_value\">19,250.00</span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-#, fuzzy
 msgid "<span>1.00</span>"
 msgstr "<span>1.00</span>"
 
@@ -2234,6 +2232,232 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<t t-set=\"portal_url\" t-value=\"object.get_portal_url()\"/>\n"
+"<t t-set=\"unsubscribe_url\" t-value=\"ctx.get('unsubscribe_url', False)\"/"
+">\n"
+"\n"
+"<div style=\"margin:0; padding:0; color:#2c2431;\">\n"
+"    <table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" "
+"style=\"width:100%; background:#f7f4f8; padding:40px 0;\">\n"
+"        <tr>\n"
+"            <td align=\"center\">\n"
+"                <table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" "
+"width=\"640\" style=\"width:100%; max-width:640px; background:#ffffff; "
+"border-radius:16px; overflow:hidden; box-shadow:0 20px 45px rgba(56, 37, 60, "
+"0.12);\">\n"
+"                    <tr>\n"
+"                        <td colspan=\"2\" style=\"background:linear-"
+"gradient(140deg,#714B67 0%,#8a6381 55%,#bfa8c2 100%); color:#ffffff; "
+"padding:38px;\">\n"
+"                            <table cellpadding=\"0\" cellspacing=\"0\" "
+"border=\"0\" style=\"width:100%;\">\n"
+"                                <tr>\n"
+"                                    <td style=\"font-size:13px; letter-"
+"spacing:0.3px; text-transform:uppercase; opacity:0.78;\">\n"
+"                                        <t t-"
+"if=\"object.is_sale_document(include_receipts=True)\">Factură emisă</t>\n"
+"                                        <t t-else=\"\">Factură primită</t>\n"
+"                                    </td>\n"
+"                                    <td align=\"right\">\n"
+"                                        <img alt=\"Odoo\" src=\"/web/static/"
+"img/logo_inverse_white_206px.png\" style=\"height:30px; width:92px; object-"
+"fit:contain;\"/>\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                                <tr>\n"
+"                                    <td colspan=\"2\" style=\"padding-"
+"top:22px; font-size:26px; line-height:1.45; font-weight:600; color:#ffffff;"
+"\">\n"
+"                                        Factură nouă în <t t-"
+"out=\"object.journal_id.display_name\"/>\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                                <tr>\n"
+"                                    <td colspan=\"2\" style=\"padding-"
+"top:18px; font-size:14px; opacity:0.85; line-height:1.6; color:#ffffff;\">\n"
+"                                        A fost creată o factură nouă în "
+"jurnalul <t t-out=\"object.journal_id.display_name\"/> al companiei <t t-"
+"out=\"object.company_id.name\"/>!\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                            </table>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                    <tr>\n"
+"                        <td colspan=\"2\" style=\"padding:34px 38px;\">\n"
+"                            <table cellpadding=\"0\" cellspacing=\"0\" "
+"border=\"0\" style=\"width:100%; border-collapse:separate; border-spacing:0 "
+"16px;\">\n"
+"                                <tr>\n"
+"                                    <td colspan=\"2\" style=\"padding:0;\">\n"
+"                                        <table cellpadding=\"0\" "
+"cellspacing=\"0\" border=\"0\" style=\"width:100%; background:#fbf7fc; "
+"border-radius:16px;\">\n"
+"                                            <tr>\n"
+"                                                <td style=\"padding:24px "
+"26px;\">\n"
+"                                                    <div style=\"font-"
+"size:12px; color:#8d7a92; text-transform:uppercase; letter-spacing:0.45px;"
+"\">Document</div>\n"
+"                                                    <div style=\"margin-"
+"top:8px; font-size:20px; font-weight:600; color:#2c2431; word-break:break-"
+"word;\">\n"
+"                                                        <t t-"
+"out=\"object._get_move_display_name()\"/>\n"
+"                                                    </div>\n"
+"                                                    <t t-if=\"object.ref\">\n"
+"                                                        <div style=\"margin-"
+"top:6px; color:#7f6c84;\">Referință: <t t-out=\"object.ref\"/></div>\n"
+"                                                    </t>\n"
+"                                                </td>\n"
+"                                                <t t-if=\"not "
+"object.currency_id.is_zero(object.amount_total)\">\n"
+"                                                    <td style=\"padding:24px "
+"26px; border-left:1px solid #efe6f3;\" align=\"right\">\n"
+"                                                        <div style=\"font-"
+"size:12px; color:#8d7a92; text-transform:uppercase; letter-spacing:0.45px;"
+"\">Total</div>\n"
+"                                                        <div style=\"margin-"
+"top:8px; font-size:22px; font-weight:600; color:#2c2431;\">\n"
+"                                                            <t t-"
+"out=\"format_amount(object.amount_total, object.currency_id)\"/>\n"
+"                                                        </div>\n"
+"                                                    </td>\n"
+"                                                </t>\n"
+"                                            </tr>\n"
+"                                        </table>\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                                <tr>\n"
+"                                    <td colspan=\"2\" style=\"padding:0;\">\n"
+"                                        <table cellpadding=\"0\" "
+"cellspacing=\"0\" border=\"0\" style=\"width:100%; margin-top:18px;\">\n"
+"                                            <tr>\n"
+"                                                <td style=\"padding:0;\">\n"
+"                                                    <div "
+"style=\"display:flex; flex-wrap:wrap; gap:12px; justify-content:flex-start;"
+"\">\n"
+"                                                        <t t-"
+"if=\"object.partner_id\">\n"
+"                                                            <div "
+"style=\"flex:0 1 180px; min-width:160px; background:#fff; border:1px solid "
+"#efe6f3; border-radius:12px; padding:12px 16px;\">\n"
+"                                                                <div "
+"style=\"font-size:12px; color:#8d7a92; text-transform:uppercase; letter-"
+"spacing:0.45px;\">Partener</div>\n"
+"                                                                <div "
+"style=\"margin-top:6px; font-size:15px; font-weight:500; color:#2c2431; word-"
+"break:break-word;\">\n"
+"                                                                    <t t-"
+"out=\"object.partner_id.display_name\"/>\n"
+"                                                                </div>\n"
+"                                                            </div>\n"
+"                                                        </t>\n"
+"                                                        <div style=\"flex:0 "
+"1 150px; min-width:140px; background:#fff; border:1px solid #efe6f3; border-"
+"radius:12px; padding:12px 16px;\">\n"
+"                                                            <div "
+"style=\"font-size:12px; color:#8d7a92; text-transform:uppercase; letter-"
+"spacing:0.45px;\">Data facturii</div>\n"
+"                                                            <div "
+"style=\"margin-top:6px; font-size:15px; color:#2c2431;\">\n"
+"                                                                <t t-"
+"out=\"format_date(object.invoice_date or object.date)\"/>\n"
+"                                                            </div>\n"
+"                                                        </div>\n"
+"                                                        <t t-"
+"if=\"object.invoice_date_due\">\n"
+"                                                            <div "
+"style=\"flex:0 1 150px; min-width:140px; background:#fff; border:1px solid "
+"#efe6f3; border-radius:12px; padding:12px 16px;\">\n"
+"                                                                <div "
+"style=\"font-size:12px; color:#8d7a92; text-transform:uppercase; letter-"
+"spacing:0.45px;\">Data scadentă</div>\n"
+"                                                                <div "
+"style=\"margin-top:6px; font-size:15px; color:#2c2431;\">\n"
+"                                                                    <t t-"
+"out=\"format_date(object.invoice_date_due)\"/>\n"
+"                                                                </div>\n"
+"                                                            </div>\n"
+"                                                        </t>\n"
+"                                                        <t t-"
+"if=\"object.payment_state in ('paid', 'in_payment')\">\n"
+"                                                            <div "
+"style=\"flex:0 1 180px; min-width:160px; background:#fff; border:1px solid "
+"#efe6f3; border-radius:12px; padding:12px 16px;\">\n"
+"                                                                <div "
+"style=\"font-size:12px; color:#8d7a92; text-transform:uppercase; letter-"
+"spacing:0.45px;\">Stare plată</div>\n"
+"                                                                <div "
+"style=\"margin-top:6px; font-size:15px; color:#2c2431; text-"
+"transform:capitalize;\">\n"
+"                                                                    Factura "
+"a fost deja achitată\n"
+"                                                                </div>\n"
+"                                                            </div>\n"
+"                                                        </t>\n"
+"                                                        <t t-"
+"if=\"object.currency_id != object.company_currency_id\">\n"
+"                                                            <div "
+"style=\"flex:0 1 150px; min-width:140px; background:#fff; border:1px solid "
+"#efe6f3; border-radius:12px; padding:12px 16px;\">\n"
+"                                                                <div "
+"style=\"font-size:12px; color:#8d7a92; text-transform:uppercase; letter-"
+"spacing:0.45px;\">Monedă</div>\n"
+"                                                                <div "
+"style=\"margin-top:6px; font-size:15px; color:#2c2431;\">\n"
+"                                                                    <t t-"
+"out=\"object.currency_id.display_name\"/>\n"
+"                                                                </div>\n"
+"                                                            </div>\n"
+"                                                        </t>\n"
+"                                                    </div>\n"
+"                                                </td>\n"
+"                                            </tr>\n"
+"                                        </table>\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                            </table>\n"
+"\n"
+"                            <div style=\"margin:18px 0 0; padding:18px 22px; "
+"background:#f9f2f9; border-radius:12px; border:1px solid #eadff0; font-"
+"size:13px; color:#6f5c73; line-height:1.6;\">\n"
+"                                <strong style=\"color:#2c2431;\">Fișiere "
+"incluse:</strong> documentele originale sunt atașate acestui mesaj.\n"
+"                            </div>\n"
+"\n"
+"                            <div style=\"margin-top:32px; text-align:center;"
+"\" t-if=\"object.move_type != 'in_invoice'\">\n"
+"                                <a t-if=\"portal_url\" t-attf-"
+"href=\"{{ portal_url }}\" style=\"display:inline-block; margin:0 10px 14px; "
+"padding:13px 30px; min-width:210px; background:linear-"
+"gradient(135deg,#714B67 0%,#9b77a3 100%); color:#FFFFFF; text-"
+"decoration:none; border-radius:12px; font-weight:600; font-size:14px;\" "
+"target=\"_blank\">\n"
+"                                    Vizualizează în portal\n"
+"                                </a>\n"
+"                            </div>\n"
+"\n"
+"                            <p style=\"margin:28px 0 0; font-size:12px; "
+"color:#8f8596; text-align:center;\">\n"
+"                                Primiți acest mesaj deoarece urmăriți\n"
+"                                <strong t-"
+"out=\"object.journal_id.display_name or 'this journal'\"/>.\n"
+"                                <span style=\"display:block; margin:18px "
+"auto; height:1px; max-width:420px; background:#ece3ed;\"/>\n"
+"                                <t t-if=\"unsubscribe_url\">\n"
+"                                    Nu mai doriți să primiți aceste mesaje? "
+"<a t-attf-href=\"{{ unsubscribe_url }}\" style=\"color:#8f8596; text-"
+"decoration:underline;\" target=\"_blank\">Dezabonați-vă aici</a>.\n"
+"                                </t>\n"
+"                            </p>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </table>\n"
+"            </td>\n"
+"        </tr>\n"
+"    </table>\n"
+"</div>"
 
 #. module: account
 #. odoo-python
@@ -2644,7 +2868,7 @@ msgstr "Număr mișcări cont"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__account_move_line_ids
 msgid "Account Move Line"
-msgstr ""
+msgstr "Linie mișcare contabilă"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_reversal
@@ -2680,7 +2904,7 @@ msgstr "Nume Cont"
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__acc_number
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
 msgid "Account Number"
-msgstr "Numar de Cont"
+msgstr "Număr de cont"
 
 #. module: account
 #: model:account.account,name:account.1_payable
@@ -2719,7 +2943,7 @@ msgstr "Cont reconciliere"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__account_reconcile_model_line_ids
 msgid "Account Reconcile Model Line"
-msgstr ""
+msgstr "Linie Model de Reconciliere"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__account_root_id
@@ -2776,9 +3000,9 @@ msgid ""
 "legal reports, and set the rules to close a fiscal year and generate opening "
 "entries."
 msgstr ""
-"Tipul de cont este folosit in scop informativ, pentru a genera rapoarte "
-"juridice specifice tarilor, si pentru a configura regulile pentru inchiderea "
-"unui an fiscal si a genera inregistrari de deschidere."
+"Tipul de cont este utilizat în scop informativ pentru generarea rapoartelor "
+"juridice specifice fiecărei țări și pentru definirea regulilor de închidere "
+"a anului fiscal și de generare a înregistrărilor de deschidere."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__account_types
@@ -2805,13 +3029,15 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_res_config_settings__account_journal_early_pay_discount_loss_account_id
 msgid ""
 "Account for the difference amount after the expense discount has been granted"
-msgstr "Cont pentru diferenta dupa ce a fost acordat discountul de cheltuieli"
+msgstr ""
+"Contul pentru diferența de valoare rămasă după acordarea reducerii pentru "
+"plata anticipată"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__account_journal_early_pay_discount_gain_account_id
 msgid ""
 "Account for the difference amount after the income discount has been granted"
-msgstr "Cont pentru diferenta dupa ce a fost acordat discountul de venituri"
+msgstr "Cont pentru suma diferenței după acordarea reducerii de venit"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_group_search
@@ -3302,7 +3528,7 @@ msgstr "Adăugați o notă internă..."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_send_wizard_form
 msgid "Add contacts to notify..."
-msgstr "Adaugați contactele pentru a fi înștiințate..."
+msgstr "Adăugați contacte de notificat…"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -3395,7 +3621,7 @@ msgstr "Opțiuni Avansate"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Advanced Settings"
-msgstr "Configurari Avansate"
+msgstr "Setări avansate"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_marketing
@@ -3565,7 +3791,7 @@ msgstr "Permite reconciliere"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_check_printing
 msgid "Allow check printing and deposits"
-msgstr "Permie tiparire cec si depozite"
+msgstr "Permite tipărirea cecurilor și înregistrarea depunerilor."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -3607,7 +3833,7 @@ msgstr "Deja plătit:"
 #. odoo-python
 #: code:addons/account/controllers/portal.py:0
 msgid "Already unsubscribed"
-msgstr ""
+msgstr "Dezabonare deja efectuată"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__availability_condition__always
@@ -4033,7 +4259,7 @@ msgstr ""
 #. module: account
 #: model:account.account,description:account.2_account_account_us_profit_or_loss_appropriation
 msgid "Appropriation of the profit or loss"
-msgstr ""
+msgstr "Repartizarea profitului sau a pierderii"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__4
@@ -4049,6 +4275,7 @@ msgstr "Aprilie"
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
+#: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_search
@@ -4145,7 +4372,7 @@ msgstr "Atașamente"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__attachments_not_supported
 msgid "Attachments Not Supported"
-msgstr ""
+msgstr "Atașamentele nu sunt acceptate"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_audit_trail_report
@@ -4217,6 +4444,14 @@ msgid ""
 msgstr ""
 "Postarea automată a fost dezactivată pentru această factură deoarece a fost "
 "detectat un potențial duplicat."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"Auto-posting enabled: %(auto_post_name)s. Next accounting date: %"
+"(move_date)s."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__autopost_bills
@@ -4371,7 +4606,7 @@ msgstr "Înapoi la factură"
 #. odoo-javascript
 #: code:addons/account/static/src/components/product_catalog/kanban_controller.js:0
 msgid "Back to Refund"
-msgstr ""
+msgstr "Înapoi la rambursare"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -4470,7 +4705,7 @@ msgstr "Nume cont bancar"
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 #: model_terms:ir.ui.view,arch_db:account.view_base_document_layout
 msgid "Bank Account Number"
-msgstr "Numar de cont bancar"
+msgstr "Număr de cont bancar"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__partner_bank_id
@@ -4480,9 +4715,10 @@ msgid ""
 "account if this is a Customer Invoice or Vendor Credit Note, otherwise a "
 "Partner bank account number."
 msgstr ""
-"Număr de cont bancar la care se va plăti factura. Un cont bancar al "
-"companiei dacă aceasta este o factură pentru client sau o notă de credit a "
-"furnizorului, altfel un număr de cont bancar partener."
+"Numărul contului bancar în care va fi plătită factura. Dacă este o factură "
+"de client sau o notă de credit a furnizorului, indicați un cont bancar al "
+"companiei; în celelalte cazuri, indicați numărul contului bancar al "
+"partenerului."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__l10n_us_bank_account_type
@@ -4607,7 +4843,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Bank accounts"
-msgstr ""
+msgstr "Conturi bancare"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_moves_journal_bank_cash
@@ -4624,7 +4860,7 @@ msgstr "Banca odoo"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Bank settings"
-msgstr ""
+msgstr "Setări bancare"
 
 #. module: account
 #: model:ir.model,name:account.model_account_setup_bank_manual_config
@@ -4655,7 +4891,7 @@ msgstr "Bancă: Sold"
 #. odoo-javascript
 #: code:addons/account/static/src/components/many2many_tags_banks/many2many_tags_banks.js:0
 msgid "Banks"
-msgstr "Banci"
+msgstr "Bănci"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__repartition_type__base
@@ -4966,7 +5202,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "C"
-msgstr ""
+msgstr "C"
 
 #. module: account
 #. odoo-python
@@ -5681,7 +5917,7 @@ msgstr "Companii"
 #: model:ir.model.fields,field_description:account.field_res_partner__ref_company_ids
 #: model:ir.model.fields,field_description:account.field_res_users__ref_company_ids
 msgid "Companies that refers to partner"
-msgstr "Companii care se raporteaza la partener"
+msgstr "Companii asociate partenerului"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__company_id
@@ -5998,7 +6234,6 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
-#, fuzzy
 msgid "Cost of revenue"
 msgstr "Costul veniturilor"
 
@@ -6050,12 +6285,12 @@ msgstr "Nu s-au putut încărca fișierele"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__count_reconciled_lines
 msgid "Count Reconciled Lines"
-msgstr ""
+msgstr "Număr linii reconciliate"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__count_reconciled_lines_excluding_exchange_diff
 msgid "Count Reconciled Lines Excluding Exchange Diff"
-msgstr ""
+msgstr "Număr linii reconciliate fără diferențe de curs valutar"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -6560,7 +6795,7 @@ msgstr ""
 #. module: account
 #: model:account.account,description:account.2_account_account_us_retained_earnings
 msgid "Cumulative undistributed profits and losses"
-msgstr ""
+msgstr "Profituri și pierderi cumulate nerepartizate"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_currency_form
@@ -6844,12 +7079,12 @@ msgstr "Tăiere {label} {percent}%"
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "D"
-msgstr ""
+msgstr "D"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_DAP
 msgid "DELIVERED AT PLACE"
-msgstr "LIVRAT LA LOCATIE"
+msgstr "LIVRAT LA LOCAȚIE"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_DPU
@@ -7314,7 +7549,7 @@ msgstr "Depreciat"
 #. odoo-python
 #: code:addons/account/controllers/portal.py:0
 msgid "Deprecated link"
-msgstr ""
+msgstr "Link învechit"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__expense_depreciation
@@ -7536,7 +7771,7 @@ msgstr "Afișează suma"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__display_attachments_widget
 msgid "Display Attachments Widget"
-msgstr ""
+msgstr "Afișare widget atașamente"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__display_days_next_month
@@ -8175,7 +8410,7 @@ msgstr "Schimb electronic de date (EDI)"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Electronic Invoicing"
-msgstr ""
+msgstr "Facturare electronică"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_details
@@ -8372,7 +8607,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Entries to Review"
-msgstr "Întrări de verificat"
+msgstr "Înregistrări de verificat"
 
 #. module: account
 #. odoo-python
@@ -8541,7 +8776,7 @@ msgstr "Curs valutar așteptat"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__expects_chart_of_accounts
 msgid "Expects a Chart of Accounts"
-msgstr "Asteapta un Plan de Conturi"
+msgstr "Necesită un plan de conturi"
 
 #. module: account
 #. odoo-javascript
@@ -9409,13 +9644,13 @@ msgstr "Bunuri"
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid "Goods Delivered not Invoiced (perpetual valuation)"
-msgstr ""
+msgstr "Bunuri livrate, dar nefacturate (evaluare permanentă)"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid "Goods Invoiced not Delivered (perpetual valuation)"
-msgstr ""
+msgstr "Bunuri facturate, dar nelivrate (evaluare permanentă)"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_ground_transportation
@@ -9702,7 +9937,6 @@ msgstr "Cum se calculează valoarea totală a impozitului în comenzi și factur
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-#, fuzzy
 msgid "ICE:"
 msgstr "ICE:"
 
@@ -10529,8 +10763,8 @@ msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
 msgstr ""
-"Termenii Comerciali Internationali sunt o serie de termeni comerciali "
-"predefiniți folosiți in tranzacțiile internaționale."
+"Termenii comerciali internaționali sunt un set de condiții comerciale "
+"prestabilite, utilizate în tranzacțiile internaționale."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_intrastat
@@ -10575,7 +10809,6 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/controllers/portal.py:0
-#, fuzzy
 msgid "Invalid token"
 msgstr "Token invalid"
 
@@ -10850,7 +11083,7 @@ msgstr "Trimitere factură"
 #. module: account
 #: model:mail.message.subtype,description:account.mt_invoice_validated
 msgid "Invoice validated"
-msgstr "Factura validata"
+msgstr "Factură validată"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_date
@@ -11034,7 +11267,7 @@ msgstr "Este intern"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_draft_duplicated_ref_ids
 #: model:ir.model.fields,field_description:account.field_account_move__is_draft_duplicated_ref_ids
 msgid "Is Draft Duplicated Ref"
-msgstr ""
+msgstr "Este o referință duplicată în ciornă"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__is_mail_template_editor
@@ -11113,7 +11346,7 @@ msgstr "Este înregistrare plată în ciornă"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_sale_installed
 #: model:ir.model.fields,field_description:account.field_account_move__is_sale_installed
 msgid "Is Sale Installed"
-msgstr ""
+msgstr "Este instalată aplicația Vânzări"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__is_same_currency
@@ -12755,7 +12988,7 @@ msgstr "Sumarul următoarei activități"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_type_id
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_type_id
 msgid "Next Activity Type"
-msgstr "Tip de activitate urmatoare"
+msgstr "Tipul activității următoare"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_register__installments_mode__next
@@ -14153,7 +14386,7 @@ msgstr "Condiții de plată: 21 de zile"
 #: model_terms:account.payment.term,note:account.account_payment_term_30days
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 msgid "Payment terms: 30 Days"
-msgstr "Conditii de plata: 30 de zile"
+msgstr "Condiții de plată: 30 de zile"
 
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_30days_early_discount
@@ -14837,7 +15070,7 @@ msgstr "Responsabil achiziție"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Purchase Tax"
-msgstr "Taxa de cumparare"
+msgstr "Taxă de achiziție"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_product__supplier_taxes_id
@@ -15004,7 +15237,7 @@ msgstr "Primire"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_register__payment_type__inbound
 msgid "Receive Money"
-msgstr "Încasăre"
+msgstr "Încasare"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_details
@@ -15828,6 +16061,11 @@ msgid "Sanitized Account Number"
 msgstr "Număr cont curățat"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__sanitized_account_number
+msgid "Sanitized Bank Account Number"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding
 #: model_terms:ir.ui.view,arch_db:account.res_company_view_form_terms
 msgid "Save"
@@ -15865,7 +16103,7 @@ msgstr "Caută contul"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_search
 msgid "Search Account Journal"
-msgstr "Cautati Jurnalul de Conturi"
+msgstr "Căutați jurnalul contabil"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__search_bar
@@ -15885,7 +16123,7 @@ msgstr "Caută grup"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Search Invoice"
-msgstr "Cautati Factura"
+msgstr "Căutați factura"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -15896,7 +16134,7 @@ msgstr "Căutați Elemente Jurnal"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Search Move"
-msgstr "Cautati Miscarea"
+msgstr "Căutați înregistrarea contabilă"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_search
@@ -15907,7 +16145,7 @@ msgstr "Caută extrasele"
 #: model_terms:ir.ui.view,arch_db:account.account_tax_view_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
 msgid "Search Taxes"
-msgstr "Cautati Taxele"
+msgstr "Căutați taxele"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -16830,8 +17068,8 @@ msgid ""
 "Planned: Future activities."
 msgstr ""
 "Stare bazată pe activități\n"
-"Întârziată: data scadentă este deja trecută\n"
-"Astăzi: activității pentru astăzi\n"
+"Întârziată: termenul scadent a trecut deja\n"
+"Astăzi: data activității este astăzi\n"
 "Planificate: activități viitoare."
 
 #. module: account
@@ -17817,6 +18055,8 @@ msgid ""
 "The account code can only contain alphanumeric characters and dots. (account "
 "code: %s)"
 msgstr ""
+"Codul contului poate conține doar caractere alfanumerice și puncte. (Cod "
+"cont: %s)"
 
 #. module: account
 #. odoo-python
@@ -17859,8 +18099,8 @@ msgid ""
 "The amount expressed in an optional other currency if it is a multi-currency "
 "entry."
 msgstr ""
-"Suma exprimata intr-o alta moneda optionala daca este o inregistrare de tip "
-"multi-moneda."
+"Suma exprimată într-o altă monedă opțională, în cazul unei înregistrări "
+"multivalutare."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_amount_currency_balance_sign
@@ -18012,6 +18252,10 @@ msgid ""
 "trusted. Go to the Bank Settings, double-check that it is yours or correct "
 "the number, and click on Send Money to trust it."
 msgstr ""
+"Contul bancar al companiei (%(account_number)s) asociat acestei facturi nu "
+"este de încredere. Accesează setările bancare și verifică dacă îți aparține "
+"sau corectează numărul, apoi apasă pe „Trimite bani” pentru a-l marca drept "
+"de încredere."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
@@ -18384,7 +18628,8 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__foreign_currency_id
 msgid "The optional other currency if it is a multi-currency entry."
-msgstr "Cealalta moneda optionala daca este o inregistrare multi-moneda."
+msgstr ""
+"Cealaltă monedă, opțională, utilizată într-o înregistrare multivalutară."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__quantity
@@ -18392,9 +18637,9 @@ msgid ""
 "The optional quantity expressed by this line, eg: number of product sold. "
 "The quantity is not a legal requirement but is very useful for some reports."
 msgstr ""
-"Cantitatea optionala exprimata de aceasta linie, de exemplu numarul "
-"produselor vandute. Cantitatea nu este o cerinta legala, dar este foarte "
-"folositoare pentru unele rapoarte."
+"Cantitatea opțională exprimată de această linie, de exemplu numărul de "
+"produse vândute. Cantitatea nu este obligatorie din punct de vedere legal, "
+"dar este foarte utilă pentru unele rapoarte."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__sequence
@@ -18403,10 +18648,10 @@ msgid ""
 "to work properly, invoice distribution lines should be arranged in the same "
 "order as the credit note distribution lines they correspond to."
 msgstr ""
-"Ordinea in care linile de distribuție sunt afișate și potrivite. Pentru "
-"facturile de credit sa functioneze corect, linile de distributie a facturii "
-"trebuie sa fie aranjate in aceeasi ordine ca si linile de distributie a "
-"facturii de credit la care se refera."
+"Ordinea în care liniile de distribuție sunt afișate și asociate. Pentru ca "
+"facturile de corecție să funcționeze corect, liniile de distribuție ale "
+"facturii trebuie aranjate în aceeași ordine ca liniile de distribuție ale "
+"notei de credit aferente."
 
 #. module: account
 #. odoo-python
@@ -18436,7 +18681,7 @@ msgstr "Referința de plată setată pe elementele jurnalului."
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__payment_id
 msgid "The payment that created this entry"
-msgstr "Plata care a creat aceasta intrare"
+msgstr "Plata care a creat această înregistrare"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__currency_id
@@ -18460,7 +18705,7 @@ msgid ""
 "The reconciliation model will only be applied to the selected customers/"
 "vendors."
 msgstr ""
-"Modelul de reconciliere va fi aplicat doar la clientii/furnizorii selectati."
+"Modelul de reconciliere se aplică doar clienților/furnizorilor selectați."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_label
@@ -18485,8 +18730,8 @@ msgid ""
 "The reconciliation model will only be applied when the amount being lower "
 "than, greater than or between specified amount(s)."
 msgstr ""
-"Modelul de reconciliere va fi aplicat doar când suma este mai mică decăt, "
-"mai mare decât sau între sumele specificate."
+"Modelul de reconciliere se aplică numai dacă suma este mai mică, mai mare "
+"sau se încadrează între sumele specificate."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_journal_ids
@@ -18497,8 +18742,8 @@ msgstr "Modelul de reconciliere va fi disponibil doar din jurnalele selectate."
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-msgid "The recurrence will end on %s (included)."
-msgstr "Recurența se va încheia la %s (inclusiv)."
+msgid "The recurrence will end on %(date)s (included)."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -19033,9 +19278,9 @@ msgid ""
 "country. Check company fiscal country in the settings and tax country in "
 "taxes configuration."
 msgstr ""
-"Ace intrare contine una sau mai multe taxe care sunt incompatibile cu tara "
-"ta fiscala. Verifica tara ta fiscala in setari si tara taxei in configurarea "
-"taxelor."
+"Această înregistrare conține una sau mai multe taxe incompatibile cu țara "
+"fiscală a companiei. Verificați țara fiscală a companiei în setări și țara "
+"taxei în configurarea taxelor."
 
 #. module: account
 #. odoo-python
@@ -19169,11 +19414,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid ""
-"This move is configured to be posted automatically at the accounting date: "
-"%s."
+"This move is configured to be posted automatically at the accounting date: %"
+"(date)s."
 msgstr ""
-"Această mutare este configurată să fie validată automat la data contabilă: "
-"%s."
 
 #. module: account
 #. odoo-python
@@ -19627,7 +19870,6 @@ msgstr "Transfer la %s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__translated_product_name
-#, fuzzy
 msgid "Translated Product Name"
 msgstr "Nume produs tradus"
 
@@ -19789,7 +20031,6 @@ msgstr "Preț unitar:"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-#, fuzzy
 msgid "Units"
 msgstr "Unități"
 
@@ -21014,7 +21255,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "You cannot delete a tax line as it would impact the tax report"
-msgstr "Nu poți șterge o linie de taxă deoarece ar afecta raportul de taxe."
+msgstr ""
+"Nu puteți șterge o linie de taxe, deoarece acest lucru ar afecta raportul "
+"fiscal."
 
 #. module: account
 #. odoo-python
@@ -21358,6 +21601,8 @@ msgstr ""
 msgid ""
 "You cannot switch the type of a document with an existing sequence number."
 msgstr ""
+"Nu poți schimba tipul unui document dacă acesta are deja un număr de "
+"secvență."
 
 #. module: account
 #. odoo-python
@@ -21553,7 +21798,7 @@ msgstr "Cod poștal de la"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__zip_to
 msgid "Zip Range To"
-msgstr "Cod postal până la"
+msgstr "Cod poștal până la"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__days_sales_outstanding
@@ -21684,7 +21929,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_error
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_success
 msgid "close"
-msgstr "inchideți"
+msgstr "Închideți"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
@@ -22091,8 +22336,8 @@ msgid ""
 "will be authorized to suspend any provision of services without prior "
 "warning in the event of late payment."
 msgstr ""
-"va fi autorizat să suspende orice furnizare de servicii fără avertizare în "
-"cazul întârzierii platii."
+"Va fi autorizat să suspende orice furnizare de servicii fără avertisment în "
+"cazul întârzierii plății."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
@@ -22133,8 +22378,8 @@ msgid ""
 "{{ object.company_id.name }} - New invoice in "
 "{{ object.journal_id.display_name or 'Invoices' }} journal"
 msgstr ""
-"{{ object.company_id.name }} - Factură nouă în jurnalul {{ "
-"object.journal_id.display_name or 'Invoices' }}"
+"{{ object.company_id.name }} - Factură nouă în jurnalul "
+"{{ object.journal_id.display_name or 'Invoices' }}"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_credit_note
@@ -22173,6 +22418,23 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Factură de auto-facturare (Ref {{ object.name "
 "or 'n/a' }})"
+
+#~ msgid ""
+#~ "%(auto_post_name)s auto-posting enabled. Next accounting date: %"
+#~ "(move_date)s."
+#~ msgstr ""
+#~ "%(auto_post_name)s postarea automată activată. Următoarea dată contabilă: "
+#~ "%(move_date)s."
+
+#~ msgid "The recurrence will end on %s (included)."
+#~ msgstr "Recurența se va încheia la %s (inclusiv)."
+
+#~ msgid ""
+#~ "This move is configured to be posted automatically at the accounting "
+#~ "date: %s."
+#~ msgstr ""
+#~ "Această mutare este configurată să fie validată automat la data "
+#~ "contabilă: %s."
 
 #~ msgid "<span class=\"o_stat_text\">Journal Entries</span>"
 #~ msgstr "<span class=\"o_stat_text\">Înregistrări jurnal</span>"

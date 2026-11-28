@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-11-06 17:37+0000\n"
-"PO-Revision-Date: 2026-11-20 06:05+0000\n"
+"PO-Revision-Date: 2026-11-28 16:44+0000\n"
 "Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-19/hr/ro/>"
 "\n"
@@ -442,7 +442,7 @@ msgstr "<span invisible=\"not contract_date_start\">până la</span>"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_partner_bank_form_inherit_hr
 msgid "<span invisible=\"not employee_salary_amount_is_percentage\">%</span>"
-msgstr ""
+msgstr "<span invisible=\"not employee_salary_amount_is_percentage\">%</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -451,6 +451,9 @@ msgid ""
 "                                                (User is Inactive)\n"
 "                                            </span>"
 msgstr ""
+"<span invisible=\"not user_id or is_user_active\">\n"
+"                                                (Utilizatorul este inactiv)\n"
+"                                            </span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -613,16 +616,20 @@ msgid ""
 "                aligning the workforce with the organization's goals and "
 "objectives."
 msgstr ""
-"A Human Resources (HR) Manager este responsabil pentru supravegherea forței "
-"de muncă a unei organizații și pentru asigurarea\n"
-"                că toate funcțiile HR sunt gestionate eficient. Aceasta "
-"include recrutarea, angajarea, integrarea și\n"
+"Un manager de resurse umane (HR) este responsabil de coordonarea "
+"personalului unei organizații și de asigurarea\n"
+"                gestionării eficiente a tuturor funcțiilor de resurse umane. "
+"Acestea includ recrutarea, angajarea, integrarea și\n"
 "                instruirea noilor angajați, precum și gestionarea relațiilor "
-"cu angajații, performanța și compensațiile. Managerul HR\n"
-"                asigură, de asemenea, conformitatea cu legile muncii și "
-"politicile companiei, promovând în același timp un mediu de lucru pozitiv.\n"
-"                Ei pot gestiona rezolvarea conflictelor, efectua evaluări "
-"ale angajaților și implementa programe"
+"cu angajații, a performanței și a remunerației. Managerul de resurse umane\n"
+"                asigură respectarea legislației muncii și a politicilor "
+"companiei și promovează un mediu de lucru pozitiv.\n"
+"                De asemenea, poate soluționa conflicte, efectua evaluări ale "
+"angajaților și implementa programe\n"
+"                pentru a îmbunătăți implicarea și retenția angajaților. "
+"Managerii de resurse umane au și un rol strategic în\n"
+"                alinierea forței de muncă la scopurile și obiectivele "
+"organizației."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -1058,7 +1065,7 @@ msgid ""
 "quality results in a fast-paced environment."
 msgstr ""
 "Ca dezvoltator în compania noastră, veți <b>colabora cu manageri de produs, "
-"designeri,\n"
+"designeri\n"
 "                                și alți ingineri pentru a proiecta, dezvolta "
 "și implementa soluții software inovatoare</b>.\n"
 "                                Alăturați-vă unei organizații în creștere "
@@ -1068,16 +1075,16 @@ msgstr ""
 "                                Căutăm un dezvoltator calificat, pasionat de "
 "tehnologie și inovație.\n"
 "                                <br>\n"
-"                                În acest rol, veți fi responsabil pentru "
-"<b>scrierea unui cod curat și ușor de întreținut,\n"
+"                                În acest rol, veți fi responsabil pentru <b>"
+"scrierea unui cod curat și ușor de întreținut,\n"
 "                                participarea la revizuiri de cod și "
 "depistarea problemelor</b>. Munca dvs. va implica\n"
 "                                atât <b>rezolvarea creativă a problemelor, "
-"cât și analiza riguroasă</b>, necesitând să gândiți\n"
-"                                în afara cutiei pentru a oferi soluții "
-"efective. Căutăm un candidat proactiv cu o\n"
-"                                mentalitate puternică de \"a face "
-"lucrurile\". Succesul în această poziție depinde de capacitatea dvs. de a\n"
+"cât și analiza riguroasă</b>, necesitând să găsiți soluții inovatoare\n"
+"                                și eficiente. Căutăm un candidat proactiv cu "
+"o\n"
+"                                orientare puternică spre rezultate. Succesul "
+"în această poziție depinde de capacitatea dvs. de a\n"
 "                                aborda provocări complexe și de a oferi "
 "rezultate de înaltă calitate într-un mediu dinamic."
 
@@ -1100,6 +1107,21 @@ msgid ""
 "within the company based on their fit and\n"
 "                                performance."
 msgstr ""
+"În calitate de stagiar în compania noastră, vei <b>colabora cu diverse "
+"departamente pentru a contribui la\n"
+"                                crearea și lansarea unor produse inovatoare</"
+"b>. Alătură-te echipei noastre în creștere, care oferă\n"
+"                                beneficii excelente și oportunități "
+"valoroase de învățare alături de profesioniști cu\n"
+"                                experiență.\n"
+"                                <br>\n"
+"                                Acest rol este atât <b>creativ, cât și "
+"structurat</b>, încurajând gândirea neconvențională.\n"
+"                                Căutăm o persoană proactivă, hotărâtă să "
+"ducă lucrurile la bun sfârșit. Candidații potriviți\n"
+"                                vor avea șansa să se dezvolte în cadrul "
+"companiei, în funcție de potrivirea cu rolul și\n"
+"                                de performanță."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_marketing
@@ -1167,6 +1189,37 @@ msgid ""
 "                                fostering collaboration across all "
 "departments."
 msgstr ""
+"În calitate de director tehnic al companiei noastre, vei <b>colabora "
+"îndeaproape cu echipele de produs, marketing și\n"
+"                                operațiuni pentru a crea și lansa soluții "
+"tehnologice inovatoare care ne diferențiază\n"
+"                                în domeniu</b>. Alătură-te companiei noastre "
+"în plină dezvoltare, unde vei beneficia de avantaje competitive\n"
+"                                și de oportunități de creștere profesională, "
+"colaborând cu experți de top\n"
+"                                din domeniu.\n"
+"                                <br>\n"
+"                                În acest rol, vei <b>defini și implementa "
+"strategia și foaia noastră de parcurs în domeniul tehnologiei</b>,\n"
+"                                asigurând alinierea acesteia la obiectivele "
+"companiei. Acest rol este atât <b>creativ, cât și\n"
+"                                analitic</b>, ceea ce necesită să gândești "
+"neconvențional și să implementezi soluții eficiente.\n"
+"                                Căutăm un lider proactiv, hotărât să ducă "
+"lucrurile la bun sfârșit, capabil să\n"
+"                                înfrunte provocările și să finalizeze cu "
+"succes proiectele.\n"
+"                                <br>\n"
+"                                Pentru a excela în acest rol, ai nevoie de "
+"<b>experiență vastă în arhitectura software,\n"
+"                                cloud computing și securitatea datelor</b>, "
+"precum și experiență solidă în\n"
+"                                coordonarea echipelor și managementul agil "
+"al proiectelor. Abilitățile tale excelente de comunicare\n"
+"                                vor fi esențiale pentru a explica idei "
+"tehnice complexe persoanelor fără pregătire tehnică și\n"
+"                                pentru a stimula colaborarea între toate "
+"departamentele."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_mail_activity_plan_template__responsible_type
@@ -1322,7 +1375,7 @@ msgstr "Informații bancare"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_partner_bank_form_inherit_hr
 msgid "Bank Name"
-msgstr "Numele Bancii"
+msgstr "Numele băncii"
 
 #. module: hr
 #. odoo-python
@@ -1477,7 +1530,7 @@ msgstr "Instructor"
 #. odoo-python
 #: code:addons/hr/models/mail_activity_plan_template.py:0
 msgid "Coach of employee %s is not set."
-msgstr "Antrenor angajat%s nu este setat"
+msgstr "Mentorul angajatului %s nu este setat."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_contract_type__code
@@ -1539,7 +1592,7 @@ msgstr "Cod Țara Companie"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
 msgid "Company Logo"
-msgstr "Siglă comanie"
+msgstr "Sigla companiei"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__resource_calendar_id
@@ -1659,7 +1712,7 @@ msgstr "Data de început a contractului"
 #: model:ir.model.fields,field_description:hr.field_hr_version_wizard__contract_template_id
 #: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_form_view
 msgid "Contract Template"
-msgstr "Sablon de Contract"
+msgstr "Șablon de contract"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_version_wizard_action
@@ -1712,7 +1765,7 @@ msgstr "Contract expirat"
 #. module: hr
 #: model:mail.message.subtype,name:hr.mt_department_contract_pending
 msgid "Contract to Renew"
-msgstr "Contract de Reinnoit"
+msgstr "Contract de reînnoit"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_version__employee_type__contractor
@@ -1758,7 +1811,7 @@ msgstr "Data creării"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_users_simple_form_inherit_hr
 msgid "Create Employee"
-msgstr "Creati Angajatul"
+msgstr "Creați un angajat"
 
 #. module: hr
 #. odoo-python
@@ -1869,7 +1922,7 @@ msgstr "Versiunea curentă a datei"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__no_of_employee
 msgid "Current Number of Employees"
-msgstr "Numărul Actual de Angajati"
+msgstr "Numărul actual de angajați"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__current_version_id
@@ -2130,7 +2183,7 @@ msgstr "Afișare nume avatar"
 #. odoo-python
 #: code:addons/hr/models/hr_version.py:0
 msgid "Divorced"
-msgstr "Divortat(a)"
+msgstr "Divorțat(ă)"
 
 #. module: hr
 #. odoo-python
@@ -2283,7 +2336,7 @@ msgstr "Angajatul %s trebuie să aibă întotdeauna cel puțin o versiune activ�
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee_category
 msgid "Employee Category"
-msgstr "Categorie aAgajat"
+msgstr "Categorie de angajați"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_version
@@ -2468,13 +2521,14 @@ msgstr "Data de sfârșit"
 #: model:ir.model.fields,help:hr.field_hr_version__contract_date_end
 msgid "End date of the contract (if it's a fixed-term contract)."
 msgstr ""
-"Data de sfarsit a contractului (dacă este contract pe perioadă determinată)"
+"Data de sfârșit a contractului (dacă este un contract pe perioadă "
+"determinată)."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__trial_date_end
 #: model:ir.model.fields,help:hr.field_hr_version__trial_date_end
 msgid "End date of the trial period (if there is one)."
-msgstr "Data de sfârșit a perioadei de probă (dacă există)"
+msgstr "Data de încheiere a perioadei de probă (dacă este cazul)."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__trial_date_end
@@ -2528,7 +2582,9 @@ msgstr "Extindeți-vă cunoștințele despre diverse industrii de afaceri"
 #: model:ir.model.fields,help:hr.field_hr_job__expected_employees
 msgid ""
 "Expected number of employees for this job position after new recruitment."
-msgstr "Numărul prevazut de angajati pentru acest post dupa noua recrutare."
+msgstr ""
+"Numărul estimat de angajați pentru acest post după recrutarea de noi "
+"angajați."
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_employee_public_action
@@ -2588,7 +2644,7 @@ msgid ""
 "External user with limited access, created only for the purpose of sharing "
 "data."
 msgstr ""
-"Utilizator extern cu acces limitat, creat numai in scopul partajarii datelor."
+"Utilizator extern cu acces limitat, creat doar pentru partajarea datelor."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -2762,7 +2818,7 @@ msgstr "Experiență Google Adwords"
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "Graduate"
-msgstr "Licentiat"
+msgstr "Absolvent"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -2853,7 +2909,7 @@ msgstr "Acasă"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__distance_home_work
 #: model:ir.model.fields,field_description:hr.field_hr_version__distance_home_work
 msgid "Home-Work Distance"
-msgstr "Distranța Lucru - Acasă"
+msgstr "Distanța dintre domiciliu și locul de muncă"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__km_home_work
@@ -3042,7 +3098,7 @@ msgstr "Imagine 512"
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "Import Template for Employees"
-msgstr "Importare Model de Anagajat"
+msgstr "Model de import pentru angajați"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
@@ -3181,7 +3237,7 @@ msgstr "Funcție"
 #: model:ir.actions.act_window,name:hr.action_hr_job
 #: model:ir.ui.menu,name:hr.menu_view_hr_job
 msgid "Job Positions"
-msgstr "Pozitii functie"
+msgstr "Posturi de lucru"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
@@ -3395,7 +3451,7 @@ msgstr "Mențineți și actualizați sistemele existente"
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_version__sex__male
 msgid "Male"
-msgstr "Barbat"
+msgstr "Bărbat"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_hrm
@@ -3426,7 +3482,7 @@ msgstr "Manager"
 #. odoo-python
 #: code:addons/hr/models/mail_activity_plan_template.py:0
 msgid "Manager of employee %s is not set."
-msgstr "Managager Angajat %s nu este setat."
+msgstr "Managerul angajatului %s nu este setat."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__marital
@@ -3443,7 +3499,7 @@ msgstr "Manager Marketing și Comunitate"
 #. odoo-python
 #: code:addons/hr/models/hr_version.py:0
 msgid "Married"
-msgstr "Casatorit(a)"
+msgstr "Căsătorit(ă)"
 
 #. module: hr
 #. odoo-python
@@ -3620,7 +3676,7 @@ msgstr "Sumarul următoarei activități"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_type_id
 #: model:ir.model.fields,field_description:hr.field_hr_version__activity_type_id
 msgid "Next Activity Type"
-msgstr "Tip de activitate urmatoare"
+msgstr "Tipul activității următoare"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -3722,7 +3778,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job__no_of_employee
 msgid "Number of employees currently occupying this job position."
-msgstr "Numărul de angajati care ocupa in prezent aceasta functie."
+msgstr "Numărul de angajați care ocupă în prezent acest post."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_has_error_counter
@@ -3751,7 +3807,7 @@ msgstr "Numărul de mesaje cu eroare de livrare"
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job__no_of_recruitment
 msgid "Number of new employees you expect to recruit."
-msgstr "Numărul angajatilor noi pe care planuiti sa ii recrutati."
+msgstr "Numărul de angajați noi pe care intenționați să îi recrutați."
 
 #. module: hr
 #. odoo-javascript
@@ -4083,7 +4139,7 @@ msgstr "Afișare prezență"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Presence of employees"
-msgstr "Prezența Angajațiilor"
+msgstr "Prezența angajaților"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -4227,7 +4283,7 @@ msgstr "Istoric dovedit în inovație"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Provide additional information about this version..."
-msgstr ""
+msgstr "Furnizează informații suplimentare despre această versiune..."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -4593,7 +4649,7 @@ msgstr "Afișează tuturor angajaților"
 #. odoo-python
 #: code:addons/hr/models/hr_version.py:0
 msgid "Single"
-msgstr "Necasatorit(a)"
+msgstr "Necăsătorit(ă)"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_skills
@@ -4604,7 +4660,7 @@ msgstr "Management Competențe"
 #: model:ir.model.fields,help:hr.field_hr_employee__ssnid
 #: model:ir.model.fields,help:hr.field_hr_version__ssnid
 msgid "Social Security Number"
-msgstr "Numar Asigurare Sociala"
+msgstr "Număr de asigurare socială"
 
 #. module: hr
 #. odoo-python
@@ -4671,8 +4727,8 @@ msgid ""
 "Planned: Future activities."
 msgstr ""
 "Stare bazată pe activități\n"
-"Întârziată: data scadentă este deja trecută\n"
-"Astăzi: activității pentru astăzi\n"
+"Întârziată: termenul scadent a trecut deja\n"
+"Astăzi: data activității este astăzi\n"
 "Planificate: activități viitoare."
 
 #. module: hr
@@ -4780,7 +4836,7 @@ msgstr "Câmp tehnic, atașați utilizatorul acestui angajat la creare"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__create_employee
 msgid "Technical field, whether to create an employee"
-msgstr "Câmp tehnic, dacă să creeați un angajat"
+msgstr "Câmp tehnic care indică dacă trebuie creat un angajat."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_form_view
@@ -4890,8 +4946,8 @@ msgid ""
 "The employee is already in contract on %s. Please select a date outside "
 "existing contracts"
 msgstr ""
-"The employee is already in contract on %s. Please select a date outside "
-"existing contracts"
+"Angajatul are deja un contract valabil la data de %s. Selectați o dată din "
+"afara perioadelor contractuale existente."
 
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_job_no_of_recruitment_positive
@@ -4912,7 +4968,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "The following employees have the same work email address: %s"
-msgstr ""
+msgstr "Următorii angajați au aceeași adresă de e-mail de serviciu: %s"
 
 #. module: hr
 #. odoo-python
@@ -4966,8 +5022,8 @@ msgid ""
 "The user will have access to the human resources configuration as well as "
 "statistic reports."
 msgstr ""
-"Utilizatorul va avea acces la configurația resurselor umane, precum și la "
-"rapoarte statistice"
+"Utilizatorul va avea acces la configurarea resurselor umane și la rapoarte "
+"statistice."
 
 #. module: hr
 #. odoo-python
@@ -5058,7 +5114,7 @@ msgstr "Activitățile de astăzi"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__expected_employees
 msgid "Total Forecasted Employees"
-msgstr "Total Angajati Estimati"
+msgstr "Numărul total estimat de angajați"
 
 #. module: hr
 #. odoo-python
@@ -5184,7 +5240,7 @@ msgstr "Notificare creare utilizator"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__is_user_employee
 msgid "User Employee"
-msgstr ""
+msgstr "Utilizator angajat"
 
 #. module: hr
 #. odoo-python
@@ -5366,8 +5422,8 @@ msgid ""
 "Whether the employee is a member of the active user's department or one of "
 "it's child department."
 msgstr ""
-"Indica daca angajatul este membru al departamentului activ al utilizatorului "
-"sau al unui departament copil."
+"Indică dacă angajatul este membru al departamentului utilizatorului activ "
+"sau al unuia dintre departamentele sale descendente."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_res_partner__employee
@@ -5379,7 +5435,7 @@ msgstr "Dacă acest contact este un angajat."
 #. odoo-python
 #: code:addons/hr/models/hr_version.py:0
 msgid "Widower"
-msgstr "Vaduv"
+msgstr "Văduv"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__wizard_id
@@ -5727,7 +5783,7 @@ msgstr "Cod poștal"
 #: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__bank_zip
 #: model:ir.model.fields,field_description:hr.field_res_partner_bank__bank_zip
 msgid "Zip"
-msgstr "Cod postal"
+msgstr "Cod poștal"
 
 #. module: hr
 #. odoo-python
@@ -5805,7 +5861,7 @@ msgstr "ex. myprivateemail@example.com"
 #. module: hr
 #: model:ir.model,name:hr.model_hr_mixin
 msgid "hr.mixin"
-msgstr ""
+msgstr "hr.mixin"
 
 #. module: hr
 #. odoo-python

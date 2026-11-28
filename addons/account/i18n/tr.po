@@ -41,7 +41,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 17:37+0000\n"
+"POT-Creation-Date: 2026-11-27 18:32+0000\n"
 "PO-Revision-Date: 2026-08-06 14:41+0000\n"
 "Last-Translator: \"Deniz Guvener Unal (degu)\" <degu@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/account/"
@@ -181,15 +181,6 @@ msgid ""
 msgstr ""
 "%(attachment_name)s (%(user)s tarafından %(date)starihinde ayrılmıştır)%"
 "(attachment_extension)s"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid ""
-"%(auto_post_name)s auto-posting enabled. Next accounting date: %(move_date)s."
-msgstr ""
-"%(auto_post_name)s otomatik kayıt etkinleştirildi. Bir sonraki muhasebe "
-"tarihi: %(move_date)s."
 
 #. module: account
 #. odoo-python
@@ -4073,6 +4064,7 @@ msgstr "Nisan"
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
+#: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_search
@@ -4242,6 +4234,14 @@ msgid ""
 msgstr ""
 "Bu faturada otomatik gönderim, olası bir mükerrer öğe tespit edildiği için "
 "devre dışı bırakılmıştır."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"Auto-posting enabled: %(auto_post_name)s. Next accounting date: %"
+"(move_date)s."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__autopost_bills
@@ -15800,6 +15800,11 @@ msgid "Sanitized Account Number"
 msgstr "Arındırılmış Hesap Numarası"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__sanitized_account_number
+msgid "Sanitized Bank Account Number"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding
 #: model_terms:ir.ui.view,arch_db:account.res_company_view_form_terms
 msgid "Save"
@@ -18437,8 +18442,8 @@ msgstr "Denkleştirme modeli yalnızca seçilen yevmiyelerden kullanılabilir."
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-msgid "The recurrence will end on %s (included)."
-msgstr "Tekrarlama %s (dahil) adresinde sona erecektir."
+msgid "The recurrence will end on %(date)s (included)."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -19097,11 +19102,9 @@ msgstr "Bu kayıt otomatik olarak onaylanacak şekilde yapılandırıldı %(date
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid ""
-"This move is configured to be posted automatically at the accounting date: "
-"%s."
+"This move is configured to be posted automatically at the accounting date: %"
+"(date)s."
 msgstr ""
-"Bu hareket, hesap tarihinde otomatik olarak gönderilecek şekilde "
-"yapılandırılmıştır: %s."
 
 #. module: account
 #. odoo-python
@@ -22055,6 +22058,23 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Kendi kendine faturalandırma faturası (Ref "
 "{{ object.name or 'n/a' }})"
+
+#~ msgid ""
+#~ "%(auto_post_name)s auto-posting enabled. Next accounting date: %"
+#~ "(move_date)s."
+#~ msgstr ""
+#~ "%(auto_post_name)s otomatik kayıt etkinleştirildi. Bir sonraki muhasebe "
+#~ "tarihi: %(move_date)s."
+
+#~ msgid "The recurrence will end on %s (included)."
+#~ msgstr "Tekrarlama %s (dahil) adresinde sona erecektir."
+
+#~ msgid ""
+#~ "This move is configured to be posted automatically at the accounting "
+#~ "date: %s."
+#~ msgstr ""
+#~ "Bu hareket, hesap tarihinde otomatik olarak gönderilecek şekilde "
+#~ "yapılandırılmıştır: %s."
 
 #~ msgid "<span class=\"o_stat_text\">Journal Entries</span>"
 #~ msgstr "<span class=\"o_stat_text\">Yevmiye Kaydı</span>"

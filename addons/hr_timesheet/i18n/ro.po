@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-12 17:36+0000\n"
-"PO-Revision-Date: 2026-11-20 06:05+0000\n"
+"PO-Revision-Date: 2026-11-28 16:44+0000\n"
 "Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-19/"
 "hr_timesheet/ro/>\n"
@@ -81,13 +81,13 @@ msgstr "%(project_name)s (%(days)sd)"
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid "%(project_name)s (%(sign)s%(hours)sh%(minutes)s)"
-msgstr ""
+msgstr "%(project_name)s (%(sign)s%(hours)sh%(minutes)s)"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid "%(project_name)s (%(sign)s%(hours)sh)"
-msgstr ""
+msgstr "%(project_name)s (%(sign)s%(hours)sh)"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -130,8 +130,7 @@ msgstr "2 ore"
 #. module: hr_timesheet
 #: model_terms:digest.tip,tip_description:hr_timesheet.digest_tip_hr_timesheet_0
 msgid "<b class=\"tip_title\">Tip: Record your Timesheets faster</b>"
-msgstr ""
-"<b class=\"tip_title\">Sfat: Înregistrați-vă foiele de timp mai rapid</b>"
+msgstr "<b class=\"tip_title\">Sfat: înregistrați pontajele mai rapid</b>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_kanban_account_analytic_line
@@ -326,12 +325,12 @@ msgstr "După proiect"
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.timesheet_menu_report_timesheet_by_task
 msgid "By Task"
-msgstr "După sracină"
+msgstr "După sarcină"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
 msgid "Call client and discuss project"
-msgstr "Întalnire cu clientul sugerată"
+msgstr "Sunați clientul și discutați proiectul"
 
 #. module: hr_timesheet
 #. odoo-javascript
@@ -542,7 +541,7 @@ msgstr "Terminare Angajat"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_kanban_account_analytic_line
 msgid "Employee's image"
-msgstr ""
+msgstr "Imaginea angajatului"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1032,7 +1031,7 @@ msgstr ""
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
 msgid "There are no timesheets."
-msgstr "Nu există fișe de pontaj"
+msgstr "Nu există fișe de pontaj."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1110,9 +1109,9 @@ msgid ""
 "If you use the timesheet linked to projects, don't forget to setup the right "
 "unit of measure in your employees."
 msgstr ""
-"Acesta va seta unitatea de măsură folosită în proiecte și sarcini.\n"
-"Dacă folosiți fișa de pontaj asociată proiectelor, nu uitați să setați "
-"unitatea de masură corectă la angajații dumneavoastră."
+"Acest lucru stabilește unitatea de măsură folosită în proiecte și sarcini.\n"
+"Dacă folosiți pontajul asociat proiectelor, nu uitați să configurați "
+"unitatea de măsură corectă pentru angajați."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
@@ -1474,16 +1473,17 @@ msgid ""
 "        Make sure to use the right format and order e.g. Improve the "
 "configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
-"Utilizați aceste cuvinte cheie în titlu pentru a seta sarcini noi:\n"
+"Utilizați aceste cuvinte-cheie în titlul sarcinii pentru a crea sarcini "
+"noi:\n"
 "\n"
-"        30h Alocați 30 de ore sarcinii\n"
-"        #tags Setează etichete pe sarcină\n"
-"        @user Atribuie sarcina unui utilizator\n"
-"        ! Setează sarcina o prioritate medie\n"
-"        !! Setează sarcina o prioritate mare\n"
-"        !!! Setează sarcina o prioritate urgentă\n"
+"        30h Alocați sarcinii 30 de ore\n"
+"        #tags Adăugați etichete sarcinii\n"
+"        @user Atribuiți sarcina unui utilizator\n"
+"        ! Setați prioritatea sarcinii la medie\n"
+"        !! Setați prioritatea sarcinii la ridicată\n"
+"        !!! Setați prioritatea sarcinii la urgentă\n"
 "\n"
-"Asigurați-vă că utilizați formatul și ordinea corectă, de exemplu "
+"        Asigurați-vă că respectați formatul și ordinea corecte, de exemplu: "
 "Îmbunătățiți ecranul de configurare 5h #feature #v16 @Mitchell !"
 
 #. module: hr_timesheet

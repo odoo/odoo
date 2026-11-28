@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-10-09 14:12+0000\n"
+"PO-Revision-Date: 2026-11-27 07:33+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/mrp/de/>\n"
 "Language: de\n"
@@ -26,7 +26,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__state
@@ -372,7 +372,7 @@ msgstr "<span class=\"o_stat_text\">Vorgang hinzufügen</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"o_stat_text\">Backorders</span>"
-msgstr "<span class=\"o_stat_text\">Lieferrückstände</span>"
+msgstr "<span class=\"o_stat_text\">Fertigungsrückstände</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -1175,13 +1175,13 @@ msgstr "Rückstandsbestätigungszeilen"
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "Backorder MO"
-msgstr "Lieferrückstand bei Fertigungsauftrag"
+msgstr "Fertigungsauftrag für Rückstand"
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "Backorder MO's"
-msgstr "Lieferrückstand bei Fertigungsaufträgen"
+msgstr "Fertigungsaufträge für Rückstand"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__backorder_sequence
@@ -1193,7 +1193,7 @@ msgstr "Rückstandsreihenfolge"
 msgid "Backorder sequence, if equals to 0 means there is not related backorder"
 msgstr ""
 "Rückstandsreihenfolge, wenn gleich 0 bedeutet dies, dass es keinen "
-"Lieferrückstand gibt"
+"Fertigungsrückstand gibt"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__barcode
@@ -1883,7 +1883,7 @@ msgstr "Anzahl generierter Fertigungsaufträge"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__mrp_production_backorder_count
 msgid "Count of linked backorder"
-msgstr "Anzahl verbundener Lieferrückstände"
+msgstr "Anzahl verbundener Fertigungsrückstände"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__serial_numbers_count
@@ -1899,7 +1899,7 @@ msgstr "Neue Los-/Seriennummern für Komponenten erstellen"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
 msgid "Create a Backorder"
-msgstr "Einen Lieferrückstand erstellen"
+msgstr "Fertigungsrückstand erstellen"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
@@ -1907,10 +1907,10 @@ msgid ""
 "Create a backorder if you expect to process the remaining products later. Do "
 "not create a backorder if you will not process the remaining products."
 msgstr ""
-"Legen Sie einen Lieferrückstand an, wenn Sie davon ausgehen, dass Sie die "
-"verbleibenden Produkte später verarbeiten werden. Legen Sie keinen "
-"Lieferrückstand an, wenn Sie die verbleibenden Produkte nicht verarbeiten "
-"werden."
+"Legen Sie einen Fertigungsrückstand an, wenn Sie davon ausgehen, dass Sie "
+"die verbleibenden Produkte später verarbeiten werden. Legen Sie keinen "
+"Fertigungsrückstand an, wenn Sie die verbleibenden Produkte nicht "
+"verarbeiten werden."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workcenter_action
@@ -1937,7 +1937,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
 msgid "Create backorder"
-msgstr "Lieferrückstand erstellen"
+msgstr "Fertigungsrückstand erstellen"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -3425,7 +3425,7 @@ msgstr "Los-/Seriennummern"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder_line__mrp_production_backorder_id
 msgid "MO Backorder"
-msgstr "Lieferrückstand bei Fertigungsauftrag"
+msgstr "Fertigungsauftrag für Rückstand"
 
 #. module: mrp
 #: model:mail.message.subtype,description:mrp.mrp_mo_in_cancelled
@@ -3925,7 +3925,7 @@ msgstr "Nächster Aktivitätstyp"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
 msgid "No Backorder"
-msgstr "Kein Lieferrückstand"
+msgstr "Kein Fertigungsrückstand"
 
 #. module: mrp
 #. odoo-python
@@ -5500,7 +5500,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder__show_backorder_lines
 msgid "Show backorder lines"
-msgstr "Lieferrückstandposten anzeigen"
+msgstr "Fertigungsrückstandposten anzeigen"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__leave_id
@@ -6191,7 +6191,7 @@ msgstr "Bis"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder_line__to_backorder
 msgid "To Backorder"
-msgstr "Zum Lieferrückstand"
+msgstr "Zum Fertigungsrückstand"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__state__to_close

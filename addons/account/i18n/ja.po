@@ -20,8 +20,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 17:37+0000\n"
-"PO-Revision-Date: 2026-11-18 04:25+0000\n"
+"POT-Creation-Date: 2026-11-27 18:32+0000\n"
+"PO-Revision-Date: 2026-11-27 04:31+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/account/"
 "ja/>\n"
@@ -160,15 +160,6 @@ msgid ""
 msgstr ""
 "%(attachment_name)s (%(user)sにより%(date)sに添付が解除されました)%"
 "(attachment_extension)s"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid ""
-"%(auto_post_name)s auto-posting enabled. Next accounting date: %(move_date)s."
-msgstr ""
-"%(auto_post_name)s の自動記帳が有効になっています。次の仕訳日は: %"
-"(move_date)sです。"
 
 #. module: account
 #. odoo-python
@@ -1297,7 +1288,7 @@ msgstr "<span class=\"o_stat_text\">仕訳</span>"
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "<span class=\"o_stat_text\">Journal Items</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">仕訳明細</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -3270,7 +3261,7 @@ msgstr "勘定科目が正常に統合されました!"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__account_id
 msgid "Accrual Account"
-msgstr "未収勘定"
+msgstr "経過勘定"
 
 #. module: account
 #. odoo-python
@@ -4248,6 +4239,7 @@ msgstr "4月"
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
+#: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_search
@@ -4415,6 +4407,14 @@ msgid ""
 "detected."
 msgstr ""
 "重複の可能性が検出されたため、この顧客請求書では自動記帳が無効化されました。"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"Auto-posting enabled: %(auto_post_name)s. Next accounting date: %"
+"(move_date)s."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__autopost_bills
@@ -8714,7 +8714,7 @@ msgstr "費用勘定"
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__expense_accrual_account
 #: model:ir.model.fields,field_description:account.field_res_company__expense_accrual_account_id
 msgid "Expense Accrual Account"
-msgstr "費用発生勘定"
+msgstr "費用経過勘定"
 
 #. module: account
 #: model:account.account,name:account.1_expense
@@ -12100,7 +12100,7 @@ msgstr "会社が使う主要通貨"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_accrued_orders_wizard
 msgid "Make Accrual Entries"
-msgstr "発生主義の仕訳を作成する"
+msgstr "経過勘定仕訳を作成"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_reports_management_menu
@@ -12606,7 +12606,7 @@ msgstr "上へ移動"
 #. module: account
 #: model:ir.actions.server,name:account.action_automatic_entry_change_account
 msgid "Move to Account"
-msgstr "仕訳する"
+msgstr "勘定科目に振替"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_multi_company
@@ -15494,7 +15494,7 @@ msgstr "収益"
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__revenue_accrual_account
 #: model:ir.model.fields,field_description:account.field_res_company__revenue_accrual_account_id
 msgid "Revenue Accrual Account"
-msgstr "収益発生主義アカウント"
+msgstr "収益経過勘定"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__account_id
@@ -15861,6 +15861,11 @@ msgstr "サンプルデータ"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__sanitized_acc_number
 msgid "Sanitized Account Number"
 msgstr "サニタイズ済口座番号"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__sanitized_account_number
+msgid "Sanitized Bank Account Number"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding
@@ -18470,8 +18475,8 @@ msgstr "消込のモデルは、選択された台帳から利用できるよう
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-msgid "The recurrence will end on %s (included)."
-msgstr "繰り返しは %s(当日を含む)で終了します。"
+msgid "The recurrence will end on %(date)s (included)."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -19125,9 +19130,9 @@ msgstr "この仕訳は、%(date)sに自動記帳されるよう設定されて�
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid ""
-"This move is configured to be posted automatically at the accounting date: "
-"%s."
-msgstr "この仕訳は、会計日 %s に自動で記帳されるよう設定されています。"
+"This move is configured to be posted automatically at the accounting date: %"
+"(date)s."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -19231,7 +19236,7 @@ msgstr "ヒント: 必要なドキュメントを追いかけるのを止めま�
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__mail_partner_ids
 #: model_terms:ir.ui.view,arch_db:account.account_move_send_wizard_form
 msgid "To"
-msgstr "終了日"
+msgstr "振替先/宛先"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -19540,7 +19545,7 @@ msgstr "振替日"
 #. module: account
 #: model:ir.actions.act_window,name:account.account_automatic_entry_wizard_action
 msgid "Transfer Journal Items"
-msgstr "仕訳明細を振替える"
+msgstr "仕訳明細を振替"
 
 #. module: account
 #. odoo-python
@@ -22049,6 +22054,21 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }}支払明細書 (セルフビリング) (参照番号 "
 "{{ object.name or 'n/a' }})"
+
+#~ msgid ""
+#~ "%(auto_post_name)s auto-posting enabled. Next accounting date: %"
+#~ "(move_date)s."
+#~ msgstr ""
+#~ "%(auto_post_name)s の自動記帳が有効になっています。次の仕訳日は: %"
+#~ "(move_date)sです。"
+
+#~ msgid "The recurrence will end on %s (included)."
+#~ msgstr "繰り返しは %s(当日を含む)で終了します。"
+
+#~ msgid ""
+#~ "This move is configured to be posted automatically at the accounting "
+#~ "date: %s."
+#~ msgstr "この仕訳は、会計日 %s に自動で記帳されるよう設定されています。"
 
 #~ msgid ""
 #~ "Email addresses that will receive copy for sent and received invoices. "

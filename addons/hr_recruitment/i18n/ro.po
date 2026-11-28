@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-03 17:35+0000\n"
-"PO-Revision-Date: 2026-11-20 06:05+0000\n"
+"PO-Revision-Date: 2026-11-28 16:44+0000\n"
 "Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-19/"
 "hr_recruitment/ro/>\n"
@@ -628,6 +628,7 @@ msgstr ""
 msgid ""
 "<i class=\"fa fa-2x fa-clock-o\" role=\"img\" aria-label=\"Activities\"/>"
 msgstr ""
+"<i class=\"fa fa-2x fa-clock-o\" role=\"img\" aria-label=\"Activități\"/>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
@@ -637,7 +638,7 @@ msgstr "<i class=\"fa fa-paperclip\" role=\"img\" aria-label=\"Documents\"/>"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "<i class=\"fa fa-user fa-2x\" title=\"new_applications_icon\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-user fa-2x\" title=\"new_applications_icon\"/>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -987,7 +988,7 @@ msgstr "Numele candidatului"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__applicant_without_email
 msgid "Applicant(s) not having email"
-msgstr "Candidaț/i fără email"
+msgstr "Candidați fără adresă de e-mail"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_employee__applicant_ids
@@ -999,7 +1000,7 @@ msgstr "Candidaț/i fără email"
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_activity
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "Applicants"
-msgstr "Candidati"
+msgstr "Candidați"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__applicant_hired
@@ -1156,7 +1157,7 @@ msgstr "Disponibilitate"
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_bachelor
 msgid "Bachelor Degree"
-msgstr "Diploma de licenta"
+msgstr "Diplomă de licență"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__is_blacklisted
@@ -1244,7 +1245,7 @@ msgstr "Anulează"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_graph_view_job
 msgid "Cases By Stage and Estimates"
-msgstr "Cazuri dupa Etapa si Estimari"
+msgstr "Cazuri după etapă și estimări"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_applicant_category
@@ -1367,7 +1368,7 @@ msgstr "Creați aplicații"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Create Employee"
-msgstr "Creati Angajatul"
+msgstr "Creați un angajat"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -1450,7 +1451,7 @@ msgstr "Data creării"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__no_of_employee
 msgid "Current Number of Employees"
-msgstr "Numărul Actual de Angajati"
+msgstr "Numărul actual de angajați"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_bounced_content
@@ -1758,8 +1759,8 @@ msgid ""
 "Email alias for this job position. New emails will automatically create new "
 "applicants for this job position."
 msgstr ""
-"Email alias pentru acest post. Email-urile noi vor crea automat candidati "
-"noi pentru acest post."
+"Alias de e-mail pentru acest post. E-mailurile noi vor crea automat "
+"candidați noi pentru postul respectiv."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__email_cc
@@ -1856,7 +1857,9 @@ msgstr "Salariul suplimentar estimat"
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__expected_employees
 msgid ""
 "Expected number of employees for this job position after new recruitment."
-msgstr "Numărul prevazut de angajati pentru acest post dupa noua recrutare."
+msgstr ""
+"Numărul estimat de angajați pentru acest post după recrutarea de noi "
+"angajați."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__extended_interviewer_ids
@@ -1933,7 +1936,7 @@ msgstr "Bun/bine"
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_graduate
 msgid "Graduate"
-msgstr "Licentiat"
+msgstr "Absolvent"
 
 #. module: hr_recruitment
 #: model_terms:web_tour.tour,rainbow_man_message:hr_recruitment.hr_recruitment_tour
@@ -2174,8 +2177,9 @@ msgid ""
 "Interviewer right will give access to all job position/applications where "
 "the employee is defined. It will allow to refuse, plan meetings."
 msgstr ""
-"Interviewer right will give access to all job position/applications where "
-"the employee is defined. It will allow to refuse, plan meetings."
+"Dreptul de intervievator oferă acces la toate posturile și candidaturile "
+"pentru care este desemnat angajatul. Acesta îi permite să respingă "
+"candidaturi și să planifice întâlniri."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__interviewer_ids
@@ -2282,7 +2286,7 @@ msgstr "Poziția postului creată"
 #: model:ir.model.fields,field_description:hr_recruitment.field_job_add_applicants__job_ids
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_config_jobs
 msgid "Job Positions"
-msgstr "Pozitii functie"
+msgstr "Posturi de lucru"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
@@ -2604,7 +2608,7 @@ msgstr "Aplicații noi"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_digest_digest__kpi_hr_recruitment_new_colleagues
 msgid "New Employees"
-msgstr "Angajati Noi"
+msgstr "Angajați noi"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_department__new_hired_employee
@@ -2644,7 +2648,7 @@ msgstr "Sumarul următoarei activități"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_type_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__activity_type_id
 msgid "Next Activity Type"
-msgstr "Tip de activitate urmatoare"
+msgstr "Tipul activității următoare"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -2747,7 +2751,7 @@ msgstr "Numărul de zile de închidere"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__no_of_employee
 msgid "Number of employees currently occupying this job position."
-msgstr "Numărul de angajati care ocupa in prezent aceasta functie."
+msgstr "Numărul de angajați care ocupă în prezent acest post."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_has_error_counter
@@ -2823,9 +2827,9 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
-"Id-ul optional al unei înregistrări la care vor fi atașate toate mesajele "
-"primite, chiar dacă nu i-au răspuns. Dacă este setat, acesta va dezactiva "
-"complet crearea de înregistrări noi."
+"ID-ul opțional al unui fir de discuție (înregistrare) la care se atașează "
+"toate mesajele primite, chiar dacă expeditorii nu au răspuns în fir. Dacă "
+"este specificat, se dezactivează complet crearea de înregistrări noi."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_applicant_get_refuse_reason__lang
@@ -3016,7 +3020,7 @@ msgstr "Recrutare"
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_job_stage_act
 msgid "Recruitment / Applicants Stages"
-msgstr "Etapele Recrutarii / Candidati"
+msgstr "Etapele recrutării / candidați"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_report_filtered_department
@@ -3027,7 +3031,7 @@ msgstr "Etapele Recrutarii / Candidati"
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_pivot
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 msgid "Recruitment Analysis"
-msgstr "Analiza Recrutarii"
+msgstr "Analiza recrutării"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.mail_activity_plan_action_config_hr_applicant
@@ -3216,7 +3220,7 @@ msgstr "Eroare livrare SMS"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__salary_expected
 msgid "Salary Expected by Applicant"
-msgstr "Salariul dorit de catre Candidat"
+msgstr "Salariul așteptat de candidat"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__salary_expected_extra
@@ -3231,12 +3235,12 @@ msgstr "Pachet salarial"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__salary_proposed
 msgid "Salary Proposed by the Organisation"
-msgstr "Salariul propus de catre Organizatie"
+msgstr "Salariul propus de organizație"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__salary_proposed_extra
 msgid "Salary Proposed by the Organisation, extra advantages"
-msgstr "Salariul propus de Organizatie, plus bonusuri"
+msgstr "Salariul propus de organizație, avantaje suplimentare"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__phone_sanitized
@@ -3257,7 +3261,7 @@ msgstr "Salvați-l !"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "Schedule Interview"
-msgstr "Programeaza un Interviu"
+msgstr "Programează un interviu"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__scheduled_date
@@ -3409,7 +3413,7 @@ msgstr "Sursa"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_source
 msgid "Source of Applicants"
-msgstr "Sursa Candidati"
+msgstr "Sursa candidaților"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_utm_sources
@@ -3419,7 +3423,7 @@ msgstr "Surse"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_source_tree
 msgid "Sources of Applicants"
-msgstr "Surse Candidati"
+msgstr "Surse de candidați"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -3502,8 +3506,8 @@ msgid ""
 "Planned: Future activities."
 msgstr ""
 "Stare bazată pe activități\n"
-"Întârziată: data scadentă este deja trecută\n"
-"Astăzi: activității pentru astăzi\n"
+"Întârziată: termenul scadent a trecut deja\n"
+"Astăzi: data activității este astăzi\n"
 "Planificate: activități viitoare."
 
 #. module: hr_recruitment
@@ -3659,7 +3663,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.constraint,message:hr_recruitment.constraint_hr_recruitment_degree_name_uniq
 msgid "The name of the Degree of Recruitment must be unique!"
-msgstr "Numele Gradului Recrutarii trebuie sa fie unic!"
+msgstr "Numele gradului de recrutare trebuie să fie unic!"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_name
@@ -3681,8 +3685,9 @@ msgid ""
 "The regex facilitates to extract information from the subject or body of the "
 "received email to autopopulate the Applicant's name field"
 msgstr ""
-"Regex-ul facilitează extragerea informațiilor din subiectul sau corpul e-"
-"mailului primit pentru a completa automat câmpul nume candidat."
+"Expresia regulată permite extragerea informațiilor din subiectul sau corpul "
+"e-mailului primit și completarea automată a câmpului pentru numele "
+"candidatului."
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -3744,8 +3749,8 @@ msgid ""
 "This stage is folded in the kanban view when there are no records in that "
 "stage to display."
 msgstr ""
-"Stadiul este pliat in vizualizarea kanban când nu sunt înregistrări de "
-"afișat în acest stadiu"
+"Această etapă este restrânsă în vizualizarea Kanban atunci când nu conține "
+"înregistrări de afișat."
 
 #. module: hr_recruitment
 #: model:digest.tip,name:hr_recruitment.digest_tip_hr_recruitment_0
@@ -3771,7 +3776,7 @@ msgstr "Sfaturi"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__expected_employees
 msgid "Total Forecasted Employees"
-msgstr "Total Angajati Estimati"
+msgstr "Totalul estimat al angajaților"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_sources
@@ -4114,7 +4119,7 @@ msgstr "ex. compania-mea.com"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 msgid "e.g. sales-manager"
-msgstr "de exemplu. manager de vanzari"
+msgstr "de exemplu, manager de vânzări"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -4125,12 +4130,12 @@ msgstr "id"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "in<br/>progress"
-msgstr ""
+msgstr "în<br/>desfășurare"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "new<br/>applications"
-msgstr ""
+msgstr "noi<br/>candidaturi"
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -4156,7 +4161,7 @@ msgstr "rezervor de talente"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "to<br/>recruit"
-msgstr ""
+msgstr "de<br/>recrutat"
 
 #~ msgid ""
 #~ "<div>Great job! You hired a new colleague!</div><div>Try the Website app "

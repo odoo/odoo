@@ -14,19 +14,19 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-11-20 17:35+0000\n"
-"PO-Revision-Date: 2026-10-13 12:33+0000\n"
-"Last-Translator: Vlad Patenko <vlad.patenko@gmail.com>\n"
+"PO-Revision-Date: 2026-11-26 12:33+0000\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>\n"
 "Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-19/"
 "purchase/uk/>\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
-"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
-"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
-"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
-"X-Generator: Weblate 2026.8.1\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 "
+"? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > "
+"14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % "
+"100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: purchase
 #: model:ir.actions.report,print_report_name:purchase.action_report_purchase_order
@@ -80,6 +80,8 @@ msgid ""
 ", it's 100% free! You'll save time creating beautiful quotations and track "
 "sales."
 msgstr ""
+", 100% безкоштовно! Ви заощадите час, створюючи красиві комерційні "
+"пропозиції та відстежуючи продажі."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_qty_received_template
@@ -140,6 +142,39 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Шановний <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</"
+"t>\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure "
+"Interior</t>)\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Нагадуємо, що доставка замовлення на купівлю <span style=\"font-"
+"weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
+"        <t t-if=\"object.partner_ref\">\n"
+"            <span style=\"font-weight:bold;\">(<t t-out=\"object.partner_ref "
+"or ''\">REF_XXX</t>)</span>\n"
+"        </t>\n"
+"        що очікується на \n"
+"        <t t-if=\"object.date_planned\">\n"
+"            <span style=\"font-weight:bold;\" t-out=\"format_date"
+"(object.date_planned) or ''\">05/05/2021</span>.\n"
+"        </t>\n"
+"         <t t-else=\"\">\n"
+"            <span style=\"font-weight:bold;\">невизанчено</span>.\n"
+"        </t>\n"
+"        Чи не могли б ви підтвердити, що буде доставлено вчасно?\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-"
+"quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"object.user_id.signature or ''\" data-o-mail-"
+"quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"    </p>\n"
+"</div>"
 
 #. module: purchase
 #: model:mail.template,body_html:purchase.email_template_edi_purchase_done
@@ -185,6 +220,39 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Шановний <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</"
+"t>\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure "
+"Interior</t>)\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Ось у додатку замовлення на купівлю <span style=\"font-"
+"weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
+"        <t t-if=\"object.partner_ref\">\n"
+"            з референсом: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>\n"
+"        </t>\n"
+"        у сумі <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount_total, object.currency_id) or ''\">$ 10.00</span>\n"
+"        від <t t-out=\"object.company_id.name or ''\">YourCompany</t>. \n"
+"        <br/><br/>\n"
+"        <t t-if=\"object.date_planned\">\n"
+"            Надходження очікуєтьтся на <span style=\"font-weight:bold;\" t-"
+"out=\"format_date(object.date_planned) or ''\">05/05/2021</span>.\n"
+"            <br/><br/>\n"
+"            Чи не могли б ви підтвердити отримання цього замовлення?\n"
+"        </t>\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-"
+"quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"object.user_id.signature or ''\" data-o-mail-"
+"quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"    </p>\n"
+"</div>"
 
 #. module: purchase
 #: model:mail.template,body_html:purchase.email_template_edi_purchase
@@ -218,6 +286,32 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"<p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"Шановний(-а) <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>\n"
+"<t t-if=\"object.partner_id.parent_id\">\n"
+"(<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
+"</t>\n"
+"<br/><br/>\n"
+"У вкладенні — запит ціни <span style=\"font-weight:bold;\" t-"
+"out=\"object.name or ''\">P00015</span>\n"
+"<t t-if=\"object.partner_ref\">\n"
+"з посиланням: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>\n"
+"</t>\n"
+"від компанії <t t-out=\"object.company_id.name or ''\">YourCompany</t>. \n"
+"<br/><br/>\n"
+"Якщо у вас виникнуть запитання, будь ласка, звертайтеся до нас. \n"
+"<br/><br/>\n"
+"З повагою,\n"
+"<t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-quote-"
+"container=\"1\">\n"
+"<br/><br/>\n"
+"<div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">Mitchell "
+"Admin</t></div>\n"
+"</t>\n"
+"</p>\n"
+"</div>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -260,11 +354,13 @@ msgid ""
 "<i class=\"fa fa-lock\"/>\n"
 "                        Locked"
 msgstr ""
+"<i class=\"fa fa-lock\"/>\n"
+"                        Заблоковано"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "<i class=\"fa fa-print me-1\"/>Download / Print"
-msgstr ""
+msgstr "<i class=\"fa fa-print me-1\"/>Завантажити / Роздрукувати"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
@@ -321,7 +417,7 @@ msgstr "<span class=\"o_stat_text\">Порівняння цін</span>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_move_form_inherit_purchase
 msgid "<span class=\"o_stat_text\">Purchase Matching</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Співставлення купівель</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.product_normal_form_view_inherit_purchase
@@ -357,7 +453,7 @@ msgstr "<span>Податки</span>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "<span>Warning: this order might be a duplicate of</span>"
-msgstr ""
+msgstr "<span>Увага: це замовлення може бути дублікатом</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -373,7 +469,7 @@ msgstr "<strong class=\"d-block mb-1\">Рахунки</strong>"
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
 msgid "<strong class=\"d-block mt-3\">Shipping address</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mt-3\">Адреса доставки</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -389,7 +485,7 @@ msgstr "<strong>Сума</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Buyer</strong>"
-msgstr ""
+msgstr "<strong>Покупець</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -405,12 +501,12 @@ msgstr "<strong>Опис</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Disc.</strong>"
-msgstr ""
+msgstr "<strong>Зниж.</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Expected Arrival:</strong>"
-msgstr ""
+msgstr "<strong>Очікуване прибуття:</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
@@ -431,7 +527,7 @@ msgstr "<strong>Дедлайн замовлення:</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Payment Terms: </strong>"
-msgstr ""
+msgstr "<strong>Терміни оплати: </strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -452,7 +548,7 @@ msgstr "<strong>Дата запиту на комерційну пропозиц
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
 msgid "<strong>Requested Ship Date:</strong>"
-msgstr ""
+msgstr "<strong>Запитана дата відправлення:</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -477,7 +573,7 @@ msgstr "<strong>Ціна одиниці</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Your Order Reference</strong>"
-msgstr ""
+msgstr "<strong>Референс вашого замовлення</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -486,6 +582,9 @@ msgid ""
 "supplier to deliver goods or services to the buyer at a preset price for a "
 "period of time."
 msgstr ""
+"Генеральне замовлення на купівлю – це угода про купівлю-продаж між покупцем "
+"і постачальником на поставку товарів або послуг покупцеві за заздалегідь "
+"встановлену ціну протягом певного періоду часу."
 
 #. module: purchase
 #. odoo-python
@@ -529,7 +628,7 @@ msgstr "Введення нарахованих витрат"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Acknowledge"
-msgstr ""
+msgstr "Підтверджено"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__acknowledged
@@ -549,7 +648,7 @@ msgstr "Дії"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 msgid "Activities of"
-msgstr ""
+msgstr "Дії"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_exception_decoration
@@ -574,7 +673,7 @@ msgstr "Тип дії"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.bill_to_po_wizard_form
 msgid "Add Down Payment"
-msgstr ""
+msgstr "Додати авансовий платіж"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.bill_to_po_wizard_form
@@ -611,13 +710,13 @@ msgstr "Додайте деякі товари чи послуги до вашо
 #: model_terms:ir.ui.view,arch_db:purchase.bill_to_po_wizard_form
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
 msgid "Add to PO"
-msgstr ""
+msgstr "Додати до PO"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_bill_line_match.py:0
 msgid "Add to Purchase Order"
-msgstr ""
+msgstr "Додати до Замовлення на купівлю"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.mail_followers_edit_action_from_purchase
@@ -659,7 +758,7 @@ msgstr "Усі протерміновані ЗНКП"
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "All Late Receipt POs"
-msgstr ""
+msgstr "Усі замовлення на купівлю із затриманим отриманням"
 
 #. module: purchase
 #. odoo-javascript
@@ -671,7 +770,7 @@ msgstr "Всі непідтверджені замовлення на купів
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "All Sent RFQs"
-msgstr ""
+msgstr "Усі надіслані запити на пропозицію"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings__group_send_reminder
@@ -688,12 +787,12 @@ msgstr "Дозволити редагувати замовлення на куп
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__allowed_uom_ids
 msgid "Allowed Uom"
-msgstr ""
+msgstr "Дозволені одиниці вимірювання"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__aml_id
 msgid "Aml"
-msgstr ""
+msgstr "Aml"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__amount
@@ -757,6 +856,9 @@ msgid ""
 "been used for this product, the change of unit of measure can not be done.If "
 "you want to change it, please archive the product and create a new one."
 msgstr ""
+"Оскільки інші одиниці виміру (наприклад: %(problem_uom)s), ніж %(uom)s, вже "
+"використовувалися для цього товару, змінити одиницю виміру неможливо. Якщо "
+"ви бажаєте змінити її, будь ласка, архівуйте цей товар і створіть новий."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_attachment_count
@@ -795,7 +897,7 @@ msgstr "Автозаповнення з останнього замовленн�
 #: model:ir.model.fields,help:purchase.field_account_bank_statement_line__purchase_vendor_bill_id
 #: model:ir.model.fields,help:purchase.field_account_move__purchase_vendor_bill_id
 msgid "Auto-complete from a previous bill, refund, or purchase order."
-msgstr ""
+msgstr "Автозаповнення з останнього рахунку/замовлення на купівлю."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -843,7 +945,7 @@ msgstr "Звірка рахунків"
 #. module: purchase
 #: model:ir.model,name:purchase.model_bill_to_po_wizard
 msgid "Bill to Purchase Order"
-msgstr ""
+msgstr "Рахунок до замовлення на купівлю"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_invoiced_at_date
@@ -855,7 +957,7 @@ msgstr "Виставлено рахунок"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__billed_amount_untaxed
 msgid "Billed Amount Untaxed"
-msgstr ""
+msgstr "Сума рахунка без оподаткування"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_invoiced
@@ -928,7 +1030,7 @@ msgstr "Скасовані замовлення на купівлю #"
 #. odoo-python
 #: code:addons/purchase/models/purchase_order_line.py:0
 msgid "Cannot delete a purchase order line which is in state “%s”."
-msgstr ""
+msgstr "Неможливо видалити рядок замовлення на купівлю, який має статус “%s”."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1040,7 +1142,7 @@ msgstr "Підключіть своє програмне забезпеченн�
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
 msgid "Connect your software"
-msgstr ""
+msgstr "Підключіться до свого програмного забезпечення"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_partner
@@ -1071,7 +1173,7 @@ msgstr "Створити рахунки постачальника"
 #. module: purchase
 #: model:ir.model,website_form_label:purchase.model_res_partner
 msgid "Create a Customer"
-msgstr ""
+msgstr "Створіть клієнта"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.product_product_action
@@ -1283,7 +1385,7 @@ msgstr "Сума подвійного затвердження"
 #. odoo-python
 #: code:addons/purchase/wizard/bill_to_po_wizard.py:0
 msgid "Down Payment (ref: %(ref)s)"
-msgstr ""
+msgstr "Авансовий платіж (реф: %(ref)s)"
 
 #. module: purchase
 #. odoo-python
@@ -1318,7 +1420,7 @@ msgstr "Продубльовані документи"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__duplicated_order_ids
 msgid "Duplicated Order"
-msgstr ""
+msgstr "Задубльоване замовлення"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__date_planned
@@ -1395,7 +1497,7 @@ msgstr "Майбутні дії"
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "Generated Orders"
-msgstr ""
+msgstr "Створені замовлення"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__res_company__po_double_validation__two_step
@@ -1414,6 +1516,8 @@ msgid ""
 "Goods are tangible materials and merchandise you provide.\n"
 "A service is a non-material product you provide."
 msgstr ""
+"Товари – це фізичні товари, які ви надаєте.\n"
+"Послуга – це нематеріальний товар, який ви надаєте."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__weight

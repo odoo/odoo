@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:37+0000\n"
-"PO-Revision-Date: 2026-08-02 18:22+0000\n"
+"PO-Revision-Date: 2026-11-28 16:45+0000\n"
 "Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-19/"
 "sale_timesheet/ro/>\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -134,6 +134,8 @@ msgid ""
 "<a href=\"/\" class=\"btn btn-primary o_translate_inline\" "
 "target=\"_blank\"><small><b>READ</b></small></a>"
 msgstr ""
+"<a href=\"/\" class=\"btn btn-primary o_translate_inline\" target=\"_blank\">"
+"<small><b>CITEȘTE</b></small></a>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
@@ -218,35 +220,35 @@ msgstr "<span class=\"text-muted small\">Timp de răspuns</span>"
 #: model_terms:hr.job,website_description:sale_timesheet.job_interior_designer
 #: model_terms:hr.job,website_description:sale_timesheet.job_labour
 msgid "<strong class=\"s_rating_title\">Administrative Work</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">Muncă administrativă</strong>"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
 #: model_terms:hr.job,website_description:sale_timesheet.job_interior_designer
 #: model_terms:hr.job,website_description:sale_timesheet.job_labour
 msgid "<strong class=\"s_rating_title\">Autonomy</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">Autonomie</strong>"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
 #: model_terms:hr.job,website_description:sale_timesheet.job_interior_designer
 #: model_terms:hr.job,website_description:sale_timesheet.job_labour
 msgid "<strong class=\"s_rating_title\">Customer Relationship</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">Relația cu clienții</strong>"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
 #: model_terms:hr.job,website_description:sale_timesheet.job_interior_designer
 #: model_terms:hr.job,website_description:sale_timesheet.job_labour
 msgid "<strong class=\"s_rating_title\">Personal Evolution</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">Evoluție personală</strong>"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
 #: model_terms:hr.job,website_description:sale_timesheet.job_interior_designer
 #: model_terms:hr.job,website_description:sale_timesheet.job_labour
 msgid "<strong class=\"s_rating_title\">Technical Expertise</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">Expertiză tehnică</strong>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_task_inherit
@@ -304,7 +306,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_account_move_reversal
 msgid "Account Move Reversal"
-msgstr ""
+msgstr "Inversare Notă Contabilă"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
@@ -581,12 +583,13 @@ msgid ""
 "                    sports sessions, team building events, monthly drink, "
 "and much more"
 msgstr ""
-"Fiecare angajat are șansa să vadă impactul muncii sale.\n"
-"Poți contribui cu adevărat la succesul companiei.\n"
-"<br>\n"
-"Se organizează frecvent diverse activități pe tot parcursul anului, precum "
-"sesiuni sportive săptămânale, evenimente de team building, întâlniri lunare "
-"și multe altele."
+"Fiecare angajat poate vedea impactul muncii sale.\n"
+"                    Puteți contribui concret la succesul companiei.\n"
+"                    <br>\n"
+"                    Pe parcursul anului se organizează adesea activități "
+"precum\n"
+"                    sesiuni sportive săptămânale, evenimente de team "
+"building, întâlniri lunare și multe altele."
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
@@ -797,7 +800,7 @@ msgstr "Ansamblu bucătărie (Repere)"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__last_sol_of_customer
 msgid "Last Sol Of Customer"
-msgstr ""
+msgstr "Ultima comandă de vânzare a clientului"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__write_uid
@@ -1327,12 +1330,14 @@ msgid ""
 "The %s product is required by the Timesheets app and cannot be archived, "
 "deleted nor linked to a company."
 msgstr ""
+"Produsul %s este necesar aplicației Pontaje și nu poate fi arhivat, șters "
+"sau asociat unei companii."
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/models/sale_order.py:0
 msgid "The Sales Order must contain at least one service product."
-msgstr ""
+msgstr "Comanda de vânzare trebuie să conțină cel puțin un produs de serviciu."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_project__pricing_type
@@ -1346,13 +1351,8 @@ msgid ""
 "senior consultants would deliver the same service (= consultancy), but at a "
 "different rate because of their level of seniority."
 msgstr ""
-"Valoarea sarcinii este perfectă dacă doriți să facturați diferite servicii "
-"clițenților la diferite rate. Valoarea fixă este perfectă dacă facturați un "
-"serviciu la o rată fixă pe oră sau zi lucrată indiferent de angajatul care a "
-"efectuat-o. Valoarea angajatului este preferabilă dacă angajații dvs. "
-"livrează același serviciu la o valori diferite. De exemplu, consilierii "
-"juniori și seniori ar livra același serviciu (= consultanță), dar la o "
-"valoare diferită datorită nivelului lor de experiență."
+"Valoarea sarcinii este potrivită dacă doriți să facturați servicii diferite "
+"unor clienți diferiți, la tarife diferite."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_sale_line_employee_map__cost
@@ -1367,7 +1367,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_timesheet/models/project_project.py:0
 msgid "This project is current linked to timesheet."
-msgstr ""
+msgstr "Acest proiect este conectat în prezent la foaia de pontaj."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product__service_upsell_threshold
@@ -1608,6 +1608,18 @@ msgid ""
 "        Make sure to use the right format and order e.g. Improve the "
 "configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
+"Utilizați aceste cuvinte-cheie în titlul sarcinii pentru a crea sarcini "
+"noi:\n"
+"\n"
+"        30h Alocați sarcinii 30 de ore\n"
+"        #tags Adăugați etichete sarcinii\n"
+"        @user Atribuiți sarcina unui utilizator\n"
+"        ! Setați prioritatea sarcinii la medie\n"
+"        !! Setați prioritatea sarcinii la ridicată\n"
+"        !!! Setați prioritatea sarcinii la urgentă\n"
+"\n"
+"        Asigurați-vă că respectați formatul și ordinea corecte, de exemplu: "
+"Îmbunătățiți ecranul de configurare 5h #feature #v16 @Mitchell !"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
@@ -1705,7 +1717,7 @@ msgstr "de ore vândute."
 #. odoo-python
 #: code:addons/sale_timesheet/models/account_move.py:0
 msgid "project_id"
-msgstr ""
+msgstr "project_id"
 
 #. module: sale_timesheet
 #. odoo-python

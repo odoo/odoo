@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-13 17:36+0000\n"
-"PO-Revision-Date: 2026-11-20 06:05+0000\n"
+"POT-Creation-Date: 2026-11-27 18:33+0000\n"
+"PO-Revision-Date: 2026-11-28 16:45+0000\n"
 "Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-19/"
 "account_edi_ubl_cii/ro/>\n"
@@ -32,7 +32,7 @@ msgstr "%(invoice_name)s - Generat de Odoo"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 msgid "%s should have a valid KBO/BCE number in the Company ID field"
-msgstr ""
+msgstr "Câmpul „ID-ul companiei” trebuie să conțină un număr KBO/BCE valid: %s"
 
 #. module: account_edi_ubl_cii
 #: model:ir.actions.server,name:account_edi_ubl_cii.action_group_ungroup_lines_by_tax
@@ -57,7 +57,7 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "A"
-msgstr ""
+msgstr "A"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -219,16 +219,16 @@ msgstr "Lipsește codul țării cumpărătorului [IBR-011]."
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Buyer Electronic Address / Endpoint ID is missing [IBR-080]."
 msgstr ""
-"Lipsește adresa electronică / ID-ul punctului final al cumpărătorului [IBR-"
-"080]."
+"Lipsește adresa electronică / ID-ul punctului final al cumpărătorului "
+"[IBR-080]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Buyer Electronic Address Scheme Identifier is missing [IBR-063]."
 msgstr ""
-"Lipsește identificatorul schemei adresei electronice a cumpărătorului [IBR-"
-"063]."
+"Lipsește identificatorul schemei adresei electronice a cumpărătorului "
+"[IBR-063]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -289,12 +289,13 @@ msgstr "Cod unic unitate organizatorică iPA"
 msgid ""
 "Common functions for EDI documents: generate the data, the constraints, etc"
 msgstr ""
-"Funcții comune pentru documente EDI: generarea datelor, constrângerilor etc."
+"Funcții comune pentru documente EDI: generarea datelor, a constrângerilor "
+"etc."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Companii"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -333,6 +334,14 @@ msgid ""
 msgstr ""
 "Nu s-a putut găsi un partener corespunzător pentru „%s” cu același cod TVA. "
 "A fost creat un partener nou."
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+msgid ""
+"Could not retrieve a partner corresponding to '%s' with the same endpoint. A "
+"new partner was created."
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -510,7 +519,7 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid "Draft"
-msgstr ""
+msgstr "Ciornă"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_category_code__e
@@ -593,7 +602,7 @@ msgstr "Export în afara UE"
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_cii
 msgid "Factur-x/ZUGFeRD CII 2.2.0"
-msgstr ""
+msgstr "Factur-x/ZUGFeRD CII 2.2.0"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__au
@@ -641,7 +650,7 @@ msgstr "Format folosit pentru importul documentului: %s"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 msgid "Format used to import the invoice: %s"
-msgstr ""
+msgstr "Formatul utilizat pentru importul facturii: %s"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -914,8 +923,8 @@ msgstr "Linia %s: lipsește cantitatea facturată [IBR-022]."
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Line %s: Invoiced quantity unit of measure code is missing [IBR-023]."
 msgstr ""
-"Linia %s: lipsește codul unității de măsură pentru cantitatea facturată [IBR-"
-"023]."
+"Linia %s: lipsește codul unității de măsură pentru cantitatea facturată "
+"[IBR-023]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1174,16 +1183,16 @@ msgstr "Lipsește codul țării vânzătorului [IBR-009]."
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Seller Electronic Address / Endpoint ID is missing [IBR-081]."
 msgstr ""
-"Lipsește adresa electronică / ID-ul punctului final al vânzătorului [IBR-"
-"081]."
+"Lipsește adresa electronică / ID-ul punctului final al vânzătorului "
+"[IBR-081]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Seller Electronic Address Scheme Identifier is missing [IBR-062]."
 msgstr ""
-"Lipsește identificatorul schemei adresei electronice a vânzătorului [IBR-"
-"062]."
+"Lipsește identificatorul schemei adresei electronice a vânzătorului "
+"[IBR-062]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1266,7 +1275,7 @@ msgstr "Cod motiv scutire taxă"
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.layout_invoices_generated_by_odoo
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.report_invoice_document
 msgid "Tax ID"
-msgstr ""
+msgstr "CIF"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1303,6 +1312,7 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/res_partner.py:0
 msgid "The Peppol endpoint is not valid. A valid email is required"
 msgstr ""
+"Punctul final Peppol nu este valid. Este necesară o adresă de e-mail validă"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1322,6 +1332,10 @@ msgid ""
 "Identification Number (TIN). If your business is VAT-registered, this is the "
 "first 10 digits of your 15-digit TRN. Expected format: 1001234567."
 msgstr ""
+"Punctul final Peppol nu este valid. Introdu un număr de identificare fiscală "
+"(TIN) valid, format din 10 cifre. Dacă firma ta este înregistrată în scopuri "
+"de TVA, acesta reprezintă primele 10 cifre ale numărului TRN din 15 cifre. "
+"Format așteptat: 1001234567."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1479,12 +1493,12 @@ msgstr "UBL BIS Facturare 3.0.12"
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_ubl_cen_en16931
 msgid "UBL CEN-EN16931"
-msgstr ""
+msgstr "UBL CEN-EN16931"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_ubl_pint
 msgid "UBL PINT"
-msgstr ""
+msgstr "UBL PINT"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_ubl_pint_eu
@@ -1553,7 +1567,7 @@ msgstr "TVA Regatul Unit"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 msgid "Unknown partner"
-msgstr ""
+msgstr "Partener necunoscut"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1565,7 +1579,7 @@ msgstr "Tipul de fișier nu este acceptat prin %s"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 msgid "Untaxed"
-msgstr ""
+msgstr "Fără taxe"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132

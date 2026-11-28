@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-30 17:38+0000\n"
-"PO-Revision-Date: 2026-11-20 06:05+0000\n"
+"POT-Creation-Date: 2026-11-27 18:33+0000\n"
+"PO-Revision-Date: 2026-11-28 11:34+0000\n"
 "Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-19/loyalty/"
 "ro/>\n"
@@ -64,6 +64,12 @@ msgstr " (Max %s)"
 #: code:addons/loyalty/models/loyalty_reward.py:0
 msgid "%g%% on "
 msgstr "%g%% pe "
+
+#. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_rule.py:0
+msgid "%s (copy)"
+msgstr ""
 
 #. module: loyalty
 #. odoo-python
@@ -434,6 +440,68 @@ msgid ""
 "</tbody></table>\n"
 "        "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%; "
+"margin:0px auto; background:#ffffff; color:#333333;\"><tbody>\n"
+"<tr>\n"
+"    <td valign=\"top\" style=\"text-align: center; font-size: 14px;\">\n"
+"        <t t-if=\"object._mail_get_customer().name\">\n"
+"            Felicitări, <t t-out=\"object._mail_get_customer().name or "
+"''\">Brandon Freeman</t>,<br/>\n"
+"        </t>\n"
+"\n"
+"        Iată recompensa ta de la <t t-"
+"out=\"object.program_id.company_id.name or ''\">YourCompany</t>.<br/>\n"
+"\n"
+"        <t t-foreach=\"object.program_id.reward_ids\" t-as=\"reward\">\n"
+"            <t t-if=\"reward.required_points &lt;= object.points\">\n"
+"                <span t-attf-style=\"font-size: 50px; color: "
+"{{object.program_id.company_id.email_secondary_color or '#875A7B'}}; font-"
+"weight: bold;\" t-esc=\"reward.description\">Reward Description</span>\n"
+"                <br/>\n"
+"            </t>\n"
+"        </t>\n"
+"    </td>\n"
+"</tr>\n"
+"<tr style=\"margin-top: 16px\">\n"
+"    <td valign=\"top\" style=\"text-align: center; font-size: 14px;\">\n"
+"        Folosește acest cod promoțional\n"
+"        <t t-if=\"object.expiration_date\">\n"
+"            înainte de <t t-out=\"format_date(object.expiration_date) or "
+"''\">2021-06-16</t>\n"
+"        </t>\n"
+"        <p style=\"margin-top: 16px;\">\n"
+"            <strong style=\"padding: 16px 8px 16px 8px; border-radius: 3px; "
+"background-color: #F1F1F1;\" t-out=\"object.code or "
+"''\">15637502648479132902</strong>\n"
+"        </p>\n"
+"        <t t-foreach=\"object.program_id.rule_ids\" t-as=\"rule\">\n"
+"            <t t-if=\"rule.minimum_qty not in [0, 1]\">\n"
+"                <span style=\"font-size: 14px;\">\n"
+"                    Achiziție minimă de <t t-out=\"rule.minimum_qty or "
+"''\">10</t> produse\n"
+"                </span><br/>\n"
+"            </t>\n"
+"            <t t-if=\"rule.minimum_amount != 0.00\">\n"
+"                <span style=\"font-size: 14px;\">\n"
+"                    Valabil pentru achiziții de peste <t t-"
+"out=\"rule.company_id.currency_id.symbol or ''\">$</t><t t-out=\"'%0.2f' % "
+"float(rule.minimum_amount) or ''\">10.00</t>\n"
+"                </span><br/>\n"
+"            </t>\n"
+"        </t>\n"
+"        <br/>\n"
+"        Cu mulțumiri,\n"
+"        <t t-if=\"object._get_signature()\" data-o-mail-quote-"
+"container=\"1\">\n"
+"            <br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"object._get_signature() or ''\" data-o-mail-quote=\"1\">Mitchell "
+"Admin</t></div>\n"
+"        </t>\n"
+"    </td>\n"
+"</tr>\n"
+"</tbody></table>\n"
+"        "
 
 #. module: loyalty
 #. odoo-python
@@ -725,7 +793,7 @@ msgstr "Felicitări"
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_res_partner
 msgid "Contact"
-msgstr ""
+msgstr "Contact"
 
 #. module: loyalty
 #. odoo-javascript
@@ -789,11 +857,13 @@ msgstr "Creează un client"
 #: model_terms:ir.actions.act_window,help:loyalty.loyalty_program_gift_ewallet_action
 msgid "Create a new one from scratch, or use one of the templates below."
 msgstr ""
+"Creează una de la zero sau folosește unul dintre șabloanele de mai jos."
 
 #. module: loyalty
 #: model_terms:ir.actions.act_window,help:loyalty.loyalty_program_discount_loyalty_action
 msgid "Create one from scratch, or use a templates below:"
 msgstr ""
+"Creează una de la zero sau folosește unul dintre șabloanele de mai jos:"
 
 #. module: loyalty
 #. odoo-javascript
@@ -868,12 +938,12 @@ msgstr "Clienți"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
 msgid "DEMO_CODE"
-msgstr ""
+msgstr "DEMO_CODE"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
 msgid "DEMO_TEXT"
-msgstr ""
+msgstr "DEMO_TEXT"
 
 #. module: loyalty
 #. odoo-python
@@ -970,7 +1040,7 @@ msgstr "Punct(e) de reducere"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
 msgid "Discount product"
-msgstr ""
+msgstr "Produs de reducere"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_product_category_id
@@ -1013,7 +1083,7 @@ msgstr "Nume afișat"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Displayed as"
-msgstr ""
+msgstr "Afișat ca"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -1064,7 +1134,7 @@ msgstr "Data expirării"
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_card.py:0
 msgid "Expiration date cannot be set on a loyalty card."
-msgstr ""
+msgstr "Nu se poate seta o dată de expirare pentru un card de fidelitate."
 
 #. module: loyalty
 #. odoo-python
@@ -1083,6 +1153,7 @@ msgstr "Carduri de fidelitate"
 #: code:addons/loyalty/models/loyalty_program.py:0
 msgid "Fill in your eWallet, to pay future orders"
 msgstr ""
+"Alimentează-ți portofelul electronic pentru a plăti comenzile viitoare."
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_follower_ids
@@ -1126,7 +1197,7 @@ msgstr "Produs gratuit - dulap mare"
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_reward.py:0
 msgid "Free Product - [%(products)s, and %(count)s more]"
-msgstr ""
+msgstr "Produs gratuit - [%(products)s și încă %(count)s]"
 
 #. module: loyalty
 #. odoo-python
@@ -1323,7 +1394,7 @@ msgstr "Istoric pentru carduri de fidelitate și portofele electronice"
 #: model:ir.model.fields,field_description:loyalty.field_product_template__id
 #: model:ir.model.fields,field_description:loyalty.field_res_partner__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_card__message_needaction
@@ -1395,7 +1466,7 @@ msgstr "Elemente"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
 msgid "John Doe"
-msgstr ""
+msgstr "John Doe"
 
 #. module: loyalty
 #. odoo-javascript
@@ -1611,7 +1682,7 @@ msgstr "Numărul de mesaje cu eroare de livrare"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
 msgid "Odoo"
-msgstr ""
+msgstr "Odoo"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_history__order_id
@@ -1727,7 +1798,7 @@ msgstr "Produse"
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__program_id
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__program_id
 msgid "Program"
-msgstr ""
+msgstr "Program"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__name
@@ -1864,7 +1935,7 @@ msgstr "Clienți selectați"
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 msgid "Sell Gift Cards, that allows to purchase products"
-msgstr ""
+msgstr "Vinde carduri cadou, care permit achiziționarea produselor."
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_view_tree
@@ -1904,7 +1975,7 @@ msgstr ""
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Show points Unit"
-msgstr ""
+msgstr "Afișează unitatea de puncte"
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_reward__discount_applicability__specific
@@ -2053,7 +2124,7 @@ msgstr "Numărul total de comenzi"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__trigger
 msgid "Trigger"
-msgstr "Declansati"
+msgstr "Declanșați"
 
 #. module: loyalty
 #. odoo-python
@@ -2120,12 +2191,12 @@ msgstr "Vizibil pentru toți"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__website_message_ids
 msgid "Website Messages"
-msgstr ""
+msgstr "Mesaje Website"
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_card__website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "Istoric comunicare website"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_mail__trigger
@@ -2222,8 +2293,8 @@ msgstr "Cardul dumneavoastră cadou la {{ object.company_id.name }}"
 #: model:mail.template,subject:loyalty.mail_template_loyalty_card
 msgid "Your reward coupon from {{ object.program_id.company_id.name }} "
 msgstr ""
-"Cuponul dumneavoastră recompensă de la {{ "
-"object.program_id.company_id.name }} "
+"Cuponul dumneavoastră recompensă de la "
+"{{ object.program_id.company_id.name }} "
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
@@ -2293,7 +2364,7 @@ msgstr "Recompensă de loialitate"
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 msgid "mail.template"
-msgstr ""
+msgstr "mail.template"
 
 #. module: loyalty
 #. odoo-python
@@ -2384,7 +2455,7 @@ msgstr "utilizat)"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
 msgid "x"
-msgstr ""
+msgstr "x"
 
 #. module: loyalty
 #. odoo-python

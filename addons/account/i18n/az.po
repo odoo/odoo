@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 17:37+0000\n"
+"POT-Creation-Date: 2026-11-27 18:32+0000\n"
 "PO-Revision-Date: 2026-08-07 07:02+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Azerbaijani <https://translate.odoo.com/projects/odoo-19/"
@@ -128,13 +128,6 @@ msgstr "%(amount)s görə %(date)s"
 msgid ""
 "%(attachment_name)s (detached by %(user)s on %(date)s)%"
 "(attachment_extension)s"
-msgstr ""
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid ""
-"%(auto_post_name)s auto-posting enabled. Next accounting date: %(move_date)s."
 msgstr ""
 
 #. module: account
@@ -3495,6 +3488,7 @@ msgstr "Aprel"
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
+#: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_search
@@ -3660,6 +3654,14 @@ msgstr "Tarixə kimi Avtomatik dərc etmə"
 msgid ""
 "Auto-post was disabled on this invoice because a potential duplicate was "
 "detected."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"Auto-posting enabled: %(auto_post_name)s. Next accounting date: %"
+"(move_date)s."
 msgstr ""
 
 #. module: account
@@ -14978,6 +14980,11 @@ msgid "Sanitized Account Number"
 msgstr "Filtlənmiş  Hesab Nömrəsi"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__sanitized_account_number
+msgid "Sanitized Bank Account Number"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding
 #: model_terms:ir.ui.view,arch_db:account.res_company_view_form_terms
 msgid "Save"
@@ -17475,7 +17482,7 @@ msgstr "Üzləşdirmə modeli yalnız seçilmiş jurnallardan əldə edilə bil�
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-msgid "The recurrence will end on %s (included)."
+msgid "The recurrence will end on %(date)s (included)."
 msgstr ""
 
 #. module: account
@@ -18064,8 +18071,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid ""
-"This move is configured to be posted automatically at the accounting date: "
-"%s."
+"This move is configured to be posted automatically at the accounting date: %"
+"(date)s."
 msgstr ""
 
 #. module: account

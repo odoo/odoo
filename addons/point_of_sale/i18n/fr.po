@@ -13,13 +13,14 @@
 # Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # Camille Dantinne <cmd@odoo.com>, 2026.
 # "Jonathan Quique (jqu)" <jqu@odoo.com>, 2026.
+# "Cécile Collart (cco)" <cco@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-11-20 17:35+0000\n"
-"PO-Revision-Date: 2026-11-12 16:33+0000\n"
-"Last-Translator: \"Jonathan Quique (jqu)\" <jqu@odoo.com>\n"
+"PO-Revision-Date: 2026-11-26 09:33+0000\n"
+"Last-Translator: \"Cécile Collart (cco)\" <cco@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-19/"
 "point_of_sale/fr/>\n"
 "Language: fr\n"
@@ -28,7 +29,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: point_of_sale
 #. odoo-python
@@ -475,6 +476,8 @@ msgstr "? Cliquer sur \"Confirmer\" validera le paiement."
 msgid ""
 "A QR code payment already covers the amount due. Send it or remove it first."
 msgstr ""
+"Un paiement par QR code couvre déjà le montant dû. Envoyez-le ou supprimez-"
+"le d'abord."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__uuid
@@ -600,6 +603,8 @@ msgstr "Jeton d'accès"
 msgid ""
 "Access printer configuration panel by putting this URL in your search bar:"
 msgstr ""
+"Accédez au panneau de configuration de l'imprimante en saisissant cette URL "
+"dans votre barre de recherche :"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -608,6 +613,8 @@ msgid ""
 "Access the below URL but replace [printer_ip] with your current Printer IP "
 "address"
 msgstr ""
+"Accédez à l'URL ci-dessous en remplaçant [printer_ip] par l'adresse IP "
+"actuelle de votre imprimante"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__access_warning
@@ -4086,7 +4093,7 @@ msgstr "A des lignes remboursables"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_stock_picking_type__has_stock_reports_to_print
 msgid "Has Stock Reports To Print"
-msgstr ""
+msgstr "Rapports de stock à imprimer"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -4347,6 +4354,8 @@ msgid ""
 "If this endpoint does not return a 404 error and displays a blank page, "
 "everything is ready."
 msgstr ""
+"Si ce point de terminaison ne renvoie pas d'erreur 404 et affiche une page "
+"vierge, tout est prêt."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order_line__refunded_orderline_id
@@ -5380,6 +5389,8 @@ msgid ""
 "Message: %(messages)s\n"
 "Please update the %(invalid_fields)s"
 msgstr ""
+"Message : %(messages)s\n"
+"Veuillez mettre à jour les champs suivants : %(invalid_fields)s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__message_ids
@@ -5826,7 +5837,7 @@ msgstr "Pas disponible"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/printer/base_printer.js:0
 msgid "Not implemented"
-msgstr ""
+msgstr "Non implémenté"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_preset__identification__none
@@ -5957,7 +5968,7 @@ msgstr "Baskets Odoo"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/navbar/proxy_status/proxy_status.js:0
 msgid "Offline"
-msgstr ""
+msgstr "Hors ligne"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6002,6 +6013,8 @@ msgstr "Réservation en ligne pour le point de vente"
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "Only Point of Sale managers can modify a Point of Sale configuration."
 msgstr ""
+"Seuls les responsables du Point de Vente peuvent modifier la configuration "
+"d'un Point de Vente."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7559,7 +7572,7 @@ msgstr "Le capot de l’imprimante est ouvert. Veuillez le fermer et réessayer 
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "Printer's local IP address is printed"
-msgstr ""
+msgstr "L'adresse IP locale de l'imprimante est imprimée"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -7589,7 +7602,7 @@ msgstr "Poursuivre"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/feedback_screen/feedback_screen.xml:0
 msgid "Processing..."
-msgstr ""
+msgstr "Traitement en cours..."
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_template
@@ -8110,7 +8123,7 @@ msgstr "Restant"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_removal
 msgid "Removal Strategy"
-msgstr ""
+msgstr "Stratégie de retrait"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8506,7 +8519,7 @@ msgstr "Impression sécurisée"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "Secure printing enabled"
-msgstr ""
+msgstr "Impression sécurisée activée"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bus_mixin__access_token
@@ -8713,7 +8726,7 @@ msgstr "Statistiques de session"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Session already closed"
-msgstr ""
+msgstr "Session déjà fermée"
 
 #. module: point_of_sale
 #: model:mail.activity.type,name:point_of_sale.mail_activity_old_session
@@ -8982,6 +8995,9 @@ msgid ""
 "Some paid orders have not been synced to the server yet. Closing or "
 "reloading now may cause data loss."
 msgstr ""
+"Certaines commandes payées n'ont pas encore été synchronisées avec le "
+"serveur. La clôture ou le rechargement des données maintenant pourrait "
+"entraîner une perte de données."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9850,7 +9866,7 @@ msgstr "Le reçu sera automatiquement imprimé à la fin de chaque commande."
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/opening_control_popup/opening_control_popup.js:0
 msgid "The register cannot be opened while offline. Please try again."
-msgstr ""
+msgstr "Impossible d'ouvrir la caisse hors ligne. Veuillez réessayer."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10167,6 +10183,8 @@ msgstr "Ces méthodes de paiement seront disponibles pour le paiement rapide"
 msgid ""
 "This action will delete all unsaved orders and other locally stored data"
 msgstr ""
+"Cette action supprimera toutes les commandes non enregistrées et les autres "
+"données stockées localement"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10910,7 +10928,7 @@ msgstr "Valeur"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Variant does not exist"
-msgstr ""
+msgstr "La variante n'existe pas"
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_green_hood_product_template
@@ -11322,6 +11340,8 @@ msgstr "Vous ne pouvez pas modifier un paiement pour une commande enregistrée."
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "You cannot refund more than the outstanding quantity for this product."
 msgstr ""
+"Vous ne pouvez pas rembourser une quantité supérieure à la quantité restante "
+"à rembourser pour ce produit."
 
 #. module: point_of_sale
 #. odoo-python
@@ -11747,13 +11767,13 @@ msgstr "commandes ouvertes planifiées pour plus tard."
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "order"
-msgstr ""
+msgstr "commande"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "orders"
-msgstr ""
+msgstr "commandes"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_preset_form

@@ -15,8 +15,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-24 17:38+0000\n"
-"PO-Revision-Date: 2026-08-06 19:38+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"PO-Revision-Date: 2026-11-22 09:33+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-19/"
 "base_vat/ro/>\n"
 "Language: ro\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: base_vat
 #. odoo-python
@@ -38,12 +38,13 @@ msgstr "1-01-85004-3 sau 101850043"
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "10XXXXXXXXY or 20XXXXXXXXY or 15XXXXXXXXY or 16XXXXXXXXY or 17XXXXXXXXY"
 msgstr ""
+"10XXXXXXXXY sau 20XXXXXXXXY sau 15XXXXXXXXY sau 16XXXXXXXXY sau 17XXXXXXXXY"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "11111111111 (NIN) or 2222222222 (VKN)"
-msgstr ""
+msgstr "11111111111 (NIN) sau 2222222222 (VKN)"
 
 #. module: base_vat
 #. odoo-python
@@ -51,12 +52,13 @@ msgstr ""
 msgid ""
 "12345678 or UA12345678 (EDRPOU), 1234567890 (RNOPP) or 123456789012 (IPN)"
 msgstr ""
+"12345678 sau UA12345678 (EDRPOU), 1234567890 (RNOPP) sau 123456789012 (IPN)"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "123456789 (TIN) or 12345678901234 (PINFL)"
-msgstr ""
+msgstr "123456789 (TIN) sau 12345678901234 (PINFL)"
 
 #. module: base_vat
 #. odoo-python
@@ -81,7 +83,7 @@ msgstr "49-098-576 or 49098576"
 #. module: base_vat
 #: model:ir.actions.server,name:base_vat.vies_iap_check_update_ir_actions_server
 msgid "Base VAT: Sync updates from IAP VIES"
-msgstr ""
+msgstr "TVA de bază: sincronizează actualizările din IAP VIES"
 
 #. module: base_vat
 #. odoo-python
@@ -155,7 +157,7 @@ msgstr "GB123456782 or XI123456782"
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "GODE561231GR8"
-msgstr ""
+msgstr "GODE561231GR8"
 
 #. module: base_vat
 #. odoo-python
@@ -166,7 +168,7 @@ msgstr "HU12345676 or 12345678-1-11 or 8071592153"
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_country__has_foreign_fiscal_position
 msgid "Has Foreign Fiscal Position"
-msgstr ""
+msgstr "Are poziție fiscală străină"
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_company__id
@@ -191,6 +193,8 @@ msgstr ""
 msgid ""
 "If you are trying to input a European number, this is the expected format: "
 msgstr ""
+"Dacă încercați să introduceți un număr european, acesta este formatul "
+"așteptat: "
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__vies_valid
@@ -202,13 +206,13 @@ msgstr "Valabil în comunitate"
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "Invalid IAP VIES endpoint"
-msgstr ""
+msgstr "Punct final IAP VIES nevalid"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "Note: the expected format is %(expected_format)s"
-msgstr ""
+msgstr "Notă: formatul așteptat este %(expected_format)s"
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__perform_vies_validation
@@ -230,6 +234,7 @@ msgid ""
 "The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. %"
 "(expected_note)s"
 msgstr ""
+"Numărul %(vat_label)s [%(wrong_vat)s] nu pare să fie valid. %(expected_note)s"
 
 #. module: base_vat
 #. odoo-python
@@ -238,30 +243,33 @@ msgid ""
 "The %(vat_label)s number [%(wrong_vat)s] for %(record_label)s does not seem "
 "to be valid. %(expected_note)s"
 msgstr ""
+"Numărul %(vat_label)s [%(wrong_vat)s] pentru %(record_label)s nu pare să fie "
+"valid. %(expected_note)s"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "The Intra-Community validity has been updated to: %s."
-msgstr ""
+msgstr "Valabilitatea intracomunitară a fost actualizată la: %s."
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "The VIES check failed. Please check the Tax ID manually."
-msgstr ""
+msgstr "Verificarea VIES a eșuat. Verificați manual codul fiscal."
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "The VIES check is pending. The status will be updated soon."
-msgstr ""
+msgstr "Verificarea VIES este în așteptare. Starea va fi actualizată în curând."
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "To explicitly indicate no (valid) VAT, use '/' instead. "
 msgstr ""
+"Pentru a indica explicit lipsa unui cod TVA valid, folosește „/” în schimb. "
 
 #. module: base_vat
 #. odoo-python
@@ -293,12 +301,14 @@ msgstr ""
 #: model:ir.model.fields,help:base_vat.field_res_users__vat
 msgid "You can use '/' to indicate that the customer has no Tax ID."
 msgstr ""
+"Poți folosi „/” pentru a indica faptul că acest client nu are cod de "
+"identificare fiscală."
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "either 11 digits for CPF or 14 characters for CNPJ"
-msgstr ""
+msgstr "fie 11 cifre pentru CPF, fie 14 caractere pentru CNPJ"
 
 #. module: base_vat
 #. odoo-python

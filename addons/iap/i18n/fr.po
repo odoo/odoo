@@ -8,13 +8,14 @@
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
 # "Manon Rondou (ronm)" <ronm@odoo.com>, 2025, 2026.
+# "Cécile Collart (cco)" <cco@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~15.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-24 17:37+0000\n"
-"PO-Revision-Date: 2026-08-04 05:51+0000\n"
-"Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
+"PO-Revision-Date: 2026-11-25 15:11+0000\n"
+"Last-Translator: \"Cécile Collart (cco)\" <cco@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-19/iap/fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -22,7 +23,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
@@ -172,7 +173,7 @@ msgstr "ID"
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_tree
 msgid "In-App Purchase Accounts"
-msgstr ""
+msgstr "Comptes d’achat intégré"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_service__integer_balance
@@ -194,7 +195,7 @@ msgstr "Mis à jour le"
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_tree
 msgid "Manage"
-msgstr ""
+msgstr "Gérer"
 
 #. module: iap
 #. odoo-javascript
@@ -248,7 +249,7 @@ msgstr "Inscrit"
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_tree
 msgid "Rotate"
-msgstr ""
+msgstr "Renouveler"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__service_id
@@ -278,6 +279,8 @@ msgid ""
 "The IAP server is unreachable and the information may not be up to date. "
 "Please try again later."
 msgstr ""
+"Le serveur IAP est inaccessible et les informations peuvent ne pas être à "
+"jour. Veuillez réessayer plus tard."
 
 #. module: iap
 #. odoo-python
@@ -301,18 +304,25 @@ msgid ""
 "This is useful if you think it may have leaked. It will also deactivate auto-"
 "refill if set. Are you sure to rotate your IAP token?"
 msgstr ""
+"Cette opération est utile si vous pensez que votre jeton a pu être divulgué. "
+"Elle désactivera également le rechargement automatique s'il est configuré. "
+"Voulez-vous vraiment renouveler votre jeton IAP ?"
 
 #. module: iap
 #. odoo-python
 #: code:addons/iap/models/iap_account.py:0
 msgid "Unable to rotate token, another process is busy. Please try later."
 msgstr ""
+"Impossible de renouveler le jeton, un autre processus est en cours. Veuillez "
+"réessayer plus tard."
 
 #. module: iap
 #. odoo-python
 #: code:addons/iap/models/iap_account.py:0
 msgid "Unexpected while contacting IAP. Please contact the support."
 msgstr ""
+"Une erreur inattendue s'est produite lors de la communication avec IAP. "
+"Veuillez contacter l'assistance."
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_service__unit_name

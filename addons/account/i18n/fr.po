@@ -25,12 +25,13 @@
 # Grace Conlon <grco@odoo.com>, 2026.
 # "Cécile Collart (cco)" <cco@odoo.com>, 2026.
 # "Larissa Manderfeld (lman)" <lman@odoo.com>, 2026.
+# Camille Dantinne <cmd@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 17:37+0000\n"
-"PO-Revision-Date: 2026-10-20 13:33+0000\n"
+"POT-Creation-Date: 2026-11-27 18:32+0000\n"
+"PO-Revision-Date: 2026-11-25 15:11+0000\n"
 "Last-Translator: \"Cécile Collart (cco)\" <cco@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-19/account/"
 "fr/>\n"
@@ -40,7 +41,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -171,15 +172,6 @@ msgid ""
 msgstr ""
 "%(attachment_name)s (détaché par %(user)s le %(date)s)%"
 "(attachment_extension)s"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid ""
-"%(auto_post_name)s auto-posting enabled. Next accounting date: %(move_date)s."
-msgstr ""
-"Comptabilisation automatique de %(auto_post_name)s activée. Prochaine date "
-"comptable : %(move_date)s."
 
 #. module: account
 #. odoo-python
@@ -1309,7 +1301,7 @@ msgstr "<span class=\"o_stat_text\">Pièce comptable</span>"
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "<span class=\"o_stat_text\">Journal Items</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Ecriture Comptables</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -2910,7 +2902,7 @@ msgstr "Nombre d’écritures comptables"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__account_move_line_ids
 msgid "Account Move Line"
-msgstr ""
+msgstr "Ligne d'écriture comptable"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_reversal
@@ -2985,7 +2977,7 @@ msgstr "Compte lettrable"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__account_reconcile_model_line_ids
 msgid "Account Reconcile Model Line"
-msgstr ""
+msgstr "Ligne de modèle de rapprochement comptable"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__account_root_id
@@ -4322,6 +4314,7 @@ msgstr "Avril"
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
+#: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_search
@@ -4496,6 +4489,14 @@ msgstr ""
 "de la détection d’un potentiel doublon."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"Auto-posting enabled: %(auto_post_name)s. Next accounting date: %"
+"(move_date)s."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__autopost_bills
 #: model:ir.model.fields,field_description:account.field_res_config_settings__autopost_bills
 msgid "Auto-validate bills"
@@ -4637,7 +4638,7 @@ msgstr "Retour à la facture fournisseur"
 #. odoo-javascript
 #: code:addons/account/static/src/components/product_catalog/kanban_controller.js:0
 msgid "Back to Credit Note"
-msgstr ""
+msgstr "Retour à l'avoir"
 
 #. module: account
 #. odoo-javascript
@@ -4649,7 +4650,7 @@ msgstr "Retour à la facture client"
 #. odoo-javascript
 #: code:addons/account/static/src/components/product_catalog/kanban_controller.js:0
 msgid "Back to Refund"
-msgstr ""
+msgstr "Retour au remboursement"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -6350,7 +6351,7 @@ msgstr "Nombre de lignes lettrées"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__count_reconciled_lines_excluding_exchange_diff
 msgid "Count Reconciled Lines Excluding Exchange Diff"
-msgstr ""
+msgstr "Nombre de lignes lettrées hors différences de change"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -8487,7 +8488,7 @@ msgstr "Échange de données informatisé"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Electronic Invoicing"
-msgstr ""
+msgstr "Facturation électronique"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_details
@@ -8516,6 +8517,8 @@ msgid ""
 "Email addresses that should receive invoices copy/return reminders. Separate "
 "entries with ';'."
 msgstr ""
+"Adresses e-mail devant recevoir les rappels de copie/retour de factures. "
+"Séparez les entrées par ';'."
 
 #. module: account
 #. odoo-javascript
@@ -9126,12 +9129,12 @@ msgstr "Première nouvelle séquence"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__first_reconciled_lines_id
 msgid "First Reconciled Lines"
-msgstr ""
+msgstr "Premières lignes lettrées"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__first_reconciled_lines_excluding_exchange_diff_id
 msgid "First Reconciled Lines Excluding Exchange Diff"
-msgstr ""
+msgstr "Premières lignes lettrées hors différences de change"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__auto_post_origin_id
@@ -9153,7 +9156,7 @@ msgstr "Code fiscal du pays"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__company_country_code
 msgid "Fiscal Country Code of the Company"
-msgstr ""
+msgstr "Code du pays fiscal de la société"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__fiscal_country_codes
@@ -11130,7 +11133,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move_send.py:0
 msgid "Invoice generated but not sent."
-msgstr ""
+msgstr "Facture générée mais non envoyée."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -11845,7 +11848,7 @@ msgstr "Étiquettes sur les reçus PdV"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__sanitize_payment_reference
 #: model:ir.model.fields,field_description:account.field_account_move__sanitize_payment_reference
 msgid "Label sanitize"
-msgstr ""
+msgstr "Assainissement du libellé"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_land
@@ -13193,6 +13196,9 @@ msgid ""
 "No valid sending method could be applied, so this invoice was not sent "
 "automatically. Please configure a sending method and send it manually."
 msgstr ""
+"Aucune méthode d'envoi valide n'a pu être appliquée, cette facture n'a donc "
+"pas été envoyée automatiquement. Veuillez configurer une méthode d'envoi et "
+"l'envoyer manuellement."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__non_deductible_product
@@ -13615,6 +13621,7 @@ msgstr "Paiements en ligne"
 #: code:addons/account/models/partner.py:0
 msgid "Only Accounting managers can create foreign taxes."
 msgstr ""
+"Seuls les responsables de la comptabilité peuvent créer des taxes étrangères."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__only_tax_exigible
@@ -15077,7 +15084,7 @@ msgstr "Affectation du résultat"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__analytic_profitability
 msgid "Profitability"
-msgstr ""
+msgstr "Profitabilité"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -16164,6 +16171,11 @@ msgstr "Exemple de données"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__sanitized_acc_number
 msgid "Sanitized Account Number"
 msgstr "Numéro de compte nettoyé"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__sanitized_account_number
+msgid "Sanitized Bank Account Number"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding
@@ -18175,6 +18187,8 @@ msgid ""
 "The account code can only contain alphanumeric characters and dots. (account "
 "code: %s)"
 msgstr ""
+"Le code du compte ne peut contenir que des caractères alphanumériques et des "
+"points. (code du compte : %s)"
 
 #. module: account
 #. odoo-python
@@ -18562,6 +18576,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 msgid "The entry is using taxes (%(tax_names)s) from a different company."
 msgstr ""
+"L'écriture utilise des taxes (%(tax_names)s) provenant d'une autre société."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_expense_categ_id
@@ -18874,8 +18889,8 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-msgid "The recurrence will end on %s (included)."
-msgstr "La récurrence se termine le %s (inclus)."
+msgid "The recurrence will end on %(date)s (included)."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -19559,11 +19574,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid ""
-"This move is configured to be posted automatically at the accounting date: "
-"%s."
+"This move is configured to be posted automatically at the accounting date: %"
+"(date)s."
 msgstr ""
-"Cette écriture est configurée pour être comptabilisée automatiquement à la "
-"date comptable : %s."
 
 #. module: account
 #. odoo-python
@@ -20122,7 +20135,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__uncategorized
 msgid "Uncategorized"
-msgstr ""
+msgstr "Non catégorisé"
 
 #. module: account
 #. odoo-python
@@ -21086,6 +21099,14 @@ msgid ""
 "2/ filter on this journal and on 'Unposted' entries\n"
 "3/ select them all and post or delete them through the action menu"
 msgstr ""
+"Vous ne pouvez pas archiver un journal contenant des écritures comptables en "
+"brouillon.\n"
+"\n"
+"Pour continuer :\n"
+"1/ allez dans Comptabilité > Comptabilité > Écritures comptables\n"
+"2/ filtrez sur ce journal et sur les écritures 'Non comptabilisées'\n"
+"3/ sélectionnez-les toutes et comptabilisez-les ou supprimez-les via le menu "
+"d'action"
 
 #. module: account
 #. odoo-python
@@ -21164,6 +21185,8 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_base_document_layout__vat
 msgid "You can use '/' to indicate that the customer has no Tax ID."
 msgstr ""
+"Vous pouvez utiliser « / » pour indiquer que le client n'a pas de numéro de "
+"TVA."
 
 #. module: account
 #. odoo-python
@@ -21606,6 +21629,8 @@ msgid ""
 "You cannot modify the following readonly fields on the posted move %(move)s: "
 "%(fields)s"
 msgstr ""
+"Vous ne pouvez pas modifier les champs en lecture seule suivants sur "
+"l'écriture comptabilisée %(move)s : %(fields)s"
 
 #. module: account
 #. odoo-python
@@ -21658,6 +21683,7 @@ msgstr ""
 #: code:addons/account/wizard/account_payment_register.py:0
 msgid "You cannot register payments for blocked invoices."
 msgstr ""
+"Vous ne pouvez pas enregistrer de paiements pour des factures bloquées."
 
 #. module: account
 #. odoo-python
@@ -22590,6 +22616,23 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Facture en autofacturation (Réf. {{ object.name "
 "or 'n/a' }})"
+
+#~ msgid ""
+#~ "%(auto_post_name)s auto-posting enabled. Next accounting date: %"
+#~ "(move_date)s."
+#~ msgstr ""
+#~ "Comptabilisation automatique de %(auto_post_name)s activée. Prochaine "
+#~ "date comptable : %(move_date)s."
+
+#~ msgid "The recurrence will end on %s (included)."
+#~ msgstr "La récurrence se termine le %s (inclus)."
+
+#~ msgid ""
+#~ "This move is configured to be posted automatically at the accounting "
+#~ "date: %s."
+#~ msgstr ""
+#~ "Cette écriture est configurée pour être comptabilisée automatiquement à "
+#~ "la date comptable : %s."
 
 #~ msgid ""
 #~ "Email addresses that will receive copy for sent and received invoices. "
