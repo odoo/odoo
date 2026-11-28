@@ -32,11 +32,14 @@ class PollController(ThreadController):
             "poll_end_dt": end_dt,
             "poll_question": question,
         }
-        message = thread.with_context(mail_create_poll_values=poll_values).message_post(
-            body="", message_type="comment", subtype_xmlid="mail.mt_comment",
+        # sudo: mail.poll - can create a poll on an accessible thread.
+        message = thread.sudo().message_post(
+            body="",
+            message_type="comment",
+            started_poll_ids=[Command.create(poll_values)],
+            subtype_xmlid="mail.mt_comment",
         )
-        # sudo - mail.poll: can access the poll we just created.
-        poll = message.sudo().started_poll_ids
+        poll = message.started_poll_ids
         self.env.ref("mail.ir_cron_mail_end_polls")._trigger(end_dt)
         Store(*thread._store_target()).add(poll, "_store_poll_fields")
         return poll.id

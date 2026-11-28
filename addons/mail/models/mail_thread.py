@@ -2399,12 +2399,7 @@ class MailThread(models.AbstractModel):
         """ Hook to add custom behavior after having posted the message. Both
         message and computed value are given, to try to lessen query count by
         using already-computed values instead of having to rebrowse things. """
-        if poll_values := self.env.context.get("mail_create_poll_values"):
-            # sudo: mail.poll - can create a poll on an accessible thread.
-            self.env["mail.poll"].sudo().create({**poll_values, "start_message_id": message.id})
-        elif poll := self.env.context.get("mail_end_poll"):
-            # sudo: mail.poll - can close a poll on an accessible thread.
-            poll.sudo().end_message_id = message.id
+        return
 
     def _message_mail_after_hook(self, mails):
         """ Hook to add custom behavior after having sent an mass mailing.
@@ -3201,6 +3196,7 @@ class MailThread(models.AbstractModel):
             'email_add_signature',
             'email_from',
             'email_layout_xmlid',
+            'ended_poll_ids',
             'incoming_email_cc',
             'incoming_email_to',
             'is_internal',
@@ -3218,6 +3214,7 @@ class MailThread(models.AbstractModel):
             'reply_to',
             'reply_to_force_new',
             'res_id',
+            'started_poll_ids',
             'subject',
             'subtype_id',
         }
