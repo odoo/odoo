@@ -5,7 +5,8 @@ from werkzeug.exceptions import NotFound
 from markupsafe import Markup
 
 from odoo.exceptions import UserError, ValidationError
-from odoo.tests.common import users, HttpCase, tagged, TransactionCase
+from odoo.tests.common import users, warmup, HttpCase, tagged, TransactionCase
+from odoo.tools import mute_logger
 from odoo.addons.http_routing.tests.common import MockRequest
 from odoo.addons.website_blog.tests.common import TestWebsiteBlogCommon
 from odoo.addons.mail.controllers.thread import ThreadController
@@ -77,6 +78,39 @@ class TestWebsiteBlogFlow(TestWebsiteBlogCommon):
         self.assertIn(
             self.user_employee.partner_id, self.test_blog_post.message_partner_ids,
             'website_blog: people commenting a post should follow it afterwards')
+
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    @warmup
+    def test_website_blog_publish_batch(self):
+        """ Publishing several posts at once, as done by the scheduled
+        publication cron, notifies blog followers once per post. """
+        blogs = self.test_blog + self.env['blog.blog'].with_user(self.user_blogmanager).create({'name': 'Other Blog'})
+        followers = self.user_employee.partner_id | self.user_public.partner_id
+        blogs.message_subscribe(followers.ids)
+        # 3 posts on the first blog, 2 on the other one
+        posts = self.env['blog.post'].with_user(self.user_blogmanager).create([{
+            'name': f'Scheduled Post {idx}',
+            'blog_id': blog.id,
+            'is_published': False,
+        } for idx, blog in enumerate(blogs + blogs + self.test_blog)])
+        published_subtype = self.env.ref('website_blog.mt_blog_blog_published')
+
+        with self.assertQueryCount(176):  # website_blog: 130
+            posts.sudo().write({'is_published': True, 'publish_on': False})
+
+        self.assertTrue(all(posts.mapped('published_date')))
+        for post in posts:
+            message = post.blog_id.message_ids.filtered(
+                lambda msg: msg.subtype_id == published_subtype and msg.subject == post.name
+            )
+            self.assertEqual(len(message), 1)
+            self.assertEqual(message.notified_partner_ids, followers)
+            self.assertEqual(len(message.notification_ids), 2, 'Each follower should be notified once')
+            notif_type_by_partner = {notif.res_partner_id: notif.notification_type for notif in message.notification_ids}
+            self.assertEqual(notif_type_by_partner, {
+                self.user_employee.partner_id: 'inbox',
+                self.user_public.partner_id: 'email',
+            })
 
     @users('cedric', 'portal_user')
     def test_blog_post_comment_permissions(self):

@@ -1436,7 +1436,7 @@ class MailThread(models.AbstractModel):
             is called with the new message (if the thread record did not exist)
             or its ``message_update`` method (if it did).
 
-           :param str model: the fallback model to use if the message
+           :param str | None model: the fallback model to use if the message
                does not match any of the currently configured mail aliases
                (may be None if a matching alias is supposed to be present)
            :param message: source of the RFC2822 message
