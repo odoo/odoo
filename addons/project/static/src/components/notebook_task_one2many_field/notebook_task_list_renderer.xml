@@ -3,7 +3,7 @@
     <t t-name="project.NotebookTaskListRenderer.Rows" t-inherit="web.ListRenderer.Rows" t-inherit-mode="primary">
         <xpath expr="//t[@t-foreach='list.records']" position="replace">
             <t t-foreach="list.records" t-as="record" t-key="record.id">
-                <t t-if="!['1_done','1_canceled'].includes(record.data.state) or !this.hideState.hide">
+                <t t-if="!this.isClosedState(record.data.state) or !this.hideState.hide">
                     <t t-call="{{ this.constructor.recordRowTemplate }}"/>
                 </t>
             </t>

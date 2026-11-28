@@ -10,3 +10,16 @@ export const STATUS_COLORS = {
 };
 
 export const STATUS_COLOR_PREFIX = 'o_status o_status_bubble mx-0 o_color_bubble_';
+
+/**
+ * Task states considered closed, see `CLOSED_STATES` in `project_task.py`
+ */
+export const CLOSED_STATES = ["1_done", "1_canceled"];
+
+/**
+ * @param {string} state task state
+ * @returns {boolean}
+ */
+export function isClosedState(state) {
+    return CLOSED_STATES.includes(state);
+}

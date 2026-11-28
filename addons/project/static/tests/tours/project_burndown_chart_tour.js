@@ -38,8 +38,8 @@ registry.category("web_tour.tours").add('burndown_chart_tour', {
     trigger: '.o_searchview_facet:contains("Stage") .o_facet_remove',
     run: "click",
 }, {
-    content: 'A "The Burndown Chart must be grouped by Date and Stage" notification is shown when trying to remove the group by "Date: Month > Stage"',
-    trigger: '.o_notification_manager .o_notification:contains("The report should be grouped either by ") button.o_notification_close',
+    content: 'A "The Burndown Chart must be grouped by Stage" notification is shown when trying to remove the group by "Date: Month > Stage"',
+    trigger: '.o_notification_manager .o_notification:contains("The Burndown Chart must be grouped by Stage") button.o_notification_close',
     run: "click",
 }, {
     content: 'Open the search panel menu',

@@ -1,9 +1,9 @@
 import { location } from "@web/core/browser/browser";
-import { useBus, useService } from "@web/core/utils/hooks";
+import { useService } from "@web/core/utils/hooks";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { useOwnDebugContext } from "@web/core/debug/debug_context";
 import { ActionContainer } from "@web/webclient/actions/action_container";
-import { Component, onMounted, proxy, useListener } from "@odoo/owl";
+import { Component, onMounted, useListener } from "@odoo/owl";
 
 export class ProjectSharingWebClient extends Component {
     static components = { ActionContainer, MainComponentsContainer };
@@ -12,14 +12,6 @@ export class ProjectSharingWebClient extends Component {
     setup() {
         this.actionService = useService("action");
         useOwnDebugContext({ categories: ["default"] });
-        this.state = proxy({
-            fullscreen: false,
-        });
-        useBus(this.env.bus, "ACTION_MANAGER:UI-UPDATED", (mode) => {
-            if (mode !== "new") {
-                this.state.fullscreen = mode === "fullscreen";
-            }
-        });
         this.isMounted = false;
         onMounted(() => {
             this.loadRouterState();

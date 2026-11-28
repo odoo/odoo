@@ -18,13 +18,6 @@ class ProjectTaskBurndownChartReport extends models.Model {
     date = fields.Date();
     project_id = fields.Many2one({ relation: "project.project" });
     stage_id = fields.Many2one({ relation: "project.task.type" });
-    is_closed = fields.Selection({
-        string: "Burnup chart",
-        selection: [
-            ["closed", "Closed tasks"],
-            ["open", "Open tasks"],
-        ],
-    });
     nb_tasks = fields.Integer({
         string: "Number of Tasks",
         type: "integer",
@@ -36,7 +29,6 @@ class ProjectTaskBurndownChartReport extends models.Model {
             id: 1,
             project_id: 1,
             stage_id: 1,
-            is_closed: "open",
             date: "2020-01-01",
             nb_tasks: 10,
         },
@@ -44,7 +36,6 @@ class ProjectTaskBurndownChartReport extends models.Model {
             id: 2,
             project_id: 1,
             stage_id: 2,
-            is_closed: "open",
             date: "2020-02-01",
             nb_tasks: 5,
         },
@@ -52,7 +43,6 @@ class ProjectTaskBurndownChartReport extends models.Model {
             id: 3,
             project_id: 1,
             stage_id: 3,
-            is_closed: "closed",
             date: "2020-03-01",
             nb_tasks: 2,
         },
@@ -77,7 +67,6 @@ const mountViewParams = {
         <graph type="line" js_class="burndown_chart">
             <field name="date" string="Date" interval="month"/>
             <field name="stage_id"/>
-            <field name="is_closed"/>
             <field name="nb_tasks" type="measure"/>
         </graph>
     `,
@@ -91,7 +80,6 @@ async function mountViewWithSearch(mountViewContext = null) {
             <search string="Burndown Chart">
                 <filter name="date" context="{'group_by': 'date'}"/>
                 <filter name="stage" context="{'group_by': 'stage_id'}"/>
-                <filter name="is_closed" context="{'group_by': 'is_closed'}"/>
             </search>
         `,
         context: mountViewContext || {
@@ -159,16 +147,5 @@ test("burndown.chart: check that groupby 'Stage > Date' results in 'Date > Stage
         search_default_stage: 1,
         search_default_date: 1,
     });
-    checkGroupByOrder();
-});
-
-test("burndown.chart: check the toggle between 'Stage' and 'Burnup chart'", async () => {
-    await mountViewWithSearch();
-    const searchFacets = queryAll(".o_facet_value");
-    expect(searchFacets).toHaveCount(2);
-
-    const [dateSearchFacet, stageSearchFacet] = searchFacets;
-    expect(dateSearchFacet).toHaveText("Date: Month");
-    expect(stageSearchFacet).toHaveText("Stage");
     checkGroupByOrder();
 });

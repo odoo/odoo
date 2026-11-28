@@ -5,6 +5,7 @@ import {
     describe,
     edit,
     expect,
+    press,
     queryOne,
     test,
 } from "@odoo/hoot";
@@ -227,6 +228,36 @@ test("project.task (kanban): check closed subtask count update", async () => {
     expect.verifySteps(["project.task/web_read", "project.task/onchange", "project.task/web_save"]);
 });
 
+test("project.task (kanban): closed subtask stays visible until the parent task is reloaded", async () => {
+    await mountView({
+        resModel: "project.task",
+        type: "kanban",
+    });
+    await click(".subtask_list_button");
+    await animationFrame();
+    expect(".subtask_list_row").toHaveCount(3);
+
+    await click(".subtask_list_row:contains('Task 7 (Project 1)') .o_field_project_task_state_selection button");
+    await animationFrame();
+    await click(".project_task_state_selection_menu [data-icon='check_circle']");
+    await animationFrame();
+    expect(".subtask_list_row").toHaveCount(3, {
+        message: "The subtask closed from the card should stay in the list",
+    });
+    expect(".subtask_list_row:contains('Task 7 (Project 1)') .subtask_name_col").toHaveClass("opacity-50", {
+        message: "The closed subtask should be greyed out",
+    });
+
+    // folding and unfolding reloads the parent task
+    await click(".subtask_list_button");
+    await animationFrame();
+    await click(".subtask_list_button");
+    await animationFrame();
+    expect(".subtask_list_row").toHaveCount(2, {
+        message: "Once the parent task is reloaded, the closed subtask should be hidden",
+    });
+});
+
 test("project.task (kanban): check subtask creation", async () => {
     let checkSteps = false;
     onRpc(({ args, method, model }) => {
@@ -325,6 +356,33 @@ test("project.task (kanban): check subtask creation when input is empty", async 
     });
     expect(".o_notification_bar").toHaveClass("bg-danger", {
         message: "The notification bar should have type 'danger'.",
+    });
+});
+
+test("project.task (kanban): subtask creation input closes on Escape or when left empty", async () => {
+    await mountView({
+        resModel: "project.task",
+        type: "kanban",
+    });
+    await click(".subtask_list_button");
+    await animationFrame();
+
+    await click(".subtask_create");
+    await animationFrame();
+    expect(".subtask_create_input input").toBeFocused();
+    await press("Escape");
+    await animationFrame();
+    expect(".subtask_create_input").toHaveCount(0, {
+        message: "Pressing Escape should close the subtask creation input",
+    });
+    expect(".subtask_create").toHaveCount(1);
+
+    await click(".subtask_create");
+    await animationFrame();
+    await click(".o_kanban_renderer");
+    await animationFrame();
+    expect(".subtask_create_input").toHaveCount(0, {
+        message: "Leaving the input while empty should close it",
     });
 });
 

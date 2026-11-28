@@ -6,31 +6,20 @@ import { useAutofocus } from "@web/core/utils/hooks";
 export class SubtaskCreate extends Component {
     static template = "project.SubtaskCreate";
     props = useProps({
-        name: t.string(),
-        isReadonly: t.boolean().optional(),
         onSubtaskCreateNameChanged: t.function(),
-        onBlur: t.function(),
+        onClose: t.function(),
     });
 
+    root = signal.ref();
     input = signal.ref();
 
     setup() {
         this.placeholder = _t("Write a task name");
         this.state = proxy({
-            inputSize: 1,
-            name: this.props.name,
+            name: "",
             isFieldInvalid: false,
         });
         useAutofocus({ ref: this.input });
-    }
-
-    /**
-     * @private
-     * @param {InputEvent} ev
-     */
-    _onFocus(ev) {
-        ev.target.value = this.placeholder;
-        ev.target.select();
     }
 
     /**
@@ -45,6 +34,30 @@ export class SubtaskCreate extends Component {
 
     _onClick() {
         this.input()?.focus();
+    }
+
+    /**
+     * @private
+     * @param {KeyboardEvent} ev
+     */
+    _onKeydown(ev) {
+        if (ev.key === "Escape") {
+            this.props.onClose();
+        }
+    }
+
+    /**
+     * Close the input when it loses the focus while empty, unless the focus
+     * goes to the "Add" button (which shows the empty name error instead).
+     * A non-empty name is created by the `change` event, not here.
+     *
+     * @private
+     * @param {FocusEvent} ev
+     */
+    _onBlur(ev) {
+        if (ev.target.value.trim() === "" && !this.root()?.contains(ev.relatedTarget)) {
+            this.props.onClose();
+        }
     }
 
     /**
