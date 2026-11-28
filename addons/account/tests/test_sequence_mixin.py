@@ -375,13 +375,13 @@ class TestSequenceMixin(TestSequenceMixinCommon):
             self.create_move(date='2016-01-01')
             for i in range(6)
         )
+        (invoice + invoice2).move_type = 'out_invoice'
+        (refund + refund2).move_type = 'out_refund'
         (invoice + invoice2 + refund + refund2).write({
             'journal_id': self.company_data['default_journal_sale'].id,
             'partner_id': self.ref('base.partner_root'),
             'invoice_date': '2016-01-01',
         })
-        (invoice + invoice2).move_type = 'out_invoice'
-        (refund + refund2).move_type = 'out_refund'
         all_moves = (entry + entry2 + invoice + invoice2 + refund + refund2)
         all_moves.name = False
         all_moves.action_post()

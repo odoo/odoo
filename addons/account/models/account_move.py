@@ -4059,6 +4059,19 @@ class AccountMove(models.Model):
                     "Therefore, you cannot edit the following fields: %s.",
                     ', '.join(f['string'] for f in self.fields_get(violated_fields).values())
                 ))
+            if vals.get('journal_id') and move.journal_id.id != vals['journal_id']:
+                new_journal = self.env['account.journal'].browse(vals['journal_id'])
+                # The move type may change in the same write (e.g. l10n_uy_edi): check against the target type.
+                target = move.new({
+                    'move_type': vals.get('move_type', move.move_type),
+                    'origin_payment_id': move.origin_payment_id.id,
+                    'statement_line_id': move.statement_line_id.id,
+                })
+                if new_journal.type not in target._get_valid_journal_types():
+                    raise UserError(_(
+                        "You cannot assign a %(journal_type)s journal to this journal entry.",
+                        journal_type=new_journal.type,
+                    ))
             if (
                     move.posted_before
                     and 'journal_id' in vals and move.journal_id.id != vals['journal_id']
