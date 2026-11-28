@@ -2686,6 +2686,62 @@ class AccountEdiUBL(models.AbstractModel):
 
         self._define_document_type(vals, document_type)
 
+    def _ubl_invoice_line_collapse_base_line_composition_grouping_key(self, vals):
+        """ The lines of a collapsed section merged into one: those sharing their taxes, by default.
+        A format adds the values a single line must not mix.
+
+        :param vals:    The global values collected so far.
+        :return:        The grouping key telling how the base_lines will be merged together.
+        """
+        return {}
+
+    def _ubl_invoice_collapse_base_lines_composition(self, vals):
+        """Collapse the base_lines of sections/subsections flagged with 'collapse_composition'.
+
+        For each section or subsection with `collapse_composition` enabled, all of its
+        base_lines are hidden and replaced by a single base_line being the aggregate of the others
+        lines.
+
+        base_lines belonging to sections without `collapse_composition` are left untouched.
+
+        :param vals:    Some custom data.
+        """
+        base_lines = vals['base_lines']
+
+        for base_line in base_lines:
+            invoice_line = base_line['record']
+            if isinstance(invoice_line, models.Model):
+                section = invoice_line.parent_id
+                collapsing_section = None
+                while section:
+                    if section.collapse_composition:
+                        collapsing_section = section
+                    section = section.parent_id
+                base_line['_collapsing_section'] = collapsing_section
+            else:
+                base_line['_collapsing_section'] = None
+
+        def grouping_function(base_line):
+            invoice_line = base_line['record']
+            sub_vals = {**vals, 'base_line': base_line, 'invoice_line': invoice_line}
+            grouping_key = self._ubl_invoice_line_collapse_base_line_composition_grouping_key(sub_vals)
+            grouping_key['name'] = base_line['_collapsing_section'].name
+            return grouping_key
+
+        def aggregate_function(target_base_line, base_line):
+            target_base_line['name'] = target_base_line['_collapsing_section'].name
+            target_base_line['product_id'] = self.env['product.product']
+
+        def filter_function(base_line):
+            return bool(base_line['_collapsing_section'])
+
+        vals['base_lines'] = self.env['account.tax']._reduce_base_lines_with_grouping_function(
+            base_lines=vals['base_lines'],
+            grouping_function=grouping_function,
+            aggregate_function=aggregate_function,
+            filter_function=filter_function,
+        )
+
     def _ubl_get_collapsed_base_line_grouping_key(self, base_line):
         """ The lines of a collapsed section merged into one: those sharing their taxes, by default.
         A format adds the values a single line must not mix.
@@ -2694,6 +2750,7 @@ class AccountEdiUBL(models.AbstractModel):
         :return:            A dict, added to the taxes in the grouping key of
                             account.tax._reduce_base_lines_with_grouping_function.
         """
+        # TO BE REMOVED IN MASTER
         return {}
 
     def _preprocess_base_lines(self, invoice, base_lines):
@@ -2705,6 +2762,7 @@ class AccountEdiUBL(models.AbstractModel):
 
         base_lines belonging to sections without `collapse_composition` are left untouched.
         """
+        # TO BE REMOVED IN MASTER
         AccountTax = self.env['account.tax']
 
         def _get_collapsed_section_line_ids(invoice, base_lines):
@@ -2786,8 +2844,11 @@ class AccountEdiUBL(models.AbstractModel):
         self._ubl_add_values_customer(vals, customer)
         self._ubl_add_values_delivery(vals, delivery)
 
-        base_lines, vals['tax_lines'] = invoice._get_rounded_base_and_tax_lines()
-        vals['base_lines'] = self._preprocess_base_lines(invoice, base_lines)
+        vals['base_lines'], vals['tax_lines'] = invoice._get_rounded_base_and_tax_lines()
+
+        # Collapse the base_lines of sections/subsections flagged with 'collapse_composition'.
+        self._ubl_invoice_collapse_base_lines_composition(vals)
+
         return vals
 
     def _export_invoice(self, invoice):

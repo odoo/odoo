@@ -761,6 +761,7 @@ class AccountEdiXmlPintAe(models.AbstractModel):
         """ The classification values an item carries once: lines differing in any of them are
         different items.
         """
+        # TO BE REMOVED IN MASTER
         return (
             line.l10n_ae_item_type or '',
             line.l10n_ae_goods_service_type or '',
@@ -768,12 +769,23 @@ class AccountEdiXmlPintAe(models.AbstractModel):
             line.l10n_ae_service_accounting_code or '',
         )
 
-    def _ubl_get_collapsed_base_line_grouping_key(self, base_line):
+    def _ubl_invoice_line_collapse_base_line_composition_grouping_key(self, vals):
         """ A collapsed section keeps one line per item classification rather than merging items
         that differ in it: the item type, goods type, HS code and service accounting code are all
         single per item (BTAE-13, BTAE-09, IBT-158 per classification, BTAE-17).
         """
         # EXTENDS account.edi.ubl
+        grouping_key = super()._ubl_invoice_line_collapse_base_line_composition_grouping_key(vals)
+        invoice_line = vals['invoice_line']
+        grouping_key['l10n_ae_classification'] = (
+            invoice_line.l10n_ae_item_type or '',
+            invoice_line.l10n_ae_goods_service_type or '',
+            invoice_line.l10n_ae_hs_code or '',
+            invoice_line.l10n_ae_service_accounting_code or '',
+        )
+
+    def _ubl_get_collapsed_base_line_grouping_key(self, base_line):
+        # TO BE REMOVED IN MASTER
         return {
             **super()._ubl_get_collapsed_base_line_grouping_key(base_line),
             'l10n_ae_classification': self._l10n_ae_get_line_classification_key(self._l10n_ae_get_base_line_record(base_line)),

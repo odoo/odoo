@@ -1818,6 +1818,10 @@ class AccountMove(models.Model):
             base_amls = self.line_ids.filtered(lambda line: line.display_type == 'product')
         else:
             base_amls = self.invoice_line_ids.filtered(lambda line: line.display_type == 'product')
+
+        # The order of the lines in the UI (sequence, id) is different than the one in _order (id).
+        # This is an issue in the EDI files for the end user if both documents doesn't match.
+        base_amls = base_amls.sorted(lambda aml: (aml.sequence, aml._origin.id))
         base_lines = [self._prepare_product_base_line_for_taxes_computation(line) for line in base_amls]
 
         tax_lines = []
@@ -1847,8 +1851,6 @@ class AccountMove(models.Model):
             AccountTax._add_tax_details_in_base_lines(base_lines, self.company_id)
             AccountTax._round_base_lines_tax_details(base_lines, self.company_id)
 
-        # todo: modify the _order in master
-        base_lines[:len(base_amls)] = sorted(base_lines[:len(base_amls)], key=lambda base_line: (base_line['record'].sequence, base_line['record']._origin.id))
         return base_lines, tax_lines
 
     @api.depends_context('lang')
