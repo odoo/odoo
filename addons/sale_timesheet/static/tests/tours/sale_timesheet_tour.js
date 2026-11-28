@@ -194,6 +194,10 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     }
 }, {
     trigger: 'div[name="partner_id"] input',
+    content: 'Focus the customer field (scrolls the form to the header)',
+    run: "click",
+}, {
+    trigger: 'div[name="partner_id"] input',
     content: markup('Add the customer for this project to select an SO and SOL for this customer <i>(e.g. Brandon Freeman)</i>.'),
     run: "edit Brandon Freeman",
 }, {
