@@ -5743,8 +5743,38 @@ test(`Scale: scale default is fetched from localStorage`, async () => {
         arch: `<calendar date_start="start" mode="month"/>`,
         viewId: 19,
     });
-    expect.verifySteps(["scale_week"]);
+    expect.verifySteps([]);
     expect(`.scale_button_selection`).toHaveText("Week");
+
+    await changeScale("year");
+    expect(`.scale_button_selection`).toHaveText("Year");
+    expect.verifySteps(["scale_year"]);
+});
+
+test(`Scale: scale from context has priority over localStorage`, async () => {
+    patch(localStorage, {
+        getItem(key) {
+            if (key.startsWith("scaleOf-viewId")) {
+                return "week";
+            }
+        },
+        setItem(key, value) {
+            if (key === "scaleOf-viewId-19") {
+                expect.step(`scale_${value}`);
+            }
+        },
+    });
+
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `<calendar date_start="start" mode="week"/>`,
+        viewId: 19,
+        context: { default_mode: "month" },
+    });
+    expect(`.scale_button_selection`).toHaveText("Month");
+    // the scale from the context is not saved
+    expect.verifySteps([]);
 
     await changeScale("year");
     expect(`.scale_button_selection`).toHaveText("Year");

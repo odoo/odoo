@@ -67,12 +67,20 @@ export class CalendarModel extends Model {
                 params.context && params.context.initial_date
                     ? deserializeDateTime(params.context.initial_date).startOf("day")
                     : DateTime.local().startOf("day");
+            // A scale given by the action context takes precedence over the one saved in the local storage
+            const contextScale = params.context?.default_mode;
+            if (this.meta.scales.includes(contextScale)) {
+                this.meta.scale = contextScale;
+            }
         }
         // Prevent picking a scale that is not supported by the view
         if (!this.meta.scales.includes(this.meta.scale)) {
             this.meta.scale = this.meta.scales[0];
         }
-        browser.localStorage.setItem(this.storageKey, this.meta.scale);
+        // Only save the scale if it was set by the user (not by the context)
+        if (params.scale) {
+            window.localStorage.setItem(this.storageKey, this.meta.scale);
+        }
         const data = { ...this.data };
         if (params.date) {
             // notify with basic data to render a simple calendar before updating them
