@@ -1,18 +1,18 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import io
+import itertools
 import logging
 import os
 from collections.abc import Sequence
-from contextlib import ExitStack
-from typing import Literal
+from contextlib import ExitStack, closing
 from urllib.parse import urlsplit
-
-import lxml.html
 
 from odoo import api, fields, models
 from odoo.http import request
 from odoo.http.session import session_store, update_session_token
 
+from odoo.addons.base.models.ir_actions_report import ReportDocument, ReportPageSetup
 from odoo.addons.base_report_paper_muncher.paper_muncher import (
     PaperMuncherServer,
     paper_muncher,
@@ -37,89 +37,48 @@ class IrActionsReport(models.Model):
         return paper_muncher().state
 
     @api.model
-    def _run_paper_muncher(
-        self,
-        bodies: Sequence[str],
-        report_ref: str | Literal[False] = False,
-        header: str = '',
-        footer: str = '',
-        landscape: bool = False,
-        specific_paperformat_args: dict | None = None,
-    ) -> bytes:
-        """Render a PDF from HTML content using Paper Muncher subprocess.
+    def _run_paper_muncher(self, documents: Sequence[ReportDocument], page_setup: ReportPageSetup) -> bytes:
+        """Render documents with one Paper Muncher subprocess.
 
-        :param bodies: List of HTML body strings.
-        :param report_ref: report reference that is needed to get report paperformat.
-        :param header: HTML header fragment.
-        :param footer: HTML footer fragment.
-        :param landscape: Whether to use landscape layout.
-        :param specific_paperformat_args: A dictionary containing specific paperformat
-            arguments that override the default paperformat settings. Supported keys:
-
-            ``data-report-dpi``
-                DPI used to compute the document scale, overrides ``paperformat.dpi``.
-            ``data-report-margin-top``
-                top margin in mm, mapped to the header size, overrides
-                ``paperformat.margin_top``.
-            ``data-report-margin-bottom``
-                bottom margin in mm, mapped to the footer size, overrides
-                ``paperformat.margin_bottom``.
-            ``data-report-landscape``
-                force landscape orientation; combined with the ``landscape`` parameter,
-                either one being truthy is enough.
-
-            Any other key is ignored.
+        :param documents: documents to concatenate, with the same decorations
+            unless paper-muncher has the ``per-input-decoration`` capability.
+        :param page_setup: Resolved page setup. The top and bottom margins are
+            mapped to the header and footer sizes; ``header_spacing`` and
+            ``header_line`` are not supported.
         :returns: PDF bytes returned by Paper Muncher.
         :raises RuntimeError: If Paper Muncher fails during any phase.
         """
         assert isinstance(self, IrActionsReport)
-        specific_paperformat_args = specific_paperformat_args or {}
-        paperformat = (
-            self._get_report(report_ref).get_paperformat()
-            if report_ref else
-            self.get_paperformat()
-        )
+        per_input_decoration = paper_muncher().has_capability('per-input-decoration')
 
-        if not isinstance(bodies, (list, tuple)):
-            bodies = list(bodies)
-
-        headers = footers = None
-        if paper_muncher().has_capability('per-input-decoration'):
-            headers = self._split_paper_muncher_decoration(header, 'minimal_layout_report_headers', len(bodies))
-            footers = self._split_paper_muncher_decoration(footer, 'minimal_layout_report_footers', len(bodies))
+        # documents sharing a decoration share its index
+        headers = {html: i for i, html in enumerate(dict.fromkeys(d.header for d in documents if d.header))}
+        footers = {html: i for i, html in enumerate(dict.fromkeys(d.footer for d in documents if d.footer))}
 
         inputs = []
-        for i in range(len(bodies)):
+        for i, document in enumerate(documents):
             inputs.append(f'pipe:/paper-muncher/{i}.html')
-            if headers:
-                inputs += ['--header', f'pipe:/paper-muncher/header-{i}.html']
-            if footers:
-                inputs += ['--footer', f'pipe:/paper-muncher/footer-{i}.html']
+            if i and not per_input_decoration:
+                # older binaries apply the decorations to every input
+                continue
+            if document.header:
+                inputs += ['--header', f'pipe:/paper-muncher/header-{headers[document.header]}.html']
+            if document.footer:
+                inputs += ['--footer', f'pipe:/paper-muncher/footer-{footers[document.footer]}.html']
 
-        dpi = float(specific_paperformat_args.get('data-report-dpi', paperformat.dpi))
         # wkhtmltopdf lays CSS px out at ~76/dpi with smart shrinking, and at its
-        # zoom (96/dpi) with --disable-smart-shrinking.
-        scale = (96 if paperformat.disable_shrinking else 76) / dpi
+        # zoom (96/dpi) with --disable-smart-shrinking; it defaults to 96 dpi.
+        scale = (96 if page_setup.disable_shrinking else 76) / (page_setup.dpi or 96)
 
         extra_args = [
             '--scale', f'{scale}x',
-            '--margins', f'0mm {paperformat.margin_right}mm 0mm {paperformat.margin_left}mm',
-            '--header-size', f'{specific_paperformat_args.get('data-report-margin-top', paperformat.margin_top)}mm',
-            '--footer-size', f'{specific_paperformat_args.get('data-report-margin-bottom', paperformat.margin_bottom)}mm',
+            '--margins', f'0mm {page_setup.margin_right:g}mm 0mm {page_setup.margin_left:g}mm',
+            '--header-size', f'{page_setup.margin_top:g}mm',
+            '--footer-size', f'{page_setup.margin_bottom:g}mm',
+            '--orientation', 'landscape' if page_setup.landscape else 'portrait',
+            '--sandboxed',
         ]
 
-        if header and not headers:
-            extra_args += ['--header', 'pipe:/paper-muncher/header.html']
-
-        if footer and not footers:
-            extra_args += ['--footer', 'pipe:/paper-muncher/footer.html']
-
-        extra_args.append('--sandboxed')
-
-        if landscape or specific_paperformat_args.get('data-report-landscape', False):
-            extra_args += ['--orientation', 'landscape']
-        elif paperformat and paperformat.orientation:
-            extra_args += ['--orientation', paperformat.orientation.lower()]
         features = []
         if os.getenv('ODOO_PAPER_MUNCHER_FEATURE') == '1':
             features.append('*=on')  # activate all experimental/optional features
@@ -128,12 +87,11 @@ class IrActionsReport(models.Model):
         if features:
             # NOTE: a single --feature option, repeating it would override the previous one
             extra_args += ['--feature', *features]
-        if paperformat and paperformat.format:
-            if paperformat.format != 'custom':
-                extra_args += ['--paper', paperformat.format]
-            elif paperformat.page_height and paperformat.page_width:
-                extra_args += ['--width', f'{paperformat.page_width}mm']
-                extra_args += ['--height', f'{paperformat.page_height}mm']
+        if page_setup.paper_format:
+            extra_args += ['--paper', page_setup.paper_format]
+        elif page_setup.page_width and page_setup.page_height:
+            extra_args += ['--width', f'{page_setup.page_width:g}mm']
+            extra_args += ['--height', f'{page_setup.page_height:g}mm']
 
         os_env = os.environ.copy()
         # Disable ANSI color codes in subprocess logs to prevent parsing errors.
@@ -163,73 +121,21 @@ class IrActionsReport(models.Model):
                 os_env=os_env,
                 wsgi_environ=wsgi_environ,
             ) as server:
-                return server.serve(bodies, headers or header, footers or footer)  # TODO: ir.config_parameter
+                return server.serve(  # TODO: ir.config_parameter
+                    [document.body for document in documents], list(headers), list(footers))
 
-    @api.model
-    def _split_paper_muncher_decoration(self, html: str | None, container_id: str, count: int) -> list[str] | None:
-        """Server-side equivalent of the ``subst()`` script of ``web.minimal_layout``,
-        which paper-muncher does not run: one header/footer document per body.
-
-        :returns: ``None`` when the decoration cannot be matched with the bodies.
-        """
-        if not html:
-            return None
-        root = lxml.html.document_fromstring(html)
-        container = root.get_element_by_id(container_id, None)
-        if container is None or len(container) != count:
-            return None
-        documents = []
-        for child in list(container):
-            container[:] = [child]
-            documents.append(lxml.html.tostring(root, encoding='unicode', doctype='<!DOCTYPE html>'))
-        return documents
-
-    def _run_pdf_engine_without_processing(
-            self,
-            engine_name,
-            bodies,
-            report_ref=False,
-            *,
-            header=None,
-            footer=None,
-            landscape=False,
-            specific_paperformat_args=None,
-            **kwargs,
-    ) -> bytes:
-        if engine_name == 'paper-muncher':
-            return self._run_paper_muncher(
-                bodies,
-                report_ref=report_ref,
-                header=header,
-                footer=footer,
-                landscape=landscape,
-                specific_paperformat_args=specific_paperformat_args,
-            )
-        return super()._run_pdf_engine_without_processing(
-            engine_name, bodies, report_ref,
-            header=header, footer=footer, landscape=landscape,
-            specific_paperformat_args=specific_paperformat_args,
-            **kwargs)
-
-    def _run_pdf_engine(
-        self,
-        engine_name: str,
-        html: str,
-        report_ref: str | Literal[False] = False,
-        landscape: bool = False,
-        **kwargs,
-    ) -> tuple[bytes, list[int]]:
-        if engine_name == 'paper-muncher':
-            report_sudo = self._get_report(report_ref).with_context(debug=False)
-            bodies, html_ids, header, footer, specific_paperformat_args = (
-                report_sudo._prepare_html(html, report_model=report_sudo.model))
-            content = self._run_paper_muncher(
-                bodies,
-                report_ref=report_ref,
-                header=header,
-                footer=footer,
-                landscape=landscape,
-                specific_paperformat_args=specific_paperformat_args,
-            )
-            return content, html_ids
-        return super()._run_pdf_engine(engine_name, html, report_ref, landscape, **kwargs)
+    def _run_pdf_engine_with_documents(self, engine_name, documents, page_setup, **kwargs) -> bytes:
+        if engine_name != 'paper-muncher':
+            return super()._run_pdf_engine_with_documents(engine_name, documents, page_setup, **kwargs)
+        if paper_muncher().has_capability('per-input-decoration'):
+            return self._run_paper_muncher(documents, page_setup)
+        # Older binaries apply the decorations to every input: one subprocess
+        # per run of documents with the same decorations.
+        pdfs = [
+            self._run_paper_muncher(list(batch), page_setup)
+            for _decorations, batch in itertools.groupby(documents, key=lambda document: (document.header, document.footer))
+        ]
+        if len(pdfs) == 1:
+            return pdfs[0]
+        with closing(self._merge_pdfs([io.BytesIO(pdf) for pdf in pdfs])) as stream:
+            return stream.getvalue()

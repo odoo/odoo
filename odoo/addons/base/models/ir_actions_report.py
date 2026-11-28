@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import dataclasses
 import io
 import json
 import logging
@@ -31,6 +32,113 @@ from odoo.tools.safe_eval import safe_eval, time
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 _logger = logging.getLogger(__name__)
+
+
+def _parse_landscape(value) -> bool:
+    if isinstance(value, bool):
+        return value
+    return str(value).strip().lower() not in ('0', 'false', 'no', 'off', 'none')
+
+
+# ``data-report-*`` override (root ``<html>`` attribute or
+# ``specific_paperformat_args`` key) -> ReportPageSetup field and its parser.
+PAGE_SETUP_OVERRIDES = {
+    'data-report-margin-top': ('margin_top', float),
+    'data-report-margin-bottom': ('margin_bottom', float),
+    'data-report-margin-left': ('margin_left', float),
+    'data-report-margin-right': ('margin_right', float),
+    'data-report-header-spacing': ('header_spacing', float),
+    'data-report-dpi': ('dpi', lambda value: int(float(value))),
+    'data-report-landscape': ('landscape', _parse_landscape),
+}
+
+
+@dataclasses.dataclass(frozen=True, slots=True, kw_only=True)
+class ReportPageSetup:
+    """Page setup of a PDF rendering, as given to the PDF engines.
+
+    Built by :meth:`resolve`. Lengths are in millimetres; the defaults are
+    those of ``base.paperformat_euro``.
+    """
+    paper_format: str | None = 'A4'  #: named paper size (``A4``, ...), ``None`` for a custom or the engine's size
+    page_width: float | None = None  #: width of a custom paper size, without ``paper_format``
+    page_height: float | None = None  #: height of a custom paper size, without ``paper_format``
+    landscape: bool = False  #: landscape orientation, portrait otherwise
+    margin_top: float = 52.0  #: space above the content, in which the header is laid out
+    margin_bottom: float = 32.0  #: space below the content, in which the footer is laid out
+    margin_left: float = 0.0  #: space on the left of the content, the header and the footer
+    margin_right: float = 0.0  #: space on the right of the content, the header and the footer
+    header_spacing: float | None = None  #: distance between the header and the content, ``None`` for the engine's
+    dpi: int | None = 90  #: output resolution, the lower the bigger the content; ``None`` for the engine's
+    header_line: bool = False  #: draw a line below the header
+    disable_shrinking: bool = False  #: lay the content out at its ``dpi`` size, not shrunk to fit the page width
+
+    @classmethod
+    def resolve(
+        cls,
+        paperformat,
+        landscape: bool | None = None,
+        specific_paperformat_args: typing.Mapping[str, typing.Any] | None = None,
+    ) -> "ReportPageSetup":
+        """Merge, from lowest to highest priority: the ``report.paperformat``
+        record, the ``data-report-*`` overrides and the ``landscape`` flag.
+
+        Orientation is landscape as soon as any of the three asks for it.
+        """
+        values = {}
+        if paperformat:
+            custom = paperformat.format == 'custom'
+            values.update(
+                paper_format=None if custom else paperformat.format or None,
+                landscape=(paperformat.orientation or '').lower() == 'landscape',
+                margin_top=paperformat.margin_top,
+                margin_bottom=paperformat.margin_bottom,
+                margin_left=paperformat.margin_left,
+                margin_right=paperformat.margin_right,
+                header_spacing=paperformat.header_spacing or None,
+                dpi=paperformat.dpi or None,
+                header_line=paperformat.header_line,
+                disable_shrinking=paperformat.disable_shrinking,
+            )
+            if custom and paperformat.page_width and paperformat.page_height:
+                values.update(page_width=paperformat.page_width, page_height=paperformat.page_height)
+
+        overrides = cls._parse_overrides(specific_paperformat_args)
+        values.update(
+            overrides,
+            landscape=bool(landscape or overrides.get('landscape') or values.get('landscape')),
+        )
+        return cls(**values)
+
+    @staticmethod
+    def _parse_overrides(args: typing.Mapping[str, typing.Any] | None) -> dict[str, typing.Any]:
+        """Convert ``data-report-*`` overrides, whose values are strings when
+        they come from the HTML, to typed :class:`ReportPageSetup` values.
+        Empty values and unknown keys are ignored."""
+        overrides = {}
+        for key, value in (args or {}).items():
+            if key not in PAGE_SETUP_OVERRIDES or value is None or value == '':
+                continue
+            field_name, parse = PAGE_SETUP_OVERRIDES[key]
+            try:
+                overrides[field_name] = parse(value)
+            except (ValueError, TypeError, OverflowError):
+                _logger.warning("Ignoring invalid report page setup override %s=%r", key, value)
+        return overrides
+
+
+@dataclasses.dataclass(frozen=True, slots=True, kw_only=True)
+class ReportDocument:
+    """One HTML document of a PDF rendering.
+
+    PDF engines concatenate a sequence of them, all laid out with the same
+    :class:`ReportPageSetup`, into a single PDF.
+    """
+    body: str
+    header: str | None = None
+    """Complete HTML document repeated at the top of every page."""
+    footer: str | None = None
+    """Complete HTML document repeated at the bottom of every page."""
 
 
 class IrActionsReport(models.Model):
@@ -817,7 +925,7 @@ class IrActionsReport(models.Model):
         engine_name: str,
         html: str,
         report_ref: str | typing.Literal[False] = False,
-        landscape: bool = False,
+        landscape: bool | None = None,
         **kwargs,
     ) -> tuple[bytes, list[int]]:
         """Render the HTML using the associated PDF engine.
@@ -826,13 +934,69 @@ class IrActionsReport(models.Model):
         :param html: The html to convert to pdf.
         :param report_ref: The report reference (opt.).
         :param landscape: If the pdf should be in landscape mode (opt.).
-        :param kwargs: Additional arguments to pass to the pdf engine. (e.g. page size, margins, etc.)
+        :param kwargs: engine specific options.
         :return: a tuple of (pdf, html_ids) where pdf is the generated pdf content and html ids to separate the
             pdf content.
         """
-        # If we reach here it means no module handled the pdf rendering with the given engine_name.
-        e = NotImplementedError(f"Unknown PDF engine: {engine_name}")
-        raise e
+        report_sudo = self._get_report(report_ref).with_context(debug=False)
+        bodies, html_ids, header, footer, specific_paperformat_args = report_sudo._prepare_html(
+            html, report_model=report_sudo.model)
+        content = self._run_pdf_engine_without_processing(
+            engine_name,
+            bodies,
+            report_ref,
+            header=header,
+            footer=footer,
+            landscape=landscape,
+            specific_paperformat_args=specific_paperformat_args,
+            **kwargs,
+        )
+        return content, html_ids
+
+    @api.model
+    def _make_report_documents(
+        self,
+        bodies: Sequence[str],
+        *,
+        header: str | None = None,
+        footer: str | None = None,
+    ) -> list[ReportDocument]:
+        """Give each body its own header and footer when the ones produced by
+        :meth:`_prepare_html` hold exactly one decoration per body, otherwise
+        share them between all the bodies."""
+        headers = self._split_report_decoration(header, 'minimal_layout_report_headers', len(bodies))
+        footers = self._split_report_decoration(footer, 'minimal_layout_report_footers', len(bodies))
+        return [
+            ReportDocument(
+                body=body,
+                header=headers[i] if headers else header,
+                footer=footers[i] if footers else footer,
+            )
+            for i, body in enumerate(bodies)
+        ]
+
+    @api.model
+    def _split_report_decoration(self, html: str | None, container_id: str, count: int) -> list[str] | None:
+        """Server-side equivalent of the ``subst()`` script of ``web.minimal_layout``:
+        one header/footer document per body.
+
+        The container loses its id so that ``subst()`` leaves the only
+        decoration in place.
+
+        :returns: ``None`` when the decoration cannot be matched with the bodies.
+        """
+        if not html:
+            return None
+        root = lxml.html.document_fromstring(html)
+        container = root.get_element_by_id(container_id, None)
+        if container is None or len(container) != count:
+            return None
+        del container.attrib['id']
+        documents = []
+        for child in list(container):
+            container[:] = [child]
+            documents.append(lxml.html.tostring(root, encoding='unicode', doctype='<!DOCTYPE html>'))
+        return documents
 
     @api.model
     def _run_pdf_engine_without_processing(
@@ -843,10 +1007,51 @@ class IrActionsReport(models.Model):
         *,
         header: str | None = None,
         footer: str | None = None,
-        landscape: bool = False,
+        landscape: bool | None = None,
         specific_paperformat_args: dict | None = None,
         **kwargs,
     ) -> bytes:
+        """Render already prepared HTML to a single PDF.
+
+        :param bodies: HTML bodies.
+        :param report_ref: report whose paperformat is used, the company's one otherwise.
+        :param header: header of the bodies, split between them when it holds one per body.
+        :param footer: footer of the bodies, split between them when it holds one per body.
+        :param landscape: force the landscape orientation.
+        :param specific_paperformat_args: ``data-report-*`` overrides of the paperformat.
+        :param kwargs: engine specific options.
+        """
+        return self._run_pdf_engine_with_documents(
+            engine_name,
+            self._make_report_documents(bodies, header=header, footer=footer),
+            self._get_page_setup(report_ref, landscape, specific_paperformat_args),
+            **kwargs,
+        )
+
+    @api.model
+    def _get_page_setup(
+        self,
+        report_ref: str | typing.Literal[False] = False,
+        landscape: bool | None = None,
+        specific_paperformat_args: dict | None = None,
+    ) -> ReportPageSetup:
+        paperformat = self._get_report(report_ref).get_paperformat() if report_ref else self.get_paperformat()
+        return ReportPageSetup.resolve(paperformat, landscape, specific_paperformat_args)
+
+    @api.model
+    def _run_pdf_engine_with_documents(
+        self,
+        engine_name: str,
+        documents: Sequence[ReportDocument],
+        page_setup: ReportPageSetup,
+        **kwargs,
+    ) -> bytes:
+        """Engine hook: render ``documents``, in order, into a single PDF laid
+        out as ``page_setup``.
+
+        Override it with an ``engine_name`` check. ``page_setup`` is final:
+        engines must not look at the paperformat themselves.
+        """
         # If we reach here it means no module handled the pdf rendering with the given engine_name.
         e = NotImplementedError(f"Unknown PDF engine: {engine_name}")
         raise e
