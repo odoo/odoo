@@ -1,7 +1,7 @@
-import { useBus } from "@web/core/utils/hooks";
 import { BomOverviewLine } from "../bom_overview_line/mrp_bom_overview_line";
 import { BomOverviewExtraBlock } from "../bom_overview_extra_block/mrp_bom_overview_extra_block";
-import { Component, onWillUnmount, proxy, t, useOnChange, useProps } from "@odoo/owl";
+import { Component, onWillUnmount, proxy, t, useOnChange, usePlugin, useProps } from "@odoo/owl";
+import { MrpOverviewPlugin } from "../mrp_overview_plugin";
 
 export class BomOverviewComponentsBlock extends Component {
     static template = "mrp.BomOverviewComponentsBlock";
@@ -16,38 +16,36 @@ export class BomOverviewComponentsBlock extends Component {
         currentWarehouseId: t.number().optional(),
         data: t.object(),
         precision: t.number(),
-        changeFolded: t.function(),
     });
 
     setup() {
+        this.overviewPlugin = usePlugin(MrpOverviewPlugin);
         const childFoldstate = this.childIds.reduce((prev, curr) => ({ ...prev, [curr]: !this.props.unfoldAll}), {});
         this.state = proxy({
             ...childFoldstate,
-            unfoldAll: this.props.unfoldAll || false,
+            unfoldAll: this.props.unfoldAll,
         });
         if (this.props.unfoldAll) {
-            this.props.changeFolded({ ids: this.childIds, isFolded: false });
+            this.overviewPlugin.updateFolded(this.childIds, false);
         }
 
-        if (this.hasComponents) {
-            useBus(this.env.overviewBus, "toggle-fold-all", () => this._toggleFoldAll());
-        }
+        this.overviewPlugin.onToggleFoldAll((isFolded) => this._onToggleFoldAll(isFolded));
 
         useOnChange(
             () => [this.data.product_id],
             () => {
-                Object.keys(this.state)
-                    .filter(key => key !== "unfoldAll")
-                    .forEach(id => delete this.state[id]);
-                this.childIds.forEach(id => this.state[id] = true);
+                const oldChildIds = Object.keys(this.state).filter((id) => id !== "unfoldAll");
+                oldChildIds.forEach((id) => delete this.state[id]);
+                this.childIds.forEach((id) => (this.state[id] = true));
                 this.state.unfoldAll = false;
+                this.overviewPlugin.updateFolded(oldChildIds, true);
             },
             { initialRun: false }
         );
 
         onWillUnmount(() => {
             if (this.hasComponents) {
-                this.props.changeFolded({ ids: this.childIds, isFolded: true });
+                this.overviewPlugin.updateFolded(this.childIds, true);
             }
         });
     }
@@ -57,15 +55,14 @@ export class BomOverviewComponentsBlock extends Component {
         const newState = !this.state[foldId];
         this.state[foldId] = newState;
         this.state.unfoldAll = false;
-        this.props.changeFolded({ ids: [foldId], isFolded: newState });
+        this.overviewPlugin.updateFolded([foldId], newState);
     }
 
-    _toggleFoldAll() {
+    _onToggleFoldAll(isFolded) {
         const allChildIds = this.childIds;
-
-        this.state.unfoldAll = !this.state.unfoldAll;
-        allChildIds.forEach(id => this.state[id] = !this.state.unfoldAll);
-        this.props.changeFolded({ ids: allChildIds, isFolded: !this.state.unfoldAll });
+        this.state.unfoldAll = !isFolded;
+        allChildIds.forEach((id) => (this.state[id] = isFolded));
+        this.overviewPlugin.updateFolded(allChildIds, isFolded);
     }
 
     //---- Getters ----

@@ -17,8 +17,7 @@
                         showOptions="this.props.showOptions"
                         currentWarehouseId="this.props.currentWarehouseId"
                         data="line"
-                        precision="this.props.precision"
-                        changeFolded.bind="this.props.changeFolded"/>
+                        precision="this.props.precision"/>
                 </t>
             </t>
         </t>
@@ -28,8 +27,7 @@
                 type="'operations'"
                 showOptions="this.props.showOptions"
                 data="this.data"
-                precision="this.props.precision"
-                changeFolded.bind="this.props.changeFolded"/>
+                precision="this.props.precision"/>
         </t>
         <t name="byproducts" t-if="!!this.data.byproducts &amp;&amp; this.data.byproducts.length > 0">
             <BomOverviewExtraBlock
@@ -37,8 +35,7 @@
                 type="'byproducts'"
                 showOptions="this.props.showOptions"
                 data="this.data"
-                precision="this.props.precision"
-                changeFolded.bind="this.props.changeFolded"/>
+                precision="this.props.precision"/>
         </t>
     </t>
 

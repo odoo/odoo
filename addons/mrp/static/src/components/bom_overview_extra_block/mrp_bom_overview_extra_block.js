@@ -1,7 +1,7 @@
-import { useBus } from "@web/core/utils/hooks";
 import { BomOverviewLine } from "../bom_overview_line/mrp_bom_overview_line";
 import { BomOverviewSpecialLine } from "../bom_overview_special_line/mrp_bom_overview_special_line";
-import { Component, onWillUnmount, proxy, t, useOnChange, useProps } from "@odoo/owl";
+import { Component, onWillUnmount, proxy, t, useOnChange, usePlugin, useProps } from "@odoo/owl";
+import { MrpOverviewPlugin } from "../mrp_overview_plugin";
 
 export class BomOverviewExtraBlock extends Component {
     static template = "mrp.BomOverviewExtraBlock";
@@ -16,30 +16,31 @@ export class BomOverviewExtraBlock extends Component {
         showOptions: t.object(),
         data: t.object(),
         precision: t.number(),
-        changeFolded: t.function(),
     });
 
     setup() {
+        this.overviewPlugin = usePlugin(MrpOverviewPlugin);
         this.state = proxy({
             isFolded: !this.props.unfoldAll,
         });
         if (this.props.unfoldAll) {
-            this.props.changeFolded({ ids: [this.identifier], isFolded: false });
+            this.overviewPlugin.updateFolded([this.identifier], false);
         }
 
-        useBus(this.env.overviewBus, "toggle-fold-all", () => this._toggleFoldAll());
+        this.overviewPlugin.onToggleFoldAll((isFolded) => this._onToggleFoldAll(isFolded));
 
         useOnChange(
             () => [this.props.data.product_id],
             () => {
                 this.state.isFolded = true;
+                this.overviewPlugin.updateFolded([this.identifier], true);
             },
             { initialRun: false }
         );
 
         onWillUnmount(() => {
             // Need to notify main component that the block was folded so it doesn't appear on the PDF.
-            this.props.changeFolded({ ids: [this.identifier], isFolded: true });
+            this.overviewPlugin.updateFolded([this.identifier], true);
         });
     }
 
@@ -48,12 +49,12 @@ export class BomOverviewExtraBlock extends Component {
     onToggleFolded() {
         const newState = !this.state.isFolded;
         this.state.isFolded = newState;
-        this.props.changeFolded({ ids: [this.identifier], isFolded: newState });
+        this.overviewPlugin.updateFolded([this.identifier], newState);
     }
 
-    _toggleFoldAll() {
-        this.state.isFolded = !this.state.isFolded;
-        this.props.changeFolded({ ids: [this.identifier], isFolded: this.state.isFolded });
+    _onToggleFoldAll(isFolded) {
+        this.state.isFolded = isFolded;
+        this.overviewPlugin.updateFolded([this.identifier], isFolded);
     }
 
     //---- Getters ----

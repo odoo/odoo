@@ -21,7 +21,6 @@ export class BomOverviewTable extends Component {
         data: t.object(),
         precision: t.number(),
         bomQuantity: t.number(),
-        changeFolded: t.function(),
     });
 
     setup() {

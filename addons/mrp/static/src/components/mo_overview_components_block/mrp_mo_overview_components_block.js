@@ -1,5 +1,5 @@
-import { Component, proxy, t, useOnChange, useProps } from "@odoo/owl";
-import { useBus } from "@web/core/utils/hooks";
+import { Component, onWillUnmount, proxy, t, useOnChange, usePlugin, useProps } from "@odoo/owl";
+import { MrpOverviewPlugin } from "../mrp_overview_plugin";
 import { MoOverviewLine } from "../mo_overview_line/mrp_mo_overview_line";
 import { MoOverviewOperationsBlock } from "../mo_overview_operations_block/mrp_mo_overview_operations_block";
 import { MoOverviewByproductsBlock } from "../mo_overview_byproducts_block/mrp_mo_overview_byproducts_block";
@@ -34,16 +34,17 @@ export class MoOverviewComponentsBlock extends Component {
     static template = "mrp.MoOverviewComponentsBlock";
 
     setup() {
+        this.overviewPlugin = usePlugin(MrpOverviewPlugin);
         this.state = proxy({
             fold: this.getIndexStates(this.props),
-            unfoldAll: this.props.unfoldAll || false,
+            unfoldAll: this.props.unfoldAll,
         });
 
         if (this.props.unfoldAll) {
-            this.env.overviewBus.trigger("update-folded", { indexes: Object.keys(this.state.fold), isFolded: false });
+            this.overviewPlugin.updateFolded(Object.keys(this.state.fold), false);
         }
 
-        useBus(this.env.overviewBus, "unfold-all", () => this.unfoldAll());
+        this.overviewPlugin.onToggleFoldAll((isFolded) => this._onToggleFoldAll(isFolded));
 
         useOnChange(
             () => Object.keys(this.getIndexStates(this.props)),
@@ -53,28 +54,28 @@ export class MoOverviewComponentsBlock extends Component {
             },
             { initialRun: false }
         );
+
+        onWillUnmount(() => this.overviewPlugin.updateFolded(Object.keys(this.state.fold), true));
     }
 
     //---- Handlers ----
 
     onToggleFolded(foldIndex) {
         this.state.unfoldAll = false;
-        const newState = !this.state.fold[foldIndex];
-        if (newState) {
-            // If a line is folded, its children lines must be folded as well
-            Object.keys(this.state.fold).filter(key => key.startsWith(foldIndex)).forEach(index => {
-                this.state.fold[index] = newState;
-            });
-        }
-        this.state.fold[foldIndex] = newState;
-        this.env.overviewBus.trigger("update-folded", { indexes: [foldIndex], isFolded: newState });
+        const isFolded = !this.state.fold[foldIndex];
+        // Folding a line also folds its children.
+        const indexes = isFolded
+            ? Object.keys(this.state.fold).filter((key) => key.startsWith(foldIndex))
+            : [foldIndex];
+        indexes.forEach((index) => (this.state.fold[index] = isFolded));
+        this.overviewPlugin.updateFolded(indexes, isFolded);
     }
 
-    unfoldAll() {
-        this.state.unfoldAll = true;
+    _onToggleFoldAll(isFolded) {
+        this.state.unfoldAll = !isFolded;
         const foldIndexes = Object.keys(this.state.fold);
-        foldIndexes.forEach(index => this.state.fold[index] = false);
-        this.env.overviewBus.trigger("update-folded", { indexes: foldIndexes, isFolded: false });
+        foldIndexes.forEach((index) => (this.state.fold[index] = isFolded));
+        this.overviewPlugin.updateFolded(foldIndexes, isFolded);
     }
 
     //---- Helpers ----
@@ -99,7 +100,11 @@ export class MoOverviewComponentsBlock extends Component {
     }
 
     hasComponents(replenishment) {
-        return replenishment?.components?.length > 0 || replenishment?.operations?.details?.length > 0;
+        return (
+            replenishment?.components?.length > 0 ||
+            replenishment?.operations?.details?.length > 0 ||
+            replenishment?.byproducts?.details?.length > 0
+        );
     }
 
     hasComponentsBlock(replenishment) {

@@ -1,7 +1,7 @@
-import { useSubEnv } from "@web/owl2/utils";
-import { Component, EventBus, onWillStart, proxy, useProps, usePlugin } from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
+import { Component, onWillStart, providePlugins, proxy, usePlugin, useProps } from "@odoo/owl";
+import { MrpOverviewPlugin } from "../mrp_overview_plugin";
 import { registry } from "@web/core/registry";
-import { useBus } from "@web/core/utils/hooks";
 import { Layout } from "@web/search/layout";
 import { standardActionServiceProps, ActionPlugin } from "@web/webclient/actions/action_plugin";
 import { MoOverviewLine } from "../mo_overview_line/mrp_mo_overview_line";
@@ -24,24 +24,28 @@ export class MoOverview extends Component {
     setup() {
         this.actionPlugin = usePlugin(ActionPlugin);
         this.ormPlugin = usePlugin(ORM);
+        this.foldableIds = new Set();
         this.unfoldedIds = new Set();
         this.context = {};
 
         this.state = proxy({
             data: {},
             showOptions: this.getDefaultConfig(),
+            foldable: true,
+            allFolded: true,
         });
 
-        useSubEnv({ overviewBus: new EventBus() });
+        providePlugins([MrpOverviewPlugin]);
+        this.overviewPlugin = usePlugin(MrpOverviewPlugin);
 
         onWillStart(async () => {
-            await this.getManufacturingData();
+            await this.getManufacturingData(true);
         });
-        useBus(this.env.overviewBus, "update-folded", (ev) => this.onChangeFolded(ev.detail));
-        useBus(this.env.overviewBus, "reload", () => this.getManufacturingData());
+        this.overviewPlugin.onUpdateFolded((foldInfo) => this.onChangeFolded(foldInfo));
+        this.overviewPlugin.onReload(() => this.getManufacturingData());
     }
 
-    async getManufacturingData() {
+    async getManufacturingData(shouldInitializeFoldState = false) {
         const reportValues = await this.ormPlugin.call(
             "report.mrp.report_mo_overview",
             "get_report_values",
@@ -58,12 +62,17 @@ export class MoOverview extends Component {
         this.state.showOptions.uom = reportValues.context.show_uom;
         this.context = reportValues.context;
         // Main MO's operations & byproducts are always unfolded by default.
-        if (reportValues.data?.operations?.summary?.index) {
-            this.unfoldedIds.add(reportValues.data.operations.summary.index);
+        if (shouldInitializeFoldState) {
+            if (this.hasOperations) {
+                this.unfoldedIds.add(reportValues.data.operations.summary.index);
+            }
+            if (this.hasByproducts) {
+                this.unfoldedIds.add(reportValues.data.byproducts.summary.index);
+            }
         }
-        if (reportValues.data?.byproducts?.summary?.index) {
-            this.unfoldedIds.add(reportValues.data.byproducts.summary.index);
-        }
+        this.getFoldableIds(reportValues.data);
+        this.state.allFolded = this.unfoldedIds.size !== this.foldableIds.size;
+        this.state.foldable = this.foldableIds.size > 0;
     }
 
     //---- Handlers ----
@@ -75,7 +84,16 @@ export class MoOverview extends Component {
     onChangeFolded(foldInfo) {
         const { indexes, isFolded } = foldInfo;
         const operation = isFolded ? "delete" : "add";
-        indexes.forEach(index => this.unfoldedIds[operation](index));
+        indexes.forEach((index) => {
+            if (this.foldableIds.has(index)) {
+                this.unfoldedIds[operation](index);
+            }
+        });
+        if (this.unfoldedIds.size === 0) {
+            this.state.allFolded = true;
+        } else if (this.unfoldedIds.size === this.foldableIds.size) {
+            this.state.allFolded = false;
+        }
     }
 
     async onPrint() {
@@ -86,8 +104,8 @@ export class MoOverview extends Component {
         });
     }
 
-    onUnfold() {
-        this.env.overviewBus.trigger("unfold-all")
+    clickToggleFold() {
+        this.overviewPlugin.toggleFoldAll(!this.state.allFolded);
     }
 
     //---- Helpers ----
@@ -106,6 +124,25 @@ export class MoOverview extends Component {
 
     formatCost(cost) {
         return formatMonetary(cost, { currencyId: this.state.data.summary.currency_id });
+    }
+
+    getFoldableIds(data) {
+        const children = [...(data.components ?? []), ...(data.replenishments ?? [])];
+        const hasOperations = data.operations?.details?.length > 0;
+        const hasByproducts = data.byproducts?.details?.length > 0;
+        // The main MO has no index: it is always unfolded, so it is not foldable.
+        if (data.summary.index && (children.length || hasOperations || hasByproducts)) {
+            this.foldableIds.add(data.summary.index);
+        }
+        for (const child of children) {
+            this.getFoldableIds(child);
+        }
+        if (hasOperations) {
+            this.foldableIds.add(data.operations.summary.index);
+        }
+        if (hasByproducts) {
+            this.foldableIds.add(data.byproducts.summary.index);
+        }
     }
 
     //---- Getters ----
@@ -146,8 +183,16 @@ export class MoOverview extends Component {
         return this.state.data?.summary?.state === "cancel";
     }
 
+    get foldButtonText() {
+        return this.state.allFolded ? _t("Unfold") : _t("Fold");
+    }
+
     get hasOperations() {
         return this.state.data?.operations?.details?.length > 0;
+    }
+
+    get hasByproducts() {
+        return this.state.data?.byproducts?.details?.length > 0;
     }
 
     get hasBreakdown() {

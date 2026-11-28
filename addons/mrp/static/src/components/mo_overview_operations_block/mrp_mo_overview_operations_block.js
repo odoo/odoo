@@ -1,5 +1,5 @@
-import { Component, useProps, proxy, t } from "@odoo/owl";
-import { useBus } from "@web/core/utils/hooks";
+import { Component, onWillUnmount, proxy, t, usePlugin, useProps } from "@odoo/owl";
+import { MrpOverviewPlugin } from "../mrp_overview_plugin";
 import { formatFloatTime, formatMonetary } from "@web/views/fields/formatters";
 import { MoOverviewLine } from "../mo_overview_line/mrp_mo_overview_line";
 import { SHOW_OPTIONS } from "../mo_overview_display_filter/mrp_mo_overview_display_filter";
@@ -29,28 +29,31 @@ export class MoOverviewBaseBlock extends Component {
     props = useProps(moOverviewBaseBlockProps);
 
     setup() {
+        this.overviewPlugin = usePlugin(MrpOverviewPlugin);
         this.formatFloatTime = formatFloatTime;
         this.state = proxy({
             // Unfold the main MO's operations by default
             isFolded: this.level > 0 && !this.props.unfoldAll,
         });
         if (this.props.unfoldAll) {
-            this.env.overviewBus.trigger("update-folded", { indexes: [this.index], isFolded: false });
+            this.overviewPlugin.updateFolded([this.index], false);
         }
 
-        useBus(this.env.overviewBus, "unfold-all", () => this.unfold());
+        this.overviewPlugin.onToggleFoldAll((isFolded) => this._onToggleFoldAll(isFolded));
+
+        onWillUnmount(() => this.overviewPlugin.updateFolded([this.index], true));
     }
 
     //---- Handlers ----
 
     toggleFolded() {
         this.state.isFolded = !this.state.isFolded;
-        this.env.overviewBus.trigger("update-folded", { indexes: [this.index], isFolded: this.state.isFolded });
+        this.overviewPlugin.updateFolded([this.index], this.state.isFolded);
     }
 
-    unfold() {
-        this.state.isFolded = false;
-        this.env.overviewBus.trigger("update-folded", { indexes: [this.index], isFolded: false });
+    _onToggleFoldAll(isFolded) {
+        this.state.isFolded = isFolded;
+        this.overviewPlugin.updateFolded([this.index], isFolded);
     }
 
     //---- Helpers ----

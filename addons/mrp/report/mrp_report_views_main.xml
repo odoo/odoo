@@ -15,6 +15,7 @@
             <field name="model">mrp.bom</field>
             <field name="report_type">qweb-pdf</field>
             <field name="report_name">mrp.report_bom_structure</field>
+            <field name="paperformat_id" ref="product.paperformat_label_sheet"/>
             <field name="print_report_name">'Bom Overview - %s' % object.display_name</field>
         </record>
         <record id="action_report_mrp_mo_overview" model="ir.actions.report">

@@ -28,12 +28,12 @@
                 </t>
             </t>
         </t>
-        <MoOverviewOperationsBlock t-if="!this.props.showOptions.toReplenish"
+        <MoOverviewOperationsBlock t-if="this.props.operations?.details.length and !this.props.showOptions.toReplenish"
             unfoldAll="this.state.unfoldAll"
             summary="this.props.operations.summary"
             operations="this.props.operations.details"
             showOptions="this.props.showOptions"/>
-        <MoOverviewByproductsBlock t-if="!this.props.showOptions.toReplenish"
+        <MoOverviewByproductsBlock t-if="this.props.byproducts?.details.length and !this.props.showOptions.toReplenish"
             unfoldAll="this.state.unfoldAll"
             summary="this.props.byproducts.summary"
             byproducts="this.props.byproducts.details"
