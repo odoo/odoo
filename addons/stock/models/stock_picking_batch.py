@@ -513,3 +513,16 @@ class StockPickingBatch(models.Model):
             'description': self.description,
             'scheduled_date': self.scheduled_date,
         }
+
+    @api.model
+    def _get_picking_operations(self, move_lines):
+        return [{
+            'product_name': move_line.product_id.display_name,
+            'quantity': sum(move_line.mapped('quantity')),
+            'uom': move_line.uom_id.name,
+            'picking_name': move_line.picking_id.name,
+            'lot_name': move_line.lot_id.name,
+            'product_barcode': move_line.product_id.barcode,
+            'package': move_line.package_id.display_name,
+            'result_package': move_line.result_package_id.display_name,
+        } for move_line in move_lines]
