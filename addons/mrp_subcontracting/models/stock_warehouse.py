@@ -150,7 +150,7 @@ class StockWarehouse(models.Model):
                 'company_id': self.company_id.id,
             }
         })
-        return data, max_sequence + 4
+        return data, next_sequence + 4
 
     def _get_sequence_values(self, name=False, code=False):
         values = super(StockWarehouse, self)._get_sequence_values(name=name, code=code)
