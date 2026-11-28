@@ -3324,6 +3324,29 @@ class TestStockValuation(TestStockValuationCommon):
         self._make_out_move(product, 1, uom_id=uom_pack_6.id)
         self.assertEqual(product.total_value, 32)
 
+    def test_stock_user_applies_count_at_past_counting_date(self):
+        """ A stock user applies a count at a past counting date: the count move is dated
+        after it is valued, which replays the valuation. The replay runs as the valuation of
+        a move being done does, since the user holds no right on the correction entries.
+        """
+        product = self.product_standard_auto
+        self._use_inventory_location_accounting()
+        stock_user = self._create_new_internal_user(
+            name='Count Stock User', login='count_stock_user', groups='stock.group_stock_user')
+        counting_date = Datetime.now().replace(microsecond=0) - timedelta(days=10)
+        quant = self.env['stock.quant'].with_user(stock_user).with_context(inventory_mode=True).create({
+            'product_id': product.id,
+            'location_id': self.stock_location.id,
+            'inventory_quantity': 5,
+        })
+        wizard = Form(self.env['stock.inventory.adjustment.name'].with_user(stock_user).with_context(
+            default_quant_ids=quant.ids))
+        wizard.counting_date = counting_date
+        wizard.save().action_apply()
+        move = self.env['stock.move'].search([('product_id', '=', product.id), ('is_inventory', '=', True)])
+        self.assertEqual(move.date, counting_date)
+        self.assertEqual(move.value, 50)
+
     def test_journal_entry_created_with_given_accounting_date(self):
         """ Test that the journal entry is created with the specified
         accounting date from the inventory adjustment.
