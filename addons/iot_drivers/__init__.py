@@ -33,3 +33,5 @@ def set_default_options(func):
 
 requests.get = set_default_options(_get)
 requests.post = set_default_options(_post)
+
+main.manager.start()

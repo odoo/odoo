@@ -223,4 +223,3 @@ class Manager(Thread):
 
 
 manager = Manager()
-manager.start()
