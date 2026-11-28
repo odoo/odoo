@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import pytz
+
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
+from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 class ProjectTaskRecurrence(models.Model):
@@ -63,6 +66,14 @@ class ProjectTaskRecurrence(models.Model):
             f"{self.repeat_unit}s": self.repeat_interval
         })
 
+    def _postpone_value(self, value):
+        delta = self._get_recurrence_delta()
+        if not isinstance(value, datetime):
+            return value + delta
+        tz = pytz.timezone(self.env.user.tz or 'UTC')
+        local_value = pytz.utc.localize(value).astimezone(tz).replace(tzinfo=None)
+        return tz.localize(local_value + delta).astimezone(pytz.utc).replace(tzinfo=None)
+
     def _create_next_occurrence(self, occurrence_from):
         self.ensure_one()
         # Prevent double mail_followers creation
@@ -88,7 +99,7 @@ class ProjectTaskRecurrence(models.Model):
         fields_to_postpone = occurrence_from.read(self._get_recurring_fields_to_postpone()).pop()
         fields_to_postpone.pop('id', None)
         create_values.update({
-            field: value and value + self._get_recurrence_delta()
+            field: value and self._postpone_value(value)
             for field, value in fields_to_postpone.items()
         })
 

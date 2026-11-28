@@ -101,6 +101,23 @@ class TestProjectRecurrence(TransactionCase):
         for reset_field in ['priority', 'stage_id', 'state']:
             self.assertNotEqual(other_task[reset_field], task[reset_field], f"Next occurrence's {reset_field} should have been reset")
 
+    def test_recurrence_keeps_local_time_across_dst(self):
+        """Check that the next occurrence keeps the deadline's local time when a daylight saving change occurs in between."""
+        self.env.user.tz = 'Europe/Brussels'
+        task = self.env['project.task'].create({
+            'name': 'weekly task',
+            'project_id': self.project_recurring.id,
+            'date_deadline': datetime(2025, 10, 21, 5, 0),
+            'recurring_task': True,
+            'repeat_interval': 1,
+            'repeat_unit': 'week',
+            'repeat_type': 'forever',
+        })
+
+        task.state = '1_done'
+        next_task = task.recurrence_id.task_ids - task
+        self.assertEqual(next_task.date_deadline, datetime(2025, 10, 28, 6, 0))
+
     def test_recurrence_until(self):
         with freeze_time(self.date_01_01):
             form = Form(self.env['project.task'])
