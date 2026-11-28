@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="hr_recruitment.DateForcedPlaceholder" t-inherit="web.DateTimeField">
+        <xpath expr="//span[@t-if='!this.isEmpty(this.startDateField)']" position="after">
+            <span t-else="" class="text-truncate" t-out="this.props.placeholder"/>
+        </xpath>
+    </t>
+</templates>

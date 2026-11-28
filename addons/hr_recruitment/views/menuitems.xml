@@ -8,13 +8,13 @@
         sequence="205"/>
 
         <menuitem
-            name="Applications"
+            name="Job Positions"
             parent="menu_hr_recruitment_root"
             id="menu_crm_case_categ0_act_job"
-            sequence="2"/>
+            sequence="10"/>
 
             <menuitem
-                name="By Job Positions"
+                name="All Job Positions"
                 id="menu_hr_job_position"
                 parent="menu_crm_case_categ0_act_job"
                 action="action_hr_job"
@@ -22,27 +22,39 @@
                 groups="hr_recruitment.group_hr_recruitment_user"/>
 
             <menuitem
-                name="By Job Positions"
+                name="All Job Positions"
                 id="menu_hr_job_position_interviewer"
                 parent="menu_crm_case_categ0_act_job"
                 action="action_hr_job_interviewer"
                 sequence="1"
                 groups="hr_recruitment.group_hr_recruitment_interviewer"/>
 
-            <menuitem
-                name="By Talent Pools"
-                parent="menu_crm_case_categ0_act_job"
-                id="menu_hr_talent_pools"
-                action="action_hr_talent_pool"
-                sequence="2"
-                groups="hr_recruitment.group_hr_recruitment_user"/>
+        <menuitem
+            name="Candidates"
+            parent="menu_hr_recruitment_root"
+            id="menu_hr_recruitment_candidates"
+            sequence="20"/>
 
             <menuitem
-                name="All Applications"
-                parent="menu_crm_case_categ0_act_job"
-                id="menu_crm_case_categ_all_app"
-                action="crm_case_categ0_act_job"
-                sequence="3"/>
+                name="Candidate Pools"
+                parent="menu_hr_recruitment_candidates"
+                id="menu_hr_talent_pools"
+                action="action_hr_talent_pool"
+                sequence="10"/>
+
+            <menuitem
+                name="All Candidates"
+                parent="menu_hr_recruitment_candidates"
+                id="menu_hr_recruitment_all_candidates"
+                action="action_hr_talent_pool_all_applications"
+                sequence="20"/>
+
+        <menuitem
+            name="Applications"
+            parent="menu_hr_recruitment_root"
+            id="menu_crm_case_categ_all_app"
+            action="crm_case_categ0_act_job"
+            sequence="20"/>
 
 
         <menuitem
