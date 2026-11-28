@@ -6,7 +6,7 @@
     'icon': '/account/static/description/l10n.png',
     'countries': ['ro'],
     'category': 'Accounting/Localizations/Account Charts',
-    'version': '1.1',
+    'version': '1.2',
     'depends': [
         'account',
         'base_vat',
