@@ -364,18 +364,12 @@ class TestAccountTax(AccountTestInvoicingCommon):
             'company_id': company.id,
         })
 
-        dummy_invoice = self.env['account.move'].create({
-            'move_type': 'in_invoice',
-            'company_id': company.id,
-        })
-
         def get_search_method(amount, name, amount_type='fixed'):
             tax_values = {
                 'amount_type': amount_type,
                 'type_tax_use': 'purchase',
                 'amount': amount,
                 'name': name,
-                'invoice_predictive': {'invoice': dummy_invoice},
             }
             plan = self.env['account.tax']._import_retrieve_tax_from_fixed_allowance_charge(tax_values)
             return plan['criteria'][0]['search_method'] if plan else None
@@ -384,16 +378,16 @@ class TestAccountTax(AccountTestInvoicingCommon):
         search_method_recupel = get_search_method(0.125, 'REC 0.12 (Kopie)')
         search_method_bebat = get_search_method(0.125, 'BEBAT')
 
-        self.assertEqual(search_method_recupel({}), tax_recupel)
-        self.assertEqual(search_method_bebat({}), tax_bebat)
+        self.assertEqual(search_method_recupel({'company': company}), tax_recupel)
+        self.assertEqual(search_method_bebat({'company': company}), tax_bebat)
 
         # single candidate tax match, even if the name doesnt match
         search_method_fallback = get_search_method(0.505, 'Unknown Eco Tax')
-        self.assertEqual(search_method_fallback({}), random)
+        self.assertEqual(search_method_fallback({'company': company}), random)
 
         # multiple candidate taxes matching, but name doesnt match
         search_method_not_found = get_search_method(0.125, 'Unknown Eco Tax')
-        self.assertFalse(search_method_not_found({}))
+        self.assertFalse(search_method_not_found({'company': company}))
 
         # percentage tax, early exit
         search_method_ignored = get_search_method(0.125, 'REC 0.12 (Kopie)', amount_type='percent')
