@@ -35,6 +35,8 @@ class MrpProduction(models.Model):
 
     def _validate_analytic_distribution(self):
         for production in self:
+            if not production.project_id:
+                continue
             # Pass the produced product so applicabilities filtered by product_categ_id
             plans = self.env['account.analytic.plan'].sudo().with_company(production.company_id).get_relevant_plans(
                 business_domain='manufacturing_order',
