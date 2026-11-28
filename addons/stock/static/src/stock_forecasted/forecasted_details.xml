@@ -126,7 +126,7 @@
                             </td>
                         </tr> -->
                         <tr
-                            class="o_forecasted_row fw-bold table-secondary" t-attf-class="#{this.multipleProducts and 'collapse show' or ''} collapseGroup_#{line.product.id}">
+                            class="o_forecasted_row fw-bold bg-100" t-attf-class="#{this.multipleProducts and 'collapse show' or ''} collapseGroup_#{line.product.id}">
                             <td/>
                             <td class="border-end-0">Forecasted Inventory</td>
                             <td class="text-end border-start-0 border-end-0"
@@ -149,7 +149,7 @@
                                 <t t-out="this._formatFloat(-currentProduct.draft_picking_qty.out)"/> <t t-out="line.uom_id.display_name"/>
                             </td>
                         </tr>
-                        <tr class="o_forecasted_row fw-bold table-secondary" t-attf-class="#{this.multipleProducts and 'collapse show' or ''} collapseGroup_#{line.product.id}">
+                        <tr class="o_forecasted_row fw-bold bg-100" t-attf-class="#{this.multipleProducts and 'collapse show' or ''} collapseGroup_#{line.product.id}">
                             <td/>
                             <td class="border-end-0">Forecasted with Pending</td>
                             <td class="text-end border-start-0 border-end-0" t-attf-class="#{this.futureVirtualAvailable(line) &lt;= 0 and 'text-danger' or 'text-success'}">
