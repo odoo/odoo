@@ -53,7 +53,7 @@
                         />
                         <i
                             t-att-style="background_style"
-                            class="css_attribute_color cursor-pointer d-block"
+                            class="css_attribute_color o_forced_colors_preserve cursor-pointer d-block"
                             t-att-title="ptav.name"
                         />
                     </div>
@@ -589,7 +589,7 @@
                t-value="'background: ' + str(v.html_color or v.name if not v.is_custom else '')"
             />
             <label t-attf-style="#{img_style or color_style}"
-                   t-attf-class="css_attribute_color cursor-pointer #{'active' if v.id in attrib_set else ''}"
+                   t-attf-class="css_attribute_color o_forced_colors_preserve cursor-pointer #{'active' if v.id in attrib_set else ''}"
             >
                 <input type="checkbox"
                        name="attribute_value"
@@ -613,7 +613,7 @@
                     t-att-value="'%s/%s' % (slug(a), slug(v))"
                     t-att-checked="'checked' if v.id in attrib_set else None"
                     t-att-title="v.name"
-                    class="w-100 h-100 opacity-0 cursor-pointer"
+                    class="cursor-pointer"
                 />
                 <div
                     class="oe_img_bg o_bg_img_center position-absolute top-0 w-100 h-100 rounded-1"
@@ -1327,6 +1327,7 @@
                             t-att-aria-expanded="isOpen and 'true' or 'false'"
                             t-attf-aria-controls="o_wsale_cat_accordion_{{c.id}}"
                             data-bs-toggle="collapse"
+                            t-attf-aria-label="Toggle {{c.name}} subcategories"
                             type="button"/>
                 </div>
                 <ul t-attf-id="o_wsale_cat_accordion_{{c.id}}"
