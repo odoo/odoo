@@ -2820,3 +2820,46 @@ class Website(models.CachedModel):
     def _get_settings_to_copy_onto_new_default_website(self):
         # This list is extended by other modules
         return []
+
+    # -------------------------------------------------------------------------
+    # Website Builder / Branding API
+    # -------------------------------------------------------------------------
+
+    def update_branding(self, values):
+        """Save the name, favicon and logo from the website builder.
+
+        :param dict values: Supported keys: 'name' (str), 'favicon' (int|False), 'logo' (int).
+        :return: why each refused field was refused, e.g.
+            ``{"logo": "Invalid branding values."}``.
+        """
+        self.ensure_one()
+        self.check_access("write")
+
+        errors = {}
+        for field in ("name", "favicon", "logo"):
+            if field not in values:
+                continue
+            try:
+                with self.env.cr.savepoint():
+                    self.write({field: self._get_branding_value(field, values[field])})
+            except UserError as error:
+                errors[field] = error.args[0]
+
+        return errors
+
+    def _get_branding_value(self, field, value):
+        if field == "name" and isinstance(value, str) and value.strip():
+            return value.strip()
+        if field == "favicon" and value is False:
+            return False
+        if field in ("favicon", "logo") and isinstance(value, int) and not isinstance(value, bool):
+            attachment = self.env["ir.attachment"].browse(value).exists()
+            if attachment and attachment.has_access("read"):
+                if attachment.type == "url":
+                    data = self.env["ir.qweb.field.image"].load_remote_url(attachment.url)
+                    if not data:
+                        raise ValidationError(self.env._("The image could not be downloaded from its URL."))
+                    return data
+                if attachment.raw and (attachment.mimetype or "").startswith("image/"):
+                    return attachment.raw
+        raise ValidationError(self.env._("Invalid branding values."))

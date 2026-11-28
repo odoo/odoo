@@ -409,6 +409,14 @@
     <xpath expr="//div[@id='wrapwrap']" position="attributes">
         <attribute name="t-attf-class" add="#{'o_header_overlay' if 'header_overlay' in main_object and main_object.sudo().header_overlay else ''}" separator=" "/>
     </xpath>
+    <xpath expr="//div[@id='wrapwrap']" position="inside">
+        <t t-if="editable" t-ignore="true">
+            <div id="o_website_branding" class="d-none"
+                t-att-data-website-name="website.name"
+                t-att-data-saved-name="website.name"
+                t-att-data-favicon-src="website.favicon and website.image_url(website, 'favicon')"/>
+        </t>
+    </xpath>
     <xpath expr="//header" position="attributes">
         <attribute name="t-attf-class" add="#{header_bg_color_class}" separator=" "/>
         <attribute name="t-attf-style" add="#{header_bg_color_style and ('background-color: %s;' % header_bg_color_style)}" separator=" "/>
