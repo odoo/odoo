@@ -8,6 +8,7 @@ from odoo import tools
 from odoo.exceptions import UserError
 
 from odoo.addons.base.tests.files import PDF_RAW
+from collections import defaultdict
 
 try:
     from pdfminer.converter import PDFPageAggregator
@@ -37,6 +38,10 @@ class TestReports(odoo.tests.TransactionCase):
         extra_data_reports = {
             "im_livechat.report_livechat_conversation": {
                 "company": self.env["res.company"].search([], limit=1)
+            },
+            "sale_stock.return_label": {
+                "return_reason": self.env["return.reason"].search([], limit=1),  # noqa: OLS03001,OLS03002
+                "move_qty_by_picking": defaultdict(lambda: defaultdict(int)),
             },
         }
         Report = self.env['ir.actions.report']
