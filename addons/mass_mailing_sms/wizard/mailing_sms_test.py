@@ -81,6 +81,8 @@ class MailingSmsTest(models.TransientModel):
             }],
             delivery_reports_url=url_join(self[0].get_base_url(), '/sms/status')
         )
+        # sent above, keep them out of the SMS queue
+        sms_sudo.to_delete = True
 
         notification_messages = []
         sms_uuid_to_number_map = {sms.uuid: sms.number for sms in sms_sudo}
