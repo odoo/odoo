@@ -1701,10 +1701,10 @@ class ChromeBrowser:
     """ Helper object to control a Chrome headless process. """
     remote_debugging_port = 0  # 9222, change it in a non-git-tracked file
 
-    def __init__(self, test_case: HttpCase, success_signal: str = DEFAULT_SUCCESS_SIGNAL, headless: bool = True, debug: bool = False):
+    def __init__(self, test_case: HttpCase, success_signal: str = DEFAULT_SUCCESS_SIGNAL, headless: bool = True, debug: bool = False, name: str = ''):
         self.cleanup = ExitStack()
         self.throttling_factor = 1
-        self._logger = test_case._logger
+        self._logger = test_case._logger.getChild(name) if name else test_case._logger
         self.test_case = test_case
         self.success_signal = success_signal
         if websocket is None:
@@ -2387,10 +2387,17 @@ which leads to stray network requests and inconsistencies."""
     def _wait_code_ok(self, code, timeout, error_checker=None, console_hook=None):
         if timeout:
             timeout *= self.throttling_factor
+        start = time.time()
+        self._run_code(code, timeout, error_checker=error_checker, console_hook=console_hook)
+        # if the runcode was a promise which took some time to execute,
+        # discount that from the timeout
+        self._wait_result(time.time() - start + timeout)
+
+    def _run_code(self, code, timeout, error_checker=None, console_hook=None):
+        """ Evaluate `code` in the page, without waiting for the success signal. """
         self.error_checker = error_checker
         self.console_hook = console_hook
         self._logger.info('Evaluate test code "%s"', code)
-        start = time.time()
         try:
             res = self._websocket_request('Runtime.evaluate', params={
                 'expression': code,
@@ -2404,11 +2411,11 @@ which leads to stray network requests and inconsistencies."""
         if res.get('subtype') == 'error':
             raise ChromeBrowserException("Running code returned an error: %s" % res)
 
+    def _wait_result(self, timeout):
+        """ Wait for the success signal (or a failure) of the code run by `_run_code`. """
         err = ChromeBrowserException("failed")
         try:
-            # if the runcode was a promise which took some time to execute,
-            # discount that from the timeout
-            if self._result.result(time.time() - start + timeout) and not self.had_failure:
+            if self._result.result(timeout) and not self.had_failure:
                 self.chrome_log_level = logging.INFO
                 return
         except CancelledError:
@@ -3045,6 +3052,24 @@ class HttpCase(TransactionCase):
             (regardless of its level), e.g. to collect stats out of the test's own logging
         :param string stat_name: `collect_stats` leaf name for this call
         """
+        timeout, watch = self._browser_timeout(timeout, watch, debug)
+        browser = ChromeBrowser(self, headless=not watch, success_signal=success_signal, debug=debug)
+        with self.collect_stats(stat_name), self._browser_context([browser]):
+            self.authenticate(login, login, browser=browser)
+            self._browser_open(
+                browser, url_path, ready=ready, cookies=cookies,
+                watch=watch, debug=debug, cpu_throttling=cpu_throttling,
+            )
+            error = None
+            try:
+                browser._wait_code_ok(code, timeout, error_checker=error_checker, console_hook=console_hook)
+            except ChromeBrowserException as chrome_browser_exception:
+                error = chrome_browser_exception
+            if error:  # dont keep initial traceback, keep that outside of except
+                self.fail(str(error))
+
+    def _browser_timeout(self, timeout, watch, debug):
+        """ Return the `(timeout, watch)` to use for the browsers of the test. """
         if not self.env.registry.loaded:
             self._logger.warning('HttpCase test should be in post_install only')
 
@@ -3059,16 +3084,23 @@ class HttpCase(TransactionCase):
             timeout = 1e6
         if watch:
             self._logger.warning('watch mode is only suitable for local testing')
+        return timeout, watch
 
-        browser = ChromeBrowser(self, headless=not watch, success_signal=success_signal, debug=debug)
-        with self.collect_stats(stat_name), self.allow_requests(browser=browser), contextlib.ExitStack() as atexit:
+    @contextmanager
+    def _browser_context(self, browsers):
+        """ Allow the requests of the given browsers for the time of the context,
+        and close the browsers at the end. """
+        with self.allow_requests(), contextlib.ExitStack() as atexit:
+            for browser in browsers:
+                browser.set_cookie(TEST_CURSOR_COOKIE_NAME, self.http_request_key, '/', HOST)
             # Flush and clear the current transaction.  This is useful in case
             # we make requests to the server, as these requests are made with
             # test cursors, which uses different caches than this transaction.
             # Wait for all request before resetting the cursor.
             atexit.enter_context(flushing_cursor(self.cr))
             atexit.callback(self._wait_remaining_requests)
-            atexit.enter_context(browser.cleanup)
+            for browser in browsers:
+                atexit.enter_context(browser.cleanup)
             if "bus.bus" in self.env.registry:
                 from odoo.addons.base.models.ir_http import IrHttp  # noqa: PLC0415
                 from odoo.addons.bus.websocket import CloseCode, WebsocketConnectionHandler, _kick_all  # noqa: PLC0415
@@ -3086,61 +3118,54 @@ class HttpCase(TransactionCase):
                 atexit.enter_context(patch.object(
                     WebsocketConnectionHandler, "websocket_allowed", return_value=True
                 ))
+            yield
 
-            self.authenticate(login, login, browser=browser)
-            url = urljoin(self.base_url(), url_path)
-            if watch:
-                parsed = urlsplit(url)
-                qs = dict(parse_qsl(parsed.query))
-                qs['watch'] = '1'
-                if debug is not False:
-                    qs['debug'] = "assets"
-                url = urlunsplit(parsed._replace(query=urlencode(qs)))
-            self._logger.info('Open "%s" in browser', url)
+    def _browser_open(self, browser, url_path, ready='', cookies=None, watch=False, debug=False, cpu_throttling=None):
+        """ Open `url_path` in `browser` and wait for `ready`. """
+        url = urljoin(self.base_url(), url_path)
+        if watch:
+            parsed = urlsplit(url)
+            qs = dict(parse_qsl(parsed.query))
+            qs['watch'] = '1'
+            if debug is not False:
+                qs['debug'] = "assets"
+            url = urlunsplit(parsed._replace(query=urlencode(qs)))
+        self._logger.info('Open "%s" in browser', url)
 
-            browser.screencaster.start()
-            if cookies:
-                for name, value in cookies.items():
-                    browser.set_cookie(name, value, '/', HOST)
+        browser.screencaster.start()
+        if cookies:
+            for name, value in cookies.items():
+                browser.set_cookie(name, value, '/', HOST)
 
-            cpu_throttling_os = os.environ.get('ODOO_BROWSER_CPU_THROTTLING')  # used by dedicated runbot builds
-            cpu_throttling = int(cpu_throttling_os) if cpu_throttling_os else cpu_throttling
+        cpu_throttling_os = os.environ.get('ODOO_BROWSER_CPU_THROTTLING')  # used by dedicated runbot builds
+        cpu_throttling = int(cpu_throttling_os) if cpu_throttling_os else cpu_throttling
 
-            if cpu_throttling:
-                _logger.log(
-                    logging.INFO if cpu_throttling_os else logging.WARNING,
-                    'CPU throttling mode is only suitable for local testing - '
-                    'Throttling browser CPU to %sx slowdown and extending timeout to %s sec', cpu_throttling, timeout)
-                browser.throttle(cpu_throttling)
+        if cpu_throttling:
+            _logger.log(
+                logging.INFO if cpu_throttling_os else logging.WARNING,
+                'CPU throttling mode is only suitable for local testing - '
+                'Throttling browser CPU to %sx slowdown', cpu_throttling)
+            browser.throttle(cpu_throttling)
 
-            browser.navigate_to(url, wait_stop=not bool(ready))
+        browser.navigate_to(url, wait_stop=not bool(ready))
 
-            # Needed because tests like test01.js (qunit tests) are passing a ready
-            # code = ""
-            self.assertTrue(browser._wait_ready(ready), 'The ready "%s" code was always falsy' % ready)
+        # Needed because tests like test01.js (qunit tests) are passing a ready
+        # code = ""
+        self.assertTrue(browser._wait_ready(ready), 'The ready "%s" code was always falsy' % ready)
 
-            error = None
-            try:
-                browser._wait_code_ok(code, timeout, error_checker=error_checker, console_hook=console_hook)
-            except ChromeBrowserException as chrome_browser_exception:
-                error = chrome_browser_exception
-            if error:  # dont keep initial traceback, keep that outside of except
-                self.fail(str(error))
-
-    def start_tour(self, url_path, tour_name, step_delay=None, **kwargs):
-        """Wrapper for `browser_js` to start the given `tour_name` with the
-        optional delay between steps `step_delay`. Other arguments from
-        `browser_js` can be passed as keyword arguments."""
+    def _tour_js(self, tour_name, step_delay=None, debug=False):
+        """ Return the `(code, ready)` JavaScript starting the tour `tour_name`. """
         options = {
             'stepDelay': step_delay or 0,
-            'debug': kwargs.get('debug', False),
+            'debug': debug,
         }
-        code = kwargs.pop('code', f"odoo.startTour({tour_name!r}, {json.dumps(options)})")
-        ready = kwargs.pop('ready', f"odoo.isTourReady({tour_name!r})")
-        timeout = kwargs.pop('timeout', 60)
-
         if step_delay is not None:
             self._logger.warning('step_delay is only suitable for local testing')
+        return f"odoo.startTour({tour_name!r}, {json.dumps(options)})", f"odoo.isTourReady({tour_name!r})"
+
+    @contextmanager
+    def _tours_disabled(self):
+        """ Disable the onboarding tours of the users, which would interfere with the tested tours. """
         Users = self.registry['res.users']
 
         def _post_model_setup__(model):
@@ -3150,10 +3175,93 @@ class HttpCase(TransactionCase):
         with patch.object(Users, 'tour_enabled', False),\
                 patch.object(Users, '_post_model_setup__', _post_model_setup__),\
                 patch.object(Users, '_compute_tour_enabled', lambda _: None):
+            yield
+
+    def start_tour(self, url_path, tour_name, step_delay=None, **kwargs):
+        """Wrapper for `browser_js` to start the given `tour_name` with the
+        optional delay between steps `step_delay`. Other arguments from
+        `browser_js` can be passed as keyword arguments."""
+        code, ready = self._tour_js(tour_name, step_delay, kwargs.get('debug', False))
+        code = kwargs.pop('code', code)
+        ready = kwargs.pop('ready', ready)
+        timeout = kwargs.pop('timeout', 60)
+        with self._tours_disabled():
             self.browser_js(
                 url_path=url_path, code=code, ready=ready, timeout=timeout, success_signal="tour succeeded",
                 stat_name=f'start_tour.{tour_name}', **kwargs,
             )
+
+    def start_tours(self, *tours, timeout=60, watch=False, debug=False, cpu_throttling=None):
+        """ Run several tours at the same time, each one in its own browser.
+
+        Used to test the interactions between several clients of the server
+        (e.g. through the bus). The tours can wait for each other with their
+        triggers. The pages are opened one after the other, in the given order,
+        then all the tours are started, and the test fails as soon as one of
+        them fails.
+
+        :param tours: one dict per browser, with the keys `url_path` and
+            `tour_name`, and optionally `login`, `step_delay`, `cookies`,
+            `code`, `ready` and `error_checker` (see `start_tour` and `browser_js`)
+        :param timeout: maximum time to wait for all the tours to complete (in seconds)
+        :param watch: see `browser_js`, for all the browsers
+        :param debug: see `browser_js`, for all the browsers
+        :param cpu_throttling: see `browser_js`, for all the browsers
+        """
+        timeout, watch = self._browser_timeout(timeout, watch, debug)
+        browsers = []
+        try:
+            for tour in tours:
+                browsers.append(ChromeBrowser(
+                    self, headless=not watch, success_signal="tour succeeded", debug=debug,
+                    name=tour['tour_name'],
+                ))
+        except BaseException:
+            for browser in browsers:
+                browser.cleanup.close()
+            raise
+
+        with self._tours_disabled(), self._browser_context(browsers):
+            # Log all the browsers in before opening any page: `authenticate`
+            # uses the test cursor, which the requests of an opened page use too.
+            for index, (browser, tour) in enumerate(zip(browsers, tours)):
+                if index:
+                    # Otherwise `authenticate` deletes the session of the previous browser.
+                    self.session = None
+                self.authenticate(tour.get('login'), tour.get('login'), browser=browser)
+
+            codes = []
+            for browser, tour in zip(browsers, tours):
+                code, ready = self._tour_js(tour['tour_name'], tour.get('step_delay'), debug)
+                codes.append(tour.get('code', code))
+                self._browser_open(
+                    browser, tour['url_path'], ready=tour.get('ready', ready),
+                    cookies=tour.get('cookies'),
+                    watch=watch, debug=debug, cpu_throttling=cpu_throttling,
+                )
+
+            deadline = time.time() + timeout * max(browser.throttling_factor for browser in browsers)
+            for browser, tour, code in zip(browsers, tours, codes):
+                browser._run_code(code, deadline - time.time(), error_checker=tour.get('error_checker'))
+            wait(
+                [browser._result for browser in browsers],
+                timeout=max(deadline - time.time(), 0),
+                return_when=concurrent.futures.FIRST_EXCEPTION,
+            )
+
+            def has_failed(browser):
+                result = browser._result
+                return result.done() and not result.cancelled() and result.exception() is not None
+
+            # Report the failed tours first: the others may just be stuck waiting for them.
+            error = None
+            try:
+                for browser in sorted(browsers, key=lambda browser: not has_failed(browser)):
+                    browser._wait_result(max(deadline - time.time(), 0))
+            except ChromeBrowserException as chrome_browser_exception:
+                error = chrome_browser_exception
+            if error:  # dont keep initial traceback, keep that outside of except
+                self.fail(str(error))
 
     def profile(self, **kwargs):
         """

@@ -12,8 +12,12 @@ from odoo import SUPERUSER_ID, Command, _, api, fields, models, tools
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.http import request
+from odoo.http.session import STORED_SESSION_BYTES
 from odoo.tools import SQL, convert
 from odoo.tools.misc import get_lang
+
+WEBRTC_MAX_MESSAGE_SIZE = 64 * 1024  # 64 KB
+WEBRTC_MAX_ID_LENGTH = 64
 
 DEFAULT_LIMIT_LOAD_PRODUCT = 5000
 DEFAULT_LIMIT_LOAD_PARTNER = 100
@@ -1495,3 +1499,51 @@ class PosConfig(models.Model):
             rounding_method = self.rounding_method
 
         return rounding_method
+
+    def _webrtc_signal(self, message, sender_tag):
+        """ Relay a WebRTC signaling message to the devices of the config, through the bus.
+
+        :param sender_tag: tag of the sender's session (see `_get_webrtc_session_tag`)
+        """
+        self.ensure_one()
+        if not self._is_valid_webrtc_signal(message):
+            raise ValidationError(_("Invalid WebRTC signaling message."))
+        if not message["from"].endswith(f".{sender_tag}"):
+            raise AccessError(_("This WebRTC device id belongs to another session."))
+
+        self.env["bus.bus"]._sendone((self, "webrtc"), f"WEBRTC_SIGNAL-{self.id}", message)
+
+    @api.model
+    def _get_webrtc_session_tag(self, sid):
+        """ The tag ending the WebRTC device ids of the session `sid`, stable across
+        session rotations (only the static part of `sid` is used). """
+        return tools.hmac(self.env(su=True), "pos-webrtc-session", sid[:STORED_SESSION_BYTES])[:16]
+
+    @api.model
+    def _is_valid_webrtc_signal(self, message):
+        """ Whether `message` is a valid signaling message: it is relayed as is to the devices. """
+        def is_id(value):
+            return isinstance(value, str) and 0 < len(value) <= WEBRTC_MAX_ID_LENGTH
+
+        if not isinstance(message, dict) or not is_id(message.get("from")):
+            return False
+
+        # Expected keys of each type: an announce without `to` is sent to all the devices.
+        if message.get("type") == "announce":
+            keys = {"type", "from", "to"} if "to" in message else {"type", "from"}
+        elif message.get("type") in ("offer", "answer"):
+            keys = {"type", "from", "to", "attempt", "sdp"}
+            attempt, sdp = message.get("attempt"), message.get("sdp")
+            if (
+                type(attempt) is not int or attempt <= 0  # invalid attempt number
+                or not isinstance(sdp, dict) or set(sdp) != {"type", "sdp"}  # invalid sdp structure
+                or sdp["type"] != message["type"] or not isinstance(sdp["sdp"], str)  # invalid sdp content
+            ):
+                return False
+        else:
+            return False
+        return (
+            set(message) == keys  # no missing or extra key
+            and ("to" not in message or (is_id(message["to"]) and message["to"] != message["from"]))  # valid recipient, not the sender
+            and len(json.dumps(message).encode()) <= WEBRTC_MAX_MESSAGE_SIZE  # not too big
+        )

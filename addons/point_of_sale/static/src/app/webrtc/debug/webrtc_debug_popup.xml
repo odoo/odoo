@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.WebrtcDebugPopup">
+        <Dialog bodyClass="'d-flex flex-column gap-3 pt-0'" footer="false" title.translate="WebRTC" backdrop="true" size="'md'">
+            <!-- ===== Tabs ===== -->
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <button class="nav-link" t-att-class="{ active: this.state.tab === 'actions' }"
+                        t-on-click="() => this.state.tab = 'actions'">Actions</button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link d-flex align-items-center gap-1" t-att-class="{ active: this.state.tab === 'peers' }"
+                        t-on-click="() => this.state.tab = 'peers'">
+                        Peers
+                        <span class="badge rounded-pill text-bg-secondary" t-out="this.peers.length"/>
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link d-flex align-items-center gap-1" t-att-class="{ active: this.state.tab === 'logs' }"
+                        t-on-click="() => this.state.tab = 'logs'">
+                        Logs
+                        <span class="badge rounded-pill text-bg-secondary" t-out="this.logger.visibleLogs().length"/>
+                    </button>
+                </li>
+            </ul>
+
+            <!-- ===== Actions tab ===== -->
+            <div t-if="this.state.tab === 'actions'" class="control-buttons control-buttons-modal d-grid gap-2"
+                style="--grid-columns: 3; --oi-font-size: 1.5rem;">
+                <t t-call="point_of_sale.controlButton"
+                    icon="'send'"
+                    btnText.translate="Broadcast &quot;Hi&quot;"
+                    btnClasses="'btn-secondary '"
+                    disabled="!this.peers.length"
+                    onClick="() => this.broadcastHi()"/>
+                <t t-call="point_of_sale.controlButton"
+                    icon="'refresh'"
+                    btnText.translate="Announce"
+                    btnClasses="'btn-secondary '"
+                    onClick="() => this.announce()"/>
+            </div>
+
+            <!-- ===== Peers tab ===== -->
+            <div t-if="this.state.tab === 'peers'" class="d-flex flex-column gap-2">
+                <!-- This device -->
+                <div class="d-flex align-items-center gap-2 p-2 rounded bg-100">
+                    <i class="oi text-info" data-icon="account_tree" aria-hidden="true"/>
+                    <span class="fw-bold">This device</span>
+                    <code class="ms-auto" t-out="this.webrtc.id"/>
+                </div>
+                <!-- Other devices -->
+                <div t-if="!this.peers.length" class="text-muted text-center py-3">No peer yet.</div>
+                <div t-foreach="this.peers" t-as="peer" t-key="peer.id"
+                    class="o_webrtc_peer d-flex align-items-center gap-2 p-2 border rounded"
+                    t-att-data-id="peer.id">
+                    <code class="me-auto" t-out="peer.id"/>
+                    <span t-attf-class="badge rounded-pill {{ peer.badgeClass }}" t-out="peer.state"/>
+                </div>
+            </div>
+
+            <!-- ===== Logs tab ===== -->
+            <div t-if="this.state.tab === 'logs'" class="d-flex flex-column gap-2">
+                <!-- Toolbar: print in the console, clear -->
+                <div class="d-flex align-items-center gap-2">
+                    <div class="form-check form-switch mb-0">
+                        <input id="o_webrtc_log_to_console" class="form-check-input" type="checkbox"
+                            t-att-checked="this.logger.settings.toConsole"
+                            t-on-change="(ev) => this.logger.setToConsole(ev.target.checked)"/>
+                        <label class="form-check-label" for="o_webrtc_log_to_console">Print in the console</label>
+                    </div>
+                    <button class="o_webrtc_clear_logs btn btn-sm btn-secondary ms-auto"
+                        t-att-disabled="!this.logger.logs().length"
+                        t-on-click="() => this.logger.clear()">Clear</button>
+                </div>
+                <!-- Filters by log type -->
+                <div class="d-flex flex-wrap gap-1">
+                    <button t-foreach="this.logTypes" t-as="type" t-key="type"
+                        t-attf-class="o_webrtc_log_type btn btn-sm {{ this.logger.isHidden(type) ? 'btn-outline-info' : 'btn-info' }}"
+                        t-att-data-type="type"
+                        t-att-aria-pressed="!this.logger.isHidden(type)"
+                        t-on-click="() => this.logger.toggleType(type)"
+                        t-out="type"/>
+                </div>
+                <!-- Log list -->
+                <div t-if="!this.logger.visibleLogs().length" class="text-muted text-center py-3">No log yet.</div>
+                <div t-foreach="this.logger.visibleLogs()" t-as="log" t-key="log.id"
+                    class="o_webrtc_log d-flex align-items-center gap-2 p-2 border rounded"
+                    t-att-data-type="log.type"
+                    t-att-data-peer="log.peer"
+                    t-att-data-text="log.text">
+                    <small class="text-muted" t-out="this.formatTime(log.time)"/>
+                    <span t-attf-class="badge rounded-pill {{ this.logBadgeClass(log.type) }}" t-out="log.type"/>
+                    <code t-if="log.peer" t-att-title="log.peer" t-out="this.logger.shortId(log.peer)"/>
+                    <span class="o_webrtc_log_text ms-auto text-end" t-out="log.text"/>
+                </div>
+            </div>
+        </Dialog>
+    </t>
+</templates>
