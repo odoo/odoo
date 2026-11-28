@@ -3391,6 +3391,59 @@ class MrpProduction(models.Model):
                 wo.sequence = index_wo + offset
         return True
 
+    def can_load_samples(self):
+        return self.sudo().env['mrp.production'].search_count([]) == 0
+
+    def action_load_samples(self):
+        if not self.can_load_samples():
+            raise UserError(_('Unable to load samples when you already have existing manufacturing orders'))
+
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+
+        if self.env.context.get('enable_work_orders') and not self.env.user.has_group('mrp.group_mrp_routings'):
+            self.env['res.config.settings'].sudo().create([{'group_mrp_routings': True}]).execute()
+
+        bom_lines = self.env['mrp.bom']._load_sample_bom()
+        bom = bom_lines.bom_id
+        drawer = bom.product_tmpl_id.product_variant_id
+        drawer_black, drawer_case = bom_lines[0].product_id, bom_lines[1].product_id
+
+        if not self.env.user.has_group('stock.group_production_lot'):
+            self.env['res.config.settings'].sudo().create([{'group_stock_production_lot': True}]).execute()
+
+        lots = self.env['stock.lot']._load_records([{'xml_id': xmlid, 'noupdate': True, 'values': {
+            'name': name,
+            'product_id': prod,
+        }} for (xmlid, name, prod) in (
+            ('mrp.lot_product_product_drawer_drawer_0', '0000000010001', drawer_black.id),
+            ('mrp.lot_product_product_drawer_case_0', '0000000020045', drawer_case.id),
+        )], True)
+
+        quants = [{'xml_id': xmlid, 'noupdate': True, 'values': {
+            'product_id': lot.product_id.id,
+            'lot_id': lot.id,
+            'inventory_quantity': 50,
+            'location_id': warehouse.lot_stock_id.id,
+        }} for (xmlid, lot) in (
+            ('mrp.stock_inventory_product_drawer_drawer', lots[0]),
+            ('mrp.stock_inventory_product_drawer_case', lots[1]),
+        )]
+        self.env['stock.quant']._load_records(quants, True)._apply_inventory()
+
+        MO = self.env['mrp.production']._load_records([{'xml_id': xmlid, 'noupdate': True, 'values': {
+            'name': name,
+            'product_id': drawer.id,
+            'uom_id': self.env.ref('uom.product_uom_unit').id,
+            'product_qty': 5,
+            'date_start': fields.Datetime.now() + relativedelta(days=1),
+            'bom_id': bom.id,
+        }} for (xmlid, name) in (
+            ('mrp.mrp_production_drawer_sec_1', 'WH/MO/DEMO1'),
+            ('mrp.mrp_production_drawer_sec_2', 'WH/MO/DEMO2'),
+        )], True)
+        self.env['stock.rule'].run_scheduler()
+        MO.action_confirm()
+
     def _track_get_fields(self):
         res = super()._track_get_fields()
         if res:

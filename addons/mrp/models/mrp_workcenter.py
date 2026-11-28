@@ -434,6 +434,25 @@ class MrpWorkcenter(models.Model):
             }
         return res
 
+    def can_load_samples(self):
+        return self.sudo().env['mrp.workcenter'].search_count([]) == 0
+
+    def action_load_samples(self):
+        if not self.can_load_samples():
+            raise UserError(_('Unable to load samples when you already have existing work centers'))
+        self._load_sample_workcenter()
+
+    def _load_sample_workcenter(self):
+        calendar = self.env.ref('mrp.mrp_workcenter_calendar')
+        return self.env['mrp.workcenter']._load_records([{'xml_id': xmlid, 'noupdate': True, 'values': {
+            'name': name,
+            'barcode': barcode,
+            'resource_calendar_id': calendar.id,
+        }} for (xmlid, name, barcode) in (
+            ('mrp.mrp_workcenter_3', 'Assembly 1', 'assembly1'),
+            ('mrp.mrp_workcenter_1', 'Drill 1', 'drill1'),
+        )], True)
+
     def _get_capacity(self, product, unit, bom):
         default_capacity = bom.uom_id._compute_quantity(bom.product_qty, unit, round=False) or 1
         capacity = self.capacity_ids.sorted(lambda c: (

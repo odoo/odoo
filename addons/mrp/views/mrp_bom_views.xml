@@ -227,7 +227,7 @@
             <field name="name">mrp.bom.list</field>
             <field name="model">mrp.bom</field>
             <field name="arch" type="xml">
-                <list string="Bill of Materials" sample="1" multi_edit="1">
+                <list string="Bill of Materials" sample="1" multi_edit="1" js_class="mrp_load_samples_list">
                     <field name="active" column_invisible="True"/> <!-- enables the Archive/Unarchive action in this list -->
                     <field name="sequence" widget="handle"/>
                     <field name="company_id" column_invisible="True"/> <!-- needed by the company-dependent domain of the check_company fields of this multi-edit list, and xpath anchor of mrp_bom_replenishment_tree_view -->
