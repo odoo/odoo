@@ -14,9 +14,15 @@ export class GenerateContentAndCopyButton extends CopyButton {
     }
 
     async onClick() {
-        if(this.props.contentGenerationFunction){
-            this.props.content = await this.props.contentGenerationFunction();
+        if (!this.props.contentGenerationFunction) {
+            return super.onClick();
         }
-        await super.onClick();
+        const content = await this.props.contentGenerationFunction();
+        try {
+            await navigator.clipboard.writeText(content);
+        } catch (error) {
+            return console.warn(error);
+        }
+        this.showTooltip();
     }
 }
