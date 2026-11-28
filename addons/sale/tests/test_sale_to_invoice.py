@@ -1460,3 +1460,14 @@ class TestSaleToInvoice(TestSaleCommon):
         so.action_confirm()
         invoice = so._create_invoices()
         self.assertEqual(invoice.invoice_line_ids.name, so.order_line.name)
+
+    def test_amount_to_invoice_cancelled_invoice(self):
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({'product_id': self.company_data['product_order_no'].id})],
+        })
+        so.action_confirm()
+        invoice = so._create_invoices()
+        invoice.invoice_line_ids.discount = 10
+        invoice.button_cancel()
+        self.assertEqual(so.order_line.untaxed_amount_to_invoice, so.order_line.price_subtotal)
