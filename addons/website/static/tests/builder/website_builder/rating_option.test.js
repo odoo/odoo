@@ -8,6 +8,23 @@ import { contains } from "@web/../tests/web_test_helpers";
 
 defineWebsiteModels();
 
+/**
+ * Checks one group of rating icons: how many there are, their icon and whether
+ * they are filled. An empty group only has its count checked.
+ *
+ * @param {"active"|"inactive"} group
+ * @param {number} count
+ * @param {{ icon: string, filled: boolean }} [iconSpec]
+ */
+function expectIcons(group, count, { icon, filled } = {}) {
+    const iconSelector = `:iframe .s_rating_${group}_icons i`;
+    expect(iconSelector).toHaveCount(count);
+    if (count) {
+        expect(iconSelector).toHaveAttribute("data-icon", icon);
+        expect(`${iconSelector}${filled ? ".oi-filled" : ":not(.oi-filled)"}`).toHaveCount(count);
+    }
+}
+
 test("rating snippet should not be user-selectable", async () => {
     await setupWebsiteBuilderWithSnippet("s_rating", { loadIframeBundles: true });
     expect(":iframe .s_rating").toHaveStyle({ "user-select": "none" });
@@ -31,12 +48,20 @@ test("changing score should update the aria-label", async () => {
     expect(":iframe .s_rating_icons").toHaveAttribute("aria-label", "1 out of 10 stars");
 });
 
-test("standard icons are preserved after score change", async () => {
+test("changing the score keeps active icons filled and inactive ones hollow", async () => {
     await setupWebsiteBuilderWithSnippet("s_rating", { loadIframeBundles: true });
-    await contains(":iframe .s_rating").click();
+    expectIcons("active", 3, { icon: "star", filled: true });
+    expectIcons("inactive", 2, { icon: "star", filled: false });
 
+    await contains(":iframe .s_rating").click();
+    await contains("[data-action-id='activeIconsNumber'] input").edit("5");
+    expectIcons("active", 5, { icon: "star", filled: true });
+    expectIcons("inactive", 0);
+
+    // The inactive icons come back from an empty group.
     await contains("[data-action-id='activeIconsNumber'] input").edit("2");
-    expect(":iframe .s_rating_icons i").toHaveAttribute("data-icon", "star");
+    expectIcons("active", 2, { icon: "star", filled: true });
+    expectIcons("inactive", 3, { icon: "star", filled: false });
 });
 
 test("custom icons are preserved after score change", async () => {
