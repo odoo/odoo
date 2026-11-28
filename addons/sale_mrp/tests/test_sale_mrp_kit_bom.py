@@ -325,6 +325,34 @@ class TestSaleMrpKitBom(TransactionCase):
         # Checks the delivery amount (must be 1).
         self.assertEqual(so.order_line.qty_delivered, 1)
 
+    def test_display_qty_widget_kit_of_kit(self):
+        company_2 = self.env['res.company'].create({'name': 'Company 2'})
+        customer = self.env['res.partner'].create({'name': 'Customer 1'})
+        bulk_kit = self._create_product('Bulk Kit Product', True, 1.00)
+        useful_kit = self._create_product('Useful Kit Product', False, 1.00)
+        component_a = self._create_product('Component A', False, 1.00)
+        self.env['mrp.bom'].create([{
+            'product_tmpl_id': kit.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'bom_line_ids': [Command.create({'product_id': component.id, 'product_qty': 10.0})],
+        } for component, kit in [(component_a, useful_kit), (useful_kit, bulk_kit)]])
+        so = self.env['sale.order'].with_company(company_2).create({
+            'partner_id': customer.id,
+            'order_line': [Command.create({
+                'name': bulk_kit.name,
+                'product_id': bulk_kit.id,
+                'product_uom_qty': 1.0,
+                'price_unit': 1,
+                'tax_id': False,
+            })],
+            'company_id': self.env.company.id,
+        })
+        self.assertFalse(so.order_line.display_qty_widget)
+
+        so.action_confirm()
+        self.assertFalse(so.order_line.display_qty_widget)
+
     def test_sale_kit_show_kit_in_delivery(self):
         """Create a kit with 2 product and activate 2 steps
             delivery and check that every stock move contains
