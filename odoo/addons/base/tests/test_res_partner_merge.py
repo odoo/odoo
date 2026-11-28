@@ -188,3 +188,27 @@ class TestMergePartner(TransactionCase):
         ])
         self.assertEqual(self.attachment_bank1.res_id, self.bank1.id, "Bank attachment should remain linked to the correct bank account")
         self.assertEqual(self.attachment_bank3.res_id, self.bank1.id, "Bank attachment should be reassigned to the correct bank account")
+
+    def test_non_admin_can_merge_partners_with_empty_and_unset_email(self):
+        user = new_test_user(
+            self.env, login='contact_merger',
+            groups='base.group_user,base.group_partner_manager',
+        )
+        contact_no_email = self.env['res.partner'].create({'name': 'Contact no email', 'email': False})
+        contact_empty_string = self.env['res.partner'].create({'name': 'Contact empty email', 'email': ''})
+        wizard = self.env['base.partner.merge.automatic.wizard'].with_user(user).create({})
+        wizard._merge((contact_no_email | contact_empty_string).ids, contact_empty_string)
+        self.assertFalse(contact_no_email.exists(), "Source partner should be deleted after merge")
+        self.assertTrue(contact_empty_string.exists(), "Destination partner should exist after merge")
+
+    def test_non_admin_cannot_merge_partners_with_different_emails(self):
+        user = new_test_user(
+            self.env, login='contact_merger',
+            groups='base.group_user,base.group_partner_manager',
+        )
+        wizard = self.env['base.partner.merge.automatic.wizard'].with_user(user).create({})
+        for email in (False, '', 'other@example.com'):
+            with self.subTest(email=email):
+                other_partner = self.env['res.partner'].create({'name': 'Other Contact', 'email': email})
+                with self.assertRaisesRegex(UserError, "All contacts must have the same email"):
+                    wizard._merge((self.partner1 | other_partner).ids, self.partner1)

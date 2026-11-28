@@ -438,7 +438,7 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
         if len(partner_ids.sudo().with_context(active_test=False).user_ids) > 1:
             raise UserError(self.env._("You cannot merge contacts linked to more than one user even if only one is active."))
 
-        if extra_checks and len(set(partner.email for partner in partner_ids)) > 1:
+        if extra_checks and len({partner.email or False for partner in partner_ids}) > 1:
             raise UserError(self.env._("All contacts must have the same email. Only the Administrator can merge contacts with different emails."))
 
         # remove dst_partner from partners to merge
