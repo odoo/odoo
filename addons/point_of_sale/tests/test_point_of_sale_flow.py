@@ -2773,6 +2773,102 @@ class TestPointOfSaleFlow(CommonPosTest):
         self.assertTrue(reversal_receivable_entry.reconciled)
         self.assertEqual(customer_account_receivable_entry.reconciled_lines_ids, reversal_receivable_entry)
 
+    def test_reinvoice_order_after_session_closed(self):
+        """Re-invoicing an order whose invoice was deleted after closing must only
+        reverse the closing entry if that entry booked the order's sale."""
+        order_data = {
+            'line_data': [
+                {'product_id': self.twenty_dollars_with_10_incl.product_variant_id.id},
+            ],
+            'payment_data': [
+                {'payment_method_id': self.credit_payment_method.id, 'amount': 20},
+            ],
+            'order_data': {
+                'partner_id': self.partner.id,
+            },
+        }
+
+        def partner_balance():
+            return sum(self.env['account.move.line'].search([
+                ('partner_id', '=', self.partner.id),
+                ('account_id', '=', self.partner.property_account_receivable_id.id),
+                ('parent_state', '=', 'posted'),
+            ]).mapped('balance'))
+
+        def delete_invoice(order):
+            invoice = order.account_move
+            invoice.button_draft()
+            invoice.unlink()
+
+        self.pos_config_usd.open_ui()
+        current_session = self.pos_config_usd.current_session_id
+        order_invoiced, _ = self.create_backend_pos_order({
+            **order_data,
+            'order_data': {**order_data['order_data'], 'to_invoice': True},
+        })
+        order_not_invoiced, _ = self.create_backend_pos_order(order_data)
+        self.assertTrue(order_invoiced.account_move)
+        self.assertFalse(order_not_invoiced.account_move)
+        current_session.close_session_from_ui()
+        self.assertEqual(current_session.state, 'closed')
+        self.assertTrue(current_session.move_id)
+        self.assertEqual(partner_balance(), 40)
+
+        # Invoiced at closing: the closing entry never booked it, nothing to reverse
+        delete_invoice(order_invoiced)
+        order_invoiced.action_pos_order_invoice()
+        self.assertTrue(order_invoiced.account_move)
+        self.assertFalse(order_invoiced.reversed_move_ids)
+        self.assertEqual(partner_balance(), 40)
+
+        # Invoiced after closing: reversed once, not again when re-invoiced
+        order_not_invoiced.action_pos_order_invoice()
+        self.assertEqual(len(order_not_invoiced.reversed_move_ids), 1)
+        self.assertEqual(partner_balance(), 40)
+        delete_invoice(order_not_invoiced)
+        order_not_invoiced.action_pos_order_invoice()
+        self.assertEqual(len(order_not_invoiced.reversed_move_ids), 1)
+        self.assertEqual(partner_balance(), 40)
+
+    def test_reinvoice_order_invoiced_from_wizard_after_session_closed(self):
+        """An order invoiced from the "Create Invoices" wizard while its session is open is
+        left out of the closing entry, so re-invoicing it after closing reverses nothing."""
+        order_data = {
+            'line_data': [
+                {'product_id': self.twenty_dollars_with_10_incl.product_variant_id.id},
+            ],
+            'payment_data': [
+                {'payment_method_id': self.credit_payment_method.id, 'amount': 20},
+            ],
+            'order_data': {
+                'partner_id': self.partner.id,
+            },
+        }
+        self.pos_config_usd.open_ui()
+        current_session = self.pos_config_usd.current_session_id
+        order, _ = self.create_backend_pos_order(order_data)
+        # Uninvoiced order so that the session has a closing entry
+        self.create_backend_pos_order(order_data)
+        self.env['pos.make.invoice'].create({}).with_context(active_ids=order.ids).action_create_invoices()
+        self.assertTrue(order.account_move)
+        self.assertTrue(order.to_invoice)
+        current_session.close_session_from_ui()
+        self.assertEqual(current_session.state, 'closed')
+        self.assertTrue(current_session.move_id)
+
+        invoice = order.account_move
+        invoice.button_draft()
+        invoice.unlink()
+        order.action_pos_order_invoice()
+        self.assertTrue(order.account_move)
+        self.assertFalse(order.reversed_move_ids)
+        receivable_lines = self.env['account.move.line'].search([
+            ('partner_id', '=', self.partner.id),
+            ('account_id', '=', self.partner.property_account_receivable_id.id),
+            ('parent_state', '=', 'posted'),
+        ])
+        self.assertEqual(sum(receivable_lines.mapped('balance')), 40)
+
     def test_add_two_lines_with_same_uuid_through_sync_from_ui(self):
         """Test that adding two lines with the same UUID doesn't cause issues."""
         self.pos_config_usd.open_ui()

@@ -1170,14 +1170,27 @@ class PosOrder(models.Model):
         for lines in lines_by_account.values():
             lines.reconcile()
 
+    def _is_sale_in_closing_entry(self):
+        """ Whether the closing entry still books this order's sale, so invoicing must reverse it. """
+        self.ensure_one()
+        return bool(
+            self.session_id.state == 'closed'
+            and self.session_move_id
+            and not self.to_invoice
+            and not self.payment_ids.account_move_id
+            and not self.reversed_move_ids.filtered(lambda m: m.state == 'posted')
+        )
+
     def action_pos_order_invoice(self):
         self.ensure_one()
         if not (move := self.account_move):
+            # Read before to_invoice is forced below
+            in_closing_entry = self._is_sale_in_closing_entry()
             is_picking_created = self._should_create_picking_real_time()
             self.write({'to_invoice': True})
             if not is_picking_created and self._should_create_picking_real_time() and self.session_id.state != 'closed':
                 self._create_order_picking()
-            move = self._generate_pos_order_invoice()
+            move = self.with_context(pos_order_ids_in_closing_entry=self.ids if in_closing_entry else [])._generate_pos_order_invoice()
         return {
             'name': _('Customer Invoice'),
             'view_mode': 'form',
@@ -1199,6 +1212,10 @@ class PosOrder(models.Model):
         if not self.env['res.company']._with_locked_records(self, allow_raising=False):
             raise UserError(_("Some orders are already being invoiced. Please try again later."))
         self.state = 'done'
+        if (order_ids := self.env.context.get('pos_order_ids_in_closing_entry')) is not None:
+            orders_in_closing_entry = self.browse(order_ids)
+        else:
+            orders_in_closing_entry = self.filtered(lambda o: o._is_sale_in_closing_entry())
 
         company = self.company_id
         invoice_vals = self._prepare_invoice_vals()
@@ -1221,7 +1238,8 @@ class PosOrder(models.Model):
 
         # reverse payment moves from closed sessions
         for order, payment_moves in payment_moves_from_closed_sessions.items():
-            order._create_misc_reversal_move(payment_moves)
+            if order in orders_in_closing_entry:
+                order._create_misc_reversal_move(payment_moves)
 
         if self.env.context.get('generate_pdf', True):
             invoice.with_context(skip_invoice_sync=True)._generate_and_send()

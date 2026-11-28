@@ -66,5 +66,8 @@ class PosMakeInvoice(models.TransientModel):
             for _key, orders in grouped_orders:
                 invoices |= orders._generate_pos_order_invoice()
 
+        # Set after invoicing, l10n modules read it while generating the invoice
+        selected_orders.write({'to_invoice': True})
+
         if invoices:
             return selected_orders.action_view_invoice()
