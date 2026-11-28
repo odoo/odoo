@@ -44,6 +44,19 @@ class TestQwebFieldTime(common.TransactionCase):
         with self.assertRaises(ValueError):
             self.value_to_html(24)
 
+    def test_time_value_to_html_minutes(self):
+        """ Every minute of the day, entered as hours + minutes / 60 (as done
+            by the float_time widget), must be displayed as is.
+        """
+        fmt = {'format': 'HH:mm'}
+        expected = []
+        result = []
+        for hour in range(24):
+            for minute in range(60):
+                expected.append(f"{hour:02d}:{minute:02d}")
+                result.append(self.value_to_html(hour + minute / 60, fmt))
+        self.assertEqual(result, expected)
+
 
 class TestQwebFieldInteger(common.TransactionCase):
     def value_to_html(self, value, options=None):
