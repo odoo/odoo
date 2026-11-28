@@ -179,6 +179,24 @@ class TestMailThreadRottingMixin(MailTrackingDurationMixinCase):
                     'Items that are not done, won, or in a disabled rotting stage are not rotting',
                 )
 
+    def test_resource_rotting_read_progress_bar(self):
+        Resource = self.env['mail.test.rotting.resource']
+        with self.mock_datetime_and_now(datetime(2025, 1, 1)):
+            Resource.create([
+                {'name': 'new 1', 'stage_id': self.stage_new.id},
+                {'name': 'new 2', 'stage_id': self.stage_new.id},
+                {'name': 'qualif', 'stage_id': self.stage_qualification.id},
+                {'name': 'qualif done', 'stage_id': self.stage_qualification.id, 'done': True},
+            ]).flush_recordset(['date_last_stage_update'])
+
+        progress_bar = {'field': 'name', 'colors': {}}
+        with self.mock_datetime_and_now(datetime(2025, 1, 7)):
+            result = Resource.read_progress_bar([('name', '!=', 'new 1')], 'stage_id', progress_bar)
+            self.assertEqual(result['__rotting_counts'], {
+                str(self.stage_new.id): 1,
+                str(self.stage_qualification.id): 1,
+            }, 'Kanban domain should be applied')
+
 
 @tagged('mail_thread', 'mail_blacklist')
 class TestMailThread(MailCommon, TestRecipients):
