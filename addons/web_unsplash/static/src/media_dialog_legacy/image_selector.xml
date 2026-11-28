@@ -19,7 +19,7 @@
 
 <t t-name="web_unsplash.ImagesListTemplate" t-inherit="web_editor.ImagesListTemplate" t-inherit-mode="extension">
     <xpath expr="//t[@id='o_we_media_library_images']" position="replace">
-        <t id='o_we_media_library_images' t-if="['all', 'unsplash', 'media-library'].includes(state.searchService)">
+        <t id='o_we_media_library_images' t-if="['all', 'unsplash', 'pexels', 'media-library'].includes(state.searchService)">
             <t t-foreach="combinedRecords" t-as="record" t-key="record.id">
                 <t t-call="web_editor.ExternalImage"/>
             </t>
