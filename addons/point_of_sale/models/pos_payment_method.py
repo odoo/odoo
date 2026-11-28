@@ -435,6 +435,14 @@ class PosPaymentMethod(models.Model):
         # the payment terminal modules don't need to depend on it.
         return []
 
+    def _is_valid_self_order_payment(self, pos_config, order, payment):
+        # Overridden by payment terminal modules to confirm, with their provider,
+        # a payment that the Self Order Kiosk reports as done. `order` and
+        # `payment` are the values sent by the kiosk, so they cannot be trusted.
+        # Defined here for the same reason as `_allowed_actions_in_self_order`.
+        self.ensure_one()
+        return True
+
     def get_qr_code_value(self, amount, free_communication, structured_communication, currency, debtor_partner):
         """ Returns the payment payload to encode in the QR-code.
 

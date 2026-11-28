@@ -1,5 +1,8 @@
+from hashlib import sha1
+
 from odoo.exceptions import UserError
 from odoo import fields, models, api, _
+from odoo.tools import consteq, hmac
 
 from .razorpay_pos_request import RazorpayPosRequest
 
@@ -59,9 +62,11 @@ class PosPaymentMethod(models.Model):
         })
         response = razorpay._call_razorpay(endpoint='pay', payload=body)
         if response.get('success') and not response.get('errorCode'):
+            p2p_request_id = str(response.get('p2pRequestId'))
             return {
                 'success': True,
-                'p2pRequestId': str(response.get('p2pRequestId'))
+                'p2pRequestId': p2p_request_id,
+                'signature': self._razorpay_sign_transaction(p2p_request_id, data['referenceId'], data['amount']),
             }
         default_error_msg = _('Razorpay POS payment request expected errorCode not found in the response')
         error = response.get('errorMessage') or default_error_msg
@@ -121,3 +126,33 @@ class PosPaymentMethod(models.Model):
     def _check_razorpay_terminal(self):
         if any(record.payment_provider == 'razorpay' and record.company_id.currency_id.name != 'INR' for record in self):
             raise UserError(_('This Payment Terminal is only valid for INR Currency'))
+
+    @api.model
+    def _allowed_actions_in_self_order(self):
+        return super()._allowed_actions_in_self_order() + ['razorpay_make_payment_request', 'razorpay_fetch_payment_status', 'razorpay_cancel_payment_request']
+
+    def _razorpay_sign_transaction(self, p2p_request_id, reference_id, amount):
+        # Razorpay status responses don't include the requested amount, so the
+        # signature proves which reference and amount a p2p request was made for.
+        return hmac(self.env(su=True), 'pos_razorpay', f'{p2p_request_id}/{reference_id}/{float(amount)}')
+
+    def _is_valid_self_order_payment(self, pos_config, order, payment):
+        if self.payment_provider != 'razorpay':
+            return super()._is_valid_self_order_payment(pos_config, order, payment)
+        p2p_request_id = str(payment.get('razorpay_p2p_request_id') or '')
+        # Same reference as `_processRazorpay` builds for the only payment of a
+        # kiosk order: `payment['amount']` is the JSON number sent by the
+        # frontend, so `str()` formats it as the frontend does.
+        reference_id = sha1(
+            f"{pos_config.id}/{order['uuid']}/{self.id}/{pos_config.currency_id.name}/{payment['amount']}/1".encode()
+        ).hexdigest()
+        expected_signature = self._razorpay_sign_transaction(p2p_request_id, reference_id, payment['amount'])
+        if not p2p_request_id or not consteq(str(payment.get('razorpay_signature') or ''), expected_signature):
+            return False
+        if self.env['pos.payment'].search_count([
+            ('payment_method_id', '=', self.id),
+            ('razorpay_p2p_request_id', '=', p2p_request_id),
+        ], limit=1):
+            return False
+        status = self.razorpay_fetch_payment_status({'p2pRequestId': p2p_request_id})
+        return status.get('status') == 'AUTHORIZED' and status.get('externalRefNumber') == reference_id

@@ -204,7 +204,7 @@ class PosOrder(models.Model):
         return []
 
     @api.model
-    def _check_pos_order_payment(self, device_type, order, payment):
+    def _check_pos_order_payment(self, pos_config, device_type, order, payment):
         if device_type != "kiosk" or not payment or len(payment) != 1 or len(payment[0]) != 3:
             return []
 
@@ -214,6 +214,12 @@ class PosOrder(models.Model):
 
         payment_line = payment[0][2]
         if "amount" not in payment_line or payment_line["amount"] != order.get("amount_total", 0):
+            return []
+
+        payment_method = pos_config.payment_method_ids.filtered(lambda pm: pm.id == payment_line.get("payment_method_id"))
+
+        if not payment_method or not payment_method._is_valid_self_order_payment(pos_config, order, payment_line):
+            _logger.warning("pos_self_order: Kiosk payment of order %s could not be verified.", order.get("uuid"))
             return []
 
         safe_fields = [
@@ -271,7 +277,7 @@ class PosOrder(models.Model):
         pricelist_id = preset_id.pricelist_id if preset_id else pos_config.pricelist_id
         lines = [self._check_pos_order_lines(pos_config, order, line, fiscal_position_id) for line in order.get('lines', [])]
         lines = [line for line in lines if len(line)]
-        payment_lines = self._check_pos_order_payment(device_type, order, order.get("payment_ids"))
+        payment_lines = self._check_pos_order_payment(pos_config, device_type, order, order.get("payment_ids"))
         payment_lines = [line for line in payment_lines if len(line)]
         partner = self._get_self_partner_from_token(pos_config, order.get('partner_id')) if order.get('partner_id') else False
 
