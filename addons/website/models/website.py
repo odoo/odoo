@@ -1247,6 +1247,7 @@ class Website(models.CachedModel):
         # Bootstrap default menu hierarchy, create a new minimalist one if no default
         if not self.menu_id and (default_menu := self.env.ref('website.main_menu', raise_if_not_found=False)):
             self.copy_menu_hierarchy(default_menu)
+            self.invalidate_recordset(['menu_id'])
         home_menu = self.env['website.menu'].search([('website_id', '=', self.id), ('url', '=', '/')])
         home_menu.page_id = homepage_page
 
