@@ -61,6 +61,16 @@ class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
             })],
         })
 
+    def return_picking(self, picking, quantity):
+        return_form = Form(self.env['stock.return.picking'].with_context(active_id=picking.id, active_model='stock.picking'))
+        return_wizard = return_form.save()
+        return_wizard.product_return_moves.quantity = quantity
+        new_picking = return_wizard._create_return()
+        new_picking.move_ids.quantity = quantity
+        new_picking.move_ids.picked = True
+        new_picking.button_validate()
+        return new_picking
+
     def test_bom_overview_availability(self):
         # Create routes for components and the main product
         self.comp2.bom_ids.unlink()
@@ -470,6 +480,72 @@ class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
         subcontract_location = self.env.company.subcontracting_location_id
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.finished2, self.warehouse.lot_stock_id), 10.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.finished2, subcontract_location), 0.0)
+
+    def test_purchase_and_exchange_cross_warehouse_subcontracting(self):
+        """
+        Make an exchange of a product but for a subcontractor
+        with another WH's stock as subcontracting location.
+        """
+        warehouse_2 = self.env['stock.warehouse'].create({
+            'name': 'Warehouse 2',
+            'code': 'WH2',
+        })
+        self.subcontractor_partner1.property_stock_subcontractor = warehouse_2.lot_stock_id
+
+        po = self.env['purchase.order'].create({
+            'partner_id': self.subcontractor_partner1.id,
+            'order_line': [Command.create({
+                'product_id': self.finished2.id,
+                'product_uom_qty': 5,
+            })],
+        })
+        po.button_confirm()
+
+        receipt = po.picking_ids
+        receipt.move_ids.quantity = 5
+        receipt.move_ids.picked = True
+        receipt.button_validate()
+        self.assertEqual(po.order_line.qty_received, 5)
+
+        return_to_subcontractor = self.return_picking(receipt, 4)
+        self.assertEqual(po.order_line.qty_received, 1)
+        _ = self.return_picking(return_to_subcontractor, 4)
+        self.assertEqual(po.order_line.qty_received, 5)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.finished2, self.warehouse.lot_stock_id), 5)
+
+    def test_purchase_and_return_chain(self):
+        """
+        Ensure a return chain for a subcontracted product correctly updates the
+        PO's qty_received.
+        """
+        po = self.env['purchase.order'].create({
+            'partner_id': self.subcontractor_partner1.id,
+            'order_line': [Command.create({
+                'product_id': self.finished2.id,
+                'product_uom_qty': 5,
+            })],
+        })
+        po.button_confirm()
+
+        receipt = po.picking_ids
+        receipt.move_ids.quantity = 5
+        receipt.move_ids.picked = True
+        receipt.button_validate()
+        self.assertEqual(po.order_line.qty_received, 5)
+
+        # Return > Return of 4 units
+        return_to_subcontractor_1 = self.return_picking(receipt, 4)
+        self.assertEqual(po.order_line.qty_received, 1)
+        return_of_return_1 = self.return_picking(return_to_subcontractor_1, 4)
+        self.assertEqual(po.order_line.qty_received, 5)
+
+        # Return > Return of 3 units
+        return_to_subcontractor_2 = self.return_picking(return_of_return_1, 3)
+        self.assertEqual(po.order_line.qty_received, 2)
+        _ = self.return_picking(return_to_subcontractor_2, 3)
+        self.assertEqual(po.order_line.qty_received, 5)
+
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.finished2, self.warehouse.lot_stock_id), 5)
 
     def test_subcontracting_resupply_price_diff(self):
         """Test that the price difference is correctly computed when a subcontracted
