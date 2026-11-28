@@ -4,6 +4,11 @@
     z-index: 5;
     transition: filter 0.3s;
 
+    &:focus-visible {
+        outline: 2px solid Highlight;
+        outline-offset: 2px;
+    }
+
     &:hover {
         filter: brightness(90%);
     }
