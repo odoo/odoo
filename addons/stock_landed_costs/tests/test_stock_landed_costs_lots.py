@@ -1,12 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.addons.purchase_stock.tests.common import PurchaseTestCommon
 from odoo.addons.stock_account.tests.test_lot_valuation import TestLotValuation
 from odoo.tests import tagged, Form
 from odoo.fields import Command
 
 
 @tagged('post_install', '-at_install')
-class TestStockLandedCostsLots(TestLotValuation):
+class TestStockLandedCostsLots(TestLotValuation, PurchaseTestCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -23,16 +24,11 @@ class TestStockLandedCostsLots(TestLotValuation):
 
         :param lot_qtys: list of (lot_name, quantity) tuples
         """
-        po = self.env['purchase.order'].create({
-            'partner_id': self.vendor.id,
-            'order_line': [Command.create({
-                'product_id': product.id,
-                'product_qty': sum(qty for _name, qty in lot_qtys),
-                'price_unit': unit_cost,
-                'tax_ids': [Command.clear()],
-            })],
-        })
-        po.button_confirm()
+        po = self._create_purchase(
+            product=product,
+            quantity=sum(qty for _name, qty in lot_qtys),
+            price_unit=unit_cost,
+        )
         receipt = po.picking_ids
         receipt.move_ids.move_line_ids = [Command.clear()] + [Command.create({
             'product_id': product.id,
@@ -61,19 +57,16 @@ class TestStockLandedCostsLots(TestLotValuation):
         Check that a landed cost applied on receipts of lot-valuated products is spread
         equally across the receipts and, within a receipt, spread over its lots.
         """
-        product_a, product_b = self.env['product.product'].create([{
-            'name': 'product_a',
-            'is_storable': True,
-            'tracking': 'lot',
-            'lot_valuated': True,
-            'categ_id': self.category_avco_auto.id,
-        }, {
-            'name': 'product_b',
-            'is_storable': True,
-            'tracking': 'lot',
-            'lot_valuated': True,
-            'categ_id': self.category_avco_auto.id,
-        }])
+        product_a, product_b = self.env['product.product'].create([
+            {
+                'name': name,
+                'is_storable': True,
+                'tracking': 'lot',
+                'lot_valuated': True,
+                'categ_id': self.category_avco_auto.id,
+            }
+            for name in ('product_a', 'product_b')
+        ])
         receipt_a = self._receive_in_lots(product_a, 10, [('LClotA1', 5), ('LClotA2', 5), ('LClotA3', 5)])
         receipt_b = self._receive_in_lots(product_b, 11, [('LClotB1', 5), ('LClotB2', 5)])
 
@@ -151,13 +144,8 @@ class TestStockLandedCostsLots(TestLotValuation):
         or when some have a portion of their quantity already sold (check that it uses the
         remaining quantity)
         """
-        product = self.env['product.product'].create({
-            'name': 'product',
-            'is_storable': True,
-            'tracking': 'lot',
-            'lot_valuated': True,
-            'categ_id': self.category_fifo_auto.id,
-        })
+        self.product_avco.categ_id = self.category_fifo_auto
+        product = self.product_avco
         # Receive 5 units split in 4 lots
         receipt = self._receive_in_lots(product, 10000, [('L1', 1), ('L2', 2), ('L3', 1), ('L4', 1)])
         lots = receipt.move_ids.move_line_ids.lot_id.sorted('id')

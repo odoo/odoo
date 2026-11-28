@@ -15,19 +15,9 @@ class TestMrpAccount(TestBomPriceCommon, TestMrpCommon):
 
     def test_00_production_order_with_accounting(self):
         # Inventory Product Table
-        quants = self.env['stock.quant'].with_context(inventory_mode=True).create([{
-            'product_id': self.leg.id,
-            'inventory_quantity': 20,
-            'location_id': self.stock_location.id,
-        }, {
-            'product_id': self.glass.id,
-            'inventory_quantity': 20,
-            'location_id': self.stock_location.id,
-        }, {
-            'product_id': self.screw.id,
-            'inventory_quantity': 200000,
-            'location_id': self.stock_location.id,
-        }])
+        quants = self.env['stock.quant']
+        for product, qty in ((self.leg, 20), (self.glass, 20), (self.screw, 200000)):
+            quants |= self._make_inventory_quant(product=product, qty=qty, inventory_mode=True)
         quants.action_apply_inventory()
 
         production_table_form = Form(self.env['mrp.production'])
