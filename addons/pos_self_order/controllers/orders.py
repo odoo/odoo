@@ -50,6 +50,9 @@ class PosSelfOrderController(http.Controller):
                 )
 
         if preset_id and preset_id.service_at == 'delivery':
+            # The lines are created without subtotals: price them first, so that the
+            # free delivery threshold is checked against the server-side prices.
+            order_ids.recompute_prices()
             self._ensure_delivery_fee(order_ids, preset_id)
 
         if preset_id:
@@ -106,15 +109,15 @@ class PosSelfOrderController(http.Controller):
         if not delivery_product:
             return
 
-        non_delivery_lines = order.lines.filtered(
-            lambda l: l.product_id != delivery_product
+        threshold_lines = order.lines.filtered(
+            lambda l: l.product_id not in (delivery_product | preset.service_fee_product_id)
         )
         tax_included = order.config_id.iface_tax_included == 'total'
         total_field = 'price_subtotal_incl' if tax_included else 'price_subtotal'
-        non_delivery_total = sum(non_delivery_lines.mapped(total_field))
+        threshold_total = sum(threshold_lines.mapped(total_field))
 
         free_min = preset.free_delivery_min_amount
-        delivery_is_free = bool(free_min) and non_delivery_total >= free_min
+        delivery_is_free = bool(free_min) and threshold_total >= free_min
 
         existing_delivery_lines = order.lines.filtered(
             lambda l: l.product_id == delivery_product

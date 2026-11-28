@@ -131,6 +131,7 @@
             "point_of_sale/static/src/app/models/related_models/**/*",
             "point_of_sale/static/src/app/plugins/pos_data_plugin.js",
             "point_of_sale/static/src/app/models/**/*",
+            "pos_self_order/static/src/overrides/models/pos_order_line.js",
             "pos_restaurant/static/src/app/models/restaurant_table.js",
             "point_of_sale/static/src/app/utils/numbers.js",
             "point_of_sale/static/src/app/utils/pretty_console_log.js",

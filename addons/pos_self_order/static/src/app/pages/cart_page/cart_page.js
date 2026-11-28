@@ -39,19 +39,18 @@ export class CartPage extends Component {
             () => this.selfOrder.ensureDeliveryLine(),
             () => {
                 const order = this.selfOrder.currentOrder;
-                const nonDeliveryTotal = order.lines
-                    .filter((l) => !l.isDeliveryLine && !l.isTipLine())
+                const thresholdTotal = order.lines
+                    .filter((l) => !l.isDeliveryLine && !l.isTipLine() && !l.isServiceFeeLine())
                     .reduce((sum, l) => sum + (l.qty || 0) * (l.price_unit || 0), 0);
-                return [order.preset_id?.id, nonDeliveryTotal];
+                return [order.preset_id?.id, thresholdTotal];
             }
         );
         useLayoutEffect(
             () => this.selfOrder.currentOrder.recomputeServiceFees(),
             () => {
                 const order = this.selfOrder.currentOrder;
-                const serviceFeeProductId = order.preset_id?.service_fee_product_id?.id;
                 const applicableTotal = order.lines
-                    .filter((l) => l.product_id?.id !== serviceFeeProductId && !l.isTipLine())
+                    .filter((l) => l.isServiceFeeApplicable())
                     .reduce((sum, l) => sum + (l.qty || 0) * (l.price_unit || 0), 0);
                 return [order.preset_id?.id, applicableTotal];
             }

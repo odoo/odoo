@@ -8,6 +8,14 @@ patch(PosPreset.prototype, {
             "mail_template_id",
             "available_in_self",
             "service_at",
+            "delivery_product_id",
+        ];
+    },
+    _load_pos_self_data_fields() {
+        return [
+            ...this._load_pos_data_fields(),
+            "free_delivery_min_amount",
+            "delivery_product_price",
         ];
     },
 });

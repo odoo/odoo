@@ -171,14 +171,14 @@ class PosPreset(models.Model):
     @api.model
     def _load_pos_self_data_fields(self, config):
         params = super()._load_pos_self_data_fields(config)
-        params.extend(['service_at', 'mail_template_id', 'free_delivery_min_amount', 'delivery_product_id', 'delivery_product_price',
+        params.extend(['service_at', 'mail_template_id', 'free_delivery_min_amount', 'delivery_product_price',
                        'service_fee', 'service_fee_product_id', 'service_fee_type', 'service_fee_amount', 'service_fee_based_on'])
         return params
 
     @api.model
     def _load_pos_data_fields(self, config):
         params = super()._load_pos_data_fields(config)
-        params.extend(['mail_template_id', 'service_at'])
+        params.extend(['mail_template_id', 'service_at', 'delivery_product_id'])
         return params
 
     def _can_return_content(self, field_name=None, access_token=None):
