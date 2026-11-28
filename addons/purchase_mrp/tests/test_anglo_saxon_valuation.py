@@ -276,6 +276,39 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
 
         self.assertEqual(receipt.move_ids.state, 'done')
 
+    def test_kit_component_different_uom_value_from_bill(self):
+        """
+        Buy a kit in Units made of 1 Dozen of an AVCO component, receive it, then post the bill.
+        The component should be valued at the billed price.
+        """
+        uom_dozen = self.env.ref('uom.product_uom_dozen')
+        kit, component = self.env['product.product'].create([
+            {'name': 'Kit'},
+            {'name': 'Component', 'is_storable': True, 'uom_id': uom_dozen.id, 'categ_id': self.category_avco_auto.id},
+        ])
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': kit.product_tmpl_id.id,
+            'type': 'phantom',
+            'bom_line_ids': [Command.create({'product_id': component.id})],
+        })
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.vendor.id,
+            'order_line': [Command.create({'product_id': kit.id, 'price_unit': 120})],
+        })
+        purchase_order.button_confirm()
+        receipt = purchase_order.picking_ids
+        receipt.button_validate()
+
+        self.assertRecordValues(receipt.move_ids, [{'product_id': component.id, 'quantity': 1.0, 'value': 120.0}])
+        self.assertEqual(component.standard_price, 120.0)
+
+        bill = self.env['account.move'].browse(purchase_order.action_create_invoice()['res_id'])
+        bill.invoice_date = Date.today()
+        bill.action_post()
+
+        self.assertRecordValues(receipt.move_ids, [{'value': 120.0}])
+        self.assertEqual(component.standard_price, 120.0)
+
     def test_fifo_cost_adjust_mo_quantity(self):
         """ An MO using a FIFO cost method product as a component should not zero-out the std cost
         of the product if we unlock it once it is in a validated state and adjust the quantity of
