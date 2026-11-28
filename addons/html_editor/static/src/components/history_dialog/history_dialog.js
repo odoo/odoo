@@ -93,6 +93,9 @@ export class HistoryDialog extends Component {
 
     resize() {
         const dialogContainer = document.querySelector(".html-history-dialog-container");
+        if (!dialogContainer) {
+            return;
+        }
         const computedStyle = getComputedStyle(dialogContainer);
         this.state.cssMaxHeight = parseInt(computedStyle.height.replace("px", "")) - 160;
     }
@@ -171,7 +174,7 @@ export class HistoryDialog extends Component {
                     [this.props.recordId],
                     [this.props.versionedFieldName]
                 );
-                if (!curentContent || !curentContent.length) {
+                if (!curentContent?.[0]?.[this.props.versionedFieldName]) {
                     return this.props.noContentHelper;
                 }
                 return this._removeExternalBlockHtml(
