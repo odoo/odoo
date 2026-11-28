@@ -86,6 +86,8 @@ Help your customers with this chat, and analyse their feedback.
             'web/static/lib/bootstrap/scss/_maps.scss',
             'web/static/src/webclient/icons_mappings/**',
             'web/static/src/webclient/icons.scss',
+            # first js file: the composer waits for the lazy loaded editor
+            'mail/static/src/ignore_missing_deps.js',
             'web/static/src/views/fields/file_handler.*',
             'web/static/src/views/fields/formatters.js',
             ('include', 'im_livechat.assets_embed_core'),

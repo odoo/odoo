@@ -25,6 +25,13 @@ registry.category("web_tour.tours").add("im_livechat_request_chat_and_send_messa
         ...requestChatSteps,
         editComposer("Hello, I need help please !"),
         {
+            // `selectionchange` is async and lost if the focus leaves the shadow
+            // tree first: the emoji would be inserted at the start.
+            trigger:
+                ".o-livechat-root:shadow .o-mail-Composer-html:text('Hello, I need help please !')",
+            run: () => document.dispatchEvent(new Event("selectionchange")),
+        },
+        {
             trigger: ".o-livechat-root:shadow .o-mail-Composer button[title='Add Emojis']",
             run: "click",
         },

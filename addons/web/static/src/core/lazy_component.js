@@ -3,7 +3,8 @@ import { loadBundle } from "@web/core/assets";
 import { registry } from "@web/core/registry";
 
 /**
- * Utility component that loads an asset bundle before instanciating a component
+ * Utility component that loads an asset bundle before instanciating a component,
+ * unless the component is already registered.
  */
 export class LazyComponent extends Component {
     static template = xml`<t t-component="this.Component" t-props="this.componentProps"/>`;
@@ -14,10 +15,14 @@ export class LazyComponent extends Component {
     });
 
     setup() {
-        onWillStart(async () => {
-            await loadBundle(this.props.bundle);
-            this.Component = registry.category("lazy_components").get(this.props.Component);
-        });
+        const components = registry.category("lazy_components");
+        this.Component = components.get(this.props.Component, null);
+        if (!this.Component) {
+            onWillStart(async () => {
+                await loadBundle(this.props.bundle);
+                this.Component = components.get(this.props.Component);
+            });
+        }
     }
 
     get componentProps() {

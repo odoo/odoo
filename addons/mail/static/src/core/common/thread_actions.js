@@ -12,7 +12,6 @@ import {
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
 import { RenameThreadPlugin } from "@mail/core/common/rename_thread_plugin";
 import { SearchMessagesPanel } from "@mail/core/common/search_messages_panel";
-import { MeetingChat } from "@mail/discuss/call/common/meeting_chat";
 import { useMaybePlugin } from "@mail/utils/common/hooks";
 
 export const threadActionsRegistry = registry.category("mail.thread/actions");
@@ -97,7 +96,12 @@ registerThreadAction("meeting-chat", {
     condition: ({ ancestors }) => ancestors.inMeetingView,
     icon: "forum",
     name: _t("Chat"),
-    panel: { component: MeetingChat },
+    panel: {
+        // From the registry: the chat requires the composer, which is lazy loaded on the portal.
+        get component() {
+            return registry.category("discuss.call/components").get("MeetingChat");
+        },
+    },
     sequence: 30,
     tags: ({ channel }) => {
         const tags = [];
