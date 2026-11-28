@@ -1,6 +1,7 @@
 from odoo.tests.common import TransactionCase, tagged
 from odoo.exceptions import AccessError
 from datetime import date, datetime
+from odoo import Command
 from odoo.tests import new_test_user
 
 
@@ -95,3 +96,32 @@ class TestHrAttendanceSelfEdit(TransactionCase):
         attendance_as_user._compute_can_edit()
         self.assertEqual(attendance.overtime_status, 'approved', "Status should be approved")
         self.assertFalse(attendance_as_user.can_edit, "Employee should NOT be able to edit once manager has approved")
+
+    def test_overtime_on_self_attendance_creation(self):
+        self.company.attendance_overtime_validation = 'by_manager'
+        self.emp_self_edit.ruleset_id = self.env['hr.attendance.overtime.ruleset'].create({
+            'name': 'Overtime outside schedule',
+            'rule_ids': [Command.create({
+                'name': 'Outside working hours',
+                'base_off': 'timing',
+                'timing_type': 'schedule',
+                'resource_calendar_id': self.company.resource_calendar_id.id,
+                'employer_tolerance': 0,
+                'paid': True,
+            })],
+        })
+
+        attendance = self.env['hr.attendance'].with_user(self.user_self_edit).create({
+            'employee_id': self.emp_self_edit.id,
+            'check_in': datetime(2023, 1, 2, 18, 0),
+            'check_out': datetime(2023, 1, 2, 20, 0),
+        })
+
+        self.assertRecordValues(attendance, [{
+            'overtime_hours': 2.0,
+            'overtime_status': 'to_approve',
+        }])
+        self.assertRecordValues(attendance.linked_overtime_ids, [{
+            'duration': 2.0,
+            'status': 'to_approve',
+        }])
