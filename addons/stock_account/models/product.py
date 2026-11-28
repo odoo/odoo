@@ -118,10 +118,10 @@ class ProductTemplate(models.Model):
             lot_ids_to_update.update(self.env['stock.lot'].sudo().search([
                 ('product_id', 'in', self.product_variant_ids.ids),
             ]).ids)
-        if product_ids_to_update:
-            self.env['product.product'].browse(product_ids_to_update)._update_standard_price()
         if lot_ids_to_update:
             self.env['stock.lot'].browse(lot_ids_to_update).sudo()._update_standard_price()
+        if product_ids_to_update:
+            self.env['product.product'].browse(product_ids_to_update)._update_standard_price()
         return res
 
     # -------------------------------------------------------------------------
@@ -775,9 +775,9 @@ class ProductCategory(models.Model):
             if updated_categories:
                 products_to_update = self.env['product.product'].search([('categ_id', 'in', updated_categories.ids)])
         res = super().write(vals)
-        if products_to_update:
-            products_to_update._update_standard_price()
         products_lot_valuated = products_to_update.filtered(lambda p: p.lot_valuated)
         if products_lot_valuated:
             self.env['stock.lot'].sudo().search([('product_id', 'in', products_lot_valuated.ids)])._update_standard_price()
+        if products_to_update:
+            products_to_update._update_standard_price()
         return res

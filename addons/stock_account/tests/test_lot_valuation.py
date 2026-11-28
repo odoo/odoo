@@ -776,3 +776,35 @@ class TestLotValuation(TestStockValuationCommon):
         in_move.picked = True
         in_move.with_context(allowed_company_ids=[c1.id, c2.id])._action_done()
         self.assertEqual(self.product.standard_price, 15)
+
+    def test_lot_avco_new_lot_value_with_and_without_date(self):
+        """ Without date, the value of an AVCO lot is its cost times its quantity. With a
+        date, the moves of the lot are replayed. Adding a new lot must give the same result
+        in both cases, for the lots and for the product.
+        """
+        self._make_in_move(self.product, 10, 5, lot_ids=[self.lot1])
+        self._make_in_move(self.product, 10, 9, lot_ids=[self.lot2])
+        self._make_out_move(self.product, 4, lot_ids=[self.lot2])
+
+        # New lot received at a cost different from its initial cost (the product cost)
+        lot4 = self.env['stock.lot'].create({'name': 'lot4', 'product_id': self.product.id})
+        self._make_in_move(self.product, 10, 13, lot_ids=[lot4])
+
+        # New lot added with an inventory adjustment
+        lot5 = self.env['stock.lot'].create({'name': 'lot5', 'product_id': self.product.id})
+        self.env['stock.quant'].create({
+            'location_id': self.stock_location.id,
+            'product_id': self.product.id,
+            'lot_id': lot5.id,
+            'inventory_quantity': 6,
+        }).action_apply_inventory()
+
+        to_date = fields.Datetime.now()
+        lots = self.lot1 | self.lot2 | lot4 | lot5
+        for lot in lots:
+            self.assertAlmostEqual(lot.total_value, lot.with_context(to_date=to_date).total_value, places=2)
+
+        # lot1 = 10u@5, lot2 = 6u@9, lot4 = 10u@13, lot5 = 6u@9 (product cost at its creation)
+        self.assertEqual(self.product.total_value, 288)
+        self.assertAlmostEqual(self.product.total_value, self.product.with_context(to_date=to_date).total_value, places=2)
+        self.assertAlmostEqual(self.product.standard_price, self.product.with_context(to_date=to_date).total_value / 32, places=2)
