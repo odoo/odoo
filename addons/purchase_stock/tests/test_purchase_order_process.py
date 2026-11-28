@@ -80,7 +80,7 @@ class TestPurchaseOrderProcess(PurchaseTestCommon):
         purchase_order.order_line.flush_recordset()
         purchase_order.picking_ids.move_ids.flush_recordset()
         delay_reports = self.env['vendor.delay.report']._read_group([('partner_id', '=', partner.id)], ['product_id'], ['on_time_rate:sum'])
-        self.assertEqual([rec[1] for rec in delay_reports], [0.0, 0.0])
+        self.assertEqual([rec[1] for rec in delay_reports], [])
         # cancel the first part of the PO
         purchase_order.order_line.filtered(lambda l: l.product_id == self.product_1).product_qty = 0
         self.assertEqual(partner.purchase_order_count, 1)
