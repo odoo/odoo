@@ -104,7 +104,11 @@ class ChangeProductionQty(models.TransientModel):
                 moves_raw.mapped('move_line_ids').write({'workorder_id': wo.id})
                 (moves_finished + moves_raw).write({'workorder_id': wo.id})
 
-        # run scheduler for moves forecasted to not have enough in stock
-        self.mo_id.filtered(lambda mo: mo.state in ['confirmed', 'progress']).move_raw_ids._trigger_scheduler()
+        # run scheduler for moves forecasted to not have enough in stock, except for the
+        # productions being confirmed: it is run once the current procurements are processed
+        ignored_mo_ids = self.env.context.get('ignore_mo_ids', [])
+        self.mo_id.filtered(
+            lambda mo: mo.state in ['confirmed', 'progress'] and mo.id not in ignored_mo_ids
+        ).move_raw_ids._trigger_scheduler()
 
         return {}

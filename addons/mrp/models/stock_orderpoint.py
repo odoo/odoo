@@ -170,10 +170,11 @@ class StockWarehouseOrderpoint(models.Model):
     def _post_process_scheduler(self):
         """ Confirm the productions only after all the orderpoints have run their
         procurement to avoid the new procurement created from the production conflict
-        with them. """
+        with them. The productions being confirmed are confirmed again, as new needs
+        can have been merged into them. """
         self.env['mrp.production'].sudo().search([
             ('orderpoint_id', 'in', self.ids),
             ('move_raw_ids', '!=', False),
-            ('state', '=', 'draft'),
+            '|', ('state', '=', 'draft'), ('id', 'in', self.env.context.get('ignore_mo_ids', [])),
         ]).action_confirm()
         return super()._post_process_scheduler()
