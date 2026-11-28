@@ -6,18 +6,11 @@ import { LanguageSelector } from "@html_editor/main/translate/language_selector"
 import { withSequence } from "@html_editor/utils/resource";
 import { user } from "@web/core/user";
 import { isContentEditable } from "@html_editor/utils/dom_info";
+import { parseHTML } from "@html_editor/utils/html";
 
 export class TranslatePlugin extends Plugin {
     static id = "translate";
-    static dependencies = [
-        "baseContainer",
-        "selection",
-        "history",
-        "dom",
-        "sanitize",
-        "dialog",
-        "split",
-    ];
+    static dependencies = ["selection", "history", "dom", "sanitize", "dialog", "split"];
     /** @type {import("plugins").EditorResources} */
     resources = {
         toolbar_groups: withSequence(45, {
@@ -46,11 +39,34 @@ export class TranslatePlugin extends Plugin {
         return cannotReplace || isEmpty;
     }
 
-    openDialog(params = {}) {
+    /**
+     * Return the HTML of the selection, without the editor-specific markup.
+     *
+     * @param {Range} selection
+     * @returns {string}
+     */
+    getSelectedHtml(selection) {
+        const container = this.document.createElement("div");
+        container.append(selection.cloneContents());
+        const cleaned = this.processThrough("clean_for_save_processors", container);
+        // The editor version is meant for the saved document, not for a part
+        // of it.
+        delete cleaned.firstElementChild?.dataset.oeVersion;
+        return cleaned.innerHTML;
+    }
+
+    openDialog({ targetLang }) {
         const selection = this.dependencies.selection.getEditableSelection();
-        const dialogParams = {
-            insert: (content) => {
-                const insertedNodes = this.dependencies.dom.insert(content);
+        const sanitize = this.dependencies.sanitize.sanitize;
+        this.dependencies.dialog.addDialog(TranslateDialog, {
+            document: this.document,
+            originalHtml: this.getSelectedHtml(selection),
+            sanitize,
+            targetLang,
+            onConfirm: (translatedHtml) => {
+                const fragment = parseHTML(this.document, translatedHtml || "");
+                sanitize(fragment);
+                const insertedNodes = this.dependencies.dom.insert(fragment);
                 this.dependencies.history.commit();
                 // Add a frame around the inserted content to highlight it for 2
                 // seconds.
@@ -88,17 +104,6 @@ export class TranslatePlugin extends Plugin {
                     setTimeout(() => div.remove(), 2000);
                 }
             },
-            ...params,
-        };
-        dialogParams.baseContainer = this.dependencies.baseContainer.getDefaultNodeName();
-        // collapse to end
-        const sanitize = this.dependencies.sanitize.sanitize;
-        const originalText = selection.toString() || "";
-        this.dependencies.dialog.addDialog(TranslateDialog, {
-            ...dialogParams,
-            originalText,
-            sanitize,
-            document: this.document,
         });
         if (this.services.ui.isSmall) {
             // TODO: Find a better way and avoid modifying range
