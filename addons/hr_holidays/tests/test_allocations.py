@@ -884,3 +884,64 @@ class TestAllocations(TestHrHolidaysCommon):
         self.employee.invalidate_recordset(['allocations_count', 'allocation_display'])
         self.assertEqual(self.employee.allocation_display, '0', "nothing accrued yet")
         self.assertEqual(self.employee.allocations_count, 1, "but the employee has an allocation")
+
+    def test_allocation_custom_name_kept_on_duration_change(self):
+        """ A name given together with a new duration is kept; without a given name, the
+            generated title follows the duration. """
+        allocation = self.env['hr.leave.allocation'].create({
+            'name': 'Custom name',
+            'employee_id': self.employee.id,
+            'work_entry_type_id': self.work_entry_type_paid.id,
+            'number_of_days_display': 3,
+        })
+        self.assertEqual(allocation.name, 'Custom name')
+
+        allocation.write({'name': 'Other custom name', 'number_of_days_display': 5})
+        self.assertEqual(allocation.number_of_days, 5)
+        self.assertEqual(allocation.name, 'Other custom name')
+
+        allocation.write({'number_of_days_display': 6})
+        self.assertEqual(allocation.name, 'Other custom name', "a custom name is kept when only the duration is saved")
+
+        allocation.write({'name': False})
+        allocation.write({'number_of_days_display': 7})
+        self.assertEqual(allocation.name, allocation._get_title(), "an emptied name is generated again")
+        self.assertIn('7', allocation.name)
+
+    def test_allocation_generated_name_any_language(self):
+        """ A title generated in another installed language is still recognized as generated. """
+        self.env['res.lang']._activate_lang('fr_FR')
+        self.work_entry_type_paid.with_context(lang='fr_FR').name = 'Congés payés'
+        allocation = self.env['hr.leave.allocation'].with_context(lang='fr_FR').create({
+            'employee_id': self.employee.id,
+            'work_entry_type_id': self.work_entry_type_paid.id,
+            'number_of_days_display': 3,
+        })
+        self.assertIn('Congés payés', allocation.name)
+
+        allocation.with_context(lang='en_US').write({'number_of_days_display': 4})
+        self.assertIn('Paid Time Off', allocation.name)
+        self.assertIn('4', allocation.name)
+
+    def test_allocation_generated_name_follows_duration_in_form(self):
+        """ The form sends the name computed before the duration changed: it is still a
+            generated title, so it follows the duration on create and on later edits. """
+        view = 'hr_holidays.hr_leave_allocation_view_form_manager'
+        with Form(self.env['hr.leave.allocation'], view) as allocation_form:
+            allocation_form.employee_id = self.employee
+            allocation_form.work_entry_type_id = self.work_entry_type_paid
+            allocation_form.number_of_days_display = 3
+        allocation = allocation_form.record
+        self.assertEqual(allocation.name, allocation._get_title())
+        self.assertIn('3', allocation.name)
+
+        with Form(allocation, view) as allocation_form:
+            allocation_form.number_of_days_display = 5
+        self.assertEqual(allocation.name, allocation._get_title())
+        self.assertIn('5', allocation.name)
+
+        with Form(allocation, view) as allocation_form:
+            allocation_form.name = 'Custom name'
+        with Form(allocation, view) as allocation_form:
+            allocation_form.number_of_days_display = 6
+        self.assertEqual(allocation.name, 'Custom name')
