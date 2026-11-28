@@ -474,8 +474,11 @@ class ResourceCalendar(models.Model):
             leave_date_to = leave.date_to
             for tz, resources in resources_per_tz.items():
                 for resource in chain(resources, (self.env['resource.resource'],) if self else ()):
-                    if leave_resource.id not in [False, resource.id] or (not leave_resource and resource and resource.company_id != leave_company):
+                    if leave_resource.id not in [False, resource.id]:
                         continue
+                    if not leave_resource and resource:
+                        if resource.company_id and leave_company and resource.company_id != leave_company:
+                            continue
                     if (tz, start_dt) in tz_dates:
                         start = tz_dates[tz, start_dt]
                     else:
