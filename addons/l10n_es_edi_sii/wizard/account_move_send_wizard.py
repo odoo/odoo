@@ -8,11 +8,13 @@ class AccountMoveSendWizard(models.TransientModel):
     @api.depends('move_id')
     def _compute_extra_edi_checkboxes(self):
         super()._compute_extra_edi_checkboxes()
-
+        all_extra_edis = self._get_all_extra_edis()
         for wizard in self:
-            if wizard.extra_edi_checkboxes:
-                checkboxes = dict(wizard.extra_edi_checkboxes)
-                for key in ('es_edi_sii', 'es_edi_sii_resend'):
-                    if key in checkboxes:
-                        checkboxes[key]['checked'] = False
-                wizard.extra_edi_checkboxes = checkboxes
+            wizard.extra_edi_checkboxes = {
+                **(wizard.extra_edi_checkboxes or {}),
+                **{
+                    edi_key: {'checked': False, 'label': all_extra_edis[edi_key]['label'], 'help': all_extra_edis[edi_key].get('help')}
+                    for edi_key in ('es_edi_sii', 'es_edi_sii_resend')
+                    if all_extra_edis[edi_key]['is_applicable'](wizard.move_id)
+                },
+            }
