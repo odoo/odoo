@@ -465,6 +465,7 @@
                     <field name="tag_ids" string="Tags"/>
                     <field name="origin"/>
                     <filter name="my_purchases" string="My Purchases" domain="[('user_id', '=', uid)]"/>
+                    <separator/>
                     <filter string="Starred" name="starred" domain="[('priority', '=', '1')]"/>
                     <separator/>
                     <filter name="to_approve" string="To Approve" domain="[('state', '=', 'to approve')]" invisible="1"/>
@@ -517,6 +518,7 @@
                     <field name="activity_user_id" string="Activities of"/>
                     <field name="activity_type_id" string="Activity type"/>
                     <filter name="my_Orders" string="My Orders" domain="[('user_id', '=', uid)]"/>
+                    <separator/>
                     <filter string="Starred" name="starred" domain="[('priority', '=', '1')]"/>
                     <separator/>
                     <filter name="not_invoiced" string="Waiting Bills" domain="[('invoice_status', '=', 'to invoice')]" help="Purchase orders that include lines not invoiced."/>

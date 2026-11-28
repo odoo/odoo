@@ -35,8 +35,7 @@ export class PurchaseDashBoard extends Component {
      * the filters found in `filter_name` attibute from button pressed
      */
     setSearchContext(ev) {
-        const filter_name = ev.currentTarget.getAttribute("filter_name");
-        const filters = filter_name.split(",");
+        const filters = ev.target.closest("[filter_name]").getAttribute("filter_name").split(",");
         const searchItems = this.env.searchModel.getSearchItems((item) =>
             filters.includes(item.name)
         );
