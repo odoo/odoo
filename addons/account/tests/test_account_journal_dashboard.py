@@ -3,7 +3,7 @@ import json
 from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
 
-from odoo import Command
+from odoo import Command, fields
 from odoo.addons.account.tests.test_account_journal_dashboard_common import TestAccountJournalDashboardCommon
 from odoo.tests import tagged
 from odoo.tools.misc import format_amount
@@ -383,6 +383,52 @@ class TestAccountJournalDashboard(TestAccountJournalDashboardCommon):
         self.assertEqual(dashboard_data['nb_misc_operations'], 0)
         self.assertEqual(dashboard_data['account_balance'], (bank_journal.currency_id or self.env.company.currency_id).format(100))
 
+    def test_cashflow_kpi_with_default_account_as_outstanding_account(self):
+        """
+        Payments whose outstanding account is the journal's own default/bank account never get
+        reconciled against any account.bank.statement.line. The cashflow KPI must still take them
+        into account since the money did move in/out of the bank account.
+
+        This must hold on top of the "old" case that was already working before the fix: a bank
+        statement line whose own move directly carries the liquidity movement.
+        """
+        bank_journal = self.company_data['default_journal_bank'].copy()
+        bank_journal.outbound_payment_method_line_ids[0].payment_account_id = bank_journal.default_account_id
+        bank_journal.inbound_payment_method_line_ids[0].payment_account_id = bank_journal.default_account_id
+
+        cashflow_before = self.env['account.journal']._get_cashflow_kpi_amount()
+
+        inbound_payment = self.env['account.payment'].create({
+            'amount': 100,
+            'payment_type': 'inbound',
+            'partner_type': 'customer',
+            'journal_id': bank_journal.id,
+        })
+        outbound_payment = self.env['account.payment'].create({
+            'amount': 40,
+            'payment_type': 'outbound',
+            'partner_type': 'supplier',
+            'journal_id': bank_journal.id,
+        })
+        (inbound_payment + outbound_payment).action_post()
+
+        # Neither payment is ever reconciled against a bank statement line.
+        self.assertFalse((inbound_payment.move_id + outbound_payment.move_id).line_ids.statement_line_id)
+
+        # A statement line not linked to any payment: its own move already carried the liquidity
+        # movement and was already picked up by the KPI before the fix.
+        statement_line = self.env['account.bank.statement.line'].create({
+            'payment_ref': 'ref',
+            'journal_id': bank_journal.id,
+            'amount': -25,
+            'date': fields.Date.context_today(self.env['account.journal']),
+        })
+        self.assertTrue(statement_line.move_id.line_ids.statement_line_id)
+
+        cashflow_after = self.env['account.journal']._get_cashflow_kpi_amount()
+        # 100 (inbound payment) - 40 (outbound payment) - 25 (outgoing statement line)
+        self.assertEqual(cashflow_after - cashflow_before, 35)
+
     def test_bank_journal_different_currency(self):
         """Test that the misc operations amount on the dashboard is correct
         for a bank account in another currency."""
@@ -580,7 +626,7 @@ class TestAccountJournalDashboard(TestAccountJournalDashboardCommon):
         profit_and_loss_action = self.env.ref('account_reports.action_account_report_pl', raise_if_not_found=False)
         aged_receivable_action = self.env.ref('account_reports.action_account_report_ar', raise_if_not_found=False)
         aged_payable_action = self.env.ref('account_reports.action_account_report_ap', raise_if_not_found=False)
-        cashflow_analysis_action = self.env.ref('account.action_account_cashflow_analysis')
+        cashflow_analysis_action = self.env.ref('account.action_account_cashflow_analysis_move_line')
         invoice_layout_action = self.env.ref('account.action_base_document_layout_configurator')
         kpis = self.env['account.journal'].get_account_dashboard_kpis()
         self.assertEqual(kpis, [{
