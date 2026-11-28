@@ -1265,6 +1265,7 @@ class Website(models.CachedModel):
             })
             for submenu in top_menu.child_id:
                 copy_menu(submenu, new_top_menu)
+        self.invalidate_recordset(['menu_id'])
 
     @api.model
     def new_page(self, name=False, add_menu=False, template='website.default_page', ispage=True, namespace=None, page_values=None, menu_values=None, sections_arch=None, page_title=None):
