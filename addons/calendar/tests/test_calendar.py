@@ -620,3 +620,13 @@ class TestCalendar(SavepointCaseWithUserDemo):
         self.assertIn('Organized by', event_single.description)
         self.assertIn('Contact Details', event_single.description)
         self.assertIn('Attendee A', event_single.description)
+
+        # Orginazer is the only attendde: no contact description
+        event_alone = self.env['calendar.event'].with_user(organizer).create({
+            'name': "Personnal Event",
+            'start': '2026-04-01 12:00:00',
+            'stop': '2026-04-01 13:00:00',
+            'user_id': organizer.id,
+            'partner_ids': [Command.link(organizer.partner_id.id)],
+        })
+        self.assertFalse(event_alone.description, 'Event should have no contact description when orginazer is alone (Personnal event)')
