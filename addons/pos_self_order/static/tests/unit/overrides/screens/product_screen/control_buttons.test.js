@@ -100,3 +100,31 @@ describe("clickDynamicQr", () => {
         expect(syncCalled).toBe(false);
     });
 });
+
+test("prints the dynamic QR on the pro forma receipt", async () => {
+    const store = await setupPoSEnvForSelfOrder();
+    store.config.self_ordering_mode = "mobile";
+    store.config.self_ordering_service_mode = "dynamic_qr";
+    await getFilledOrder(store);
+    onRpc("pos.config", "get_dynamic_qr_url", () => "http://example.com/pos-self/1/order/abc");
+    let receiptData = null;
+    patchWithCleanup(store.ticketPrinter, {
+        async selectPrinter() {
+            return this.receiptPrinters[0];
+        },
+        async generateIframe(template, data) {
+            receiptData = data;
+            return document.createElement("iframe");
+        },
+        async generateImage() {
+            return "fake_image_data";
+        },
+        print() {
+            return { successful: true };
+        },
+        printWeb() {},
+    });
+    const comp = await mountWithCleanup(ControlButtons, { props: {} });
+    await comp.clickPrintBill();
+    expect(receiptData.image.dynamic_qr_code).toInclude("data:image");
+});

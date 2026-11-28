@@ -9,6 +9,8 @@ patch(GeneratePrinterData.prototype, {
     generateReceiptData() {
         const data = super.generateReceiptData(...arguments);
         data.conditions.from_self = ["mobile", "kiosk"].includes(this.order.source);
+        const dynamicQrUrl = !this.order.finalized && this.order.uiState.dynamicQrUrl;
+        data.image.dynamic_qr_code = dynamicQrUrl ? this.generateQrCode(dynamicQrUrl) : false;
         return data;
     },
     generatePreparationData(categoryIdsSet, opts = { orderChange: null }) {
