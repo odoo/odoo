@@ -126,6 +126,30 @@ class PaymentProvider(models.Model):
 
     # === CRUD METHODS === #
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        providers = super().create(vals_list)
+        providers._check_stripe_webhook_secret_required()
+        return providers
+
+    def write(self, vals):
+        result = super().write(vals)
+        self._check_stripe_webhook_secret_required()
+        return result
+
+    def _check_stripe_webhook_secret_required(self):
+        live_stripe_provider_wo_secret = self.filtered(
+            lambda provider: (
+                provider.code == "stripe"
+                and provider.is_live
+                and not provider.stripe_webhook_secret
+            )
+        )
+        if live_stripe_provider_wo_secret:
+            raise ValidationError(
+                self.env._("Webhook secret is required. Use the button to generate it.")
+            )
+
     def _get_default_payment_method_codes(self):
         """Override of `payment` to return the default payment method codes."""
         self.ensure_one()
@@ -205,7 +229,7 @@ class PaymentProvider(models.Model):
         """
         self.ensure_one()
 
-        if self.stripe_webhook_secret:
+        if self.stripe_webhook_secret and self.stripe_webhook_secret != " ":
             message = self.env._("Your Stripe Webhook is already set up.")
             notification_type = "warning"
         elif not self.stripe_secret_key:
