@@ -427,7 +427,7 @@ export function clickPartnerButton() {
     ];
 }
 
-export function clickCustomer(name, pressEnter = false) {
+export function clickCustomer(name, pressEnter = true) {
     return [...PartnerList.searchCustomerValue(name, pressEnter), PartnerList.clickPartner(name)];
 }
 
