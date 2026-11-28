@@ -105,6 +105,7 @@
             'point_of_sale/static/src/scss/pos_dashboard.css',
             'point_of_sale/static/src/backend/tours/point_of_sale.js',
             'point_of_sale/static/src/backend/pos_onboarding_scenarios/*',
+            'point_of_sale/static/src/backend/pos_dashboard_graph/*',
             ('remove', 'point_of_sale/static/src/backend/pos_onboarding_scenarios/*.dark.css'),
             'point_of_sale/static/src/backend/lna_checklist/*',
             'point_of_sale/static/src/backend/pos_payment_provider_cards/*',
@@ -146,6 +147,7 @@
             'web/static/src/core/dialog/dialog.css',
             'point_of_sale/static/src/backend/views/**/*',
             'point_of_sale/static/src/backend/print_receipt/**/*',
+            'point_of_sale/static/src/backend/pos_dashboard_graph/pos_dashboard_graph_field.js',
 
             'point_of_sale/static/src/customer_display/**/*',
             ('remove', 'point_of_sale/static/src/customer_display/root.js'),
