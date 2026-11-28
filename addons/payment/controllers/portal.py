@@ -200,6 +200,7 @@ class PaymentPortal(portal.CustomerPortal):
         company_id,
         partner_id,
         amount,
+        billing_partner_id=None,
         currency_id=None,
         force_tokenization=False,
         is_express_checkout=False,
@@ -211,6 +212,8 @@ class PaymentPortal(portal.CustomerPortal):
         :param int company_id: The company to which providers must belong, as a `res.company` id
         :param int partner_id: The partner making the payment, as a `res.partner` id
         :param float amount: The amount to pay (`0` for validation transactions)
+        :param int billing_partner_id: The billing address of the document being paid, as a
+                                       `res.partner` id
         :param int currency_id: The payment currency, as a `res.currency` id
         :param bool force_tokenization: Whether providers and methods must allow tokenization
         :param bool is_express_checkout: Whether providers and methods must allow express checkout
@@ -242,6 +245,7 @@ class PaymentPortal(portal.CustomerPortal):
         # Find available payment methods
         payment_methods_sudo = providers_sudo._find_available_payment_methods(
             partner_id,
+            billing_partner_id=billing_partner_id,
             currency_id=currency_id,
             force_tokenization=force_tokenization,
             is_express_checkout=is_express_checkout,

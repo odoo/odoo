@@ -546,6 +546,7 @@ REPORT_REASONS_MAPPING = {
     "incompatible_currency": _lt("Incompatible currency"),
     "incompatible_website": _lt("Incompatible website"),
     "manual_capture_not_supported": _lt("Manual capture not supported"),
+    "missing_billing_address": _lt("Missing or incomplete billing address"),
     "tokenization_not_supported": _lt("Tokenization not supported"),
     "validation_not_supported": _lt("Tokenization without payment no supported"),
 }

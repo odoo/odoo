@@ -47,6 +47,28 @@ class PaymentTransaction(models.Model):
         for trans in self:
             trans.sale_order_ids_nbr = len(trans.sale_order_ids)
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        """Override of `payment` to fill in the billing and delivery addresses from the order.
+
+        This is only done as a fallback: flows that already know their billing/delivery partner set
+        `billing_partner_id`/`delivery_partner_id` themselves and are left untouched.
+        """
+        for values in vals_list:
+            if values.get("billing_partner_id") or values.get("delivery_partner_id"):
+                continue
+            # Extract the sales order id(s) from the X2M commands.
+            command_list = values.get("sale_order_ids") or []
+            order_ids = self._fields["sale_order_ids"].convert_to_cache(command_list, self.browse())
+            if not order_ids:
+                continue
+            order = self.env["sale.order"].sudo().browse(order_ids[:1]).exists()
+            values.update({
+                "billing_partner_id": order.partner_invoice_id.id,
+                "delivery_partner_id": order.partner_shipping_id.id,
+            })
+        return super().create(vals_list)
+
     def _post_process(self):
         """Override of `payment` to add Sales-specific logic to the post-processing.
 

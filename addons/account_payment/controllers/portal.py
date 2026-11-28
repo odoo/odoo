@@ -130,6 +130,7 @@ class PortalAccount(portal.PortalAccount, PaymentPortal):
             invoice_company.id,
             partner_sudo.id,
             invoices_data['total_amount'],
+            billing_partner_id=invoices_data['partner'].id,
             currency_id=invoices_data['currency'].id,
             **kwargs,
         )

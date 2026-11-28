@@ -34,6 +34,31 @@ class PaymentTransaction(models.Model):
         for tx in self:
             tx.invoices_count = tx_data.get(tx.id, 0)
 
+    # === CRUD METHODS ===#
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        """ Override of `payment` to fill in the billing and delivery addresses from the invoice.
+
+        This is only done as a fallback: flows that already know their billing/delivery partner
+        (e.g. `sale`) set `billing_partner_id`/`delivery_partner_id` themselves and are left
+        untouched.
+        """
+        for values in vals_list:
+            if values.get('billing_partner_id') or values.get('delivery_partner_id'):
+                continue
+            # Extract the invoice id(s) from the X2M commands.
+            command_list = values.get('invoice_ids') or []
+            invoice_ids = self._fields['invoice_ids'].convert_to_cache(command_list, self.browse())
+            if not invoice_ids:
+                continue
+            invoice = self.env['account.move'].sudo().browse(invoice_ids[:1]).exists()
+            values.update({
+                'billing_partner_id': invoice.partner_id.id,
+                'delivery_partner_id': invoice.partner_shipping_id.id,
+            })
+        return super().create(vals_list)
+
     #=== ACTION METHODS ===#
 
     def action_view_invoices(self):
