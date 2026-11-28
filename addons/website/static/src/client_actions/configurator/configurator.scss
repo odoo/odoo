@@ -174,6 +174,14 @@
                 content: '';
             }
 
+            .o_configurator_typing_text {
+                @include media-breakpoint-up(lg) {
+                    // The text column is half the viewport: scale with it so
+                    // each part of the sentence stays on one line.
+                    font-size: clamp(20px, 2vw, 40px);
+                }
+            }
+
             .dropdown, .industry_selection, .custom-ui-autocomplete {
                 font-weight: 500;
                 cursor: pointer;
@@ -221,7 +229,11 @@
                 &::after {
                     content: attr(data-value) '|';
                     display: inline-block;
+                    // Match the input (font weight and `pe-3`) so the label
+                    // is sized to fit the selected industry.
+                    padding-right: map-get($spacers, 3);
                     overflow: hidden;
+                    font-weight: $font-weight-normal;
                     opacity: 0;
                 }
             }
@@ -272,6 +284,11 @@
             .dropdown-item, .fa-angle-down, .ui-menu-item a, .ui-menu-item a.ui-state-active {
                 font-size: .5em;
                 font-weight: inherit;
+            }
+
+            .dropdown-item, .ui-menu-item a, .ui-menu-item a.ui-state-active {
+                // Keep the menus readable when the sentence font scales down.
+                font-size: unquote("max(.5em, #{$font-size-base})");
             }
 
             .custom-ui-autocomplete {
