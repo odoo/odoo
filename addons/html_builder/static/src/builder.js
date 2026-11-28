@@ -247,8 +247,14 @@ export class Builder extends Component {
             editor: this.editor,
             editorBus: this.editorBus,
             triggerDomUpdated: this.triggerDomUpdated.bind(this),
+<<<<<<< 31bcd537dd80d69414056d9a5908023da7b0d468
             editColorCombination: this.editColorCombination.bind(this),
             editShadow: this.editShadow.bind(this),
+||||||| 439a87cce19fb4a27cd901807f31d13299e13659
+            editColorCombination: this.editColorCombination.bind(this),
+=======
+            editColorCombination: this.ThemeTab ? this.editColorCombination.bind(this) : undefined,
+>>>>>>> 699764b80424e16f62d54603e29048654dc6fead
         });
         onWillDestroy(() => {
             this.editor.destroy();
