@@ -912,6 +912,37 @@
             </field>
         </record>
 
+        <record id="project_task_view_card_side_panel" model="ir.ui.view">
+            <field name="name">project.task.view.card.side.panel</field>
+            <field name="model">project.task</field>
+            <field name="arch" type="xml">
+                <card>
+                    <field name="allow_milestones"/>
+                    <templates>
+                        <t t-name="card" class="px-3 py-2">
+                            <main class="gap-1">
+                                <header name="card_header" class="d-flex align-items-baseline gap-2">
+                                    <field name="name" class="fw-bold text-truncate"/>
+                                    <field t-if="record.allocated_hours.raw_value" name="allocated_hours" widget="float_time"
+                                            class="ms-auto text-nowrap flex-shrink-0"/>
+                                </header>
+                                <footer>
+                                    <field name="milestone_id" t-if="record.allow_milestones.raw_value and record.milestone_id.raw_value" class="text-truncate" context="{'display_milestone_deadline': False}"/>
+                                    <div class="ms-auto d-flex align-items-center gap-1 flex-shrink-0">
+                                        <field name="priority" widget="priority" readonly="1"/>
+                                        <field name="user_ids" widget="many2many_avatar_user" readonly="1" t-if="record.user_ids.raw_value.length"/>
+                                        <div t-else="" class="o_project_task_card_empty_assignee">
+                                           <i class="oi lh-1 text-muted" data-icon="block" role="img" aria-label="Unassigned" title="Unassigned"/>
+                                        </div>
+                                    </div>
+                                </footer>
+                            </main>
+                        </t>
+                    </templates>
+                </card>
+            </field>
+        </record>
+
         <record id="view_task_calendar" model="ir.ui.view">
             <field name="name">project.task.calendar</field>
             <field name="model">project.task</field>
@@ -935,6 +966,7 @@
                     <field name="stage_id" invisible="not project_id or not stage_id" widget="task_stage_with_state_selection" filters="1"/>
                     <field name="personal_stage_id" string="Personal Stage" options="{'no_open': True}" invisible="project_id or not personal_stage_id"/>
                     <field name="task_properties" invisible="not task_properties"/>
+                    <schedulecard card_id="%(project.project_task_view_card_side_panel)d"/>
                 </calendar>
             </field>
         </record>
