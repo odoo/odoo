@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import fnmatch
 import werkzeug
 import pytz
 import babel.dates
@@ -7,6 +8,7 @@ from collections import defaultdict
 
 from odoo import http, fields, tools, models
 from odoo.addons.website.controllers.main import QueryURL
+from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools import html2plaintext
@@ -224,9 +226,19 @@ class WebsiteBlog(http.Controller):
         # Compatibility pre-v14
         return request.redirect("/blog/%s/%s" % (request.env['ir.http']._slug(blog), request.env['ir.http']._slug(blog_post)), code=301)
 
+    def sitemap_blog_post(env, rule, query_string):
+        BlogPost = env['blog.post']
+        domain = sitemap_qs2dom(query_string, '/blog', BlogPost._rec_name)
+        domain &= Domain('blog_id', 'any', env['website'].get_current_website().website_domain() & Domain('active', '=', True))
+        slug = env['ir.http']._slug
+        for blog_post in BlogPost.search_fetch(domain, ['name', 'seo_name', 'blog_id']):
+            url = f'/blog/{slug(blog_post.blog_id)}/{slug(blog_post)}'
+            if not query_string or fnmatch.fnmatch(url.lower(), '*%s*' % '*'.join(query_string.split('/'))):
+                yield {'loc': url}
+
     @http.route([
         '''/blog/<model("blog.blog"):blog>/<model("blog.post", "[('blog_id','=',blog.id)]"):blog_post>''',
-    ], type='http', auth="public", website=True, sitemap=True)
+    ], type='http', auth="public", website=True, sitemap=sitemap_blog_post)
     def blog_post(self, blog, blog_post, tag_id=None, page=1, enable_editor=None, **post):
         """ Prepare all values to display the blog.
 

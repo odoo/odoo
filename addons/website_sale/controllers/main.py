@@ -192,7 +192,11 @@ class WebsiteSale(payment_portal.PaymentPortal):
         Category = env['product.public.category']
         dom = sitemap_qs2dom(qs, f'{SHOP_PATH}/category', Category._rec_name)
         dom &= website.website_domain()
-        for cat in Category.search(dom):
+        categories = Category.search(dom)
+        # The slug of a category reads its parents, whose read access is checked
+        # on `has_published_products` for public and portal users: compute it in one go.
+        categories.mapped('has_published_products')
+        for cat in categories:
             loc = f'{SHOP_PATH}/category/{env["ir.http"]._slug(cat)}'
             if not qs or qs.lower() in loc:
                 yield {'loc': loc}

@@ -1,11 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import fnmatch
 from ast import literal_eval
 from collections import OrderedDict
 from random import randint, sample
 from werkzeug.exceptions import Forbidden
 
 from odoo import http
+from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website_event.controllers.main import WebsiteEventController
 from odoo.fields import Domain
 from odoo.http import request
@@ -125,8 +127,18 @@ class ExhibitorController(WebsiteEventController):
     # FRONTEND FORM
     # ------------------------------------------------------------
 
+    def sitemap_event_exhibitor(env, rule, query_string):
+        Sponsor = env['event.sponsor']
+        domain = sitemap_qs2dom(query_string, '/event/exhibitor', Sponsor._rec_name)
+        domain &= Domain('event_id', 'any', [('exhibitor_menu', '=', True), ('active', '=', True)])
+        slug = env['ir.http']._slug
+        for sponsor in Sponsor.search_fetch(domain, ['name', 'event_id']):
+            url = f'/event/{slug(sponsor.event_id)}/exhibitor/{slug(sponsor)}'
+            if not query_string or fnmatch.fnmatch(url.lower(), '*%s*' % '*'.join(query_string.split('/'))):
+                yield {'loc': url}
+
     @http.route(['''/event/<model("event.event", "[('exhibitor_menu', '=', True)]"):event>/exhibitor/<model("event.sponsor", "[('event_id', '=', event.id)]"):sponsor>'''],
-                type='http', auth="public", website=True, sitemap=True)
+                type='http', auth="public", website=True, sitemap=sitemap_event_exhibitor)
     def event_exhibitor(self, event, sponsor, **options):
         if not sponsor.has_access('read'):
             raise Forbidden()
