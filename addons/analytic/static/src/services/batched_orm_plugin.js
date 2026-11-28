@@ -1,14 +1,29 @@
-import { registry } from "@web/core/registry";
 import { ORM } from "@web/core/orm_plugin";
 import { unique } from "@web/core/utils/arrays";
+import { Plugin, usePlugin } from "@odoo/owl";
+import { services } from "@web/core/services";
 
-class RequestBatcherORM extends ORM {
-    constructor() {
-        super();
-        this.searchReadBatches = {};
-        this.searchReadBatchId = 1;
-        this.batches = {};
+/**
+ * @typedef {{
+ *   deferred: PromiseWithResolvers;
+ *   scheduled: boolean;
+ *   ids: number[];
+ * }} Batch
+ */
+
+export class BatchedOrmPlugin extends Plugin {
+    static scoped(self, scope) {
+        return Object.assign(Object.create(self), {
+            read(...args) {
+                return scope.run(() => self.read(...args));
+            },
+        });
     }
+
+    #orm = usePlugin(ORM);
+
+    /** @type {Record<string, Batch>} */
+    #batches = {};
 
     /**
      * @param {number[]} ids
@@ -16,23 +31,23 @@ class RequestBatcherORM extends ORM {
      * @param {Function} callback
      * @returns {Promise<any>}
      */
-    async batch(ids, keys, callback) {
+    async #batch(ids, keys, callback) {
         const key = JSON.stringify(keys);
-        let batch = this.batches[key];
+        let batch = this.#batches[key];
         if (!batch) {
             batch = {
                 deferred: Promise.withResolvers(),
                 scheduled: false,
                 ids: [],
             };
-            this.batches[key] = batch;
+            this.#batches[key] = batch;
         }
         batch.ids = unique([...batch.ids, ...ids]);
 
         if (!batch.scheduled) {
             batch.scheduled = true;
             Promise.resolve().then(async () => {
-                delete this.batches[key];
+                delete this.#batches[key];
                 let result;
                 try {
                     result = await callback(batch.ids);
@@ -59,29 +74,10 @@ class RequestBatcherORM extends ORM {
      * @returns {Promise<Object[]>}
      */
     async read(resModel, resIds, fields, kwargs) {
-        const records = await this.batch(resIds, ["read", resModel, fields, kwargs], (resIds) =>
-            super.read.call(this.unscoped, resModel, resIds, fields, kwargs)
+        const records = await this.#batch(resIds, ["read", resModel, fields, kwargs], (resIds) =>
+            this.#orm.read(resModel, resIds, fields, kwargs)
         );
         return records.filter((r) => resIds.includes(r.id));
     }
 }
-
-export const batchedOrmService = {
-    async: [
-        "call",
-        "create",
-        "nameGet",
-        "read",
-        "formattedReadGroup",
-        "search",
-        "searchRead",
-        "unlink",
-        "webSearchRead",
-        "write",
-    ],
-    start() {
-        return new RequestBatcherORM();
-    },
-};
-
-registry.category("services").add("batchedOrm", batchedOrmService);
+services.add(BatchedOrmPlugin);

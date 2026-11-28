@@ -29,6 +29,7 @@ import { Field } from "@web/views/fields/field";
 import { formatPercentage } from "@web/views/fields/formatters";
 import { useOpenMany2XRecord } from "@web/views/fields/relational_utils";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
+import { BatchedOrmPlugin } from "@analytic/services/batched_orm_plugin";
 
 export class AnalyticDistribution extends Component {
     static template = "analytic.AnalyticDistribution";
@@ -58,7 +59,7 @@ export class AnalyticDistribution extends Component {
 
     setup(){
         this.orm = useService("orm");
-        this.batchedOrm = useService("batchedOrm");
+        this.batchedOrm = usePlugin(BatchedOrmPlugin);
         this.offlinePlugin = usePlugin(OfflinePlugin);
 
         this.state = proxy({
