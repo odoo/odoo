@@ -502,7 +502,7 @@ class PosPaymentMethod(models.Model):
                 Command.create({
                     'name': self.name,
                     'account_id': partner_account.id,
-                    'partner_id': partner.id,
+                    'partner_id': partner.commercial_partner_id.id,
                     'balance': amount,
                 }),
                 Command.create({

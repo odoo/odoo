@@ -306,6 +306,32 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         move = order.account_move
         self.assertNotIn(move, session.sale_move_ids)
 
+    def test_invoiced_order_payment_reconciled_again(self):
+        """ A payment unreconciled from its invoice pays its own term line again. """
+        self.open_pos_session()
+        order = self.create_pos_order(
+            payment_method=[
+                [self.customer_pm, {'amount': 5.0}],
+                [self.bank_pm, {'amount': 5.6}],
+            ],
+            products=[[self.product_6, {}]],
+            extra_data={
+                'partner_id': self.partner_1.id,
+                'to_invoice': True,
+            },
+        )
+        invoice = order.account_move
+        customer_account_line = invoice.line_ids.filtered(
+            lambda line: line.display_type == 'payment_term' and not line.reconciled,
+        )
+        bank_line = invoice.line_ids.filtered('reconciled')
+        payment = bank_line.matched_credit_ids.credit_move_id
+
+        invoice.js_remove_outstanding_partial(bank_line.matched_credit_ids.id)
+        invoice.js_assign_outstanding_line(payment.id)
+        self.assertEqual(payment.matched_debit_ids.debit_move_id, bank_line)
+        self.assertEqual(customer_account_line.amount_residual, 5.0)
+
     def test_cash_statement_opening_and_closing_consistency(self):
         def open_and_close_session_with_cash_amounts(init, start, end):
             cash_pm = self.pos_config._get_cash_payment_method()
@@ -2352,6 +2378,42 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         # The customer debt moved from the transfer entry to the invoice
         self.assertTrue(transfer_line.reconciled)
         self.assertEqual(invoice.amount_residual, 22.4)
+
+    def test_invoice_after_closing_order_of_contact(self):
+        """
+        The customer receivable lines of an order of a contact are on its company,
+        as any journal item: once undone, the payment of an order invoiced after
+        closing is proposed again on its invoice.
+        """
+        contact = self.env['res.partner'].create({'name': 'Contact', 'parent_id': self.partner_1.id})
+        self.open_pos_session()
+        order = self.create_pos_order(
+            payment_method=[
+                [self.customer_pm, {'amount': 5.0}],
+                [self.cash_pm, {'amount': 5.6}],
+            ],
+            products=[[self.product_6, {}]],
+            extra_data={'partner_id': contact.id},
+        )
+        self.close_session()
+
+        transfer_line = self.env['account.move.line'].search([
+            ('account_id', '=', self.partner_1.property_account_receivable_id.id),
+            ('partner_id', 'child_of', self.partner_1.id),
+            ('move_id.move_type', '=', 'entry'),
+        ])
+        self.assertEqual(transfer_line.partner_id, self.partner_1)
+
+        order.action_pos_order_invoice()
+        invoice = order.account_move
+        self.assertEqual(invoice.amount_residual, 5.0)
+        cash_line = invoice.line_ids.matched_credit_ids.credit_move_id
+        self.assertEqual(cash_line.partner_id, self.partner_1)
+
+        cash_line.move_id.js_remove_outstanding_partial(cash_line.matched_debit_ids.id)
+        self.assertEqual(invoice.amount_residual, 10.6)
+        outstanding = invoice.invoice_outstanding_credits_debits_widget['content']
+        self.assertIn(cash_line.id, [credit['id'] for credit in outstanding])
 
     @mute_logger('odoo.addons.point_of_sale.models.pos_session')
     def test_launch_cron_generate_invoice_period_rollback_on_failure(self):

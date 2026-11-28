@@ -1703,7 +1703,7 @@ class PosOrder(models.Model):
         # that entry instead of registering their payments again.
         globally_invoiced = self.filtered('is_globally_invoiced')
 
-        total_payments_by_session = {}
+        payments_data = []
         for order in self - globally_invoiced:
             payments = order._prepare_account_move_line_data_for_payments(
                 order.partner_id,
@@ -1712,8 +1712,7 @@ class PosOrder(models.Model):
             line_data = [pm['account.move.line'] for pm in payments]
             payment_commands = [Command.create(pm_data) for pm_data in line_data]
             extra_commands = order._prepare_invoice_extra_line_commands(payments)
-            total_payments_by_session.setdefault(order.session_id, [])
-            total_payments_by_session[order.session_id] += payments
+            payments_data += [(order.session_id, payment) for payment in payments]
             vals['line_ids'] += payment_commands + extra_commands
 
         AccountMove = self.env['account.move'].sudo().with_company(company)
@@ -1758,30 +1757,32 @@ class PosOrder(models.Model):
             session._reconcile_partial_reversal_move(orders, invoice, move)
 
         name_str = " - ".join(self.mapped('name')) if len(self) > 1 else self.name
-        all_payment_lines = self.env['account.move.line']
         payment_term_lines = invoice.line_ids.filtered(
             lambda line: line.display_type == 'payment_term',
         )
 
-        for session, payments in total_payments_by_session.items():
-            for payment in payments:
-                metadata = payment['metadata']
-                pm = metadata['payment_method_id']
+        # The payment_term lines are created in the same order as the
+        # payments, pair them so each payment is reconciled with its own
+        # term line: reconciling all of them together could pay the
+        # customer account line, which stays open, with another payment.
+        for (session, payment), term in zip(payments_data, payment_term_lines.sorted('id')):
+            metadata = payment['metadata']
+            pm = metadata['payment_method_id']
 
-                all_payment_lines |= pm._create_payment_line(
-                    session,
-                    metadata['amount'],
-                    self.partner_id.property_account_receivable_id,
-                    f"POS Order {name_str}",
-                    self.partner_id,
-                    metadata['foreign_currency_id'].id,
-                    metadata['amount_currency'],
-                )
-
-        to_reconcile = (payment_term_lines | all_payment_lines).filtered(
-            lambda line: not line.reconciled,
-        )
-        to_reconcile.with_context(skip_invoice_sync=True).reconcile()
+            payment_line = pm._create_payment_line(
+                session,
+                metadata['amount'],
+                self.partner_id.property_account_receivable_id,
+                f"POS Order {name_str}",
+                self.partner_id.commercial_partner_id,
+                metadata['foreign_currency_id'].id,
+                metadata['amount_currency'],
+            )
+            to_reconcile = (payment_line | term).filtered(
+                lambda line: not line.reconciled,
+            )
+            if len(to_reconcile) > 1:
+                to_reconcile.with_context(skip_invoice_sync=True).reconcile()
 
         body = _("This invoice has been created from the point of sale session:%s",
             Markup().join(Markup("%s ") % order._get_html_link() for order in self),

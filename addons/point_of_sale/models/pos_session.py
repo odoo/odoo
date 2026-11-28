@@ -1288,7 +1288,7 @@ class PosSession(models.Model):
             receivable_line = Command.create({
                 'name': _("Payment reversal %s", payment_data['account.move.line']['name']),
                 'account_id': orders.partner_id.property_account_receivable_id.id,
-                'partner_id': orders.partner_id.id,
+                'partner_id': orders.partner_id.commercial_partner_id.id,
                 'currency_id': company.currency_id.id,
                 'amount_currency': -balance,
                 'balance': -balance,
