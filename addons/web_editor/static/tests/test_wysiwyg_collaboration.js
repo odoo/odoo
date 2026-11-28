@@ -176,6 +176,9 @@ export async function createPeers(peers) {
                 if (route === "/web/dataset/call_kw/res.users/read") {
                     return [{ id: 0, name: "admin" }];
                 }
+                if (route === "/web/dataset/call_kw/res.users/has_group") {
+                    return true;
+                }
             }
         });
 
