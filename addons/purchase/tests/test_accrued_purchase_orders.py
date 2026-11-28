@@ -190,14 +190,14 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
 
     def test_error_when_different_currencies_accrued(self):
         """
-        Tests that if two Purchase Orders with different currencies are selected for Accrued Expense Entry, 
+        Tests that if two Purchase Orders with different currencies are selected for Accrued Expense Entry,
         a UserError is raised.
         """
         purchase_orders = self.env['purchase.order'].create([
             {
                 'partner_id': self.partner_a.id,
                 'currency_id': self.company_data['currency'].id,
-            }, 
+            },
             {
                 'partner_id': self.partner_a.id,
                 'currency_id': self.other_currency.id,
@@ -268,3 +268,35 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
 
         accrued_entry = wizard.create_entries()
         self.assertTrue(accrued_entry)
+
+    def test_prepaid_expense_search_both_purchase_methods(self):
+        """ Lines billed ahead of receipt should be found by the `prepaid_expense` filter,
+        whether the product is billed on received or on ordered quantities.
+        """
+        (self.product | self.product_b).purchase_method = 'purchase'
+
+        bill = self.env['account.move'].browse(self.purchase_order.action_create_invoice()['res_id'])
+        bill.invoice_line_ids.quantity = 10
+        bill.invoice_date = '2020-01-01'
+        bill.action_post()
+
+        prepaid_lines = self.env['purchase.order.line'].search([('order_id', '=', self.purchase_order.id), ('prepaid_expense', '=', True)])
+        self.assertRecordValues(prepaid_lines, [
+            {'product_id': self.product_a.id, 'product_qty': 10.0, 'qty_to_invoice': -10.0},
+            {'product_id': self.product_b.id, 'product_qty': 10.0, 'qty_to_invoice': 0.0},
+        ])
+
+        self.purchase_order.write({
+            'order_line': [
+                Command.create({
+                    'product_id': self.product.id,
+                    'product_qty': 1,
+                }),
+            ],
+        })
+
+        prepaid_lines = self.env['purchase.order.line'].search([('order_id', '=', self.purchase_order.id), ('prepaid_expense', '=', True)])
+        self.assertRecordValues(prepaid_lines, [
+            {'product_id': self.product_a.id, 'product_qty': 10.0, 'qty_to_invoice': -10.0},
+            {'product_id': self.product_b.id, 'product_qty': 10.0, 'qty_to_invoice': 0.0},
+        ])
