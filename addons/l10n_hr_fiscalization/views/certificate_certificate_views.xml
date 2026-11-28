@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+    <record id="certificate_certificate_view_search" model="ir.ui.view">
+        <field name="name">certificate_certificate_view_search.inherit.l10n_hr_fiscalization</field>
+        <field name="model">certificate.certificate</field>
+        <field name="inherit_id" ref="certificate.certificate_certificate_view_search"/>
+        <field name="arch" type="xml">
+            <filter name="scope_general" position="after">
+                <filter string="Fiscalization" name="scope_fiscalization" domain="[('scope','=','fiscalization')]" help="Fiscalization certificates"/>
+            </filter>
+        </field>
+    </record>
+
+    <record id="certificate_certificate_view_form" model="ir.ui.view">
+        <field name="name">certificate_certificate_view_form.inherit.l10n_hr_fiscalization</field>
+        <field name="model">certificate.certificate</field>
+        <field name="inherit_id" ref="certificate.certificate_certificate_view_form"/>
+        <field name="arch" type="xml">
+            <field name="scope" position="attributes">
+                <attribute name="invisible">False</attribute>
+            </field>
+        </field>
+    </record>
+</odoo>
