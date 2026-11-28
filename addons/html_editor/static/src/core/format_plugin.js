@@ -1,6 +1,7 @@
 import { prepareUpdate } from "@html_editor/utils/dom_state";
 import { withSequence } from "@html_editor/utils/resource";
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
+import { isMacOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 import { Plugin, shared } from "../plugin";
 import { closestBlock, isBlock } from "../utils/blocks";
@@ -123,7 +124,7 @@ export class FormatPlugin extends Plugin {
                 id: "removeFormat",
                 description: (sel, nodes) =>
                     nodes && this.canRemoveFormat(nodes)
-                        ? _t("Remove Format (Ctrl + Space)")
+                        ? _t("Remove Format")
                         : _t("Selection has no format"),
                 icon: "ink_eraser",
                 run: this.removeAllFormats.bind(this),
@@ -135,13 +136,14 @@ export class FormatPlugin extends Plugin {
             { hotkey: "control+i", commandId: "formatItalic" },
             { hotkey: "control+u", commandId: "formatUnderline" },
             { hotkey: "control+5", commandId: "formatStrikethrough" },
-            { hotkey: "control+space", commandId: "removeFormat" },
+            // On macOS, ⌘ + Space opens Spotlight and never reaches the editor.
+            ...(isMacOS() ? [] : [{ hotkey: "control+space", commandId: "removeFormat" }]),
         ],
         toolbar_groups: withSequence(20, { id: "decoration" }),
         toolbar_items: [
             {
                 id: "bold",
-                description: _t("Bold (Ctrl + B)"),
+                description: _t("Bold"),
                 groupId: "decoration",
                 namespaces: ["compact", "expanded", "text", "table"],
                 commandId: "formatBold",
@@ -150,7 +152,7 @@ export class FormatPlugin extends Plugin {
             },
             {
                 id: "italic",
-                description: _t("Italic (Ctrl + I)"),
+                description: _t("Italic"),
                 groupId: "decoration",
                 namespaces: ["compact", "expanded", "text", "table"],
                 commandId: "formatItalic",
@@ -159,7 +161,7 @@ export class FormatPlugin extends Plugin {
             },
             {
                 id: "underline",
-                description: _t("Underline (Ctrl + U)"),
+                description: _t("Underline"),
                 groupId: "decoration",
                 namespaces: ["compact", "expanded", "text", "table"],
                 commandId: "formatUnderline",
@@ -168,7 +170,7 @@ export class FormatPlugin extends Plugin {
             },
             {
                 id: "strikethrough",
-                description: _t("Strikethrough (Ctrl + 5)"),
+                description: _t("Strikethrough"),
                 groupId: "decoration",
                 commandId: "formatStrikethrough",
                 isActive: () =>

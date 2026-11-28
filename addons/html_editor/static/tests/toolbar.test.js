@@ -1948,10 +1948,23 @@ test("toolbar buttons should have title attribute with translated text", async (
 
     await waitFor(".o-we-toolbar");
 
-    // Check that every button has a title attribute with the translated description
+    // Check that every button has a title attribute with the translated description,
+    // followed by its shortcut if it has one
     for (const button of queryAll(".o-we-toolbar button")) {
-        expect(button).toHaveAttribute("title", "Translated");
+        expect(button).toHaveAttribute("title", /^Translated( \(.+\))?$/);
     }
+});
+
+test("toolbar button titles show the shortcut with the macOS key names", async () => {
+    mockUserAgent("mac");
+    await setupEditor("<p><strong>[test]</strong></p>");
+    await expandToolbar();
+    expect(".btn[name='bold']").toHaveAttribute("title", "Bold (⌘ + B)");
+    expect(".btn[name='remove_format']").toHaveAttribute("title", "Remove Format");
+
+    click(".btn[name='list_selector'].dropdown-toggle");
+    await waitFor(".btn[name='bulleted_list']");
+    expect(".btn[name='bulleted_list']").toHaveAttribute("title", "Bulleted list (⌘ + Shift + 8)");
 });
 
 test.tags("desktop");
