@@ -129,11 +129,11 @@ function getDomain(fieldDef) {
     }
 }
 
-function makeAutoCompleteEditor(fieldDef) {
+function makeAutoCompleteEditor(fieldDef, resModel = getResModel(fieldDef)) {
     return {
         component: DomainSelectorAutocomplete,
         extractProps: ({ value, update }) => ({
-            resModel: getResModel(fieldDef),
+            resModel,
             fieldString: fieldDef.string,
             domain: getDomain(fieldDef),
             update: (value) => update(unique(value)),
@@ -142,6 +142,21 @@ function makeAutoCompleteEditor(fieldDef) {
         }),
         isSupported: (value) => Array.isArray(value),
         defaultValue: () => [],
+    };
+}
+
+function makeSingleAutoCompleteEditor(fieldDef, resModel = getResModel(fieldDef)) {
+    return {
+        component: DomainSelectorSingleAutocomplete,
+        extractProps: ({ value, update }) => ({
+            resModel,
+            fieldString: fieldDef.string,
+            update,
+            resId: value,
+        }),
+        isSupported: () => true,
+        defaultValue: () => false,
+        shouldResetValue: (value) => value !== false && !isId(value),
     };
 }
 
@@ -170,11 +185,8 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
         case "not ilike":
             return makeInputEditor("text");
         case "between": {
-            const editorInfo = getValueEditorInfo(fieldDef, "=", params);
-            const { defaultValue } = getValueEditorInfo(fieldDef, "=", {
-                ...params,
-                forBetween: true,
-            });
+            const editorInfo = getValueEditorInfo(fieldDef, "=", { ...params, forBetween: true });
+            const { defaultValue } = editorInfo;
             return {
                 component: Range,
                 extractProps: ({ value, update }) => ({
@@ -227,6 +239,9 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
         }
         case "in":
         case "not in": {
+            if (fieldDef.name === "id" && fieldDef.type === "integer") {
+                return makeAutoCompleteEditor(fieldDef, params.resModel);
+            }
             switch (fieldDef.type) {
                 case "tags":
                     return makeInputEditor("text");
@@ -275,6 +290,15 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
                 }
             }
         }
+    }
+
+    if (
+        fieldDef.name === "id" &&
+        fieldDef.type === "integer" &&
+        ["=", "!="].includes(operator) &&
+        !params.forBetween
+    ) {
+        return makeSingleAutoCompleteEditor(fieldDef, params.resModel);
     }
 
     const { type } = fieldDef;
@@ -358,18 +382,7 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
             return makeInputEditor("text");
         case "many2one": {
             if (["=", "!="].includes(operator)) {
-                return {
-                    component: DomainSelectorSingleAutocomplete,
-                    extractProps: ({ value, update }) => ({
-                        resModel: getResModel(fieldDef),
-                        fieldString: fieldDef.string,
-                        update,
-                        resId: value,
-                    }),
-                    isSupported: () => true,
-                    defaultValue: () => false,
-                    shouldResetValue: (value) => value !== false && !isId(value),
-                };
+                return makeSingleAutoCompleteEditor(fieldDef);
             } else if (["parent_of", "child_of"].includes(operator)) {
                 return makeAutoCompleteEditor(fieldDef);
             }

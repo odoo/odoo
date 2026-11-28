@@ -930,17 +930,17 @@ test("Add a custom filter", async () => {
     await clickOnButtonAddBranch(-1);
     await clickOnButtonAddRule(-1);
     await contains(".modal footer button").click();
-    expect(getFacetTexts()).toEqual(["Filter", "Id = 1", "Id = 1", "Id = 1"]);
+    expect(getFacetTexts()).toEqual(["Filter", "Id = ( )", "Id = ( )", "Id = ( )"]);
     expect(searchBar.env.searchModel.domain).toEqual([
         "&",
         ["foo", "=", "abc"],
         "&",
-        ["id", "=", 1],
+        ["id", "in", []],
         "&",
-        ["id", "=", 1],
+        ["id", "in", []],
         "|",
-        ["id", "=", 1],
-        ["id", "=", 1],
+        ["id", "in", []],
+        ["id", "in", []],
     ]);
 
     // open again the search menu -> the custom filter should not be displayed
@@ -975,6 +975,7 @@ test("Add a custom filter containing an expression", async () => {
 
 test("Add a custom filter containing a between operator", async () => {
     serverState.debug = "1";
+    Foo._fields.int = fields.Integer({ string: "Int" });
 
     onRpc("/web/domain/validate", () => true);
     const searchBar = await mountWithSearch(SearchBar, {
@@ -989,11 +990,11 @@ test("Add a custom filter containing a between operator", async () => {
     await toggleSearchBarMenu();
     await openAddCustomFilterDialog();
     await contains(`.o_domain_selector_debug_container textarea`).edit(
-        `[("id", "between", [0, 10])]`
+        `[("int", "between", [0, 10])]`
     );
     await contains(".modal footer button").click();
-    expect(getFacetTexts()).toEqual([`Id between 0 and 10`]);
-    expect(searchBar.env.searchModel.domain).toEqual(["&", ["id", ">=", 0], ["id", "<=", 10]]);
+    expect(getFacetTexts()).toEqual([`Int between 0 and 10`]);
+    expect(searchBar.env.searchModel.domain).toEqual(["&", ["int", ">=", 0], ["int", "<=", 10]]);
 });
 
 test("consistent display of ! in debug mode", async () => {
@@ -1014,7 +1015,7 @@ test("consistent display of ! in debug mode", async () => {
     expect(SELECTORS.connectorValue).toHaveText("none");
 
     await contains(".modal footer button").click();
-    expect(getFacetTexts()).toEqual([`! ( Foo = 1 or Id = 2 )`]);
+    expect(getFacetTexts()).toEqual([`! ( Foo = 1 or Id = Missing record )`]);
     expect(searchBar.env.searchModel.domain).toEqual(["!", "|", ["foo", "=", 1], ["id", "=", 2]]);
 });
 
@@ -1121,6 +1122,8 @@ test("display names in facets", async () => {
         { id: 1, name: "John" },
         { id: 2, name: "David" },
     ];
+    Foo._rec_name = "foo";
+    Foo._records = [{ id: 2, foo: "Paul" }];
 
     onRpc("/web/domain/validate", () => true);
     const searchBar = await mountWithSearch(SearchBar, {
@@ -1140,7 +1143,7 @@ test("display names in facets", async () => {
         "Bar = John",
         "Bar = David or Missing record",
         `Bar ${label("set")}`,
-        "Id = 2",
+        "Id = Paul",
     ]);
     expect(searchBar.env.searchModel.domain).toEqual([
         "&",
@@ -1301,7 +1304,9 @@ test("shorten descriptions of long lists", async function () {
         `[("id", "in", [${values}])]`
     );
     await contains(".modal footer button").click();
-    expect(getFacetTexts()).toEqual([`Id = ${values.slice(0, 4).join(" or ")} or ...`]);
+    expect(getFacetTexts()).toEqual([
+        "Id = Missing record or Missing record or Missing record or Missing record or ...",
+    ]);
     expect(searchBar.env.searchModel.domain).toEqual([["id", "in", values]]);
 });
 

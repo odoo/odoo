@@ -229,7 +229,7 @@ test("building a domain with an invalid path (2)", async () => {
     await makeDomainSelector({
         domain: `[(bloup, "=", "abc")]`,
         update(domain) {
-            expect(domain).toBe(`[("id", "=", 1)]`);
+            expect(domain).toBe(`[("id", "in", [])]`);
         },
     });
 
@@ -240,8 +240,52 @@ test("building a domain with an invalid path (2)", async () => {
 
     await clearNotSupported();
     expect(getCurrentPath()).toBe("Id");
-    expect(getCurrentOperator()).toBe(label("="));
-    expect(getCurrentValue()).toBe("1");
+    expect(getCurrentOperator()).toBe(label("in"));
+    expect(getCurrentValue()).toBe("");
+});
+
+test("id field: record selector with operator '='", async () => {
+    await makeDomainSelector({
+        domain: `[("id", "=", 1)]`,
+    });
+    expect(getCurrentPath()).toBe("Id");
+    expect(getCurrentValue()).toBe("first record");
+});
+
+test("id field: multi-record selector with operator 'in'", async () => {
+    await makeDomainSelector({
+        domain: `[("id", "in", [1, 2])]`,
+        update(domain) {
+            expect.step(domain);
+        },
+    });
+    expect(getCurrentPath()).toBe("Id");
+    expect(getCurrentOperator()).toBe(label("in"));
+    expect(getCurrentValue()).toBe("first record second record");
+
+    await editValue("aa", { confirm: false });
+    await runAllTimers();
+    await contains(".dropdown-menu li").click();
+    expect(getCurrentValue()).toBe("first record second record aaa");
+    expect.verifySteps([`[("id", "in", [1, 2, 4])]`]);
+});
+
+test("id field: display names in readonly mode", async () => {
+    await makeDomainSelector({
+        domain: `[("id", "in", [1, 2, 9999])]`,
+        readonly: true,
+    });
+    expect(".o_tree_editor_condition").toHaveText(
+        "Id\n=\nfirst record\nor\nsecond record\nor\nMissing record"
+    );
+});
+
+test("id field on a related model: record selector on the related model", async () => {
+    await makeDomainSelector({
+        domain: `[("product_id.id", "in", [37])]`,
+    });
+    expect(getCurrentPath()).toBe("Product > Id");
+    expect(getCurrentValue()).toBe("xphone");
 });
 
 test("building a domain with an invalid path (3)", async () => {
@@ -543,7 +587,7 @@ test("parse -1", async () => {
             <DomainSelector resModel="'partner'" domain="this.domain" readonly="false"/>
         `;
         setup() {
-            this.domain = `[("id", "=", -1)]`;
+            this.domain = `[("int", "=", -1)]`;
         }
     }
     await mountWithCleanup(Parent);
@@ -1921,7 +1965,7 @@ test("Include archived on empty tree", async () => {
 
     await addNewRule();
     expect(SELECTORS.condition).toHaveCount(1);
-    expect.verifySteps(['["&", ("id", "=", 1), ("active", "in", [True, False])]']);
+    expect.verifySteps(['["&", ("id", "in", []), ("active", "in", [True, False])]']);
 });
 
 test("Include archived not shown when model doesn't have the active field", async () => {
@@ -2082,8 +2126,8 @@ test(`any/not any operator in editable mode (add a rule in empty sub domain)`, a
     expect(getCurrentPath()).toBe("Product");
     expect(getCurrentOperator()).toBe("matches");
     expect(getCurrentPath(1)).toBe("Id");
-    expect(getCurrentOperator(1)).toBe(label("="));
-    expect(SELECTORS.debugArea).toHaveValue(`[("product_id", "any", [("id", "=", 1)])]`);
+    expect(getCurrentOperator(1)).toBe(label("in"));
+    expect(SELECTORS.debugArea).toHaveValue(`[("product_id", "any", [("id", "in", [])])]`);
 });
 
 test(`any/not any operator (readonly) with custom domain as value`, async () => {
@@ -2199,11 +2243,11 @@ test(`any/not any operator (readonly)`, async () => {
         },
         {
             domain: `[("product_id", "any", ["&", ("name", "in", ["JD7", "KDB"]), ("team_id", "not any", ["&", ("id", "=", 17), ("name", "ilike", "mancity")])])]`,
-            text: `Match\nall\nof the following rules:\nProduct\n:\nall\nof:\nProduct Name\n=\nJD7\nor\nKDB\nProduct Team\n: not\nall\nof:\nId\n=\n17\nTeam Name\ncontains\nmancity`,
+            text: `Match\nall\nof the following rules:\nProduct\n:\nall\nof:\nProduct Name\n=\nJD7\nor\nKDB\nProduct Team\n: not\nall\nof:\nId\n=\nMissing record\nTeam Name\ncontains\nmancity`,
         },
         {
             domain: `[("product_id", "any", ["|", ("name", "in", ["JD7", "KDB"]), ("team_id", "not any", ["|", ("id", "=", 17), ("name", "ilike", "mancity")])])]`,
-            text: `Match\nall\nof the following rules:\nProduct\n:\nany\nof:\nProduct Name\n=\nJD7\nor\nKDB\nProduct Team\n: not\nany\nof:\nId\n=\n17\nTeam Name\ncontains\nmancity`,
+            text: `Match\nall\nof the following rules:\nProduct\n:\nany\nof:\nProduct Name\n=\nJD7\nor\nKDB\nProduct Team\n: not\nany\nof:\nId\n=\nMissing record\nTeam Name\ncontains\nmancity`,
         },
     ];
     const parent = await makeDomainSelector({ readonly: true });
@@ -2230,7 +2274,7 @@ test("shorten descriptions of long lists", async () => {
         readonly: true,
     });
     expect(".o_tree_editor_condition").toHaveText(
-        `Id\n=\n${values.slice(0, 4).join("\nor\n")}\nor\n...`
+        "Id\n=\nMissing record\nor\nMissing record\nor\nMissing record\nor\nMissing record\nor\n..."
     );
 });
 
@@ -2307,7 +2351,7 @@ test("Any operator supported even if not proposed", async () => {
         "matches",
     ]);
     await addNewRule();
-    expect.verifySteps([`[("product_id", "any", [("id", "=", 1)])]`]);
+    expect.verifySteps([`[("product_id", "any", [("id", "in", [])])]`]);
 });
 
 test("Hierarchical operators", async () => {
@@ -2318,7 +2362,7 @@ test("Hierarchical operators", async () => {
         },
     });
     await addNewRule();
-    expect.verifySteps(['[("id", "=", 1)]']);
+    expect.verifySteps(['[("id", "in", [])]']);
     await openModelFieldSelectorPopover();
     await contains(
         ".o_model_field_selector_popover .o_model_field_selector_popover_item_name:contains(Product)"

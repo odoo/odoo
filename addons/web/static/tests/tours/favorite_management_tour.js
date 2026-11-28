@@ -63,8 +63,21 @@ registry.category("web_tour.tours").add("test_favorite_management", {
             run: "click",
         },
         {
-            trigger: '.o_model_field_selector_popover_item[data-name="id"] .o_model_field_selector_popover_item_name',
+            trigger:
+                '.o_model_field_selector_popover_item[data-name="id"] .o_model_field_selector_popover_item_name',
             run: "click",
+        },
+        {
+            // "id" is edited with a record selector: pick a single record
+            trigger: ".o_field_domain .o_multi_record_selector input",
+            run: "edit Base",
+        },
+        {
+            trigger: ".o-autocomplete--dropdown-item:contains(Base):first",
+            run: "click",
+        },
+        {
+            trigger: ".o_field_domain .o_multi_record_selector .o_tag",
         },
         {
             trigger: ".o_form_button_save",
