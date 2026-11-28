@@ -153,7 +153,7 @@ test("drop previous actions if possible", async () => {
 test.tags("desktop");
 test("handle switching view and switching back on slow network", async () => {
     const def = new Deferred();
-    const defs = [null, def, null];
+    const defs = [undefined, def, undefined];
     stepAllNetworkCalls();
     onRpc("web_search_read", () => defs.shift());
 
@@ -599,7 +599,7 @@ test("switching when doing an action -- get_views slow", async () => {
 test.tags("desktop");
 test("switching when doing an action -- search_read slow", async () => {
     const def = new Deferred();
-    const defs = [null, def, null];
+    const defs = [undefined, def, undefined];
     onRpc("web_search_read", () => defs.shift());
     stepAllNetworkCalls();
 
@@ -632,7 +632,7 @@ test("switching when doing an action -- search_read slow", async () => {
 test.tags("desktop");
 test("click multiple times to open a record", async () => {
     const def = new Deferred();
-    const defs = [null, def];
+    const defs = [undefined, def];
     onRpc("web_read", () => defs.shift());
 
     await mountWithCleanup(WebClient);
