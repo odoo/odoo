@@ -4,8 +4,8 @@
 <t t-name="website_sale.ProductImageOption">
     <BuilderRow label.translate="Media">
         <BuilderButton
-            action="'replaceMedia'"
-            title.translate="Replace image"
+            action="this.env.getEditingElement().dataset.embedded ? 'replaceVideo' : 'replaceMedia'"
+            title.translate="Replace media"
             className="'flex-grow-1'"
             type="'success'"
             label.translate="Replace" />
