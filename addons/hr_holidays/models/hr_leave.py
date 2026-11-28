@@ -76,13 +76,17 @@ class HrLeave(models.Model):
         """
         employee = self.env['hr.employee'].browse(defaults.get('employee_id'))
         country = employee.company_id.country_id or self.env.company.country_id
-        return Domain([
+        domain = Domain([
             ('country_id', '=', country.id),
             ('time_off_selectable', '=', True),
             '|',
                 ('requires_allocation', '=', False),
                 ('has_valid_allocation', '=', True),
         ])
+        if not self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
+            # The employees request the pooled types through their pool
+            domain &= Domain('pool_id', '=', False)
+        return domain
 
     @api.model
     def default_get(self, fields):
@@ -310,6 +314,9 @@ class HrLeave(models.Model):
             if self.env.user.has_group('hr_holidays.group_hr_holidays_manager')
             else Domain('time_off_selectable', '=', True)
         )
+        if not self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
+            # The employees request the pooled types through their pool
+            selectable_domain &= Domain('pool_id', '=', False)
         work_entry_types_by_country = dict(self.env['hr.work.entry.type']._read_group(
             domain=Domain.AND([selectable_domain, [('country_id', 'in', self.company_id.country_id.ids + [False])]]),
             groupby=['country_id'],
@@ -1572,7 +1579,19 @@ class HrLeave(models.Model):
                 zero_duration_employees |= leave.employee_id
             sorted_leaves[leave.work_entry_type_id, leave.date_from.date()] |= leave
         for (work_entry_type, date_from), leaves in sorted_leaves.items():
-            if not work_entry_type.requires_allocation or self.env.context.get('skip_allocation_check'):
+            if self.env.context.get('skip_allocation_check'):
+                continue
+            if work_entry_type.pooled_type_ids:
+                for leave in leaves.filtered(lambda leave: leave.state not in ('cancel', 'refuse')):
+                    if float_compare(leave._get_pool_split()[1], 0, precision_digits=2) > 0:
+                        if self.env.context.get('multi_leave_request', False):
+                            employees_without_allocation |= leave.employee_id
+                        else:
+                            raise ValidationError(_(
+                                "%(name)s does not have a valid allocation for the leave type %(leave_type)s to cover that request.",
+                                name=leave.employee_id.name, leave_type=work_entry_type.name))
+                continue
+            if not work_entry_type.requires_allocation:
                 continue
             employees = leaves.employee_id
             leave_data = work_entry_type.get_allocation_data(employees, date_from)
@@ -2205,7 +2224,8 @@ class HrLeave(models.Model):
         if invalid_leaves:
             raise UserError(self.env._('You cannot approve this leave.'))
         leave_to_approve.write({'state': 'validate1', 'first_approver_id': current_employee.id})
-        leave_to_validate._action_validate(check_state)
+        # Split before the validation, which then goes through every part
+        leave_to_validate._split_pool_leaves()._action_validate(check_state)
         if not self.env.context.get('leave_fast_create'):
             self.activity_update()
         return True
@@ -3081,7 +3101,7 @@ class HrLeave(models.Model):
                 new_leave_request_date_from -= relativedelta(days=1)
 
             if remaining_days:
-                new_leave = current_leave.with_context({'skip_copy_check': True, 'leave_fast_create': True}).copy(
+                new_leave = current_leave.with_context(clean_context(current_leave.env.context), skip_copy_check=True, leave_fast_create=True).copy(
                     default={
                         'request_date_from': new_leave_request_date_from,
                         'request_date_from_period': new_leave_request_date_from_period,
@@ -3096,6 +3116,91 @@ class HrLeave(models.Model):
             else:
                 res += current_leave
         return res
+
+    def _get_pool_split(self):
+        """Split the pool request into its pooled types, against the balances the other requests leave.
+
+        :return: see :meth:`_consume_pool_allocations`
+        :rtype: tuple
+        """
+        self.ensure_one()
+        consumed = self.employee_id.with_context(ignored_leave_ids=self.ids)._get_consumed_leaves(
+            self.work_entry_type_id.pooled_type_ids, self.date_from.date())[0]
+        return self._consume_pool_allocations(consumed[self.employee_id])
+
+    def _consume_pool_allocations(self, consumed):
+        """Deduct the pool request from the allocations of its pooled types, valid on its first day.
+
+        The pooled types are consumed by ``pool_sequence``, then by the earliest end of their
+        allocations; each one gives the days its balance covers (see
+        ``hr.work.entry.type._get_pool_days()``).
+
+        :param dict consumed: ``{work_entry_type: {allocation: data}}`` of the employee, see
+            ``hr.employee._get_consumed_leaves()``, updated in place
+        :return: ``(leave_split, missing_days)``: ``leave_split`` as in
+            :meth:`_create_leaves_from_split`, ``missing_days`` the days no balance covers
+        :rtype: tuple
+        """
+        self.ensure_one()
+        pool = self.work_entry_type_id
+        leave_date = self.date_from.date()
+        # sudo: the calendar comes from the version of the employee
+        hours_per_day = self.employee_id.sudo()._get_hours_per_day(leave_date)
+        allocations_per_type = {
+            work_entry_type: sorted(
+                (allocation for allocation in consumed[work_entry_type]
+                 if allocation and allocation.date_from <= leave_date
+                 and (not allocation.date_to or allocation.date_to >= leave_date)),
+                key=lambda allocation: allocation.date_to or date.max)
+            for work_entry_type in pool.pooled_type_ids
+        }
+        ordered_types = sorted(
+            (work_entry_type for work_entry_type, allocations in allocations_per_type.items() if allocations),
+            key=lambda work_entry_type: (
+                work_entry_type.pool_sequence, allocations_per_type[work_entry_type][0].date_to or date.max))
+        leave_split = []
+        missing_days = self.number_of_days
+        for work_entry_type in ordered_types:
+            unit = 'hours' if work_entry_type.unit_of_measure == 'hour' else 'days'
+            allocations_data = [consumed[work_entry_type][allocation] for allocation in allocations_per_type[work_entry_type]]
+            remaining = sum(data[f'{unit}_virtual_remaining_leaves'] for data in allocations_data)
+            days = min(missing_days, pool._get_pool_days(work_entry_type, remaining, hours_per_day))
+            if days <= 0:
+                continue
+            leave_split.append((work_entry_type, days))
+            missing_days -= days
+            amount = days * hours_per_day if unit == 'hours' else days
+            for data in allocations_data:
+                taken = min(amount, max(data[f'{unit}_virtual_remaining_leaves'], 0))
+                data[f'{unit}_virtual_remaining_leaves'] -= taken
+                data[f'{unit}_virtual_leaves_taken'] += taken
+                amount -= taken
+        return leave_split, missing_days
+
+    def _split_pool_leaves(self):
+        """Split the pool requests into requests of their pooled types, see ``hr.work.entry.type.pool_id``.
+
+        :return: the requests, the pool ones replaced by their parts
+        :rtype: hr.leave
+        :raise ValidationError: when the balances do not cover a pool request anymore
+        """
+        result = self.env['hr.leave']
+        for leave in self.sorted('date_from'):
+            if leave.work_entry_type_id.pooled_type_ids:
+                leave_split, missing_days = leave._get_pool_split()
+                if float_compare(missing_days, 0, precision_digits=2) > 0:
+                    raise ValidationError(_(
+                        "%(name)s does not have a valid allocation for the leave type %(leave_type)s to cover that request.",
+                        name=leave.employee_id.name, leave_type=leave.work_entry_type_id.name))
+                if leave_split:
+                    # The split is covered by the balances, its intermediate steps are not, and keeps the dates of
+                    # a request approved once. sudo: the split is not a choice of the approver, who may not read
+                    # every field of the request (e.g. payroll ones)
+                    leave = leave.sudo().with_context(
+                        skip_allocation_check=True, leave_skip_state_check=True,
+                    )._create_leaves_from_split(leave_split, use_worked_days=True).with_env(self.env)
+            result |= leave
+        return result
 
     def _get_extra_default_leave_values_for_split(self):
         """Hook returning extra values for the requests created when splitting.

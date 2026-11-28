@@ -625,6 +625,8 @@ class HrEmployee(models.Model):
         ``ignored_leave_ids`` are ignored. Requests of other types can be deducted from the
         allocations of a type, see
         :meth:`~odoo.addons.hr_holidays.models.hr_work_entry_type.HrWorkEntryType._get_allocation_work_entry_type_per_leave_type`.
+        The requests to approve of a pool are deducted from its pooled types, see
+        :meth:`~odoo.addons.hr_holidays.models.hr_leave.HrLeave._consume_pool_allocations`.
 
         :param work_entry_types: ``hr.work.entry.type`` records to consider
         :param datetime.date target_date: date of the balance, today by default; the accrual
@@ -654,9 +656,12 @@ class HrEmployee(models.Model):
         :rtype: tuple
         """
         employees = self or self._get_contextual_employee()
+        # The requests to approve of a pool consume the allocations of all its pooled types
+        pools = work_entry_types.pool_id
+        work_entry_types |= pools.pooled_type_ids
         allocation_type_per_leave_type = work_entry_types._get_allocation_work_entry_type_per_leave_type()
         leaves_domain = [
-            ('work_entry_type_id', 'in', [leave_type.id for leave_type in allocation_type_per_leave_type]),
+            ('work_entry_type_id', 'in', [leave_type.id for leave_type in allocation_type_per_leave_type] + pools.ids),
             ('employee_id', 'in', employees.ids),
             ('state', 'in', ['confirm', 'validate1', 'validate']),
         ]
@@ -671,9 +676,11 @@ class HrEmployee(models.Model):
             leaves_domain.append(('date_from', '>=', datetime.combine(date(target_date.year, 1, 1), time.min)))
             leaves_domain.append(('date_from', '<=', datetime.combine(date(target_date.year, 12, 31), time.max)))
         leaves = self.env['hr.leave'].search(leaves_domain)
+        pool_leaves = leaves.filtered(lambda leave: leave.work_entry_type_id in pools and leave.state != 'validate')
         leaves_per_employee_type = defaultdict(lambda: defaultdict(lambda: self.env['hr.leave']))
         for leave in leaves:
-            leaves_per_employee_type[leave.employee_id][allocation_type_per_leave_type[leave.work_entry_type_id]] |= leave
+            if allocation_type := allocation_type_per_leave_type.get(leave.work_entry_type_id):
+                leaves_per_employee_type[leave.employee_id][allocation_type] |= leave
 
         allocations = self.env['hr.leave.allocation'].with_context(active_test=False).search([
             ('employee_id', 'in', employees.ids),
@@ -910,6 +917,9 @@ class HrEmployee(models.Model):
                         f'{secondary_unit}_taken': data['leaves_taken'],
                         f'{secondary_unit}_remaining': data['virtual_remaining_leaves'],
                     })
+        for leave in pool_leaves.sorted('date_from'):
+            leave._consume_pool_allocations(allocations_leaves_consumed[leave.employee_id])
+
         for employee in to_recheck_leaves_per_work_entry_type:
             for work_entry_type in to_recheck_leaves_per_work_entry_type[employee]:
                 content = to_recheck_leaves_per_work_entry_type[employee][work_entry_type]

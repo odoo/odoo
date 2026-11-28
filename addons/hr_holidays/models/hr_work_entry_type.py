@@ -129,6 +129,42 @@ class HrWorkEntryType(models.Model):
         'The maximum excess amount should be greater than 0. If you want to set 0, disable the negative cap instead.'
     )
     time_off_selectable = fields.Boolean(string="Selectable in Time Off", default=True, tracking=True)
+    # pools: generic time types requested instead of their pooled types, split into them on approval
+    pool_id = fields.Many2one(
+        'hr.work.entry.type', string="Requested Through", index='btree_not_null', tracking=True,
+        domain=[('pool_id', '=', False)],
+        help="Employees request this time type through the selected one. On approval, its requests are split "
+             "into its pooled time types, by order.")
+    pool_sequence = fields.Integer(
+        string="Order in Pool", default=10, tracking=True,
+        help="Lowest first. Among time types of the same order, the one whose allocation ends first.")
+    pooled_type_ids = fields.One2many('hr.work.entry.type', 'pool_id', string="Pooled Time Types")
+
+    @api.constrains('pool_id', 'requires_allocation', 'unit_of_measure', 'request_unit')
+    def _check_pool(self):
+        for pool in self.pool_id | self.filtered('pooled_type_ids'):
+            if (
+                pool.pool_id or pool.requires_allocation or pool.unit_of_measure != 'day' or pool.request_unit == 'hour'
+                or (pool.request_unit == 'half_day' and set(pool.pooled_type_ids.mapped('request_unit')) != {'half_day'})
+            ):
+                raise ValidationError(self.env._(
+                    "%(pool)s cannot be a pool: a pool requires no allocation, is counted in days, is requested by day or "
+                    "half day and is not pooled itself. The time types of a pool requested by half day are requested by "
+                    "half day too.", pool=pool.name))
+
+    def _get_pool_days(self, pooled_type, remaining, hours_per_day):
+        """Return the days of the pool ``self`` covered by a balance of ``pooled_type``.
+
+        :param float remaining: balance, in the unit of measure of ``pooled_type``
+        :param float hours_per_day: hours per day of the employee, for the balances in hours
+        :return: days, rounded down to the request unit of the pool
+        :rtype: float
+        """
+        self.ensure_one()
+        if pooled_type.unit_of_measure == 'hour':
+            remaining = remaining / hours_per_day if hours_per_day else 0
+        precision = 0.5 if self.request_unit == 'half_day' else 1
+        return float_round(max(remaining, 0), precision_rounding=precision, rounding_method='DOWN')
 
     @api.model
     def _search_valid(self, operator, value):
@@ -349,8 +385,22 @@ been taken for this time type. Changing it now would affect existing employee ba
         # This is a workaround to save the date value in context for next triggers
         # when context gets cleaned and 'default_' context keys gets removed
         target_date = self.env.context.get('leave_date_from') or self.env.context.get('default_date_from')
-        data_days = self.get_allocation_data(employee, target_date)[employee]
+        data_days = (self | self.pooled_type_ids).get_allocation_data(employee, target_date)[employee]
         for work_entry_type in self:
+            if work_entry_type.pooled_type_ids:
+                # The balance of a pool is the one of its pooled types, in days
+                # sudo: the calendar comes from the version of the employee
+                hours_per_day = employee.sudo()._get_hours_per_day(fields.Date.to_date(target_date) or fields.Date.today())
+                remaining = sum(
+                    work_entry_type._get_pool_days(self.browse(type_id), data['virtual_remaining_leaves'], hours_per_day)
+                    for _name, data, _requires_allocation, type_id in data_days
+                    if type_id in work_entry_type.pooled_type_ids.ids
+                )
+                work_entry_type.max_leaves = remaining
+                work_entry_type.leaves_taken = 0
+                work_entry_type.virtual_remaining_leaves = remaining
+                work_entry_type.display_virtual_remaining_leaves = remaining
+                continue
             result = [item for item in data_days if item[3] == work_entry_type.id]
             work_entry_type_tuple = result[0] if result else ('', {})
             work_entry_type.max_leaves = work_entry_type_tuple[1].get('max_leaves', 0)
@@ -432,12 +482,12 @@ been taken for this time type. Changing it now would affect existing employee ba
     def requested_display_name(self):
         return self.env.context.get('work_entry_type_display_name', True) and self.env.context.get('employee_id')
 
-    @api.depends('time_off_selectable', 'requires_allocation', 'display_virtual_remaining_leaves', 'unit_of_measure')
+    @api.depends('time_off_selectable', 'requires_allocation', 'pooled_type_ids', 'display_virtual_remaining_leaves', 'unit_of_measure')
     @api.depends_context('work_entry_type_display_name', 'employee_id')
     def _compute_remaining_leaves_label(self):
         for record in self:
             record.remaining_leaves_label = False
-            if not record.requested_display_name() or not (record.time_off_selectable and record.requires_allocation):
+            if not record.requested_display_name() or not (record.time_off_selectable and (record.requires_allocation or record.pooled_type_ids)):
                 continue
             remaining_time = float_round(record.display_virtual_remaining_leaves, precision_digits=2) or 0.0
             if record.unit_of_measure == "hour":

@@ -23,6 +23,7 @@ from . import test_uninstall
 from . import test_holidays_calendar
 from . import test_holidays_mail
 from . import test_negative
+from . import test_pool_work_entry_type
 from . import test_past_accruals
 from . import test_allocations
 from . import test_multicompany
