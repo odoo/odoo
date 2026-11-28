@@ -19,7 +19,7 @@ patch(PosPreset.prototype, {
         if (today.toFormat("D") === slotDate) {
             return _t("Today");
         } else if (today.plus({ days: 1 }).toFormat("D") === slotDate) {
-            return _t("Tommorrow");
+            return _t("Tomorrow");
         }
         return "";
     },
