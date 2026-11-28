@@ -10,7 +10,7 @@ from odoo.addons.test_mail_full.tests.common import TestMailFullCommon
 from odoo.addons.test_mail_sms.tests.common import TestSMSRecipients
 from odoo.exceptions import AccessError
 from odoo.tests import tagged, users
-from odoo.tests.common import HttpCase
+from odoo.tests.common import HttpCase, RecordCapturer
 from odoo.tools import html_escape, mute_logger
 
 
@@ -30,6 +30,7 @@ class TestPortal(TestMailFullCommon, TestSMSRecipients):
 @tagged('-at_install', 'post_install', 'portal', 'mail_controller')
 class TestPortalControllers(TestPortal):
 
+    @mute_logger('odoo.http')
     def test_portal_share_comment(self):
         """ Test posting through portal controller allowing to use a hash to
         post wihtout access rights. """
@@ -37,23 +38,62 @@ class TestPortalControllers(TestPortal):
         post_url = f"{self.record_portal.get_base_url()}/mail/message/post"
 
         # test as not logged
-        self.url_open(
-            url=post_url,
-            json={
-                'params': {
-                    'thread_model': self.record_portal._name,
-                    'thread_id': self.record_portal.id,
-                    'post_data': {'body': "Test"},
-                    'token': self.record_portal.access_token,
-                    'hash': self.record_portal._sign_token(self.partner_2.id),
-                    'pid': self.partner_2.id,
+        with RecordCapturer(self.env['mail.message']) as capture:
+            self.url_open(
+                url=post_url,
+                json={
+                    'params': {
+                        'thread_model': self.record_portal._name,
+                        'thread_id': self.record_portal.id,
+                        'post_data': {'body': "Test"},
+                        'token': self.record_portal.access_token,
+                        'hash': self.record_portal._sign_token(self.partner_2.id),
+                        'pid': self.partner_2.id,
+                    },
                 },
-            },
-        )
-        # Only messages from the current user not OdooBot
-        messages = self.record_portal.message_ids.filtered(lambda msg: msg.author_id == self.partner_2)
+            )
+        self.assertEqual(len(capture.records), 1)
+        self.assertEqual(capture.records.author_id, self.partner_2)
+        self.assertIn('Test', capture.records.body)
 
-        self.assertIn('Test', messages[0].body)
+        # no token, no signature: a hash signed over an empty token would be useless
+        record_notoken = self.env['mail.test.portal'].create({
+            'partner_id': self.partner_2.id,
+            'name': 'Test Portal Record (no token)',
+        })
+        # e.g. on some projects, access_token is void
+        with patch.object(self.registry['mail.test.portal'], '_portal_ensure_token', return_value=''):
+            groups = record_notoken._notify_get_recipients_groups(self.env['mail.message'], False)
+            share_url = record_notoken._get_share_url(redirect=True, pid=self.partner_2.id, share_token=False)
+        self.assertTrue(record_notoken.access_token is False, 'Assert falsy value being False instead of a void string')
+
+        notify_url = next(gdata['button_access']['url'] for gname, _gfunc, gdata in groups if gname == 'portal_customer')
+        for url in notify_url, share_url:
+            params = url_decode(url_parse(url).query)
+            self.assertEqual(params['model'], record_notoken._name)
+            self.assertEqual(params['res_id'], str(record_notoken.id))
+            # signup params depend on auth_signup_uninvited
+            self.assertEqual(set(params) - {'auth_signup_token', 'auth_login'}, {'model', 'res_id'})
+
+        # hash signed over an empty token (people using old email notification links)
+        # should not crash
+        for empty in (False, ''):
+            empty_token_hash = self.env['mail.thread']._build_sign_token((self.env.cr.dbname, empty, self.partner_2.id))
+            with RecordCapturer(self.env['mail.message']) as capture:
+                res = self.url_open(
+                    url=post_url,
+                    json={
+                        'params': {
+                            'thread_model': record_notoken._name,
+                            'thread_id': record_notoken.id,
+                            'post_data': {'body': "Test"},
+                            'hash': empty_token_hash,
+                            'pid': self.partner_2.id,
+                        },
+                    },
+                )
+                self.assertEqual(res.json()["error"]["code"], 404, "Should receive a NotFound, not a token comparison crash")
+            self.assertFalse(capture.records)
 
     def test_portal_message_fetch(self):
         """Test that portal message fetch result includes share-only messages."""

@@ -14,7 +14,7 @@ def validate_thread_with_hash_pid(thread, _hash, pid):
 
 
 def validate_thread_with_token(thread, token):
-    return token and consteq(token, thread[thread._mail_post_token_field])
+    return token and consteq(token, thread[thread._mail_post_token_field] or '')
 
 
 def get_portal_partner(thread, _hash, pid, token):
