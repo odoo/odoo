@@ -377,6 +377,7 @@ class TestTimesheetHolidays(TestCommonTimesheet):
         # New company already has an auto-configured timeoff task
         self.assertTrue(company.leave_timesheet_task_id)
         self.assertTrue(company.leave_timesheet_task_id.is_timeoff_task)
+        self.assertIn(company.leave_timesheet_task_id, self.env['project.task'].search([('is_timeoff_task', '!=', False)]))
 
         task_count = self.env['project.task'].search_count([('is_timeoff_task', '!=', False)])
         timesheet_count = self.env['account.analytic.line'].search_count([('holiday_id', '!=', False)])
@@ -398,6 +399,24 @@ class TestTimesheetHolidays(TestCommonTimesheet):
 
         new_timesheet_count = self.env['account.analytic.line'].search_count([('holiday_id', '!=', False)])
         self.assertEqual(timesheet_count + 1, new_timesheet_count)
+
+    def test_timeoff_task_remaining_hours(self):
+        task = self.env['project.task'].create({
+            'name': 'Task',
+            'project_id': self.internal_project.id,
+            'allocated_hours': 10.0,
+        })
+        self.assertEqual(task.remaining_hours, 10.0)
+
+        self.env.company.leave_timesheet_task_id = task
+        self.assertTrue(task.is_timeoff_task)
+        self.assertEqual(task.remaining_hours, 0.0, "The remaining hours of a time off task should be 0.")
+        task.allocated_hours = 20.0
+        self.assertEqual(task.remaining_hours, 0.0, "The remaining hours of a time off task should stay 0.")
+
+        self.env.company.leave_timesheet_task_id = self.internal_task_leaves
+        self.assertFalse(task.is_timeoff_task)
+        self.assertEqual(task.remaining_hours, 20.0, "The remaining hours should be recomputed once the task is no longer a time off task.")
 
     def test_timesheet_timeoff_flexible_employee(self):
         self.empl_employee.write({
