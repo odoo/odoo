@@ -12,7 +12,26 @@ patch(PosStore.prototype, {
         );
     },
 
-    async handleBancontactPayNotification({ bancontact_id, bancontact_status }) {
+    async _onBeforeDeleteOrder(order) {
+        if (order.payment_ids.some((line) => line.isBancontactRefundPending)) {
+            this.notification.add(
+                _t(
+                    "The order %s has a pending refund: check its status or force it done before deleting the order.",
+                    order.floatingOrderName
+                ),
+                { type: "warning" }
+            );
+            return false;
+        }
+        return super._onBeforeDeleteOrder(...arguments);
+    },
+
+    async handleBancontactPayNotification({
+        bancontact_id,
+        bancontact_status,
+        bancontact_debtor_name,
+        bancontact_debtor_iban,
+    }) {
         const paymentline = this.models["pos.payment"].find(
             (line) => line.bancontact_id === bancontact_id
         );
@@ -31,6 +50,8 @@ patch(PosStore.prototype, {
         if (bancontact_status === "SUCCEEDED") {
             paymentline.setPaymentStatus("done");
             paymentline.qr_code = null;
+            paymentline.bancontact_debtor_name = bancontact_debtor_name || false;
+            paymentline.bancontact_debtor_iban = bancontact_debtor_iban || false;
 
             // Other order selected
             if (order !== currentOrder) {
@@ -72,6 +93,40 @@ patch(PosStore.prototype, {
             }
 
             return;
+        }
+    },
+
+    async handleBancontactRefundStatus(line, { fromPolling = false } = {}) {
+        const order = line.pos_order_id;
+        if (!order || order.finalized) {
+            return;
+        }
+        const isCurrentOrder = order === this.getOrder();
+
+        if (line.payment_status === "done") {
+            if (!isCurrentOrder) {
+                this.notification.add(
+                    _t("The refund for order %s has been completed.", order.floatingOrderName),
+                    { type: "success" }
+                );
+                return;
+            }
+            await this.autoValidateOrder({ order });
+        } else if (!line.payment_status) {
+            const message = isCurrentOrder
+                ? _t("The refund failed.")
+                : _t("A refund for order %s has failed.", order.floatingOrderName);
+            this.notification.add(message, { type: "danger" });
+        } else if (fromPolling) {
+            const message = isCurrentOrder
+                ? _t("The refund is still pending. Check its status later or force it done.")
+                : _t(
+                      "The refund for order %s is still pending. Check its status later or force it done.",
+                      order.floatingOrderName
+                  );
+            this.notification.add(message, { type: "warning" });
+        } else {
+            this.notification.add(_t("The refund is still pending."), { type: "info" });
         }
     },
 

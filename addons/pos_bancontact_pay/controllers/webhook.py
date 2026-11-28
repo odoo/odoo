@@ -6,6 +6,7 @@ from PIL import Image
 
 from odoo import http
 from odoo.http import request
+from odoo.http.stream import content_disposition
 from odoo.tools.misc import file_path
 
 from odoo.addons.pos_bancontact_pay import const
@@ -21,9 +22,11 @@ _logger = logging.getLogger(__name__)
 
 class BancontactPayController(http.Controller):
 
-    @http.route('/bancontact_pay/sticker/<int:payment_method_id>', type='http', auth='user')
-    def download_sticker(self, payment_method_id):
-        payment_method = request.env['pos.payment.method'].browse(payment_method_id)
+    @http.route('/bancontact_pay/sticker/<string:identifier>', type='http', auth='user')
+    def download_sticker(self, identifier):
+        sticker = request.env['pos.bancontact.sticker'].search([('identifier', '=', identifier), ('product_id.usage', '=', 'sticker')], limit=1)
+        if not sticker:
+            raise request.not_found()
 
         lang = request.env.context.get('lang')
         frame_lang = lang.split('_')[0] if lang else 'fr'
@@ -36,7 +39,7 @@ class BancontactPayController(http.Controller):
         frame = Image.open(frame_path).convert("RGBA")
 
         # fetch qr code
-        qr_bytes = payment_method._fetch_bancontact_sticker_image()
+        qr_bytes = sticker._fetch_sticker_image()
         qr = Image.open(io.BytesIO(qr_bytes)).convert("RGBA")
 
         # resize QR
@@ -52,14 +55,19 @@ class BancontactPayController(http.Controller):
         frame.save(buffer, format="PNG")
         content = buffer.getvalue()
 
-        filename = f"{payment_method.name}.png"
         headers = [
             ('Content-Type', 'image/png'),
-            ('Content-Disposition', f'attachment; filename="{filename}"'),
+            ('Content-Disposition', content_disposition(f"{sticker.name}.png")),
             ('Cache-Control', 'no-cache'),
         ]
 
         return request.make_response(content, headers)
+
+    @http.route('/bancontact_pay/jwks', type='http', auth='public', methods=['GET'], readonly=True)
+    def bancontact_pay_jwks(self):
+        """Publish the public keys Bancontact uses to verify the requests signed by Odoo (one per company)."""
+        companies = request.env['res.company'].sudo().search([('bancontact_signing_key', '!=', False)])
+        return request.make_json_response({'keys': [company._bancontact_get_public_jwk() for company in companies]})
 
     @http.route(["/bancontact_pay/webhook"], type="http", auth="public", methods=["POST"], csrf=False)
     def bancontact_pay_webhook(self, config_id=None, payment_method_id=None):
@@ -70,9 +78,9 @@ class BancontactPayController(http.Controller):
             _logger.error("%s webhook rejected: invalid payment_method_id=%s", log_prefix, payment_method_id)
             return http.Response("Invalid POS configuration", status=400)
 
-        bancontact_signature_validation = BancontactSignatureValidation(request.httprequest, payment_method.bancontact_test_mode)
+        bancontact_signature_validation = BancontactSignatureValidation(request.httprequest, payment_method.bancontact_product_id.preprod)
         try:
-            bancontact_signature_validation.verify_signature(payment_method.bancontact_ppid)
+            bancontact_signature_validation.verify_signature(payment_method.bancontact_product_id.ppid)
         except BancontactSignatureValidationError as e:
             _logger.warning("%s webhook rejected: %s", log_prefix, e)
             return http.Response("Invalid signature", status=403)
@@ -90,12 +98,23 @@ class BancontactPayController(http.Controller):
             return http.Response(status=204)
 
         payment = self._get_bancontact_payment(bancontact_id, payment_method, pos_config)
-        if payment and self._is_bancontact_payment_finalized(payment):
-            _logger.info("%s webhook ignored: payment already finalized (paymentId=%s)", log_prefix, bancontact_id)
-            return http.Response(status=204)
+        debtor = data.get("debtor") or {}
+        debtor_values = {
+            "bancontact_debtor_name": debtor.get("name") or False,
+            "bancontact_debtor_iban": (debtor.get("iban") or "")[-4:] or False,
+        } if bancontact_status == "SUCCEEDED" else {}
+        if payment:
+            if self._is_bancontact_payment_finalized(payment):
+                _logger.info("%s webhook ignored: payment already finalized (paymentId=%s)", log_prefix, bancontact_id)
+                return http.Response(status=204)
+
+            if bancontact_status == "SUCCEEDED":
+                payment.write({"qr_code": False, "payment_status": "done", **debtor_values})
+            else:
+                payment.write({"qr_code": False, "payment_status": "retry", "bancontact_id": False})
 
         _logger.info("%s webhook processed: paymentId=%s, status=%s", log_prefix, bancontact_id, bancontact_status)
-        self._notify_pos(pos_config, bancontact_id, bancontact_status)
+        self._notify_pos(pos_config, bancontact_id, bancontact_status, debtor_values)
 
         return http.Response(status=200)
 
@@ -129,11 +148,12 @@ class BancontactPayController(http.Controller):
         pos_config = self.env['pos.config'].sudo().browse(config_id)
         return pos_config if pos_config.exists() else None
 
-    def _notify_pos(self, pos_config, bancontact_id, bancontact_status):
+    def _notify_pos(self, pos_config, bancontact_id, bancontact_status, debtor_values=None):
         pos_config._notify(
             "BANCONTACT_PAY_PAYMENTS_NOTIFICATION",
             {
                 "bancontact_id": bancontact_id,
                 "bancontact_status": bancontact_status,
+                **(debtor_values or {}),
             },
         )
