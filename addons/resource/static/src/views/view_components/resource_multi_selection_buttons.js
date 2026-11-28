@@ -1,13 +1,25 @@
-import { usePlugin } from "@odoo/owl";
-import { MultiSelectionButtons } from "@web/views/view_components/multi_selection_buttons";
+import { t, usePlugin, useProps } from "@odoo/owl";
+import {
+    MultiSelectionButtons,
+    multiSelectionButtonsProps,
+} from "@web/views/view_components/multi_selection_buttons";
 import { ResourceCalendarPlugin } from "@resource/plugins/resource_calendar_plugin";
 import { ResourceMultiCreatePopover } from "@resource/views/view_components/resource_multi_create_popover";
 
 export class ResourceMultiSelectionButtons extends MultiSelectionButtons {
+    static template = "resource.ResourceMultiSelectionButtons";
     static components = {
         ...MultiSelectionButtons.components,
         Popover: ResourceMultiCreatePopover,
     };
+
+    props = useProps({
+        reactive: t.object({
+            ...multiSelectionButtonsProps.reactive.toShape(),
+            onQuickAdd: t.function().optional(),
+            quickAddBlocks: t.array().optional(),
+        }),
+    });
 
     /**
      * @override

@@ -1,0 +1,17 @@
+/* Two lines fit in the height of the other buttons, to stay aligned with the view controls */
+.o_resource_quick_add_btn {
+    max-width: fit-content;
+}
+
+/* Same colors as the events, through the variables of their o_calendar_color_* class */
+.o_resource_quick_add_btn[class*="o_calendar_color_"] {
+    color: var(--fc-event-contrast-color);
+    background-color: var(--fc-event-color);
+    border-color: var(--fc-event-color);
+
+    &:hover {
+        --o-resource-quick-add-hover: color-mix(in srgb, var(--fc-event-color) 82%, var(--o-calendar-event-bg));
+        background-color: var(--o-resource-quick-add-hover);
+        border-color: var(--o-resource-quick-add-hover);
+    }
+}
