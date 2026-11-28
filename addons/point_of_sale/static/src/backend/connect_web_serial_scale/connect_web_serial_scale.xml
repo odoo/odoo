@@ -5,6 +5,9 @@
         <button type="button" class="btn btn-primary" t-on-click="this.onClick">
             Connect USB Scale
         </button>
+        <div t-if="this.state.connected" class="text-success mt-2">
+            <i class="fa fa-check me-1"/>Scale connected
+        </div>
     </t>
 
 </templates>
