@@ -191,6 +191,67 @@ class TestCustomSnippet(TransactionCase):
             'Parseltongue Text',
             view.with_context(lang=parseltongue.code).arch)
 
+    def test_translations_custom_snippet_html_to_xml_terms(self):
+        ResLang = self.env['res.lang']
+        View = self.env['ir.ui.view']
+
+        parseltongue = ResLang.create({
+            'name': 'Parseltongue',
+            'code': 'pa_GB',
+            'iso_code': 'pa_GB',
+            'url_code': 'pa_GB',
+        })
+        ResLang._activate_lang(parseltongue.code)
+        website = self.env.ref('website.default_website')
+        website.language_ids = [Command.link(parseltongue.id)]
+        data_name_attr = "Custom Snippet Br Translations"
+        snippet_arch = f"""
+            <section class="s_text_block s_custom_snippet" data-name="{data_name_attr}">
+                <h2>English<br>Title</h2>
+                <p>English Text</p>
+            </section>
+        """
+
+        # Save a custom snippet from an HTML field, where the term contains
+        # `<br>` whereas the same term in the view arch contains `<br/>`
+        mega_menu = self.env['website.menu'].create({
+            'name': 'Mega Menu Br Translations',
+            'mega_menu_content': f'<div>{snippet_arch}</div>',
+        })
+        mega_menu.update_field_translations('mega_menu_content', {
+            parseltongue.code: {
+                'English<br>Title': 'Parseltongue<br>Title',
+                'English Text': 'Parseltongue Text',
+            }
+        })
+        self.env['ir.ui.view'].with_context(
+            website_id=website.id,
+            model=mega_menu._name,
+            field='mega_menu_content',
+            resId=mega_menu.id,
+        ).save_snippet(
+            name=data_name_attr,
+            arch=snippet_arch,
+            thumbnail_url='/website/static/src/img/snippets_thumbs/s_text_block.svg',
+            snippet_key='s_text_block',
+            template_key='website.snippets'
+        )
+        custom_snippet_view = View.search([('name', '=', data_name_attr)], limit=1)
+        custom_snippet_arch = custom_snippet_view.with_context(lang=parseltongue.code).arch
+        self.assertIn('Parseltongue<br/>Title', custom_snippet_arch)
+        self.assertIn('Parseltongue Text', custom_snippet_arch)
+
+        # Drop the custom snippet in another HTML field
+        mega_menu2 = self.env['website.menu'].create({
+            'name': 'Mega Menu Br Translations 2',
+            'mega_menu_content': '<div></div>',
+        })
+        mega_menu2.mega_menu_content = f'<div>{snippet_arch}</div>'
+        View._copy_custom_snippet_translations(mega_menu2, 'mega_menu_content')
+        mega_menu2_content = mega_menu2.with_context(lang=parseltongue.code).mega_menu_content
+        self.assertIn('Parseltongue<br>Title', mega_menu2_content)
+        self.assertIn('Parseltongue Text', mega_menu2_content)
+
 
 @tagged('post_install', '-at_install')
 class TestHttpCustomSnippet(HttpCase):
