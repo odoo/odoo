@@ -26,13 +26,21 @@ class AccountMoveSend(models.AbstractModel):
     def _get_alerts(self, moves, moves_data):
         alerts = super()._get_alerts(moves, moves_data)
         moves_to_check = moves.filtered(self._is_tr_nilvera_applicable)
-        if tr_companies_missing_required_codes := moves_to_check.company_id.filtered(
-            lambda c: c.country_code == 'TR' and not (c.partner_id.category_id.parent_id and self.env["res.partner.category"]._get_l10n_tr_official_mandatory_categories())
-        ):
+
+        if tr_companies_not_verified := moves_to_check.company_id.filtered(lambda c: c.country_code == 'TR' and c.partner_id.l10n_tr_nilvera_customer_status == 'not_checked'):
+            alerts["tr_companies_not_verified"] = {
+                "message": self.env._("Please verify your company contact on Nilvera: set its eInvoice format to 'Türkiye (UBL TR 1.2)' and click 'Verify'."),
+                "action_text": self.env._("View Company(s)"),
+                "action": tr_companies_not_verified.partner_id._get_records_action(name=self.env._("Verify company(s)")),
+                "level": "danger",
+            }
+
+        mandatory_categories = self.env['res.partner.category']._get_l10n_tr_official_mandatory_categories()
+        if tr_companies_missing_required_codes := moves_to_check.company_id.filtered(lambda c: c.country_code == 'TR' and c.partner_id.l10n_tr_nilvera_customer_status == 'einvoice' and not (mandatory_categories & c.partner_id.category_id.parent_id)):
             alerts["tr_companies_missing_required_codes"] = {
-                "message": _("Please ensure that your company contact has either the 'MERSISNO' or 'TICARETSICILNO' tag with a value assigned."),
-                "action_text": _("View Company(s)"),
-                "action": tr_companies_missing_required_codes.partner_id._get_records_action(name=_("Check tags on company(s)")),
+                "message": self.env._("Please ensure that your company contact has either the 'MERSISNO' or 'TICARETSICILNO' tag with a value assigned."),
+                "action_text": self.env._("View Company(s)"),
+                "action": tr_companies_missing_required_codes.partner_id._get_records_action(name=self.env._("Check tags on company(s)")),
                 "level": "danger",
             }
 
