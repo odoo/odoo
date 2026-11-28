@@ -87,6 +87,7 @@ class IrModuleModule(models.Model):
             if (
                 not self.env.company.chart_template
                 and self.account_templates
+                and not self.env.company.root_id._existing_accounting()
                 and (guessed := next((
                     tname
                     for tname, tvals in self.account_templates.items()
