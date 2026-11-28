@@ -4,7 +4,7 @@ import { OrderSummary } from "@point_of_sale/app/screens/product_screen/order_su
 import { setupPosEnv, getFilledOrder } from "../utils";
 import { getFilledOrderForPriceCheck } from "../accounting/utils";
 import { definePosModels } from "../data/generate_model_definitions";
-import { queryAll, queryOne } from "@odoo/hoot-dom";
+import { manuallyDispatchProgrammaticEvent, queryAll, queryOne } from "@odoo/hoot-dom";
 
 definePosModels();
 
@@ -86,4 +86,24 @@ test("Negate the weighed quantity from the numpad in price mode", async () => {
     store.numpadMode = "price";
     await orderSummary.updateSelectedOrderline({ buffer: "-0", key: "-" });
     expect(line.qty).toBe(-2);
+});
+
+test("Tapping an orderline selects it on click, not on pointerup", async () => {
+    const store = await setupPosEnv();
+    const order = await getFilledOrder(store);
+    await mountWithCleanup(OrderSummary, {});
+    order.uiState.selected_orderline_uuid = null;
+    await animationFrame();
+
+    const line = order.getOrderlines()[0];
+    const lineEl = queryAll(".orderline")[0];
+    await manuallyDispatchProgrammaticEvent(lineEl, "pointerdown", { button: 0 });
+    await manuallyDispatchProgrammaticEvent(lineEl, "pointerup", { button: 0 });
+    await manuallyDispatchProgrammaticEvent(lineEl, "pointerleave");
+    await animationFrame();
+    expect(line.isSelected()).toBe(false);
+
+    await manuallyDispatchProgrammaticEvent(lineEl, "click", { button: 0 });
+    await animationFrame();
+    expect(line.isSelected()).toBe(true);
 });

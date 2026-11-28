@@ -24,21 +24,26 @@ export class Orderline extends Component {
         if (this.props.mode === "display") {
             useTimedPress(this.root, [
                 {
-                    type: "release",
-                    maxDelay: 500,
-                    callback: (event, duration) => {
-                        this.props.onClick(event, duration);
-                    },
-                },
-                {
                     type: "hold",
                     delay: 500,
                     callback: (event, duration) => {
+                        this.longPressed = true;
                         this.props.onLongPress(event, duration);
                     },
                 },
             ]);
         }
+    }
+
+    onPointerDown() {
+        this.longPressed = false;
+    }
+
+    onClick(event) {
+        if (this.props.mode !== "display" || this.longPressed) {
+            return;
+        }
+        this.props.onClick(event);
     }
 
     get line() {
