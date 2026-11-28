@@ -198,6 +198,46 @@ class TestSyncGoogle2Odoo(TestSyncGoogle, MockEmail):
         self.assertGoogleAPINotCalled()
 
     @patch_api
+    def test_new_google_event_without_attendees(self):
+        """ An event created in the user's primary Google calendar without guests is imported with the
+        user as attendee, so that it blocks their availability. Events of other calendars are imported
+        without attendees. """
+        user = self.organizer_user
+        values = {
+            'organizer': {'email': user.google_account_email, 'self': True},
+            'creator': {'email': user.google_account_email, 'self': True},
+            'summary': 'Focus time',
+            'attendees': [],
+            'reminders': {'useDefault': True},
+            'start': {'dateTime': '2020-01-13T16:00:00+01:00', 'timeZone': 'Europe/Brussels'},
+            'end': {'dateTime': '2020-01-13T17:00:00+01:00', 'timeZone': 'Europe/Brussels'},
+        }
+        Event = self.env['calendar.event'].with_user(user)
+
+        Event._sync_google2odoo(GoogleEvent([dict(values, id='primarynoattendee')]), user.primary_calendar_id)
+        event = self.env['calendar.event'].search([('google_id', '=', 'primarynoattendee')])
+        self.assertEqual(event.user_id, user)
+        self.assertEqual(event.partner_ids, user.partner_id)
+        self.assertEqual(event.attendee_ids.partner_id, user.partner_id)
+        self.assertEqual(event.attendee_ids.state, 'accepted')
+        busy_events = user.partner_id._get_busy_calendar_events(datetime(2020, 1, 13), datetime(2020, 1, 14))
+        self.assertEqual(busy_events.get(user.partner_id.id), event)
+
+        # Syncing the event again must not duplicate the attendee
+        Event._sync_google2odoo(GoogleEvent([dict(values, id='primarynoattendee', summary='Focus', updated=self.now)]), user.primary_calendar_id)
+        self.assertEqual(event.name, 'Focus')
+        self.assertEqual(len(event.attendee_ids), 1)
+        self.assertEqual(event.partner_ids, user.partner_id)
+
+        # In secondary calendars, 'organizer.self' does not tell who owns the event
+        Event._sync_google2odoo(GoogleEvent([dict(values, id='secondarynoattendee')]), self.secondary_calendar)
+        event = self.env['calendar.event'].search([('google_id', '=', 'secondarynoattendee')])
+        self.assertTrue(event)
+        self.assertFalse(event.attendee_ids)
+        self.assertFalse(event.partner_ids)
+        self.assertGoogleAPINotCalled()
+
+    @patch_api
     def test_invalid_owner_property(self):
         values = {
             'id': 'oj44nep1ldf8a3ll02uip0c9aa',
@@ -2022,7 +2062,9 @@ class TestSyncGoogle2Odoo(TestSyncGoogle, MockEmail):
         }
         self.env['calendar.event']._sync_google2odoo(GoogleEvent([values]), self.env.user.primary_calendar_id)
         event = self.env['calendar.event'].search([('google_id', '=', values.get('id'))])
-        self.assertEqual(0, len(event.attendee_ids))
+        self.assertEqual(1, len(event.attendee_ids))
+        self.assertEqual(event.attendee_ids.partner_id, self.env.user.partner_id)
+        self.assertEqual('accepted', event.attendee_ids[0].state)
         self.assertGoogleAPINotCalled()
 
     @patch_api

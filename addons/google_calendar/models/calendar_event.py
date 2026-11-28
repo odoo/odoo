@@ -190,7 +190,10 @@ class CalendarEvent(models.Model):
         if not reminder_command:
             reminder_command = reminders.get('useDefault') and default_reminders or ()
         alarm_commands = self._odoo_reminders_commands(reminder_command)
-        attendee_commands, partner_commands = self._odoo_attendee_commands(google_event)
+        is_own_primary_calendar = calendar == self.env.user.primary_calendar_id
+        attendee_commands, partner_commands = self.with_context(
+            google_calendar_own_primary_calendar=is_own_primary_calendar,
+        )._odoo_attendee_commands(google_event)
         related_event = self.search([('google_id', '=', google_event.id)], limit=1)
         name = google_event.summary or related_event and related_event.name or _("(No title)")
         values = {
@@ -256,6 +259,20 @@ class CalendarEvent(models.Model):
         attendee_commands = []
         partner_commands = []
         google_attendees = google_event.attendees or []
+        if (
+            not google_attendees
+            and self.env.context.get('google_calendar_own_primary_calendar')
+            and google_event.organizer and google_event.organizer.get('self')
+        ):
+            # Google omits the organizer from the attendees of an event without guests. When such an
+            # event lives in the user's own primary calendar, add the user as attendee so that the
+            # time slot is seen as busy (e.g. by appointments). This is not done for other calendars,
+            # where 'organizer.self' is set regardless of who actually owns the event.
+            google_attendees = [{
+                'email': self.env.user.partner_id.email_normalized or self.env.user.partner_id.email,
+                'responseStatus': 'accepted',
+                'self': True,
+            }]
         emails = [a.get('email') for a in google_attendees]
         existing_attendees = self.env['calendar.attendee']
         if google_event.exists(self.env):
