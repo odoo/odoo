@@ -1118,10 +1118,10 @@ test("pivot grouped by ID in a chain displays values correctly", async () => {
 });
 
 test("Can group by many2one_reference field ", async () => {
-    onRpc("partner", "formatted_read_grouping_sets", ({ kwargs }) => {
+    onRpc("partner", "formatted_read_grouping_sets", ({ kwargs }) =>
         // The mock server doesn't support well many2one_reference.
         // It is fixed in master/saas-19.1, but for now we have to mock the correct output ourselves.
-        return [
+        [
             [{ __count: 3, "probability:avg": 11, __extra_domain: [] }],
             [
                 {
@@ -1142,9 +1142,9 @@ test("Can group by many2one_reference field ", async () => {
                     __count: 1,
                     "probability:avg": 13,
                 },
-            ]
-        ];
-    });
+            ],
+        ]
+    );
     Partner._fields = {
         ...Partner._fields,
         res_id: fields.Many2oneReference({
@@ -1195,10 +1195,10 @@ test("Can group by many2one_reference field ", async () => {
 });
 
 test("Can group by reference field ", async () => {
-    onRpc("partner", "formatted_read_grouping_sets", ({ kwargs }) => {
+    onRpc("partner", "formatted_read_grouping_sets", ({ kwargs }) =>
         // The mock server doesn't support well reference.
         // It is fixed in master/saas-19.1, but for now we have to mock the correct output ourselves.
-        return [
+        [
             [{ __count: 3, "probability:avg": 11, __extra_domain: [] }],
             [
                 {
@@ -1219,9 +1219,9 @@ test("Can group by reference field ", async () => {
                     __count: 1,
                     "probability:avg": 13,
                 },
-            ]
-        ];
-    });
+            ],
+        ]
+    );
     Partner._fields = {
         ...Partner._fields,
         ref: fields.Reference({
@@ -2683,5 +2683,18 @@ test("Groupable fields in pivot", async function () {
         expect(pivotNormalizationValueRegistry.contains(fieldType)).toBe(false, {
             message: `Field ${fieldType} should not be normalizable`,
         });
+    }
+
+    // Property definitions don't have a groupable attribute
+    const mockProperty = { ...mockField, groupable: undefined, is_property: true };
+    for (const propertyType of ["char", "selection", "many2one", "many2many", "date"]) {
+        expect(
+            pivotRegistry.get(pivot.type).isGroupable({ ...mockProperty, type: propertyType })
+        ).toBe(true, { message: `Property ${propertyType} should be groupable` });
+    }
+    for (const propertyType of ["tags", "html", "separator"]) {
+        expect(
+            pivotRegistry.get(pivot.type).isGroupable({ ...mockProperty, type: propertyType })
+        ).toBe(false, { message: `Property ${propertyType} should not be groupable` });
     }
 });
