@@ -189,6 +189,7 @@
                                         context="{
                                             'product_id': product_variant_id if product_variant_count == 1 else False,
                                             'default_product_id': product_variant_id,
+                                            'default_relative_uom_id': uom_id,
                                             'product_ids': product_variant_ids,
                                             'has_variants': product_variant_count > 1,
                                         }"
@@ -484,7 +485,7 @@
                         name="extra_uom_ids"
                         widget="many2many_uom_tags"
                         groups="uom.group_uom"
-                        context="{'product_id': id}"
+                        context="{'product_id': id, 'default_relative_uom_id': uom_id}"
                         options="{'no_quick_create': True, 'on_tag_click': 'open_form'}"
                         optional="hide"
                     />
@@ -580,7 +581,7 @@
                 </field>
                 <field name="uom_ids" position="attributes">
                     <attribute name="readonly">product_variant_count != 1</attribute>
-                    <attribute name="context">{'product_id': id}</attribute>
+                    <attribute name="context">{'product_id': id, 'default_relative_uom_id': uom_id}</attribute>
                 </field>
                 <field name="uom_ids" position="after">
                     <field
@@ -589,7 +590,7 @@
                         options="{'no_quick_create': True, 'on_tag_click': 'open_form'}"
                         groups="uom.group_uom"
                         invisible="product_variant_count == 1"
-                        context="{'product_id': id}"
+                        context="{'product_id': id, 'default_relative_uom_id': uom_id}"
                     />
                 </field>
             </field>
