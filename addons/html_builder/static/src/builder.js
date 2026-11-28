@@ -22,7 +22,6 @@ import { SIZES, MEDIAS_BREAKPOINTS } from "@web/core/ui/ui_utils";
 import { useService } from "@web/core/utils/hooks";
 import { addLoadingEffect as addButtonLoadingEffect } from "@web/core/utils/ui";
 import { HighlightThemeRowPlugin } from "@html_builder/sidebar/highlight_theme_row_plugin";
-import { InvisibleElementsPanel } from "@html_builder/sidebar/invisible_elements_panel";
 import { BlockTab } from "@html_builder/sidebar/block_tab";
 import { CustomizeTab } from "@html_builder/sidebar/customize_tab";
 import { useSnippets } from "@html_builder/snippets/snippet_service";
@@ -30,7 +29,6 @@ import { setBuilderCSSVariables } from "@html_builder/utils/utils_css";
 import { TextTruncateTooltipPlugin } from "@web/core/tooltip/text_truncate_tooltip_plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { getHtmlStyle } from "@html_editor/utils/formatting";
-import { isVisible } from "@html_builder/utils/utils";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 
 const TAB_TRANSITION_FALLBACK_DELAY = 400;
@@ -92,10 +90,6 @@ export class Builder extends Component {
             pendingTab: undefined,
             currentOptionsContainers: undefined,
         });
-        this.invisibleElementsPanelState = proxy({
-            invisibleEls: [],
-            invisibleSelector: "",
-        });
         useHotkey("control+z", () => this.undo());
         useHotkey("control+y", () => this.redo());
         useHotkey("control+shift+z", () => this.redo());
@@ -132,7 +126,6 @@ export class Builder extends Component {
                 if (!isPreviewing) {
                     this.state.canUndo = this.editor.shared.history.canUndo();
                     this.state.canRedo = this.editor.shared.history.canRedo();
-                    this.updateInvisibleEls();
                     this.editorBus.trigger("UPDATE_EDITING_ELEMENT");
                     this.triggerDomUpdated();
                     this.props.config.onChange?.();
@@ -154,7 +147,6 @@ export class Builder extends Component {
                 },
                 on_mobile_view_switched_handlers: withSequence(20, () => {
                     this.triggerDomUpdated();
-                    this.updateInvisibleEls();
                 }),
                 on_will_save_handlers: () => {
                     const snippetMenuEl = this.builderSidebarRef();
@@ -194,10 +186,6 @@ export class Builder extends Component {
                     ...context,
                     initialTab: this.state.activeTab,
                 }),
-                lower_panel_entries: withSequence(20, {
-                    Component: InvisibleElementsPanel,
-                    props: this.invisibleElementsPanelState,
-                }),
                 properties: {
                     predicate: (/** @type {Node} */ node) => {
                         const typedEl = closestElement(node, "[data-oe-type]");
@@ -213,7 +201,6 @@ export class Builder extends Component {
             saveSnippet: (snippetEl, cloneAndPrepareForSave) =>
                 this.snippetModel.saveSnippet(snippetEl, cloneAndPrepareForSave),
             snippetModel: this.snippetModel,
-            updateInvisibleElementsPanel: () => this.updateInvisibleEls(),
             hideStylingInLinkPopover: true,
             allowTargetBlank: true,
             allowTextColumnResize: false,
@@ -289,7 +276,6 @@ export class Builder extends Component {
             this.editor.document.body.classList.add("editor_enable");
             setBuilderCSSVariables(getHtmlStyle(this.editor.document));
             // TODO: onload editor
-            this.updateInvisibleEls();
             this.editableEl.addEventListener("dragstart", this.onDragStart);
         });
         onWillUnmount(() => {
@@ -329,7 +315,7 @@ export class Builder extends Component {
             this.activeTargetEl = this.activeTargetEl || this.getActiveTarget();
             this.editor.shared.builderOptions.deactivateContainers();
         } else if (this.activeTargetEl) {
-            if (isVisible(this.activeTargetEl)) {
+            if (!this.editor.shared.visibility.isElementHidden(this.activeTargetEl)) {
                 // Reactivate the previously active element.
                 this.editor.shared.builderOptions.updateContainers(this.activeTargetEl);
             }
@@ -391,19 +377,8 @@ export class Builder extends Component {
         this.props.toggleMobile();
     }
 
-    updateInvisibleEls() {
-        const isMobile = this.editor.config.isMobileView(this.editor.editable);
-        const invisibleSelector = `.o_snippet_invisible, ${
-            isMobile ? ".o_snippet_mobile_invisible" : ".o_snippet_desktop_invisible"
-        }`;
-        this.invisibleElementsPanelState.invisibleSelector = invisibleSelector;
-        this.invisibleElementsPanelState.invisibleEls = [
-            ...this.editor.editable.querySelectorAll(invisibleSelector),
-        ];
-    }
-
     lowerPanelEntries() {
-        return this.editor.resources["lower_panel_entries"] ?? [];
+        return this.editor.getResource("lower_panel_entries");
     }
 
     getActiveTarget() {

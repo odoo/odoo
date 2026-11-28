@@ -5,7 +5,7 @@ import { closestScrollableY, getScrollingElement, isScrollableY } from "@web/cor
 import { closest, touching } from "@web/core/utils/ui";
 import { clamp } from "@web/core/utils/numbers";
 import { rowSize } from "@html_builder/utils/grid_layout_utils";
-import { isEditable, isVisible } from "@html_builder/utils/utils";
+import { isEditable } from "@html_builder/utils/utils";
 import { DragAndDropMoveHandle } from "./drag_and_drop_move_handle";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 
@@ -85,6 +85,7 @@ export class DragAndDropPlugin extends Plugin {
         "builderOptions",
         "properties",
         "remove",
+        "visibility",
     ];
     /** @type {import("plugins").BuilderResources} */
     resources = {
@@ -288,7 +289,9 @@ export class DragAndDropPlugin extends Plugin {
 
                 // Add a clone, to allow to drop where it started.
                 const visibleSiblingEl = [...parentEl.children].find(
-                    (el) => el !== this.overlayTarget && isVisible(el)
+                    (el) =>
+                        el !== this.overlayTarget &&
+                        !this.dependencies.visibility.isElementHidden(el)
                 );
                 if (parentEl.children.length === 1 || !visibleSiblingEl) {
                     const dropCloneEl = this.overlayTarget.cloneNode();
