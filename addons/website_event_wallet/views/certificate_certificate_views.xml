@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="certificate_certificate_view_form" model="ir.ui.view">
+        <field name="name">certificate.certificate.form.inherit.event.wallet</field>
+        <field name="model">certificate.certificate</field>
+        <field name="inherit_id" ref="certificate.certificate_certificate_view_form"/>
+        <field name="arch" type="xml">
+            <field name="scope" position="attributes">
+                <attribute name="invisible">False</attribute>
+                <attribute name="string">Certificate Use</attribute>
+            </field>
+            <field name="scope" position="after">
+                <field name="wallet_type" widget="radio" invisible="scope != 'event'" required="scope == 'event'"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="certificate_certificate_view_list" model="ir.ui.view">
+        <field name="name">certificate.certificate.list.inherit.event.wallet</field>
+        <field name="model">certificate.certificate</field>
+        <field name="inherit_id" ref="certificate.certificate_certificate_view_list"/>
+        <field name="arch" type="xml">
+            <field name="subject_common_name" position="after">
+                <field name="scope" string="Certificate Use" optional="show"/>
+                <field name="wallet_type" optional="show"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="certificate_certificate_view_search" model="ir.ui.view">
+        <field name="name">certificate.certificate.search.inherit.event.wallet</field>
+        <field name="model">certificate.certificate</field>
+        <field name="inherit_id" ref="certificate.certificate_certificate_view_search"/>
+        <field name="arch" type="xml">
+            <field name="scope" position="after">
+                <field name="wallet_type"/>
+                <field name="company_id"/>
+            </field>
+            <filter name="scope_general" position="after">
+                <filter name="scope_event" string="Event Pass" domain="[('scope', '=', 'event')]"/>
+            </filter>
+        </field>
+    </record>
+
+    <record id="certificate_event_pass_action" model="ir.actions.act_window">
+        <field name="name">Event Pass Certificates</field>
+        <field name="res_model">certificate.certificate</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{'default_scope': 'event', 'search_default_scope_event': 1}</field>
+    </record>
+</odoo>

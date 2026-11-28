@@ -39,6 +39,7 @@
         'views/event_menus.xml',
         'views/website_pages_views.xml',
         'views/event_event_add.xml',
+        'views/res_config_settings_view.xml',
         'security/event_security.xml',
         'security/ir.access.csv',
     ],

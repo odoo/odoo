@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="event_event_view_form" model="ir.ui.view">
+        <field name="name">event.event.form.inherit.wallet</field>
+        <field name="model">event.event</field>
+        <field name="inherit_id" ref="website_event.event_event_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='event_notes']" position="after">
+                <page name="wallet" string="Wallet" invisible="not has_wallet_provider">
+                    <field name="has_wallet_provider" invisible="True"/> <!-- Required to control the visibility of the Wallet tab. -->
+                    <group name="wallet_appearance" string="Pass Appearance">
+                        <field name="wallet_background_image"/>
+                    </group>
+                    <div class="text-muted">
+                        This background is used for digital wallet passes.
+                        Leave it empty to use the company colors.
+                    </div>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
