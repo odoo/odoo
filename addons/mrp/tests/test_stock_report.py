@@ -881,3 +881,46 @@ class TestMrpStockReports(TestReportsCommon):
         report_data = self.env['report.mrp.report_mo_overview']._get_report_data(mo_2.id)
         self.assertEqual(report_data['components'][0]['replenishments'][0]['summary']['bom_cost'], 0.0)
         self.assertEqual(report_data['components'][0]['replenishments'][1]['summary']['bom_cost'], 0.0)
+
+    def test_mo_overview_done_backorders_mto(self):
+        """ Both the MO and the MTO MO of its component are split into backorders: the Overview of
+        each backorder must only show the component MO that replenished it, before and after it is done.
+        """
+        self.env.ref('stock.route_warehouse0_mto').active = True
+        component, semi_finished, finished = self.env['product.product'].create([
+            {'name': name, 'is_storable': True} for name in ('Component', 'Semi-finished', 'Finished')
+        ])
+        semi_finished.route_ids = [Command.set([
+            self.env.ref('stock.route_warehouse0_mto').id,
+            self.env.ref('mrp.route_warehouse0_manufacture').id,
+        ])]
+        self.env['mrp.bom'].create([{
+            'product_tmpl_id': product.product_tmpl_id.id,
+            'bom_line_ids': [Command.create({'product_id': bom_component.id, 'product_qty': 1})],
+        } for product, bom_component in ((semi_finished, component), (finished, semi_finished))])
+
+        def produce(mo, qty):
+            with Form(mo) as mo_form:
+                mo_form.qty_producing = qty
+            action = mo.button_mark_done()
+            if action is not True:
+                Form(self.env['mrp.production.backorder'].with_context(**action['context'])).save().action_backorder()
+
+        def assert_replenishments(mo, expected):
+            replenishments = self.env['report.mrp.report_mo_overview']._get_report_data(mo.id)['components'][0]['replenishments']
+            self.assertEqual([(r['summary']['name'], r['summary']['quantity']) for r in replenishments], expected)
+
+        mo_finished = self.env['mrp.production'].create({'product_id': finished.id, 'product_qty': 4})
+        mo_finished.action_confirm()
+        mo_semi = mo_finished._get_children()
+        produce(mo_semi, 1)
+        produce(mo_finished, 1)
+        mo_semi_backorder = self.env['mrp.production'].search([('product_id', '=', semi_finished.id)]) - mo_semi
+        mo_finished_backorder = self.env['mrp.production'].search([('product_id', '=', finished.id)]) - mo_finished
+        produce(mo_semi_backorder, 3)
+        mo_finished_backorder.do_unreserve()
+        assert_replenishments(mo_finished_backorder, [(mo_semi_backorder.name, 3)])
+        produce(mo_finished_backorder, 3)
+
+        assert_replenishments(mo_finished, [(mo_semi.name, 1)])
+        assert_replenishments(mo_finished_backorder, [(mo_semi_backorder.name, 3)])
