@@ -118,6 +118,12 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
             (conflicting_leaves - one_day_leaves)._split_leaves(self.date_from, self.date_to + timedelta(days=1))
 
         vals_list = self._prepare_employees_holiday_values(employees, date_from_tz, date_to_tz)
+        # create() returns one record per values, all the time off have to be validated below
+        vals_list = [
+            part_vals
+            for vals in vals_list
+            for part_vals in self.env['hr.leave']._get_version_parts_vals(vals)
+        ]
         leaves = self.env['hr.leave'].with_context(
             tracking_disable=True,
             mail_activity_automation_skip=True,

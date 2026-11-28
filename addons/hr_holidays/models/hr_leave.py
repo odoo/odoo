@@ -29,6 +29,12 @@ def get_employee_from_context(values, context, user_employee_id):
     return employee_id_value or context.get('default_employee_id', context.get('employee_id', user_employee_id))
 
 
+# the fields of the first part of a cut request that the request itself takes, see
+# :meth:`HrLeave._split_leaves` and :meth:`HrLeave._split_across_versions_on_write`
+SPLIT_PART_FIELDS = (
+    'request_date_from', 'request_date_to', 'request_duration', 'request_date_from_period',
+    'request_date_to_period', 'request_hour_from', 'request_hour_to', 'date_from', 'date_to',
+)
 POSITION_DEPENDS = ('date_from', 'date_to', 'tz', 'request_date_from', 'request_date_to',
                     'request_date_from_period', 'request_date_to_period', 'work_entry_type_request_unit')
 
@@ -685,36 +691,40 @@ class HrLeave(models.Model):
                 calendar = contracts[:1].resource_calendar_id
             leave.resource_calendar_id = calendar
 
-    def _get_overlapping_contracts(self):
-        """Return the versions in contract of the employee overlapping the request dates.
+    def _get_overlapping_versions(self):
+        """Return the versions of the employee in effect during the request dates.
+
+        The versions are taken on their effective dates (``date_start`` to ``date_end``), in
+        contract or not: the schedule of a day is the one of the version in effect that day.
 
         :rtype: hr.version
         """
         self.ensure_one()
-        domain = Domain.AND([
-            Domain('employee_id', '=', self.employee_id.id),
-            Domain('active', '=', True),
-            Domain('contract_date_start', '<=', self.date_to),
-            Domain.OR([
-                Domain('contract_date_end', '>=', self.date_from),
-                Domain('contract_date_end', '=', False),
-            ])
+        if not (self.employee_id and self.request_date_from and self.request_date_to):
+            return self.env['hr.version']
+        versions = self.env['hr.version'].sudo().search([
+            ('employee_id', '=', self.employee_id.id),
+            ('active', '=', True),
         ])
-        versions = self.env['hr.version'].sudo().search(domain)
-        return versions.filtered(lambda v: v._is_overlapping_period(self.request_date_from, self.request_date_to))
+        return versions.filtered(
+            lambda v: v.date_start <= self.request_date_to
+            and (not v.date_end or v.date_end >= self.request_date_from),
+        )
 
     @api.constrains('date_from', 'date_to')
     def _check_contracts(self):
         """Forbid a time off over several versions with different working schedules.
 
-        A time off can still end up across such versions when the versions are changed after
-        its creation (``hr.version`` then splits it, see ``hr_holidays``'s ``hr.version``).
-        Skipped with the context key ``skip_leave_version_check`` and for time rule outputs.
+        A request over such versions is cut in one time off per version when it is created or
+        moved (:meth:`_get_version_parts_vals`), and a time off is cut when the versions change
+        after its creation (``hr.version``). This is the safety net of the other ways to reach
+        such a time off. Skipped with the context key ``skip_leave_version_check`` and for time
+        rule outputs.
         """
         if self.env.context.get('skip_leave_version_check'):
             return
         for holiday in self.filtered(lambda h: h.employee_id and not h.time_rule_id):
-            versions = holiday._get_overlapping_contracts()
+            versions = holiday._get_overlapping_versions()
             if len(versions.resource_calendar_id) > 1:
                 raise ValidationError(
                     self.env._("""A leave cannot be set across multiple versions with different working schedules.
@@ -1122,9 +1132,48 @@ class HrLeave(models.Model):
             result[leave.id] = (days, hours)
         return result
 
+    def _get_durations_over_versions(self):
+        """Return the duration of an unsaved request over versions with different schedules.
+
+        Such a request is created as one time off per version, see
+        :meth:`_get_version_parts_vals`: what is shown before the request is saved (the
+        duration, the allocation warning) is the sum of its parts, not the duration of the whole
+        period with the schedule of its first day.
+
+        :return: ``(number_of_days, number_of_hours)``, ``None`` for a saved request, for a request
+            that is not cut, or when no part has working time
+        :rtype: tuple
+        """
+        self.ensure_one()
+        if self.id or not (self.employee_id and self.request_date_from and self.request_date_to):
+            return None
+        vals = {
+            'employee_id': self.employee_id.id,
+            'work_entry_type_id': self.work_entry_type_id.id,
+            'request_date_from': self.request_date_from,
+            'request_date_to': self.request_date_to,
+            'request_hour_from': self.request_hour_from,
+            'request_hour_to': self.request_hour_to,
+            **{
+                fname: self[fname]
+                for fname in ('request_date_from_period', 'request_date_to_period', 'request_duration')
+                if self[fname]
+            },
+        }
+        parts_vals = self._get_version_parts_vals(vals)
+        if len(parts_vals) < 2 or any('number_of_days' not in part_vals for part_vals in parts_vals):
+            return None
+        return (
+            sum(part_vals['number_of_days'] for part_vals in parts_vals),
+            sum(part_vals['number_of_hours'] for part_vals in parts_vals),
+        )
+
     @api.depends('date_from', 'date_to', 'resource_calendar_id')
     def _compute_duration(self):
         durations = self._get_durations()
+        for leave in self.filtered(lambda l: not l.id):
+            if (durations_over_versions := leave._get_durations_over_versions()):
+                durations[leave.id] = durations_over_versions
         for leave in self:
             days, hours = durations.get(leave.id, (0, 0))
             if float_compare(leave.number_of_days, days, precision_digits=2) != 0:
@@ -1694,7 +1743,17 @@ class HrLeave(models.Model):
         activities (:meth:`_process_auto_approve_activities`) and the time rules run on it. With the
         context key ``leave_fast_create``, the double validation rights, the approval and the time
         rules are skipped, and the validated requests directly get their resource leave.
+
+        A request over versions with different working schedules is created as one time off per
+        version (:meth:`_get_version_parts_vals`); the result holds the first part of each request
+        only, to keep one record per values.
         """
+        # A request over versions with different working schedules is created as one time off
+        # per version, all of them checked with the same transaction
+        parts_vals_list = [] if self.env.context.get('skip_leave_version_check') else [
+            self._get_version_parts_vals(vals) for vals in vals_list]
+        if parts_vals_list:
+            vals_list = [vals for parts_vals in parts_vals_list for vals in parts_vals]
         # Override to avoid automatic logging of creation
         if not self.env.context.get('leave_fast_create'):
             work_entry_types = self.env['hr.work.entry.type'].browse([values.get('work_entry_type_id') for values in vals_list if values.get('work_entry_type_id')])
@@ -1711,6 +1770,7 @@ class HrLeave(models.Model):
         if any(not vals.get('employee_id', self.env.context.get('default_employee_id')) for vals in vals_list):
             raise UserError(_("There is no employee set on the time off. Please make sure you're logged in the correct company."))
         holidays = super(HrLeave, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
+        created = holidays
         employees_without_allocation = self.env['hr.employee']
         zero_duration_employees = self.env['hr.employee']
         if not self.env.context.get('skip_check_validity'):
@@ -1743,6 +1803,15 @@ class HrLeave(models.Model):
                 'type': 'danger',
                 'message': self.env._('The time off is outside the working schedule of the employee'),
             })
+        # one record per values, as expected from create: the other parts of a request cut over
+        # versions are created too, a caller needing them cuts the values first
+        index = 0
+        for parts_vals in parts_vals_list:
+            parts = created[index:index + len(parts_vals)].exists()
+            index += len(parts_vals)
+            if len(parts) > 1:
+                parts._post_version_split_note()
+                holidays -= parts[1:]
         return holidays
 
     def _process_auto_approve_activities(self):
@@ -1794,6 +1863,14 @@ class HrLeave(models.Model):
                 raise UserError(_('You must have manager rights to modify/validate a time off that already begun'))
             if any(leave.state == 'cancel' for leave in self):
                 raise UserError(_('Only a manager can modify a canceled leave.'))
+
+        # A time off moved over versions with different working schedules is cut in one time
+        # off per version, the first part being the time off itself
+        if {'request_date_from', 'request_date_to', 'employee_id'} & values.keys() \
+                and not self.env.context.get('skip_leave_version_check'):
+            self -= self._split_across_versions_on_write(values)
+            if not self:
+                return True
 
         # If a leave changes state from validated unlink the corresponding resource calendar leave
         validated_leaves = self.filtered(lambda l: l.state == 'validate')
@@ -2249,7 +2326,7 @@ class HrLeave(models.Model):
             lambda l: l.employee_id and not l.number_of_days and not l.number_of_hours and l.work_entry_type_id.count_as == 'absence' and l.work_entry_type_id.code not in bypass_work_entry_types)
 
     def _get_split_hour_vals(self, date_from=None, date_to=None):
-        """Return the hours of a part of a request in hours cut by :meth:`_split_leaves`.
+        """Return the hours of a part of a request in hours, see :meth:`_get_split_part_vals`.
 
         The part whose first (or last) day changes takes the first (or last) hour of the
         schedule on that day.
@@ -2260,11 +2337,225 @@ class HrLeave(models.Model):
         if self.work_entry_type_request_unit != 'hour':
             return {}
         vals = {'request_duration': 'specific'}
-        if date_from and date_from != self.request_date_from:
+        # without hours the request lasts whole days: so do its parts, on both sides
+        whole_days = not self.request_hour_from and not self.request_hour_to
+        if date_from and (whole_days or date_from != self.request_date_from):
             vals['request_hour_from'] = self.employee_id.sudo()._get_hours_for_date(date_from)[0]
-        if date_to and date_to != self.request_date_to:
+        if date_to and (whole_days or date_to != self.request_date_to):
             vals['request_hour_to'] = self.employee_id.sudo()._get_hours_for_date(date_to)[1]
         return vals
+
+    def _get_split_part_vals(self, request_date_from, request_date_to):
+        """Return the request values of the part of the request between two days.
+
+        A part keeps the half day (or the hours) of the request where it still starts or ends
+        with it. Where it is cut, it is whole: it starts in the morning and ends in the
+        afternoon, or takes the first and last hours of the schedule on that day.
+
+        :param datetime.date request_date_from: first day of the part
+        :param datetime.date request_date_to: last day of the part
+        :rtype: dict
+        """
+        self.ensure_one()
+        period_from = (self.request_date_from_period or 'am') if request_date_from == self.request_date_from else 'am'
+        period_to = (self.request_date_to_period or 'pm') if request_date_to == self.request_date_to else 'pm'
+        return {
+            'request_date_from': request_date_from,
+            'request_date_from_period': period_from,
+            'request_date_to': request_date_to,
+            'request_date_to_period': period_to,
+            'request_duration': self._get_request_duration(
+                request_date_from, period_from, request_date_to, period_to),
+            **self._get_split_hour_vals(request_date_from, request_date_to),
+        }
+
+    def _get_version_periods(self, versions):
+        """Return the part of the request falling in each version.
+
+        The request is clipped to the dates of every version, whatever its schedule, see
+        :meth:`_get_split_part_vals` for the bounds of the parts.
+
+        :param versions: ``hr.version`` records overlapping the request, see
+            :meth:`_get_overlapping_versions`
+        :return: ``[(version, request values of the part)]``, in the order of ``versions``
+        :rtype: list
+        """
+        self.ensure_one()
+        return [
+            (
+                version,
+                self._get_split_part_vals(
+                    max(self.request_date_from, version.date_start),
+                    min(self.request_date_to, version.date_end or date.max),
+                ),
+            )
+            for version in versions
+        ]
+
+    @api.model
+    def _get_request_across_versions(self, vals):
+        """Return the versions a request over different working schedules goes over.
+
+        :param dict vals: creation values of a request
+        :return: ``(request, versions)``: a new record holding the request and the versions it
+            goes over, sorted by start; ``versions`` is empty when the request is not to be cut
+            (one schedule, no employee or dates, time rule output)
+        :rtype: tuple
+        """
+        employee_id = vals.get('employee_id') or self.env.context.get('default_employee_id')
+        if not (employee_id and vals.get('request_date_from') and vals.get('request_date_to')) \
+                or vals.get('time_rule_id') or vals.get('source_leave_id'):
+            return self.browse(), self.env['hr.version']
+        request = self.new({
+            'employee_id': employee_id,
+            **{
+                fname: vals[fname]
+                for fname in ('work_entry_type_id', 'request_date_from', 'request_date_to',
+                              'request_date_from_period', 'request_date_to_period',
+                              'request_hour_from', 'request_hour_to')
+                if vals.get(fname)
+            },
+        })
+        versions = request._get_overlapping_versions().sorted('date_start')
+        if len(versions.resource_calendar_id) < 2:
+            return request, self.env['hr.version']
+        return request, versions
+
+    @api.model
+    def _get_version_parts_vals(self, vals):
+        """Return the creation values of a request, cut in one part per version.
+
+        A request over versions with different working schedules is cut on the periods of
+        the versions in contract, see :meth:`_get_version_periods`. A part with nothing to take
+        off (an absence without working time, for instance a weekend) is dropped, unless
+        every part is: the request is then left as it is.
+
+        :param dict vals: creation values of a request
+        :return: the values of the parts, ``[vals]`` when the request is not cut
+        :rtype: list
+        """
+        request, versions = self._get_request_across_versions(vals)
+        if not versions:
+            return [vals]
+        work_entry_type = self.env['hr.work.entry.type'].browse(vals.get('work_entry_type_id'))
+        parts_vals = []
+        for _version, period_vals in request._get_version_periods(versions):
+            # the employee may come from the context: the part is timed with its schedule
+            part_vals = self._prepare_split_leave_vals(
+                {**vals, 'employee_id': request.employee_id.id, **period_vals})
+            if not part_vals or (
+                work_entry_type.count_as == 'absence'
+                and float_is_zero(part_vals.get('number_of_hours', 0), precision_digits=3)
+            ):
+                continue
+            parts_vals.append(part_vals)
+        return parts_vals or [vals]
+
+    def _post_version_split_note(self):
+        """Post on each part of a request cut by versions a note listing the other parts.
+
+        :param self: the parts of one request
+        """
+        for part in self:
+            part.message_post(
+                body=self.env._(
+                    "This time off is one part of a request across several working schedules. Other parts: %(parts)s",
+                    parts=Markup(', ').join(other._get_html_link() for other in self - part),
+                ),
+                message_type='comment',
+                subtype_xmlid='mail.mt_note',
+            )
+
+    def _split_across_versions_on_write(self, values):
+        """Cut the requests that ``values`` move over versions with different schedules.
+
+        Each one keeps the part of the first version, written with ``values``; the other parts
+        are created as new requests (their own approval), see :meth:`_get_version_parts_vals`.
+        The parts are checked as the requests are written and created, an error cancels the whole
+        change.
+
+        :param dict values: values written on ``self``
+        :return: the requests that were written (cut or not) with ``values``
+        :rtype: hr.leave
+        """
+        split_leaves = self.browse()
+        # the datetimes of the views are derived from the request, and their inverse would move the
+        # request back over the versions: only the request fields are written
+        values = {k: v for k, v in values.items() if k not in ('request_date_hour_from', 'request_date_hour_to')}
+        for leave in self.filtered(lambda l: l.employee_id and not l.time_rule_id and not l.source_leave_id):
+            # cheap check first: most of the requests stay in one version
+            moved_vals = {
+                'employee_id': values.get('employee_id') or leave.employee_id.id,
+                'work_entry_type_id': values.get('work_entry_type_id') or leave.work_entry_type_id.id,
+                **{
+                    fname: values.get(fname) or leave[fname]
+                    for fname in ('request_date_from', 'request_date_to', 'request_date_from_period', 'request_date_to_period')
+                },
+            }
+            if not self._get_request_across_versions(moved_vals)[1]:
+                continue
+            # the fields the user cannot read (private_name, the ones of other modules) are not
+            # copied: the description goes through its public field, name
+            unreadable = {
+                fname: False
+                for fname, field in leave._fields.items()
+                if field.copy and not leave._has_field_access(field, 'read')
+            }
+            base_vals = leave.with_context(skip_copy_check=True).copy_data({**values, **unreadable})[0]
+            for fname in unreadable:
+                del base_vals[fname]
+            base_vals['name'] = leave.name
+            first_vals, *other_vals = self._get_version_parts_vals(base_vals)
+            if not other_vals:
+                continue
+            leave.write({**values, **{fname: first_vals[fname] for fname in SPLIT_PART_FIELDS if fname in first_vals}})
+            # the other parts are timed now that the request is shortened, not on the new records
+            for vals in other_vals:
+                vals.pop('number_of_days', None)
+                vals.pop('number_of_hours', None)
+            (leave | self.create(other_vals))._post_version_split_note()
+            split_leaves |= leave
+        return split_leaves
+
+    @api.model
+    def _prepare_split_leave_vals(self, base_vals, compute_duration=True):
+        """Return the creation values of a part of a request, without creating it.
+
+        The part is built on a new record to compute its dates, and its duration, with the
+        schedule it will have.
+
+        :param dict base_vals: values of the part, for instance the ones copied from a request
+            (``copy_data``) or given to ``create``, with the dates and the state of the part
+        :param bool compute_duration: ``False`` to let the creation compute the duration, for
+            a part created after the request it is cut from was shortened (its resource leave
+            would still be counted as an absence of the part on a new record)
+        :return: the values, or an empty dict when the part has no working time
+        :rtype: dict
+        """
+        new_leave = self.new(base_vals)
+        new_leave._compute_date_from_to()
+        if compute_duration:
+            new_leave._compute_duration()
+        if new_leave.date_from < new_leave.date_to:
+            return new_leave._convert_to_write(new_leave._cache)
+        return {}
+
+    @api.model
+    def _create_split_leaves(self, vals_list):
+        """Create the parts of split requests, see :meth:`_prepare_split_leave_vals`.
+
+        The creation skips the tracking, the activities, the approval and the time rules (context
+        key ``leave_fast_create``): the parts keep the state they are given, and the validated
+        ones get their resource leave from ``create``.
+
+        :rtype: hr.leave
+        """
+        return self.with_context(
+            tracking_disable=True,
+            mail_activity_automation_skip=True,
+            leave_fast_create=True,
+            leave_skip_state_check=True,
+        ).create(vals_list)
 
     def _split_leaves(self, split_date_from, split_date_to=False):
         """Cut the requests out of a period, keeping the parts before and after it.
@@ -2289,49 +2580,39 @@ class HrLeave(models.Model):
         # to be split.
         multi_day_leaves = self.filtered(lambda l: l.request_date_from < split_date_from or l.request_date_to >= split_date_to)
         for leave in multi_day_leaves:
-            new_leave_vals = []
-            target_leave_vals = []
+            parts_vals = []
             # both parts are whole where they are cut, not the half day of the original
             if leave.request_date_from < split_date_from:
                 date_to = split_date_from + timedelta(days=-1)
-                period_to = leave.request_date_to_period if date_to == leave.request_date_to else 'pm'
-                new_leave_vals.append(leave.with_context(skip_copy_check=True).copy_data({
-                    'request_date_to': date_to,
-                    'request_date_to_period': period_to,
-                    'request_duration': leave._get_request_duration(
-                        leave.request_date_from, leave.request_date_from_period, date_to, period_to),
+                parts_vals.append({
+                    **leave._get_split_part_vals(leave.request_date_from, date_to),
                     'state': leave.state,
-                    **leave._get_split_hour_vals(date_to=date_to),
-                })[0])
+                })
 
             # Do the same for the new leave after the split
             if leave.request_date_to >= split_date_to:
-                period_from = (leave.request_date_from_period
-                               if split_date_to == leave.request_date_from else 'am')
-                new_leave_vals.append(leave.with_context(skip_copy_check=True).copy_data({
-                    'request_date_from': split_date_to,
-                    'request_date_from_period': period_from,
-                    'request_duration': leave._get_request_duration(
-                        split_date_to, period_from, leave.request_date_to, leave.request_date_to_period),
+                parts_vals.append({
+                    **leave._get_split_part_vals(split_date_to, leave.request_date_to),
                     'state': leave.state,
-                    **leave._get_split_hour_vals(date_from=split_date_to),
-                })[0])
+                })
 
             # For those two new leaves, only create them if they actually have a non-zero duration.
-            for leave_vals in new_leave_vals:
-                new_leave = self.env['hr.leave'].new(leave_vals)
-                new_leave._compute_date_from_to()
-                if new_leave.date_from < new_leave.date_to:
-                    target_leave_vals.append(new_leave._convert_to_write(new_leave._cache))
+            target_leave_vals = [
+                part_vals
+                for part_vals in (
+                    self._prepare_split_leave_vals(
+                        leave.with_context(skip_copy_check=True).copy_data(vals)[0], compute_duration=False)
+                    for vals in parts_vals
+                )
+                if part_vals
+            ]
 
             if target_leave_vals:
                 vals = target_leave_vals.pop(0)
                 leave.with_context(leave_skip_state_check=True).write({
                     # date_from/date_to too, so this part is not left waiting for a recompute
                     fname: vals[fname]
-                    for fname in ('request_date_from', 'request_date_to', 'request_duration',
-                                  'request_date_from_period', 'request_date_to_period',
-                                  'request_hour_from', 'request_hour_to', 'date_from', 'date_to')
+                    for fname in SPLIT_PART_FIELDS
                     if fname in vals
                 })
                 if target_leave_vals:
@@ -2341,12 +2622,7 @@ class HrLeave(models.Model):
             return self.env['hr.leave']
 
         # TODO To check: leave_fast_create skips the creation of resource calendar leaves.
-        return self.env['hr.leave'].with_context(
-            tracking_disable=True,
-            mail_activity_automation_skip=True,
-            leave_fast_create=True,
-            leave_skip_state_check=True
-        ).create(new_leaves_vals)
+        return self._create_split_leaves(new_leaves_vals)
 
     def _action_validate(self, check_state=True):
         """Validate the requests (state ``'validate'``).

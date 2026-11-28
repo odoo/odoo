@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import date, UTC
+from datetime import UTC
 from odoo import api, fields, models
 from odoo.fields import Domain
 from odoo.exceptions import ValidationError
@@ -67,10 +67,10 @@ class HrVersion(models.Model):
                 created_versions |= super().create(vals)
                 continue
             leaves = self._get_leaves_from_vals(vals)
-            contract_date_start = fields.Date.to_date(vals.get('contract_date_start'))
+            start_date = self._get_start_date_from_vals(vals)
             is_created = False
             for leave in leaves:
-                refuse_leave = bool(contract_date_start) and leave.request_date_from < contract_date_start
+                refuse_leave = leave.request_date_from < start_date
                 leaves_state = self._update_leave_state(leave, leaves_state, refuse_leave)
                 if not is_created:
                     created_versions |= super().create([vals])
@@ -210,23 +210,30 @@ class HrVersion(models.Model):
             domain = Domain.AND([domain, extra_domain])
         return self.env['hr.leave'].search(domain)
 
-    def _get_leaves_from_vals(self, vals):
-        """Return the time off a version created with ``vals`` impacts.
-
-        The employee's requests not refused or cancelled, on another schedule, within the
-        contract.
+    def _get_start_date_from_vals(self, vals):
+        """Return the first day a version created with ``vals`` is in effect.
 
         :param dict vals: creation values of a version
-        :rtype: hr.leave
+        :rtype: datetime.date
         """
         today = fields.Date.context_today(self)
         contract_date_start = fields.Date.from_string(vals.get('contract_date_start') or vals.get('date_version', today))
         version_date_start = fields.Date.from_string(vals.get('date_version', today))
-        relevant_start_date = max(contract_date_start, version_date_start)
+        return max(contract_date_start, version_date_start)
+
+    def _get_leaves_from_vals(self, vals):
+        """Return the time off a version created with ``vals`` impacts.
+
+        The employee's requests not refused or cancelled, on another schedule, ending on or after
+        the first day of the version (and starting before the end of its contract, if any).
+
+        :param dict vals: creation values of a version
+        :rtype: hr.leave
+        """
         domain = [
             ('state', 'not in', ['refuse', 'cancel']),
             ('employee_id', 'in', vals['employee_id']),
-            ('date_to', '>=', relevant_start_date),
+            ('date_to', '>=', self._get_start_date_from_vals(vals)),
             ('resource_calendar_id', '!=', vals.get('resource_calendar_id')),
         ]
         if vals.get('contract_date_end'):
@@ -234,11 +241,11 @@ class HrVersion(models.Model):
         return self.env['hr.leave'].search(domain)
 
     def _check_overlapping_contract(self, leave):
-        """Return the versions in contract overlapping ``leave``, sorted by start date.
+        """Return the versions overlapping ``leave``, sorted by start date.
 
         :rtype: hr.version
         """
-        return leave._get_overlapping_contracts().sorted('date_start')
+        return leave._get_overlapping_versions().sorted('date_start')
 
     def _update_leave_calendar(self, leave, overlapping_contracts):
         """Give ``leave`` the schedule of the first overlapping version and recompute its dates.
@@ -288,22 +295,16 @@ class HrVersion(models.Model):
         :rtype: tuple
         """
         last_version = overlapping_contracts[-1]
-        for overlapping_contract in overlapping_contracts:
-            new_request_date_from = max(leave.request_date_from, overlapping_contract.date_start)
-            new_request_date_to = min(leave.request_date_to, overlapping_contract.date_end or date.max)
-            new_leave_vals = leave.copy_data({
-                'request_date_from': new_request_date_from,
-                'request_date_to': new_request_date_to,
-                'state': leaves_state[leave.id] if overlapping_contract.id != last_version.id else 'confirm',
-            })[0]
-            new_leave = self.env['hr.leave'].new(new_leave_vals)
-            new_leave._compute_date_from_to()
-            new_leave._compute_duration()
+        for version, period_vals in leave._get_version_periods(overlapping_contracts):
+            new_leave_vals = self.env['hr.leave']._prepare_split_leave_vals(leave.copy_data({
+                **period_vals,
+                'state': leaves_state[leave.id] if version.id != last_version.id else 'confirm',
+            })[0])
             # Could happen for part-time contract, that time off is not necessary
             # anymore.
-            if new_leave.date_from < new_leave.date_to:
+            if new_leave_vals:
                 all_new_leave_origin.append(leave)
-                all_new_leave_vals.append(new_leave._convert_to_write(new_leave._cache))
+                all_new_leave_vals.append(new_leave_vals)
         return all_new_leave_origin, all_new_leave_vals
 
     def _create_all_new_leave(self, all_new_leave_origin, all_new_leave_vals):
@@ -311,13 +312,7 @@ class HrVersion(models.Model):
 
         Validated ones get their resource leaves; each one gets a link to its origin.
         """
-        # seems 'tracking_disable' is wanted to speedup leaves batch creation
-        new_leaves = self.env['hr.leave'].with_context(
-            tracking_disable=True,
-            mail_activity_automation_skip=True,
-            leave_fast_create=True,
-            leave_skip_state_check=True
-        ).create(all_new_leave_vals)
+        new_leaves = self.env['hr.leave']._create_split_leaves(all_new_leave_vals)
         new_leaves.filtered(lambda l: l.state in 'validate')._validate_leave_request()
         for index, new_leave in enumerate(new_leaves):
             new_leave.message_post_with_source(
