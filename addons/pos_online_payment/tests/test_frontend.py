@@ -457,6 +457,17 @@ class TestUi(TestPointOfSaleHttpCommon, OnlinePaymentCommon):
         self.assertTrue(result.get('pos_online_payment_nothing_to_pay'))
         self.assertEqual(self.env['payment.transaction'].search_count([('pos_order_id', '=', order.id)]), 1)
 
+    def test_online_payment_after_order_change(self):
+        """ Test that the order is synced before requesting an online payment,
+        so that the server checks the amount against the latest order total.
+        """
+        self.pos_config.with_user(self.pos_admin).open_ui()
+        self.start_pos_tour('test_online_payment_after_order_change', login="pos_admin")
+        order = self.pos_config.current_session_id.order_ids.sorted(lambda o: o.id, reverse=True)[0]
+        self.assertEqual(order.state, "draft")
+        self.assertAlmostEqual(order.amount_total, 9.6)
+        self.assertAlmostEqual(order.next_online_payment_amount, 9.6)
+
     @classmethod
     def tearDownClass(cls):
         # Restore company values after the tests

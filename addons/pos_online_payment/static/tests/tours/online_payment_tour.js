@@ -23,3 +23,28 @@ registry.category("web_tour.tours").add("test_selected_customer_after_adding_pay
             Dialog.is("Scan to Pay"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_online_payment_after_order_change", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.addOrderline("Letter Tray", "1"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Online payment"),
+            PaymentScreen.clickValidate(),
+            // The order is now synced on the server with a total of 4.80
+            { trigger: ".o_qr_popup .qr-code-amount:contains('4.80')" },
+            { trigger: ".o_qr_popup .cancel-button", run: "click" },
+            PaymentScreen.clickBackToProductScreen(),
+            ProductScreen.clickDisplayedProduct("Letter Tray"),
+            ProductScreen.selectedOrderlineHas("Letter Tray", "2.0"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.totalIs("9.60"),
+            PaymentScreen.clickPaymentMethod("Online payment"),
+            PaymentScreen.selectedPaymentlineHas("Online payment", "9.60"),
+            PaymentScreen.clickValidate(),
+            // The server must know the new total, otherwise "Invalid online payments" is shown
+            { trigger: ".o_qr_popup .qr-code-amount:contains('9.60')" },
+        ].flat(),
+});
