@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Main Menu -->
+    <menuitem id="menu_customer_payment_root"
+              name="Customer Payments"
+              sequence="100"
+              web_icon="customer_payment,static/description/icon.png"/>
+
+    <!-- Submenu: Payments -->
+    <menuitem id="menu_customer_payment_payments"
+              name="Payments"
+              parent="menu_customer_payment_root"
+              action="action_customer_payment"
+              sequence="10"/>
+
+</odoo>

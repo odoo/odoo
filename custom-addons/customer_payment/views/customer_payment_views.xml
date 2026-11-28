@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Customer Payment Tree View -->
+    <record id="view_customer_payment_tree" model="ir.ui.view">
+        <field name="name">customer.payment.tree</field>
+        <field name="model">customer.payment</field>
+        <field name="arch" type="xml">
+            <list string="Customer Payments">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="year"/>
+                <field name="invoice_count"/>
+                <field name="total_invoice_amount"/>
+                <field name="payment_entry_count"/>
+                <field name="total_payment_amount"/>
+                <field name="balance"/>
+                <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state == 'processed'"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Customer Payment Form View -->
+    <record id="view_customer_payment_form" model="ir.ui.view">
+        <field name="name">customer.payment.form</field>
+        <field name="model">customer.payment</field>
+        <field name="priority">1</field>
+        <field name="arch" type="xml">
+            <form string="Customer Payment" create="true" edit="true">
+                <header>
+                    <button name="action_process_invoices" string="Process" type="object"
+                            class="oe_highlight" invisible="state == 'processed'"/>
+                    <button name="action_reset_to_draft" string="Reset to Draft" type="object"
+                            invisible="state == 'draft'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,processed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="partner_id"/>
+                            <field name="year"/>
+                        </group>
+                        <group>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="currency_id" groups="base.group_multi_currency"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Invoices" name="invoices">
+                            <group>
+                                <group>
+                                    <field name="invoice_count" readonly="1"/>
+                                    <field name="total_invoice_amount" readonly="1" widget="monetary"/>
+                                </group>
+                            </group>
+                            <field name="invoice_ids" nolabel="1" readonly="1">
+                                <list string="Invoices" create="0" delete="0" edit="0">
+                                    <field name="name"/>
+                                    <field name="invoice_date"/>
+                                    <field name="invoice_date_due"/>
+                                    <field name="amount_total" sum="Total"/>
+                                    <field name="state"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+
+                        <page string="Payment Entries" name="payment_entries">
+                            <group>
+                                <group>
+                                    <field name="payment_entry_count" readonly="1"/>
+                                    <field name="total_payment_amount" readonly="1" widget="monetary"/>
+                                </group>
+                            </group>
+
+                            <!-- Previous Payment Entries (Readonly) -->
+                            <group string="Previous Payment History" invisible="not previous_payment_entry_ids">
+                                <field name="previous_payment_entry_ids" nolabel="1">
+                                    <list string="Previous Payments" create="0" delete="0" edit="0">
+                                        <field name="payment_date"/>
+                                        <field name="amount" sum="Previous Total"/>
+                                        <field name="note"/>
+                                        <field name="currency_id" column_invisible="1"/>
+                                    </list>
+                                </field>
+                            </group>
+
+                            <!-- New Payment Entries (Editable) -->
+                            <group string="New Payment Entries">
+                                <field name="payment_entry_ids" nolabel="1">
+                                    <list string="Payment Entries" editable="bottom">
+                                        <field name="payment_date"/>
+                                        <field name="amount" sum="New Total"/>
+                                        <field name="note"/>
+                                        <field name="currency_id" column_invisible="1"/>
+                                    </list>
+                                </field>
+                            </group>
+                        </page>
+
+                        <page string="Summary" name="summary">
+                            <group>
+                                <group string="Totals">
+                                    <field name="total_invoice_amount" readonly="1" widget="monetary"/>
+                                    <field name="total_payment_amount" readonly="1" widget="monetary"/>
+                                    <field name="balance" readonly="1" widget="monetary"
+                                           class="oe_subtotal_footer_separator"/>
+                                </group>
+                            </group>
+                            <group>
+                                <field name="notes" nolabel="1" placeholder="Add notes here..."/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Customer Payment Search View -->
+    <record id="view_customer_payment_search" model="ir.ui.view">
+        <field name="name">customer.payment.search</field>
+        <field name="model">customer.payment</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="year"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action for Customer Payment -->
+    <record id="action_customer_payment" model="ir.actions.act_window">
+        <field name="name">Customer Payments</field>
+        <field name="res_model">customer.payment</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_customer_payment_tree"/>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new customer payment record
+            </p>
+            <p>
+                Track customer invoices and payment entries by year.
+                Click the "Process" button to automatically load all invoices for the selected customer and year.
+            </p>
+        </field>
+    </record>
+
+    <!-- Explicitly define action views -->
+    <record id="action_customer_payment_view_form" model="ir.actions.act_window.view">
+        <field name="sequence">2</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_customer_payment_form"/>
+        <field name="act_window_id" ref="action_customer_payment"/>
+    </record>
+
+    <record id="action_customer_payment_view_tree" model="ir.actions.act_window.view">
+        <field name="sequence">1</field>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="view_customer_payment_tree"/>
+        <field name="act_window_id" ref="action_customer_payment"/>
+    </record>
+
+</odoo>
