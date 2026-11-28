@@ -99,6 +99,10 @@ firejail --profile=~/.config/firejail/claude.profile --whitelist=$PWD claude
 **Note:** Auto-updates will not work correctly under the sandbox.
 See [Claude auto-updates break the symlink](#claude-auto-updates-break-the-symlink).
 
+**Note:** The `private-etc` group options are only available for Firejail version
+[0.9.74](https://github.com/netblue30/firejail/releases#release-0.9.74) and later.
+Use exact file names instead.
+
 **Limitation:** Firejail always creates a PID namespace, which prevents VSCode
 IDE integration (`claude /ide`). Use `bwrap-claude.sh` if you need this
 feature. This limitation does not apply when running the editor itself under
