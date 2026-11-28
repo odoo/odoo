@@ -1,0 +1,13 @@
+/* This file is part of website.font_urls_export (not of the main bundle) to
+   give the server the theme colors without compiling the whole frontend.
+   Libsass prints some colors by name (red) or as functions (rgba), so only
+   opaque colors are printed, as hex. */
+
+.o-website-livechat-theme-colors {
+    @each $name in ('o-color-1', 'primary', 'o-color-2', 'secondary') {
+        $-color: o-color($name);
+        @if type-of($-color) == 'color' and alpha($-color) == 1 {
+            --#{$name}: #{'#' + str-slice(ie-hex-str($-color), 4)};
+        }
+    }
+}

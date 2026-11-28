@@ -8,3 +8,4 @@ from . import test_livechat_basic_flow
 from . import test_livechat_request
 from . import test_website_visitor
 from . import test_livechat_session_user_changes
+from . import test_theme_colors
