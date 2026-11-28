@@ -18,7 +18,7 @@ from PIL import Image, UnidentifiedImageError
 
 from odoo import api, Command, fields, models, modules, tools, _
 from odoo.addons.base_import.models.base_import import ImportValidationError
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.fields import Datetime, Domain
 from odoo.tools import SQL
 from odoo.tools.float_utils import float_round
@@ -577,16 +577,35 @@ class MailingMailing(models.Model):
         return mailings
 
     def write(self, vals):
-        values = vals
-        if values.get('body_arch'):
-            values['body_arch'] = self._convert_inline_images_to_urls(values['body_arch'])
-        if values.get('body_html'):
-            values['body_html'] = self._convert_inline_images_to_urls(values['body_html'])
+        # Keep lifecycle updates possible while preventing content changes.
+        allowed_fields = {'kpi_mail_required', 'sent_date', 'state'}
+        if vals.get('state') == 'draft':
+            # Cancelling also clears the scheduling fields.
+            allowed_fields.update({'next_departure', 'schedule_date', 'schedule_type'})
+
+        if (
+            set(vals) - allowed_fields
+            and any(mailing.state in ('in_queue', 'sending') for mailing in self)
+        ):
+            raise RedirectWarning(
+                self.env._("Oops, you cannot edit a queued mailing."),
+                self.env.ref('mass_mailing.mailing_mailing_action_set_draft').id,
+                self.env._("Set back to draft"),
+                {
+                    'active_model': self._name,
+                    'active_ids': self.ids,
+                },
+            )
+
+        if vals.get('body_arch'):
+            vals['body_arch'] = self._convert_inline_images_to_urls(vals['body_arch'])
+        if vals.get('body_html'):
+            vals['body_html'] = self._convert_inline_images_to_urls(vals['body_html'])
         # If ab_testing is already enabled on a mailing and the campaign is removed, we raise a ValidationError
-        if values.get('campaign_id') is False and any(mailing.ab_testing_enabled for mailing in self) and 'ab_testing_enabled' not in values:
+        if vals.get('campaign_id') is False and any(mailing.ab_testing_enabled for mailing in self) and 'ab_testing_enabled' not in vals:
             raise ValidationError(_("A campaign should be set when A/B test is enabled"))
 
-        result = super().write(values)
+        result = super().write(vals)
         self._fix_attachment_ownership()
 
         if any(self.mapped('ab_testing_schedule_datetime')):
@@ -695,22 +714,13 @@ class MailingMailing(models.Model):
 
     def action_cancel(self):
         self.write({'state': 'draft', 'schedule_date': False, 'schedule_type': 'now', 'next_departure': False})
+        # Remove the emails not sent yet with their traces, so that sending the
+        # mailing again reaches their recipients.
+        self._unlink_mails_and_traces(Domain('state', '=', 'outgoing'))
 
     def action_retry_failed(self, extra_domain=None):
         """ Remove all failed emails and their traces, and try sending them again."""
-        # Use batching to prevent cache overfill in unlink()
-        batch_size = 1000
-        base_domain = [
-            ('mailing_id', 'in', self.ids),
-            ('state', '=', 'exception')
-        ]
-        domain = Domain(base_domain) & Domain(extra_domain or Domain.TRUE)
-        failed_emails = self.env['mail.mail'].sudo().with_context(prefetch_fields=False).search(domain, limit=batch_size)
-        while failed_emails:
-            failed_emails.mapped('mailing_trace_ids').unlink()
-            failed_emails.unlink()
-            self.env.invalidate_all()
-            failed_emails = failed_emails.search(domain, limit=batch_size)
+        self._unlink_mails_and_traces(Domain('state', '=', 'exception') & Domain(extra_domain or Domain.TRUE))
         self.action_put_in_queue()
 
     def action_view_link_trackers(self):
@@ -960,6 +970,19 @@ class MailingMailing(models.Model):
     # Email Sending
     # ------------------------------------------------------
 
+    def _unlink_mails_and_traces(self, domain):
+        """ Remove the emails of the mailings matching ``domain`` and their
+        traces: the next sending mails their recipients again. """
+        # Use batching to prevent cache overfill in unlink()
+        batch_size = 1000
+        domain = Domain('mailing_id', 'in', self.ids) & domain
+        mails = self.env['mail.mail'].sudo().with_context(prefetch_fields=False).search(domain, limit=batch_size)
+        while mails:
+            mails.mailing_trace_ids.unlink()
+            mails.unlink()
+            self.env.invalidate_all()
+            mails = mails.search(domain, limit=batch_size)
+
     def _get_opt_out_list(self):
         """ Give list of opt-outed emails, depending on specific model-based
         computation if available.
@@ -1199,8 +1222,10 @@ class MailingMailing(models.Model):
             mass_mailing = mass_mailing.with_context(
                 **self.env['res.users'].with_user(context_user).context_get()
             )
-            if len(mass_mailing._get_remaining_recipients()) > 0:
+            if mass_mailing._get_remaining_recipients():
                 mass_mailing.state = 'sending'
+                # Make concurrent edits fail before the first email is sent.
+                self.env['ir.cron']._commit_progress(processed=0)
                 mass_mailing._action_send_mail()
             else:
                 mass_mailing.write({
