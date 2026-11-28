@@ -136,31 +136,46 @@ function getUnselectedEdgeTextNodes(selection) {
  */
 function scrollToSelection(selection) {
     const range = selection.getRangeAt(0);
-    const container = closestScrollableY(range.startContainer.parentElement);
+    const container =
+        closestScrollableY(range.startContainer.parentElement) ||
+        range.startContainer.ownerDocument.scrollingElement;
     if (!container) {
         // If the container is not scrollable we don't scroll
         return;
     }
     let rect = range.getBoundingClientRect();
-    // If the range is invisible (0 width & height),
-    // We call `getBoundingClientRect` on closest element.
-    if (rect.width === 0 && rect.height === 0 && selection.isCollapsed) {
+    if (selection.isCollapsed && rect.width === 0 && rect.height === 0) {
         rect = closestElement(selection.anchorNode).getBoundingClientRect();
     }
 
-    const containerRect = container.getBoundingClientRect();
-    const offsetTop = rect.top - containerRect.top + container.scrollTop;
-    const offsetBottom = rect.bottom - containerRect.top + container.scrollTop;
+    const isDocumentScroller = container === container.ownerDocument.scrollingElement;
 
-    if (rect.bottom > containerRect.top && rect.top < containerRect.bottom) {
-        // If selection is partially visible, no need to scroll.
+    // The root element's rect describes the whole document and moves while
+    // scrolling, whereas selection rects are relative to the viewport.
+    const containerRect = isDocumentScroller
+        ? { top: 0, bottom: container.ownerDocument.defaultView.innerHeight }
+        : container.getBoundingClientRect();
+
+    const isVisible = selection.isCollapsed
+        ? rect.top >= containerRect.top && rect.bottom <= containerRect.bottom
+        : rect.bottom > containerRect.top && rect.top < containerRect.bottom;
+
+    if (isVisible) {
         return;
     }
-    // Simulate the "nearest" behavior by scrolling to the closest top/bottom edge
+
+    // Keep the scroll minimal by aligning only the hidden edge with the
+    // corresponding visible boundary.
     if (rect.top < containerRect.top) {
-        container.scrollTo({ top: offsetTop, behavior: "instant" });
+        container.scrollTo({
+            top: container.scrollTop + rect.top - containerRect.top,
+            behavior: "instant",
+        });
     } else if (rect.bottom > containerRect.bottom) {
-        container.scrollTo({ top: offsetBottom - container.clientHeight, behavior: "instant" });
+        container.scrollTo({
+            top: container.scrollTop + rect.bottom - containerRect.bottom,
+            behavior: "instant",
+        });
     }
 }
 
