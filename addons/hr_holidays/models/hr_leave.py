@@ -1545,13 +1545,6 @@ class HrLeave(models.Model):
                     message += "\n" + _("To import it as a new time off request instead, leave the External ID column empty.")
                 raise ValidationError(message)
 
-    @api.constrains('employee_id')
-    def _check_executive_employee_type(self):
-        executive_type = self.env.ref('hr.contract_type_company_executive', raise_if_not_found=False)
-        for holiday in self:
-            if executive_type and holiday.employee_id.employee_type_id == executive_type:
-                raise ValidationError(_("You cannot create a time off request for an employee of type company executive."))
-
     def _check_validity(self):
         """Check that the requests are covered by allocations and avoid mandatory days.
 
