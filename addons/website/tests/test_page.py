@@ -701,6 +701,23 @@ class WithContext(HttpCase):
             self.assertEqual(alternate_en_url, f'{self.base_url()}/page_1')
             self.assertEqual(alternate_fr_url, f'{self.base_url()}/fr/page_1')
 
+    def test_alternatives_noindex(self):
+        website = self.env.ref('base.default_website')
+        lang_fr = self.env['res.lang']._activate_lang('fr_FR')
+        website.language_ids = self.env.ref('base.lang_en') + lang_fr
+        website.default_lang_id = self.env.ref('base.lang_en')
+        self.page.website_indexed = False
+
+        for url in ('/page_1', '/fr/page_1'):
+            with self.subTest(url=url):
+                res = self.url_open(url)
+                res.raise_for_status()
+
+                root_html = html.fromstring(res.content)
+                self.assertTrue(root_html.xpath('//meta[@name="robots"][@content="noindex"]'))
+                self.assertTrue(root_html.xpath('//link[@rel="canonical"]'))
+                self.assertFalse(root_html.xpath('//link[@rel="alternate"][@hreflang]'), "noindex pages should not have hreflang links")
+
     def test_alternate_hreflang(self):
         website = self.env.ref('base.default_website')
         lang_en = self.env.ref('base.lang_en')
