@@ -1,7 +1,7 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { click, dblclick, queryAll, queryAllTexts, queryOne, select } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
-import { setupEditor } from "./_helpers/editor";
+import { setupEditor, testEditor } from "./_helpers/editor";
 import { getContent, setSelection } from "./_helpers/selection";
 import { QWebPlugin } from "@html_editor/others/qweb_plugin";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
@@ -462,4 +462,160 @@ test("should not apply font tag to t nodes (protects if else nodes separation)",
             </p>
         ]`)
     );
+});
+describe("formatting QWeb conditional branches (t-if, t-elif, t-else)", () => {
+    describe("font size", () => {
+        test("formatting `t-if` also wraps multiple `t-elif` and the `t-else`", async () => {
+            await testEditor({
+                contentBefore: `<p>[<t t-if="a" t-out="a">A</t>]<t t-elif="b" t-out="b">B</t><t t-elif="c" t-out="c">C</t><t t-else="" t-out="d">D</t></p>`,
+                stepFunction: (editor) => setFontSize("12px")(editor),
+                contentAfter: `<p><span style="font-size: 12px;">[<t t-if="a" t-out="a">A</t>]<t t-elif="b" t-out="b">B</t><t t-elif="c" t-out="c">C</t><t t-else="" t-out="d">D</t></span></p>`,
+                config,
+            });
+        });
+
+        test("formatting `t-else` after multiple `t-elif` wraps the whole group", async () => {
+            await testEditor({
+                contentBefore: `<p><t t-if="a" t-out="a">A</t><t t-elif="b" t-out="b">B</t><t t-elif="c" t-out="c">C</t>[<t t-else="" t-out="d">D</t>]</p>`,
+                stepFunction: (editor) => setFontSize("12px")(editor),
+                contentAfter: `<p><span style="font-size: 12px;"><t t-if="a" t-out="a">A</t><t t-elif="b" t-out="b">B</t><t t-elif="c" t-out="c">C</t>[<t t-else="" t-out="d">D</t></span>]</p>`,
+                config,
+            });
+        });
+
+        test("formatting the first group leaves the second group outside the wrapper", async () => {
+            await testEditor({
+                contentBefore: `<p>[<t t-if="a" t-out="a">A</t>]<t t-else="" t-out="b">B</t><t t-if="c" t-out="c">C</t><t t-else="" t-out="d">D</t></p>`,
+                stepFunction: (editor) => setFontSize("12px")(editor),
+                contentAfter: `<p><span style="font-size: 12px;">[<t t-if="a" t-out="a">A</t>]<t t-else="" t-out="b">B</t></span><t t-if="c" t-out="c">C</t><t t-else="" t-out="d">D</t></p>`,
+                config,
+            });
+        });
+
+        test("removing it restores `t-if` and `t-else` without any wrapper", async () => {
+            await testEditor({
+                contentBefore: `<p>[<t t-if="cond" t-out="a">A</t>]<t t-else="" t-out="b">B</t></p>`,
+                stepFunction: (editor) => {
+                    setFontSize("12px")(editor);
+                    setFontSize("")(editor);
+                },
+                contentAfter: `<p>[<t t-if="cond" t-out="a">A</t>]<t t-else="" t-out="b">B</t></p>`,
+                config,
+            });
+        });
+
+        test("formatting the middle of three consecutive `t-if` wraps only that one", async () => {
+            await testEditor({
+                contentBefore: `<p><t t-if="a" t-out="a">A</t>[<t t-if="b" t-out="b">B</t>]<t t-if="c" t-out="c">C</t></p>`,
+                stepFunction: (editor) => setFontSize("12px")(editor),
+                contentAfter: `<p><t t-if="a" t-out="a">A</t><span style="font-size: 12px;">[<t t-if="b" t-out="b">B</t></span>]<t t-if="c" t-out="c">C</t></p>`,
+                config,
+            });
+        });
+
+        test("formatting `t-else` does not wrap a following `t-if`", async () => {
+            await testEditor({
+                contentBefore: `<p><t t-if="a" t-out="a">A</t>[<t t-else="" t-out="b">B</t>]<t t-if="c" t-out="c">C</t></p>`,
+                stepFunction: (editor) => setFontSize("12px")(editor),
+                contentAfter: `<p><span style="font-size: 12px;"><t t-if="a" t-out="a">A</t>[<t t-else="" t-out="b">B</t></span>]<t t-if="c" t-out="c">C</t></p>`,
+                config,
+            });
+        });
+
+        test("formatting the `t-else` of a second group does not reach into the first group", async () => {
+            await testEditor({
+                contentBefore: `<p><t t-if="a" t-out="a">A</t><t t-else="" t-out="b">B</t><t t-if="c" t-out="c">C</t>[<t t-else="" t-out="d">D</t>]</p>`,
+                stepFunction: (editor) => setFontSize("12px")(editor),
+                contentAfter: `<p><t t-if="a" t-out="a">A</t><t t-else="" t-out="b">B</t><span style="font-size: 12px;"><t t-if="c" t-out="c">C</t>[<t t-else="" t-out="d">D</t></span>]</p>`,
+                config,
+            });
+        });
+
+        test("formatting `t-elif` does not wrap a following `t-if` group", async () => {
+            await testEditor({
+                contentBefore: `<p><t t-if="a" t-out="a">A</t>[<t t-elif="b" t-out="b">B</t>]<t t-else="" t-out="c">C</t><t t-if="d" t-out="d">D</t><t t-else="" t-out="e">E</t></p>`,
+                stepFunction: (editor) => setFontSize("12px")(editor),
+                contentAfter: `<p><span style="font-size: 12px;"><t t-if="a" t-out="a">A</t>[<t t-elif="b" t-out="b">B</t>]<t t-else="" t-out="c">C</t></span><t t-if="d" t-out="d">D</t><t t-else="" t-out="e">E</t></p>`,
+                config,
+            });
+        });
+
+        test("a selection spanning two groups wraps all nodes of both groups", async () => {
+            await testEditor({
+                contentBefore: `<p>[<t t-if="a" t-out="a">A</t><t t-else="" t-out="b">B</t><t t-if="c" t-out="c">C</t><t t-else="" t-out="d">D</t>]</p>`,
+                stepFunction: (editor) => setFontSize("12px")(editor),
+                contentAfter: `<p><span style="font-size: 12px;">[<t t-if="a" t-out="a">A</t><t t-else="" t-out="b">B</t><t t-if="c" t-out="c">C</t><t t-else="" t-out="d">D</t></span>]</p>`,
+                config,
+            });
+        });
+
+        test("removing it from a selection spanning two groups restores both groups intact", async () => {
+            await testEditor({
+                contentBefore: `<p>[<t t-if="a" t-out="a">A</t><t t-else="" t-out="b">B</t><t t-if="c" t-out="c">C</t><t t-else="" t-out="d">D</t>]</p>`,
+                stepFunction: (editor) => {
+                    setFontSize("12px")(editor);
+                    setFontSize("")(editor);
+                },
+                contentAfter: `<p>[<t t-if="a" t-out="a">A</t><t t-else="" t-out="b">B</t><t t-if="c" t-out="c">C</t><t t-else="" t-out="d">D</t>]</p>`,
+                config,
+            });
+        });
+    });
+
+    describe("bold", () => {
+        test("formatting `t-elif` wraps the whole group (`t-if`, `t-elif`, `t-else`)", async () => {
+            await testEditor({
+                contentBefore: `<p><t t-if="a" t-out="a">A</t>[<t t-elif="b" t-out="b">B</t>]<t t-else="" t-out="c">C</t></p>`,
+                stepFunction: (editor) => bold(editor),
+                contentAfter: `<p><strong><t t-if="a" t-out="a">A</t>[<t t-elif="b" t-out="b">B</t>]<t t-else="" t-out="c">C</t></strong></p>`,
+                config,
+            });
+        });
+
+        test("toggling it off restores `t-if` and `t-else` without any wrapper", async () => {
+            await testEditor({
+                contentBefore: `<p>[<t t-if="a" t-out="a">A</t>]<t t-else="" t-out="b">B</t></p>`,
+                stepFunction: (editor) => {
+                    bold(editor);
+                    bold(editor);
+                },
+                contentAfter: `<p>[<t t-if="a" t-out="a">A</t>]<t t-else="" t-out="b">B</t></p>`,
+                config,
+            });
+        });
+    });
+
+    describe("color", () => {
+        test("formatting `t-elif` wraps the whole group (`t-if`, `t-elif`, `t-else`)", async () => {
+            await testEditor({
+                contentBefore: `<p><t t-if="a" t-out="a">A</t>[<t t-elif="b" t-out="b">B</t>]<t t-else="" t-out="c">C</t></p>`,
+                stepFunction: (editor) => setColor("red", "color")(editor),
+                contentAfter: `<p><font style="color: red;"><t t-if="a" t-out="a">A</t>[<t t-elif="b" t-out="b">B</t>]<t t-else="" t-out="c">C</t></font></p>`,
+                config,
+            });
+        });
+
+        test("removing it restores `t-if` and `t-else` without any wrapper", async () => {
+            await testEditor({
+                contentBefore: `<p>[<t t-if="a" t-out="a">A</t>]<t t-else="" t-out="b">B</t></p>`,
+                stepFunction: (editor) => {
+                    setColor("red", "color")(editor);
+                    setColor("", "color")(editor);
+                },
+                contentAfter: `<p>[<t t-if="a" t-out="a">A</t>]<t t-else="" t-out="b">B</t></p>`,
+                config,
+            });
+        });
+    });
+
+    describe("background color", () => {
+        test("formatting `t-if` also wraps its `t-else`", async () => {
+            await testEditor({
+                contentBefore: `<p>[<t t-if="a" t-out="a">A</t>]<t t-else="" t-out="b">B</t></p>`,
+                stepFunction: (editor) => setColor("red", "backgroundColor")(editor),
+                contentAfter: `<p><font style="background-color: red;">[<t t-if="a" t-out="a">A</t>]<t t-else="" t-out="b">B</t></font></p>`,
+                config,
+            });
+        });
+    });
 });
