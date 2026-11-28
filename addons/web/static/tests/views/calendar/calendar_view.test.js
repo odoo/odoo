@@ -4412,6 +4412,28 @@ test(`European week start month mode on mobile`, async () => {
 });
 
 test.tags("mobile");
+test(`month mode on mobile: the week column does not shift the tapped day`, async () => {
+    patchWithCleanup(CalendarCommonRenderer.prototype, {
+        onDateClick(info) {
+            expect.step(info.dateStr);
+        },
+    });
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `<calendar date_start="start" date_stop="stop" mode="month"/>`,
+    });
+
+    // FullCalendar splits a week in 7 equal columns to find the tapped day
+    const days = queryAll(`.o_calendar_current .o_calendar_day_row:eq(1) .o_calendar_day`);
+    for (const day of days) {
+        await click(day, { position: { x: queryRect(day).width - 2 }, relative: true });
+        await animationFrame();
+    }
+    expect.verifySteps(days.map((day) => day.dataset.date));
+});
+
+test.tags("mobile");
 test(`week mode on mobile has no week column`, async () => {
     await mountView({
         resModel: "event",
@@ -4580,6 +4602,9 @@ test(`Monday week start year mode`, async () => {
         get customOptions() {
             return { ...super.customOptions, weekNumbersWithinDays: false };
         },
+        onDateClick(info) {
+            expect.step(info.dateStr);
+        },
     });
 
     onRpc("event", "search_read", ({ kwargs }) => {
@@ -4607,6 +4632,13 @@ test(`Monday week start year mode`, async () => {
         message: "The last day of the week should be Sunday the 15th",
     });
     expect(queryFirst(`.o_calendar_week`, { root: weekRow })).toHaveText("37");
+
+    // FullCalendar splits the row group in 7 equal columns to find the clicked day
+    const monday = queryFirst(`.o_calendar_day`, { root: weekRow });
+    monday.scrollIntoView({ behavior: "instant", block: "center" });
+    await click(monday, { position: { x: queryRect(monday).width - 2 }, relative: true });
+    await animationFrame();
+    expect.verifySteps(["2019-09-09"]);
 });
 
 test(`Sunday week start year mode`, async () => {

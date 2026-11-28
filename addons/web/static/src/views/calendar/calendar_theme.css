@@ -286,21 +286,32 @@
 /* Month and year */
 .o_calendar_fc_view_dayGridMonth,
 .o_calendar_fc_view_multiMonthYear {
+    --o-calendar__week-width: 1.75rem;
+
     .o_calendar_week,
     .o_calendar_week_header {
-        flex: 0 0 4ch;
         text-align: center;
         line-height: var(--o-bs-line-height-sm);
         font-size: var(--o-font-size-base-smaller);
         opacity: .5;
-
-        @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
-            width: 3ch;
-        }
     }
 
     .o_calendar_week_header {
+        flex: 0 0 var(--o-calendar__week-width);
         color: transparent;
+    }
+
+    /* FullCalendar finds the day under the pointer by splitting the row group in equal */
+    /* columns, so the week column is drawn in a margin of the row group instead of in its rows */
+    [role="rowgroup"]:has(> .o_calendar_day_row > .o_calendar_week) {
+        margin-inline-start: var(--o-calendar__week-width);
+    }
+
+    .o_calendar_week {
+        position: absolute;
+        inset-block: 0;
+        inset-inline-end: 100%;
+        width: var(--o-calendar__week-width);
     }
 
     .o_calendar_week_number {
@@ -354,7 +365,9 @@
     }
 
     .o_calendar_week {
-        align-self: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         cursor: default;
     }
 
