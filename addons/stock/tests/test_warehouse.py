@@ -629,6 +629,35 @@ class TestWarehouse(TestStockCommon):
         self.assertTrue(Warehouse.new()._onchange_company_id())
         self.assertFalse(Warehouse.new({'company_id': main_company.id})._onchange_company_id())
 
+    def test_inventory_admin_toggles_multi_warehouse(self):
+        """ A user with only Inventory Administrator rights should be able to create a
+        second warehouse. The multi-location and multi-warehouse settings should become
+        enabled.
+        """
+        group_multi_warehouses = self.env.ref('stock.group_stock_multi_warehouses')
+        group_multi_locations = self.env.ref('stock.group_stock_multi_locations')
+
+        # Remove groups
+        self.group_user.sudo().implied_ids = [
+            Command.unlink(group_multi_warehouses.id),
+            Command.unlink(group_multi_locations.id),
+        ]
+
+        # Create user with Inventory admin rights only
+        inventory_admin = new_test_user(
+            self.env, login='inventory_admin',
+            groups='base.group_user,stock.group_stock_manager',
+            company_id=self.company.id,
+        )
+        self.assertFalse(inventory_admin.has_group('base.group_system'))
+
+        self.env['stock.warehouse'].with_user(inventory_admin).create({
+            'name': 'Second Warehouse',
+            'code': 'WH2',
+        })
+        self.assertIn(group_multi_warehouses, self.group_user.implied_ids)
+        self.assertIn(group_multi_locations, self.group_user.implied_ids)
+
     def test_toggle_active_warehouse_1(self):
         """ Basic test that create a warehouse with classic configuration.
         Archive it and check that locations, picking types, routes, rules are
