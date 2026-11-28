@@ -315,6 +315,75 @@ class StockQuant(models.Model):
                     quant._check_company()
         return quants
 
+    @api.model
+    def load(self, fields, data):
+        """Resolve the Lot/Serial column against each row's product on import.
+
+        When importing a Physical Inventory with the *Create new values* option
+        enabled for the Lot/Serial Number column, the generic importer resolves
+        it through ``stock.lot.name_create(name=...)``, passing the name alone.
+        As ``stock.lot.product_id`` is required, the lot cannot be created and
+        the whole row is rejected. Encoding a lot manually works only because
+        the form widget provides ``default_product_id`` in the context,
+        something the importer cannot do as it converts each column
+        independently.
+
+        Pre-resolve the lot against the product of the same row (find it or
+        create it) and feed the importer a database id.
+        """
+        if (
+            self.env.context.get('import_file')
+            and 'product_id' in fields
+            and 'lot_id' in fields
+            and (self.env.context.get('name_create_enabled_fields') or {}).get('lot_id')
+        ):
+            fields, data = self._set_import_lots(fields, data)
+        return super().load(fields, data)
+
+    @api.model
+    def _set_import_lots(self, fields, data):
+        """Replace the name-based ``lot_id`` column by ``lot_id/.id``.
+
+        For each row, the lot is matched against the row's product and created
+        if missing. Rows whose product cannot be resolved get an empty lot cell,
+        so the importer reports the error on the product column itself.
+        """
+        lot_index = fields.index('lot_id')
+        product_index = fields.index('product_id')
+        Product = self.env['product.product']
+        Lot = self.env['stock.lot']
+        products = {}
+        lots = {}
+        data = [list(row) for row in data]
+        for row in data:
+            lot_name = (row[lot_index] or '').strip()
+            product_ref = (row[product_index] or '').strip()
+            if not lot_name or not product_ref:
+                row[lot_index] = ''
+                continue
+            if product_ref not in products:
+                match = Product.name_search(name=product_ref, operator='=')
+                products[product_ref] = Product.browse(match[0][0]) if match else Product
+            product = products[product_ref]
+            if product.tracking not in ('lot', 'serial'):
+                # Unknown product or product not tracked by lot/serial: leave it
+                # to the importer, which will report the error on the row.
+                row[lot_index] = ''
+                continue
+            key = (product.id, lot_name)
+            if key not in lots:
+                lot = Lot.search(
+                    [('product_id', '=', product.id), ('name', '=', lot_name)],
+                    limit=1,
+                )
+                if not lot:
+                    lot = Lot.create({'product_id': product.id, 'name': lot_name})
+                lots[key] = lot.id
+            row[lot_index] = str(lots[key])
+        fields = list(fields)
+        fields[lot_index] = 'lot_id/.id'
+        return fields, data
+
     def _load_records_create(self, values):
         """ Add default location if import file did not fill it"""
         company_user = self.env.company
