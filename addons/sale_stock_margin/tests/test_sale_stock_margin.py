@@ -666,7 +666,8 @@ class TestSaleStockMargin(TestStockValuationCommon):
 
     def test_dropship_fifo_purchase_price(self):
         """ Check that when the product is dropshipped, the purchase_price used is based on the unit
-        price of the purchase order.
+        price of the purchase order. A second dropship at 40 that is returned is deducted: 1 unit
+        is delivered at 20 and 1 is still to deliver at the standard price of 10.
         """
         try:
             dropship_route = self.env.ref('stock_dropshipping.route_drop_shipping')
@@ -700,6 +701,16 @@ class TestSaleStockMargin(TestStockValuationCommon):
         so.picking_ids.button_validate()
         self.assertEqual(po.order_line.price_unit, 20)
         self.assertEqual(so.order_line.purchase_price, 20)
+
+        self.product_fifo_auto.seller_ids.price = 40
+        with Form(so) as so_form:
+            with so_form.order_line.edit(0) as line:
+                line.product_uom_qty = 2
+        self.env['purchase.order'].search([('origin', '=', so.name), ('state', '=', 'draft')]).button_confirm()  # noqa: OLS03001
+        dropship_2 = so.picking_ids.filtered(lambda picking: picking.state != 'done')
+        dropship_2.button_validate()
+        self._make_return(dropship_2.move_ids, 1)
+        self.assertRecordValues(so.order_line, [{'qty_delivered': 1, 'purchase_price': 15}])
 
     def test_reduce_ordered_quantity_after_delivery(self):
         """Ensure the ordered quantity cannot be reduced after the product has been delivered."""
