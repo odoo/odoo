@@ -6,8 +6,14 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import models, api, _
 from odoo.fields import Domain
+<<<<<<< 4c6e3547bc38e62b22082bed3055c47bcfdc35a0
 from odoo.tools import date_utils
 from odoo.addons.spreadsheet.utils.helpers import spreadsheet_safe_batch
+||||||| 19cafbe819c9cd3de1dc87b4a0b4ff03f937dcd8
+from odoo.tools import date_utils
+=======
+from odoo.tools import date_utils, SQL
+>>>>>>> e7f115d0d62cf21dd04d603611d7f4412c9187ab
 
 
 class AccountAccount(models.Model):
@@ -63,19 +69,20 @@ class AccountAccount(models.Model):
             tag_ids = [int(tag_id) for tag_id in formula_params["account_tag_ids"]]
             account_id_domain = Domain('account_id.tag_ids', 'in', tag_ids) if tag_ids else Domain.FALSE
         elif 'codes' in formula_params:
-            # It is more optimized to (like) search for code directly in account.account than in account_move_line
-            codes = [code for code in formula_params.get("codes", []) if code]
+            codes = {code for code in formula_params.get("codes", []) if code}
+            Account = self.env["account.account"].with_company(company_id)
             if codes:
-                account_domain = Domain.OR(
-                    Domain.OR([Domain("code", "=like", f"{code}%"), Domain("name", "=", code)])
-                    for code in codes
-                )
+                query = Account._search([])
+                query.add_where(SQL(
+                    "(%s LIKE ANY(%s) OR %s IN %s)",
+                    query.table.code, [f"{code}%" for code in codes],
+                    query.table.name, tuple(codes),
+                ))
+                account_ids = query.get_result_ids()
             elif default_accounts:
-                account_domain = Domain('account_type', 'in', ['liability_payable', 'asset_receivable'])
+                account_ids = Account.search([('account_type', 'in', ['liability_payable', 'asset_receivable'])]).ids
             else:
                 return Domain.FALSE
-
-            account_ids = self.env["account.account"].with_company(company_id).search(account_domain).ids
             account_id_domain = [("account_id", "in", account_ids)]
         else:
             account_id_domain = Domain.FALSE
