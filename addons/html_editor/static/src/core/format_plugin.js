@@ -200,9 +200,16 @@ export class FormatPlugin extends Plugin {
         const isFormatted = formatsSpecs[format].isFormatted;
         const isNonFormattedWhiteSpaces = (node) =>
             /^(\s|\n)+$/.test(node.nodeValue) && !isFormatted(node, { editable: this.editable });
+        const isEmptyLineBr = (node) => {
+            if (node.nodeName !== "BR") {
+                return false;
+            }
+            const prevLeaf = previousLeaf(node, closestBlock(node));
+            return !prevLeaf || prevLeaf.nodeName === "BR";
+        };
         const targetedTextNodes = targetedNodes.filter(
             (node) =>
-                isTextNode(node) &&
+                (isTextNode(node) || isEmptyLineBr(node)) &&
                 !isZwnbsp(node) &&
                 !isEmptyTextNode(node) &&
                 !isNonFormattedWhiteSpaces(node) &&
@@ -210,6 +217,10 @@ export class FormatPlugin extends Plugin {
                 this.dependencies.selection.isNodeEditable(node) &&
                 (this.checkPredicates("is_formattable_node_predicates", node) ?? true)
         );
+        const sel = this.dependencies.selection.getSelectionData().deepEditableSelection;
+        if (!targetedTextNodes.length && sel.isCollapsed) {
+            return isFormatted(sel.anchorNode, { editable: this.editable });
+        }
         return (
             targetedTextNodes.length &&
             targetedTextNodes.every((node) => isFormatted(node, { editable: this.editable }))
