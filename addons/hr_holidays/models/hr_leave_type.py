@@ -108,7 +108,7 @@ class HolidaysType(models.Model):
     accrual_count = fields.Float(compute="_compute_accrual_count", string="Accruals count")
     # negative time off
     allows_negative = fields.Boolean(string='Allow Negative Cap',
-        help="If checked, users request can exceed the allocated days and balance can go in negative.")
+        help="Maximum negative balance allowed, in the unit of this time-off type.")
     max_allowed_negative = fields.Integer(string="Maximum Excess Amount",
         help="Define the maximum level of negative days this kind of time off can reach. Value must be at least 1.")
 
