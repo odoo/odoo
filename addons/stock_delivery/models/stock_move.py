@@ -117,11 +117,16 @@ class StockMoveLine(models.Model):
         return res
 
     def _post_put_in_pack_hook(self, package):
-        weight = self.env.context.get('weight')
-        if not weight and self.carrier_id:
-            weight = package._get_weight(self.picking_id[:1].id).get(package, 0.0)
+        # The weight given in the put in pack wizard is the one of all the packed products: it
+        # can't be used when they are split in several packages.
+        weight = len(package) == 1 and self.env.context.get('weight')
         if weight:
             package.shipping_weight = weight
+        elif self.carrier_id:
+            package_weights = package._get_weight(self.picking_id[:1].id)
+            for pack in package:
+                if package_weights.get(pack):
+                    pack.shipping_weight = package_weights[pack]
         return super()._post_put_in_pack_hook(package)
 
     def _get_package_carrier_type_for_pack(self):
