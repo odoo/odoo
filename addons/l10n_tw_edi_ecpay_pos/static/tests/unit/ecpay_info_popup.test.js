@@ -61,3 +61,25 @@ test("set the default customer and check the invoice button by default", async (
     // The invoice button should be toggled in PaymentScreen if the customer is set
     expect(order.to_invoice).toBe(true);
 });
+
+test("open the register when the commercial partner of the customer is not loaded", async () => {
+    const store = await setupPosEnv();
+    const twd = store.models["res.currency"].create({ name: "TWD", rounding: 0.01, rate: 1.0 });
+    const country = store.models["res.country"].create({ name: "Taiwan", code: "TW" });
+    const company = store.models["res.company"].create({
+        name: "Test Company",
+        country_id: country,
+        account_fiscal_country_id: country,
+        currency_id: twd,
+    });
+    const walkInCustomer = store.models["res.partner"].create({
+        name: "Walk-in Customer",
+        is_company: false,
+    });
+    const config = store.models["pos.config"].getFirst();
+    config.update({ is_ecpay_enabled: true, company_id: company, currency_id: twd });
+    config._tw_walk_in_customer = walkInCustomer;
+
+    const order = store.addNewOrder();
+    expect(order.partner_id.name).toBe("Walk-in Customer");
+});
