@@ -45,23 +45,27 @@ class HrLeaveEmployeeReport(models.Model):
             """
             WITH leave_data AS (
                 SELECT
-                    ROW_NUMBER() OVER(ORDER BY employee_id, days_included_in_request) AS id,
-                    id AS leave_id, employee_id, date_from, date_to,
-                    work_entry_type_id, state, private_name AS description,
-                    DATE_TRUNC('day', days_included_in_request) AS day_start
+                    ROW_NUMBER() OVER(ORDER BY hl.employee_id, local_day) AS id,
+                    hl.id AS leave_id, hl.employee_id, hl.date_from, hl.date_to,
+                    hl.work_entry_type_id, hl.state, hl.private_name AS description,
+                    (local_day AT TIME ZONE tz.name) AT TIME ZONE 'UTC' AS day_start,
+                    ((local_day + INTERVAL '1 day') AT TIME ZONE tz.name) AT TIME ZONE 'UTC' AS day_stop
                 FROM hr_leave hl
+                JOIN hr_employee he ON he.id = hl.employee_id
+                JOIN resource_resource rr ON rr.id = he.resource_id
+                CROSS JOIN LATERAL (SELECT COALESCE(rr.tz, 'UTC') AS name) AS tz
                 CROSS JOIN LATERAL GENERATE_SERIES(
-                    DATE_TRUNC('day', date_from),
-                    DATE_TRUNC('day', date_to),
+                    DATE_TRUNC('day', (hl.date_from AT TIME ZONE 'UTC') AT TIME ZONE tz.name),
+                    DATE_TRUNC('day', (hl.date_to AT TIME ZONE 'UTC') AT TIME ZONE tz.name),
                     INTERVAL '1 day'
-                ) AS days_included_in_request
+                ) AS local_day
                 WHERE hl.employee_company_id IN %(company_ids)s
             )
             SELECT
                 id, leave_id, employee_id,
                 work_entry_type_id, state, description,
                 GREATEST(date_from, day_start) AS working_schedule_aligned_date_from,
-                LEAST(date_to, (day_start + INTERVAL '1 day' - INTERVAL '1 second')) AS day_aligned_date_to
+                LEAST(date_to, day_stop - INTERVAL '1 second') AS day_aligned_date_to
             FROM leave_data;
             """,
             company_ids=tuple(self.env.companies.ids),
