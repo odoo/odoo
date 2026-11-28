@@ -5,6 +5,7 @@
         <field name="arch" type="xml">
             <form string="Generate time off allocations for multiple employees">
                     <group>
+                        <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                         <field name="employee_ids" widget="many2many_avatar_employee" placeholder="All Employees"/>
                         <div class="o_td_label" name="validity_label">
                             <label for="date_from" string="Validity Period"

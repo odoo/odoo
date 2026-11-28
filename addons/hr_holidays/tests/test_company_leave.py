@@ -4,6 +4,7 @@
 from datetime import date, datetime
 
 from odoo import Command
+from odoo.exceptions import UserError
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase, warmup
 
@@ -299,3 +300,29 @@ class TestCompanyLeave(TransactionCase):
 
         leaves = self.env['hr.leave'].search([('work_entry_type_id', '=', self.bank_holiday.id)])
         self.assertEqual(len(leaves), 101)
+
+    def test_08_group_requests_single_company(self):
+        """A group time off or allocation request is for the employees of its company only, with the time types of
+        its country: the company is in the view and the employees are checked against it."""
+        company_fr = self.env['res.company'].create({'name': 'French Company', 'country_id': self.env.ref('base.fr').id})
+        employee_fr = self.env['hr.employee'].create({'name': 'French Employee', 'company_id': company_fr.id})
+        self.assertEqual(self.bank_holiday.country_id, self.env.ref('base.us'))
+
+        for model in ('hr.leave.generate.multi.wizard', 'hr.leave.allocation.generate.multi.wizard'):
+            Wizard = self.env[model].with_context(allowed_company_ids=(self.company + company_fr).ids)
+            values = {
+                'company_id': self.company.id,
+                'work_entry_type_id': self.bank_holiday.id,
+                'date_from': date(2020, 4, 2),
+                'date_to': date(2020, 4, 2),
+            }
+            self.assertIn("company_id", Wizard.fields_get(['employee_ids'])['employee_ids']['domain'])
+            self.assertIn('<field name="company_id"', Wizard.get_view()['arch'])
+            with self.assertRaises(UserError):
+                Wizard.create({**values, 'employee_ids': [Command.set((self.employee + employee_fr).ids)]})
+
+            wizard = Wizard.new({**values, 'employee_ids': [Command.set((self.employee + employee_fr).ids)]})
+            wizard.company_id = company_fr
+            wizard._onchange_company_id()
+            self.assertEqual(wizard.employee_ids._origin, employee_fr)
+            self.assertFalse(wizard.work_entry_type_id, "The time type of the previous company's country is removed")

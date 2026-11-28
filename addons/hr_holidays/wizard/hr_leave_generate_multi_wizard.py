@@ -12,6 +12,7 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
     _name = 'hr.leave.generate.multi.wizard'
     _inherit = ['hr.mixin']
     _description = 'Generate time off for multiple employees'
+    _check_company_auto = True
 
     def _get_employee_domain(self):
         domain = (
@@ -28,8 +29,11 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
         "hr.work.entry.type", string="Time Type", required=True, ui_domain="[('id', 'in', valid_work_entry_type_ids)]")
     allowed_work_entry_type_ids = fields.Many2many(
         'hr.work.entry.type', compute='_compute_allowed_work_entry_type_ids')
-    employee_ids = fields.Many2many('hr.employee', string='Employees', domain=lambda self: self._get_employee_domain())
-    company_id = fields.Many2one('res.company', default=lambda self: self.env.company, required=True)
+    employee_ids = fields.Many2many(
+        'hr.employee', string='Employees', domain=lambda self: self._get_employee_domain(), check_company=True)
+    company_id = fields.Many2one(
+        'res.company', default=lambda self: self.env.company, required=True,
+        domain=lambda self: [('id', 'in', self.env.companies.ids)])
     date_from = fields.Date('Start Date', required=True, default=fields.Date.context_today)
     date_to = fields.Date('End Date', required=True, default=fields.Date.context_today)
     hour_from = fields.Float(string='Hour from')
@@ -82,6 +86,13 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
                     employee_values['request_date_to_period'] = self.date_to_period
                 values.append(employee_values)
         return values
+
+    @api.onchange('company_id')
+    def _onchange_company_id(self):
+        # the time off of a group request are all in its company, with a time type of its country
+        self.employee_ids = self.employee_ids.filtered(lambda employee: employee.company_id == self.company_id)
+        if self.work_entry_type_id not in self.allowed_work_entry_type_ids:
+            self.work_entry_type_id = False
 
     def action_generate_time_off(self):
         self.ensure_one()

@@ -13,6 +13,7 @@ class HrLeaveAllocationGenerateMultiWizard(models.TransientModel):
     _name = 'hr.leave.allocation.generate.multi.wizard'
     _inherit = ['hr.mixin']
     _description = 'Generate time off allocations for multiple employees'
+    _check_company_auto = True
 
     def _get_employee_domain(self):
         domain = (
@@ -41,8 +42,11 @@ class HrLeaveAllocationGenerateMultiWizard(models.TransientModel):
     allowed_work_entry_type_ids = fields.Many2many(
         'hr.work.entry.type', compute='_compute_allowed_work_entry_type_ids')
     unit_of_measure = fields.Selection(related="work_entry_type_id.unit_of_measure")
-    employee_ids = fields.Many2many('hr.employee', string='Employees', domain=lambda self: self._get_employee_domain())
-    company_id = fields.Many2one('res.company', default=lambda self: self.env.company, required=True)
+    employee_ids = fields.Many2many(
+        'hr.employee', string='Employees', domain=lambda self: self._get_employee_domain(), check_company=True)
+    company_id = fields.Many2one(
+        'res.company', default=lambda self: self.env.company, required=True,
+        domain=lambda self: [('id', 'in', self.env.companies.ids)])
     accrual_plan_id = fields.Many2one('hr.leave.accrual.plan')
     date_from = fields.Date('Start Date', default=fields.Date.context_today, required=True)
     date_to = fields.Date('End Date')
@@ -91,6 +95,13 @@ class HrLeaveAllocationGenerateMultiWizard(models.TransientModel):
             'accrual_plan_id': self.accrual_plan_id.id,
             'notes': self.notes
         } for employee in employees]
+
+    @api.onchange('company_id')
+    def _onchange_company_id(self):
+        # the allocations of a group request are all in its company, with a time type of its country
+        self.employee_ids = self.employee_ids.filtered(lambda employee: employee.company_id == self.company_id)
+        if self.work_entry_type_id not in self.allowed_work_entry_type_ids:
+            self.work_entry_type_id = False
 
     def action_generate_allocations(self):
         self.ensure_one()
