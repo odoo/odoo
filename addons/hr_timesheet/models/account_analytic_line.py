@@ -76,7 +76,7 @@ class AccountAnalyticLine(models.Model):
     milestone_id = fields.Many2one('project.milestone', related='task_id.milestone_id')
     message_partner_ids = fields.Many2many('res.partner', compute='_compute_message_partner_ids', search='_search_message_partner_ids')
     calendar_display_name = fields.Char(compute="_compute_calendar_display_name", export_string_translation=False)
-    color = fields.Integer(related="project_id.color")
+    color = fields.Integer(related="project_id.color", aggregator=False)
     sequence = fields.Integer(string='Sequence', export_string_translation=False, default=10)
 
     def _search_message_partner_ids(self, operator, value):
