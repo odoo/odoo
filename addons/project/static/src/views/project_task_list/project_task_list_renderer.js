@@ -30,6 +30,11 @@ export class ProjectTaskListRenderer extends ListRenderer {
         }
         return this._areSelectedTasksInSameProject;
     }
+
+    getResequenceOrderIndex() {
+        return this.props.list.orderBy[0]?.name === "priority" ? 1 : 0;
+    }
+
     isFieldReadonly(column, record) {
         let readonly = false;
         if (column.name === "stage_id") {
