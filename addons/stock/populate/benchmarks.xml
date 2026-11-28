@@ -333,4 +333,61 @@
             </write>
         </field>
     </record>
+
+    <!--
+        ==========================================================
+        BENCHMARK 8: Validate with Backorder — similar partially picked transfers
+        ==========================================================
+        Reserved deliveries that all use the same products, each move
+        picked for 10 of 15 units. Validating them with "Create Backorder"
+        splits every move and reserves the backorders again.
+    -->
+    <record id="benchmark_backorder" model="populate.blueprint">
+        <field name="name">Benchmark: Validate with Backorder</field>
+        <field name="definition_xml" type="xml">
+            <create model="stock.location" count="50" id="bo_bins" scale="False">
+                <field name="name" length="12"/>
+                <field name="usage" eval="'internal'"/>
+                <field name="location_id" eval="env.ref('stock.stock_location_stock').id"/>
+            </create>
+
+            <!-- 10 quants per product, each in a different bin; 1.5x the demand of all pickings -->
+            <create model="product.product" count="200" id="bo_products" scale="False">
+                <value name="bins" generator="relation.many" comodel_name="stock.location" ref="bo_bins" count="10"/>
+                <value name="quant_qty" eval="23.0"/>
+                <field name="name" length="20"/>
+                <field name="type" eval="'consu'"/>
+                <field name="is_storable" eval="True"/>
+                <field name="stock_quant_ids" eval="[Command.create({'location_id': b, 'quantity': quant_qty}) for b in bins[0][2]]"/>
+            </create>
+
+            <!-- every picking has one move per product, so they all reserve the same products -->
+            <create model="stock.picking" count="10" id="bo_pickings" scale="False" context="{'tracking_disable': True}">
+                <value name="products" generator="relation.many" comodel_name="product.product" ref="bo_products" count="200"/>
+                <field name="picking_type_id" eval="env.ref('stock.picking_type_out').id"/>
+                <field name="origin" eval="'BENCH-BACKORDER'"/>
+                <field name="move_ids" eval="[Command.create({'product_id': p, 'product_uom_qty': 15.0}) for p in products[0][2]]"/>
+            </create>
+
+            <function model="stock.picking" name="action_confirm" ref="bo_pickings" batched="True" parallel="False"/>
+
+            <!-- pick 10 of 15 so validating asks for a backorder -->
+            <write model="stock.move" ref="bo_pickings.move_ids" batched="True" parallel="False">
+                <field name="quantity" eval="10.0"/>
+                <field name="picked" eval="True"/>
+            </write>
+        </field>
+    </record>
+
+    <record id="benchmark_backorder_large" model="populate.blueprint">
+        <field name="name">Benchmark: Validate with Backorder (large)</field>
+        <field name="inherit_id" ref="benchmark_backorder"/>
+        <field name="definition_xml" type="xml">
+            <xpath expr="//create[@id='bo_bins']" position="attributes"><attribute name="count">100</attribute></xpath>
+            <xpath expr="//create[@id='bo_products']" position="attributes"><attribute name="count">500</attribute></xpath>
+            <xpath expr="//value[@name='quant_qty']" position="attributes"><attribute name="eval">45.0</attribute></xpath>
+            <xpath expr="//create[@id='bo_pickings']" position="attributes"><attribute name="count">20</attribute></xpath>
+            <xpath expr="//value[@name='products']" position="attributes"><attribute name="count">500</attribute></xpath>
+        </field>
+    </record>
 </odoo>

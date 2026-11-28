@@ -99,10 +99,10 @@ class StockMove(models.Model):
                     break
         return options
 
-    def _update_reserved_quantity(self, need, location_id, lot_id=None, package_id=None, owner_id=None, strict=True):
+    def _update_reserved_quantity(self, need, location_id, lot_id=None, package_id=None, owner_id=None, strict=True, pending_move_line_vals=None):
         if self.product_id.use_expiration_date:
-            return super(StockMove, self.with_context(with_expiration=self.date))._update_reserved_quantity(need, location_id, lot_id, package_id, owner_id, strict)
-        return super()._update_reserved_quantity(need, location_id, lot_id, package_id, owner_id, strict)
+            return super(StockMove, self.with_context(with_expiration=self.date))._update_reserved_quantity(need, location_id, lot_id, package_id, owner_id, strict, pending_move_line_vals)
+        return super()._update_reserved_quantity(need, location_id, lot_id, package_id, owner_id, strict, pending_move_line_vals)
 
     def _get_available_quantity(self, location_id, lot_id=None, package_id=None, owner_id=None, strict=False, allow_negative=False):
         if self.product_id.use_expiration_date:
