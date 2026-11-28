@@ -109,7 +109,11 @@ class HrVersion(models.Model):
                 check_in = att.check_in.replace(tzinfo=UTC)
                 check_out = att.check_out.replace(tzinfo=UTC)
                 # deficit outputs start after source check_out (unworked time); exclude from time_on
-                if not att.source_attendance_id or att.check_in < att.source_attendance_id.check_out:
+                if (
+                    not att.source_attendance_id
+                    or not att.source_attendance_id.check_out
+                    or att.check_in < att.source_attendance_id.check_out
+                ):
                     time_on_raw[rid].append((check_in, check_out, dummy))
                 if version.has_static_work_entries():
                     start_day = check_in.astimezone(tz).date()
