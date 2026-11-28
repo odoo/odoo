@@ -170,6 +170,17 @@ class StockMove(models.Model):
                 self.company_id,
                 convert_date
             )
+            # Converting back the rounded balance can give a different amount than the vendor bill,
+            # so use the purchase price when it matches the balance
+            if not self._should_ignore_pol_price():
+                purchase_value = qty * self.purchase_line_id._get_gross_price_unit()
+                value = purchase_currency._convert(purchase_value, company_currency, self.company_id, convert_date)
+                if (
+                    company_currency.compare_amounts(value, rslt['debit_line_vals']['balance']) == 0
+                    and company_currency.compare_amounts(value, -rslt['credit_line_vals']['balance']) == 0
+                ):
+                    rslt['debit_line_vals']['amount_currency'] = purchase_currency.round(purchase_value)
+                    rslt['credit_line_vals']['amount_currency'] = -purchase_currency.round(purchase_value)
             rslt['debit_line_vals']['currency_id'] = purchase_currency.id
             rslt['credit_line_vals']['currency_id'] = purchase_currency.id
         else:

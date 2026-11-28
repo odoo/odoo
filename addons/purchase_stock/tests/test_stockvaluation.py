@@ -1145,6 +1145,51 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         self.assertEqual(stock_line.amount_currency, 100.0)
         self.assertAlmostEqual(stock_line.balance, 66.67)
 
+    def test_receipt_amount_currency_rounding_multicurrency(self):
+        """ The amount in foreign currency of the receipt must be computed from the purchase
+        price, as on the vendor bill, and not from the rounded value in company currency.
+        Otherwise, an exchange difference is created between both entries, even if the
+        currency rate never changed.
+        """
+        company = self.env.user.company_id
+        self.cr.execute("UPDATE res_company SET currency_id = %s WHERE id = %s", (self.usd_currency.id, company.id))
+        self.env['res.currency.rate'].search([]).unlink()
+        self.env['res.currency.rate'].create({
+            'name': fields.Date.today(),
+            'rate': 1.5,
+            'currency_id': self.eur_currency.id,
+            'company_id': company.id,
+        })
+        self.product1.categ_id.property_cost_method = 'average'
+
+        po = self.env['purchase.order'].create({
+            'currency_id': self.eur_currency.id,
+            'partner_id': self.partner_id.id,
+            'order_line': [Command.create({
+                'name': self.product1.name,
+                'product_id': self.product1.id,
+                'product_uom': self.product1.uom_po_id.id,
+                'product_qty': 1452.5,
+                'price_unit': 3.25,
+                'taxes_id': False,
+            })],
+        })
+        po.button_confirm()
+        receipt = po.picking_ids
+        receipt.move_ids.quantity = 1452.5
+        receipt.move_ids.picked = True
+        receipt.button_validate()
+
+        # 1452.5 * 3.25 = 4720.625 EUR = 3147.08 USD
+        receipt_input_line = receipt.move_ids.stock_valuation_layer_ids.account_move_id.line_ids.filtered(lambda line: line.account_id == self.stock_input_account)
+        self.assertRecordValues(receipt_input_line, [{'balance': -3147.08, 'amount_currency': -4720.63}])
+
+        bill = self._bill(po)
+        bill_input_line = bill.line_ids.filtered(lambda line: line.account_id == self.stock_input_account)
+        self.assertEqual(bill_input_line.amount_currency, 4720.63)
+        self.assertTrue(receipt_input_line.full_reconcile_id)
+        self.assertFalse(receipt_input_line.full_reconcile_id.exchange_move_id)
+
     def test_realtime_anglo_saxon_valuation_multicurrency_different_dates(self):
         """
         The PO and invoice are in the same foreign currency.
