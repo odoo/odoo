@@ -8,6 +8,10 @@
             <field name="arch" type="xml">
                 <block id="production_lot_info" position="after">
                     <block title="Valuation" name="valuation_setting_container">
+                        <setting id="cost_method_setting" string="Costing Method" company_dependent="1"
+                                 help="Default method used to compute the cost of products. It can be overridden on product categories.">
+                            <field name="cost_method"/>
+                        </setting>
                         <setting id="additional_cost_setting" title="Affect landed costs on reception operations and split them among products to update their cost price." documentation="/applications/inventory_and_mrp/inventory/management/reporting/integrating_landed_costs.html" help="Add additional cost (transport, customs, ...) in the value of the product.">
                             <field name="module_stock_landed_costs"/>
                             <div class="content-group">
