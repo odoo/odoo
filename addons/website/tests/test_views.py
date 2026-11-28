@@ -339,8 +339,6 @@ class TestViewSaving(TestViewSavingCommon):
             h.H3("Column 2"),
             h.UL(
                 h.LI("wob wob wob"),
-                h.LI(h.SPAN("Acme Corporation", attrs(model='res.company', id=self.env.company.id, field='name', expression="bob", type='char'))),
-                h.LI(h.SPAN("+12 3456789", attrs(model='res.company', id=self.env.company.id, field='phone', expression="edmund", type='char'))),
             )
         ), encoding='unicode')
 
@@ -354,9 +352,6 @@ class TestViewSaving(TestViewSavingCommon):
         # the xml_id of the view should be flagged as 'noupdate'
         self.assertTrue(imd.noupdate)
 
-        company = self.env.ref('base.main_company')
-        self.assertEqual(company.name, "Acme Corporation")
-        self.assertEqual(company.phone, "+12 3456789")
         self.eq(
             ET.fromstring(self.view_id.arch),
             h.DIV(
@@ -370,8 +365,6 @@ class TestViewSaving(TestViewSavingCommon):
                     h.H3("Column 2"),
                     h.UL(
                         h.LI("wob wob wob"),
-                        h.LI(h.SPAN({'t-field': "bob"})),
-                        h.LI(h.SPAN({'t-field': "edmund"}))
                     ))
             )
         )
@@ -503,6 +496,66 @@ class TestViewSaving(TestViewSavingCommon):
                         h.LI(h.SPAN({'t-field': "edmund"}), "whop whop"),
                     ))
             )
+        )
+
+    def test_save_t_field_default_value(self):
+        """ A t-field with a default value must keep it after a render / save
+        round trip, and the default value must not be written on the empty
+        field. """
+        partner = self.env['res.partner'].create({'name': 'Test Partner'})
+        self.assertFalse(partner.phone)
+        default = 'Default phone'
+        view = self.env['ir.ui.view'].create({
+            'name': 'Test t-field default',
+            'type': 'qweb',
+            'arch': f'<div><span t-field="partner.phone">{default}</span></div>',
+        })
+
+        rendered = self.env['ir.qweb'].with_context(inherit_branding=True)._render(view.id, {'partner': partner})
+        [field_el] = html.fromstring(str(rendered)).xpath('//span[@data-oe-field="phone"]')
+        self.assertEqual(field_el.get('data-oe-default'), default)
+        self.assertEqual(field_el.text, default)
+
+        view.save(value=html.tostring(field_el.getparent(), encoding='unicode'), xpath='/div')
+        view.save(value=html.tostring(field_el, encoding='unicode'))
+
+        self.assertFalse(partner.phone, "the default value should not be written on the empty field")
+
+        # an edited value is written on the record, the default value is kept in the view
+        nbr = '+32 123 45 67'
+        field_el.text = nbr
+        view.save(value=html.tostring(field_el.getparent(), encoding='unicode'), xpath='/div')
+        view.save(value=html.tostring(field_el, encoding='unicode'))
+
+        self.assertEqual(partner.phone, nbr)
+        rendered = self.env['ir.qweb'].with_context(inherit_branding=True)._render(view.id, {'partner': partner})
+        [field_el] = html.fromstring(str(rendered)).xpath('//span[@data-oe-field="phone"]')
+        self.assertEqual(field_el.get('data-oe-default'), default)
+        self.assertEqual(field_el.text, nbr)
+
+    def test_save_section_does_not_write_embedded_fields(self):
+        """ Saving a view section must not write the embedded fields it
+        contains: they are only saved on their own, when they were modified. The
+        embedded fields must still be turned back into `t-field`. """
+        partner = self.env['res.partner'].create({'name': 'Test Partner', 'phone': '+32 000 00 00'})
+        view = self.env['ir.ui.view'].create({
+            'name': 'Test embedded field saving',
+            'type': 'qweb',
+            'arch': '<div><p>Hello</p><span t-field="partner.phone"/></div>',
+        })
+
+        rendered = self.env['ir.qweb'].with_context(inherit_branding=True)._render(view.id, {'partner': partner})
+        [field_el] = html.fromstring(str(rendered)).xpath('//span[@data-oe-field="phone"]')
+        parent = field_el.getparent()
+        parent.find('p').text = 'Hello World'
+
+        View = self.registry['ir.ui.view']
+        with patch.object(View, 'save_embedded_field', autospec=True, side_effect=View.save_embedded_field) as save_embedded_field:
+            view.save(value=html.tostring(parent, encoding='unicode'), xpath='/div')
+        save_embedded_field.assert_not_called()
+        self.eq(
+            ET.fromstring(view.arch),
+            h.DIV(h.P('Hello World'), h.SPAN({'t-field': 'partner.phone'})),
         )
 
     def test_save_view_delay_translations(self):

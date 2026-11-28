@@ -2512,6 +2512,12 @@ class IrQweb(models.AbstractModel):
             record, field_name = expr.rsplit('.', 1)
             attr_name = 'field_attrs' if compile_context.get('qweb_attrs_created') else 'attrs'
             code.append(indent_code(f"""{attr_name}, content, force_display = self._get_field({self._compile_expr(record, compile_context, raise_on_missing=True)}, {field_name!r}, {expr!r}, {el.tag!r}, values.pop('__qweb_options__', {{}}), values)""", level))
+            if self.env.context.get('inherit_branding') or self.env.context.get('inherit_branding_auto'):
+                default_content = el.text
+                if default_content:
+                    code.append(indent_code(f"""
+                        {attr_name}['data-oe-default'] = {default_content!r}
+                        """, level))
             if compile_context.get('qweb_attrs_created'):
                 code.append(indent_code("""
                     if attrs is None:

@@ -518,9 +518,13 @@ class IrUiView(models.Model):
 
         try:
             value = converter.from_html(Model, Model._fields[field], el)
+            default_value = el.get('data-oe-default')
             if value is not None:
                 # TODO: batch writes?
                 record = Model.browse(int(el.get('data-oe-id')))
+                if default_value and not record[field] and value == default_value:
+                    # Do not write the default value on empty field
+                    return
                 if not self.env.context.get('lang') and self.get_default_lang_code():
                     record.with_context(lang=self.get_default_lang_code()).write({field: value})
                 else:
@@ -640,9 +644,12 @@ class IrUiView(models.Model):
         attributes = {k: v for k, v in el.attrib.items()
                            if not k.startswith('data-oe-')}
         attributes['t-field'] = el.get('data-oe-expression')
+        default_value = el.get('data-oe-default')
 
         out = html.html_parser.makeelement(el.tag, attrib=attributes)
         out.tail = el.tail
+        if default_value:
+            out.text = default_value
         return out
 
     @api.model
@@ -702,8 +709,6 @@ class IrUiView(models.Model):
             return
 
         for el in view.extract_embedded_fields(arch_section):
-            view.save_embedded_field(el)
-
             # transform embedded field back to t-field
             el.getparent().replace(el, view.to_field_ref(el))
 
