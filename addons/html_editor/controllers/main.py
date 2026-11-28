@@ -414,6 +414,7 @@ class HTML_Editor(http.Controller):
             return {'error': format_error_msg}
         self._clean_context()
         attachment = request.env['ir.attachment'].browse(attachment.id)
+        original_attachment = attachment
         if not data and attachment.datas:
             data = attachment.datas
 
@@ -425,6 +426,7 @@ class HTML_Editor(http.Controller):
             'mimetype': mimetype or attachment.mimetype,
             'name': name or attachment.name,
             'res_id': 0,
+            'url': False,
         }
         if fields['res_model'] == 'ir.ui.view':
             fields['res_id'] = 0
@@ -434,7 +436,7 @@ class HTML_Editor(http.Controller):
             fields['name'] = re.sub(r'\.(jpe?g|png)$', '.webp', fields['name'], flags=re.I)
 
         existing_attachment = get_existing_attachment(request.env['ir.attachment'], fields)
-        if existing_attachment and not existing_attachment.url:
+        if existing_attachment:
             attachment = existing_attachment
         else:
             # Restricted editors can handle attachments related to records to
@@ -448,8 +450,8 @@ class HTML_Editor(http.Controller):
             # empty record set.
             request.env[fields['res_model']].browse(fields['res_id']).check_access('write')
 
-            # Sudo because restricted editor will not be able to copy the record
-            attachment = attachment.sudo().copy(fields).sudo(False)
+            attachment = attachment.copy(fields)
+            self._handle_modified_attachment(original_attachment, attachment)
             # Override mimetype with SUPERUSER if it was forced to plain text
             if attachment.mimetype == 'text/plain' != fields['mimetype']:
                 mimetype_exempt = any(
@@ -482,24 +484,15 @@ class HTML_Editor(http.Controller):
                         'mimetype': 'image/jpeg',
                     }])
 
-        if attachment.url:
-            # Don't keep url if modifying static attachment because static images
-            # are only served from disk and don't fallback to attachments.
-            if re.match(r'^/\w+/static/', attachment.url):
-                attachment.url = None
-            # Uniquify url by adding a path segment with the id before the name.
-            # This allows us to keep the unsplash url format so it still reacts
-            # to the unsplash beacon.
-            else:
-                url_fragments = attachment.url.split('/')
-                url_fragments.insert(-1, str(attachment.id))
-                attachment.url = '/'.join(url_fragments)
-
         if attachment.public:
             return attachment.image_src
 
         attachment.generate_access_token()
         return '%s?access_token=%s' % (attachment.image_src, attachment.access_token)
+
+    def _handle_modified_attachment(self, original_attachment, new_attachment):
+        # To be overriden
+        pass
 
     @http.route(['/web_editor/save_library_media', '/html_editor/save_library_media'], type='jsonrpc', auth='user', methods=['POST'])
     def save_library_media(self, media):
@@ -547,7 +540,7 @@ class HTML_Editor(http.Controller):
                 attachment = IrAttachment.with_user(SUPERUSER_ID).create(attachment_data)
             if media[id]['is_dynamic_svg']:
                 colorParams = werkzeug.urls.url_encode(media[id]['dynamic_colors'])
-                attachment['url'] = '/html_editor/shape/illustration/%s?%s' % (slug(attachment), colorParams)
+                attachment.sudo().url = '/html_editor/shape/illustration/%s?%s' % (slug(attachment), colorParams)
             attachments.append(attachment._get_media_info())
 
         return attachments
