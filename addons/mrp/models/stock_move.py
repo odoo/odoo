@@ -316,6 +316,11 @@ class StockMove(models.Model):
             # context no_procurement means we don't want the qty update to modify stock i.e create new pickings
             # ex. when spliting MO to backorders we don't want to move qty from pre prod to stock in 2/3 step config
             self.filtered(lambda m: m.raw_material_production_id.state in ('confirmed', 'progress', 'to_close'))._run_procurement(old_demand)
+        if vals.get('date_deadline'):
+            for production in self.production_id:
+                deadline = min(production.move_finished_ids.filtered('date_deadline').mapped('date_deadline'), default=False)
+                if deadline and production.date_deadline != deadline:
+                    production.date_deadline = deadline
         return res
 
     def _run_procurement(self, old_qties=False):
