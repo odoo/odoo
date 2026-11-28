@@ -11,6 +11,7 @@ import { closestBlock } from "@html_editor/utils/blocks";
 import { fillEmpty } from "@html_editor/utils/dom";
 import { isElementOverlappingAnyFloatingImage } from "@html_editor/utils/dom_info";
 import { ImageAlignSelector } from "./image_align_selector";
+import { getImageFileModel } from "@html_editor/utils/image";
 
 const IMAGE_PADDING = [
     { name: _t("None"), value: 0 },
@@ -256,13 +257,7 @@ export class ImagePlugin extends Plugin {
             imageName = p(targetedImg);
             return imageName;
         });
-        const fileModel = {
-            isImage: true,
-            isViewable: true,
-            name: imageName || targetedImg.src,
-            defaultSource: targetedImg.src,
-            downloadUrl: targetedImg.src,
-        };
+        const fileModel = getImageFileModel(targetedImg, imageName || targetedImg.src);
         this.document.getSelection().collapseToEnd();
         this.document.activeElement.blur();
         const onClose = () => {

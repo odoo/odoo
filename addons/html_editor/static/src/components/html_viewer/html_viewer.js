@@ -19,11 +19,13 @@ import {
     useProps,
 } from "@odoo/owl";
 import { getBundle } from "@web/core/assets";
+import { useFileViewer } from "@web/core/file_viewer/file_viewer_hook";
 import { memoize } from "@web/core/utils/functions";
 import { useLayoutEffect } from "@web/owl2/utils";
 import { TABLE_WRAPPER_SELECTOR, wrapReadonlyTables } from "@html_editor/utils/table";
 import { unwrapContents } from "@html_editor/utils/dom";
 import { getLinksToRetarget, retargetLinkToNewTab } from "@html_editor/utils/url";
+import { getImageFileModel } from "@html_editor/utils/image";
 
 export class HtmlViewer extends Component {
     static template = "html_editor.HtmlViewer";
@@ -38,6 +40,7 @@ export class HtmlViewer extends Component {
 
     setup() {
         this._cleanups = [];
+        this.fileViewer = useFileViewer();
         this.htmlUpgradeManager = new HtmlUpgradeManager();
 
         this.state = proxy({
@@ -151,6 +154,12 @@ export class HtmlViewer extends Component {
         this.applyAccessibilityAttributes(container);
         this.wrapTables(container);
         this.addDomListener(container, "copy", fillClipboardWithSelection);
+        this.addDomListener(container, "dblclick", ({ target }) => {
+            const embedded = target.closest("[data-embedded], [data-embedded-editable]");
+            if (target.tagName === "IMG" && !embedded?.matches("[data-embedded]")) {
+                this.fileViewer.open(getImageFileModel(target));
+            }
+        });
     }
 
     /**

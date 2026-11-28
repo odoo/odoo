@@ -1,4 +1,5 @@
 import { fillClipboardWithSelection } from "@html_editor/utils/clipboard";
+import { getImageFileModel } from "@html_editor/utils/image";
 import { wrapReadonlyTables } from "@html_editor/utils/table";
 import { getLinksToRetarget, retargetLinkToNewTab } from "@html_editor/utils/url";
 import { registry } from "@web/core/registry";
@@ -15,6 +16,7 @@ export class ReadonlyContentInteraction extends Interaction {
     dynamicContent = {
         _root: {
             "t-on-copy.noUpdate": fillClipboardWithSelection,
+            "t-on-dblclick.noUpdate": this.onImageDoubleClick,
         },
         "[data-oe-role]": {
             "t-att-role": (el) => el.dataset.oeRole,
@@ -23,6 +25,18 @@ export class ReadonlyContentInteraction extends Interaction {
             "t-att-aria-label": (el) => el.dataset.oeAriaLabel,
         },
     };
+
+    setup() {
+        this.fileViewer = this.services.fileViewer();
+        this.registerCleanup(() => this.fileViewer.close());
+    }
+
+    onImageDoubleClick({ target }) {
+        const embedded = target.closest("[data-embedded], [data-embedded-editable]");
+        if (target.tagName === "IMG" && !embedded?.matches("[data-embedded]")) {
+            this.fileViewer.open(getImageFileModel(target));
+        }
+    }
 
     start() {
         for (const link of getLinksToRetarget(this.el)) {
