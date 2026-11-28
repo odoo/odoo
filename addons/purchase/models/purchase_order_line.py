@@ -554,7 +554,7 @@ class PurchaseOrderLine(models.Model):
             ).uom_id
             line.allowed_uom_ids = line.product_id._get_available_uoms() | seller_uom
 
-    @api.depends('product_qty', 'uom_id', 'company_id', 'order_id.partner_id')
+    @api.depends('product_qty', 'uom_id', 'company_id', 'order_id.partner_id', 'order_id.currency_id')
     def _compute_price_unit_and_date_planned_and_name(self):
         for line in self:
             if not line.product_id or line.invoice_lines or not line.company_id or self.env.context.get('skip_uom_conversion') or (line.technical_price_unit != line.price_unit):
@@ -573,6 +573,7 @@ class PurchaseOrderLine(models.Model):
             # If no seller, use the standard price. It needs a proper currency conversion.
             if not seller_info:
                 if line.price_unit and line.uom_id == line._origin.uom_id and line.partner_id == line._origin.partner_id \
+                        and line.currency_id == line._origin.currency_id \
                         and not line.product_id._has_vendor_pricelist(line.partner_id, line.company_id):
                     # Avoid to modify the price unit if there is no price list for this partner and
                     # the line has already one to avoid to override unit price set manually.
