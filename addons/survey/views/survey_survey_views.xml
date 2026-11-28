@@ -49,6 +49,7 @@
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <field name="background_image" widget="image" class="oe_avatar" filename="background_image_filename"/>
+                    <field name="allowed_survey_types" invisible="1"/> <!-- allowed_selection_field of the survey_type badges below -->
                     <field name="survey_type" widget="badges_selection" nolabel="1" class="w-auto mb-3"
                         options="{
                             'allowed_selection_field': 'allowed_survey_types',
