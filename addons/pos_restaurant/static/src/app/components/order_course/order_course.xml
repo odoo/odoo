@@ -11,7 +11,7 @@
                 <span class="fw-bolder" t-out="this.course.name"/>
                 <span t-if="this.course.fired" class="rounded text-bg-info fs-6 px-2 ms-auto">Fired</span>
             </div>
-            <t t-foreach="this.comboSortedLines" t-as="line" t-key="line_index">
+            <t t-foreach="this.comboSortedLines" t-as="line" t-key="line.uuid">
                 <t t-call-slot="default" line="line" />
             </t>
         </div>

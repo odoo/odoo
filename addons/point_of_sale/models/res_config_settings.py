@@ -162,6 +162,11 @@ class ResConfigSettings(models.TransientModel):
                 else:
                     res_config.pos_fallback_nomenclature_id = False
 
+    @api.onchange('pos_module_pos_restaurant')
+    def _onchange_pos_module_pos_restaurant(self):
+        if self.pos_module_pos_restaurant and not self.pos_config_id.module_pos_restaurant:
+            self.pos_iface_group_by_categ = True
+
     @api.onchange('pos_iface_tipproduct')
     def _onchange_iface_tipproduct(self):
         for res_config in self:

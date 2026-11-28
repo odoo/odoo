@@ -716,6 +716,8 @@ class PosConfig(models.Model):
                 vals['set_tip_after_payment'] = False
 
             self._check_header_footer(vals)
+            if vals.get('module_pos_restaurant') and 'iface_group_by_categ' not in vals:
+                vals['iface_group_by_categ'] = True
 
         pos_configs = super().create(vals_list)
         pos_configs._create_sequences()
@@ -807,6 +809,9 @@ class PosConfig(models.Model):
         if ('use_order_printer' in vals and not vals['use_order_printer']):
             vals['preparation_printer_ids'] = [fields.Command.clear()]
 
+        configs_to_group_by_categ = self.filtered(lambda c: not c.module_pos_restaurant) \
+            if vals.get('module_pos_restaurant') and 'iface_group_by_categ' not in vals else self.browse()
+
         self._preprocess_x2many_vals_from_settings_view(vals)
         vals = self._keep_new_vals(vals)
 
@@ -842,6 +847,9 @@ class PosConfig(models.Model):
                 ))
 
         result = super().write(vals)
+
+        if configs_to_group_by_categ:
+            configs_to_group_by_categ.iface_group_by_categ = True
 
         for config in self:
             if config.use_presets and config.default_preset_id and config.default_preset_id.id not in config.available_preset_ids.ids:
