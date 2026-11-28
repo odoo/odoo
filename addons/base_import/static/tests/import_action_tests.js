@@ -510,6 +510,63 @@ QUnit.module("Base Import Tests", (hooks) => {
         );
     });
 
+    QUnit.test("Import view: preview error on first sheet keeps sheet selector", async function (assert) {
+        registerFakeHTTPService();
+        await createImportAction({
+            "base_import.import/parse_preview": (route, args) => {
+                assert.step(route);
+                const opts = args[1];
+                if (!opts.sheet || opts.sheet === "Template") {
+                    return Promise.resolve({
+                        error: "Import file has no content or is corrupt",
+                        preview: null,
+                        options: {
+                            ...opts,
+                            sheet: "Template",
+                            sheets: ["Template", "Template 2"],
+                        },
+                    });
+                }
+                return parsePreview(opts);
+            },
+        });
+
+        const file = new File(["fake_file"], "fake_file.xlsx", { type: "text/plain" });
+        await editInput(target, ".o_control_panel_main_buttons input[type='file']", file);
+        assert.verifySteps(["base_import.import/parse_preview"]);
+        assert.ok(
+            target
+                .querySelector(".o_import_data_content .alert-danger p")
+                .textContent.includes("Import file has no content or is corrupt"),
+            "preview error is shown"
+        );
+        assert.strictEqual(
+            target.querySelector(".o_import_data_sidepanel [name=o_import_sheet]")
+                .selectedOptions[0].textContent,
+            "Template",
+            "sheet selector is still visible when first sheet fails"
+        );
+
+        await editSelect(target, ".o_import_data_sidepanel [name=o_import_sheet]", "Template 2");
+        assert.verifySteps(["base_import.import/parse_preview"]);
+        assert.strictEqual(
+            target.querySelector(".o_import_data_sidepanel [name=o_import_sheet]")
+                .selectedOptions[0].textContent,
+            "Template 2"
+        );
+        assert.containsNone(
+            target,
+            ".o_import_data_content .alert-danger",
+            "preview error is cleared"
+        );
+        assert.containsN(
+            target,
+            ".o_import_data_content tbody > tr",
+            3,
+            "switching to a valid sheet clears the error and renders the preview"
+        );
+    });
+
     QUnit.test("Import view: default import options are correctly", async function (assert) {
         registerFakeHTTPService();
         await createImportAction({

@@ -312,6 +312,7 @@ export class BaseImportModel {
     async updateData(fileChanged = false) {
         if (fileChanged) {
             this.importOptionsValues.sheet.value = "";
+            this.importOptionsValues.sheets.value = [];
         }
         this.importMessages = [];
 
@@ -325,7 +326,7 @@ export class BaseImportModel {
             res.options.datetime_format = strftimeToHumanFormat(res.options.datetime_format);
             this._onLoadSuccess(res);
         } else {
-            this._onLoadError();
+            this._onLoadError(res);
         }
         return { res, error: res.error };
     }
@@ -596,9 +597,13 @@ export class BaseImportModel {
         this._updateComments();
     }
 
-    _onLoadError() {
+    _onLoadError(res) {
         this.columns = [];
         this.importMessages = [];
+        if (res?.options) {
+            this.importOptionsValues.sheets.value = res.options.sheets || [];
+            this.importOptionsValues.sheet.value = res.options.sheet || "";
+        }
     }
 
     _getColumns(res) {

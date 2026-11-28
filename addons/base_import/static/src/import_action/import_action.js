@@ -152,6 +152,9 @@ export class ImportAction extends Component {
             const { res, error } = result;
             if (!error && res.file_length) {
                 this.state.fileLength = res.file_length;
+                this.state.previewError = undefined;
+            } else {
+                this.state.previewError = error;
             }
         }
         this.model.unblock();
