@@ -98,7 +98,7 @@ registerWebsitePreviewTour(
         ...unfoldOptionsGroup("Image Gallery"),
         {
             content: "click on add images to open image dialog (in multi mode)",
-            trigger: "button[data-action-id='addImage']",
+            trigger: "button[data-action-id='addImage']:not([data-action-param])",
             run: "click",
         },
         {

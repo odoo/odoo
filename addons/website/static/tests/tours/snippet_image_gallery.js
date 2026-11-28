@@ -48,13 +48,8 @@ registerWebsitePreviewTour(
             name: "Image Gallery",
         }),
         {
-            content: "Click on Remove all",
-            trigger: "button[data-action-id='removeAllImages']",
-            run: "click",
-        },
-        {
-            content: "Click on Add Images",
-            trigger: ":iframe span:contains('Add Images')",
+            content: "Click on Replace all",
+            trigger: "button[data-action-id='addImage'][data-action-param*='replaceAll']",
             run: "click",
         },
         {
@@ -189,7 +184,7 @@ registerWebsitePreviewTour(
             name: "Image Gallery",
         }),
         ...changeOptionInPopover("Image Gallery", "Indicators", "Squared Miniatures"),
-        changeOption("Image Gallery", "addImage"),
+        changeOption("Image Gallery", "[data-action-id='addImage']:not([data-action-param])"),
         {
             content: "Click on the default image",
             trigger: ".o_select_media_dialog .o_button_area[aria-label='s_default_image.jpg']",

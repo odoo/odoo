@@ -149,7 +149,7 @@ test("regular -> hidden -> regular", async () => {
     expect(modifiedWrapwrap).toHaveOuterHTML(precedentWrapwrap);
 });
 
-test("'Show Disclaimer' option should toggle dislaimer template", async () => {
+test("'Add Banner' option should toggle the banner template", async () => {
     await setupWebsiteBuilder("", {
         openEditor: true,
         headerContent: `
@@ -164,8 +164,8 @@ test("'Show Disclaimer' option should toggle dislaimer template", async () => {
         expect(params.disable).toEqual([]);
     });
     await contains(":iframe #wrapwrap > header").click();
-    await waitFor("[data-label='Show Disclaimer']");
-    expect("[data-label='Show Disclaimer']").toBeVisible();
-    await contains("[data-label='Show Disclaimer'] input").click();
+    await waitFor("[data-label='Add Banner']");
+    expect("[data-label='Add Banner']").toBeVisible();
+    await contains("[data-label='Add Banner'] input").click();
     expect.verifySteps(["theme_customize_data"]);
 });

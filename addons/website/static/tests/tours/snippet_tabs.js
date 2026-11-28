@@ -26,6 +26,10 @@ registerWebsitePreviewTour(
             content: "Check that the first tab link is active",
             trigger: ":iframe .s_tabs .nav-item:nth-of-type(1) .nav-link.active",
         },
+        {
+            content: "Check that the last 2 tabs cannot be removed",
+            trigger: "[data-container-title='Tabs'] button[aria-label='Remove Tab']:disabled",
+        },
         changeOption("Tabs", "button[aria-label='Add Tab']"),
         {
             content: "Check there are 3 tab panes",

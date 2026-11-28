@@ -12,6 +12,7 @@ class MailMessage(models.Model):
             if self._should_add_seo_rels(vals):
                 vals["body"] = add_seo_rels_to_links(
                     vals["body"],
+                    self._get_seo_rels_base_url(vals),
                 )
         return super().create(vals_list)
 
@@ -19,6 +20,7 @@ class MailMessage(models.Model):
         if self._should_add_seo_rels(vals):
             vals["body"] = add_seo_rels_to_links(
                 vals["body"],
+                self._get_seo_rels_base_url(vals),
             )
         return super().write(vals)
 
@@ -32,3 +34,13 @@ class MailMessage(models.Model):
         model_name = vals.get("model") or self.model
         model = self.env.registry.get(model_name)
         return model and getattr(model, '_add_seo_rels', False)
+
+    def _get_seo_rels_base_url(self, vals):
+        """
+        Return the base url of the website of the document the message is
+        posted on, so that links to this website are not marked as
+        user-generated.
+        """
+        model_name = vals.get("model") or self.model
+        res_id = vals.get("res_id") or self.res_id
+        return self.env[model_name].sudo().browse(res_id).get_base_url()
