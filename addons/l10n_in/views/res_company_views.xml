@@ -14,6 +14,12 @@
             <xpath expr="//label[@for='name']" position="before">
                <field class="o_form_label mb-0" name="l10n_in_pan_type" invisible="not l10n_in_pan_type"/>
             </xpath>
+            <xpath expr="//div[@id='vat_div']" position="after">
+                <label for="l10n_in_gst_registration_type" invisible="not vat or country_code != 'IN'"/>
+                <field name="l10n_in_gst_registration_type" invisible="not vat or country_code != 'IN'"/>
+                <label string="Tax Rate" for="l10n_in_composition_tax_rate" invisible="l10n_in_gst_registration_type != 'composition'"/>
+                <field name="l10n_in_composition_tax_rate" required="l10n_in_gst_registration_type == 'composition' and country_code =='IN'" invisible="l10n_in_gst_registration_type != 'composition'"/>
+            </xpath>
             <xpath expr="//div[@name='identifiers']" position="after">
                 <field name="l10n_in_pan_entity_id" invisible="country_code != 'IN'"/>
                 <field name="l10n_in_tan" invisible="not l10n_in_pan_entity_id"/>
