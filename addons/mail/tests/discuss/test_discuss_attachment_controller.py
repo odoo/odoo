@@ -129,6 +129,7 @@ class TestDiscussAttachmentController(MailControllerAttachmentCommon):
                             "discuss.channel/new_message",
                             self._new_message_payload(channel, message, posted),
                         ),
+                        BusResult((channel, "internal_users"), "mail.record/insert"),
                         BusResult(
                             persona,
                             "mail.record/insert",
@@ -237,6 +238,7 @@ class TestDiscussAttachmentController(MailControllerAttachmentCommon):
                     Store().add(channel, ["last_interest_dt"]),
                 ),
                 new_message(attachment),
+                BusResult((channel, "internal_users"), "mail.record/insert"),
                 BusResult(
                     self.user_portal,
                     "mail.record/insert",
@@ -254,7 +256,12 @@ class TestDiscussAttachmentController(MailControllerAttachmentCommon):
         attachment = IrAttachment.create(
             {"name": "Posted", "res_id": 0, "res_model": "mail.compose.message"},
         )
-        with self.assertBus(lambda: [new_message(attachment)]):
+        with self.assertBus(
+            lambda: [
+                new_message(attachment),
+                BusResult((channel, "internal_users"), "mail.record/insert"),
+            ],
+        ):
             channel.with_user(self.user_admin).message_post(
                 attachment_ids=attachment.ids,
                 author_id=partner.id,
@@ -285,6 +292,7 @@ class TestDiscussAttachmentController(MailControllerAttachmentCommon):
                     "discuss.channel/new_message",
                     self._new_message_payload(channel, message, attachment),
                 ),
+                BusResult((channel, "internal_users"), "mail.record/insert"),
             ]
 
         with self.assertBus(notifications):

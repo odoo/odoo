@@ -139,5 +139,4 @@ class MailNotification(models.Model):
                 res.attr("display_name", predicate=lambda p: not p.name, version=False),
             ),
         )
-        if res.is_for_internal_users():
-            res.append("mail_email_address")
+        res.for_internal_users(["mail_email_address"])

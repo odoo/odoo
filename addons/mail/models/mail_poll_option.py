@@ -101,5 +101,4 @@ class MailPollOption(models.Model):
         # Computed from the votes, which do not write the option.
         res.attr("number_of_votes", version=False)
         res.attr("vote_percentage", version=False)
-        if res.is_for_current_user():
-            res.attr("selected_by_self", version=False)
+        res.for_current_user(lambda res: res.attr("selected_by_self", version=False))
