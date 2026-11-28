@@ -4,7 +4,7 @@ import { useService } from "@web/core/utils/hooks";
 import { useSpreadsheetNotificationStore } from "@spreadsheet/hooks";
 
 import * as spreadsheet from "@odoo/o-spreadsheet";
-import { Spreadsheet, Model } from "@odoo/o-spreadsheet";
+import { Model, ModelCreationError, Spreadsheet } from "@odoo/o-spreadsheet";
 import { useSpreadsheetPrint } from "../hooks";
 import { _t } from "@web/core/l10n/translation";
 
@@ -30,6 +30,7 @@ export class PublicReadonlySpreadsheet extends Component {
         this.http = useService("http");
         this.state = useState({
             isFilterShown: false,
+            errorMessage: undefined,
         });
         useSpreadsheetPrint(() => this.model);
         onWillStart(this.createModel.bind(this));
@@ -37,6 +38,7 @@ export class PublicReadonlySpreadsheet extends Component {
 
     get showFilterButton() {
         return (
+            !this.state.errorMessage &&
             this.props.mode === "dashboard" &&
             this.globalFilters.length > 0 &&
             !this.state.isFilterShown
@@ -52,16 +54,24 @@ export class PublicReadonlySpreadsheet extends Component {
 
     async createModel() {
         this.data = await this.http.get(this.props.dataUrl);
-        this.model = new Model(
-            this.data,
-            {
-                mode: this.props.mode === "dashboard" ? "dashboard" : "readonly",
-                custom: {
-                    isFrozenSpreadsheet: true,
+        try {
+            this.model = new Model(
+                this.data,
+                {
+                    mode: this.props.mode === "dashboard" ? "dashboard" : "readonly",
+                    custom: {
+                        isFrozenSpreadsheet: true,
+                    },
                 },
-            },
-            this.data.revisions || []
-        );
+                this.data.revisions || []
+            );
+        } catch (error) {
+            if (error instanceof ModelCreationError) {
+                this.state.errorMessage = error.message;
+                return;
+            }
+            throw error;
+        }
         if (this.env.debug) {
             // eslint-disable-next-line no-import-assign
             spreadsheet.__DEBUG__ = spreadsheet.__DEBUG__ || {};

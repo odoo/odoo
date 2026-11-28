@@ -1,4 +1,5 @@
 import { expect, test } from "@odoo/hoot";
+import { ModelCreationError } from "@odoo/o-spreadsheet";
 import { animationFrame } from "@odoo/hoot-mock";
 import { getCellValue } from "@spreadsheet/../tests/helpers/getters";
 import { makeSpreadsheetMockEnv } from "@spreadsheet/../tests/helpers/model";
@@ -194,6 +195,25 @@ test("load spreadsheet data with error", async () => {
     // error is thrown
     expect.verifySteps(["error"]);
 });
+
+for (const [errorName, snapshot] of [
+    ["DataMigrationError", { version: "999.0" }],
+    ["XLSXImportError", { "[Content_Types].xml": "<Types/>" }],
+]) {
+    test(`load spreadsheet data with ${errorName}`, async () => {
+        onRpc("/spreadsheet/dashboard/data/*", () => ({ snapshot, revisions: [] }));
+        const loader = await createDashboardLoader();
+        await loader.load();
+        const result = loader.getDashboard(3);
+        expect(result.status).toBe(Status.Loading);
+        // known errors are not thrown
+        await result.promise;
+        expect(result.status).toBe(Status.Error);
+        expect(result.error).toBeInstanceOf(ModelCreationError);
+        expect(result.error.constructor.name).toBe(errorName);
+        expect(result.errorMessage).toBe(result.error.message);
+    });
+}
 
 test("async formulas are correctly evaluated", async () => {
     const spreadsheetData = {

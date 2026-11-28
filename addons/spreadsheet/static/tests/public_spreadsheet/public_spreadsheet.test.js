@@ -93,3 +93,21 @@ test("Disable copy button in public spreadsheets", async function () {
     await contains(".o-topbar-menu[data-id='edit']").click();
     expect(fixture.querySelector(".o-menu-item[data-name='copy']")).toHaveClass("disabled");
 });
+
+test("show an error message when the spreadsheet data cannot be migrated", async function () {
+    data = { version: "999.0" };
+    const fixture = await mountPublicSpreadsheet("dashboardDataUrl", "dashboard");
+    expect(fixture.querySelector(".o-spreadsheet")).toBe(null);
+    expect(".o-public-spreadsheet-error").toHaveText(
+        /postdates the current version of o-spreadsheet/
+    );
+});
+
+test("show an error message when the xlsx file cannot be imported", async function () {
+    data = { "[Content_Types].xml": "<Types/>" };
+    const fixture = await mountPublicSpreadsheet("dashboardDataUrl", "spreadsheet");
+    expect(fixture.querySelector(".o-spreadsheet")).toBe(null);
+    expect(".o-public-spreadsheet-error").toHaveText(
+        "An error occurred while converting the XLSX file. The file may be corrupted or invalid."
+    );
+});
