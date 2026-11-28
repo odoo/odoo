@@ -50,6 +50,21 @@ class AccountTax(models.Model):
                         tax.l10n_in_gst_tax_type = tag_code
                         break
 
+    def _l10n_in_classify_gst_supply(self):
+        """ Classify the supply made with the taxes applied together on one line (self, may be empty).
+
+        Exempt, nil rated and non-GST taxes win over GST taxes, as in the GSTR-1 section of a line.
+
+        :return: 'exempt', 'taxable', or False when no tax is a GST or an exempt-type tax
+                 (no tax, only TDS / TCS, taxes without Indian tax type).
+        """
+        tax_types = set(self.flatten_taxes_hierarchy().mapped('l10n_in_tax_type'))
+        if tax_types & {'nil_rated', 'exempt', 'non_gst'}:
+            return 'exempt'
+        if 'gst' in tax_types:
+            return 'taxable'
+        return False
+
     # -------------------------------------------------------------------------
     # HELPERS IN BOTH PYTHON/JAVASCRIPT (hsn_summary.js / account_tax.py)
 

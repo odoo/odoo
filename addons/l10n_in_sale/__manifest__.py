@@ -10,6 +10,7 @@
     ],
     'data': [
         'views/sale_order_views.xml',
+        'wizard/sale_make_invoice_advance_views.xml',
     ],
     'demo': [
         'data/product_demo.xml',

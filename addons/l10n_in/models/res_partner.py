@@ -270,6 +270,20 @@ class ResPartner(models.Model):
             return True
         return super().check_vat_in(vat)
 
+    def _l10n_in_get_gst_treatment(self):
+        """ GST treatment an invoice to this partner gets by default.
+
+        :return: a key of the l10n_in_gst_treatment selection, 'consumer' for an empty recordset.
+        """
+        if not self:
+            return 'consumer'
+        self.ensure_one()
+        if self.l10n_in_gst_treatment:
+            return self.l10n_in_gst_treatment
+        if self.country_id and self.country_id.code != 'IN':
+            return 'overseas'
+        return 'regular' if self.check_vat_in(self.vat) else 'consumer'
+
     @api.model
     def _l10n_in_get_partner_vals_by_vat(self, vat):
         partner_data = self.enrich_by_gst(vat)
