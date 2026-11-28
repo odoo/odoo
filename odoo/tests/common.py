@@ -54,6 +54,7 @@ from urllib3.util import parse_url
 from werkzeug.exceptions import BadRequest
 
 import odoo.cli
+import odoo.http.router
 import odoo.models
 import odoo.orm.registry
 from odoo import api, fields
@@ -2803,6 +2804,9 @@ class HttpCase(TransactionCase):
             self.startPatcher(
                 patch.object(report_model, '_run_wkhtmltopdf__', _patched_run_wkhtmltopdf),
             )
+
+        self._patch_serve_db_assets = patch('odoo.http.router.serve_db_assets', odoo.http.router.serve_db)
+        self.startPatcher(self._patch_serve_db_assets)
 
     @contextmanager
     def allow_pdf_render(self):

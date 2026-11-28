@@ -10,6 +10,7 @@ from urllib.parse import urlsplit
 from freezegun import freeze_time
 
 from odoo import api
+from odoo.http import router
 from odoo.tests import RecordCapturer, new_test_user, tagged
 from odoo.tools import BinaryBytes, BinaryValue, config, file_open
 from odoo.tools.image import image_process
@@ -358,39 +359,44 @@ class TestHttpStatic(TestHttpStaticCommon):
         self.assertEqual(res.status_code, 404)
 
     def test_static20_web_assets(self):
+        self._patch_serve_db_assets.stop()
         attachment = self.env['ir.attachment'].search([
-            ('url', 'like', '%/web.assets_frontend_minimal.min.js')
+            ('url', 'like', '%/web.assets_frontend_minimal.min.js'),
         ], limit=1)
         x_sendfile = opj(config.filestore(self.env.cr.dbname), attachment.store_fname)
         x_accel_redirect = f'/web/filestore/{self.env.cr.dbname}/{attachment.store_fname}'
 
-        with self.subTest(x_sendfile=False):
-            self.assertDownload(
-                attachment.url,
-                headers={},
-                assert_status_code=200,
-                assert_headers={
-                    'Content-Length': str(attachment.file_size),
-                    'Content-Type': 'application/javascript; charset=utf-8',
-                    'Content-Disposition': 'inline; filename=web.assets_frontend_minimal.min.js',
-                },
-                assert_content=attachment.raw
-            )
+        with patch.object(router, 'serve_db', wraps=router.serve_db) as serve_db_spy:
+            with self.subTest(x_sendfile=False):
+                self.assertDownload(
+                    attachment.url,
+                    headers={},
+                    assert_status_code=200,
+                    assert_headers={
+                        'Content-Length': str(attachment.file_size),
+                        'Content-Type': 'application/javascript; charset=utf-8',
+                        'Content-Disposition': 'inline; filename=web.assets_frontend_minimal.min.js',
+                    },
+                    assert_content=attachment.raw,
+                )
+                serve_db_spy.assert_not_called()
 
-        with self.subTest(x_sendfile=True), \
-             patch.object(config, 'options', {**config.options, 'x_sendfile': True}):
-            self.assertDownload(
-                attachment.url,
-                headers={},
-                assert_status_code=200,
-                assert_headers={
-                    'X-Sendfile': x_sendfile,
-                    'X-Accel-Redirect': x_accel_redirect,
-                    'Content-Length': '0',
-                    'Content-Type': 'application/javascript; charset=utf-8',
-                    'Content-Disposition': 'inline; filename=web.assets_frontend_minimal.min.js',
-                },
-            )
+            serve_db_spy.reset_mock()
+            with self.subTest(x_sendfile=True), \
+                 patch.object(config, 'options', {**config.options, 'x_sendfile': True}):
+                self.assertDownload(
+                    attachment.url,
+                    headers={},
+                    assert_status_code=200,
+                    assert_headers={
+                        'X-Sendfile': x_sendfile,
+                        'X-Accel-Redirect': x_accel_redirect,
+                        'Content-Length': '0',
+                        'Content-Type': 'application/javascript; charset=utf-8',
+                        'Content-Disposition': 'inline; filename=web.assets_frontend_minimal.min.js',
+                    },
+                )
+                serve_db_spy.assert_not_called()
 
     def test_static21_download_false(self):
         self.assertDownloadGizeh('/web/content/test_http.gizeh_png?download=0')
