@@ -809,3 +809,21 @@ class TestItEdiExport(TestItEdi):
         })
         bill.action_post()
         self.assertEqual(bill.show_reset_to_draft_button, True)
+
+    def test_reset_to_draft_l10n_it_edi_sent_bill(self):
+        """
+        A bill sent to the SDI should not be reset to draft, unless it was rejected.
+        """
+        bill = self.env['account.move'].create({
+            'partner_id': self.partner_a.id,
+            'move_type': 'in_invoice',
+            'invoice_date': '2026-03-24',
+            'line_ids': [
+                Command.create({
+                    'name': 'line',
+                    'account_id': self.company_data['default_account_revenue'].id,
+                }),
+            ]
+        })
+        bill.action_post()
+        self.assertEqual(bill.show_reset_to_draft_button, True)
