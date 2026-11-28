@@ -67,6 +67,35 @@ export class Vimeo extends AbstractThirdPartyVideo {
         return data.thumbnail_url || "";
     }
     /**
+     * Returns the url for the poster image of the video.
+     *
+     * @param {string} videoId
+     * @param {Object} [options]
+     * @return {Promise[string]} url
+     */
+    static async getPosterUrl(videoId, options = {}) {
+        const videoPath = [videoId, options.hash].filter(Boolean).join("/");
+        const videoUrl = encodeURIComponent(`https://vimeo.com/${videoPath}`);
+        const apiResponse = await fetch(
+            `https://vimeo.com/api/oembed.json?url=${videoUrl}&width=1920`
+        );
+        const data = apiResponse.ok ? await apiResponse.json() : {};
+        return data.thumbnail_url || "";
+    }
+    static playbackSubscription = { method: "addEventListener", value: "playProgress" };
+    /**
+     * @override
+     */
+    static isReadyMessage(message) {
+        return message.event === "ready";
+    }
+    /**
+     * @override
+     */
+    static isPlayingMessage(message) {
+        return message.event === "playProgress";
+    }
+    /**
      * @override
      */
     static getCustomUrlOptions(url) {

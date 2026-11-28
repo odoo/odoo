@@ -46,6 +46,22 @@ export class Youtube extends AbstractThirdPartyVideo {
         return `https://img.youtube.com/vi/${videoId}/0.jpg`;
     }
     /**
+     * Returns the url for the poster image of the video.
+     *
+     * @param {string} videoId
+     * @return {string} url
+     */
+    static getPosterUrl(videoId) {
+        return `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+    }
+    static playbackSubscription = { event: "listening" };
+    /**
+     * @override
+     */
+    static isPlayingMessage(message) {
+        return message.info?.playerState === 1;
+    }
+    /**
      * @override
      * @param {URL} url
      */

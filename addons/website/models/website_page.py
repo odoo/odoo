@@ -5,6 +5,7 @@ import os
 import re
 import time
 from collections import Counter
+from urllib.parse import urlsplit
 
 from odoo import api, fields, models, tools
 from odoo.exceptions import UserError
@@ -277,6 +278,13 @@ class WebsitePage(models.Model):
     def get_website_meta(self):
         self.ensure_one()
         return self.view_id.get_website_meta()
+
+    def _get_bg_video_origins(self):
+        self.ensure_one()
+        if self.env.website._should_remove_third_party_trackers():
+            return []
+        urls = map(urlsplit, re.findall(r'data-bg-video-src="([^"]+)"', self.view_id.arch))
+        return sorted({f"{url.scheme or 'https'}://{url.netloc}" for url in urls if url.netloc})
 
     @api.model
     def _search_get_detail(self, website, order, options):

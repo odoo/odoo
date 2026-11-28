@@ -3,6 +3,7 @@ import { registry } from "@web/core/registry";
 
 import { uniqueId } from "@web/core/utils/functions";
 import { setupAutoplay, triggerAutoplay } from "@website/utils/videos";
+import { PLATFORMS } from "@website/js/content/generate_video_iframe";
 
 export class BackgroundVideo extends Interaction {
     static selector = ".o_background_video";
@@ -129,7 +130,9 @@ export class BackgroundVideo extends Interaction {
         }
 
         void this.playerEl.offsetWidth; // Force style addition
-        this.playerEl.classList.add("show");
+        if (this.isPlaying) {
+            this.playerEl.classList.add("show");
+        }
     }
 
     appendBgVideo() {
@@ -152,6 +155,12 @@ export class BackgroundVideo extends Interaction {
 
         this.bgVideoContainer = this.el.querySelector(":scope > .o_bg_video_container");
         this.playerEl = this.bgVideoContainer.querySelector(".o_bg_video_iframe, .o_bg_video_file");
+        const hasPoster = !!this.el.style.getPropertyValue("--o-bg-video-poster");
+        const provider = Object.values(PLATFORMS).find((p) => p.isValidVideoUrl(this.videoSrc));
+        this.isPlaying = !(hasPoster && provider.playbackSubscription);
+        if (!this.isPlaying) {
+            this.waitForPlayback(provider);
+        }
         this.addListener(
             this.playerEl,
             this.isVideoFile ? "loadeddata" : "load",
@@ -167,6 +176,29 @@ export class BackgroundVideo extends Interaction {
 
         this.adjustPlayer();
         triggerAutoplay(this.playerEl);
+    }
+
+    waitForPlayback(provider) {
+        const subscribe = () =>
+            this.playerEl.contentWindow.postMessage(
+                JSON.stringify(provider.playbackSubscription),
+                "*"
+            );
+        this.addListener(this.playerEl, "load.noUpdate", subscribe);
+        const stopListening = this.addListener(window, "message.noUpdate", (ev) => {
+            if (ev.source !== this.playerEl.contentWindow) {
+                return;
+            }
+            const message = JSON.parse(ev.data);
+            if (provider.isReadyMessage(message)) {
+                subscribe();
+            }
+            if (provider.isPlayingMessage(message)) {
+                stopListening();
+                this.isPlaying = true;
+                this.adjustPlayer();
+            }
+        });
     }
 }
 
