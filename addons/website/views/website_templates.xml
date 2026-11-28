@@ -411,7 +411,7 @@
     </xpath>
     <xpath expr="//header" position="attributes">
         <attribute name="t-attf-class" add="#{header_bg_color_class}" separator=" "/>
-        <attribute name="t-attf-style" add="#{header_bg_color_style and ('background-color: %s;' % header_bg_color_style)}" separator=" "/>
+        <attribute name="t-attf-style" add="#{header_bg_color_style and ('--header-background-color: %s;' % header_bg_color_style)}" separator=" "/>
         <attribute name="t-attf-class" add="#{header_text_color_class}" separator=" "/>
         <attribute name="t-attf-style" add="#{header_text_color_style and ('color: %s;' % header_text_color_style)}" separator=" "/>
     </xpath>
