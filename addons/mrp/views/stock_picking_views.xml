@@ -135,9 +135,12 @@
                     <field name="use_create_components_lots"/>
                 </group>
             </xpath>
-            <field name="auto_show_allocation_report" position="attributes">
+            <label name="auto_show_allocation_report_label" position="attributes">
                 <attribute name="invisible" add="code != 'mrp_operation'" separator="and"/>
-            </field>
+            </label>
+            <div name="auto_show_allocation_report_div" position="attributes">
+                <attribute name="invisible" add="code != 'mrp_operation'" separator="and"/>
+            </div>
             <xpath expr="//group[@name='second']/group[@name='stock_packages']" position="attributes">
                 <attribute name="invisible" separator="and" add="code != 'mrp_operation'"/>
             </xpath>

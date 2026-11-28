@@ -1,3 +1,4 @@
+from . import test_auto_allocation
 from . import test_auto_waving
 from . import test_batch_picking
 from . import test_generate_serial_numbers

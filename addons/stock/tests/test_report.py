@@ -1926,7 +1926,7 @@ class TestReports(TestReportsCommon):
         """ Check the complicated use case with backorder when:
         1. Incoming qty is greater than outgoing qty needed to be assigned + total outgoing qty is assigned
         2. Smaller qty is completed + backorder is made for rest
-        3. Backorder qty (which is still assigned) is unassigned + re-assigned
+        3. The qty not received is unallocated (no more linked to the backorder) + re-assigned
         """
         incoming_qty = 10
         outgoing_qty = 8
@@ -1959,21 +1959,10 @@ class TestReports(TestReportsCommon):
         Form.from_action(self.env, receipt.button_validate()).save().process()
         backorder = self.env['stock.picking'].search([('backorder_id', '=', receipt.id)])
 
-        # Check backorder assigned quantities
-        self.assertEqual(receipt.move_ids.move_dest_ids, backorder.move_ids.move_dest_ids, "Backorder should have copied link to delivery move")
-        report_values = self.allocation_report._get_report_values('stock.picking', backorder.id)
-        product_lines = report_values['product_lines']
-        self.assertEqual(len(product_lines), 1, "The report has wrong number of incoming products.")
-        out_lines = product_lines[0]['needs']
-        self.assertEqual(len(out_lines), 1, "The report has wrong number of outgoing moves.")
-        # we expect that the report won't know about original receipt done amount, so it will show outgoing_qty as assigned
-        # (rather than the remaining amount that isn't reserved). This can change if the report becomes more sophisticated
-        self.assertEqual(out_lines[0]['quantity'], outgoing_qty, "The report out move is waiting for 8 units in total.")
-        self.assertEqual(out_lines[0]['reserved_quantity'], orig_incoming_quantity, "The report out move already has 4 reserved units.")
-
-        # Unassign the amount we expect to see in the report + check split correctly happens
-        self.allocation_report.action_unassign(backorder.move_ids.ids, delivery.move_ids.ids, outgoing_qty)
-        self.assertEqual(len(delivery.move_ids), 2, "The delivery should have split its reserved qty from the original move")
+        # The part of the delivery which wasn't received is unallocated (and not allocated again to
+        # the backorder, as the allocation mode is manual).
+        self.assertFalse(backorder.move_ids.move_dest_ids, "Backorder shouldn't be linked to the delivery")
+        self.assertEqual(len(delivery.move_ids), 2, "The delivery should have split its received qty from the original move")
         reserved_move = receipt.move_ids.move_dest_ids
         self.assertEqual(len(reserved_move), 1, "Move w/reserved qty should have full demand reserved")
         self.assertEqual(reserved_move.state, 'assigned', "Move w/reserved qty should have full demand reserved")

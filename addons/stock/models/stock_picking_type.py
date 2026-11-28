@@ -66,7 +66,7 @@ class StockPickingType(models.Model):
         check_company=True, store=True, readonly=False, precompute=True, required=True,
         help="This is the default destination location when this operation is manually created. However, it is possible to change it afterwards or that the routes use another one by default.")
     allocated_location_id = fields.Many2one(
-        'stock.location', 'Location for allocation', check_company=True,
+        'stock.location', 'Location for Allocation', check_company=True,
         ui_domain="[('usage', '=', 'internal')]",
         help="Allow to define the location where allocated products should be sent."
     )
@@ -104,6 +104,9 @@ class StockPickingType(models.Model):
     auto_show_allocation_report = fields.Boolean(
         "Show Allocation",
         help="If this checkbox is ticked, Odoo will automatically show the allocation report (if there are moves to allocate to) when validating.")
+    allocation_mode = fields.Selection(
+        [('manual', 'Manual Only'), ('automatic', 'Automatic')],
+        string="Allocation Mode", default='manual', required=True)
     auto_print_delivery_slip = fields.Boolean(
         "Auto Print Delivery Slip",
         help="If this checkbox is ticked, Odoo will automatically print the delivery slip of a picking when it is validated.")

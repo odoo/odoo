@@ -709,6 +709,12 @@ class StockRule(models.Model):
         if use_new_cursor:
             self.env['ir.cron']._commit_progress(1)
 
+        # Automatically allocate incoming products to needs whose reservation date is reached.
+        self.env['stock.allocation.report'].sudo()._run_auto_allocation(company_id=company_id)
+
+        if use_new_cursor:
+            self.env['ir.cron']._commit_progress(1)
+
         # Merge duplicated quants
         self.env['stock.quant']._quant_tasks()
 
@@ -719,7 +725,7 @@ class StockRule(models.Model):
     def _get_scheduler_tasks_to_do(self):
         """ Number of task to be executed by the stock scheduler. This number will be given in log
         message to know how many tasks succeeded."""
-        return 3
+        return 4
 
     @api.model
     def run_scheduler(self, use_new_cursor=False, company_id=False):
