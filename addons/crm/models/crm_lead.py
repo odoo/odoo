@@ -870,6 +870,8 @@ class CrmLead(models.Model):
 
         if not stage_is_won:
             result = super().write(vals)
+            if 'probability' in vals and vals['probability'] == 0:
+                self.filtered('active').date_closed = False
         else:
             # stage change between two won stages: does not change the date_closed
             leads_already_won = self.filtered(lambda lead: lead.stage_id.is_won)
