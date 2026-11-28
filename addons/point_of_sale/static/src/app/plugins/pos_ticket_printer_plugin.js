@@ -69,11 +69,11 @@ export class PosTicketPrinterPlugin extends Plugin {
     }
 
     get receiptPrinters() {
-        return this.config.receipt_printer_ids || [];
+        return this.config?.receipt_printer_ids || [];
     }
 
     get preparationPrinters() {
-        return this.config.preparation_printer_ids || [];
+        return this.config?.preparation_printer_ids || [];
     }
 
     get hasReceiptPrinters() {
@@ -85,7 +85,7 @@ export class PosTicketPrinterPlugin extends Plugin {
     }
 
     get printerStorageKey() {
-        return `pos_default_printer_id_${this.config.id}_${odoo.info?.db}`;
+        return `pos_default_printer_id_${this.config?.id}_${odoo.info?.db}`;
     }
 
     getGenerator() {
