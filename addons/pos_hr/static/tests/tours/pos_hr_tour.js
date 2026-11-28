@@ -12,6 +12,38 @@ import * as Utils from "@point_of_sale/../tests/generic_helpers/utils";
 import { registry } from "@web/core/registry";
 import { negate, scan_barcode } from "@point_of_sale/../tests/generic_helpers/utils";
 
+registry.category("web_tour.tours").add("test_enable_employee_login_on_new_session", {
+    steps: () =>
+        [
+            Chrome.clickBtn("Open Register"),
+            Dialog.confirm("Open Register"),
+            ProductScreen.isShown(),
+            Chrome.clickMenuOption("Close Register"),
+            {
+                trigger: ".modal .modal-footer .btn:contains(Close Register)",
+                run: "click",
+                expectUnloadPage: true,
+            },
+            Chrome.clickBtn("Backend", { expectUnloadPage: true }),
+            BackendUtils.editShopConfiguration("Shop"),
+            {
+                trigger: ".o_field_widget[name='module_pos_hr'] input",
+                run: "click",
+            },
+            BackendUtils.saveConfiguration(),
+            BackendUtils.openShopSession("Shop"),
+            Chrome.clickBtn("Open Register"),
+            PosHr.loginScreenIsShown(),
+            PosHr.clickLoginButton(),
+            CashierSelectionPopup.has("Pos Employee1"),
+            CashierSelectionPopup.has("Pos Employee2"),
+            CashierSelectionPopup.has("Test Employee 3"),
+            CashierSelectionPopup.has("Mitchell Admin", { run: "click" }),
+            Dialog.confirm("Open Register"),
+            ProductScreen.isShown(),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("PosHrTour", {
     steps: () =>
         [

@@ -101,9 +101,11 @@ class PosLoadMixin(models.AbstractModel):
     @api.model
     def _read_pos_data_from_metadata(self, server_data, local_data, config_id):
         model = self._name
-        if model in local_data['models'] and model in local_data['records'] and len(local_data['records'][model]):
-            ids = local_data['records'][model].keys()
-            records = server_data['records'].filtered(lambda x: self.load_pos_data_force_loading() or not str(x.id) in ids or (x.write_date and floor(x.write_date.timestamp()) > local_data['records'][model][str(x.id)]))
+        cached_records = local_data['records'].get(model)
+        if cached_records and not self.load_pos_data_force_loading():
+            records = server_data['records'].filtered(
+                lambda x: str(x.id) not in cached_records
+                or (x.write_date and floor(x.write_date.timestamp()) > local_data['records'][model][str(x.id)]))
         else:
             records = server_data['records']
         return {
