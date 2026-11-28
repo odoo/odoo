@@ -82,7 +82,7 @@ export class GenerateDialog extends Component {
             )[0];
             this.nextCustomSerialNumber = await this.orm.call("ir.sequence", "get_next_char", [
                 this.sequence.id,
-                this.sequence.number_next,
+                this.sequence.number_next_actual,
             ]);
         }
     }
