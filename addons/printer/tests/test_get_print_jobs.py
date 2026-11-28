@@ -87,3 +87,13 @@ class TestGetPrintJobs(TransactionCase):
             self.report.get_print_jobs(self.report.report_name, self.doc.ids, {})
         rendered_html = run_image_engine.call_args.args[1][0]
         self.assertIn(f'<head><base href="{base_url}"/>', rendered_html)
+
+    def test_epos_html_rendering_is_not_rotated(self):
+        self._link_printer('epos')
+        with patch(
+            'odoo.addons.base_report_wkhtmltox.models.ir_actions_report.IrActionsReport._run_image_engine',
+            return_value=[make_png_bytes(576, 256)],
+        ) as run_image_engine:
+            jobs = self.report.get_print_jobs(self.report.report_name, self.doc.ids, {})
+        self.assertIn('<style>html { zoom: ', run_image_engine.call_args.args[1][0])
+        self.assertIn('height="256"', base64.b64decode(jobs[0]['report']).decode())
