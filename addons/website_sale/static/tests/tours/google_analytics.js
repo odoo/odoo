@@ -130,9 +130,12 @@ registry.category("web_tour.tours").add('website_sale.google_analytics_add_to_ca
 registry.category("web_tour.tours").add("website_sale.google_analytics_select_item", {
     steps: () => [
         {
-            content: "click product card to trigger select_item",
-            trigger: 'article.oe_product_cart[data-product-tracking-info]',
-            run: "click",
+            content: "click product link to trigger select_item",
+            trigger: 'article.oe_product_cart[data-product-tracking-info] a[href]',
+            async run(actions) {
+                this.anchor.addEventListener("click", event => event.preventDefault(), { once: true });
+                await actions.click();
+            },
         },
         {
             content: "verify select_item event was fired",
