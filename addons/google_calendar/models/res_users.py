@@ -99,6 +99,7 @@ class ResUsers(models.Model):
         synced_events = self.env['calendar.event']
 
         events_by_calendar = {}
+        full_sync_by_calendar = {}
 
         # Google -> Odoo
         # Fetch events for all calendars before processing them.
@@ -107,6 +108,7 @@ class ResUsers(models.Model):
                 continue
 
             events, default_reminders, full_sync = self._sync_request(calendar_service, calendar)
+            full_sync_by_calendar[calendar] = full_sync
             events = self._sync_google_calendar_filter_remote_events(events)
             if not events:
                 continue
@@ -119,7 +121,6 @@ class ResUsers(models.Model):
                 'events': normal_events,
                 'recurrences': recurrences,
                 'default_reminders': default_reminders,
-                'full_sync': full_sync,
             }
 
         # When moving an event from one calendar to another, Google will send a cancellation event for the
@@ -167,7 +168,7 @@ class ResUsers(models.Model):
         for calendar in self.env.user.calendar_ids:
             if calendar.user_access_role not in ['owner', 'writer'] or not calendar.google_sync_enabled:
                 continue
-            full_sync = events_by_calendar.get(calendar.id, {}).get('full_sync', False)
+            full_sync = full_sync_by_calendar.get(calendar, False)
             send_updates = not full_sync
             recurrences = self.env['calendar.recurrence']._get_records_to_sync(calendar, full_sync=full_sync)
             recurrences -= synced_recurrences
