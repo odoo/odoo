@@ -235,8 +235,22 @@ export class FilePlugin extends Plugin {
 
     onClickFileImage(fileImage) {
         const fileBox = closestElement(fileImage, ".o_file_box");
+        let attachmentId = fileBox.dataset.attachmentId;
+        if (!/^\d+$/.test(attachmentId || "")) {
+            const link = fileBox.querySelector(".o_link_readonly");
+            if (link) {
+                const url = new URL(link.href);
+                const matches = url.pathname.match(/^\/web\/content\/(\d+)$/);
+                if (matches) {
+                    attachmentId = matches[1];
+                }
+            }
+        }
+        if (!attachmentId) {
+            return;
+        }
         const fileModel = Object.assign(new FileModel(), {
-            id: fileBox.dataset.attachmentId,
+            id: attachmentId,
             name: fileImage.title,
             mimetype: fileImage.dataset.mimetype,
         });
