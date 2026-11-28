@@ -29,6 +29,7 @@ export class RestaurantOrderCourse extends models.ServerModel {
             "line_ids",
             "index",
             "write_date",
+            "fired_date",
         ];
     }
 }

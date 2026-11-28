@@ -84,6 +84,7 @@
             'point_of_sale/static/src/app/utils/convert_python_template.js',
             'point_of_sale/static/src/lazy_getter.js',
             'point_of_sale/static/src/app/utils/init_lna.js',
+            'pos_restaurant/static/src/app/utils/time.js',
             'web/static/lib/bootstrap/js/dist/util/index.js',
             'web/static/lib/bootstrap/js/dist/dom/data.js',
             'web/static/lib/bootstrap/js/dist/dom/event-handler.js',
