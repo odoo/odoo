@@ -70,6 +70,10 @@ class AccountChartTemplate(models.AbstractModel):
             },
         }
 
+    @template('ca_2023', 'account.account.tag')
+    def _get_ca_account_account_tag(self):
+        return self._parse_csv('ca_2023', 'account.account.tag')
+
     @template('ca_2023', 'account.fiscal.position')
     def _get_ca_account_fiscal_position(self):
         """ Ensure the appropriate domestic_fiscal_position_id gets set. """
