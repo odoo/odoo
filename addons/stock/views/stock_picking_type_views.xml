@@ -212,7 +212,7 @@
                                     <label for="auto_print_lot_labels" string="Lot/SN Labels" groups="stock.group_production_lot"/>
                                     <div class="o_row" groups="stock.group_production_lot">
                                         <field name="auto_print_lot_labels" string="Lot/SN Labels"/>
-                                        <field name="lot_label_format" invisible="not auto_print_lot_labels"/>
+                                        <field name="lot_label_format" invisible="not auto_print_lot_labels" required="auto_print_lot_labels"/>
                                     </div>
                                     <field name="auto_print_reception_report" string="Reception Report" invisible="not auto_show_allocation_report"/>
                                     <field name="auto_print_reception_report_labels" string="Reception Report Labels" invisible="not auto_show_allocation_report"/>
