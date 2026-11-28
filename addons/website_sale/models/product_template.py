@@ -131,6 +131,8 @@ class ProductTemplate(models.Model):
              "It will not be displayed if pricelists apply.",
     )
 
+    website_message_ids = fields.One2many(domain=lambda self: [('model', '=', self._name), ('message_type', '=', 'comment'), ('rating_ids', '!=', False)])
+
     #=== COMPUTE METHODS ===#
 
     @api.depends('product_variant_ids', 'product_variant_ids.base_unit_count')
