@@ -83,6 +83,9 @@ class LoyaltyRule(models.Model):
         self.ensure_one()
         return not line.combo_parent_id and not line._is_tip_line()
 
+    def _get_amount_sign(self, order):
+        return -1 if order.is_refund and order.is_refund_or_negative() else 1
+
     def _qualifying_lines(self, order, lines=None):
         """
         Lines that match this rule's product domain (the goods it applies to).
@@ -115,9 +118,7 @@ class LoyaltyRule(models.Model):
         if total_qty < self.minimum_qty:
             return False
         amount = qualifying._get_loyalty_price(tax_included=self.minimum_amount_tax_mode == 'incl')
-        if order.is_refund:
-            amount = -amount
-        return amount >= self.minimum_amount
+        return amount * self._get_amount_sign(order) >= self.minimum_amount
 
     def _get_pos_order_points(self, order, lines=None):
         """
@@ -141,10 +142,7 @@ class LoyaltyRule(models.Model):
             money_lines = order_lines.filtered(
                 lambda l: self._counts_for_points(l) and self._in_domain(l) and not is_excluded_reward(l)
             )
-            money_amount = money_lines._get_loyalty_price()
-            # Only refunds to cards should reach this
-            if order.is_refund:
-                money_amount = -money_amount
+            money_amount = money_lines._get_loyalty_price() * self._get_amount_sign(order)
             return float_round(
                 self.reward_point_amount * money_amount,
                 precision_rounding=0.01,

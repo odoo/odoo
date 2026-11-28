@@ -261,26 +261,6 @@ patch(PosOrder.prototype, {
         }
         this.active_rewards.push({ reward_id: reward.id });
     },
-    /**
-     * Funding an eWallet or selling/topping-up a gift card from a refund adds a positive
-     * trigger-product line that offsets the refund and credits the card. That's the
-     * intended way to "refund to an eWallet", not a new sale, so the refund guard must
-     * not block it.
-     */
-    isSaleDisallowed(values, options) {
-        const product = values.product_id || values.product_tmpl_id?.product_variant_ids?.[0];
-        const isPaymentTrigger = this.models["loyalty.program"].some(
-            (program) =>
-                program.is_payment_program &&
-                program.trigger_product_ids.some(
-                    (triggerProduct) => triggerProduct.id === product?.id
-                )
-        );
-        if (isPaymentTrigger) {
-            return false;
-        }
-        return super.isSaleDisallowed(values, options);
-    },
     _isItemCountExcludedLine(line) {
         return super._isItemCountExcludedLine(line) || line.is_reward_line;
     },

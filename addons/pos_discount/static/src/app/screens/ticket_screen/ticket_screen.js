@@ -27,7 +27,9 @@ patch(TicketScreen.prototype, {
             return { value: 0, type: "fixed" };
         }
         const refundBase = -totalIncl(
-            destinationOrder.lines.filter((line) => line.isGlobalDiscountApplicable())
+            destinationOrder.lines.filter(
+                (line) => line.isGlobalDiscountApplicable() && line.refunded_orderline_id
+            )
         );
         const discountAmount = -totalIncl(order.discountLines);
         return {

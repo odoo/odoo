@@ -173,9 +173,13 @@ class PosOrder(models.Model):
                 lambda l: l.is_reward_line and l.reward_id.program_id == program
             )
             reversal_used = 0.0
+            sold_points = 0.0
             if self.is_refund and not program.is_payment_program:
                 reversal = self._get_refund_reversal_points(program)
-                points_issued = reversal['issued']
+                if reward_lines or program.applies_on != 'current':
+                    sold_lines = earning_lines.filtered(lambda l: not l.refunded_orderline_id)
+                    sold_points = program._get_pos_order_points(self, sold_lines)
+                points_issued = reversal['issued'] + sold_points
                 if not reward_lines:
                     reversal_used = reversal['used']
             else:
@@ -196,6 +200,8 @@ class PosOrder(models.Model):
 
             if self.is_refund and not reward_lines and not program.is_payment_program:
                 cards = self._get_refund_reversal_cards(program)
+                if not cards and sold_points:
+                    cards = self._get_loyalty_cards_to_credit(program, reward_lines)
             else:
                 cards = self._get_loyalty_cards_to_credit(program, reward_lines)
             if not cards:

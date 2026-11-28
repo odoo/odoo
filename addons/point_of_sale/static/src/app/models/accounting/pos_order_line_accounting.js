@@ -153,7 +153,7 @@ export class PosOrderlineAccounting extends Base {
     }
 
     isRefund() {
-        return this.order_id.isRefund;
+        return this.order_id.isRefundDocument;
     }
 
     getUnitPriceFromDisplayPrice(price) {

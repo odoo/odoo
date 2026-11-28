@@ -171,7 +171,7 @@ export class PaymentScreen extends Component {
         return this.pos.models["pos.order"].getBy("uuid", this.props.orderUuid);
     }
     get isRefundOrder() {
-        return this.currentOrder.isRefund;
+        return this.currentOrder.isRefundDocument;
     }
     get paymentLines() {
         return this.currentOrder.payment_ids;

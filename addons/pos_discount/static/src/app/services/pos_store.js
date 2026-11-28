@@ -68,7 +68,10 @@ patch(PosStore.prototype, {
         const isGlobalDiscountBtnClicked = Object.keys(discountLinesMap).length === 0;
 
         const lines = order.getOrderlines();
-        const discountableLines = lines.filter((line) => line.isGlobalDiscountApplicable());
+        const discountableLines = lines.filter(
+            (line) =>
+                line.isGlobalDiscountApplicable() && (!order.isRefund || line.refunded_orderline_id)
+        );
         const baseLines = discountableLines.map((line) =>
             accountTaxHelpers.prepare_base_line_for_taxes_computation(
                 line,
@@ -120,7 +123,7 @@ patch(PosStore.prototype, {
                         extra_tax_data: extra_tax_data,
                     },
                     order,
-                    { force: true },
+                    {},
                     false
                 );
             }

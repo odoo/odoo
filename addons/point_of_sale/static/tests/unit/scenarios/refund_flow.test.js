@@ -1,5 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 import { animationFrame, waitFor } from "@odoo/hoot-dom";
+import { advanceTime } from "@odoo/hoot-mock";
 import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { setupAndMountPosApp, createComboSetup } from "@point_of_sale/../tests/unit/utils";
 import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
@@ -8,7 +9,7 @@ import * as Utils from "@point_of_sale/../tests/unit/ui_utils";
 definePosModels();
 
 test("test_refund_line_keep_attributes: refund keeps variant attributes", async () => {
-    await setupAndMountPosApp();
+    const store = await setupAndMountPosApp();
     await Utils.clickDisplayedProduct("Cake");
     await waitFor(".modal");
     await contains(".modal .btn-primary").click();
@@ -62,6 +63,16 @@ test("test_refund_line_keep_attributes: refund keeps variant attributes", async 
             price: "10.00",
         })
     ).toBe(true);
+
+    await Utils.clickOrderline("Cake");
+    await Utils.clickNumpad("5");
+    expect(Utils.dialogTitle()).toBe("quantity update not allowed");
+    await Utils.confirmDialog();
+    await Utils.clickDisplayedProduct("TEST");
+    await Utils.clickNumpad("5");
+    await advanceTime(200);
+    expect(Utils.hasOrderline({ productName: "TEST", quantity: "5" })).toBe(true);
+    expect(store.getOrder().isRefundDocument).toBe(false);
 });
 
 test("test_combo_refund_different_qty: refund combo with different quantities", async () => {

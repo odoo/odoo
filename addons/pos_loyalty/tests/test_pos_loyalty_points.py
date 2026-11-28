@@ -266,6 +266,24 @@ class TestPOSLoyaltyPoints(TestPointOfSaleHttpCommon):
         self.assertEqual(sum(history.mapped('used')), 50.0, "Refunding half the order should reverse half the points")
         self.assertEqual(card.points, 50.0)
 
+        self._create_order(
+            [
+                self._line(
+                    self.whiteboard_pen_product, -1, 50,
+                    refunded_orderline_id=origin_order.lines[:1].id,
+                    price_subtotal=50, price_subtotal_incl=50,
+                ),
+                self._line(
+                    self.desk_pad.product_variant_id, 1, 30,
+                    price_subtotal=-30, price_subtotal_incl=-30,
+                ),
+            ],
+            is_refund=True,
+            amount_total=-20,
+        )
+        card.invalidate_recordset()
+        self.assertEqual(card.points, 30.0)
+
     def test_gift_card_refund_reverses_balance(self):
         """
         Refunding a gift-card sale must debit the card by what the origin topup

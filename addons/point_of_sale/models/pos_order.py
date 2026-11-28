@@ -409,7 +409,7 @@ class PosOrder(models.Model):
         self.config_id._notify("TICKET_PRINTING_REQUESTED", self.ids)
 
     def is_refund_or_negative(self):
-        return self.is_refund or self.amount_total < 0
+        return (self.is_refund and self.currency_id.is_zero(self.amount_total)) or self.amount_total < 0
 
     @api.depends('account_move')
     def _compute_invoice_status(self):
@@ -1080,6 +1080,8 @@ class PosOrder(models.Model):
             'pos_reference': pos_reference,
             'lines': False,
             'amount_paid': 0,
+            'amount_total': 0,
+            'amount_tax': 0,
             'is_total_cost_computed': False,
             'is_refund': True,
         }

@@ -84,6 +84,8 @@ test("showPaymentMethod", async () => {
     // The payment method must be available for the order
     order.is_refund = true;
     card.payment_interface = { supports_refunds: false };
+    expect(comp.showPaymentMethod(card)).toBe(true);
+    order.lines.forEach((line) => line.setQuantity(-line.qty));
     expect(comp.showPaymentMethod(card)).toBe(false);
 });
 
