@@ -273,6 +273,9 @@ class AccountEdiCommon(models.AbstractModel):
     def _get_document_type_code_vals(self, invoice, invoice_data):
         return {'attrs': {}, 'value': None}
 
+    def _get_document_description(self):
+        return None
+
     # -------------------------------------------------------------------------
     # TAXES
     # -------------------------------------------------------------------------
