@@ -27,6 +27,26 @@ class ResUsers(models.Model):
                 user_list = [user_tuple[0], *user_list[:-1]]
         return user_list
 
+    @api.model
+    @api.readonly
+    def web_search_read(self, domain, specification, offset=0, limit=None, order=None, count_limit=None):
+        domain = Domain(domain)
+        uid = self.env.uid
+        if (
+            not self.env.context.get('current_user_first')
+            or limit == 1
+            or not self.search_count(domain & Domain('id', '=', uid), limit=1)
+        ):
+            return super().web_search_read(domain, specification, offset, limit, order, count_limit)
+        others_domain = domain & Domain('id', '!=', uid)
+        if offset:
+            result = super().web_search_read(others_domain, specification, offset - 1, limit, order, count_limit)
+        else:
+            result = super().web_search_read(others_domain, specification, 0, limit and limit - 1, order, count_limit)
+            result['records'] = self.browse(uid).web_read(specification) + result['records']
+        result['length'] += 1
+        return result
+
     def _on_webclient_bootstrap(self):
         self.ensure_one()
 

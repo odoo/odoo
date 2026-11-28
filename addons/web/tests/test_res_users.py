@@ -48,6 +48,31 @@ class TestResUsers(TransactionCase):
         user_ids = [id_ for id_, __ in ResUsers.with_user(claude).name_search('', limit=5)]
         self.assertEqual(len(user_ids), len(set(user_ids)), "Some user(s), appear multiple times in the result")
 
+    def test_web_search_read_current_user_first(self):
+        ResUsers = self.env['res.users']
+        domain = [('id', 'in', self.users.ids)]
+        spec = {'name': {}}
+        pascal = self.users[-1]
+
+        def ids(result):
+            return [record['id'] for record in result['records']]
+
+        default = ResUsers.with_user(pascal).web_search_read(domain, spec, order='name')
+        self.assertNotEqual(ids(default)[0], pascal.id)
+
+        ResUsers = ResUsers.with_user(pascal).with_context(current_user_first=True)
+        everyone = ResUsers.web_search_read(domain, spec, order='name')
+        self.assertEqual(ids(everyone), [pascal.id, *(id_ for id_ in ids(default) if id_ != pascal.id)])
+        self.assertEqual(everyone['length'], 6)
+
+        pages = [ResUsers.web_search_read(domain, spec, offset=offset, limit=4, order='name') for offset in (0, 4)]
+        self.assertEqual(ids(pages[0]) + ids(pages[1]), ids(everyone))
+        self.assertEqual([page['length'] for page in pages], [6, 6])
+
+        others = ResUsers.web_search_read(domain + [('name', 'like', 'Jean')], spec, order='name')
+        self.assertNotIn(pascal.id, ids(others))
+        self.assertEqual(others['length'], 3)
+
 
 @tagged('post_install', '-at_install')
 class TestUserSettings(HttpCaseWithUserDemo):

@@ -3,6 +3,13 @@ import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 import { AvatarUserFormViewDialog } from "@mail/views/web/view_dialog/avatar_user_form_view_dialog";
 
 export class Many2XAvatarUserAutocomplete extends Many2XAutocomplete {
+    setup() {
+        super.setup();
+        const selectCreate = this.selectCreate;
+        this.selectCreate = (params) =>
+            selectCreate({ ...params, context: { ...params.context, current_user_first: true } });
+    }
+
     get actionSuggestions() {
         return [
             {
