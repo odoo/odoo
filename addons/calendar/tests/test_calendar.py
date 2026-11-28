@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 
 from odoo import fields, Command
 from odoo.exceptions import AccessError
-from odoo.tests import tagged, Form, new_test_user
+from odoo.tests import tagged, new_test_user
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
 
 _logger = logging.getLogger(__name__)
@@ -106,7 +106,7 @@ class TestCalendar(SavepointCaseWithUserDemo):
             'rrule': u'FREQ=DAILY;INTERVAL=1;COUNT=4',
             'recurrency': True,
             'stop': '2018-10-27 16:30:00',
-            'event_tz': 'Europe/Brussels',
+            'recurrence_tz': 'Europe/Brussels',
         })
 
         start_recurring_dates = m.recurrence_id.calendar_event_ids.sorted('start').mapped('start')
@@ -122,13 +122,16 @@ class TestCalendar(SavepointCaseWithUserDemo):
     def test_recurring_ny(self):
         self.user_demo.tz = 'America/New_York'
         event = self.CalendarEvent.create({'user_id': self.user_demo.id, 'name': 'test', 'partner_ids': [Command.link(self.user_demo.partner_id.id)]})
-        f = Form(event.with_context(tz='America/New_York').with_user(self.user_demo))
-        f.name = 'test'
-        f.start = '2022-07-07 01:00:00'  # This is in UTC. In NY, it corresponds to the 6th of july at 9pm.
-        f.recurrency = True
+        # The recurrence fields are only in the form's recurrence widget: check the values it gets.
+        f = event.with_context(tz='America/New_York').with_user(self.user_demo).new({
+            'name': 'test',
+            'start': '2022-07-07 01:00:00',  # This is in UTC. In NY, it corresponds to the 6th of july at 9pm.
+            'recurrency': True,
+        }, origin=event)
+        self.assertEqual(f.end_type, 'forever')  # computed when recurrency is toggled, as in the form
         f.end_type = 'count'
         self.assertEqual(f.weekday, 'WED')
-        self.assertEqual(f.event_tz, 'America/New_York', "The value should correspond to the user tz")
+        self.assertEqual(f.recurrence_tz, 'America/New_York', "The value should correspond to the user tz")
         self.assertEqual(f.count, 1, "The default value should be displayed")
         self.assertEqual(f.interval, 1, "The default value should be displayed")
         self.assertEqual(f.month_by, "date", "The default value should be displayed")

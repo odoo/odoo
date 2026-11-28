@@ -2,7 +2,6 @@
 
 import itertools
 import logging
-import math
 import re
 import uuid
 from babel.dates import parse_time
@@ -13,22 +12,16 @@ from markupsafe import Markup
 
 from werkzeug.urls import url_encode, url_parse
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.fields import Command, Domain
-from odoo.addons.base.models.res_partner import _tz_get
 from odoo.addons.calendar.models.calendar_attendee import CalendarAttendee
-from odoo.addons.calendar.models.calendar_recurrence import (
+from odoo.addons.mail.models.recurrence_utils import (
+    get_recurrence_values_from_date,
     weekday_to_field,
-    RRULE_TYPE_SELECTION,
-    END_TYPE_SELECTION,
-    MONTH_BY_SELECTION,
-    WEEKDAY_SELECTION,
-    BYDAY_SELECTION
 )
 from odoo.addons.calendar.models.utils import interval_from_events
 from odoo.addons.mail.tools.discuss import Store
 from odoo.tools.intervals import intervals_overlap
-from odoo.tools.translate import _
 from odoo.tools.misc import get_lang, babel_locale_parse
 from odoo.tools import html2plaintext, html_sanitize, is_html_empty, single_email_re, format_date, format_time
 from odoo.exceptions import UserError, ValidationError
@@ -45,14 +38,6 @@ SORT_ALIASES = {
     'start': 'sort_start',
     'start_date': 'sort_start',
 }
-
-RRULE_TYPE_SELECTION_UI = [
-    ('daily', 'Daily'),
-    ('weekly', 'Weekly'),
-    ('monthly', 'Monthly'),
-    ('yearly', 'Yearly'),
-    ('custom', 'Custom')
-]
 
 # regex to match common ways to represent time
 # (9h, 9H, 9:00, 09:00, 9 am, 9am, 9a.m. 21h, 21:30, 9-10, 9-11h...)
@@ -77,27 +62,11 @@ TIME_REGEX = re.compile(
 )
 
 
-def get_weekday_occurence(date):
-    """
-    :returns: ocurrence
-
-    >>> get_weekday_occurence(date(2019, 12, 17))
-    3  # third Tuesday of the month
-
-    >>> get_weekday_occurence(date(2019, 12, 25))
-    -1  # last Friday of the month
-    """
-    occurence_in_month = math.ceil(date.day/7)
-    if occurence_in_month in {4, 5}:  # fourth or fifth week on the month -> last
-        return -1
-    return occurence_in_month
-
-
 class CalendarEvent(models.Model):
     _name = 'calendar.event'
     _description = "Calendar Event"
     _order = "start desc"
-    _inherit = ["mail.thread", "mail.activity.mixin"]
+    _inherit = ["mail.thread", "mail.activity.mixin", "mail.recurrence.instance.mixin"]
     _mail_post_access = 'read'
     _systray_view = 'calendar'
 
@@ -280,42 +249,6 @@ class CalendarEvent(models.Model):
         ('all_events', "All events"),
     ], store=False, copy=False, default='self_only',
        help="Choose what to do with other events in the recurrence. Updating All Events is not allowed when dates or time is modified")
-    # Those field are pseudo-related fields of recurrence_id.
-    # They can't be "real" related fields because it should work at record creation
-    # when recurrence_id is not created yet.
-    # If some of these fields are set and recurrence_id does not exists,
-    # a `calendar.recurrence.rule` will be dynamically created.
-    rrule = fields.Char('Recurrent Rule', compute='_compute_recurrence', readonly=False)
-    rrule_type_ui = fields.Selection(RRULE_TYPE_SELECTION_UI, string='Repeat',
-                                     compute="_compute_rrule_type_ui",
-                                     readonly=False,
-                                     help="Let the event automatically repeat at that interval")
-    rrule_type = fields.Selection(RRULE_TYPE_SELECTION, string='Recurrence',
-                                  help="Let the event automatically repeat at that interval",
-                                  compute='_compute_recurrence', readonly=False)
-    event_tz = fields.Selection(
-        _tz_get, string='Timezone', compute='_compute_recurrence', readonly=False)
-    end_type = fields.Selection(
-        END_TYPE_SELECTION, string='Recurrence Termination',
-        compute='_compute_recurrence', readonly=False)
-    interval = fields.Integer(
-        string='Repeat On', compute='_compute_recurrence', readonly=False,
-        help="Repeat every (Days/Week/Month/Year)")
-    count = fields.Integer(
-        string='Number of Repetitions', help="Repeat x times", compute='_compute_recurrence', readonly=False)
-    mon = fields.Boolean(compute='_compute_recurrence', readonly=False)
-    tue = fields.Boolean(compute='_compute_recurrence', readonly=False)
-    wed = fields.Boolean(compute='_compute_recurrence', readonly=False)
-    thu = fields.Boolean(compute='_compute_recurrence', readonly=False)
-    fri = fields.Boolean(compute='_compute_recurrence', readonly=False)
-    sat = fields.Boolean(compute='_compute_recurrence', readonly=False)
-    sun = fields.Boolean(compute='_compute_recurrence', readonly=False)
-    month_by = fields.Selection(
-        MONTH_BY_SELECTION, string='Option', compute='_compute_recurrence', readonly=False)
-    day = fields.Integer('Date of month', compute='_compute_recurrence', readonly=False)
-    weekday = fields.Selection(WEEKDAY_SELECTION, compute='_compute_recurrence', readonly=False)
-    byday = fields.Selection(BYDAY_SELECTION, string="By day", compute='_compute_recurrence', readonly=False)
-    until = fields.Date(compute='_compute_recurrence', readonly=False)
     # UI Fields.
     display_description = fields.Boolean(compute='_compute_display_description')
     attendees_count = fields.Integer(compute='_compute_attendees_count')
@@ -634,38 +567,6 @@ class CalendarEvent(models.Model):
             overridden in appointment.
         """
         return [True] * len(vals_list)
-
-    @api.depends('recurrence_id', 'recurrency')
-    def _compute_rrule_type_ui(self):
-        defaults = self.env["calendar.recurrence"].default_get(["interval", "rrule_type"])
-        for event in self:
-            if event.recurrency:
-                if event.recurrence_id:
-                    event.rrule_type_ui = 'custom' if event.recurrence_id.interval != 1 else (event.recurrence_id.rrule_type)
-                else:
-                    event.rrule_type_ui = defaults["rrule_type"]
-
-    @api.depends('recurrence_id', 'recurrency', 'rrule_type_ui')
-    def _compute_recurrence(self):
-        recurrence_fields = self._get_recurrent_fields()
-        false_values = {field: False for field in recurrence_fields}  # computes need to set a value
-        defaults = self.env['calendar.recurrence'].default_get(recurrence_fields)
-        default_rrule_values = self.recurrence_id.default_get(recurrence_fields)
-        for event in self:
-            if event.recurrency:
-                current_rrule = (event.rrule_type if event.rrule_type_ui == "custom" else event.rrule_type_ui)
-                event.update(defaults)  # default recurrence values are needed to correctly compute the recurrence params
-                event_values = event._get_recurrence_params()
-                rrule_values = {
-                    field: event.recurrence_id[field]
-                    for field in recurrence_fields
-                    if event.recurrence_id[field]
-                }
-                rrule_values = rrule_values or default_rrule_values
-                rrule_values['rrule_type'] = current_rrule or rrule_values.get('rrule_type') or defaults['rrule_type']
-                event.update({**false_values, **defaults, **event_values, **rrule_values})
-            else:
-                event.update(false_values)
 
     @api.depends('description')
     def _compute_display_description(self):
@@ -1603,7 +1504,7 @@ class CalendarEvent(models.Model):
 
     def _get_mail_tz(self):
         self.ensure_one()
-        return self.event_tz or self.env.user.tz
+        return self.recurrence_tz or self.env.user.tz
 
     def _sync_activities(self, fields):
         # update activities
@@ -1726,28 +1627,19 @@ class CalendarEvent(models.Model):
         to_update |= self.env['calendar.recurrence'].create(recurrence_vals)
         return to_update._apply_recurrence()
 
-    def _get_recurrence_params(self):
+    def _get_recurrence_defaults(self):
         if not self:
             return {}
-        event_date = self._get_start_date()
-        weekday_field_name = weekday_to_field(event_date.weekday())
-        return {
-            weekday_field_name: True,
-            'weekday': weekday_field_name.upper(),
-            'byday': str(get_weekday_occurence(event_date)),
-            'day': event_date.day,
-        }
+        return get_recurrence_values_from_date(self._get_start_date())
 
     @api.model
     def _get_recurrence_params_by_date(self, event_date):
         """ Return the recurrence parameters from a date object. """
-        weekday_field_name = weekday_to_field(event_date.weekday())
-        return {
-            weekday_field_name: True,
-            'weekday': weekday_field_name.upper(),
-            'byday': str(get_weekday_occurence(event_date)),
-            'day': event_date.day,
-        }
+        return get_recurrence_values_from_date(event_date)
+
+    @api.model
+    def _get_recurrence_rule_model(self):
+        return 'calendar.recurrence'
 
     def _break_recurrence(self, future=True):
         """Breaks the event's recurrence.
@@ -1890,7 +1782,7 @@ class CalendarEvent(models.Model):
             # Combine parameters from previous recurrence with the new recurrence parameters.
             new_values = {
                 **old_recurrence_values,
-                **base_event._get_recurrence_params(),
+                **base_event._get_recurrence_defaults(),
                 **recurrence_values,
             }
             new_values.pop('rrule', None)
@@ -1958,10 +1850,10 @@ class CalendarEvent(models.Model):
         """
         if not self.start:
             return fields.Date.context_today(self)
-        if self.recurrency and self.event_tz:
+        if self.recurrency and self.recurrence_tz:
             # Ensure that all day events date are not calculated around midnight. TZ shift would potentially return bad date
             start = self.start if not self.allday else self.start.replace(hour=12)
-            return start.replace(tzinfo=UTC).astimezone(ZoneInfo(self.event_tz)).date()
+            return start.replace(tzinfo=UTC).astimezone(ZoneInfo(self.recurrence_tz)).date()
         return self.start.date()
 
     def _range(self):
@@ -2133,12 +2025,6 @@ class CalendarEvent(models.Model):
             return 0
         duration = (stop - start).total_seconds() / 3600
         return round(duration, 2)
-
-    @api.model
-    def _get_recurrent_fields(self):
-        return {'byday', 'until', 'rrule_type', 'month_by', 'event_tz', 'rrule',
-                'interval', 'count', 'end_type', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat',
-                'sun', 'day', 'weekday'}
 
     @api.model
     def _get_time_fields(self):

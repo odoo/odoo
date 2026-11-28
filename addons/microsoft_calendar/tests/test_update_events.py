@@ -1420,7 +1420,7 @@ class TestUpdateEvents(TestCommon):
             simple_event.write({
                 'recurrency': True,
                 'rrule_type': 'weekly',
-                'event_tz': 'America/Sao_Paulo',
+                'recurrence_tz': 'America/Sao_Paulo',
                 'end_type': 'count',
                 'interval': 1,
                 'count': 1,
@@ -1525,7 +1525,7 @@ class TestUpdateEvents(TestCommon):
             'interval': 1,
             'end_type': 'count',
             'count': 3,
-            'event_tz': 'Europe/London',
+            'recurrence_tz': 'Europe/London',
         }
         cases = [
             {

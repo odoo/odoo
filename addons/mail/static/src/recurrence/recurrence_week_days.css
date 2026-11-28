@@ -1,0 +1,23 @@
+.o_calendar_week_days_rounded {
+    border-radius: 50%;
+    margin-right: 8px;
+    width: 24px;
+    height: 24px;
+    justify-content: center;
+    display: flex;
+    cursor: pointer;
+    align-items: center;
+}
+
+/*
+ * The widget spans both columns of the form group (colspan="2") and renders its own
+ * label / value rows: reuse the columns of the group (subgrid) so that its labels and
+ * values are aligned with those of the other fields of the group.
+ */
+.o_inner_group > .o_cell:has(> .o_widget_recurrence_config),
+.o_inner_group .o_widget_recurrence_config,
+.o_inner_group .o_widget_recurrence_config > .o_recurrence_config_widget.o_inner_group {
+    display: grid;
+    grid-template-columns: subgrid;
+    grid-column: 1 / -1;
+}
