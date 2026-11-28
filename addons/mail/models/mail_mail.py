@@ -393,6 +393,17 @@ class MailMail(models.Model):
             body = re.sub(_UNFOLLOW_REGEX, '', body)
         return body
 
+    def _get_linkable_attachments(self, attachments):
+        return {
+            attachment: attachment
+            for attachment in attachments
+            if attachment.res_model and attachment.res_id and attachment.res_model != 'mail.message'
+        }
+
+    def _render_attachments_links(self, attachments):
+        attachments.generate_access_token()
+        return self.env['ir.qweb']._render('mail.mail_attachment_links', {'attachments': attachments})
+
     def _prepare_outgoing_list(self, mail_server=False, recipients_follower_status=None):
         """ Return a list of emails to send based on current mail.mail. Each
         is a dictionary for specific email values, depending on a partner, or
@@ -494,19 +505,17 @@ class MailMail(models.Model):
         # Turn remaining attachments into links if they are too heavy and
         # their ownership are business models (i.e. something != mail.message,
         # otherwise they will be deleted along with the mail message leading to a 404)
-        if record_owned_attachments := attachments.sudo().filtered(
-                lambda a: a.res_model and a.res_id and a.res_model != 'mail.message'):
+        if linkable_attachments := self._get_linkable_attachments(attachments.sudo()):
             estimated_email_size_bytes = self._estimate_email_size(
                 headers, body, [a.file_size for a in attachments.sudo()])
             max_email_size_bytes = (mail_server or self.env['ir.mail_server']
                                     ).sudo()._get_max_email_size() * 1024 * 1024
             if estimated_email_size_bytes > max_email_size_bytes:
                 # Remove attachments and prepare downloadable links to be added in the body
-                record_owned_attachments.sudo().generate_access_token()
-                attachments_links = self.env['ir.qweb']._render('mail.mail_attachment_links',
-                                                                {'attachments': record_owned_attachments})
+                attachments_links = self._render_attachments_links(
+                    self.env['ir.attachment'].sudo().union(*linkable_attachments.values()))
                 body = tools.mail.append_content_to_html(body, attachments_links, plaintext=False)
-                attachments -= record_owned_attachments
+                attachments -= self.env['ir.attachment'].union(*linkable_attachments)
         # Prepare the remaining attachment (those not embedded as link)
         # load attachment binary data with a separate read(), as prefetching all
         # `datas` (binary field) could bloat the browse cache, triggering
