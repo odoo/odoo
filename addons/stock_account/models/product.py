@@ -186,7 +186,7 @@ class ProductProduct(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         products = super().create(vals_list)
-        products._change_standard_price({product: 0 for product in products if product.standard_price}, valuation_date=datetime.min)
+        products._change_standard_price({product: 0 for product in products if product.standard_price}, valuation_date=datetime.now())
         return products
 
     def write(self, vals):
