@@ -11,7 +11,6 @@
                 <div t-field="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True, "jp_honorific": True}'/>
             </t>
         </xpath>
-        <xpath expr="//div[hasclass('page')]/h3" position="replace"/>
         <xpath expr="//div[@t-if='o.partner_type']" position="replace"/>
     </template>
 
