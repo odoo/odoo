@@ -1,6 +1,12 @@
 // This file regroups the fixes and styling related to table inside reports
 
 table.table {
+    // Physical alignment (flipped by rtlcss in RTL), so that cells follow the
+    // direction of the report rather than the one of their content: text fields
+    // are rendered with dir="auto". Set on the table, not on the cells, so that
+    // an alignment given to the table, tbody, row or cell still applies.
+    text-align: left;
+
     // Fix alignment in PDF (default bs inheritance doesn't seem to apply)
     td {
         vertical-align: $table-cell-vertical-align;
