@@ -94,6 +94,7 @@ class TestCreatePicking(ProductVariantsCommon):
         self.assertRecordValues(backorder.move_line_ids, [
             {'product_id': self.product_id_2.id, 'quantity': 4, 'picking_type_id': receipt_type_id}])
 
+<<<<<<< 6573fc9585625f6b838204a9f3403b999d09beae
         backorder.button_validate()
 
         # Ensure that, after all those operations, it is still possible to create a PO
@@ -105,6 +106,61 @@ class TestCreatePicking(ProductVariantsCommon):
         po = po_form.save()
         self.assertTrue(po)
 
+||||||| da496bfdd73e64f1581a2544b6446825b6b21292
+=======
+    def test_extra_product_in_receipt_with_po_moves_in_backorder(self):
+        """
+        Add a product which is not in the PO to the receipt and receive only that one, the PO
+        product going to the backorder: the extra product should still be added to the PO.
+        """
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_id.id,
+            'order_line': [Command.create({
+                'product_id': self.product_id_1.id,
+                'product_qty': 1.0,
+            })],
+        })
+        po.button_confirm()
+        receipt = po.picking_ids
+        receipt.move_ids.quantity = 0
+        with Form(receipt) as receipt_form:
+            with receipt_form.move_ids.new() as move:
+                move.product_id = self.product_sofa_blue
+                move.quantity = 1.0
+        Form.from_action(self.env, receipt.button_validate()).save().process()
+
+        self.assertRecordValues(po.order_line, [
+            {'product_id': self.product_id_1.id, 'product_qty': 1, 'qty_received': 0},
+            {'product_id': self.product_sofa_blue.id, 'product_qty': 0, 'qty_received': 1},
+        ])
+
+    def test_extra_product_first_move_of_receipt(self):
+        """
+        Add a product which is not in the PO to a receipt where it becomes the first move (the
+        PO moves have a higher sequence): the extra product should still be added to the PO.
+        """
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_id.id,
+            'order_line': [Command.create({'product_id': self.service_product.id, 'product_qty': 1.0, 'sequence': 10})],
+        })
+        po.button_confirm()
+        po.order_line = [Command.create({'product_id': self.product_id_1.id, 'product_qty': 1.0, 'sequence': 11})]
+        receipt = po.picking_ids
+        with Form(receipt) as receipt_form:
+            with receipt_form.move_ids.new() as move:
+                move.product_id = self.product_sofa_blue
+                move.quantity = 1.0
+        receipt.button_validate()
+
+        self.assertEqual(receipt.state, 'done')
+        self.assertEqual(receipt.move_ids[0].product_id, self.product_sofa_blue)
+        self.assertRecordValues(po.order_line, [
+            {'product_id': self.service_product.id, 'product_qty': 1, 'qty_received': 0},
+            {'product_id': self.product_id_1.id, 'product_qty': 1, 'qty_received': 1},
+            {'product_id': self.product_sofa_blue.id, 'product_qty': 0, 'qty_received': 1},
+        ])
+
+>>>>>>> deac757764901e0cdafc6525aa66bab397beb377
     def test_01_check_double_validation(self):
 
         # make double validation two step
