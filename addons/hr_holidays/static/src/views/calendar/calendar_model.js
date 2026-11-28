@@ -214,6 +214,7 @@ export class TimeOffCalendarModel extends CalendarModel {
                       "state",
                       "validation_type",
                       "can_reschedule",
+                      "number_of_days",
                   ]
                 : [];
         return this.orm.searchRead(
