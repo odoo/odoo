@@ -684,7 +684,7 @@
                                         <field name="default_code"/>
                                     </span>
                                 </div>
-                                <div name="on_hand_qty_kanban" t-if="record.is_storable.raw_value" class="d-flex gap-1 align-items-baseline">
+                                <div name="on_hand_qty_kanban" groups="base.group_user" t-if="record.is_storable.raw_value" class="d-flex gap-1 align-items-baseline">
                                     <strong>
                                         <field name="qty_available" digits="[16, 0]"/> 
                                     </strong>
