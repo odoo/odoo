@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="mydata_delivery_note">
+        <InvoicesDoc xmlns="http://www.aade.gr/myDATA/invoice/v1.0"
+                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                     xmlns:icls="https://www.aade.gr/myDATA/incomeClassificaton/v1.0"
+                     xsi:schemaLocation="http://www.aade.gr/myDATA/invoice/v1.0/InvoicesDoc-v0.6.xsd">
+            <invoice>
+                <issuer>
+                    <vatNumber t-out="issuer_vat_number"/>
+                    <country t-out="issuer_country"/>
+                    <branch t-out="issuer_branch"/>
+                    <name t-out="issuer_name"/>
+                    <address>
+                        <street t-out="issuer_street"/>
+                        <number t-out="issuer_number"/>
+                        <postalCode t-out="issuer_postal_code"/>
+                        <city t-out="issuer_city"/>
+                    </address>
+                </issuer>
+                <counterpart>
+                    <vatNumber t-out="counterpart_vat"/>
+                    <country t-out="counterpart_country"/>
+                    <branch t-out="counterpart_branch"/>
+                    <name t-out="counterpart_name"/>
+                    <address>
+                        <street t-out="counterpart_street"/>
+                        <number t-out="counterpart_number"/>
+                        <postalCode t-out="counterpart_postal_code"/>
+                        <city t-out="counterpart_city"/>
+                    </address>
+                </counterpart>
+                <invoiceHeader>
+                    <series t-out="header_series"/>
+                    <aa t-out="header_aa"/>
+                    <issueDate t-out="header_issue_date"/>
+                    <invoiceType t-out="header_invoice_type"/>
+                    <dispatchDate t-out="header_dispatch_date"/>
+                    <dispatchTime t-out="header_dispatch_time"/>
+                    <vehicleNumber t-out="header_vehicle_number"/>
+                    <movePurpose t-out="header_move_purpose"/>
+                    <otherDeliveryNoteHeader>
+                        <loadingAddress>
+                            <street t-out="loading_street"/>
+                            <number t-out="loading_number"/>
+                            <postalCode t-out="loading_postal_code"/>
+                            <city t-out="loading_city"/>
+                        </loadingAddress>
+                        <deliveryAddress>
+                            <street t-out="delivery_street"/>
+                            <number t-out="delivery_number"/>
+                            <postalCode t-out="delivery_postal_code"/>
+                            <city t-out="delivery_city"/>
+                        </deliveryAddress>
+                    </otherDeliveryNoteHeader>
+                    <otherMovePurposeTitle t-out="header_other_move_purpose_title"/>
+                </invoiceHeader>
+                <invoiceDetails t-foreach="details" t-as="detail">
+                    <lineNumber t-out="detail['line_number']"/>
+                    <itemDescr t-out="detail['item_description']"/>
+                    <quantity t-out="detail['quantity']"/>
+                    <measurementUnit t-out="detail['unit_of_measure']"/>
+                    <netValue t-out="detail['net_value']"/>
+                    <vatCategory t-out="detail['vat_category']"/>
+                    <vatAmount t-out="detail['vat_amount']"/>
+                    <incomeClassification t-foreach="detail['icls']" t-as="icls">
+                        <icls:classificationCategory t-out="icls['category']"/>
+                        <icls:amount t-out="icls['amount']"/>
+                    </incomeClassification>
+                </invoiceDetails>
+                <invoiceSummary>
+                    <totalNetValue>0</totalNetValue>
+                    <totalVatAmount>0</totalVatAmount>
+                    <totalWithheldAmount>0</totalWithheldAmount>
+                    <totalFeesAmount>0</totalFeesAmount>
+                    <totalStampDutyAmount>0</totalStampDutyAmount>
+                    <totalOtherTaxesAmount>0</totalOtherTaxesAmount>
+                    <totalDeductionsAmount>0</totalDeductionsAmount>
+                    <totalGrossValue>0</totalGrossValue>
+                    <incomeClassification t-foreach="summary_icls" t-as="icls">
+                        <icls:classificationCategory t-out="icls['category']"/>
+                        <icls:amount t-out="icls['amount']"/>
+                    </incomeClassification>
+                </invoiceSummary>
+            </invoice>
+        </InvoicesDoc>
+    </template>
+
+    <!-- Invoices reference the MARKs of their delivery notes -->
+    <template id="mydata_invoice" inherit_id="l10n_gr_edi.mydata_invoice">
+        <xpath expr="//*[local-name()='invoiceHeader']" position="inside">
+            <!-- The namespace must be repeated, otherwise the element would be rendered outside of it -->
+            <multipleConnectedMarks xmlns="http://www.aade.gr/myDATA/invoice/v1.0"
+                                    t-foreach="invoice_vals.get('connected_marks') or []"
+                                    t-as="connected_mark"
+                                    t-out="connected_mark"/>
+        </xpath>
+    </template>
+
+</odoo>
