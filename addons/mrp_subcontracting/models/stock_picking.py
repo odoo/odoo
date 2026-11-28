@@ -111,6 +111,9 @@ class StockPicking(models.Model):
 
         return res
 
+    def do_unreserve(self):
+        return super(StockPicking, self.with_context(keep_recorded_subcontract_reservation=True)).do_unreserve()
+
     def action_record_components(self):
         self.ensure_one()
         move_subcontracted = self.move_ids.filtered(lambda m: m.is_subcontract)
