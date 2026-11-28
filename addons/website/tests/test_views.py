@@ -12,6 +12,8 @@ from odoo.exceptions import MissingError
 from odoo.modules.module import _DEFAULT_MANIFEST, Manifest
 from odoo.tests import common, HttpCase, tagged
 
+from odoo.addons.base.tests.test_views import TestViewInheritance
+
 
 def attrs(**kwargs):
     return {'data-oe-%s' % key: str(value) for key, value in kwargs.items()}
@@ -1805,3 +1807,72 @@ class TestThemeViews(common.TransactionCase):
         test_theme_module.with_context(load_all_views=True)._theme_load(website_1)
         self.assertEqual(specific_main_view_children.arch, new_arch, "View arch shouldn't have been overrided on theme update as it was modified by user.")
         self.assertEqual(specific_main_view_children.name, 'Test Child View modified', "View should receive modification on theme update.")
+
+
+class TestWebsiteViewInheritance(TestViewInheritance):
+
+    def test_invalid_locators_with_disabled_view_for_website(self):
+        """Test that views that are disabled for a specific website are not
+        taken into account when computing the invalid locators of a view of
+        that website
+        """
+        website = self.env['website'].search([], limit=1)
+        base_view_arch = """
+            <qweb>
+                <div>
+                    <span>Hello world</span>
+                </div>
+            </qweb>
+        """
+        base_view = self.makeView('invalid_xpath_base_view', arch=base_view_arch)
+
+        default_view_arch = """
+        <data>
+            <xpath expr="//div[1]/span[1]" position="replace">
+                <p>Dog</p>
+            </xpath>
+        </data>
+        """
+        self.View.create({
+            'model': self.model,
+            'name': "default_child_view",
+            'arch': default_view_arch,
+            'inherit_id': base_view.id,
+            'key': 'child.default.view.key',
+        })
+
+        custom_view_arch = """
+        <data>
+            <xpath expr="//div[1]/span[1]" position="replace">
+                <p>Cat</p>
+            </xpath>
+        </data>
+        """
+        custom_view = self.View.create({
+            'model': self.model,
+            'name': "child_view",
+            'arch': custom_view_arch,
+            'inherit_id': base_view.id,
+            'key': 'child.custom.view.key',
+            'website_id': website.id,
+        })
+        self.assertEqual(
+            custom_view.invalid_locators,
+            [{
+                "tag": "xpath",
+                "attrib": {"expr": "//div[1]/span[1]", "position": "replace"},
+                "sourceline": 2,
+            }],
+        )
+
+        self.View.create({
+            'model': self.model,
+            'name': "default_child_view",
+            'arch': default_view_arch,
+            'inherit_id': base_view.id,
+            'key': 'child.default.view.key',
+            'website_id': website.id,
+            'active': False,
+        })
+        custom_view.invalidate_recordset(['invalid_locators'])
+        self.assertEqual(custom_view.invalid_locators, False)

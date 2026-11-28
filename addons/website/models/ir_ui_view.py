@@ -578,3 +578,6 @@ class IrUiView(models.Model):
         if website:
             return website.default_lang_id.code
         return super()._get_base_lang()
+
+    def _get_invalid_locators_arch(self):
+        return super(IrUiView, self.with_context(website_id=self.website_id.id))._get_invalid_locators_arch()
