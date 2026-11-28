@@ -168,3 +168,36 @@ class TestWebsiteSaleProductPage(HttpCase, ProductVariantsCommon, WebsiteSaleCom
         )
         self.assertTrue(product)
         self.assertTrue(product.website_published)
+
+    def test_multicompany_product_review_has_no_user_error_in_template(self):
+        other_company = self.env['res.company'].create({
+            "name": "company 2"
+        })
+        portal_user = new_test_user(
+            self.env,
+            login="portal_2",
+            groups="base.group_portal",
+            password="portal_2",
+            company_id=other_company.id,
+            email="portal_2@test.test"
+        )
+        # partner restricted to the other company
+        portal_user.partner_id.company_id = other_company
+
+        self.authenticate(portal_user.login, 'portal_2')
+        self._enable_reviews()
+        self.assertTrue(self._post_review(self.product_template_sofa, portal_user))
+
+        # internal user only allowed in the main company. They cannot read the reviewer's partner
+        new_test_user(
+            self.env,
+            login="internal_1",
+            groups="base.group_user,sales_team.group_sale_salesman",
+            password="internal_1",
+            company_id=self.env.company.id,
+        )
+        self.start_tour(
+            f"/odoo/product.template/{self.product_template_sofa.id}",
+            "website_sale_product_review_multicompany",
+            login="internal_1",
+        )
