@@ -5,6 +5,7 @@ from dateutil import relativedelta
 
 from odoo import api, Command, fields, models, _
 from odoo.fields import Domain
+from datetime import timedelta
 
 
 class StockPicking(models.Model):
@@ -329,7 +330,20 @@ class StockWarehouseOrderpoint(models.Model):
         return super()._get_replenishment_order_notification(written_after=written_after)
 
     def _prepare_procurement_values(self, date=False):
-        values = super()._prepare_procurement_values(date=date)
+        if not self.supplier_id and self.qty_to_order and date:
+            seller = self.product_id.with_company(self.company_id)._select_seller(quantity=self.qty_to_order)
+            supplierinfo = seller.get('supplier_id') if isinstance(seller, dict) else seller
+            if supplierinfo:
+                from dateutil.relativedelta import relativedelta
+                lead_days, _ = self.rule_ids._get_lead_days(self.product_id, bypass_delay_description=True, supplierinfo=supplierinfo)
+                date = fields.Date.context_today(self) + relativedelta(days=lead_days.get('total_delay', 0))
+        values = super(
+            StockWarehouseOrderpoint,
+            self.with_context(
+                orderpoint_qty_to_order=self.qty_to_order,
+                orderpoint_supplier_id=self.supplier_id.id if self.supplier_id else False,
+            ),
+        )._prepare_procurement_values(date=date)
         values['supplierinfo_id'] = self.supplier_id
         return values
 
