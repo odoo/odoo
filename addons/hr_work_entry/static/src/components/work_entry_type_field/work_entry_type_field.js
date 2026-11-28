@@ -1,11 +1,11 @@
 import { Component, useProps } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
+import { buildM2OFieldDescription } from "@web/views/fields/many2one/many2one_field";
 import {
-    buildM2OFieldDescription,
-    many2OneFieldProps,
-} from "@web/views/fields/many2one/many2one_field";
-import { computeM2OProps, Many2One } from "@web/views/fields/many2one/many2one";
+    extractM2OExtendedFieldProps,
+    Many2OneExtendedField,
+} from "@hr/views/fields/many2one_extended_field/many2one_extended_field";
 import {
     Many2ManyTagsField,
     many2ManyTagsField,
@@ -30,15 +30,11 @@ export const workEntryTypeBadgeField = {
 registry.category("fields").add("work_entry_type_badge", workEntryTypeBadgeField);
 
 //Form View M2O Widget
-export class Many2OneWorkEntryTypeField extends Component {
+export class Many2OneWorkEntryTypeField extends Many2OneExtendedField {
     static template = "hr_work_entry.Many2OneWorkEntryTypeField";
-    static components = {
-        Many2One,
-    };
-    props = useProps(many2OneFieldProps);
     get m2oProps() {
         return {
-            ...computeM2OProps(this.props),
+            ...super.m2oProps,
             specification: Object.fromEntries(
                 badgeFields.getAll().map(({ name }) => [name, {}])
             ),
@@ -52,6 +48,7 @@ export class Many2OneWorkEntryTypeField extends Component {
 
 export const many2OneWorkEntryTypeField = {
     ...buildM2OFieldDescription(Many2OneWorkEntryTypeField),
+    extractProps: extractM2OExtendedFieldProps,
     relatedFields: badgeDependencies,
 };
 

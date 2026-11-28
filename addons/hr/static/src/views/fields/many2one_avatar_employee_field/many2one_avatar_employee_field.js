@@ -1,24 +1,25 @@
 import { Avatar } from "@mail/views/web/fields/avatar/avatar";
 
-import { Component, onWillStart, t, useProps } from "@odoo/owl";
+import { onWillStart, t, useProps } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
-import { computeM2OProps, Many2One } from "@web/views/fields/many2one/many2one";
+import { buildM2OFieldDescription } from "@web/views/fields/many2one/many2one_field";
 import {
-    buildM2OFieldDescription,
-    extractM2OFieldProps,
-    many2OneFieldProps,
-} from "@web/views/fields/many2one/many2one_field";
+    extractM2OExtendedFieldProps,
+    Many2OneExtendedField,
+    many2OneExtendedFieldProps,
+} from "@hr/views/fields/many2one_extended_field/many2one_extended_field";
 
-export class Many2OneAvatarEmployeeField extends Component {
+export class Many2OneAvatarEmployeeField extends Many2OneExtendedField {
     static template = "hr.Many2OneAvatarEmployeeField";
-    static components = { Avatar, Many2One };
+    static components = { ...Many2OneExtendedField.components, Avatar };
     props = useProps({
-        ...many2OneFieldProps,
+        ...many2OneExtendedFieldProps,
         relation: t.string().optional(),
     });
 
     setup() {
+        super.setup();
         onWillStart(async () => {
             this.isHrUser = await user.hasGroup("hr.group_hr_user");
         });
@@ -26,7 +27,7 @@ export class Many2OneAvatarEmployeeField extends Component {
 
     get m2oProps() {
         return {
-            ...computeM2OProps(this.props),
+            ...super.m2oProps,
             canQuickCreate: false,
             relation: this.relation,
         };
@@ -47,7 +48,7 @@ registry.category("fields").add("many2one_avatar_employee", {
     additionalClasses: ["o_field_many2one_avatar", "o_field_many2one_avatar_user"],
     extractProps(staticInfo, dynamicInfo) {
         return {
-            ...extractM2OFieldProps(staticInfo, dynamicInfo),
+            ...extractM2OExtendedFieldProps(staticInfo, dynamicInfo),
             relation: staticInfo.options.relation,
             canOpen:
                 "no_open" in staticInfo.options

@@ -151,6 +151,7 @@
                                 <span>The allocated days cannot be used, because the allocation is set to finish in the past.</span>
                             </div>
                             <field name="work_entry_type_id" widget="many2one_work_entry_type"
+                                options="{'no_save_on_open': True}"
                                 context="{'employee_id':employee_id, 'default_date_from':current_date, 'request_type':'allocation'}"
                                 domain="[
                                     ('id','in', allowed_work_entry_type_ids),
@@ -292,6 +293,9 @@
             <label for="number_of_days_display" position="attributes">
                 <attribute name="string">Duration</attribute>
             </label>
+            <field name="employee_id" position="attributes">
+                <attribute name="options">{'no_save_on_open': True}</attribute>
+            </field>
         </field>
     </record>
 
