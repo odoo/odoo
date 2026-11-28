@@ -1296,6 +1296,30 @@ class TestPointOfSaleFlow(CommonPosTest):
         order.cancel_order_from_pos()
         self.assertEqual(order.state, 'cancel')
 
+    def test_order_of_closed_session_keeps_preset_slot(self):
+        """Book a slot an hour later, close the session, then check the slot is still booked."""
+        preset = self.env['pos.preset'].create({'name': 'Delivery'})
+        slot = fields.Datetime.to_string(fields.Datetime.now() + timedelta(hours=1))
+        order, _ = self.create_backend_pos_order({
+            'order_data': {'preset_id': preset.id, 'preset_time': slot},
+        })
+        self.pos_config_usd.current_session_id.action_pos_session_closing_control()
+        usage = preset.get_available_slots()['usage_utc']
+        self.assertEqual(usage[slot], [order.id])
+
+    def test_order_older_than_a_day_keeps_preset_slot(self):
+        """Book a slot in 3 days, then check 2 days later the slot is still booked."""
+        preset = self.env['pos.preset'].create({'name': 'Delivery'})
+        self.pos_config_usd.open_ui()
+        self.pos_config_usd.current_session_id.set_opening_control(0, None)
+        slot = fields.Datetime.to_string(fields.Datetime.now() + timedelta(days=3))
+        order, _ = self.create_backend_pos_order({
+            'order_data': {'preset_id': preset.id, 'preset_time': slot},
+        })
+        with freeze_time(fields.Datetime.now() + timedelta(days=2)):
+            usage = preset.get_available_slots()['usage_utc']
+        self.assertEqual(usage[slot], [order.id])
+
     def _create_and_invoice_order(self):
         current_session = self.pos_config_usd.current_session_id
         order = self.env["pos.order"].create({
@@ -1361,7 +1385,7 @@ class TestPointOfSaleFlow(CommonPosTest):
         preset = self.env['pos.preset'].create({'name': 'Delivery'})
         self.pos_config_usd.open_ui()
         self.pos_config_usd.current_session_id.set_opening_control(0, None)
-        slot = '2026-01-01 12:00:00'
+        slot = fields.Datetime.to_string(fields.Datetime.now() + timedelta(days=1))
         order = self._create_and_invoice_order().pos_order_ids
         order.write({'preset_id': preset.id, 'preset_time': slot})
         usage = preset.get_available_slots()['usage_utc']
