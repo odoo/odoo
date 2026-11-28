@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~19.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-13 17:36+0000\n"
-"PO-Revision-Date: 2026-11-13 17:36+0000\n"
+"POT-Creation-Date: 2026-11-27 18:35+0000\n"
+"PO-Revision-Date: 2026-11-27 18:35+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -976,6 +976,14 @@ msgid "Approved Requests"
 msgstr ""
 
 #. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+msgid ""
+"Approved time off cannot be modified (%(employee)s: %(date_from)s to "
+"%(date_to)s)."
+msgstr ""
+
+#. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
 msgid "Approved:"
@@ -1782,6 +1790,8 @@ msgid "Eligible for Accrual Rate"
 msgstr ""
 
 #. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/hr_leave_export.js:0
 #: model:ir.model,name:hr_holidays.model_hr_employee
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__employee_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__employee_id
@@ -1863,6 +1873,12 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
 msgid "Exclude Refused"
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/hr_leave_export.js:0
+msgid "External ID"
 msgstr ""
 
 #. module: hr_holidays
@@ -3140,11 +3156,15 @@ msgid "Reporting"
 msgstr ""
 
 #. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/hr_leave_export.js:0
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_date_to
 msgid "Request End Date"
 msgstr ""
 
 #. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/hr_leave_export.js:0
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_date_from
 msgid "Request Start Date"
 msgstr ""
@@ -3697,12 +3717,6 @@ msgstr ""
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
-msgid "This modification is not allowed in the current state."
-msgstr ""
-
-#. module: hr_holidays
-#. odoo-python
-#: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "This time off cannot be cancelled."
 msgstr ""
 
@@ -3926,6 +3940,12 @@ msgid "Time Off: Cancel invalid leaves"
 msgstr ""
 
 #. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/hr_leave_export.js:0
+msgid "Time Type/External ID"
+msgstr ""
+
+#. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
 msgid "Time off"
 msgstr ""
@@ -4020,6 +4040,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
 msgid "To Validate"
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+msgid ""
+"To import it as a new time off request instead, leave the External ID column"
+" empty."
 msgstr ""
 
 #. module: hr_holidays
