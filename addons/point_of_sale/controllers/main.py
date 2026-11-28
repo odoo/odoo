@@ -2,10 +2,12 @@
 
 import logging
 import json
+from werkzeug.exceptions import Unauthorized
 
 from odoo import http, _
 from odoo.fields import Domain
 from odoo.http import request
+from odoo.http.stream import content_disposition
 from odoo.tools import format_amount, file_open
 from odoo.addons.account.controllers.portal import PortalAccount
 from odoo.exceptions import UserError
@@ -15,6 +17,26 @@ _logger = logging.getLogger(__name__)
 
 
 class PosController(PortalAccount):
+
+    @http.route('/pos/receipt/<order_id>', type='http', auth='user')
+    def pos_receipt_download(self, order_id=None, download=False):
+        pos_order = request.env['pos.order'].browse(int(order_id))
+        if not pos_order.exists():
+            return request.not_found()
+
+        if not pos_order.has_access('read'):
+            return Unauthorized()
+
+        # Portal users can read their orders, but not all the data needed to render a receipt.
+        order = pos_order.sudo().with_company(pos_order.company_id)
+        image = order.order_receipt_generate_image()
+        filename = f'{pos_order.pos_reference}.png'
+        return request.make_response(image, [
+            ('Content-Type', 'image/png'),
+            ('Content-Length', len(image)),
+            ('Content-Security-Policy', "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:"),
+            ('Content-Disposition', content_disposition(filename, disposition_type='attachment' if download else 'inline')),
+        ])
 
     @http.route('/pos/service-worker.js', type='http', auth='user')
     def pos_web_service_worker(self):
@@ -177,14 +199,6 @@ class PosController(PortalAccount):
                     res_prefixed[key] = val
             return res, res_prefixed
 
-        def _validate_connected_user_data(partner):
-            missing_fields, error_message = set(), []
-            for field in partner._get_mandatory_billing_address_fields(partner.country_id):
-                if not partner[field]:
-                    missing_fields.add(field)
-                    error_message.append(_('The %s must be filled in your details.', request.env['ir.model.fields']._get('res.partner', field).field_description))
-            return missing_fields, error_message
-
         # If the route is called directly, return a 404
         if not access_token:
             raise request.not_found()
@@ -248,21 +262,7 @@ class PosController(PortalAccount):
                 invalid_fields=form_values.get('invalid_fields'),
             ))
 
-        elif user_is_connected:
-            partner_to_check = pos_order.partner_id or request.env.user.partner_id
-            missing_fields, error_messages = set(), []
-            if self._user_can_edit_partner(partner_to_check, request.env.user.partner_id):
-                missing_fields, error_messages = _validate_connected_user_data(partner_to_check)
-            if not missing_fields:
-                return self._get_invoice(partner, {}, pos_order, additional_invoice_fields, kwargs)
-            else:
-                form_values.update({
-                    'invalid_field': form_values.get('invalid_fields', []) + list(missing_fields),
-                    'error_message': form_values.get('messages', []) + error_messages
-                })
-        elif pos_order.partner_id:
-            return self._get_invoice(pos_order.partner_id, {}, pos_order, additional_invoice_fields, kwargs)
-
+        # Will always display the "Need an invoice?" Page
         # Prefill the customer extra values if there is any and an user is connected
         if partner:
             if additional_partner_fields:
