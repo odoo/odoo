@@ -18,7 +18,7 @@ import { omit } from "@web/core/utils/objects";
 import { useModelWithSampleData } from "@web/model/model";
 import { DynamicRecordList } from "@web/model/relational_model/dynamic_record_list";
 import { extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
-import { onWillRender, render, useLayoutEffect, useSubEnv } from "@web/owl2/utils";
+import { render, useLayoutEffect, useSubEnv } from "@web/owl2/utils";
 import { useSetupAction } from "@web/search/action_hook";
 import { ActionMenus, STATIC_ACTIONS_GROUP_NUMBER } from "@web/search/action_menus/action_menus";
 import { CogMenu } from "@web/search/cog_menu/cog_menu";
@@ -101,11 +101,6 @@ export class ListController extends Component {
         this.nextActionAfterMouseup = null;
 
         this.optionalActiveFields = {};
-
-        this.editedRecord = null;
-        onWillRender(() => {
-            this.editedRecord = this.model.root.editedRecord;
-        });
 
         onWillStart(async () => {
             this.isExportEnable = await user.hasGroup("base.group_allow_export");
@@ -211,6 +206,10 @@ export class ListController extends Component {
             discard: () => this.onClickDiscard(),
             getRecord: () => this.model.root.editedRecord,
         });
+    }
+
+    get editedRecord() {
+        return this.model.root?.editedRecord;
     }
 
     get modelParams() {
