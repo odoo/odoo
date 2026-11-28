@@ -256,6 +256,11 @@ class ChatbotScriptStep(models.Model):
         domain = Domain('chatbot_script_id', '=', self.chatbot_script_id.id) & Domain('sequence', '>', self.sequence)
         if selected_answer_ids:
             domain &= Domain('triggering_answer_ids', 'in', selected_answer_ids.ids + [False])
+        if non_welcome_step_types := self.chatbot_script_id._get_non_welcome_step_types():
+            domain &= (
+                Domain('step_type', 'not in', non_welcome_step_types)
+                | Domain('sequence', '>', self.chatbot_script_id._get_welcome_steps()[-1:].sequence)
+            )
         steps = self.env['chatbot.script.step'].search(domain)
         for step in steps:
             if not step.triggering_answer_ids:
@@ -267,6 +272,65 @@ class ChatbotScriptStep(models.Model):
                    for step_triggering_answers in answers_by_step.values()):
                 return step
         return self.env['chatbot.script.step']
+
+    def _is_preceded_by_email_step(self, selected_answer_ids):
+        """ Return True if the selected answers trigger a 'question_email' step before this step. """
+        self.ensure_one()
+        email_steps = self.chatbot_script_id.script_step_ids.filtered(
+            lambda step: step.step_type == "question_email" and step.sequence < self.sequence
+        )
+        for email_step in email_steps:
+            answers_by_question = email_step.triggering_answer_ids.grouped("script_step_id")
+            if all(answers & selected_answer_ids for answers in answers_by_question.values()):
+                return True
+        return False
+
+    def _is_reachable_without_email(self):
+        """ Return True if at least one combination of answers leads to this step without going
+        through a 'question_email' step. """
+        self.ensure_one()
+        # later steps can never lead back to this step
+        steps = self.chatbot_script_id.script_step_ids.filtered(lambda step: step.sequence < self.sequence).sorted("sequence") + self
+        # other steps never change which question, email or this step comes next
+        branching_steps = steps.filtered(lambda step: step.step_type in ("question_selection", "question_email") or step == self)
+        # (step, answers) couples already walked through without reaching this step
+        checked = set()
+
+        def next_step(step, answers):
+            """ Like `_fetch_next_step`, on the steps in memory so that unsaved changes are used. """
+            for later_step in steps:
+                if later_step.sequence > step.sequence and all(
+                    question_answers & answers
+                    for question_answers in later_step.triggering_answer_ids.grouped("script_step_id").values()
+                ):
+                    return later_step
+            return self.env["chatbot.script.step"]
+
+        def walk(step, selected_answers):
+            while step:
+                if step == self:
+                    return True
+                if step.step_type == "question_email":
+                    return False
+                if step.step_type == "question_selection":
+                    for answer in step.answer_ids:
+                        answers = selected_answers | answer
+                        following_step = next_step(step, answers)
+                        # only keep the answers that can still change the next question, email or
+                        # this step, so that visitors who only differ by other answers are walked
+                        # through once
+                        later_steps = branching_steps.filtered(lambda later_step: later_step.sequence > following_step.sequence)
+                        answers &= later_steps.triggering_answer_ids
+                        if (following_step, answers) in checked:
+                            continue
+                        checked.add((following_step, answers))
+                        if walk(following_step, answers):
+                            return True
+                    return False
+                step = next_step(step, selected_answers)
+            return False
+
+        return walk(steps[:1], self.env["chatbot.script.answer"])
 
     def _get_parent_step(self, all_parent_steps):
         """ Returns the first preceding step that matches either the triggering answers

@@ -69,10 +69,10 @@ class LivechatChatbotScriptController(http.Controller):
             # sudo: mail.message - accessing last message to process answer is allowed
             user_answer = self.env["mail.message"].sudo().search(domain, order="id desc", limit=1)
             next_step = current_step._process_answer(discuss_channel, user_answer.body)
-        elif chatbot_script_id:  # when restarting, we don't have a "current step" -> set "next" as first step of the script
+        elif chatbot_script_id:  # when restarting, we don't have a "current step" -> set "next" as first welcome step of the script
             chatbot = request.env['chatbot.script'].sudo().browse(chatbot_script_id).with_context(lang=chatbot_language)
             if chatbot.exists():
-                next_step = chatbot.script_step_ids[:1]
+                next_step = chatbot._get_welcome_steps()[:1]
         if not next_step:
             # sudo - discuss.channel: marking the channel as closed as part of the chat bot flow
             discuss_channel.sudo().livechat_end_dt = fields.Datetime.now()
