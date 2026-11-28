@@ -531,7 +531,8 @@ class MailComposer(models.TransientModel):
         comment mode, to be sure to notify the same people. """
         for composer in self:
             if (composer.template_id and composer.composition_mode == 'comment'
-                and not composer.composition_batch):
+                and not composer.composition_batch
+                and not (composer.message_type == 'comment' and composer.subtype_is_log)):
                 res_ids = composer._evaluate_res_ids() or [0]
                 rendered_values = composer._generate_template_for_composer(
                     res_ids,
