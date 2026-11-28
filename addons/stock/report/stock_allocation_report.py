@@ -303,7 +303,8 @@ class StockAllocationReport(models.AbstractModel):
         merged_src_moves = src_moves._merge_moves()
         merged_src_moves.move_line_ids._merge_lines()
         return {
-            'in_moves': (src_moves | new_src_moves).ids,
+            # Source moves might have been merged (thus deleted) above.
+            'in_moves': (src_moves | new_src_moves).exists().ids,
             'out_moves': [self._get_out_move_values(out_move) for out_move in all_out_moves],
         }
 
@@ -316,8 +317,8 @@ class StockAllocationReport(models.AbstractModel):
             for (out_move_ids, quantity) in allocation_data:
                 updated_data = self.action_assign(update_src_move_ids, out_move_ids, quantity)
                 res[product_id]['in_moves'] = updated_data['in_moves']
-                # Update source move ids list in case a move was split.
-                update_src_move_ids.update(updated_data['in_moves'])
+                # Update source move ids list in case a move was split or merged.
+                update_src_move_ids = set(updated_data['in_moves'])
                 res[product_id]['out_moves'].append(updated_data['out_moves'])
         return res
 
