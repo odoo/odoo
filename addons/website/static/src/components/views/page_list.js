@@ -81,16 +81,17 @@ export class PageListController extends listView.Controller {
     }
 
     async onDeleteSelectedRecords() {
-        const pageIds = this.model.root.selection.map((record) => record.resId);
+        const pageIds = await this.model.root.getResIds(true);
         const newPageTemplateRecords = await rpc("/website/get_new_pages", {
             page_ids: pageIds,
         });
         this.dialogService.add(DeletePageDialog, {
             resIds: pageIds,
             resModel: this.props.resModel,
-            onDelete: () => {
-                this.model.root.deleteRecords();
-            },
+            onDelete: () =>
+                this.model.root.deleteRecords([], {
+                    context: { website_url_dependencies_confirmed: true },
+                }),
             hasNewPageTemplate: newPageTemplateRecords.some(
                 (record) => record.is_new_page_template
             ),
