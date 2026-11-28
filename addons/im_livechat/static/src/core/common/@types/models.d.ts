@@ -36,6 +36,7 @@ declare module "models" {
         chatbot_current_step_id: ChatbotScriptStep;
         chatbotTriggerFailedError: import("@web/core/network/rpc").RPCError|import("@web/core/network/rpc").ConnectionLostError|import("@web/core/network/rpc").ConnectionAbortedError|undefined;
         country_id: Country;
+        has_more_recent_channels: boolean|undefined;
         livechat_agent_history_ids: LivechatChannelMemberHistory[];
         livechat_bot_history_ids: LivechatChannelMemberHistory[];
         livechat_channel_id: LivechatChannel;
@@ -54,6 +55,7 @@ declare module "models" {
         livechatShouldAskLeaveConfirmation: Readonly<boolean>;
         livechatVisitorMember: ChannelMember;
         livechatWelcomeMessage: Message;
+        recent_channel_ids: DiscussChannel[];
         storeAsActiveVisitorLivechats: Store;
         transcriptUrl: Readonly<string>;
     }

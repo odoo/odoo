@@ -1,6 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import ast
 import json
+from collections import defaultdict
 from datetime import timedelta
 from zoneinfo import ZoneInfo
 
@@ -18,6 +20,7 @@ from odoo.addons.base.models.ir_qweb_fields import nl2br
 from odoo.addons.mail.tools.discuss import Store
 
 _lt = LazyTranslate(__name__)
+RECENT_CHANNELS_LIMIT = 5
 
 
 def is_livechat_channel(channel):
@@ -772,6 +775,63 @@ class DiscussChannel(models.Model):
             "_store_chatbot_message_fields",
             value=lambda channel: messages_by_channel.get(channel, self.env["chatbot.message"]),
         )
+        recent_channel_fields = ["description", "last_interest_dt", "livechat_end_dt"]
+        recent_channels_by_channel = defaultdict(self.browse)
+        has_more_recent_channels_by_channel = defaultdict(bool)
+        # Not batched by simplicity as it is always called on a single channel.
+        for channel in self.filtered(is_livechat_channel):
+            recent_channels = channel.search_fetch(
+                channel._get_recent_channels_domain(),
+                recent_channel_fields,
+                limit=RECENT_CHANNELS_LIMIT + 1,
+                order="livechat_end_dt DESC NULLS FIRST, last_interest_dt DESC, id DESC",
+            )
+            recent_channels_by_channel[channel] = recent_channels[:RECENT_CHANNELS_LIMIT]
+            has_more_recent_channels_by_channel[channel] = len(recent_channels) > RECENT_CHANNELS_LIMIT
+        res.many(
+            "recent_channel_ids",
+            recent_channel_fields,
+            value=lambda channel: recent_channels_by_channel[channel],
+            predicate=is_livechat_channel,
+        )
+        res.attr(
+            "has_more_recent_channels",
+            lambda channel: has_more_recent_channels_by_channel[channel],
+            predicate=is_livechat_channel,
+            version=False,
+        )
+
+    def _get_same_visitor_domain(self):
+        self.ensure_one()
+        return Domain(
+            "livechat_channel_member_history_ids",
+            "any",
+            Domain("livechat_member_type", "=", "visitor")
+            & (
+                Domain("partner_id", "in", self.livechat_customer_history_ids.partner_id.ids)
+                | Domain("guest_id", "in", self.livechat_customer_history_ids.guest_id.ids)
+            ),
+        )
+
+    def _get_recent_channels_domain(self):
+        self.ensure_one()
+        return (
+            Domain("id", "!=", self.id)
+            & Domain("channel_type", "=", "livechat")
+            & Domain("last_interest_dt", ">=", "now -7d")
+            & self._get_same_visitor_domain()
+        )
+
+    def action_recent_channels(self):
+        self.ensure_one()
+        action = self.env["ir.actions.act_window"]._for_xml_id("im_livechat.discuss_channel_action")
+        action["context"] = {
+            **ast.literal_eval(action["context"].strip()),
+            "search_default_filter_session_date": None,
+        }
+        action["domain"] = self._get_recent_channels_domain()
+        action["name"] = self.env._("Recent Conversations")
+        return action
 
     def _apply_livechat_feedback(self, rate, reason=None):
         """Post customer feedback and apply its rating to the live chat session.
