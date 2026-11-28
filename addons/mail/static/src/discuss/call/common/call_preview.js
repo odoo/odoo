@@ -182,7 +182,6 @@ export class CallPreview extends Component {
             new Action({
                 id: "toggle-microphone",
                 ancestors: this.ancestors,
-                owner: this,
                 definition: muteActionUpdated,
                 store: this.store,
             }),
@@ -191,7 +190,6 @@ export class CallPreview extends Component {
             new Action({
                 id: "toggle-camera",
                 ancestors: this.ancestors,
-                owner: this,
                 definition: cameraOnActionUpdated,
                 store: this.store,
             }),
@@ -201,7 +199,6 @@ export class CallPreview extends Component {
                 new Action({
                     id: "video-blur",
                     ancestors: this.ancestors,
-                    owner: this,
                     definition: videoBlurAction,
                     store: this.store,
                 })
@@ -211,7 +208,6 @@ export class CallPreview extends Component {
                 new Action({
                     id: "audio-settings",
                     ancestors: this.ancestors,
-                    owner: this,
                     definition: quickActionSettings,
                     store: this.store,
                 })
@@ -220,7 +216,6 @@ export class CallPreview extends Component {
                 new Action({
                     id: "video-settings",
                     ancestors: this.ancestors,
-                    owner: this,
                     definition: quickVideoSettings,
                     store: this.store,
                 })

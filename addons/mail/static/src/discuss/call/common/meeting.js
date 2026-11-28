@@ -53,6 +53,8 @@ export class Meeting extends Component {
         useAncestors({
             inDiscussCallTheme: true,
             inDiscussCallView: true,
+            // the meeting is mounted in the picture-in-picture window, @see PipPlugin
+            pipWindow: this.props.isPip ? this.env.pipWindow : undefined,
             inMeetingView: assignGetter(
                 {
                     openChat: () => this.threadActions.get("meeting-chat")?.openPanel(),

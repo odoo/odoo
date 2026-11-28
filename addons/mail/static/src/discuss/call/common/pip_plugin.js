@@ -20,12 +20,13 @@ export class PipPlugin extends Plugin {
 
     /**
      * @param {Object} [param0]
-     * @param {Component} [param0.context]
+     * @param {Element} [param0.rootEl] an element of the page opening the picture-in-picture,
+     *   to know whether it is in a shadow root (e.g. the livechat embed)
      * @returns {Promise<Window>} the picture-in-picture window
      */
-    async open({ context } = {}) {
+    async open({ rootEl } = {}) {
         this.isActive.set(true);
-        const isShadowRoot = context?.root?.el?.getRootNode() instanceof ShadowRoot;
+        const isShadowRoot = rootEl?.getRootNode() instanceof ShadowRoot;
         const pipWindow = await this.#popout.pip(Meeting, {
             props: { isPip: true },
             options: { useAlternativeAssets: isShadowRoot },

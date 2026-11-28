@@ -77,9 +77,10 @@ const getSequence = () => sequence++;
 /**
  * @typedef {Object} ToggleVideoOptions
  * @property {boolean} [force] if defined, bypass the toggle to force the state
- * @property {import("@web/env").OdooEnv} [env]
  * @property {boolean} [refreshStream] if true, the stream be requested from the device again instead of
  *     potentially reusing the current stream.
+ * @property {Window} [sourceWindow] the window to take the video from, e.g. the picture-in-picture
+ *     window. Defaults to the main window.
  */
 
 /**
@@ -538,9 +539,10 @@ export class Rtc extends Record {
         const transformedActions = registry
             .category("discuss.call/actions")
             .getEntries()
-            .map(([id, definition]) => new CallAction({ owner: this, id, definition }));
+            .map(([id, definition]) => new CallAction({ id, definition, store: this.store }));
+        // Only `isActive` and `tags` are read here, outside any component: the `setup` of the
+        // actions, which may use hooks, only runs in the components showing them.
         for (const action of transformedActions) {
-            action.setup();
             void action.isActive;
         }
         return transformedActions;
@@ -844,6 +846,10 @@ export class Rtc extends Record {
         this.setTalking(true);
     }
 
+    /**
+     * @param {Object} [options]
+     * @param {Element} [options.rootEl] an element of the page opening the picture-in-picture
+     */
     async openPip(options) {
         if (this.isHost) {
             if (!this.channel) {
@@ -2109,7 +2115,7 @@ export class Rtc extends Record {
                 "enterpictureinpicture",
                 ({ enterPictureInPictureReason }) => {
                     if (enterPictureInPictureReason === "contentoccluded") {
-                        this.openPip({ context: { root: { el: this.rootEl } } });
+                        this.openPip({ rootEl: this.rootEl });
                     }
                 }
             );
@@ -2397,13 +2403,11 @@ export class Rtc extends Record {
      */
     async toggleVideo(type, options) {
         let force;
-        let env;
         let refreshStream;
         if (typeof options === "boolean") {
             force = options;
         } else {
             force = options?.force;
-            env = options?.env;
             refreshStream = options?.refreshStream;
         }
         if (this.isRemote) {
@@ -2426,9 +2430,9 @@ export class Rtc extends Record {
                 this.isSendingCamera = false;
                 await this.setVideo(track, type, {
                     activateVideo: isSendingCamera,
-                    env,
                     rootRef: options?.rootRef,
                     refreshStream,
+                    sourceWindow: options?.sourceWindow,
                 });
                 break;
             }
@@ -2436,7 +2440,10 @@ export class Rtc extends Record {
                 const track = this.screenTrack;
                 const isSendingScreen = force ?? !this.isSendingScreen;
                 this.isSendingScreen = false;
-                await this.setVideo(track, type, { activateVideo: isSendingScreen, env });
+                await this.setVideo(track, type, {
+                    activateVideo: isSendingScreen,
+                    sourceWindow: options?.sourceWindow,
+                });
                 break;
             }
         }
@@ -2509,17 +2516,16 @@ export class Rtc extends Record {
      * @param {String} type 'camera' or 'screen'
      * @param {Object} [options] options
      * @param {Boolean} [options.activateVideo=false] options
-     * @param {import("@web/env").OdooEnv} [options.env]
      * @param {Boolean} [options.refreshStream] whether we are requesting a new stream
+     * @param {Window} [options.sourceWindow] the window to take the video from, e.g. the
+     *   picture-in-picture window. Defaults to the main window.
      */
     async setVideo(track, type, options) {
         let activateVideo;
-        let env;
         if (typeof options === "boolean") {
             activateVideo = options ?? false;
         } else {
             activateVideo = options?.activateVideo ?? false;
-            env = options?.env;
         }
         const stopVideo = () => {
             if (track) {
@@ -2557,7 +2563,7 @@ export class Rtc extends Record {
         }
         /** @type {MediaStream} */
         let sourceStream;
-        const sourceWindow = env?.pipWindow ?? window;
+        const sourceWindow = options?.sourceWindow ?? window;
         try {
             if (type === "camera") {
                 if (this.sourceCameraStream && !options?.refreshStream) {
