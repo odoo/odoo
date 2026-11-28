@@ -562,3 +562,30 @@ class TestReInvoice(TestExpenseCommon, TestSaleCommon):
             # Expense line:
             {'qty_delivered': 1.0, 'product_uom_qty': 1.0, 'price_unit': 1045.7, 'price_total': 1176.4, 'price_subtotal': 1045.7, 'is_expense': True},
         ])
+
+    def test_expenses_reinvoice_sale_order_set_after_approval(self):
+        """ The sales order can be set on the expense once it is approved, i.e. once its journal
+            entry is created. The expense should still be reinvoiced when posting that entry.
+        """
+        expense = self.create_expenses({
+            'name': 'expense_without_order',
+            'date': '2016-01-01',
+            'product_id': self.company_data['service_delivery_cost_price'].id,
+            'quantity': 5,
+            'employee_id': self.expense_employee.id,
+        })
+
+        expense.action_submit()
+        expense._do_approve()
+        self.assertFalse(expense.analytic_distribution)
+
+        # The sales order to reinvoice is only set once the journal entry exists, but before posting it.
+        expense.sale_order_id = self.expense_sale_order
+        self.post_expenses(expense)
+
+        self.assertRecordValues(self.expense_sale_order.order_line, [
+            # Original SO line:
+            {'qty_delivered': 0.0, 'product_uom_qty': 3.0, 'is_expense': False, 'expense_ids': []},
+            # Expense line:
+            {'qty_delivered': 5.0, 'product_uom_qty': 5.0, 'is_expense': True, 'expense_ids': [expense.id]},
+        ])
