@@ -172,8 +172,8 @@ class TestResourceCalendar(TransactionCase):
         leave_intervals = calendar._leave_intervals_batch(date_from, date_to, resource)
         self.assertFalse(leave_intervals[resource.id], "the time off of another company should not apply")
 
-    def test_calendar_leave_skips_resource_of_another_calendar(self):
-        """ A time off set on no resource and on a calendar does not block a resource of another calendar. """
+    def test_calendar_leave_applies_to_resource_of_another_calendar(self):
+        """ A time off set on no resource and on a calendar applies when this calendar is computed for a resource of another calendar. """
         calendar, other_calendar = self.env['resource.calendar'].create([
             {'name': 'Tennis Courts', 'company_id': False, 'tz': 'UTC'},
             {'name': 'Padel Courts', 'company_id': False, 'tz': 'UTC'},
@@ -193,6 +193,8 @@ class TestResourceCalendar(TransactionCase):
         date_from = datetime(2019, 5, 29, 10, 0, 0).astimezone(pytz.UTC)
         date_to = datetime(2019, 5, 29, 12, 0, 0).astimezone(pytz.UTC)
         leave_intervals = calendar._leave_intervals_batch(date_from, date_to, resource)
+        self.assertTrue(leave_intervals[resource.id], "the time off of the computed calendar should apply")
+        leave_intervals = other_calendar._leave_intervals_batch(date_from, date_to, resource)
         self.assertFalse(leave_intervals[resource.id], "the time off of another calendar should not apply")
 
     def test_resource_calendar_form_view(self):
