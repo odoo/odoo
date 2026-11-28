@@ -28,7 +28,7 @@ from odoo.tools import config
 from .session_helpers import check_sessions
 from .tools import orjson
 from .tools.misc import acquire_cursor, tuplify
-from .tools.notifications import fetch_bus_notifications
+from .tools.notifications import fetch_bus_notification_batches
 from .websocket_protocol import CloseCode, ConnectionState, InvalidStateException, Opcode
 
 if TYPE_CHECKING:
@@ -70,9 +70,9 @@ _logger = logging.getLogger(__name__)
 #   |      |   SET IN_FLIGHT, snapshot waiting room.     |
 #   |      | - Kill invalid sessions.                    |
 #   |      | - Fetch notifications (including catch-up   |
-#   |      |   for the waiting room).                    |
-#   |      | - Dispatch to subscribers and to the        |
-#   |      |   waiting room.                             |
+#   |      |   for the waiting room), batch by batch.    |
+#   |      | - Dispatch each batch to subscribers and to |
+#   |      |   the waiting room.                         |
 #   |      | - Promote waiting room to full subscribers. |
 #   |      +----+------------------------------+---------+
 #   |           |                              |
@@ -371,8 +371,10 @@ class BusDispatcher(threading.Thread):
             try:
                 with acquire_cursor(dbname) as cr:
                     self._kick_invalid_sessions(cr, topics)
-                    notifications_by_channel = self._fetch(cr, topics)
-                self._dispatch(topics, notifications_by_channel)
+                    # Dispatch each batch before the next fetch to avoid pulling all the
+                    # notifications into memory.
+                    for notifications_by_channel, _ in self._fetch(cr, topics):
+                        self._dispatch(topics, notifications_by_channel)
                 success = True
             except psycopg2.Error:
                 # Temporary database failure: retry quickly instead of falling back to the
@@ -525,7 +527,8 @@ class BusDispatcher(threading.Thread):
                     self._queue_topic(topic)
 
     def _fetch(self, cr, topics: set[ChannelTopic] | frozenset[ChannelTopic]):
-        """Fetch pending notifications for the given topics, grouped by channel."""
+        """Fetch pending notifications for the given topics, one batch at a time. See
+        :func:`fetch_bus_notification_batches`."""
         channels_by_last_fetched_id = defaultdict(list)
         excluded_ids = set()
         for topic in topics:
@@ -538,7 +541,7 @@ class BusDispatcher(threading.Thread):
                 last_fetched_id = topic._last_fetched_id
                 excluded_ids.update(topic.excluded_ids)
             channels_by_last_fetched_id[last_fetched_id].append(topic._channel)
-        return fetch_bus_notifications(cr, channels_by_last_fetched_id, excluded_ids)
+        return fetch_bus_notification_batches(cr, channels_by_last_fetched_id, excluded_ids)
 
     def _dispatch(
         self,

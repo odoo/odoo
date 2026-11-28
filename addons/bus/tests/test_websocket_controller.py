@@ -30,6 +30,7 @@ class TestWebsocketController(HttpCase, BusCase):
         self.assertIsInstance(channels, list)
         notifications = result.get('notifications')
         self.assertEqual(notifications[0]['message']['type'], 'channel_a_notification')
+        self.assertIs(result.get('has_more'), False)
         result = self.make_jsonrpc_request('/websocket/peek_notifications', {
             'channels': [],
             'last': initial_last_id,
