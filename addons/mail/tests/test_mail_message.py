@@ -52,6 +52,33 @@ class TestMailMessage(common.MailCommon, HttpCase):
         self.assertIn(message_c1, search_result)
         self.assertNotIn(message_c2, search_result)
 
+    def test_mail_message_read_access_search_message_id(self):
+        """ Searching on message_id with a limit, as the duplicate check of the
+        mail gateway does, must filter in SQL instead of reading all messages
+        in batches. """
+        ids = []
+        for _i in range(5):
+            ids += self._add_messages(self.company_2, "Inaccessible note").ids
+            ids += self._add_messages(self.env.company, "Accessible note").ids
+        messages = (self.env["mail.message"]
+            .with_user(self.user_employee)
+            .with_context(allowed_company_ids=[self.env.company.id])
+        ).browse(ids)
+        accessible = messages._filtered_access('read')
+        self.assertEqual(len(accessible), 5)
+        accessible_msg_id = accessible[0].sudo().message_id
+        inaccessible_msg_id = (messages - accessible)[0].sudo().message_id
+        self.env.invalidate_all()
+
+        with (
+            patch.object(mail_message_module, 'PREFETCH_MAX', 4),
+            patch.object(models.BaseModel, '_search', autospec=True, side_effect=models.BaseModel._search) as search_func,
+        ):
+            self.assertEqual(messages.search_count([('message_id', '=', '<not.found@example.com>')], limit=1), 0)
+            self.assertEqual(messages.search([('message_id', '=', accessible_msg_id)], limit=1), accessible[0])
+            self.assertFalse(messages.search([('message_id', '=', inaccessible_msg_id)], limit=1))
+            self.assertLessEqual(search_func.call_count, 6)
+
     def test_mail_message_read_access_search_with_limit(self):
         ids = []
         ids += self._add_messages(self.env.company, "Accessible notes", count=5).ids
