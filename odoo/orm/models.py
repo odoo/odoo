@@ -3004,6 +3004,8 @@ class BaseModel(metaclass=MetaModel):
             if not record:
                 return None
             field = field.related_field
+        if not field.store:
+            return None
         return field._get_stored_translations(record)
 
     def _get_base_lang(self) -> str:
