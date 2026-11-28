@@ -31,7 +31,7 @@ class ProjectProject(models.Model):
     is_internal_project = fields.Boolean(compute='_compute_is_internal_project', search='_search_is_internal_project', export_string_translation=False)
     remaining_hours = fields.Float(compute='_compute_remaining_hours', string='Time Remaining', compute_sudo=True)
     is_project_overtime = fields.Boolean('Project in Overtime', compute='_compute_remaining_hours', search='_search_is_project_overtime', compute_sudo=True, export_string_translation=False)
-    allocated_hours = fields.Float(string='Allocated Time', tracking=True)
+    allocated_hours = fields.Float(string='Allocated Time', tracking=True, default=0)
     effective_hours = fields.Float(string='Time Spent', compute='_compute_remaining_hours', compute_sudo=True)
     stat_timesheet_value = fields.Char(compute='_compute_timesheet_stat_values', export_string_translation=False)
     stat_extra_time_value = fields.Char(compute='_compute_timesheet_stat_values', export_string_translation=False)
