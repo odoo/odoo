@@ -44,3 +44,4 @@ from . import test_hr_leave_report
 from . import test_member_of_department
 from . import test_time_rule_day_types
 from . import test_update
+from . import test_performance

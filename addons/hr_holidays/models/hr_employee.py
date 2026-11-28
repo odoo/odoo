@@ -654,32 +654,53 @@ class HrEmployee(models.Model):
         :rtype: tuple
         """
         employees = self or self._get_contextual_employee()
+        if not target_date:
+            target_date = fields.Date.today()
+        leaves, allocations = employees._get_leaves_and_allocations_to_consume(
+            work_entry_types, target_date, ignore_future, same_year_only)
+        return employees._get_consumed_leaves_from_records(
+            work_entry_types, leaves, allocations, target_date, ignore_future, precomputed_allocations)
+
+    def _get_leaves_and_allocations_to_consume(self, work_entry_types, target_date, ignore_future, same_year_only):
+        """Return the requests and the validated allocations of the employees that
+        :meth:`_get_consumed_leaves` deducts from each other, see its parameters.
+
+        :return: ``(hr.leave, hr.leave.allocation)`` records
+        :rtype: tuple
+        """
         allocation_type_per_leave_type = work_entry_types._get_allocation_work_entry_type_per_leave_type()
         leaves_domain = [
             ('work_entry_type_id', 'in', [leave_type.id for leave_type in allocation_type_per_leave_type]),
-            ('employee_id', 'in', employees.ids),
+            ('employee_id', 'in', self.ids),
             ('state', 'in', ['confirm', 'validate1', 'validate']),
         ]
         if self.env.context.get('ignored_leave_ids'):
             leaves_domain.append(('id', 'not in', self.env.context.get('ignored_leave_ids')))
 
-        if not target_date:
-            target_date = fields.Date.today()
         if ignore_future:
             leaves_domain.append(('date_from', '<=', target_date))
         if same_year_only:
             leaves_domain.append(('date_from', '>=', datetime.combine(date(target_date.year, 1, 1), time.min)))
             leaves_domain.append(('date_from', '<=', datetime.combine(date(target_date.year, 12, 31), time.max)))
         leaves = self.env['hr.leave'].search(leaves_domain)
+        allocations = self.env['hr.leave.allocation'].with_context(active_test=False).search([
+            ('employee_id', 'in', self.ids),
+            ('work_entry_type_id', 'in', work_entry_types.ids),
+            ('state', '=', 'validate'),
+        ])
+        return leaves, allocations
+
+    def _get_consumed_leaves_from_records(self, work_entry_types, leaves, allocations, target_date, ignore_future, precomputed_allocations):
+        """Same as :meth:`_get_consumed_leaves`, from the requests and allocations returned by
+        :meth:`_get_leaves_and_allocations_to_consume`, so that a caller computing the balance
+        at several dates searches them only once.
+        """
+        employees = self
+        allocation_type_per_leave_type = work_entry_types._get_allocation_work_entry_type_per_leave_type()
         leaves_per_employee_type = defaultdict(lambda: defaultdict(lambda: self.env['hr.leave']))
         for leave in leaves:
             leaves_per_employee_type[leave.employee_id][allocation_type_per_leave_type[leave.work_entry_type_id]] |= leave
 
-        allocations = self.env['hr.leave.allocation'].with_context(active_test=False).search([
-            ('employee_id', 'in', employees.ids),
-            ('work_entry_type_id', 'in', work_entry_types.ids),
-            ('state', '=', 'validate'),
-        ])
         allocations_per_employee_type = defaultdict(lambda: defaultdict(lambda: self.env['hr.leave.allocation']))
         for allocation in allocations:
             allocations_per_employee_type[allocation.employee_id][allocation.work_entry_type_id] |= allocation
