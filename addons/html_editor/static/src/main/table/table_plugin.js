@@ -1421,7 +1421,8 @@ export class TablePlugin extends Plugin {
     /**
      * Normalize the structure of all tables contained in `container`.
      *
-     * Ensures every table has a `<tbody>` and merges or converts `<thead>`
+     * Ensures every table has a `<tbody>`, wraps the rows that are direct
+     * children of the table in one, and merges or converts `<thead>`
      * elements when necessary. Table operations rely on the presence of a
      * `<tbody>`, so every table must contain one.
      *
@@ -1430,6 +1431,12 @@ export class TablePlugin extends Plugin {
      */
     normalizeTableStructure(container) {
         container.querySelectorAll("table").forEach((table) => {
+            const looseRows = table.querySelectorAll(":scope > tr");
+            if (looseRows.length) {
+                const looseRowsTbody = table.ownerDocument.createElement("tbody");
+                looseRows[0].before(looseRowsTbody);
+                looseRowsTbody.append(...looseRows);
+            }
             let tbody = table.tBodies[0];
             const thead = table.tHead;
 

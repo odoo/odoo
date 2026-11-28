@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { setupEditor } from "../_helpers/editor";
+import { setupEditor, testEditor } from "../_helpers/editor";
 import {
     click,
     manuallyDispatchProgrammaticEvent,
@@ -13,7 +13,7 @@ import { execCommand } from "../_helpers/userCommands";
 import { expandToolbar } from "../_helpers/toolbar";
 import { expectElementCount } from "../_helpers/ui_expectations";
 import { deleteBackward } from "../_helpers/user_actions";
-import { unformat } from "../_helpers/format";
+import { parseXHTML, unformat } from "../_helpers/format";
 
 function insertTable(editor, cols, rows) {
     execCommand(editor, "insertTable", { cols, rows });
@@ -408,6 +408,40 @@ describe("normalize table structure", () => {
                 <p data-selection-placeholder=""><br></p>
             `)
         );
+    });
+
+    test("should wrap the rows that are direct children of a table in a tbody", async () => {
+        await testEditor({
+            contentBefore: "<p>[]<br></p>",
+            stepFunction: (editor) => {
+                editor.shared.dom.insert(
+                    parseXHTML(editor.document, "<table><tr><td>a</td></tr></table>")
+                );
+            },
+            contentAfter: "<table><tbody><tr><td>a[]</td></tr></tbody></table>",
+        });
+    });
+
+    test("should merge the thead and the rows that are direct children of a table into a tbody", async () => {
+        await testEditor({
+            contentBefore: "<p>[]<br></p>",
+            stepFunction: (editor) => {
+                editor.shared.dom.insert(
+                    parseXHTML(
+                        editor.document,
+                        "<table><thead><tr><th>h</th></tr></thead><tr><td>a</td></tr></table>"
+                    )
+                );
+            },
+            contentAfter: unformat(`
+                <table>
+                    <tbody>
+                        <tr><th class="o_table_header">h</th></tr>
+                        <tr><td>a[]</td></tr>
+                    </tbody>
+                </table>
+            `),
+        });
     });
 });
 
