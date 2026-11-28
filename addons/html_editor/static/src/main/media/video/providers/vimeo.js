@@ -53,10 +53,7 @@ export class Vimeo extends AbstractThirdPartyVideo {
      * @return {Promise[string]} url
      */
     static async getThumbnailUrl(videoId, options = {}) {
-        // Unlisted videos can only be found with their privacy hash.
-        const videoPath = [videoId, options.hash].filter(Boolean).join("/");
-        const videoUrl = encodeURIComponent(`https://vimeo.com/${videoPath}`);
-        const apiResponse = await fetch(`https://vimeo.com/api/oembed.json?url=${videoUrl}`);
+        const apiResponse = await fetch(this.getTitleApiUrl(videoId, options));
         if (!apiResponse.ok) {
             console.warn(
                 `Failed to fetch thumbnail for vimeo video ${videoId} with status ${apiResponse.status}`
@@ -87,6 +84,21 @@ export class Vimeo extends AbstractThirdPartyVideo {
             options.startFrom = startFrom;
         }
         return options;
+    }
+
+    /**
+     * Returns the oEmbed url of a vimeo video, used to fetch its title and its
+     * thumbnail.
+     *
+     * @param {string} videoId
+     * @param {Object} [options]
+     * @return {string} url
+     */
+    static getTitleApiUrl(videoId, options = {}) {
+        // Unlisted videos can only be found with their privacy hash.
+        const videoPath = [videoId, options.hash].filter(Boolean).join("/");
+        const videoUrl = encodeURIComponent(`https://vimeo.com/${videoPath}`);
+        return `https://vimeo.com/api/oembed.json?url=${videoUrl}`;
     }
 
     /**

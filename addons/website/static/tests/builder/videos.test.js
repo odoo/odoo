@@ -1,14 +1,26 @@
-import { beforeEach, expect, test, advanceTime } from "@odoo/hoot";
+import { beforeEach, expect, test, advanceTime, mockFetch } from "@odoo/hoot";
 import { animationFrame, click, dblclick, edit, queryAll, waitFor, queryOne } from "@odoo/hoot-dom";
 import { patch } from "@web/core/utils/patch";
 import { VideoFile } from "@html_editor/main/media/video/providers/video_file";
 import { defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
+import { contains } from "@web/../tests/web_test_helpers";
 
 defineWebsiteModels();
 
 // A video file url is accepted once its metadata loaded, which no test
 // environment can carry out for real.
 beforeEach(() => patch(VideoFile, { isValidVideoUrl: (url) => Promise.resolve([url]) }));
+
+const videoContent = `
+    <div>
+        <div data-oe-expression="//www.youtube.com/embed/wf9gPmNc2sc?rel=0&autoplay=0"
+             class="media_iframe_video o_snippet_drop_in_only">
+            <div class="css_editable_mode_display"></div>
+            <div class="media_iframe_video_size"></div>
+            <iframe frameborder="0" allowfullscreen="allowfullscreen" aria-label="Video"></iframe>
+        </div>
+    </div>
+`;
 
 test("double click on video", async () => {
     await setupWebsiteBuilder(`
@@ -27,16 +39,7 @@ test("double click on video", async () => {
 });
 
 test("vertical toggle of video options", async () => {
-    await setupWebsiteBuilder(`
-        <div>
-            <div data-oe-expression="//www.youtube.com/embed/wf9gPmNc2sc?rel=0&autoplay=0"
-                 class="media_iframe_video o_snippet_drop_in_only">
-                <div class="css_editable_mode_display"></div>
-                <div class="media_iframe_video_size"></div>
-                <iframe frameborder="0" allowfullscreen="allowfullscreen" aria-label="Video"></iframe>
-            </div>
-        </div>
-    `);
+    await setupWebsiteBuilder(videoContent);
 
     expect(".modal-content").toHaveCount(0);
     await dblclick(":iframe iframe");
@@ -139,3 +142,41 @@ test("reopening a video file keeps its options", async () => {
     expect(videoEl.hasAttribute("loop")).toBe(false);
     expect(videoEl.hasAttribute("controls")).toBe(false);
 });
+
+test("Description option sets the video description", async () => {
+    await setupWebsiteBuilder(videoContent);
+    await contains(":iframe .media_iframe_video").click();
+    expect(".o_customize_tab [data-label='Description'] input").toHaveCount(1);
+    expect(":iframe .media_iframe_video").not.toHaveAttribute("data-video-description");
+    await contains(".o_customize_tab [data-label='Description'] input").edit(
+        "My video description"
+    );
+    expect(":iframe .media_iframe_video").toHaveAttribute(
+        "data-video-description",
+        "My video description"
+    );
+});
+
+for (const action of ["adding", "replacing"]) {
+    test(`${action} a video uses its title as the description`, async () => {
+        await setupWebsiteBuilder(
+            action === "replacing"
+                ? videoContent.replace(
+                      'class="media_iframe_video',
+                      'data-video-description="Previous video description" class="media_iframe_video'
+                  )
+                : '<div><div class="media_iframe_video"><iframe></iframe></div></div>'
+        );
+        await dblclick(":iframe iframe");
+        await contains("#o_video_text").edit("https://www.youtube.com/watch?v=jar2eqeMNjc");
+        await advanceTime(100);
+        mockFetch(() => JSON.stringify({ title: "My video title" }));
+        await click(".modal-content footer button:contains(Add)");
+        await animationFrame();
+
+        expect(":iframe .media_iframe_video").toHaveAttribute(
+            "data-video-description",
+            "My video title"
+        );
+    });
+}

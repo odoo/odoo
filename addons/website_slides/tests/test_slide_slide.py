@@ -3,6 +3,7 @@
 
 import psycopg2
 
+from odoo.addons.http_routing.tests.common import MockRequest
 from odoo.addons.website_slides.tests import common as slides_common
 from odoo.tests.common import tagged, users
 from odoo.tools import mute_logger
@@ -194,3 +195,28 @@ class TestVideoFromURL(slides_common.SlidesCase):
                     })
                     self.assertEqual('vimeo', slide.video_source_type)
                     self.assertEqual(vimeo_id, slide.vimeo_id)
+
+    def test_embed_code_title(self):
+        """ The slide name is used as the title of the embedded iframe. """
+        Slide = self.env['slide.slide'].with_context(website_slides_skip_fetch_metadata=True)
+        with MockRequest(self.env):
+            for values in [
+                {'slide_category': 'video', 'url': 'https://www.youtube.com/watch?v=W0JQcpGLSFw'},
+                {'slide_category': 'video', 'url': 'https://drive.google.com/file/d/1qU5nHVNbz_r84P_IS5kDzoCuC1h5ZAZR'},
+                {'slide_category': 'video', 'url': 'https://vimeo.com/545859999'},
+                {'slide_category': 'video', 'url': 'https://vimeo.com/545859999/94dd03ddb0'},
+                {'slide_category': 'document', 'source_type': 'external', 'url': 'https://drive.google.com/file/d/1qU5nHVNbz_r84P_IS5kDzoCuC1h5ZAZR'},
+                {'slide_category': 'document', 'source_type': 'local_file'},
+            ]:
+                with self.subTest(**values):
+                    slide = Slide.create({
+                        'name': 'Woodworking',
+                        'channel_id': self.channel.id,
+                        **values,
+                    })
+                    self.assertIn('title="Woodworking"', slide.embed_code)
+                    self.assertIn('title="Woodworking"', slide.embed_code_external)
+                    self.assertNotIn('aria-label', slide.embed_code)
+
+                    slide.name = 'Steam Box'
+                    self.assertIn('title="Steam Box"', slide.embed_code)

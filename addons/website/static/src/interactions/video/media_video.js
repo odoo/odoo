@@ -54,8 +54,14 @@ export class MediaVideo extends Interaction {
 
         this.iframeSrc = playerEl?.dataset.nocookieSrc || playerEl?.getAttribute("src") || "";
 
-        if (playerEl && !playerEl.getAttribute("aria-label")) {
-            playerEl.setAttribute("aria-label", _t("Media video"));
+        const description = this.el.dataset.videoDescription?.trim();
+        if (playerEl) {
+            if (description) {
+                playerEl.setAttribute("title", description);
+                playerEl.removeAttribute("aria-label");
+            } else if (!playerEl.getAttribute("aria-label")) {
+                playerEl.setAttribute("aria-label", _t("Media video"));
+            }
         }
 
         if (playerEl?.tagName === "VIDEO") {
