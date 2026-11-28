@@ -27,24 +27,11 @@ export class SaveTranslationPlugin extends Plugin {
             return { group: getGroup(el.dataset), content: { [sourceSha]: cleanedEl.innerHTML } };
         });
 
-        // This is not a good way to handle characters that needs escaping, as
-        // attribute's text ends up escaped several times after save. But this
-        // keeps the previous behavior: the `EscapeTextNodesPlugin` takes care
-        // of escaping the content of text nodes (as the content of the
-        // translation may come from xml nodes of a qweb view).
-        // TODO: find a good solution to handle translation's escaping
-        // (attributes's text vs xml nodes)
-        const escapeTextNodesInHTML = (html) => {
-            const spanEl = document.createElement("span");
-            spanEl.innerHTML = html;
-            return this.processThrough("clean_for_save_processors", spanEl).innerHTML;
-        };
-
         const attrTranslation = this.dependencies.translation
             .getDirtyAttributeTranslationsInfo()
             .map((data) => ({
                 group: getGroup(data),
-                content: { [data.oeTranslationSourceSha]: escapeTextNodesInHTML(data.translation) },
+                content: { [data.oeTranslationSourceSha]: data.translation },
             }));
 
         const lang = this.services.website.currentWebsite.metadata.lang;

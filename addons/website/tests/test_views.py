@@ -395,13 +395,13 @@ class TestViewSaving(TestViewSavingCommon):
             self.env['ir.qweb']._render(view.id),
             'inline script should not be escaped when rendering'
         )
-        # common text nodes should be be escaped client side
+        # common text nodes are escaped server side
         replacement = u'world &amp;amp; &amp;lt;b&amp;gt;cie'
         view.save(replacement, xpath='/t/p')
-        self.assertIn(replacement, view.arch, 'common text node should not be escaped server side')
+        self.assertIn(replacement, view.arch.replace('&amp;', '&'), 'common text node should be escaped server side')
         self.assertIn(
             replacement,
-            str(self.env['ir.qweb']._render(view.id)).replace(u'&', u'&amp;'),
+            str(self.env['ir.qweb']._render(view.id)),
             'text node characters wrongly unescaped when rendering'
         )
 

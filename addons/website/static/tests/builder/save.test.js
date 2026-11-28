@@ -124,64 +124,6 @@ test("disable discard button when clicking on save", async () => {
     expect(".o_hb_snippets_top_actions button[data-action='cancel']").toHaveAttribute("disabled", "");
 });
 
-test("content is escaped twice", async () => {
-    const { getEditor } = await setupWebsiteBuilder(`<div class="my_content">hey</div>`);
-    const editor = getEditor();
-    const div = queryOne(":iframe .my_content");
-    setSelection({ anchorNode: div.firstChild, anchorOffset: 0 });
-    await insertText(editor, "<div>html</div>");
-
-    onRpc("ir.ui.view", "save", ({ args }) => {
-        const savedView = args[1];
-        // we expect the html sent to have doubly escaped text content
-        expect(savedView).toInclude(
-            `<div class="my_content">&amp;lt;div&amp;gt;html&amp;lt;/div&amp;gt;hey</div>`
-        );
-        return true;
-    });
-    await contains(".o_hb_snippets_top_actions button:contains(Save)").click();
-});
-
-test("content is not escaped twice inside data-oe-model nodes which are not ir.ui.view", async () => {
-    const { getEditor } = await setupWebsiteBuilder(
-        `<div class="my_content" data-oe-model="other">hey</div>`
-    );
-    const editor = getEditor();
-    const div = queryOne(":iframe .my_content");
-    setSelection({ anchorNode: div.firstChild, anchorOffset: 0 });
-    await insertText(editor, "<div>html</div>");
-
-    onRpc("ir.ui.view", "save", ({ args }) => {
-        const savedView = args[1];
-        // we expect the html sent to have simply escaped text content
-        expect(savedView).toInclude(
-            `<div class="my_content" data-oe-model="other">&lt;div&gt;html&lt;/div&gt;hey</div>`
-        );
-        return true;
-    });
-    await contains(".o_hb_snippets_top_actions button:contains(Save)").click();
-});
-
-test("content is not escaped twice inside root data-oe-model node which is not ir.ui.view", async () => {
-    const { getEditor } = await setupWebsiteBuilder(
-        `<div class="my_content" data-oe-model="other" data-oe-id="42" data-oe-field="thing">hey</div>`
-    );
-    const editor = getEditor();
-    const div = queryOne(":iframe .my_content");
-    setSelection({ anchorNode: div.firstChild, anchorOffset: 0 });
-    await insertText(editor, "<div>html</div>");
-
-    onRpc("ir.ui.view", "save", ({ args }) => {
-        const savedView = args[1];
-        // we expect the html sent to have simply escaped text content
-        expect(savedView).toInclude(
-            `<div class="my_content" data-oe-model="other" data-oe-id="42" data-oe-field="thing">&lt;div&gt;html&lt;/div&gt;hey</div>`
-        );
-        return true;
-    });
-    await contains(".o_hb_snippets_top_actions button:contains(Save)").click();
-});
-
 test("reload save with target, then discard and edit again should not reselect the target", async () => {
     onRpc("ir.ui.view", "save", ({ args }) => {
         expect.step("save");

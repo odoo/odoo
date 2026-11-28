@@ -2308,10 +2308,23 @@ class Website(Home):
         record = request.env[model].browse(record_id)
         field = record._fields[field_name]
         source_lang = None
+        is_view_fragment = model == 'ir.ui.view' and field_name == 'arch_db'
         if callable(field.translate):
             for translation in translations.values():
                 for key, value in translation.items():
-                    translation[key] = field.translate.term_converter(value)
+                    value = field.translate.term_converter(value)
+                    # This is not a good way to handle characters that needs
+                    # escaping, as attribute's text ends up escaped several
+                    # times after save. But this keeps the previous behavior:
+                    # escaping the content of text nodes (as the content of the
+                    # translation may come from xml nodes of a qweb view).
+                    # TODO: find a good solution to handle translation's
+                    # escaping (attributes's text vs xml nodes)
+                    if is_view_fragment:
+                        root = etree.fromstring(f"<div>{value}</div>")
+                        record._process_html_into_arch(root)
+                        value = etree.tostring(root, encoding='unicode')[5:-6]
+                    translation[key] = value
             source_lang = record._get_base_lang()
         return record._update_field_translations(field_name, translations, lambda old_term: sha256(old_term.encode()).hexdigest(), source_lang=source_lang)
 
