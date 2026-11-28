@@ -180,6 +180,7 @@ class TestHolidaysMultiContract(TestHolidayContract):
         self.assertEqual(leave.state, 'confirm')
         self.assertEqual(leave.number_of_days, 4)
 
+<<<<<<< f9321996984924f9adf9328367c2676f6fed61c3
     def test_update_calendar_preserves_leave_request_dates(self):
         duration_calendar = self.env['resource.calendar'].create({
             'name': 'Tuesday to Friday',
@@ -219,6 +220,42 @@ class TestHolidaysMultiContract(TestHolidayContract):
         self.assertEqual(control_leave.request_date_from, date(2026, 3, 3))
         self.assertEqual(control_leave.request_date_to, date(2026, 3, 6))
 
+||||||| 284b3a58f35a57550af1065e701b48432481e4b7
+=======
+    def test_new_version_does_not_update_previous_leaves(self):
+        # The leave belongs to the initial 35h schedule. The employee later switches
+        # to 40h, then gets another version while keeping that 40h schedule.
+        leave = self.create_leave(date(2022, 2, 1), date(2022, 2, 4), employee_id=self.jules_emp.id)
+        leave.action_approve()
+        self.assertEqual(leave.state, 'validate')
+        self.assertEqual(leave.resource_calendar_id, self.calendar_35h)
+
+        intermediate_version = self.jules_emp.create_version({
+            'date_version': date(2022, 5, 1),
+            'contract_date_start': self.contract_cdi.contract_date_start,
+            'contract_date_end': False,
+            'name': 'New Schedule for Jules',
+            'resource_calendar_id': self.calendar_40h.id,
+            'wage': 5000.0,
+        })
+        self.assertEqual(intermediate_version.resource_calendar_id, self.calendar_40h)
+        self.assertEqual(leave.state, 'validate')
+        self.assertEqual(leave.resource_calendar_id, self.calendar_35h)
+
+        new_version = self.jules_emp.create_version({
+            'date_version': date(2022, 9, 1),
+            'contract_date_start': self.contract_cdi.contract_date_start,
+            'contract_date_end': False,
+            'name': 'New Version for Jules',
+            'resource_calendar_id': self.calendar_40h.id,
+            'wage': 5500.0,
+        })
+
+        self.assertEqual(new_version.resource_calendar_id, self.calendar_40h)
+        self.assertEqual(leave.state, 'validate')
+        self.assertEqual(leave.resource_calendar_id, self.calendar_35h)
+
+>>>>>>> a5dfc76ce5e0fd64d59d9bcf741d0a775ce16b64
     def test_contract_traceability_calculate_nbr_leave(self):
         """
             The goal is to test the traceability of contracts in the past,
