@@ -91,6 +91,7 @@ const providers = [
     ["dpopay", "pos_dpopay", "DPO Pay"],
     ["mollie", "pos_mollie", "Mollie"],
     ["safaricom", "pos_safaricom", "Safaricom"],
+    ["paymob", "pos_paymob", "Paymob"],
 ];
 
 export const PosPaymentProviderCardsParams = {
