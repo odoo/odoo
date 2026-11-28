@@ -419,7 +419,9 @@ export class PosOrder extends PosOrderAccounting {
             const baseData = { combo_item_id: cLine.combo_item_id };
 
             if (cLine.attribute_value_ids) {
-                baseData.configuration = { attribute_value_ids: cLine.attribute_value_ids };
+                baseData.configuration = {
+                    attribute_value_ids: cLine.attribute_value_ids.map((v) => v.id),
+                };
             }
 
             if (newQty >= 0) {
