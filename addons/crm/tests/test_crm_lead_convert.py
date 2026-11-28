@@ -389,16 +389,14 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
         date = Datetime.from_string('2020-01-20 16:00:00')
         self.crm_lead_dt_mock.now.return_value = date
 
-        leads = self.env['crm.lead']
-        for x in range(2):
-            leads |= self.env['crm.lead'].create({
-                'name': 'Dup-%02d-%s' % (x+1, self.lead_1.name),
-                'type': 'lead' if x == 0 else 'opportunity',
-                'user_id': False, 'team_id': self.lead_1.team_id.id,
-                'contact_name': 'Duplicate %02d of %s' % (x+1, self.lead_1.contact_name),
-                'email_from': self.lead_1.email_from,
-                'probability': 10,
-            })
+        leads = self.env['crm.lead'].create([{
+            'name': 'Dup-%02d-%s' % (x+1, self.lead_1.name),
+            'type': 'lead' if x == 0 else 'opportunity',
+            'user_id': False, 'team_id': self.lead_1.team_id.id,
+            'contact_name': 'Duplicate %02d of %s' % (x+1, self.lead_1.contact_name),
+            'email_from': self.lead_1.email_from,
+            'probability': 10,
+        } for x in range(2)])
 
         convert = self.env['crm.lead2opportunity.partner.mass'].with_context({
             'active_model': 'crm.lead',
@@ -425,15 +423,13 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
         date = Datetime.from_string('2020-01-20 16:00:00')
         self.crm_lead_dt_mock.now.return_value = date
 
-        leads = self.env['crm.lead']
-        for x in range(2):
-            leads |= self.env['crm.lead'].create({
-                'name': 'Dup-%02d-%s' % (x+1, self.lead_1.name),
-                'type': 'lead', 'user_id': False, 'team_id': self.lead_1.team_id.id,
-                'contact_name': 'Duplicate %02d of %s' % (x+1, self.lead_1.contact_name),
-                'email_from': self.lead_1.email_from,
-                'probability': 10,
-            })
+        leads = self.env['crm.lead'].create([{
+            'name': 'Dup-%02d-%s' % (x+1, self.lead_1.name),
+            'type': 'lead', 'user_id': False, 'team_id': self.lead_1.team_id.id,
+            'contact_name': 'Duplicate %02d of %s' % (x+1, self.lead_1.contact_name),
+            'email_from': self.lead_1.email_from,
+            'probability': 10,
+        } for x in range(2)])
 
         convert = self.env['crm.lead2opportunity.partner.mass'].with_context({
             'active_model': 'crm.lead',
