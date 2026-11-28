@@ -593,6 +593,7 @@ class AccountReportExpression(models.Model):
             ('account_codes', "Prefix of Account Codes"),
             ('external', "External Value"),
             ('custom', "Custom Python Function"),
+            ('text', "Plain Text"),
         ],
         required=True
     )

@@ -107,8 +107,9 @@
                 <field name="expression_ids">
                     <record id="l10n_ie_tr_PA1_tag" model="account.report.expression">
                         <field name="label">balance</field>
-                        <field name="engine">tax_tags</field>
-                        <field name="formula">PA1</field>
+                        <field name="engine">domain</field>
+                        <field name="formula" eval="[('tax_tag_ids', 'in', [ref('l10n_ie.tax_tag_PA1'), ref('l10n_ie.tax_tag_PA_4_5'), ref('l10n_ie.tax_tag_PA_4_8'), ref('l10n_ie.tax_tag_PA_9'), ref('l10n_ie.tax_tag_PA_13_5'), ref('l10n_ie.tax_tag_PA_23')])]" />
+                        <field name="subformula">sum</field>
                     </record>
                 </field>
             </record>
