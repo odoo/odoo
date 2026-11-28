@@ -203,10 +203,6 @@ class AccountAnalyticLine(models.Model):
                 ('reinvoice_move_id', '=', False),
         ]
 
-    def _get_timesheets_to_merge(self):
-        res = super()._get_timesheets_to_merge()
-        return res.filtered(lambda l: not l.reinvoice_move_id or l.reinvoice_move_id.state != 'posted')
-
     def _get_employee_mapping_entry(self):
         self.ensure_one()
         employees = self.env['project.sale.line.employee.map'].search([
