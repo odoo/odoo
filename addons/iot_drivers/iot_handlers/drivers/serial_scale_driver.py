@@ -62,6 +62,7 @@ class ScaleDriver(SerialDriver):
         self._set_actions()
         self._is_reading = True
         self.tare_mode = False
+        self.weight_changed = True
 
         # The HW Proxy can only expose one scale,
         # only the last scale connected is kept
@@ -97,6 +98,8 @@ class ScaleDriver(SerialDriver):
         """Reads the scale current weight value and pushes it to the frontend."""
 
         self._read_weight()
+        data['weight_changed'] = self.weight_changed or self.data['result'] != self.last_sent_value
+        self.weight_changed = False
         self.last_sent_value = self.data['result']
 
     @staticmethod
@@ -149,7 +152,9 @@ class ScaleDriver(SerialDriver):
 
         with self._device_lock:
             self._read_weight()
-            if self.data['result'] != self.last_sent_value or self._status['status'] == self.STATUS_ERROR:
+            changed = self.data['result'] != self.last_sent_value
+            self.weight_changed |= changed
+            if changed or self._status['status'] == self.STATUS_ERROR:
                 self.last_sent_value = self.data['result']
                 event_manager.device_changed(self)
 
