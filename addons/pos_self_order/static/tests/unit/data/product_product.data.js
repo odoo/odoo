@@ -36,6 +36,18 @@ ProductProduct._records = [
         product_tmpl_id: 101,
         lst_price: 10,
         display_name: "T-Shirt (S)",
+<<<<<<< d3c2acb75e7fd9f31d8e41071cde3fd1bf5ee74b
+||||||| 1c1b833663ed2a47485b14255a7e1b462f4d3487
+        product_tag_ids: [],
+        barcode: false,
+        default_code: false,
+        product_template_attribute_value_ids: [],
+=======
+        product_tag_ids: [],
+        barcode: false,
+        default_code: false,
+        product_template_attribute_value_ids: [101],
+>>>>>>> 7655a937f09c6e4d30b2e62adf6fcd832ebeaa4b
         product_template_variant_value_ids: [101],
     },
     {
@@ -44,6 +56,18 @@ ProductProduct._records = [
         product_tmpl_id: 101,
         lst_price: 15,
         display_name: "T-Shirt (M)",
+<<<<<<< d3c2acb75e7fd9f31d8e41071cde3fd1bf5ee74b
+||||||| 1c1b833663ed2a47485b14255a7e1b462f4d3487
+        product_tag_ids: [],
+        barcode: false,
+        default_code: false,
+        product_template_attribute_value_ids: [],
+=======
+        product_tag_ids: [],
+        barcode: false,
+        default_code: false,
+        product_template_attribute_value_ids: [102],
+>>>>>>> 7655a937f09c6e4d30b2e62adf6fcd832ebeaa4b
         product_template_variant_value_ids: [102],
     },
     {
@@ -59,6 +83,18 @@ ProductProduct._records = [
         product_tmpl_id: 103,
         lst_price: 100,
         display_name: "Running Sweater (S)",
+<<<<<<< d3c2acb75e7fd9f31d8e41071cde3fd1bf5ee74b
+||||||| 1c1b833663ed2a47485b14255a7e1b462f4d3487
+        product_tag_ids: [],
+        barcode: false,
+        default_code: false,
+        product_template_attribute_value_ids: [],
+=======
+        product_tag_ids: [],
+        barcode: false,
+        default_code: false,
+        product_template_attribute_value_ids: [101],
+>>>>>>> 7655a937f09c6e4d30b2e62adf6fcd832ebeaa4b
         product_template_variant_value_ids: [101],
     },
     {
@@ -67,6 +103,18 @@ ProductProduct._records = [
         product_tmpl_id: 103,
         lst_price: 105,
         display_name: "Running Sweater (M)",
+<<<<<<< d3c2acb75e7fd9f31d8e41071cde3fd1bf5ee74b
+||||||| 1c1b833663ed2a47485b14255a7e1b462f4d3487
+        product_tag_ids: [],
+        barcode: false,
+        default_code: false,
+        product_template_attribute_value_ids: [],
+=======
+        product_tag_ids: [],
+        barcode: false,
+        default_code: false,
+        product_template_attribute_value_ids: [102],
+>>>>>>> 7655a937f09c6e4d30b2e62adf6fcd832ebeaa4b
         product_template_variant_value_ids: [102],
     },
     {
