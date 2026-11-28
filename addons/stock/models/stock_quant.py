@@ -1510,7 +1510,9 @@ class StockQuant(models.Model):
             quants = self.env['stock.quant'].search([('product_id', '=', product_id.id),
                                                      ('lot_id', '=', lot_id.id),
                                                      ('quantity', '!=', 0),
-                                                     '|', ('location_id.usage', '=', 'customer'),
+                                                     # a negative quant in a customer location does not mean
+                                                     # the SN is there (e.g. return of a SN never delivered)
+                                                     '|', '&', ('location_id.usage', '=', 'customer'), ('quantity', '>', 0),
                                                            *internal_domain])
             sn_locations = quants.mapped('location_id')
             if quants:
