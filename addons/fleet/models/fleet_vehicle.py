@@ -1,12 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from collections import defaultdict
+from collections import Counter, defaultdict
 from dateutil.relativedelta import relativedelta
 from datetime import datetime
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
+from odoo.tools import SQL
 from odoo.addons.fleet.models.fleet_vehicle_model import FUEL_TYPES
 
 
@@ -393,6 +394,53 @@ class FleetVehicle(models.Model):
                     ('state', 'in', ['open', 'futur'])
                 ]),
         ]
+
+    @api.constrains('vin_sn')
+    def _check_unique_vin_sn(self):
+        # if creating multiple vehicles at once, check if there are no duplicate
+        # vin_sn (chassis number) between them
+        chassis_numbers = Counter(vin_sn for vin_sn in self.mapped('vin_sn') if vin_sn)
+        if not chassis_numbers:
+            return
+        most_common_chassis, most_common_count = chassis_numbers.most_common(1)[0]
+        if most_common_count > 1:
+            raise ValidationError(self.env._(
+                "You are trying to create %(count)s vehicles with the same chassis number (%(vin_sn)s).\n"
+                "The chassis number should be unique for every vehicle.",
+                count=most_common_count,
+                vin_sn=most_common_chassis,
+            ))
+
+        # check if the new vehicles's vin_sn don't conflict with existing ones
+        duplicates = self.env.execute_query_dict(SQL("""
+            SELECT name, vin_sn
+            FROM fleet_vehicle
+            WHERE vin_sn IN %s
+            AND id NOT IN %s
+            """,
+            tuple(chassis_numbers),
+            tuple(self.ids),
+        ))
+        if len(duplicates) == 0:
+            return
+        if len(duplicates) == 1:
+            raise ValidationError(self.env._(
+                "The chassis number %(chassis_number)s is already taken by vehicle %(vehicle_name)s",
+                vehicle_name=duplicates[0]['name'],
+                chassis_number=duplicates[0]['vin_sn'],
+            ))
+        # multiple new vehicles have a duplicated vin_sn, show the list of conflicts
+        raise ValidationError(self.env._(
+            "The chassis numbers of the vehicles you are trying to create are already taken:\n%(duplicates_list)s",
+            duplicates_list="\n".join(
+                self.env._(
+                    "  - %(vehicle_name)s already has chassis number %(chassis_number)s",
+                    vehicle_name=duplicate['name'],
+                    chassis_number=duplicate['vin_sn'],
+                )
+                for duplicate in duplicates
+            ),
+        ))
 
     @api.model_create_multi
     def create(self, vals_list):

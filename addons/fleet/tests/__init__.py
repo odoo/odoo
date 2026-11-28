@@ -5,6 +5,7 @@ from . import test_access_rights
 from . import test_fleet_ui
 from . import test_overdue
 from . import test_plan_to_change
+from . import test_unique_chassis_number
 from . import test_unique_license_plate
 from . import test_send_mail
 from . import test_vehicle_model_fields
