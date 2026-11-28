@@ -230,6 +230,19 @@ test("Check flow with multi currency payment lines", async () => {
     await waitFor(".feedback-screen");
 });
 
+test("Quick cash buttons add to the amount of a foreign currency payment line", async () => {
+    const store = await setupAndMountPosApp();
+    await Utils.clickDisplayedProduct("Steel desk");
+    await Utils.clickPayButton();
+    await waitFor(".payment-screen");
+    await Utils.clickCurrencyWisePaymentMethod("Cash", "EUR", "761.25");
+    expect(await Utils.selectedPaymentLineHasAmount("761.25€")).toBe(true);
+    await Utils.sendBufferKeys("+10");
+    const paymentLine = store.getOrder().payment_ids[0];
+    expect(paymentLine.amount_currency).toBe(771.25);
+    expect(await Utils.selectedPaymentLineHasAmount("771.25€")).toBe(true);
+});
+
 test("AutofillCashCount: cash count autofill with comma decimal separator", async () => {
     const store = await setupAndMountPosApp({ use_pricelist: false });
     patch(localization, { decimalPoint: ",", thousandsSep: "." });
