@@ -144,6 +144,17 @@ export function getImageSizeFromCache(src) {
 }
 
 /**
+ * Empties the caches of image sources and image data: the object URLs they hold
+ * may be revoked externally, after which they cannot be loaded anymore.
+ */
+export function invalidateCache() {
+    for (const src in cache) {
+        delete cache[src];
+    }
+    imageCache.clear();
+}
+
+/**
  * Activates the cropper on a given image.
  *
  * @param {jQuery} $image the image on which to activate the cropper

@@ -151,6 +151,14 @@ const $now = performance.now.bind(performance);
 //-----------------------------------------------------------------------------
 
 /**
+ * @param {Job} job
+ */
+function abortJob(job) {
+    job._controller ||= new AbortController();
+    job._controller.abort();
+}
+
+/**
  * @param {Job[]} jobs
  */
 function filterReady(jobs) {
@@ -209,20 +217,6 @@ function formatAssertions(assertions) {
 }
 
 /**
- * @template T
- * @param {T[]} array
- */
-function shuffle(array) {
-    const copy = [...array];
-    let randIndex;
-    for (let i = 0; i < copy.length; i++) {
-        randIndex = $floor(internalRandom() * copy.length);
-        [copy[i], copy[randIndex]] = [copy[randIndex], copy[i]];
-    }
-    return copy;
-}
-
-/**
  * @param {Test} test
  * @param {boolean} shouldSuppress
  */
@@ -244,6 +238,45 @@ function handleConsoleIssues(test, shouldSuppress) {
             }
         };
     }
+}
+
+/**
+ * First step to be applied on a job. Typically: resets the abort controller so
+ * that it can be used, and call the "before" callback of each job tag.
+ *
+ * @param {Job} job
+ */
+function jobFirstBeforeStep(job) {
+    job._controller = null;
+    for (const tag of job.tags) {
+        tag.before?.(job);
+    }
+}
+
+/**
+ * Last step to be applied on a job. Typically: call the "after" callback of
+ * each job tag.
+ *
+ * @param {Job} job
+ */
+function jobLastAfterStep(job) {
+    for (const tag of job.tags) {
+        tag.after?.(job);
+    }
+}
+
+/**
+ * @template T
+ * @param {T[]} array
+ */
+function shuffle(array) {
+    const copy = [...array];
+    let randIndex;
+    for (let i = 0; i < copy.length; i++) {
+        randIndex = $floor(internalRandom() * copy.length);
+        [copy[i], copy[randIndex]] = [copy[randIndex], copy[i]];
+    }
+    return copy;
 }
 
 /**
@@ -623,15 +656,15 @@ export class Runner {
     /**
      * Registers a callback that will be executed at the end of the current test
      * entity:
-     *
      * - inside of a test: executed at the end of the *current* test, after all
      *  assertions have been completed;
-     *
      * - inside of a suite: executed at the end of the *current* suite, after all
      *  tests have been run. Note that neither "after" nor "before" callbacks will
      *  be called if the suite is empty (= no tests to run);
-     *
      * - outside of a suite: executed at the end of *every* suite
+     *
+     * Warning: given callbacks are called in *reversed* order (= last callback
+     * first).
      *
      * @param {...Callback<Job>} callbacks
      */
@@ -661,10 +694,11 @@ export class Runner {
     /**
      * Registers a callback that will be executed at the end of each test in the
      * current test entity:
-     *
      * - inside of a suite: executed for all tests in the *current* suite;
-     *
      * - outside of a suite: executed for every single test accross *all* suites.
+     *
+     * Warning: given callbacks are called in *reversed* order (= last callback
+     * first).
      *
      * @param {...Callback<Test>} callbacks
      */
@@ -946,7 +980,7 @@ export class Runner {
                         // before suite code
                         this.suiteStack.push(suite);
 
-                        suite.before();
+                        jobFirstBeforeStep(suite);
                         await this._callbacks.call("before-suite", suite, this._handleError);
                         await suite.callbacks.call("before-suite", suite, this._handleError);
                     }
@@ -955,10 +989,11 @@ export class Runner {
                         this.suiteStack.pop();
 
                         await this._execAfterCallback(async () => {
+                            abortJob(suite);
                             await suite.callbacks.call("after-suite", suite, this._handleError);
                             await this._callbacks.call("after-suite", suite, this._handleError);
+                            jobLastAfterStep(suite);
                         });
-                        suite.after();
 
                         logger.logSuite(suite);
 
@@ -1007,7 +1042,6 @@ export class Runner {
             // Before test
             this.state.currentTest = test;
             this.expectHooks.before(test);
-            test.before();
             for (const callbackRegistry of [...callbackChain].reverse()) {
                 await callbackRegistry.call("before-test", test, this._handleError);
             }
@@ -1019,9 +1053,7 @@ export class Runner {
             // !    Runner.start() > Test.run() > Error
             const testPromise = Promise.resolve(test.run());
             const timeoutPromise = new Promise((resolve, reject) => {
-                // Set abort signal
                 this._resolveCurrent = resolve;
-
                 if (timeout && !this.debug) {
                     // Set timeout
                     timeoutId = setTimeout(() => {
@@ -1057,7 +1089,6 @@ export class Runner {
                     await callbackRegistry.call("after-test", test, this._handleError);
                 }
             });
-            test.after();
 
             restoreConsole();
 
@@ -1780,6 +1811,29 @@ export class Runner {
             this.state.tests.length = 0;
         }
 
+        // Register default hooks
+        this.beforeAll(_defineRootNode.bind(null, this.fixture.get));
+        this.afterAll(
+            // Warn user events
+            !this.debug && on(window, "pointermove", warnUserEvent),
+            !this.debug && on(window, "pointerdown", warnUserEvent),
+            !this.debug && on(window, "keydown", warnUserEvent)
+        );
+        this.beforeEach(jobFirstBeforeStep, this.fixture.setup, setupWindow, _setupTime);
+        this.afterEach(
+            jobLastAfterStep,
+            this.fixture.cleanup,
+            cleanupAnimations,
+            cleanupWindow,
+            cleanupNetwork,
+            cleanupNavigator,
+            _cleanupEvents,
+            _cleanupDOM,
+            cleanupDate,
+            _cleanupTime,
+            abortJob
+        );
+
         return {
             suites: [...includedSuites],
             tests: [...includedTests],
@@ -1946,27 +2000,6 @@ export class Runner {
                 );
             }
         }
-
-        // Register default hooks
-        this.beforeAll(_defineRootNode.bind(null, this.fixture.get));
-        this.afterAll(
-            // Warn user events
-            !this.debug && on(window, "pointermove", warnUserEvent),
-            !this.debug && on(window, "pointerdown", warnUserEvent),
-            !this.debug && on(window, "keydown", warnUserEvent)
-        );
-        this.beforeEach(this.fixture.setup, setupWindow, _setupTime);
-        this.afterEach(
-            this.fixture.cleanup,
-            cleanupAnimations,
-            cleanupWindow,
-            cleanupNetwork,
-            cleanupNavigator,
-            _cleanupEvents,
-            _cleanupDOM,
-            cleanupDate,
-            _cleanupTime
-        );
 
         _enableEventLogs(logger.canLog("debug"));
         _setFrameRate(this.config.fps);
