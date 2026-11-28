@@ -6,7 +6,7 @@ export class Vimeo extends AbstractThirdPartyVideo {
     static name = "Vimeo";
 
     static urlMatcher =
-        /^(?:(?:https?:)?\/\/)?(player.)?vimeo.com\/([a-z]*\/)?(?<id>[^/?#]+)(?:\/(?<hash>[^/?#]+))?\/?(?:\?(?<params>\S+))?(?:#\S*)?$/i;
+        /^(?:(?:https?:)?\/\/)?(?:player\.)?vimeo\.com\/(?:(?:showcase|album)\/(?<playlist>\d+)|(?:video\/)?(?<id>\d+))(?:\/(?<hash>[\da-f]+))?(?:[/?#]\S*)?$/i;
 
     static optionsConfig = {
         startFrom: { default: 0, type: Number },
@@ -20,6 +20,7 @@ export class Vimeo extends AbstractThirdPartyVideo {
             params: ["fullscreen"],
             reversed: true,
         },
+        isVertical: { default: false, type: Boolean },
         // Privacy hash of unlisted videos.
         hash: { default: "", type: String, params: ["h"] },
     };
@@ -39,6 +40,10 @@ export class Vimeo extends AbstractThirdPartyVideo {
             // (e.g. background videos) to play simultaneously.
             params += "&autopause=0";
         }
+        if (options.showcase) {
+            // A showcase has no start time: "#t=" stops its autoplay.
+            return `https://vimeo.com/showcase/${options.showcase}/embed?${params}`;
+        }
         let embedUrl = `https://player.vimeo.com/video/${videoId}?${params}`;
         if (options.startFrom) {
             embedUrl += `#t=${options.startFrom}`;
@@ -54,7 +59,9 @@ export class Vimeo extends AbstractThirdPartyVideo {
      */
     static async getThumbnailUrl(videoId, options = {}) {
         // Unlisted videos can only be found with their privacy hash.
-        const videoPath = [videoId, options.hash].filter(Boolean).join("/");
+        const videoPath = options.showcase
+            ? `showcase/${options.showcase}`
+            : [videoId, options.hash].filter(Boolean).join("/");
         const videoUrl = encodeURIComponent(`https://vimeo.com/${videoPath}`);
         const apiResponse = await fetch(`https://vimeo.com/api/oembed.json?url=${videoUrl}`);
         if (!apiResponse.ok) {
@@ -69,11 +76,14 @@ export class Vimeo extends AbstractThirdPartyVideo {
     /**
      * @override
      */
-    static getCustomUrlOptions(url) {
+    static getCustomUrlOptions(url, urlMatch) {
         const options = {};
+        if (urlMatch.groups.playlist) {
+            options.showcase = urlMatch.groups.playlist;
+        }
         // The privacy hash of unlisted videos can be part of the path (e.g.
         // `vimeo.com/<id>/<hash>`) instead of the `h` parameter.
-        const hash = this.urlMatcher.exec(url.href)?.groups.hash;
+        const hash = urlMatch.groups.hash;
         if (hash) {
             options.hash = hash;
         }
@@ -104,6 +114,9 @@ export class Vimeo extends AbstractThirdPartyVideo {
         unlisted: "https://vimeo.com/795669787/0763fdb816",
         embed: "https://player.vimeo.com/video/395399735",
         embedUnlisted: "https://player.vimeo.com/video/795669787?h=0763fdb816",
+        showcase: "https://vimeo.com/showcase/1000",
+        album: "https://vimeo.com/album/1000",
+        embedShowcase: "https://vimeo.com/showcase/1000/embed",
         params: "vimeo.com/395399735?autoplay=1#t=62",
         embedParams:
             "https://player.vimeo.com/video/395399735?controls=0&fullscreen=1&autoplay=1#t=62",
