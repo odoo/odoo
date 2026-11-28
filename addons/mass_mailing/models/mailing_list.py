@@ -318,7 +318,11 @@ class MailingList(models.Model):
         """Return a tuple of lists of models to flush and SQL condition."""
         return (
             [self.env['mail.blacklist']],
-            SQL("src_contact.email_normalized NOT IN (select email from mail_blacklist where active = TRUE)")
+            # `email_normalized` is NULL/empty for contacts with a missing or invalid email, and
+            # a `NOT IN (...)` against a non-empty blacklist yields NULL (falsy) for those rows,
+            # wrongly excluding them from the merge (and hence deleting them). Guard against it so
+            # only genuinely blacklisted emails are skipped.
+            SQL("(NULLIF(src_contact.email_normalized, '') IS NULL OR NULLIF(src_contact.email_normalized, '') NOT IN (select email from mail_blacklist where active = TRUE))")
         )
 
     def _mailing_list_get_select_fields(self):
