@@ -3,6 +3,8 @@ import io
 import logging
 from unittest import skipIf
 
+from lxml import etree
+
 import odoo.tests
 from odoo import tools
 from odoo.exceptions import UserError
@@ -157,6 +159,46 @@ class TestReports(odoo.tests.TransactionCase):
             len(merged_file.pages),
             "Expecting the merged pdf to have twice the number of pages as the original pdf"
         )
+
+    def test_report_specific_paperformat_args_from_headers(self):
+        """
+            Documents printed together share their margins: the largest margins
+            set by their headers are kept, and the root html tag overrides them.
+            Margins customized on the paperformat are kept over the headers.
+        """
+        report = self.env.ref('base.report_ir_model_overview')
+        report.paperformat_id = self.env.ref('base.paperformat_euro')
+        headers = [
+            etree.Element('div', {'data-report-margin-top': '40', 'data-report-header-spacing': '40', 'data-report-margin-bottom': '22'}),
+            etree.Element('div', {'data-report-margin-top': '46', 'data-report-header-spacing': '46', 'data-report-margin-bottom': '20'}),
+        ]
+        self.assertEqual(report._get_specific_paperformat_args(headers, etree.Element('html')), {
+            'data-report-margin-top': '46',
+            'data-report-header-spacing': '46',
+            'data-report-margin-bottom': '22',
+        })
+        # The content of a header, like a localized header, can ask for more room than its layout
+        localized_header = etree.Element('div', {'data-report-margin-top': '44', 'data-report-header-spacing': '44'})
+        etree.SubElement(localized_header, 'div', {'data-report-margin-top': '50', 'data-report-header-spacing': '50'})
+        self.assertEqual(report._get_specific_paperformat_args([*headers, localized_header], etree.Element('html')), {
+            'data-report-margin-top': '50',
+            'data-report-header-spacing': '50',
+            'data-report-margin-bottom': '22',
+        })
+        root = etree.Element('html', {'data-report-margin-top': '30', 'data-report-landscape': 'True'})
+        self.assertEqual(report._get_specific_paperformat_args(headers, root), {
+            'data-report-margin-top': '30',
+            'data-report-header-spacing': '46',
+            'data-report-margin-bottom': '22',
+            'data-report-landscape': 'True',
+        })
+
+        report.paperformat_id = self.env.ref('base.paperformat_euro').copy({'margin_top': 60, 'header_spacing': 60})
+        self.assertEqual(report._get_specific_paperformat_args(headers, etree.Element('html')), {})
+        self.assertEqual(report._get_specific_paperformat_args(headers, root), {
+            'data-report-margin-top': '30',
+            'data-report-landscape': 'True',
+        })
 
 
 # Some paper format examples
@@ -488,7 +530,7 @@ class TestReportsRendering(TestReportsRenderingCommon):
         self.assertEqual(pages_contents, expected_pages_contents)
 
     def test_pdf_render_page_overflow(self):
-        nb_lines = 80
+        nb_lines = 100
 
         page_content = f'''
             <div class="page">

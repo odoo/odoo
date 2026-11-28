@@ -3,6 +3,10 @@
     <data>
 
         <template id="custom_header" inherit_id="l10n_ar.custom_header" primary="True">
+            <xpath expr="//div[@data-report-margin-top]" position="attributes">
+                <attribute name="data-report-margin-top">46</attribute>
+                <attribute name="data-report-header-spacing">46</attribute>
+            </xpath>
             <xpath expr="//div[@id='l10n_ar_header_right']//span" position="replace">
                 <span t-att-style="'color: %s;' % o.company_id.secondary_color"><strong>DOCUMENT NOT VALID AS AN INVOICE</strong></span>
                 <br/>
