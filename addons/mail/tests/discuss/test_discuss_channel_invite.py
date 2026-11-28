@@ -375,3 +375,34 @@ class TestDiscussChannelInvite(HttpCase, MailCommon):
             name, channel_id=group_chat.id, with_portal_users=True
         )
         self.assertEqual(result["partner_ids"], joel.partner_id.ids)
+
+    def test_13_add_members_skips_failed_email_invitations(self):
+        bob = new_test_user(self.env, "bob", groups="base.group_user", email="bob@test.com")
+        joel = new_test_user(self.env, "joel", groups="base.group_portal", email="joel@test.com")
+        zoe = new_test_user(self.env, "zoe", groups="base.group_portal", email="zoe@test.com")
+        group_chat = self.env["discuss.channel"].with_user(bob)._create_group(users_to=bob)
+        self.authenticate("bob", "bob")
+        with (
+            self.mock_mail_gateway(),
+            self.mock_send_email_delivery_exception(["joel@test.com"]),
+            mute_logger("odoo.addons.mail.models.mail_mail"),
+        ):
+            self.make_jsonrpc_request(
+                "/mail/store",
+                {
+                    "fetch_params": [
+                        [
+                            "/discuss/channel/add_members",
+                            {"channel_id": group_chat.id, "user_ids": (joel + zoe).ids},
+                        ],
+                    ],
+                },
+            )
+            self.assertMailMail(
+                self.env["res.partner"],
+                status="sent",
+                email_to_all=["zoe@test.com"],
+                author=bob.partner_id,
+            )
+        group_chat.invalidate_recordset(["channel_member_ids"])
+        self.assertEqual(group_chat.channel_member_ids.partner_id, (bob + zoe).partner_id)
