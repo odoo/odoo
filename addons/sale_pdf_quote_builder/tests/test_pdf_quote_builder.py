@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import io
 import json
 from functools import partial
 from unittest.mock import patch
@@ -9,7 +10,9 @@ from werkzeug.datastructures import FileStorage
 from odoo.fields import Command
 from odoo.http import Response
 from odoo.tests import Form, HttpCase, tagged
+from odoo.tools import mute_logger
 from odoo.tools.misc import file_open
+from odoo.tools.pdf import PdfFileReader
 
 from .files import forms_pdf, plain_pdf
 from odoo.addons.sale_management.tests.common import SaleManagementCommon
@@ -396,3 +399,14 @@ class TestPDFQuoteBuilder(SaleManagementCommon, HttpCase):
         sof.save()
 
         self.assertFalse(sof.record.quotation_document_ids)
+
+    @mute_logger("pypdf._writer")
+    def test_selected_documents_included_in_confirmed_order_pdf(self):
+        self.sale_order.quotation_document_ids = self.header
+        self.sale_order.action_confirm()
+        report = (
+            self.env["ir.actions.report"]
+            .with_context(force_report_rendering=True)
+            ._render_qweb_pdf("sale.action_report_saleorder", res_ids=self.sale_order.id)
+        )
+        self.assertEqual(len(PdfFileReader(io.BytesIO(report[0]), strict=False).pages), 2)
