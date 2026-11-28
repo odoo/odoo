@@ -8,7 +8,7 @@ from itertools import zip_longest
 from lxml import etree as ET, html
 from lxml.html import builder as h
 
-from odoo.exceptions import MissingError
+from odoo.exceptions import MissingError, ValidationError
 from odoo.modules.module import _DEFAULT_MANIFEST, Manifest
 from odoo.tests import common, HttpCase, tagged
 
@@ -1875,3 +1875,57 @@ class TestThemeViews(common.TransactionCase):
         test_theme_module.with_context(load_all_views=True)._theme_load(website_1)
         self.assertEqual(specific_main_view_children.arch, new_arch, "View arch shouldn't have been overrided on theme update as it was modified by user.")
         self.assertEqual(specific_main_view_children.name, 'Test Child View modified', "View should receive modification on theme update.")
+
+
+@tagged('post_install', '-at_install')
+class TestViewsTranslateMode(common.TransactionCase):
+
+    def _get_specs_error(self, view, edit_translations):
+        """
+        Apply the specs of ``view`` on the arch it inherits from, i.e. its
+        root view combined with the views applied before it.
+
+        :return: the error message if the specs of ``view`` cannot be applied,
+            ``None`` otherwise. If an earlier view of the hierarchy is broken,
+            return ``None`` too: the error is reported for that earlier view.
+        """
+        view = view.with_context(edit_translations=edit_translations)
+        try:
+            parent_arch = view.with_context(ir_ui_view_tree_cut_off_view=view)._get_combined_arch()
+        except (ValueError, ValidationError):
+            return None
+        try:
+            view.apply_inheritance_specs(parent_arch, ET.fromstring(view.arch or '<data/>'))
+        except (ValueError, ValidationError) as e:
+            return str(e).splitlines()[0]
+        return None
+
+    def test_inheritance_specs_in_translate_mode(self):
+        """ In translate mode (``edit_translations``), the translatable terms of
+        each view are wrapped in a ``<span data-oe-translation-...>`` before
+        inheritance is applied. A locator that works in normal mode may then
+        no longer find its target (e.g. ``//div/b`` when ``<b>`` is the whole
+        content of the div), which makes the page crash in translate mode.
+        """
+        View = self.env['ir.ui.view'].with_context(active_test=False)
+        views = View.search([('type', '=', 'qweb'), ('inherit_id', '!=', False)], order='id')
+
+        errors = []
+        for view in views:
+            if self._get_specs_error(view, edit_translations=False):
+                # already broken in normal mode, not a translation issue
+                continue
+            if error := self._get_specs_error(view, edit_translations=True):
+                parent = view.inherit_id.xml_id or view.inherit_id.key or view.inherit_id.id
+                errors.append(f"- {view.xml_id or view.key} (id {view.id}, inherits {parent}):\n    {error}")
+
+        if errors:
+            self.fail(
+                "These views cannot be applied in translate mode, the pages using them "
+                "crash when they are translated from the website editor:\n\n"
+                + "\n".join(errors)
+                + "\n\nIn translate mode, each translatable term is wrapped in a "
+                "<span data-oe-translation-...> before inheritance is applied. Don't "
+                "locate an inline element (b, span, i, ...) that is the whole "
+                "translatable content of its parent: target the parent instead."
+            )

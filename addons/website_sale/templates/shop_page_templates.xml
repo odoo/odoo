@@ -1324,20 +1324,19 @@
                 separator=" "
             />
         </xpath>
-        <xpath expr="//div[contains(@t-attf-class, 'o_categories_collapse_title')]" position="attributes">
-            <attribute name="t-attf-class" add="accordion-header" separator=" "/>
-        </xpath>
-        <xpath expr="//div[contains(@t-attf-class, 'o_categories_collapse_title')]/b" position="replace">
-            <button
-                class="accordion-button px-0 bg-transparent shadow-none"
-                type="button"
-                data-bs-toggle="collapse"
-                t-attf-data-bs-target="#o_wsale_categories"
-                t-attf-aria-controls="o_wsale_categories"
-                aria-expanded="true"
-            >
-                <b>Categories</b>
-            </button>
+        <xpath expr="//div[contains(@t-attf-class, 'o_categories_collapse_title')]" position="replace">
+            <div t-attf-class="o_categories_collapse_title {{_titleClasses}} accordion-header">
+                <button
+                    class="accordion-button px-0 bg-transparent shadow-none"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    t-attf-data-bs-target="#o_wsale_categories"
+                    t-attf-aria-controls="o_wsale_categories"
+                    aria-expanded="true"
+                >
+                    <b>Categories</b>
+                </button>
+            </div>
         </xpath>
 
         <div name="wsale_products_categories_list" position="attributes">
