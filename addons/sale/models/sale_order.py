@@ -1728,6 +1728,21 @@ class SaleOrder(models.Model):
             kwargs['notify_author_mention'] = kwargs.get('notify_author_mention', True)
         return super().message_post(**kwargs)
 
+    def _notify_get_recipients_classify(self, message, recipients_data,
+                                    model_description, msg_vals=False):
+        groups = super()._notify_get_recipients_classify(
+            message, recipients_data, model_description, msg_vals=msg_vals)
+        message_type = (msg_vals or {}).get('message_type') or message.message_type
+        if message_type != 'comment':
+            return groups
+        user_group = next((g for g in groups if g['notification_group_name'] == 'user'), None)
+        other_groups = [g for g in groups if g is not user_group]
+        if not user_group or len(other_groups) != 1:
+            return groups
+        target = other_groups[0]
+        target['cc_recipients_ids'] = list(user_group['recipients_ids'])
+        return [target]
+
     def _notify_get_recipients_groups(self, message, model_description, msg_vals=False):
         # Give access button to users and portal customer as portal is integrated
         # in sale. Customer and portal group have probably no right to see

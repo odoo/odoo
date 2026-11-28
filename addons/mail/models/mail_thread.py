@@ -3478,21 +3478,42 @@ class MailThread(models.AbstractModel):
             recipients_ids = recipients_group['recipients_ids']
 
             # create MailMail for partners
-            for recipients_ids_chunk in split_every(gen_batch_size, recipients_ids):
+            if recipients_group.get('cc_recipients_ids') and recipients_ids:
+                partner = self.env['res.partner'].sudo()
+                to_partners = partner.browse(recipients_ids)
+                cc_partners = partner.browse(recipients_group['cc_recipients_ids'])
                 mail_values = self._notify_by_email_get_final_mail_values(
-                    recipients_ids_chunk,
-                    base_mail_values,
-                    additional_values={'body_html': mail_body}
-                )
+                    [], base_mail_values, additional_values={'body_html': mail_body})
+                mail_values['email_to'] = ','.join(
+                    formataddr((p.name or '', p.email_normalized)) for p in to_partners if p.email_normalized)
+                mail_values['email_cc'] = ','.join(
+                    formataddr((p.name or '', p.email_normalized)) for p in cc_partners if p.email_normalized)
+                headers = ast.literal_eval(mail_values.get('headers') or '{}')
+                headers.pop('X-Msg-To-Add', None)
+                mail_values['headers'] = repr(headers) if headers else False
                 new_email = SafeMail.create(mail_values)
-
-                if new_email and recipients_ids_chunk:
-                    notif_create_values += [{
-                        'mail_mail_id': new_email.id,
-                        'res_partner_id': recipient_id,
-                        **base_notification_values,
-                    } for recipient_id in recipients_ids_chunk]
+                notif_create_values += [{
+                    'mail_mail_id': new_email.id,
+                    'res_partner_id': pid,
+                    **base_notification_values,
+                } for pid in recipients_ids + recipients_group['cc_recipients_ids']]
                 emails += new_email
+            else:
+                for recipients_ids_chunk in split_every(gen_batch_size, recipients_ids):
+                    mail_values = self._notify_by_email_get_final_mail_values(
+                        recipients_ids_chunk,
+                        base_mail_values,
+                        additional_values={'body_html': mail_body}
+                    )
+                    new_email = SafeMail.create(mail_values)
+
+                    if new_email and recipients_ids_chunk:
+                        notif_create_values += [{
+                            'mail_mail_id': new_email.id,
+                            'res_partner_id': recipient_id,
+                            **base_notification_values,
+                        } for recipient_id in recipients_ids_chunk]
+                    emails += new_email
             # create MailMail for email-only recipients
             if recipients_emails:
                 mail_values = self._notify_by_email_get_final_mail_values(
