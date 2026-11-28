@@ -21,6 +21,7 @@ class Website(models.Model):
         compute='_compute_events_app_name',
         store=True,
         readonly=False,
+        copy=False,
         help="This fields holds the Event's Progressive Web App name.")
 
     @api.depends('name')
