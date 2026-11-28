@@ -459,6 +459,69 @@
             </div>
         </t>
     </template>
+    <template id="team_board" name="Team Board">
+        <t t-call="website.layout">
+            <div id="wrap">
+                <div class="oe_structure">
+                    <section class="s_title" data-snippet="s_title">
+                        <div class="container">
+                            <h1>Team Board</h1>
+                            <p>Meet the people building the next chapter.</p>
+                        </div>
+                    </section>
+                    <section class="s_team_board pt48 pb48">
+                        <div class="container">
+                            <h2 class="text-start">Meet Our Team</h2>
+                            <p class="text-start text-muted">The people building the experience you rely on every day.</p>
+
+                            <div class="row">
+                                <div class="s_team_board_col col-lg-3 col-6 pb48">
+                                    <div data-name="Card" class="s_card s_team_board_card o_card_img_top card cursor-pointer">
+                                        <figure class="o_card_img_wrapper mb-0">
+                                            <img class="o_card_img card-img-top" src="/web/image/website.set_avatars_square_md_1"/>
+                                        </figure>
+                                        <div class="card-body">
+                                            <h3 class="card-title o_card_title">Ahmed Gamal</h3>
+                                            <p class="text-muted mb-3 o_job_position">Chief Executive Officer</p>
+                                            <p class="o_card_infos">Ahmed shapes product strategy and keeps execution aligned across teams.</p>
+                                        </div>
+                                        <button type="button" class="o_team_board_card_btn stretched-link p-0 border-0 bg-transparent" aria-haspopup="dialog" aria-label="Contact"/>
+                                    </div>
+                                </div>
+                                <div class="s_team_board_col col-lg-3 col-6 pb48">
+                                    <div data-name="Card" class="s_card s_team_board_card o_card_img_top card cursor-pointer">
+                                        <figure class="o_card_img_wrapper mb-0">
+                                            <img class="o_card_img card-img-top" src="/web/image/website.set_avatars_square_md_2"/>
+                                        </figure>
+                                        <div class="card-body">
+                                            <h3 class="card-title o_card_title">Mich Stark</h3>
+                                            <p class="text-muted mb-3 o_job_position">Chief Commercial Officer</p>
+                                            <p class="o_card_infos">Ahmed shapes product strategy and keeps execution aligned across teams.</p>
+                                        </div>
+                                        <button type="button" class="o_team_board_card_btn stretched-link p-0 border-0 bg-transparent" aria-haspopup="dialog" aria-label="Contact"/>
+                                    </div>
+                                </div>
+                                <div class="s_team_board_col col-lg-3 col-6 pb48">
+                                    <div data-name="Card" class="s_card s_team_board_card o_card_img_top card cursor-pointer">
+                                        <figure class="o_card_img_wrapper mb-0">
+                                            <img class="o_card_img card-img-top" src="/web/image/website.set_avatars_square_md_3"/>
+                                        </figure>
+                                        <div class="card-body">
+                                            <h3 class="card-title o_card_title">Aline Turner</h3>
+                                            <p class="text-muted mb-3 o_job_position">Chief Technical Officer</p>
+                                            <p class="o_card_infos">Ahmed shapes product strategy and keeps execution aligned across teams.</p>
+                                        </div>
+                                        <button type="button" class="o_team_board_card_btn stretched-link p-0 border-0 bg-transparent" aria-haspopup="dialog" aria-label="Contact"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                <div class="oe_structure oe_empty"/>
+            </div>
+        </t>
+    </template>
 
     <!-- Configurator page features -->
     <record id="feature_page_about_us" model="website.configurator.feature">
@@ -584,6 +647,13 @@
             <field name="track">True</field>
             <field name="website_meta_description">This is the privacy policy page of the website</field>
         </record>
+        <record id="team_board_page" model="website.page">
+            <field name="url">/team-board</field>
+            <field name="view_id" ref="team_board"/>
+            <field name="is_published">True</field>
+            <field name="track">True</field>
+            <field name="website_meta_description">This is the team board page of the website</field>
+        </record>
 
         <!-- Default Menu to store module menus for new website -->
         <record id="main_menu" model="website.menu">
@@ -594,6 +664,13 @@
             <field name="website_id" eval="False"/>
             <field name="name">Home</field>
             <field name="page_id" ref="website.homepage_page"/>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence" type="int">10</field>
+        </record>
+        <record id="menu_team_board" model="website.menu">
+            <field name="website_id" eval="False"/>
+            <field name="name">Team Board</field>
+            <field name="page_id" ref="website.team_board_page"/>
             <field name="parent_id" ref="website.main_menu"/>
             <field name="sequence" type="int">10</field>
         </record>
