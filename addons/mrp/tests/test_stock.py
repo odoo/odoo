@@ -297,6 +297,21 @@ class TestWarehouseMrp(common.TestMrpCommon):
         self.assertRecordValues(scrap_move.move_line_ids, [{'lot_id': lot_product_2.id, 'quantity': scrap_qty}])
         self.assertRecordValues(raw_move, [{'quantity': 2, 'state': 'partially_available'}])
 
+    def test_allow_finished_products_while_mo_in_progress(self):
+        """Test that finished products can be scrapped while the MO is in progress,
+        and that the scraps are validated once the MO is marked as done.
+        """
+        production = self.new_mo_laptop()
+        scrap_form = Form.from_action(self.env, production.action_scrap())
+        scrap_form.product_id = self.laptop
+        scrap_form.quantity = 1
+        scrap_form.location_id = self.depot_location
+        scrap = scrap_form.save()
+        scrap.action_scrap()
+        self.assertEqual(scrap.state, 'assigned')
+        production.button_mark_done()
+        self.assertRecordValues(scrap, [{'state': 'done', 'location_id': self.depot_location.id}])
+
     def test_putaway_after_manufacturing_3(self):
         """ This test checks a tracked manufactured product will go to location
         defined in putaway strategy when the production is recorded with
