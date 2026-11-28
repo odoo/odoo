@@ -9,3 +9,6 @@ from . import wizards
 def _l10n_eg_edi_eta_post_init(env):
     """Post init hook to set the default invoicing threshold for Egypt."""
     env['ir.config_parameter'].sudo().set_float('l10n_eg_edi_eta.invoicing_threshold', 150000.0)
+    env['res.config.settings'].create({
+        'group_uom': True,  # set units of measure to True by default in eg
+    }).execute()
