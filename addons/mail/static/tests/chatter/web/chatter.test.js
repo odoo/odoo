@@ -48,7 +48,14 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { DELAY_FOR_SPINNER } from "@mail/chatter/web/chatter_patch";
-import { click as clickField, edit, queryFirst, waitFor, waitForNone } from "@odoo/hoot-dom";
+import {
+    animationFrame,
+    click as clickField,
+    edit,
+    queryFirst,
+    waitFor,
+    waitForNone,
+} from "@odoo/hoot-dom";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -1245,7 +1252,13 @@ test("loading more messages excludes the known messages older than the loaded on
 test("fetching new messages after posting in an empty chatter loads them from the oldest", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Frodo" });
-    listenStoreFetch("/mail/thread/messages", { logParams: ["/mail/thread/messages"] });
+    let postFetch;
+    listenStoreFetch("/mail/thread/messages", {
+        logParams: ["/mail/thread/messages"],
+        async onRpc() {
+            await postFetch?.promise;
+        },
+    });
     await start();
     await openFormView("res.partner", partnerId);
     await waitFor(".o-mail-Thread:has(:text('No messages yet.')):count(1)");
@@ -1253,6 +1266,7 @@ test("fetching new messages after posting in an empty chatter loads them from th
     await waitStoreFetch([
         ["/mail/thread/messages", { ...threadParams, fetch_params: { limit: 30 } }],
     ]);
+    postFetch = Promise.withResolvers();
     // Posted by someone else while the chatter is open: not received from the bus.
     const messageIds = [];
     for (let i = 0; i < 31; i++) {
@@ -1268,6 +1282,10 @@ test("fetching new messages after posting in an empty chatter loads them from th
     await click("button:text('Send message')");
     await insertTextInComposer(".o-mail-Composer", "Own message");
     await click(".o-mail-Composer button[aria-label='Send']:enabled");
+    await waitFor(".o-mail-Message:has(:text('Own message')):count(1)");
+    await animationFrame();
+    await animationFrame();
+    postFetch.resolve();
     await waitFor(".o-mail-Message:count(32)");
     await waitFor(".o-mail-Message:eq(0):has(:text('Own message')):count(1)");
     await waitFor(".o-mail-Message:eq(31):has(:text('Posted in between 0')):count(1)");
