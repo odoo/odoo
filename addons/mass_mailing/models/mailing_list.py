@@ -281,13 +281,19 @@ class MailingList(models.Model):
         target_fields=_get_key(SQL('target_contact')),
         target_list_id=self.id,
         )
-        # delete all contacts that were considered "duplicates" in source lists
-        # if not used in any other list
+        # delete all contacts that were considered "duplicates" in source lists,
+        # i.e. that match a contact now in the destination list, if not used in any other list
         unlink_query = SQL("""
             DELETE FROM mailing_contact AS src_contact
                   USING mailing_subscription as src_sub
                   WHERE src_sub.contact_id = src_contact.id
                     AND src_sub.list_id IN %(src_list_ids)s
+                    AND (%(src_fields)s) IN (
+                        SELECT %(target_fields)s
+                          FROM mailing_subscription target_sub
+                          JOIN mailing_contact target_contact ON target_sub.contact_id = target_contact.id
+                         WHERE target_sub.list_id = %(target_list_id)s
+                    )
                     AND src_contact.id NOT IN (
                         SELECT other_contact.id
                           FROM mailing_subscription other_sub
@@ -295,7 +301,10 @@ class MailingList(models.Model):
                          WHERE other_sub.list_id NOT IN %(src_list_ids)s
                     )
         """,
+        src_fields=_get_key(SQL('src_contact')),
         src_list_ids=tuple(src_lists.ids),
+        target_fields=_get_key(SQL('target_contact')),
+        target_list_id=self.id,
         )
         self.env.cr.execute(update_query)
         self.env.cr.execute(unlink_query)
@@ -318,7 +327,7 @@ class MailingList(models.Model):
         """Return a tuple of lists of models to flush and SQL condition."""
         return (
             [self.env['mail.blacklist']],
-            SQL("src_contact.email_normalized NOT IN (select email from mail_blacklist where active = TRUE)")
+            SQL("(src_contact.email_normalized IS NULL OR src_contact.email_normalized NOT IN (select email from mail_blacklist where active = TRUE))")
         )
 
     def _mailing_list_get_select_fields(self):
