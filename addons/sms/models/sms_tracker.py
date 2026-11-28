@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import api, fields, models
+from odoo.tools import SQL
 
 
 class SmsTracker(models.Model):
@@ -35,6 +36,29 @@ class SmsTracker(models.Model):
         'unique(sms_uuid)',
         'A record for this UUID already exists',
     )
+
+    def _lock_tracking_records(self):
+        """Lock the records updated from the SMS provider responses.
+
+        This should be done before contacting the provider. Delivery reports
+        for a batch may be received while it is being sent: they update the same
+        records and must wait for the batch, otherwise the sending transaction
+        can fail on a deadlock or a serialization failure after the SMS have
+        been sent, and the whole batch is sent again.
+
+        Overrides should call super() first to keep a consistent locking order.
+        """
+        self._lock_records(self.mail_notification_id)
+
+    @api.model
+    def _lock_records(self, records):
+        """ Wait for an update lock on ``records``, still allowing other
+        transactions to create records referencing them. """
+        if records:
+            self.env.execute_query(SQL(
+                "SELECT 1 FROM %s WHERE id IN %s ORDER BY id FOR NO KEY UPDATE",
+                SQL.identifier(records._table), tuple(records.ids),
+            ))
 
     def _action_update_from_provider_error(self, provider_error):
         """
