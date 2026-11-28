@@ -54,12 +54,11 @@
             <field name="description">Comment an answer or a question</field>
             <field name="computation_mode">count</field>
             <field name="display_mode">boolean</field>
-            <field name="model_id" ref="mail.model_mail_message"/>
+            <field name="model_id" ref="website_forum.model_forum_post_comment"/>
             <field name="condition">higher</field>
-            <field name="domain" eval="[('message_type', '=', 'comment'), ('subtype_id', '=', ref('mail.mt_comment')), ('model', '=', 'forum.post')]"/>
             <field name="batch_mode">True</field>
-            <field name="batch_distinctive_field" ref="mail.field_mail_message__author_id"/>
-            <field name="batch_user_expression">user.partner_id.id</field>
+            <field name="batch_distinctive_field" ref="website_forum.field_forum_post_comment__create_uid"/>
+            <field name="batch_user_expression">user.id</field>
         </record>
         <record model="gamification.challenge" id="challenge_commentator">
             <field name="name">Commentator</field>
