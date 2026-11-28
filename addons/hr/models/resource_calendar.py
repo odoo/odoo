@@ -30,10 +30,7 @@ class ResourceCalendar(models.Model):
 
     def _compute_employees_count(self):
         employees_per_calendar = dict(self.env['hr.version']._read_group(
-            domain=[
-                ('company_id', 'child_of', self.mapped('company_id').ids),
-                ('resource_calendar_id', 'in', self.ids),
-            ],
+            domain=[('resource_calendar_id', 'in', self.ids)],
             groupby=['resource_calendar_id'],
             aggregates=['employee_id:count_distinct'],
         ))

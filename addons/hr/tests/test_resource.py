@@ -353,3 +353,14 @@ class TestResource(TestHrCommon):
         arch = self.env['resource.calendar'].with_user(user).get_view(
             self.env.ref('resource.resource_calendar_form').id)['arch']
         self.assertNotIn('employees_count', arch)
+
+    def test_employees_count_of_calendar_without_company(self):
+        """ A working schedule without company is shared across all the companies:
+            the employees using it are counted whatever their company. """
+        calendar = self.env['resource.calendar'].create({'name': 'Shared calendar', 'company_id': False})
+        employees = self.env['hr.employee'].create([
+            {'name': 'Employee 1', 'resource_calendar_id': calendar.id},
+            {'name': 'Employee 2', 'resource_calendar_id': calendar.id},
+        ])
+        self.assertEqual(employees.resource_calendar_id, calendar)
+        self.assertEqual(calendar.employees_count, 2)
