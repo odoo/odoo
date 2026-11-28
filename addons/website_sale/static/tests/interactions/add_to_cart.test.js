@@ -1,7 +1,10 @@
+import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 import { expect, test } from "@odoo/hoot";
 import { CartService } from "@website_sale/js/cart_service";
 import { getService, onRpc, patchWithCleanup, mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { WebClient } from "@web/webclient/webclient";
+
+defineMailModels();
 
 async function testAddToCartHelper(quantity = 0) {
     onRpc("/shop/cart/add", () => ({
