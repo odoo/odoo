@@ -14,7 +14,7 @@ class ResPartnerBank(models.Model):
     bank_country = fields.Many2one(related='bank_id.country', readonly=False)
     bank_email = fields.Char(related='bank_id.email', readonly=False)
     bank_phone = fields.Char(related='bank_id.phone', readonly=False)
-    employee_id = fields.Many2many('hr.employee', 'Employee', compute="_compute_employee_id", search="_search_employee_id")
+    employee_id = fields.Many2many('hr.employee', string='Employee', compute="_compute_employee_id", search="_search_employee_id")
     employee_salary_amount = fields.Float(string='Salary Allocation', compute='_compute_salary_amount', digits=(16, 4), readonly=True, store=False)
     employee_salary_amount_is_percentage = fields.Boolean(compute='_compute_salary_amount', readonly=True, store=False)
     currency_symbol = fields.Char(related='currency_id.symbol')
@@ -40,13 +40,12 @@ class ResPartnerBank(models.Model):
         self.ensure_one()
         return self.employee_id.action_open_allocation_wizard()
 
-    @api.depends('partner_id')
+    @api.depends('partner_id.employee_ids.bank_account_ids')
     def _compute_employee_id(self):
         for bank in self:
-            if bank.partner_id.employee:
-                bank.employee_id = bank.partner_id.employee_ids.filtered(lambda e: e.company_id in self.env.companies)[:1]
-            else:
-                bank.employee_id = False
+            candidates = bank.partner_id.employee_ids.filtered(
+                lambda e: e.company_id in self.env.companies and bank in e.bank_account_ids)
+            bank.employee_id = candidates[0] if candidates else False
 
     def _compute_display_name(self):
         account_employee = self.browse()
