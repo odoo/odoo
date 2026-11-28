@@ -854,6 +854,46 @@ class TestPoSBasicConfig(TestPoSCommon):
         self.assertEqual(session.cash_register_balance_end_real, amount_paid)
         self.assertEqual(self.config.last_session_closing_cash, amount_paid)
 
+    def test_close_session_with_only_future_preset_paid_orders(self):
+        preset = self.env['pos.preset'].create({'name': 'Delivery'})
+        future = fields.Datetime.now() + timedelta(days=1)
+
+        def create_order(lines, payments, state=None):
+            order = self._create_orders([{
+                'pos_order_lines_ui_args': lines,
+                'payments': payments,
+                'pos_order_ui_args': {'state': state} if state else {},
+            }])
+            order = next(iter(order.values()))
+            order.write({'preset_id': preset.id, 'preset_time': future})
+            return order
+
+        self.open_new_session(0)
+        session = self.pos_session
+        paid = create_order([(self.product1, 1)], [(self.bank_pm1, 10)])
+        draft = create_order([(self.product1, 1)], [], state='draft')
+        self.assertTrue(session.close_session_from_ui()['successful'])
+        self.assertEqual(session.state, 'closed')
+        self.assertTrue(session.move_id)
+        self.assertEqual(paid.state, 'done')
+        self.assertEqual(draft.state, 'draft')
+        self.assertFalse(draft.session_id)
+
+        self.open_new_session(0)
+        session = self.pos_session
+        refund = create_order([(self.product1, -1)], [(self.bank_pm1, -10)])
+        self.assertTrue(session.close_session_from_ui()['successful'])
+        self.assertTrue(session.move_id)
+        self.assertEqual(refund.state, 'done')
+
+        self.open_new_session(0)
+        session = self.pos_session
+        draft = create_order([(self.product1, 1)], [], state='draft')
+        self.assertTrue(session.close_session_from_ui()['successful'])
+        self.assertEqual(session.state, 'closed')
+        self.assertFalse(session.move_id)
+        self.assertEqual(draft.state, 'draft')
+
     def test_start_balance_with_two_pos(self):
         """ When having several POS with cash control, this tests ensures that each POS has its correct opening amount """
 
