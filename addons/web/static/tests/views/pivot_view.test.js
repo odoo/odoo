@@ -532,6 +532,13 @@ test("clicking on a cell triggers a doAction", async () => {
 
     mockService("action", {
         doAction(action) {
+            const expectedViews = [
+                [false, "list"],
+                [2, "form"],
+            ];
+            if (isSmall()) {
+                expectedViews.unshift([5, "kanban"]);
+            }
             expect(action).toEqual({
                 context: {
                     lang: "en",
@@ -546,11 +553,7 @@ test("clicking on a cell triggers a doAction", async () => {
                 search_view_id: [67, "search"],
                 target: "current",
                 type: "ir.actions.act_window",
-                view_mode: "list",
-                views: [
-                    [false, "list"],
-                    [2, "form"],
-                ],
+                views: expectedViews,
             });
             return Promise.resolve(true);
         },
@@ -578,6 +581,73 @@ test("clicking on a cell triggers a doAction", async () => {
 
     expect("table").toHaveClass("o_enable_linking");
     await contains(".o_pivot_cell_value:eq(1)").click(); // should trigger a do_action
+});
+
+test("clicking on a cell opens list if the action has no kanban view", async () => {
+    expect.assertions(1);
+    Partner._views["form,2"] = `<form/>`;
+
+    mockService("action", {
+        doAction(action) {
+            expect(action.views).toEqual([
+                [false, "list"],
+                [2, "form"],
+            ]);
+            return Promise.resolve(true);
+        },
+    });
+
+    await mountView({
+        type: "pivot",
+        resModel: "partner",
+        arch: `
+            <pivot>
+                <field name="product_id" type="row"/>
+                <field name="foo" type="measure"/>
+            </pivot>`,
+        config: {
+            views: [
+                [2, "form"],
+                [false, "list"],
+                [false, "pivot"],
+            ],
+        },
+    });
+
+    await contains(".o_pivot_cell_value:eq(1)").click();
+});
+
+test("clicking on a cell renders kanban on mobile and list on desktop (real action service)", async () => {
+    Partner._views = {
+        pivot: `
+            <pivot>
+                <field name="product_id" type="row"/>
+                <field name="foo" type="measure"/>
+            </pivot>`,
+        kanban: `<kanban><templates><t t-name="card"><field name="foo"/></t></templates></kanban>`,
+        list: `<list><field name="foo"/></list>`,
+        form: `<form><field name="foo"/></form>`,
+        search: `<search/>`,
+    };
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        res_model: "partner",
+        type: "ir.actions.act_window",
+        mobile_view_mode: "pivot",
+        views: [
+            [false, "pivot"],
+            [false, "kanban"],
+            [false, "list"],
+        ],
+    });
+    expect(".o_pivot_view").toHaveCount(1);
+
+    await contains(".o_pivot_cell_value:eq(1)").click();
+    expect(".o_kanban_view").toHaveCount(isSmall() ? 1 : 0);
+    expect(".o_list_view").toHaveCount(isSmall() ? 0 : 1);
+    const recordSelector = isSmall() ? ".o_kanban_record:not(.o_kanban_ghost)" : ".o_data_cell";
+    expect(queryAllTexts(recordSelector)).toEqual(["12"]);
 });
 
 test.tags("desktop");
@@ -3867,6 +3937,13 @@ test("middle clicking on a cell triggers a doAction", async () => {
 
     mockService("action", {
         doAction(action, options) {
+            const expectedViews = [
+                [false, "list"],
+                [2, "form"],
+            ];
+            if (isSmall()) {
+                expectedViews.unshift([5, "kanban"]);
+            }
             expect(action).toEqual({
                 context: {
                     lang: "en",
@@ -3881,11 +3958,7 @@ test("middle clicking on a cell triggers a doAction", async () => {
                 search_view_id: [67, "search"],
                 target: "current",
                 type: "ir.actions.act_window",
-                view_mode: "list",
-                views: [
-                    [false, "list"],
-                    [2, "form"],
-                ],
+                views: expectedViews,
             });
             expect(options).toEqual({
                 newWindow: true,
