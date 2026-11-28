@@ -6,6 +6,16 @@
             <field name="model">account.move</field>
             <field name="inherit_id" ref="account.view_move_form"/>
             <field name="arch" type="xml">
+                <div name="journal_div" position="after">
+                    <label for="l10n_sa_invoice_type"
+                           string="Invoice Type"
+                           invisible="country_code != 'SA' or move_type not in ('out_invoice', 'out_refund')"/>
+                    <div name="l10n_sa_invoice_type_div"
+                         class="d-flex"
+                         invisible="country_code != 'SA' or move_type not in ('out_invoice', 'out_refund')">
+                        <field name="l10n_sa_invoice_type" style="width: 150px;" readonly="state != 'draft'"/>
+                    </div>
+                </div>
                 <group name="sale_info_group" position="inside">
                     <field name="l10n_sa_reason" invisible="not l10n_sa_show_reason" readonly="state != 'draft'"/>
                 </group>
@@ -21,7 +31,7 @@
                            invisible="not show_delivery_date or country_code != 'SA'"
                            readonly="state != 'draft'"
                            help="Date when the supply of the goods and services is performed."/>
-                    <field name="l10n_sa_confirmation_datetime" invisible="country_code != 'SA' or move_type not in ('out_invoice', 'out_refund')" />
+                    <field name="l10n_sa_confirmation_datetime" invisible="country_code != 'SA' or move_type not in ('out_invoice', 'out_refund') or l10n_sa_invoice_type == 'commercial'" />
                 </xpath>
             </field>
         </record>

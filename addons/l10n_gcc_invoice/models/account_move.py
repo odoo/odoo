@@ -13,6 +13,8 @@ except ImportError:
     _logger.warning("The num2words python library is not installed, amount-to-text features won't be fully available.")
     num2words = None
 
+EXCLUDE_IF_NOT_REGISTERED = {'AE', 'SA'}
+
 
 class AccountMove(models.Model):
     _inherit = 'account.move'
@@ -21,9 +23,20 @@ class AccountMove(models.Model):
 
     def _get_name_invoice_report(self):
         self.ensure_one()
-        if self.company_id.country_id and 'GCC' in self.company_id.country_id.country_group_codes:
+        if (
+            not self._l10n_gcc_is_commercial_invoice()
+            and self.company_id.country_id
+            and "GCC" in self.company_id.country_id.country_group_codes
+        ):
             return 'l10n_gcc_invoice.l10n_gcc_report_invoice_document'
         return super()._get_name_invoice_report()
+
+    def _l10n_gcc_is_commercial_invoice(self):
+        """A commercial invoice is not a tax document: it is printed with the standard invoice report.
+        By default, it is the case for the companies not registered for VAT in the countries requiring it.
+        """
+        self.ensure_one()
+        return not self.company_id.vat and self.company_id.country_id.code in EXCLUDE_IF_NOT_REGISTERED
 
     def _l10n_gcc_get_invoice_title(self):
         """To be overriden by inheriting modules implementing a custom invoice title"""
