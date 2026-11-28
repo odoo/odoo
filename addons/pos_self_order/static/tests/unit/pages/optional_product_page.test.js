@@ -104,3 +104,34 @@ test("optional product UI behavior for self-order", async () => {
     await Utils.clickBtn("Close");
     await Utils.page.isLanding();
 });
+
+test("optional products not available in self order are not proposed", async () => {
+    const store = await setupSelfPosEnv("kiosk", "counter", "each", {}, true);
+    store.config.use_presets = false;
+    const order = store.currentOrder;
+    const product = store.models["product.template"].get(5);
+    product.pos_optional_product_ids = [23]; // 'Fries'
+    store.models["product.template"].get(23).self_order_available = false;
+
+    Utils.clickBtn("Order Now");
+    await Utils.page.isProductList();
+    await Utils.clickProduct("Test");
+    await animationFrame();
+    expect(".o_self_optional_product_page").toHaveCount(0);
+    expect(".o_self_product_list_page").toHaveCount(1);
+    expect(order.lines).toHaveLength(1);
+    expect(order.lines[0].product_id.id).toBe(5);
+});
+
+test("optional product page without available options does not crash", async () => {
+    const store = await setupSelfPosEnv();
+    const product = store.models["product.template"].get(5);
+    product.update({ pos_optional_product_ids: [8] });
+    store.models["product.template"].get(8).self_order_available = false;
+
+    const comp = await mountWithCleanup(OptionalProductPage, {
+        props: { productTemplate: product },
+    });
+    expect(comp.optionalProducts).toHaveLength(0);
+    expect(comp.state.optionalProductQtyById).toEqual({});
+});

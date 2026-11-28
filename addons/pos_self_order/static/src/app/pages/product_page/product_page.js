@@ -149,7 +149,10 @@ export class ProductPage extends Component {
         );
 
         const historyState = history.state || {};
-        if (this.productTemplate.pos_optional_product_ids.length && !historyState.redirectPage) {
+        if (
+            this.selfOrder.getOptionalProducts(this.productTemplate).length &&
+            !historyState.redirectPage
+        ) {
             return this.router.navigate("optional_product", { id: this.productTemplate.id });
         }
 

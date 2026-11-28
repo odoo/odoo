@@ -17,14 +17,13 @@ export class OptionalProductPage extends Component {
         this.selfOrder = useSelfOrder();
         this.router = useService("router");
 
-        if (!this.productTemplate || !this.optionalProducts.length) {
-            this.goBack();
-            return;
-        }
-
         this.state = proxy({
             optionalProductQtyById: history.state?.optionalProductQtys || {},
         });
+
+        if (!this.productTemplate || !this.optionalProducts.length) {
+            this.goBack();
+        }
     }
 
     get productTemplate() {
@@ -32,9 +31,7 @@ export class OptionalProductPage extends Component {
     }
 
     get optionalProducts() {
-        return this.productTemplate.pos_optional_product_ids.filter(
-            (product) => product.self_order_available && this.selfOrder.isProductAvailable(product)
-        );
+        return this.selfOrder.getOptionalProducts(this.productTemplate);
     }
 
     get isOptionalProductSelected() {

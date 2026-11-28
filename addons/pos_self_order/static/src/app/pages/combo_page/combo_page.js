@@ -599,7 +599,10 @@ export class ComboPage extends Component {
         );
         this.selfOrder.applyPendingComboConversion();
         const historyState = history.state || {};
-        if (productTemplate.pos_optional_product_ids.length && !historyState.redirectPage) {
+        if (
+            this.selfOrder.getOptionalProducts(productTemplate).length &&
+            !historyState.redirectPage
+        ) {
             this.router.navigate("optional_product", { id: productTemplate.id });
             return;
         }
