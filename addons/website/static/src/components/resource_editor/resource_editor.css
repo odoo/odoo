@@ -1,5 +1,6 @@
 .o_resource_editor {
     --o-we-ace-color: #2F3129;
+    --o-we-ace-accent-color: #66d9ef;
 
     background: var(--o-we-ace-color);
     color: white;
@@ -42,11 +43,61 @@
         .o_resource_editor_resource_info {
             color: #ebecee;
         }
+        /* Use the accent color for links. The default link color has a bad contrast on the dark background. */
+        a, .btn-link {
+            color: var(--o-we-ace-accent-color);
+        }
+        .o_resource_editor_modified_by {
+            margin-left: calc(var(--o-bs-grid-gutter-width) / 4);
+            vertical-align: baseline;
+        }
     }
 
     #resource-editor {
         flex: 1 1 auto;
+
+        .o_revealed_row {
+            position: absolute;
+            background-color: color-mix(in srgb, var(--o-we-ace-accent-color) 20%, transparent);
+        }
         .ace_gutter {
+            .ace_gutter-cell.o_gutter_marker {
+                cursor: pointer;
+
+                &:not(.o_error)::before {
+                    position: absolute;
+                    top: 50%;
+                    inset-inline-start: 3px;
+                    transform: translateY(-50%);
+                    min-width: 14px;
+                    height: 14px;
+                    padding: 0 3px;
+                    border-radius: 7px;
+                    background-color: var(--o-we-ace-accent-color);
+                    color: var(--o-we-ace-color);
+                    font-size: 9px;
+                    font-weight: bold;
+                    line-height: 14px;
+                    text-align: center;
+                }
+                /* See `updateMarkers` in code_editor_with_gutter_markers.js. */
+                &.o_gutter_marker_1:not(.o_error)::before { content: "1"; }
+                &.o_gutter_marker_2:not(.o_error)::before { content: "2"; }
+                &.o_gutter_marker_3:not(.o_error)::before { content: "3"; }
+                &.o_gutter_marker_4:not(.o_error)::before { content: "4"; }
+                &.o_gutter_marker_5:not(.o_error)::before { content: "5"; }
+                &.o_gutter_marker_6:not(.o_error)::before { content: "6"; }
+                &.o_gutter_marker_7:not(.o_error)::before { content: "7"; }
+                &.o_gutter_marker_8:not(.o_error)::before { content: "8"; }
+                &.o_gutter_marker_9:not(.o_error)::before { content: "9"; }
+                &.o_gutter_marker_10:not(.o_error)::before { content: "9+"; }
+                &.o_gutter_marker_target:not(.o_error)::before {
+                    content: "\2192";
+                    background-color: transparent;
+                    color: var(--o-we-ace-accent-color);
+                    font-size: 12px;
+                }
+            }
             .ace_gutter-cell.o_error {
                 position: relative;
 

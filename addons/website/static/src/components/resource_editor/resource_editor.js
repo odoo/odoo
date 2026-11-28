@@ -1,21 +1,35 @@
-import { CodeEditor } from "@web/core/code_editor/code_editor";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { CheckboxItem } from "@web/core/dropdown/checkbox_item";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
+import { formatList } from "@web/core/l10n/utils/format_list";
 import { rpc } from "@web/core/network/rpc";
 import { SelectMenu } from "@web/core/select_menu/select_menu";
 import { user } from "@web/core/user";
 import { sortBy } from "@web/core/utils/arrays";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { useService } from "@web/core/utils/hooks";
+import { useDebounced } from "@web/core/utils/timing";
+import { usePopover } from "@web/core/popover/popover_hook";
 
+import { locateOperations } from "./operation_map";
+import { CodeEditorWithGutterMarkers } from "./code_editor_with_gutter_markers";
 import { ResourceEditorWarningOverlay } from "./resource_editor_warning";
-import { checkSCSS, checkXML, formatXML } from "./utils";
+import {
+    checkSCSS,
+    checkXML,
+    findOperationTarget,
+    formatXML,
+    getElementRows,
+    getOperationRows,
+    getOperationTargetRows,
+    parseTargetArch,
+} from "./utils";
 
 import {
     Component,
+    computed,
     onWillUnmount,
     onWillStart,
     useProps,
@@ -33,10 +47,44 @@ const BUNDLES_RESTRICTION = [
     "web.assets_frontend_lazy",
 ];
 
+const T_OPERATIONS_POPOVER_ITEM = t.object({
+    view: t.object(),
+    row: t.number().optional(),
+    onSelect: t.function(),
+});
+
+/**
+ * Popover component shown when the gutter icon is clicked. Based on the
+ * context, it can show:
+ * 1. The list of views that xpath the current line
+ * 2. The list of views xpathed by the current line
+ * Case 2 could have more than one entry if a line contains multiple xpath
+ * elements (bad formatting, but it costs nothing to cover for this case).
+ * Case 1 and 2 could coexist on the same line if an xpath element is target
+ * of another xpath from another view.
+ */
+class ResourceOperationsPopover extends Component {
+    static template = "website.ResourceOperationsPopover";
+    props = useProps({
+        row: t.number(),
+        modifiedBy: t.array(T_OPERATIONS_POPOVER_ITEM),
+        modifies: t.array(T_OPERATIONS_POPOVER_ITEM),
+        close: t.function().optional(),
+    });
+
+    getModifiedByTitle() {
+        return _t("Line %s is modified by:", this.props.row);
+    }
+
+    getModifiesTitle() {
+        return _t("Line %s modifies:", this.props.row);
+    }
+}
+
 export class ResourceEditor extends Component {
     static components = {
         ResourceEditorWarningOverlay,
-        CodeEditor,
+        CodeEditorWithGutterMarkers,
         Dropdown,
         CheckboxItem,
         DropdownItem,
@@ -57,6 +105,26 @@ export class ResourceEditor extends Component {
         this.dialog = useService("dialog");
 
         this.keepLast = new KeepLast();
+
+        this.operationsPopover = usePopover(ResourceOperationsPopover);
+        // allLocatedOperations lists the xpaths identified in *every* view
+        // available in the editor (used to build the "modified by view X" and
+        // "modifies view X" hints).
+        this.allLocatedOperations = signal([]);
+        this.operationsOutdated = signal(false);
+        // debounced to avoid recalculating while the user is typing
+        this.debouncedUpdateLocatedOperations = useDebounced(
+            () => this.updateLocatedOperations(),
+            300
+        );
+        this.currentParsedArch = computed(() => this.computeCurrentParsedArch());
+        this.incomingOperations = computed(() => this.computeIncomingOperations());
+        this.outgoingOperations = computed(() => this.computeOutgoingOperations());
+        this.codeEditorMarkers = computed(() => this.computeCodeEditorMarkers());
+        this.hasUnsavedChanges = computed(() => this.computeHasUnsavedChanges());
+        // the row to reveal in the code editor (see `CodeEditorWithGutterMarkers`).
+        this.revealRow = signal(null);
+        this.aceEditor = null;
 
         this.viewKey =
             this.website.pageDocument &&
@@ -142,6 +210,217 @@ export class ResourceEditor extends Component {
         }
     }
 
+    /**
+     * @returns {{label: string, tooltip: string}|null} how the current view
+     *  relates to the current website: a base view, a copy of a base view
+     *  for the website (COW), or a view which only exists on the website.
+     *  Null if the current resource is not a view.
+     */
+    getWebsiteStatusInfo() {
+        const resource = this.state.currentResource;
+        if (this.state.type !== "xml" || !resource) {
+            return null;
+        }
+        switch (resource.website_status) {
+            case "base":
+                return {
+                    label: _t("Base view"),
+                    tooltip: _t(
+                        "Saving this view creates a copy (COW) that only applies to the current website. The base view is not changed."
+                    ),
+                };
+            case "copy":
+                return {
+                    label: _t("Website copy (COW) of a base view"),
+                    tooltip: _t(
+                        "This copy only applies to the current website. Saving changes it, not the base view."
+                    ),
+                };
+            case "website":
+                return {
+                    label: _t("Website-only view"),
+                    tooltip: _t("This view only exists on the current website."),
+                };
+            default:
+                return null;
+        }
+    }
+
+    /**
+     * @returns {{root: Element, operations: Element[]|null}|null} the parsed
+     *  arch of the current view (see `parseTargetArch`), or null if the
+     *  current resource is not a view or its arch is not well-formed
+     */
+    computeCurrentParsedArch() {
+        const resource = this.state.currentResource;
+        if (this.state.type !== "xml" || !resource) {
+            return null;
+        }
+        return parseTargetArch(resource);
+    }
+
+    /**
+     * The operations of other views on the current view.
+     * `targetRow` is 0-indexed. Null if the target is not found (e.g.: we
+     * parsed an xpath targetting this view, but the target element could not
+     * be located). Undefined if the arch is not well-formed or if the flag
+     * `operationsOutdated` is true.
+     *
+     * @returns {Object[]}
+     */
+    computeIncomingOperations() {
+        const resource = this.state.currentResource;
+        if (this.state.type !== "xml" || !resource) {
+            return [];
+        }
+        const incoming = this.allLocatedOperations().filter(
+            ({ targetId }) => targetId === resource.id
+        );
+        if (!incoming.length) {
+            // Avoid parsing if no operations
+            return incoming;
+        }
+        if (this.operationsOutdated()) {
+            return incoming;
+        }
+        const parsed = this.currentParsedArch();
+        if (!parsed) {
+            return incoming;
+        }
+        const targets = incoming.map(({ operation }) =>
+            findOperationTarget(parsed.root, parsed.operations, operation)
+        );
+        const targetRows = getElementRows(resource.arch, parsed.root, targets);
+        return incoming.map((locatedOperation, index) => ({
+            ...locatedOperation,
+            targetRow: targetRows[index],
+        }));
+    }
+
+    /**
+     * The operations of the current view on other views.
+     * `operationRow` is 0-indexed. Undefined if the arch is not well-formed or
+     * if the flag `operationsOutdated` is true.
+     *
+     * @returns {Object[]}
+     */
+    computeOutgoingOperations() {
+        const resource = this.state.currentResource;
+        if (this.state.type !== "xml" || !resource) {
+            return [];
+        }
+        const outgoing = this.allLocatedOperations().filter(({ view }) => view.id === resource.id);
+        if (!outgoing.length) {
+            // Avoid parsing if no operations
+            return outgoing;
+        }
+        // If `operationsOutdated` is true, we can't trust the `index` from
+        // `locateOperations` because its content may not be correct anymore.
+        // In this case, we don't return the row indexes.
+        if (this.operationsOutdated()) {
+            return outgoing;
+        }
+        const parsed = this.currentParsedArch();
+        if (!parsed) {
+            return outgoing;
+        }
+        const operations = outgoing.map(({ index }) => parsed.operations?.[index] ?? null);
+        const operationRows = getElementRows(resource.arch, parsed.root, operations);
+        return outgoing.map((locatedOperation, index) => ({
+            ...locatedOperation,
+            operationRow: operationRows[index],
+        }));
+    }
+
+    /**
+     * The gutter markers (passed to `CodeEditorWithGutterMarkers`) on the rows
+     * that are changed by other views or change other views. Null while the
+     * arch is not well-formed or the located operations are outdated.
+     */
+    computeCodeEditorMarkers() {
+        const incoming = this.incomingOperations();
+        const outgoing = this.outgoingOperations();
+        if (!incoming.length && !outgoing.length) {
+            return [];
+        }
+        if (this.operationsOutdated() || !this.currentParsedArch()) {
+            return null;
+        }
+        const markersByRow = new Map();
+        const getMarker = (row) => {
+            if (!markersByRow.has(row)) {
+                markersByRow.set(row, { row, viewIds: new Set(), target: false });
+            }
+            return markersByRow.get(row);
+        };
+        for (const { view, targetRow } of incoming) {
+            if (targetRow !== null) {
+                getMarker(targetRow).viewIds.add(view.id);
+            }
+        }
+        for (const { operationRow } of outgoing) {
+            if (operationRow !== null) {
+                getMarker(operationRow).target = true;
+            }
+        }
+        return sortBy(
+            [...markersByRow.values()].map(({ row, viewIds, target }) => ({
+                row,
+                count: viewIds.size,
+                target,
+            })),
+            "row"
+        );
+    }
+
+    /**
+     * @returns {{view: Object, operations: Object[]}[]} the views with
+     *  operations on the current resource, sorted by name.
+     */
+    getIncomingViews() {
+        const operationsByView = Map.groupBy(this.incomingOperations(), ({ view }) => view);
+        return [...operationsByView]
+            .map(([view, operations]) => ({ view, operations }))
+            .sort((a, b) => a.view.name.localeCompare(b.view.name));
+    }
+
+    /**
+     * @returns {string}
+     */
+    getModifiedByLabel() {
+        const count = this.getIncomingViews().length;
+        return count === 1 ? _t("Modified by 1 view") : _t("Modified by %s views", count);
+    }
+
+    /**
+     * Describe where ``operations`` change the current arch. Return a string
+     * that lists up to 3 target line numbers, followed by "and x more".
+     *
+     * @param {Object[]} operations items of `incomingOperations`
+     * @returns {string} empty while the rows are unknown (see
+     *  `incomingOperations`)
+     */
+    getOperationRowsLabel(operations) {
+        const rows = operations.map(({ targetRow }) => targetRow);
+        if (rows.includes(undefined)) {
+            return "";
+        }
+        const lines = [...new Set(rows.filter((row) => row !== null).map((row) => row + 1))].sort(
+            (a, b) => a - b
+        );
+        if (!lines.length) {
+            return "";
+        }
+        if (lines.length === 1) {
+            return _t("line %s", lines[0]);
+        }
+        const shownLines = lines.slice(0, 3).map(String);
+        if (lines.length > shownLines.length) {
+            shownLines.push(_t("%s more", lines.length - shownLines.length));
+        }
+        return _t("lines %s", formatList(shownLines));
+    }
+
     get selectMenuProps() {
         const props = {
             onSelect: (value) => {
@@ -172,6 +451,18 @@ export class ResourceEditor extends Component {
     // -------------------------------------------------------------------------
     // Methods
     // -------------------------------------------------------------------------
+
+    /**
+     * Tell if a resource has unsaved changes.
+     *
+     * @returns {boolean}
+     */
+    computeHasUnsavedChanges() {
+        const { xml, js, scss } = this.state.resources;
+        return [xml, js, scss].some((resources) =>
+            Object.values(resources).some((resource) => resource.dirty)
+        );
+    }
 
     /**
      * Checks resource is customized or not.
@@ -256,6 +547,9 @@ export class ResourceEditor extends Component {
             });
             this.state.sortedXML = sortedXML;
 
+            this.allLocatedOperations.set(locateOperations(this.state.resources.xml));
+            this.operationsOutdated.set(false);
+
             // Compute labels
             Object.values(this.state.resources.xml).forEach((view) => {
                 view.label = `${"-".repeat(view.level)} ${view.name}`;
@@ -293,6 +587,18 @@ export class ResourceEditor extends Component {
                 }
             });
         }
+    }
+
+    /**
+     * Locates the operations again, e.g., after an edit of a view.
+     */
+    updateLocatedOperations() {
+        const resource = this.state.currentResource;
+        if (resource?.type !== "xml" || !parseTargetArch(resource)) {
+            return;
+        }
+        this.allLocatedOperations.set(locateOperations(this.state.resources.xml));
+        this.operationsOutdated.set(false);
     }
 
     /**
@@ -460,6 +766,94 @@ export class ResourceEditor extends Component {
         currentResource.arch = value;
         currentResource.dirty = true;
         this.errors.length = 0;
+        if (currentResource.type === "xml") {
+            this.operationsOutdated.set(true);
+            this.debouncedUpdateLocatedOperations();
+        }
+    }
+
+    /**
+     * Open a view on the line containing an operation
+     *
+     * @param {number} viewId
+     * @param {number} [operationIndex=0] see `parseTargetArch`
+     */
+    openView(viewId, operationIndex = 0) {
+        const view = this.state.resources.xml[viewId];
+        this.openViewOnRow(view, getOperationRows(view)?.[operationIndex]);
+    }
+
+    /**
+     * Open the view changed by an operation of the current view, on the
+     * line target of the operation.
+     *
+     * @param {Object} target an item of `outgoingOperations`
+     */
+    goToTarget({ targetId, operation }) {
+        const targetView = this.state.resources.xml[targetId];
+        const rows = getOperationTargetRows(targetView, [operation]);
+        this.openViewOnRow(targetView, rows?.[0]);
+    }
+
+    /**
+     * @param {Object} view
+     * @param {number|null|undefined} row the row to reveal, if known
+     */
+    openViewOnRow(view, row) {
+        this.operationsPopover.close();
+        this.state.currentResource = view;
+        if (typeof row === "number") {
+            this.revealRow.set({ sessionId: view.id, row });
+        }
+    }
+
+    /**
+     * Handle the click on gutter markers.
+     *
+     * Show a popover containing a list of views modifying the current line (if
+     * any), followed by a list of views modified by the current line (if any).
+     * If the current line only modifies a single view, directly redirect there
+     * on click.
+     *
+     * @param {number} row
+     * @param {HTMLElement} cellEl the gutter cell of the row
+     */
+    onMarkerClick(row, cellEl) {
+        const rowIncoming = this.incomingOperations().filter((item) => item.targetRow === row);
+        const rowOutgoing = this.outgoingOperations().filter((item) => item.operationRow === row);
+        if (!rowIncoming.length && rowOutgoing.length === 1) {
+            this.goToTarget(rowOutgoing[0]);
+            return;
+        }
+        if (!rowIncoming.length && !rowOutgoing.length) {
+            return;
+        }
+        const toLineNumber = (row) => (typeof row === "number" ? row + 1 : undefined);
+        // Sort by view name, then by row
+        const compareItems = (a, b) =>
+            a.view.name.localeCompare(b.view.name) || (a.row ?? Infinity) - (b.row ?? Infinity);
+        this.operationsPopover.open(cellEl, {
+            row: row + 1,
+            modifiedBy: rowIncoming
+                .map((item) => ({
+                    view: item.view,
+                    row: toLineNumber(getOperationRows(item.view)?.[item.index]),
+                    onSelect: () => this.openView(item.view.id, item.index),
+                }))
+                .sort(compareItems),
+            modifies: rowOutgoing
+                .map((target) => {
+                    const targetView = this.state.resources.xml[target.targetId];
+                    return {
+                        view: targetView,
+                        row: toLineNumber(
+                            getOperationTargetRows(targetView, [target.operation])?.[0]
+                        ),
+                        onSelect: () => this.goToTarget(target),
+                    };
+                })
+                .sort(compareItems),
+        });
     }
 
     /**
@@ -485,11 +879,25 @@ export class ResourceEditor extends Component {
         this.loadResources();
     }
 
+    /**
+     * @param {Object|null} aceEditor
+     */
+    onEditorReady(aceEditor) {
+        this.aceEditor = aceEditor;
+    }
+
+    openSearch() {
+        this.aceEditor?.execCommand("find");
+    }
+
     onFormat() {
         if (this.state.type === "xml") {
             const { isValid, error } = checkXML(this.state.currentResource.arch);
             if (isValid) {
-                this.state.currentResource.arch = formatXML(this.state.currentResource.arch);
+                const formattedArch = formatXML(this.state.currentResource.arch);
+                if (formattedArch !== this.state.currentResource.arch) {
+                    this.onEditorChange(formattedArch);
+                }
             } else {
                 this.errors.push({ error, resource: this.state.currentResource });
             }

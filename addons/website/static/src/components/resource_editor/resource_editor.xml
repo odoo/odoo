@@ -56,28 +56,63 @@
                     </div>
                 </label>
                 <div class="d-flex gap-2">
-                    <button class="btn btn-primary" t-on-click="this.onSave"><i t-if="this.state.saving" class="oi oi-spin mr8" data-icon="autorenew" role="img" aria-hidden="true"/>Save</button>
+                    <button class="btn btn-primary" t-att-disabled="!this.hasUnsavedChanges()" t-on-click="this.onSave"><i t-if="this.state.saving" class="oi oi-spin mr8" data-icon="autorenew" role="img" aria-hidden="true"/>Save</button>
                     <button class="btn btn-secondary" t-on-click="this.props.close">Close</button>
                 </div>
             </div>
-            <div t-if="this.state.currentResource" id="resource-editor-id">
-                <div class="float-end">
+            <div t-if="this.state.currentResource" id="resource-editor-id" class="d-flex align-items-center">
+                <span class="o_resource_editor_resource_info text-truncate" t-att-data-tooltip="this.resourceInfo" t-out="this.resourceInfo"/>
+                <a t-if="this.state.type === 'xml'"
+                    t-att-href="'/odoo/action-base.action_ui_view/' + this.state.currentResource.id"
+                    target="_blank" class="ms-1" data-tooltip="Open the view record in a new tab"
+                    aria-label="Open the view record in a new tab">
+                    <i class="oi" data-icon="open_in_new" role="img" aria-hidden="true"/>
+                </a>
+                <t t-set="websiteStatusInfo" t-value="this.getWebsiteStatusInfo()"/>
+                <span t-if="websiteStatusInfo"
+                    class="o_resource_editor_website_status ms-2 small opacity-75 text-nowrap"
+                    t-att-data-tooltip="websiteStatusInfo.tooltip"
+                    t-out="websiteStatusInfo.label"/>
+                <Dropdown t-if="this.incomingOperations().length">
+                    <button type="button"
+                        class="btn btn-sm btn-link p-0 border-0 text-nowrap o_resource_editor_modified_by">
+                        <t t-out="this.getModifiedByLabel()"/>
+                    </button>
+                    <t t-set-slot="content">
+                        <t t-foreach="this.getIncomingViews()" t-as="incomingView" t-key="incomingView.view.id">
+                            <DropdownItem class="'d-flex align-items-baseline justify-content-between gap-3'"
+                                onSelected="() => this.openView(incomingView.view.id, incomingView.operations[0].index)">
+                                <span>
+                                    <t t-call="website.ResourceEditor.ResourceLabel"
+                                        resource="incomingView.view"
+                                        label="incomingView.view.name"/>
+                                </span>
+                                <small class="text-muted text-nowrap" t-out="this.getOperationRowsLabel(incomingView.operations)"/>
+                            </DropdownItem>
+                        </t>
+                    </t>
+                </Dropdown>
+                <div class="d-flex flex-shrink-0 ms-auto ps-2">
                     <button t-if="this.state.type !== 'xml' and this.isCustomResource(this.state.currentResource.url)" type="button" class="btn btn-sm btn-danger" t-on-click="this.onReset">
                         <i class="oi" data-icon="undo" role="img" aria-hidden="true"/>
                         Reset
                     </button>
+                    <button type="button" class="btn btn-sm btn-link" t-on-click="this.openSearch">Search</button>
                     <button t-if="this.state.type === 'xml'" type="button" class="btn btn-sm btn-link" t-on-click="this.onFormat">Format</button>
                 </div>
-                <span class="o_resource_editor_resource_info" t-out="this.resourceInfo"/>
             </div>
             <div t-if="this.state.currentResource" id="resource-editor" t-ref="this.editorRef">
-                <CodeEditor
+                <CodeEditorWithGutterMarkers
                     class="'h-100'"
                     value="this.state.currentResource.arch"
                     sessionId="this.state.currentResource.id"
                     mode="this.typeToCodeEditorModeMap[this.state.type]"
                     theme="'monokai'"
-                    onChange.bind="this.onEditorChange"/>
+                    onChange.bind="this.onEditorChange"
+                    markers="this.codeEditorMarkers()"
+                    onMarkerClick.bind="this.onMarkerClick"
+                    revealRow="this.revealRow()"
+                    onEditorReady.bind="this.onEditorReady"/>
             </div>
         </div>
         <ResourceEditorWarningOverlay/>
@@ -86,6 +121,34 @@
     <t t-name="website.ResourceEditor.ResourceLabel">
         <i t-if="resource.customized or resource.dirty" t-att-class="{ 'oi mr8': true, 'text-warning': resource.dirty, 'text-success': resource.customized }" data-icon="save" role="img" aria-hidden="true"/>
         <t t-out="label"/>
+    </t>
+
+    <t t-name="website.ResourceOperationsPopover">
+        <div class="py-2">
+            <t t-if="this.props.modifiedBy.length">
+                <div class="px-3 pb-1 small text-muted" t-out="this.getModifiedByTitle()"/>
+                <t t-foreach="this.props.modifiedBy" t-as="item" t-key="item_index">
+                    <t t-call="website.ResourceOperationsPopover.Item"/>
+                </t>
+            </t>
+            <t t-if="this.props.modifies.length">
+                <div class="px-3 pb-1 small text-muted"
+                    t-att-class="{ 'pt-2': this.props.modifiedBy.length }"
+                    t-out="this.getModifiesTitle()"/>
+                <t t-foreach="this.props.modifies" t-as="item" t-key="item_index">
+                    <t t-call="website.ResourceOperationsPopover.Item"/>
+                </t>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="website.ResourceOperationsPopover.Item">
+        <button type="button" class="dropdown-item px-3" t-on-click="item.onSelect">
+            <t t-call="website.ResourceEditor.ResourceLabel"
+                resource="item.view"
+                label="item.view.name"/>
+            <small t-if="item.row" class="ms-1 text-muted">(:<t t-out="item.row"/>)</small>
+        </button>
     </t>
 
 </templates>

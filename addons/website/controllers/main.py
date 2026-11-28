@@ -2183,7 +2183,24 @@ class Website(Home):
         """
         # Related views must be fetched if the user wants the views and/or the style
         views = request.env["ir.ui.view"].with_context(no_primary_children=True, __views_get_original_hierarchy=[]).get_related_views(key, bundles=bundles)
-        views = views.read(['name', 'id', 'key', 'xml_id', 'arch', 'active', 'inherit_id'])
+        # Determine the view status:
+        # - 'base': the view has no website_id
+        # - 'copy' (COW): the view has a website_id and a base view with the same key exists
+        # - 'website': the view has a website_id and no base view with the same key exists
+        specific_keys = [key for key in views.filtered('website_id').mapped('key') if key]
+        generic_keys = set(request.env['ir.ui.view'].with_context(active_test=False).search([
+            ('key', 'in', specific_keys),
+            ('website_id', '=', False),
+        ]).mapped('key'))
+        views_data = views.read(['name', 'id', 'key', 'xml_id', 'arch', 'active', 'inherit_id', 'mode'])
+        for view, view_data in zip(views, views_data):
+            if not view.website_id:
+                view_data['website_status'] = 'base'
+            elif view.key in generic_keys:
+                view_data['website_status'] = 'copy'
+            else:
+                view_data['website_status'] = 'website'
+        views = views_data
 
         scss_files_data_by_bundle = []
         js_files_data_by_bundle = []

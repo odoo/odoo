@@ -436,6 +436,7 @@
             ('include', 'website.website_builder_assets'),
             'website/static/tests/mock_server/**/*',
             'website/static/tests/*',
+            'website/static/tests/components/**/*',
             'website/static/tests/mobile/**/*',
         ],
         'web.assets_unit_tests_setup': [

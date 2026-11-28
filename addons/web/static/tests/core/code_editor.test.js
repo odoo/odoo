@@ -4,6 +4,7 @@ import { animationFrame } from "@odoo/hoot-mock";
 import { Component, markup, proxy, useProps, xml } from "@odoo/owl";
 import {
     contains,
+    destroyApp,
     editAce,
     mountWithCleanup,
     patchWithCleanup,
@@ -438,7 +439,25 @@ test("qweb mode readonly attributes", async () => {
         <div />
         </form>
         `.replace(/^\s*/gm, "")
-    )
+    );
+});
+
+test("onEditorReady prop gives the Ace editor", async () => {
+    class Parent extends Component {
+        static components = { CodeEditor };
+        static template = xml`<CodeEditor value="'some value'" onEditorReady.bind="this.onEditorReady"/>`;
+        aceEditor = null;
+        onEditorReady(aceEditor) {
+            this.aceEditor = aceEditor;
+        }
+    }
+
+    const parent = await mountWithCleanup(Parent);
+    await animationFrame();
+    expect(parent.aceEditor.getValue()).toBe("some value");
+
+    destroyApp();
+    expect(parent.aceEditor).toBe(null);
 });
 
 test("get undo/redo state using editorState prop", async () => {
