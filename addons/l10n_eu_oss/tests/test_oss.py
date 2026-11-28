@@ -200,5 +200,5 @@ class TestOSSMap(AccountTestInvoicingCommon):
             oss_tags = EU_TAG_MAP.get(chart_template, {})
             for tax_report_line_xml_id in filter(lambda d: d, oss_tags.values()):
                 with self.subTest(chart_template=chart_template, tax_report_line_xml_id=tax_report_line_xml_id):
-                    tag = self.env.ref(tax_report_line_xml_id, raise_if_not_found=False)
+                    tag = self.env.ref(tax_report_line_xml_id.removeprefix('-'), raise_if_not_found=False)
                     self.assertIsNotNone(tag, f"The following xml_id is incorrect in EU_TAG_MAP.py: {tax_report_line_xml_id}")
