@@ -201,7 +201,7 @@ export class WebsocketWorker {
             case "BUS:DELETE_CHANNEL":
                 return this._deleteChannel(client, data);
             case "BUS:FORCE_UPDATE_CHANNELS":
-                return this._scheduleUpdateChannels({ force: true });
+                return this._scheduleUpdateChannels({ force: true, fromId: data?.fromId });
             case "BUS:SET_LOGGING_ENABLED":
                 this.loggingEnabled = data;
                 break;
@@ -644,10 +644,15 @@ export class WebsocketWorker {
      *
      * @param {boolean} force If true, ensures a subscription event is sent even if the
      * channel list has not changed.
+     * @param {number} [fromId] Id from which the notifications of the new channels must be
+     * received. The lowest id of the batch is kept.
      */
-    _scheduleUpdateChannels({ force = false } = {}) {
+    _scheduleUpdateChannels({ force = false, fromId } = {}) {
         this.nextSubscribeData ??= { minId: this.lastNotificationId };
         this.nextSubscribeData.force ||= force;
+        if (fromId < this.nextSubscribeData.minId) {
+            this.nextSubscribeData.minId = fromId;
+        }
         this._debouncedUpdateChannels();
     }
 

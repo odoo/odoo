@@ -202,6 +202,19 @@ test("pass last notification id on initialization", async () => {
     await expect.waitForSteps([`BUS:INITIALIZE_CONNECTION - 1`]);
 });
 
+test("force update channels from a given notification id", async () => {
+    onWebsocketEvent("subscribe", ({ last }) => expect.step(`subscribe - last ${last}`));
+    const env = await makeMockEnv();
+    startBusService(env);
+    await expect.waitForSteps(["subscribe - last 0"]);
+    MockServer.env["bus.bus"]._sendone("broadcast", "notifType", "alpha");
+    MockServer.env["bus.bus"]._sendone("broadcast", "notifType", "beta");
+    await waitNotifications([env, "notifType", "alpha"], [env, "notifType", "beta"]);
+    env.services.bus_service.forceUpdateChannels({ fromId: 1 });
+    env.services.bus_service.forceUpdateChannels({ fromId: 2 });
+    await expect.waitForSteps(["subscribe - last 1"]);
+});
+
 test("websocket disconnects when user logs out", async () => {
     addBusServiceListeners(
         ["BUS:CONNECT", () => expect.step("BUS:CONNECT")],

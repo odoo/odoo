@@ -1,4 +1,5 @@
-import { waitForChannels } from "@bus/../tests/bus_test_helpers";
+import { waitForChannels, waitUntilSubscribe } from "@bus/../tests/bus_test_helpers";
+import { onWebsocketEvent } from "@bus/../tests/mock_websocket";
 import {
     click,
     contains,
@@ -11,7 +12,12 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, edit, expect, mockDate, press, test } from "@odoo/hoot";
 
-import { Command, getService, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import {
+    Command,
+    getService,
+    patchWithCleanup,
+    serverState,
+} from "@web/../tests/web_test_helpers";
 
 defineMailModels();
 
@@ -110,4 +116,27 @@ test("bus subscription is refreshed when channel is left", async () => {
     await click("button:text('Leave Conversation')");
     await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
     await expect.waitForSteps(["update_bus_subscription"]);
+});
+
+test("bus subscription starts from the joined notification", async () => {
+    const pyEnv = await startServer();
+    await start();
+    await waitUntilSubscribe();
+    const johnPartner = pyEnv["res.partner"].create({ name: "John" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: johnPartner }),
+        ],
+        channel_type: "group",
+    });
+    onWebsocketEvent("subscribe", ({ last }) => expect.step(`subscribe - last ${last}`));
+    const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
+    // The worker gets another notification after "joined" in the same batch: the
+    // notifications of the new channel between both must not be missed.
+    const lastId = pyEnv["bus.bus"]._sendmany([
+        [partner, "discuss.channel/joined", { channel_id: channelId, store_data: {} }],
+        [partner, "mail.record/insert", {}],
+    ]);
+    await expect.waitForSteps([`subscribe - last ${lastId - 1}`]);
 });
