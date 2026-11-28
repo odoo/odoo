@@ -104,74 +104,65 @@
                     <t t-name="card">
                         <div class="o_hr_recruitment_kanban_card_large_screen">
                             <main>
-                                <div class="d-flex ms-3 py-1">
-                                    <div class="o_kanban_card_header col-4 col-lg-3 d-flex flex-column pt-2 pt-lg-0">
-                                        <div class="o_kanban_card_header_title d-flex align-items-baseline fw-bold">
+                                <div class="d-flex">
+                                    <div class="d-flex col-4 flex-column gap-1">
+                                        <div class="o_kanban_card_header d-flex align-items-baseline gap-2">
                                             <field name="is_favorite" widget="boolean_favorite" nolabel="1"/>
-                                            <field class="fs-4" name="name"/>
+                                            <field name="name" class="fs-4 fw-bold"/>
                                         </div>
-                                        <div groups="hr_recruitment.group_hr_recruitment_interviewer,hr.group_hr_user">
-                                            <div groups="!base.group_multi_company">
-                                                    <field name="recruiter_id" widget="many2one_avatar_employee" class="text-muted"
-                                                        options="{'display_avatar_name': True}"/>
-                                                </div>
-                                                <div groups="base.group_multi_company">
-                                                    <t t-if="record.company_id.raw_value != 0">
-                                                        <div class="d-flex flex-row">
-                                                            <field name="recruiter_id" widget="many2one_avatar_employee"
-                                                                options="{'display_avatar_name': False}"/>
-                                                            <field class="ms-1 text-muted" name="company_id" />
-                                                        </div>
-                                                    </t>
-                                                    <t t-else="">
-                                                        <field name="recruiter_id" widget="many2one_avatar_employee" class="text-muted"
-                                                            options="{'display_avatar_name': True}"/>
-                                                    </t>
-                                                </div>
-                                        </div>
-                                        <div t-if="record.alias_email.value" class="d-flex align-items-baseline mt-1 small text-muted">
-                                            <i class="oi oi-filled flex-shrink-0 me-1 text-center" data-icon="mail" title="Email"></i>
-                                            <field name="alias_id" class="d-flex flex-wrap"
-                                                groups="hr_recruitment.group_hr_recruitment_interviewer"/>
+                                        <t groups="hr_recruitment.group_hr_recruitment_interviewer">
+                                            <div t-if="record.alias_email.value"
+                                                class="d-flex align-items-center gap-2 text-muted">
+                                                <i class="oi text-center" data-icon="mail" title="Email"/>
+                                                <field name="alias_id"/>
+                                            </div>
+                                            <div groups="base.group_multi_company" 
+                                                t-if="record.company_id.raw_value != 0"
+                                                class="d-flex align-items-center gap-2 text-muted">
+                                                <i class="oi text-center" data-icon="business" title="Company"/>
+                                                <field name="company_id"/>
+                                            </div>
+                                        </t>
+                                        <div class="d-flex align-items-center gap-2 text-muted">
+                                            <field name="recruiter_id" widget="many2one_avatar_employee"/>
+                                            <field name="recruiter_id"/>
                                         </div>
                                     </div>
-                                    <div class="col align-content-center px-1">
-                                        <div class="d-flex justify-content-center">
-                                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" class="flex-shrink-0 flex-basis-100"/>
-                                        </div>
+                                    <div class="col min-w-0 align-content-center px-1">
+                                        <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                     </div>
                                     <div class="col align-content-center px-1"
-                                        groups="hr_recruitment.group_hr_recruitment_interviewer">
-                                        <div t-attf-class="d-flex justify-content-center px-1 #{record.new_application_count.raw_value == 0  ? 'text-muted opacity-75' : ''}">
-                                            <field name="new_application_count" class="number flex-shrink-0 flex-basis-lg-50 fw-semibold text-lg-end"/>
-                                            <div class="number_description flex-shrink-0 flex-basis-50 fs-6 lh-1 text-muted">
+                                         groups="hr_recruitment.group_hr_recruitment_interviewer">
+                                        <div t-attf-class="d-flex justify-content-center gap-1 gap-xl-2 #{record.new_application_count.raw_value == 0  ? 'text-muted opacity-75' : ''}">
+                                            <field name="new_application_count" class="number fw-semibold text-lg-end"/>
+                                            <div class="d-flex flex-column justify-content-center fs-6 lh-1 text-muted">
                                                 new<br/><span class="text-nowrap">applications</span>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col d-none d-lg-block align-content-center px-1"
                                         groups="hr_recruitment.group_hr_recruitment_interviewer">
-                                        <div t-attf-class="d-flex justify-content-center #{record.open_application_count.raw_value == 0  ? 'text-muted opacity-75' : ''}">
+                                        <div t-attf-class="d-flex justify-content-center gap-1 gap-xl-2 #{record.open_application_count.raw_value == 0  ? 'text-muted opacity-75' : ''}">
                                             <field name="open_application_count" class="number flex-shrink-0 flex-basis-50 fw-semibold text-lg-end"/>
-                                            <div class=" number_description flex-shrink-0 flex-basis-50 fs-6 lh-1 text-muted">
+                                            <div class="d-flex flex-column justify-content-center flex-shrink-0 flex-basis-50 fs-6 lh-1 text-muted">
                                                 in<br/><span class="text-nowrap">progress</span>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col d-none d-lg-block align-content-center px-1">
-                                        <div t-attf-class="d-flex justify-content-center #{record.no_of_recruitment.raw_value == 0  ? 'text-muted opacity-75' : ''}">
+                                        <div t-attf-class="d-flex justify-content-center gap-1 gap-xl-2 #{record.no_of_recruitment.raw_value == 0  ? 'text-muted opacity-75' : ''}">
                                             <field name="no_of_recruitment" class="number flex-shrink-0 flex-basis-50 fw-semibold text-lg-end"/>
-                                            <div class="number_description flex-shrink-0 flex-basis-50 fs-6 lh-1 text-muted">
+                                            <div class="d-flex flex-column justify-content-center flex-shrink-0 flex-basis-50 fs-6 lh-1 text-muted">
                                                 to<br/><span class="text-nowrap">recruit</span>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="o_hr_recruitment_activity-col flex-shrink-0 align-content-center ps-xxl-1 pe-xxl-5" t-attf-class="#{record.activity_count.raw_value == 0 ? 'o_hr_recruitment_no-activity' : ''}"
+                                    <div class="o_hr_recruitment_activity-col flex-shrink-0 align-content-center ps-1 pe-2" t-attf-class="#{record.activity_count.raw_value == 0 ? 'o_hr_recruitment_no-activity' : ''}"
                                         groups="hr_recruitment.group_hr_recruitment_interviewer">
                                         <div class="d-flex justify-content-sm-start justify-content-xl-start mt-1">
                                             <div class="position-relative">
                                                 <button name="action_open_activities" type="object" class="px-2 pt-2 pb-1">
-                                                    <i class="oi oi-2x" data-icon="schedule" role="img" aria-label="Activities"></i>
+                                                    <i class="oi" data-icon="schedule" role="img" aria-label="Activities"/>
                                                     <span class="activity_badge position-absolute translate-middle badge rounded-pill bg-danger text-light" t-if="record.activity_count.raw_value > 0">
                                                         <field name="activity_count"/>
                                                     </span> 
@@ -179,7 +170,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="align-content-center me-5">
+                                    <div class="align-content-center pe-1 me-4">
                                         <div class="d-flex flex-column flex-xl-row justify-content-center gap-2">
                                             <div name="large_screen_job_page_div" invisible="1">
                                                 <button class="btn btn-primary" name="%(action_hr_job_applications)d" type="action">
@@ -194,57 +185,34 @@
                                 </div>
                             </main>
                         </div>
-                        <div class="o_hr_recruitment_kanban_card_mobile_screen py-1 px-2 py-md-0 px-md-0">
+                        <div class="o_hr_recruitment_kanban_card_mobile_screen">
                             <main>
-                                <div class="o_kanban_card_header d-flex flex-column gap-1 mb-1">
-                                    <div>
-                                        <div class="d-flex fs-4 fw-bold">
-                                            <field name="is_favorite" widget="boolean_favorite" nolabel="1"/>
-                                            <field name="name"/>
-                                        </div>
-                                        <div t-if="record.alias_email.value" class="d-flex flex-wrap">
-                                            <field name="alias_id"
-                                                groups="hr_recruitment.group_hr_recruitment_interviewer"/>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex flex-row">
-                                        <div class="col-1 me-1" style="max-width: 1.5rem;"
-                                            groups="hr_recruitment.group_hr_recruitment_interviewer">
-                                            <div class="d-flex flex-row justify-content-center">
-                                                <field name="recruiter_id" widget="many2one_avatar_employee"
-                                                    options="{'display_avatar_name': False}"/>
-                                            </div>
-                                        </div>
-                                        <div class="col align-content-end">
-                                            <div groups="base.group_multi_company">
-                                                <t t-if="record.company_id.raw_value != 0">
-                                                    <field name="company_id"/>
-                                                </t>
-                                                <t t-else="">
-                                                    <field name="recruiter_id"/>
-                                                </t>
-                                            </div>
-                                            <div groups="!base.group_multi_company">
-                                                <field name="recruiter_id"/>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex flex-row">
-                                        <div class="col-1 align-content-end me-1" style="max-width: 1.5rem;"
-                                            groups="hr_recruitment.group_hr_recruitment_interviewer">
-                                            <div class="d-flex flex-row justify-content-center">
-                                                <i class="oi oi-filled" data-icon="person" title="new_applications_icon" aria-hidden="true"/>
-                                            </div>
-                                        </div>
-                                        <div class="col align-content-end">
-                                            <span>
-                                                <field name="application_count"/>
-                                                <span > new applications</span>
-                                            </span>
-                                        </div>
-                                    </div>
+                                <div class="o_kanban_card_header d-flex align-items-baseline gap-2">
+                                    <field name="is_favorite" widget="boolean_favorite" nolabel="1"/>
+                                    <field name="name" class="fs-4 fw-bold"/>
                                 </div>
+                                <t groups="hr_recruitment.group_hr_recruitment_interviewer">
+                                    <div t-if="record.alias_email.value"
+                                         class="d-flex align-items-center gap-2 text-muted">
+                                        <i class="oi text-center" data-icon="mail" title="Email"/>
+                                        <field name="alias_id"/>
+                                    </div>
+                                    <div groups="base.group_multi_company" 
+                                         t-if="record.company_id.raw_value != 0"
+                                         class="d-flex align-items-center gap-2 text-muted">
+                                        <i class="oi oi-filled text-center" data-icon="business" title="Company"/>
+                                        <field name="company_id"/>
+                                    </div>
+                                    <div t-attf-class="d-flex align-items-center gap-2 text-muted #{record.new_application_count.raw_value == 0  ? 'opacity-50' : ''}">
+                                        <i class="oi oi-filled text-center" data-icon="person" title="new_applications_icon" aria-hidden="true"/>
+                                        <span><t t-out="record.new_application_count.value"/> new <t t-if="record.new_application_count.value == 1">application</t><t t-else="">applications</t></span>
+                                    </div>
+                                </t>
                             </main>
+                            <footer class="d-flex justify-content-end gap-2">
+                                <field name="recruiter_id" widget="many2one_avatar_employee"
+                                    options="{'display_avatar_name': False}"/>
+                            </footer>
                         </div>
                     </t>
                 </templates>
