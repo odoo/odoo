@@ -315,6 +315,32 @@ class TestDeliveryCost(DeliveryCommon):
 
         self.assertRecordValues(line, [{"price_subtotal": 9.09, "price_total": 10.45}])
 
+    def test_taxes_on_delivery_cost_tax_included_document(self):
+        """The delivery line should be priced like the delivery product added as a regular line
+        when the prices of the order are tax included and the ones of the company tax excluded."""
+        tax = self.env["account.tax"].sudo().create({
+            "name": "15% exc",
+            "type_tax_use": "sale",
+            "amount_type": "percent",
+            "amount": 15,
+        })
+        self.normal_delivery.product_id.taxes_id = tax
+        sale_order = self._create_so(
+            document_tax_mode="tax_included",
+            order_line=[Command.create({"product_id": self.normal_delivery.product_id.id})],
+        )
+        self.assertRecordValues(sale_order.order_line, [{"price_unit": 11.5, "price_total": 11.5}])
+
+        delivery_wizard = Form(
+            self.env["choose.delivery.carrier"].with_context(
+                default_order_id=sale_order.id, default_carrier_id=self.normal_delivery.id,
+            ),
+        )
+        delivery_wizard.save().button_confirm()
+
+        line = sale_order.order_line.filtered("is_delivery")
+        self.assertRecordValues(line, [{"price_unit": 11.5, "price_total": 11.5}])
+
     def test_estimated_weight(self):
         """
         Test that negative qty SO lines are not included in the estimated weight calculation
