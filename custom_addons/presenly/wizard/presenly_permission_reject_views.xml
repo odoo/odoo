@@ -1,0 +1,7 @@
+<odoo>
+    <record id="view_presenly_permission_reject_wizard" model="ir.ui.view">
+        <field name="name">presenly.permission.reject.wizard.form</field>
+        <field name="model">presenly.permission.reject.wizard</field>
+        <field name="arch" type="xml"><form string="Reject Permission"><group><field name="permission_id"/><field name="reason"/></group><footer><button name="action_reject" type="object" string="Reject" class="btn-primary"/><button string="Cancel" special="cancel"/></footer></form></field>
+    </record>
+</odoo>

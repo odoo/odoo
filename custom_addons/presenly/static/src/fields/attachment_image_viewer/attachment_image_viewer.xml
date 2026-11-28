@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="presenly.AttachmentImageViewer">
+        <button t-if="attachment"
+                type="button"
+                class="btn btn-link p-0 border-0 d-inline-flex flex-column align-items-start text-decoration-none"
+                title="Open full-size photo"
+                aria-label="Open full-size attendance photo"
+                t-on-click.stop="openViewer">
+            <img t-att-src="thumbnailUrl"
+                 class="img img-fluid rounded border"
+                 style="width: 240px; height: 240px; object-fit: cover; cursor: zoom-in;"
+                 alt="Attendance selfie"/>
+            <span class="small mt-1">
+                <i class="fa fa-search-plus me-1" role="img"/>
+                View full photo
+            </span>
+        </button>
+    </t>
+</templates>
