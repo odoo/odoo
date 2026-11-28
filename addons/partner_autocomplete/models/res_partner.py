@@ -193,6 +193,12 @@ class ResPartner(models.Model):
             vat_number, vat_country_code = self._run_vat_checks(country, query, validation='setnull')
             if vat_number and vat_country_code == country.code:
                 autocomplete_response['vat'] = vat_number
+        if identifiers := autocomplete_response.get('additional_identifiers'):
+            autocomplete_response['additional_identifiers'] = {
+                key: value
+                for key, value in identifiers.items()
+                if self._is_valid_identifier(key, value)
+            }
         return autocomplete_response
 
     @api.model
