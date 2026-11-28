@@ -56,7 +56,9 @@
                 <span class="my-0" t-else="">
                     starts on
                     <span t-field="sponsor.event_id.date_begin"
-                        t-options="{'format': 'medium', 'tz_name': sponsor.event_id.date_tz}"/>
+                        t-options="{'date_only': True, 'format': 'medium', 'tz_name': sponsor.event_id.date_tz}"/>,
+                    <span t-field="sponsor.event_id.date_begin"
+                        t-options="{'time_only': True, 'hide_seconds': True, 'tz_name': sponsor.event_id.date_tz}"/>
                     <span t-if="website_visitor_timezone != sponsor.event_id.date_tz">(<t t-out="event.date_tz"/>)</span>
                 </span>
                 <br/>

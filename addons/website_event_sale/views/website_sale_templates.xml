@@ -45,7 +45,8 @@
                             </a>
                         </div>
                         <h6 t-if="not event.is_multi_slots" class="mx-2 mb-0">
-                            <span t-out="event.date_begin" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'medium'}"/>
+                            <span t-out="event.date_begin" t-options="{'widget': 'datetime', 'date_only': 'true', 'tz_name': event.date_tz, 'format': 'medium'}"/>,
+                            <span t-out="event.date_begin" t-options="{'widget': 'datetime', 'time_only': 'true', 'tz_name': event.date_tz, 'hide_seconds': 'true'}"/>
                             <span t-if="website_visitor_timezone != event.date_tz" class="d-block mt-1 smaller opacity-75">(<t t-out="event.date_tz"/>)</span>
                         </h6>
                         <div t-if="attendees and not event.is_multi_slots" class="ms-2 my-3">
@@ -61,7 +62,9 @@
                                             </div>
                                             <div class="col-12 col-md-auto ps-md-0">
                                                 <span t-out="slot.start_datetime"
-                                                    t-options='{"widget": "datetime", "show_seconds": False, "tz_name": event.date_tz, "format": "medium"}'/>
+                                                    t-options='{"widget": "datetime", "date_only": True, "tz_name": event.date_tz, "format": "medium"}'/>,
+                                                <span t-out="slot.start_datetime"
+                                                    t-options='{"widget": "datetime", "time_only": True, "hide_seconds": True, "tz_name": event.date_tz}'/>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -70,7 +73,9 @@
                                             </div>
                                             <div class="col-12 col-md-auto ps-md-0">
                                                 <span t-out="slot.end_datetime"
-                                                    t-options='{"widget": "datetime", "show_seconds": False, "tz_name": event.date_tz, "format": "medium"}'/>
+                                                    t-options='{"widget": "datetime", "date_only": True, "tz_name": event.date_tz, "format": "medium"}'/>,
+                                                <span t-out="slot.end_datetime"
+                                                    t-options='{"widget": "datetime", "time_only": True, "hide_seconds": True, "tz_name": event.date_tz}'/>
                                             </div>
                                         </div>
                                         <div class="row">

@@ -1,6 +1,11 @@
+from datetime import date, datetime
+from zoneinfo import ZoneInfo
+
+from odoo.addons.http_routing.tests.common import MockRequest
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.website_event.tests.common import TestEventOnlineCommon
-from odoo.tests.common import HttpCase, freeze_time, tagged
+from odoo.addons.website_event_track.controllers.event_track import EventTrackController
+from odoo.tests.common import HttpCase, freeze_time, tagged, users
 
 
 @tagged('post_install', '-at_install')
@@ -70,3 +75,42 @@ class TestWebsiteEventTrack(TestEventOnlineCommon, HttpCase):
         self.assertFalse(track.is_track_done, "Track should not be done without date.")
         self.assertEqual(track.track_start_relative, 0, "Track start relative should be 0.")
         self.assertEqual(track.track_start_remaining, 0, "Track start remaining should be 0.")
+
+    @users('user_eventmanager')
+    def test_website_event_track_agenda_times(self):
+        """Check that event tracks' times displayed in the agenda are converted using the event's time zone and
+        not the one of the active user and that they are formatted according to the user language's time format."""
+        self.env.user.tz = 'America/New_York'  # UTC-4
+        self.event_0.date_tz = 'Asia/Riyadh'  # UTC+3
+        location = self.env['event.track.location'].create({'name': 'Main Stage'})
+        track = self.env['event.track'].create({
+            'date': datetime(2020, 7, 5, 23),
+            'duration': 1,
+            'event_id': self.event_0.id,
+            'is_published': True,
+            'location_id': location.id,
+            'name': 'Talk at night',
+        })
+        lang = self.env['res.lang']._lang_get(self.env.user.lang)
+
+        for time_format, formatted_time, start_date, end_date in [
+            ('%I:%M:%S %p', '02:00 AM', '02:00 AM', '03:00 AM'),
+            ('%H:%M:%S', '02:00', '02:00', '03:00'),
+        ]:
+            lang.sudo().time_format = time_format
+            with self.subTest(formatted_time=formatted_time, start_date=start_date, end_date=end_date), MockRequest(self.env):
+                time_slots = EventTrackController()._prepare_calendar_values(self.event_0)['time_slots']
+
+                # Check that the track is displayed at its time converted using the event's time zone and the format of
+                # its times is the one of the user language.
+                tomorrow_utc_slots = time_slots[date(2020, 7, 6)]
+                track_time_slot = tomorrow_utc_slots[datetime(2020, 7, 6, 2, tzinfo=ZoneInfo('Asia/Riyadh'))]
+                self.assertEqual(track_time_slot['formatted_time'], formatted_time)
+                self.assertEqual(track_time_slot[location][track]['start_date'], start_date)
+                self.assertEqual(track_time_slot[location][track]['end_date'], end_date)
+
+                # Check that the track is not displayed at its time converted using the user's time zone.
+                self.assertNotIn(
+                    datetime(2020, 7, 5, 19, tzinfo=ZoneInfo('America/New_York')),
+                    time_slots[date(2020, 7, 5)]
+                )

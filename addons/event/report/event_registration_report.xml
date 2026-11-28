@@ -20,10 +20,14 @@
             </div>
             <div class="col-5">
                 <span t-out="event.date_begin"
-                    t-options='{"widget": "datetime", "show_seconds": False, "tz_name": event.date_tz, "format": "medium"}'/>
+                    t-options='{"widget": "datetime", "date_only": True, "tz_name": event.date_tz, "format": "medium"}'/>,
+                <span t-out="event.date_begin"
+                    t-options='{"widget": "datetime", "time_only": True, "hide_seconds": True, "tz_name": event.date_tz}'/>
                 <i class="oi" data-icon="arrow_forward"/>
                 <span t-out="event.date_end"
-                    t-options='{"widget": "datetime", "show_seconds": False, "tz_name": event.date_tz, "format": "medium"}'/>
+                    t-options='{"widget": "datetime", "date_only": True, "tz_name": event.date_tz, "format": "medium"}'/>,
+                <span t-out="event.date_end"
+                    t-options='{"widget": "datetime", "time_only": True, "hide_seconds": True, "tz_name": event.date_tz}'/>
             </div>
         </div>
         <table class="table mt-3" style="page-break-after:always;">
