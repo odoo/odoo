@@ -64,7 +64,9 @@ commandProviderRegistry.add("mail.partner", {
                                 channel.open();
                                 break;
                             case "channel": {
-                                await store.joinChannel(channel.id, channel.name);
+                                if (!channel.isArchived()) {
+                                    await store.joinChannel(channel.id, channel.name);
+                                }
                                 channel.open();
                             }
                         }
@@ -137,7 +139,9 @@ commandProviderRegistry.add("discuss.channel", {
                     commands.push({
                         Component: DiscussCommand,
                         async action() {
-                            await store.joinChannel(channel.id, channel.name);
+                            if (!channel.isArchived()) {
+                                await store.joinChannel(channel.id, channel.name);
+                            }
                             channel.open();
                         },
                         name: channel.displayName,

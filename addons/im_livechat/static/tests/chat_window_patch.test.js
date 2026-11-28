@@ -8,7 +8,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { test } from "@odoo/hoot";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
-import { defineLivechatModels } from "./livechat_test_helpers";
+import { ARCHIVED_BADGE_SELECTOR, defineLivechatModels } from "./livechat_test_helpers";
 import { withGuest } from "@mail/../tests/mock_server/mail_mock_server";
 import { rpc } from "@web/core/network/rpc";
 
@@ -87,4 +87,24 @@ test("Show livechats with new message in chat hub even when in discuss app)", as
     await contains(".o-mail-DiscussSidebar-item:contains('Visitor 11') .badge", { text: "1" });
     await openFormView("res.partner", serverState.partnerId);
     await contains(".o-mail-ChatWindow-header:contains('Visitor 11')");
+});
+
+test.tags("desktop");
+test("operator sees the archived badge of a live chat", async () => {
+    const pyEnv = await startServer();
+    const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
+    const channelId = pyEnv["discuss.channel"].create({
+        anonymous_name: "Visitor 11",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId, fold_state: "open" }),
+            Command.create({ guest_id: guestId }),
+        ],
+        channel_type: "livechat",
+        livechat_operator_id: serverState.partnerId,
+    });
+    await start();
+    await contains(".o-mail-ChatWindow-header", { text: "Visitor 11" });
+    await contains(ARCHIVED_BADGE_SELECTOR, { count: 0 });
+    pyEnv["discuss.channel"].write([channelId], { active: false });
+    await contains(ARCHIVED_BADGE_SELECTOR, { text: "Archived" });
 });

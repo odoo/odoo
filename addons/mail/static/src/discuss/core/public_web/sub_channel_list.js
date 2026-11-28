@@ -55,6 +55,10 @@ export class SubChannelList extends Component {
         return _t(`No thread named "%(thread_name)s"`, { thread_name: this.state.lastSearchTerm });
     }
 
+    visibleSubChannels() {
+        return this.state.subChannels.filter((thread) => !thread.isArchived());
+    }
+
     async onClickSubThread(subThread) {
         if (!subThread.hasSelfAsMember) {
             await rpc("/discuss/channel/join", { channel_id: subThread.id });

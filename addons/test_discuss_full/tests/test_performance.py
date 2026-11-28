@@ -575,6 +575,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         last_interest_dt = fields.Datetime.to_string(channel.last_interest_dt)
         if channel == self.channel_general:
             return {
+                "active": True,
                 "allow_public_upload": False,
                 "authorizedGroupFullName": self.group_user.full_name,
                 "anonymous_country": False,
@@ -607,6 +608,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_channel_public_1:
             return {
+                "active": True,
                 "allow_public_upload": False,
                 "authorizedGroupFullName": False,
                 "anonymous_country": False,
@@ -639,6 +641,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_channel_public_2:
             return {
+                "active": True,
                 "allow_public_upload": False,
                 "authorizedGroupFullName": False,
                 "anonymous_country": False,
@@ -671,6 +674,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_channel_group_1:
             return {
+                "active": True,
                 "allow_public_upload": False,
                 "authorizedGroupFullName": self.group_user.full_name,
                 "anonymous_country": False,
@@ -706,6 +710,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_channel_group_2:
             return {
+                "active": True,
                 "allow_public_upload": False,
                 "authorizedGroupFullName": self.group_user.full_name,
                 "anonymous_country": False,
@@ -738,6 +743,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_group_1:
             return {
+                "active": True,
                 "allow_public_upload": False,
                 "authorizedGroupFullName": False,
                 "anonymous_country": False,
@@ -770,6 +776,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_chat_1:
             return {
+                "active": True,
                 "allow_public_upload": False,
                 "authorizedGroupFullName": False,
                 "anonymous_country": False,
@@ -802,6 +809,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_chat_2:
             return {
+                "active": True,
                 "allow_public_upload": False,
                 "authorizedGroupFullName": False,
                 "anonymous_country": False,
@@ -834,6 +842,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_chat_3:
             return {
+                "active": True,
                 "allow_public_upload": False,
                 "authorizedGroupFullName": False,
                 "anonymous_country": False,
@@ -866,6 +875,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_chat_4:
             return {
+                "active": True,
                 "allow_public_upload": False,
                 "authorizedGroupFullName": False,
                 "anonymous_country": False,
@@ -898,6 +908,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_livechat_1:
             return {
+                "active": True,
                 "allow_public_upload": False,
                 "authorizedGroupFullName": False,
                 "anonymous_country": {
@@ -937,6 +948,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_livechat_2:
             return {
+                "active": True,
                 "allow_public_upload": False,
                 "authorizedGroupFullName": False,
                 "anonymous_country": {
@@ -1753,6 +1765,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
 
     def _expected_result_for_thread(self, channel):
         return {
+            "active": True,
             "id": channel.id,
             "model": "discuss.channel",
             "module_icon": "/mail/static/description/icon.png",

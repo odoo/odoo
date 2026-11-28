@@ -120,6 +120,47 @@ test("view sub thread of a message when not a member of the sub thread", async (
     await contains(".o-mail-Discuss-threadName", { value: "Bob's thread" });
 });
 
+test("archived sub thread stays linked to its message", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const messageId = pyEnv["mail.message"].create({
+        body: "<p>Hello world</p>",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    pyEnv["discuss.channel"].create({
+        active: false,
+        from_message_id: messageId,
+        name: "Archived thread",
+        parent_channel_id: channelId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click(".o-mail-Message-actions [title='Expand']");
+    await contains("[title='View Thread']");
+    await contains("[title='Create Thread']", { count: 0 });
+    pyEnv["discuss.channel"].write([channelId], { active: false });
+    await contains("[title='Expand']", { count: 0 });
+    await click("[title='View Thread']");
+    await contains(".o-mail-Discuss-threadName", { value: "Archived thread" });
+});
+
+test("archived sub thread is not listed in sub-thread list", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const subChannelId = pyEnv["discuss.channel"].create({
+        active: false,
+        name: "Archived thread",
+        parent_channel_id: channelId,
+    });
+    await start();
+    await openDiscuss(subChannelId);
+    await contains(".o-mail-Discuss-threadName", { value: "Archived thread" });
+    await click(".o-mail-Discuss-header span[title='General']");
+    await click("button[title='Threads']");
+    await contains(".o-mail-SubChannelList", { text: "This channel has no thread yet." });
+});
+
 test("view sub thread created by another user from an open channel", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Bob" });

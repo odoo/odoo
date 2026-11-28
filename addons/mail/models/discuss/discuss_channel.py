@@ -216,10 +216,10 @@ class Channel(models.Model):
         current_partner, current_guest = self.env["res.partner"]._get_current_persona()
         if current_guest:
             # sudo: discuss.channel - sudo for performance, just checking existence
-            channels = current_guest.sudo().channel_ids
+            channels = current_guest.sudo().with_context(active_test=False).channel_ids
         elif current_partner:
             # sudo: discuss.channel - sudo for performance, just checking existence
-            channels = current_partner.sudo().channel_ids
+            channels = current_partner.sudo().with_context(active_test=False).channel_ids
         else:
             channels = self.env["discuss.channel"]
         return [('id', "in" if is_in else "not in", channels.ids)]
@@ -935,6 +935,7 @@ class Channel(models.Model):
         self.ensure_one()
         data = self._read_format(
             [
+                "active",
                 "allow_public_upload",
                 "channel_type",
                 "create_uid",

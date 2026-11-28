@@ -21,7 +21,7 @@
                                 <span class="fw-bold fs-5">#<field name="name"/></span>
                                 <field name="channel_type" groups="base.group_no_one"/>
                                 <field name="description" class="text-muted lh-1 small"/>
-                                <button type="object" invisible="is_member or group_ids" class="btn btn-primary ms-auto mt-auto" name="channel_join">Join</button>
+                                <button type="object" invisible="not active or is_member or group_ids" class="btn btn-primary ms-auto mt-auto" name="channel_join">Join</button>
                                 <button type="object" invisible="not is_member or group_ids" class="btn btn-secondary ms-auto mt-auto" name="action_unfollow">Leave</button>
                             </main>
                         </t>

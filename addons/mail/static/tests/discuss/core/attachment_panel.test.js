@@ -69,7 +69,13 @@ test("Can toggle allow public upload", async () => {
         contains: ["label", { text: "File upload is disabled for external users" }],
     });
     await click(`${env1.selector} .o-mail-ActionPanel input[type='checkbox']`);
+    const uploadLabel = "File upload is enabled for external users";
     await contains(`${env2.selector} .o-mail-ActionPanel`, {
-        contains: ["label", { text: "File upload is enabled for external users" }],
+        contains: ["label", { text: uploadLabel }],
+    });
+    pyEnv["discuss.channel"].write([channelId], { active: false });
+    await contains(`${env2.selector} .o-mail-ActionPanel`, {
+        contains: ["label", { text: uploadLabel }],
+        count: 0,
     });
 });
