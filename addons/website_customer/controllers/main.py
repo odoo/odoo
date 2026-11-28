@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import re
 import werkzeug.urls
+from urllib.parse import urlsplit
 
 from odoo import http
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
@@ -173,5 +175,12 @@ class WebsiteCustomer(GoogleMap):
                     return request.redirect('/customers/%s' % request.env['ir.http']._slug(partner))
                 values = {}
                 values['main_object'] = values['partner'] = partner
+                values['back_url'] = False
+                referrer_url = urlsplit(referrer) if (referrer := request.httprequest.referrer) else None
+                if referrer_url and referrer_url.netloc == request.httprequest.host:
+                    if match := re.search(r"/partners/([\w-]+)", referrer_url.path):
+                        _, referrer_partner_id = request.env['ir.http']._unslug(match.group(1))
+                        if referrer_partner_id and referrer_partner_id == partner.assigned_partner_id.id:
+                            values['back_url'] = '/partners/%s' % request.env['ir.http']._slug(partner.assigned_partner_id)
                 return request.render("website_customer.details", values)
         raise request.not_found()
