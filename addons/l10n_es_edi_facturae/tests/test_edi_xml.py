@@ -68,8 +68,8 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
             'zip': '28701',
             'state_id': cls.env.ref('base.state_es_m').id,
         })
-        partner_b_ac = cls.partner_b.copy()
-        partner_b_ac.write({
+        cls.partner_b_ac = cls.partner_b.copy()
+        cls.partner_b_ac.write({
             'type': 'facturae_ac',
             'parent_id': cls.partner_b.id,
             'name': 'Intervención Municipal',
@@ -466,6 +466,50 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
         with file_open('l10n_es_edi_facturae/tests/data/expected_ac_document.xml', 'rt') as f:
             expected_xml = lxml.etree.fromstring(f.read().encode())
         self.assertXmlTreeEqual(lxml.etree.fromstring(generated_file), expected_xml)
+
+    @freeze_time('2023-01-01')
+    def test_generate_with_child_administrative_centers(self):
+        """Check the buyer's FACe centres for an invoice addressed to a child.
+
+        When the child has no FACe centre, the XML includes one node per role
+        for the parent's centre. When the child has a FACe centre, the XML
+        includes only that centre and its role.
+        """
+        child = self.env['res.partner'].create({
+            'name': 'Department A',
+            'parent_id': self.partner_b.id,
+            'type': 'invoice',
+        })
+        invoice = self._create_invoice_es(
+            partner_id=child.id,
+            move_type='out_invoice',
+            invoice_line_ids=[{'price_unit': 100.0, 'tax_ids': [self.tax.id]}],
+        )
+        invoice.action_post()
+        centers_path = './/BuyerParty/AdministrativeCentres/AdministrativeCentre'
+
+        # Fall back to the parent's FACe centre.
+        generated_file, errors = invoice._l10n_es_edi_facturae_render_facturae()
+        self.assertFalse(errors)
+        xml = lxml.etree.fromstring(generated_file)
+        self.assertEqual(len(xml.xpath(centers_path)), 3)
+        self.assertEqual(xml.xpath(f'{centers_path}/CentreCode/text()'), ['L01281343'] * 3)
+        self.assertCountEqual(xml.xpath(f'{centers_path}/RoleTypeCode/text()'), ['01', '02', '03'])
+
+        # Use the child's FACe centre after moving the shared fixture.
+        self.partner_b_ac.write({
+            'parent_id': child.id,
+            'l10n_es_edi_facturae_ac_center_code': 'GE0002273',
+            'l10n_es_edi_facturae_ac_role_type_ids': [Command.set(
+                self.env.ref('l10n_es_edi_facturae.ac_role_type_01').ids,
+            )],
+        })
+        generated_file, errors = invoice._l10n_es_edi_facturae_render_facturae()
+        self.assertFalse(errors)
+        xml = lxml.etree.fromstring(generated_file)
+        self.assertEqual(len(xml.xpath(centers_path)), 1)
+        self.assertEqual(xml.xpath(f'{centers_path}/CentreCode/text()'), ['GE0002273'])
+        self.assertEqual(xml.xpath(f'{centers_path}/RoleTypeCode/text()'), ['01'])
 
     @freeze_time('2023-01-01')
     def test_generate_with_invoice_period(self):
