@@ -172,7 +172,7 @@ class StockMove(models.Model):
             )
             rslt['debit_line_vals']['currency_id'] = purchase_currency.id
             rslt['credit_line_vals']['currency_id'] = purchase_currency.id
-        else:
+        elif svl.account_move_line_id.currency_id == purchase_currency:
             rslt['credit_line_vals']['amount_currency'] = 0
             rslt['debit_line_vals']['amount_currency'] = 0
             rslt['debit_line_vals']['currency_id'] = purchase_currency.id
