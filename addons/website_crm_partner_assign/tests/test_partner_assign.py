@@ -401,6 +401,36 @@ class TestPartnerLeadPortal(TestCrmCommon, HttpCase):
             res = WebsiteCrmPartnerAssign().partners()
             self.assertEqual([b'rendered'], res.response, "render_function wasn't called")
 
+    def test_forward_to_partners_portal_access(self):
+        """ Each forwarded partner gets the email matching its own portal
+        access, whatever the order of the assignation lines. """
+        partner_no_portal = self.env['res.partner'].create({
+            'name': 'No Portal Partner',
+            'email': 'no_portal@example.com',
+        })
+        lead_other = self.lead_portal.copy({'name': 'Test lead other'})
+        portal_partner = self.user_portal.partner_id
+        for assignations in (
+            [(lead_other, partner_no_portal), (self.lead_portal, portal_partner)],
+            [(self.lead_portal, portal_partner), (lead_other, partner_no_portal)],
+        ):
+            wizard = self.env['crm.lead.forward.to.partner'].create({
+                'forward_type': 'assigned',
+                'assignation_lines': [
+                    Command.create({'lead_id': lead.id, 'partner_assigned_id': partner.id})
+                    for lead, partner in assignations
+                ],
+            })
+            with self.mock_mail_gateway():
+                wizard.action_forward()
+            self.assertEqual(len(self._new_mails), 2)
+            mail_portal = self._find_mail_mail_wemail(portal_partner.email_formatted, 'outgoing')
+            mail_no_portal = self._find_mail_mail_wemail(partner_no_portal.email_formatted, 'outgoing')
+            self.assertIn('Partner Portal', mail_portal.body_html)
+            self.assertNotIn('You do not have yet a portal access', mail_portal.body_html)
+            self.assertIn('You do not have yet a portal access', mail_no_portal.body_html)
+            self.assertNotIn('Partner Portal', mail_no_portal.body_html)
+
 
 @tagged('post_install', '-at_install')
 class TestPublish(HttpCase):

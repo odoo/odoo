@@ -86,6 +86,7 @@ class CrmLeadForwardToPartner(models.TransientModel):
                     partners_leads[partner.id] = {'partner': partner, 'leads': [lead_details]}
 
         for partner_id, partner_leads in partners_leads.items():
+            partner = partner_leads['partner']
             in_portal = False
             if portal_group:
                 for contact in (partner.child_ids or partner).filtered(lambda contact: contact.user_ids):
