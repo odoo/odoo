@@ -45,7 +45,7 @@
                     t-att-data-view-track="view_track and '1' or '0'"
                     t-att-data-name="combination_info['display_name']"
                 >
-                    <div class="o_wsale_content_contained container d-flex flex-wrap align-items-center py-3">
+                    <div class="o_wsale_content_contained container d-flex flex-wrap align-items-center py-2 pb-md-3">
                         <div class="d-flex align-items-center flex-grow-1">
                             <ol class="o_wsale_breadcrumb breadcrumb m-0 p-0">
                                 <li class="breadcrumb-item d-none d-lg-inline-block">
@@ -817,6 +817,47 @@
                 </div>
             </div>
         </xpath>
+    </template>
+
+    <template
+        id="website_sale.product_mobile_bottom_bar"
+        inherit_id="website_sale.product"
+        name="Product Mobile Bottom Bar"
+    >
+        <!-- Add sticky bottom bar inside wrap, after all content -->
+        <div id="wrap" position="inside">
+            <div
+                t-if="is_add_to_cart_possible"
+                class="o_wsale_product_mobile_bar oe_website_sale o_not_editable sticky-bottom
+                        d-flex d-lg-none align-items-center gap-2 border-top p-3 bg-body shadow-lg"
+            >
+                <t t-call="website_sale.product_price"/>
+                <t
+                    t-if="combination_info.get('base_unit_price')"
+                    t-call="website_sale.base_unit_price"
+                    base_unit_price="combination_info['base_unit_price']"
+                />
+                <button
+                    t-if="not combination_info['prevent_sale']"
+                    class="o_wsale_mobile_bar_add_to_cart btn btn-primary ms-auto"
+                    title="Add to Cart"
+                    aria-label="Add to Cart"
+                >
+                    <i class="oi" data-icon="shopping_cart" role="img" aria-hidden="true"/>
+                </button>
+
+                <!-- Contact Us — shown when sale not possible -->
+                <a
+                    t-else=""
+                    class="btn btn-primary ms-auto"
+                    t-att-href="website._get_contact_us_url(combination_info.get('display_name', ''))"
+                    title="Contact Us"
+                    aria-label="Contact Us"
+                >
+                    <i class="oi" data-icon="mail" role="img" aria-hidden="true"/>
+                </a>
+            </div>
+        </div>
     </template>
 
     <template id="website_sale.product_tags" name="Product Tags" active="True">
