@@ -272,6 +272,7 @@ export class StaticList extends DataPoint {
      * @param {Object} [params.context]
      * @param {boolean} [params.withoutParent]
      * @param {string} [params.mode]
+     * @param {"top"|"bottom"} [params.position]
      * @param {RelationalRecord} [record]
      * @returns {RelationalRecord}
      */
@@ -354,6 +355,7 @@ export class StaticList extends DataPoint {
                     activeFields,
                     context: params.context,
                     withoutParent: params.withoutParent,
+                    position: params.position,
                     manuallyAdded: true,
                 });
                 record._activeFieldsToRestore = { ...this.config.activeFields };
@@ -471,11 +473,11 @@ export class StaticList extends DataPoint {
      *
      * @param {RelationalRecord} record
      */
-    validateExtendedRecord(record) {
+    validateExtendedRecord(record, position) {
         return this.model.mutex.exec(async () => {
             if (!this._currentIds.includes(record.isNew ? record._virtualId : record.resId)) {
                 // new record created, not yet in the list
-                await this._addRecord(record);
+                await this._addRecord(record, { position });
             } else if (!record.dirty) {
                 return;
             }
