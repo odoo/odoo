@@ -48,6 +48,14 @@ class HrWorkEntry extends models.Model {
 defineMailModels();
 defineModels([HrWorkEntryType, HrWorkEntry]);
 
+let canWriteWorkEntryType = true;
+onRpc("has_access", ({ model, args }) => {
+    if (model === "hr.work.entry.type" && args[1] === "write") {
+        return canWriteWorkEntryType;
+    }
+    return true;
+});
+
 const FORM_ARCH = `
     <form>
         <field name="work_entry_type_id" widget="many2one_work_entry_type"/>
@@ -157,4 +165,30 @@ test("search more 'Create New' refetches display_code and color of the new recor
     expect.verifySteps(["web_save", "web_read"]);
     expect(AVATAR).toHaveText("N");
     expect(AVATAR).toHaveStyle({ "--o-calendar-color": "var(--o-colors-3)" }, { inline: true });
+});
+
+test.tags("desktop");
+test("internal link is hidden for users who cannot edit the time types", async () => {
+    canWriteWorkEntryType = false;
+    await mountView({
+        type: "form",
+        resModel: "hr.work.entry",
+        resId: 1,
+        arch: FORM_ARCH,
+    });
+
+    expect(".o_field_widget[name=work_entry_type_id] .o_external_button").toHaveCount(0);
+});
+
+test.tags("desktop");
+test("internal link is shown for users who can edit the time types", async () => {
+    canWriteWorkEntryType = true;
+    await mountView({
+        type: "form",
+        resModel: "hr.work.entry",
+        resId: 1,
+        arch: FORM_ARCH,
+    });
+
+    expect(".o_field_widget[name=work_entry_type_id] .o_external_button").toHaveCount(1);
 });
