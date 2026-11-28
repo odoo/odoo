@@ -89,11 +89,21 @@ def normalize_icon_text(text):
     return remove_accents(text.casefold())
 
 
+def normalized_icon_name(name):
+    return normalize_icon_text(name.replace('_', ' '))
+
+
+def icon_search_entry(name, icon):
+    normalized_name = normalized_icon_name(name)
+    return (
+        name,
+        normalized_name,
+        normalize_icon_text(f"{normalized_name} {icon['tags']._source}"),
+    )
+
+
 # English only: the language is unknown at import time.
-ICONS_INDEX = [
-    (name, normalize_icon_text(f"{name} {icon['tags']._source}"))
-    for name, icon in ICONS.items()
-]
+ICONS_INDEX = [icon_search_entry(name, icon) for name, icon in ICONS.items()]
 
 
 @functools.cache
@@ -116,13 +126,25 @@ def search_icons(env, needle=''):
     A word matches the icon name, its English tags or its tags translated in
     the user's language.  An empty needle yields every icon.
     """
-    terms = normalize_icon_text(needle).split()
+    normalized_needle = normalized_icon_name(needle).strip()
+    terms = normalized_needle.split()
     if not terms:
         yield from ICONS
         return
     translated = translated_icon_tags(env.lang or 'en_US')
-    for name, haystack in ICONS_INDEX:
-        missing = [term for term in terms if term not in haystack]
-        if missing and any(term not in translated.get(name, '') for term in missing):
+    matching_icons = []
+    for index, (name, normalized_name, haystack) in enumerate(ICONS_INDEX):
+        translated_haystack = translated.get(name, '')
+        if not all(term in haystack or term in translated_haystack for term in terms):
             continue
+        if normalized_name == normalized_needle:
+            rank = 0
+        elif normalized_name.startswith(normalized_needle):
+            rank = 1
+        elif all(term in normalized_name for term in terms):
+            rank = 2
+        else:
+            rank = 3
+        matching_icons.append((rank, index, name))
+    for _rank, _index, name in sorted(matching_icons):
         yield name
