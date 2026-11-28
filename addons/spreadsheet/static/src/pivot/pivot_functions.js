@@ -64,14 +64,18 @@ const ODOO_FILTER_LABEL = /** @satisfies {CustomFunctionDescription} */ ({
         const start = toJsDate(startValue, this.locale);
         const end = toJsDate(endValue, this.locale);
         const endOfMonth = toJsDate(this["MONTH.END"](endValue), this.locale);
-        if (start.getDate() !== 1 || end.getDate() !== endOfMonth.getDate()) {
+        if (
+            start.getDate() !== 1 ||
+            end.getDate() !== endOfMonth.getDate() ||
+            start.getFullYear() !== end.getFullYear()
+        ) {
             return value;
         } else if (start.getMonth() === end.getMonth()) {
             return String(start.getMonth() + 1).padStart(2, "0") + "/" + start.getFullYear();
-        } else if (end.getMonth() - start.getMonth() === 2) {
+        } else if (start.getMonth() % 3 === 0 && end.getMonth() - start.getMonth() === 2) {
             const quarter = Math.floor(start.getMonth() / 3) + 1;
             return "Q" + quarter + "/" + start.getFullYear();
-        } else if (start.getFullYear() === end.getFullYear()) {
+        } else if (start.getMonth() === 0 && end.getMonth() === 11) {
             return toString(start.getFullYear(), this.locale);
         }
         return value;
