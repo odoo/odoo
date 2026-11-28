@@ -25,6 +25,7 @@ import { isBlock, closestBlock } from "@html_editor/utils/blocks";
 import { isBrowserFirefox, isBrowserSafari } from "@web/core/browser/feature_detection";
 import { session } from "@web/session";
 import { FONT_SIZE_CLASSES } from "@html_editor/utils/formatting";
+import { useScope } from "@odoo/owl";
 
 const FONT_SIZED_SPAN_SELECTOR = [
     ...FONT_SIZE_CLASSES.map((className) => `span.${className}`),
@@ -206,6 +207,9 @@ export class LinkPlugin extends Plugin {
     };
     // @phoenix @todo: do we want to have createLink and insertLink methods in link plugin?
     static shared = shared(["createLink", "insertLink", "getPathAsUrlCommand", "supportsLink"]);
+    // By id, not by class: this file is also loaded in frontend bundles, which
+    // don't include the backend-only CommandPlugin, so its import would fail there.
+    command = useScope().pluginManager.getPluginById("CommandPlugin");
     /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
@@ -475,7 +479,7 @@ export class LinkPlugin extends Plugin {
         });
         // link creation is added to the command service because of a shortcut conflict,
         // as ctrl+k is used for invoking the command palette
-        this.unregisterLinkCommandCallback = this.services.command?.add(
+        this.unregisterLinkCommandCallback = this.command?.add(
             "Create link",
             () => {
                 this.dependencies.selection.focusEditable();

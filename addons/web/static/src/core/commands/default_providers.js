@@ -6,8 +6,7 @@ import { capitalize } from "@web/core/utils/strings";
 import { getVisibleElements } from "@web/core/utils/ui";
 import { DefaultCommandItem } from "./command_palette";
 
-import { Component, t, useProps, usePlugin } from "@odoo/owl";
-import { useService } from "@web/core/utils/hooks";
+import { Component, t, useProps, usePlugin, useScope } from "@odoo/owl";
 import { HotkeyPlugin } from "@web/core/hotkeys/hotkey_plugin";
 
 const commandSetupRegistry = registry.category("command_setup");
@@ -46,7 +45,9 @@ const commandCategoryRegistry = registry.category("command_categories");
 const commandProviderRegistry = registry.category("command_provider");
 commandProviderRegistry.add("command", {
     provide(options) {
-        const commandService = useService("command");
+        // By id, not by class: this file is also loaded in frontend bundles, which
+        // don't include the backend-only CommandPlugin, so its import would fail there.
+        const commandService = useScope().pluginManager.getPluginById("CommandPlugin");
         const commands = commandService
             .getCommands(options.activeElement)
             .map((cmd) => {

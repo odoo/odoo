@@ -1,8 +1,7 @@
-import { useService } from "@web/core/utils/hooks";
-import { onMounted, onWillUnmount } from "@odoo/owl";
+import { onMounted, onWillUnmount, useScope } from "@odoo/owl";
 
 /**
- * @typedef {import("./command_service").CommandOptions} CommandOptions
+ * @typedef {import("./command_plugin").CommandOptions} CommandOptions
  */
 
 /**
@@ -14,7 +13,9 @@ import { onMounted, onWillUnmount } from "@odoo/owl";
  * @param {CommandOptions} [options]
  */
 export function useCommand(name, action, options = {}) {
-    const commandService = useService("command");
+    // By id, not by class: this file is also loaded in frontend bundles, which
+    // don't include the backend-only CommandPlugin, so its import would fail there.
+    const commandService = useScope().pluginManager.getPluginById("CommandPlugin");
     let remove;
     onMounted(() => {
         remove = commandService.add(name, action, options);

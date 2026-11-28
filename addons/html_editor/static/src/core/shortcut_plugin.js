@@ -1,3 +1,4 @@
+import { useScope } from "@odoo/owl";
 import { Plugin, isValidTargetForDomListener } from "../plugin";
 import { leftLeafOnlyNotBlockPath } from "@html_editor/utils/dom_state";
 import { omit } from "@web/core/utils/objects";
@@ -46,6 +47,10 @@ export class ShortCutPlugin extends Plugin {
         "properties",
     ];
 
+    // By id, not by class: this file is also loaded in frontend bundles, which
+    // don't include the backend-only CommandPlugin, so its import would fail there.
+    command = useScope().pluginManager.getPluginById("CommandPlugin");
+
     /** @type {import("plugins").EditorResources} */
     resources = {
         on_input_handlers: this.onInput.bind(this),
@@ -91,7 +96,7 @@ export class ShortCutPlugin extends Plugin {
         this.removeEditorCommandPalette = this.services.hotkey.add(
             "control+k",
             () => {
-                this.services.command.openMainPalette({}, () => {
+                this.command?.openMainPalette({}, () => {
                     this.dependencies.selection.focusEditable();
                 });
             },

@@ -1,7 +1,6 @@
 declare module "services" {
     import { ServicesRegistryShape } from "registries";
 
-    import { commandService } from "@web/core/commands/command_service";
     import { datetimePickerService } from "@web/core/datetime/datetimepicker_service";
     import { dialogService } from "@web/core/dialog/dialog_plugin";
     import { effectService } from "@web/core/effects/effect_plugin";
@@ -33,7 +32,6 @@ declare module "services" {
     export interface Services {
         "public.interactions": typeof publicInteractionService;
         action: typeof actionService;
-        command: typeof commandService;
         datetime_picker: typeof datetimePickerService;
         dialog: typeof dialogService;
         effect: typeof effectService;

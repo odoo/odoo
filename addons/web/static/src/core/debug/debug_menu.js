@@ -3,7 +3,6 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { DebugMenuBasic } from "@web/core/debug/debug_menu_basic";
 import { useCommand } from "@web/core/commands/command_hook";
-import { useService } from "@web/core/utils/hooks";
 import { useEnvDebugContext } from "./debug_context";
 
 export class DebugMenu extends DebugMenuBasic {
@@ -11,7 +10,6 @@ export class DebugMenu extends DebugMenuBasic {
     setup() {
         super.setup();
         const debugContext = useEnvDebugContext();
-        this.command = useService("command");
         useCommand(
             _t("Debug tools..."),
             async () => {
