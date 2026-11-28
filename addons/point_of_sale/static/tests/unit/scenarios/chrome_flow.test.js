@@ -344,3 +344,15 @@ test("customer_display_shows_qr_popup: customer display QR code popup", async ()
         await waitFor(".modal img, .modal canvas, .modal svg");
     }
 });
+
+test("test_click_outside_customer_dialog_keep_customer: clicking outside of customer dialog should keep current customer", async () => {
+    const store = await setupAndMountPosApp();
+    const partner = store.models["res.partner"].get(3);
+
+    await Utils.selectCustomer(partner.name);
+    await Utils.checkSelectedCustomer(partner.name);
+
+    await Utils.clickPartnerButton();
+    await contains("div.o_modal_body_padding").click();
+    expect(store.getOrder().getPartner().id).toBe(3);
+});
