@@ -10,7 +10,7 @@ from odoo import http, modules, _
 from odoo.tools.image import image_process
 from odoo.tools.mimetypes import guess_mimetype
 
-from odoo.addons.html_editor.controllers.main import attachment_create
+from odoo.addons.html_editor.tools import attachment_create
 from odoo.addons.web_unsplash import utils as unsplash_utils
 from odoo.addons.web_unsplash.utils import (
     UNSPLASH_ACCESS_KEY_ICP,

@@ -192,8 +192,8 @@ export class ImageSelector extends FileSelector {
         await uploadPromise;
     }
 
-    async validateUrl(url) {
-        let { isValidUrl, path } = super.validateUrl(url);
+    async validateUrl(...args) {
+        const { isValidUrl, path } = super.validateUrl(...args);
         const isValidFileFormat =
             isValidUrl &&
             (await new Promise((resolve) => {
@@ -202,9 +202,6 @@ export class ImageSelector extends FileSelector {
                 img.onload = () => resolve(true);
                 img.onerror = () => resolve(false);
             }));
-        if (isValidFileFormat && path.endsWith(".webp") && this.props.validateUrl) {
-            isValidUrl = await this.props.validateUrl(url);
-        }
         return { isValidFileFormat, isValidUrl };
     }
 
