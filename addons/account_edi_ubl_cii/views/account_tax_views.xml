@@ -6,6 +6,7 @@
         <field name="inherit_id" ref="account.view_tax_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='country_id']" position="after">
+                <separator string="Peppol/UBL"/>
                 <field name="ubl_cii_available_tax_category_codes" invisible="1"/> <!-- Needed for ubl_cii_tax_category_code > filterable_selection -->
                 <field name="ubl_cii_tax_category_code"
                        widget="filterable_selection"
@@ -18,6 +19,10 @@
                 <field name="ubl_cii_tax_exemption_reason"
                        invisible="not ubl_cii_requires_exemption_reason"
                        />
+                <field name="ubl_cii_allowance_reason_code" invisible="not ubl_cii_is_allowance_charge_code_supported"/>
+                <field name="ubl_cii_allowance_reason" invisible="not ubl_cii_is_allowance_charge_code_supported"/>
+                <field name="ubl_cii_charge_reason_code" invisible="not ubl_cii_is_allowance_charge_code_supported"/>
+                <field name="ubl_cii_charge_reason" invisible="not ubl_cii_is_allowance_charge_code_supported"/>
             </xpath>
         </field>
     </record>

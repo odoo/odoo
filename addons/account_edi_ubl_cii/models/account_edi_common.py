@@ -197,6 +197,23 @@ class AccountEdiCommon(models.AbstractModel):
             'model': self,
         }
 
+    def _get_allowance_charge_line_sign(self, collected_values):
+        """ Return the sign of the gross line amount, i.e. quantity * price before the line allowances
+        and charges. A fixed tax follows the product line, not the net amount that already contains it:
+        a charge on a return line (or an allowance bigger than the price) must not flip the fixed tax sign.
+        At this point, the line charges are folded in `price_unit` (and the allowances in `discount`),
+        so the charges are taken back out. When the gross amount is zero (e.g. free item), fall back
+        on the quantity sign.
+        see - `test_invoice_with_fixed_tax_on_negative_line` for reference
+        """
+        to_write = collected_values['to_write']
+        currency = collected_values['currency_values']['currency']
+        total_charges = sum(charge['amount'] for charge in collected_values['charges'])
+        gross_amount = to_write['quantity'] * to_write['price_unit'] - total_charges
+        if currency.is_zero(gross_amount):
+            return -1 if to_write['quantity'] < 0 else 1
+        return 1 if gross_amount > 0 else -1
+
     def _get_document_type(self, vals):
         return vals.get('_document_type', {}).get('name')
 
@@ -1548,7 +1565,12 @@ class AccountEdiCommon(models.AbstractModel):
             and (partner := collected_values.get('customer_values', {}).get('customer'))
         ):
             for line_collected_values in collected_values['lines_collected_values']:
-                taxes_values = line_collected_values['taxes_values']
+                # Ignore the fixed taxes attempted from allowances/charges, they are not the line's own taxes
+                taxes_values = [
+                    tax_values
+                    for tax_values in line_collected_values['taxes_values']
+                    if 'charge_indicator' not in tax_values
+                ]
                 line_domain = []
                 if len(taxes_values) == 1:
                     tax_domain = [
@@ -1881,6 +1903,25 @@ class AccountEdiCommon(models.AbstractModel):
                 to_write['price_unit'] -= charge['amount'] / to_write['quantity']
                 new_price_subtotal_before_discount = to_write['price_unit'] * to_write['quantity']
                 to_write['discount'] = (1 - (price_subtotal_after / new_price_subtotal_before_discount)) * 100.0
+
+            # Extract allowances matched with a (negative) fixed tax.
+            for allowance in line_collected_values['allowances']:
+                attempt_tax_values = allowance.get('attempt_tax_values')
+                if not attempt_tax_values or not attempt_tax_values.get('tax'):
+                    continue
+
+                # Suppose price_unit = 20, quantity = 10, an allowance of 20 (discount = 10%)
+                # for a total of 200 (before discount) and 180 (after discount).
+                # We retrieve a fixed tax of -20 / 10 = -2, so the allowance must not be kept in the discount:
+                # price_subtotal_before = 180
+                # price_subtotal_after = 180 + 20 = 200
+                # discount = (1 - (200 / 200)) * 100 = 0%
+                # The fixed tax is giving an amount of -20.
+                # 200 - 20 = the original 180 we had at the beginning!
+                if gross_price_subtotal := to_write['price_unit'] * to_write['quantity']:
+                    price_subtotal_before = gross_price_subtotal * (1.0 - to_write['discount'] / 100.0)
+                    price_subtotal_after = price_subtotal_before + allowance['amount']
+                    to_write['discount'] = (1 - (price_subtotal_after / gross_price_subtotal)) * 100.0
 
             # Product line.
             base_line_kwargs = self._import_invoice_line_get_product_base_line_kwargs(line_collected_values)
