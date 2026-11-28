@@ -80,6 +80,17 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
         self.assertEqual(specific_view.website_meta_title, "Hello, world!")
         self.assertEqual(event.website_meta_title, False)
 
+    def test_website_event_missing_page(self):
+        event = self.env['event.event'].create({
+            'name': 'Event With Menu',
+            'website_menu': True,
+            'website_published': True,
+        })
+        self.authenticate('admin', 'admin')
+        res = self.url_open(f'/event/{event.id}/page/missing')
+        self.assertEqual(res.status_code, 404)
+        self.assertIn('data-view-xmlid="website.page_404"', res.text)
+
     def test_website_event_questions(self):
         """ Will execute the tour that fills up two tickets with a few questions answers
         and then assert that the answers are correctly saved for each attendee. """

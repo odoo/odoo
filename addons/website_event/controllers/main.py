@@ -12,7 +12,7 @@ from odoo.http import request
 from odoo.tools.misc import get_lang
 from odoo.tools import lazy
 from odoo.tools.translate import LazyTranslate
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import MissingError, UserError, ValidationError
 
 _lt = LazyTranslate(__name__)
 
@@ -193,9 +193,9 @@ class WebsiteEventController(http.Controller):
             page = view.key if view else page
             values['seo_object'] = request.website.get_template(page)
             values['main_object'] = event
-        except ValueError:
+        except MissingError:
             # page not found
-            page = 'website.page_404'
+            raise NotFound()
 
         return request.render(page, values)
 
