@@ -1,0 +1,39 @@
+id,name,description,invoice_label,amount,amount_type,sequence,type_tax_use,tax_scope,include_base_amount,tax_group_id,active,tax_exigibility,cash_basis_transition_account_id,repartition_line_ids/factor_percent,repartition_line_ids/repartition_type,repartition_line_ids/document_type,repartition_line_ids/account_id,repartition_line_ids/tag_ids,description@fr,price_include_override,fiscal_position_ids,original_tax_ids,invoice_legal_notes,ubl_cii_tax_category_code,ubl_cii_tax_exemption_reason_code
+tva_acq_normale,,,,,,,,,,,0,,,,,,,,,,"",,,
+tva_acq_specifique,,,,,,,,,,,0,,,,,,,,"",,"",,,
+tva_acq_intermediaire,,,,,,,,,,,0,,,,,,,,,,"",,,
+tva_acq_reduite,,,,,,,,,,,0,,,,,,,,"",,"",,,
+tva_acq_super_reduite,,,,,,,,,,,0,,,,,,,,"",,"",,,
+tva_purchase_good_fuel,,,,,,,,,,,0,,,,,,,,,,"",,,
+tva_imm_normale,,,,,,,,,,,0,,,,,,,,,,"",,,
+tva_import_outside_eu_20,,,,,,,,,,,0,,,,,,,,,,,,,
+tva_intra_normale_biens,,,,,,,,,,,0,,,,,,,,,,,,,
+tva_intra_normale_services,,,,,,,,,,,0,,,,,,,,,,,,,
+tva_purchase_service_20_import,,,,,,,,,,,0,,,,,,,,,,,,,
+tva_purchase_service_0,,,,,,,,,,,0,,,,,,,,,,,,,,
+tva_acq_encaissement,,,,,,,,,,,0,,,,,,,,,,"",,,
+tva_purchase_imm_normale,,,,,,,,,,,0,,,,,,,,,,"",,,
+tva_normale,,,,,,,,,,,0,,,,,,,,,,"",,,
+tva_sale_good_0,,,,,,,,,,,0,,,,,,,,,,"",,,,
+tva_sale_good_intra_0,,,,,,,,,,,0,,,,,,,,,,,"",,,
+tva_normale_encaissement,,,,,,,,,,,0,,,,,,,,,,"",,,
+tva_sale_service_0,,,,,,,,,,,0,,,,,,,,,,"",,,,
+tva_sale_service_intra_0,,,,,,,,,,,0,,,,,,,,,,,"",,,
+tva_sale_good_na,0% NA G,0% NA G,"TVA non applicable, art. 294-1 du CGI",0.0,percent,10,sale,consu,1,tax_group_tva_0,,,,100,base,invoice,,,0% NA M,,"fiscal_position_template_domestic,fiscal_position_template_domestic_gf",,,,
+,,,,,,,,,,,,,,100,tax,invoice
+,,,,,,,,,,,,,,100,base,refund,,
+,,,,,,,,,,,,,,100,tax,refund
+tva_sale_service_na,0% NA S,0% NA S,"TVA non applicable, art. 294-1 du CGI",0.0,percent,10,sale,service,1,tax_group_tva_0,,on_payment,pcg_44574,100,base,invoice,,,0% NA S,,"fiscal_position_template_domestic,fiscal_position_template_domestic_gf,fiscal_position_template_import_export",,,,
+,,,,,,,,,,,,,,100,tax,invoice
+,,,,,,,,,,,,,,100,base,refund,,
+,,,,,,,,,,,,,,100,tax,refund
+tva_purchase_good_na,0% NA G,0% NA G,"TVA non applicable, art. 294-1 du CGI",0.0,percent,10,purchase,consu,1,tax_group_tva_0,,,,100,base,invoice,,,0% NA M,,"",,,,
+,,,,,,,,,,,,,,100,tax,invoice
+,,,,,,,,,,,,,,100,base,refund,,
+,,,,,,,,,,,,,,100,tax,refund
+tva_purchase_service_na,0% NA S,0% NA S,"TVA non applicable, art. 294-1 du CGI",0.0,percent,10,purchase,service,1,tax_group_tva_0,,on_invoice,pcg_44574,100,base,invoice,,,0% NA S,,"",,,,
+,,,,,,,,,,,,,,100,tax,invoice
+,,,,,,,,,,,,,,100,base,refund,,
+,,,,,,,,,,,,,,100,tax,refund
+tva_sale_good_export_0,,,,,,,,,,,,,,,,,,,,,"fiscal_position_template_outside_gf_b2b,fiscal_position_template_import_export","tva_sale_good_na",,,
+tva_sale_service_export_0,,,,,,,,,,,,,,,,,,,,,fiscal_position_template_outside_gf_b2b,"tva_sale_service_na",,,
