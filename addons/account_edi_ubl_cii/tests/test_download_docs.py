@@ -16,7 +16,8 @@ class TestDownloadDocs(TestUblBis3Common, TestUblCiiBECommon, AccountTestInvoici
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        invoice_1 = cls.env['account.move'].create({
+        MAIL_OFF = {'tracking_disable': True, 'mail_create_nosubscribe': True, 'mail_create_nolog': True, 'mail_notrack': True}
+        invoice_1 = cls.env['account.move'].with_context(**MAIL_OFF).create({
             'move_type': 'out_invoice',
             'partner_id': cls.partner_be.id,
             'invoice_line_ids': [
@@ -27,7 +28,7 @@ class TestDownloadDocs(TestUblBis3Common, TestUblCiiBECommon, AccountTestInvoici
                 })
             ]
         })
-        invoice_2 = cls.env['account.move'].create({
+        invoice_2 = cls.env['account.move'].with_context(**MAIL_OFF).create({
             'move_type': 'out_invoice',
             'partner_id': cls.partner_be.id,
             'invoice_line_ids': [
@@ -38,7 +39,7 @@ class TestDownloadDocs(TestUblBis3Common, TestUblCiiBECommon, AccountTestInvoici
                 })
             ]
         })
-        invoice_3 = cls.env['account.move'].create({
+        invoice_3 = cls.env['account.move'].with_context(**MAIL_OFF).create({
             'move_type': 'out_invoice',
             'partner_id': cls.partner_be.id,
             'invoice_line_ids': [
