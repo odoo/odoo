@@ -917,6 +917,39 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
             {'qty_producing': 0.0, 'product_qty': 10.0, 'state': 'confirmed'},
         ])
 
+    def test_tracked_subcontract_receipt_in_other_uom(self):
+        """ Receiving a lot-tracked subcontracted product in a UoM bigger than
+        the product's one must not change the quantity of the subcontracting MO.
+        """
+        self.finished.tracking = 'lot'
+        uom_duo = self.env['uom.uom'].create({
+            'name': 'Duos',
+            'relative_factor': 2.0,
+            'relative_uom_id': self.env.ref('uom.product_uom_unit').id,
+        })
+        lot = self.env['stock.lot'].create({'name': 'lot1', 'product_id': self.finished.id})
+        receipt = self.env['stock.picking'].create({
+            'partner_id': self.subcontractor_partner1.id,
+            'picking_type_id': self.warehouse.in_type_id.id,
+            'move_ids': [Command.create({
+                'product_id': self.finished.id,
+                'product_uom_qty': 3.0,
+                'product_uom': uom_duo.id,
+            })],
+        })
+        receipt.action_confirm()
+        production = receipt.move_ids._get_subcontract_production()
+        self.assertRecordValues(production, [{'product_qty': 3.0, 'product_uom_id': uom_duo.id}])
+
+        receipt.move_ids.move_line_ids.lot_id = lot
+        production = receipt.move_ids._get_subcontract_production()
+        self.assertRecordValues(production, [{'product_qty': 3.0, 'product_uom_id': uom_duo.id, 'lot_producing_ids': lot.ids}])
+
+        receipt.button_validate()
+        self.assertEqual(receipt.state, 'done')
+        self.assertRecordValues(production, [{'qty_produced': 3.0, 'state': 'done'}])
+        self.assertEqual(sum(production.move_raw_ids.filtered(lambda m: m.product_id == self.comp1).mapped('quantity')), 6.0)
+
     def test_change_partner_subcontracting_location(self):
         """On creating a subcontrating picking, the destination location of the picking is equal to
         the subcontracting location of the contact if specified. Otherwise, it will be equal to the

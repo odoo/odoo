@@ -262,7 +262,11 @@ class StockMove(models.Model):
                     }]).change_prod_qty()
                     productions.action_assign()
             else:
-                qty_by_lot = dict(move.move_line_ids._read_group([('move_id', '=', move.id)], ['lot_id'], ['quantity_product_uom:sum']))
+                # The subcontracting MOs are in the UoM of the move
+                qty_by_lot = {
+                    lot: move.product_id.uom_id._compute_quantity(qty, move.product_uom)
+                    for lot, qty in move.move_line_ids._read_group([('move_id', '=', move.id)], ['lot_id'], ['quantity_product_uom:sum'])
+                }
                 mos_to_assign = self.env['mrp.production']
 
                 # 1. Ensure quantities of linked MOs still match the quantities on the move
