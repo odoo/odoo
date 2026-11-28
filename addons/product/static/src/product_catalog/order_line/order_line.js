@@ -9,23 +9,22 @@ export class ProductCatalogOrderLine extends Component {
         isSample: t.boolean().optional(),
         productId: t.number(),
         quantity: t.number(),
-        price: t.number().optional(),
-        productType: t.string(),
-        uomId: t.number().optional(),
-        uomDisplayName: t.string().optional(),
-        availableUoms: t.array().optional(),
-        productUomFactor: t.number().optional(),
-        productUomDisplayName: t.string().optional(),
-        sellerUomFactor: t.number().optional(),
         readOnly: t.boolean().optional(),
         warning: t.string().optional(),
+
+        // price data
+        price: t.number().optional(),
         subtotal: t.number().optional(),
+
+        // UoM data, if uoms are enabled
+        uomId: t.number().optional(),
+        productUomId: t.number().optional(),
+        availableUoms: t.array(t.object()).optional(),
     });
 
     portalTarget = signal(null);
 
     setup() {
-        this.hasMultipleUoms = this.props.availableUoms && this.props.availableUoms.length > 1;
         onMounted(() => {
             this.portalTarget.set(document.querySelector(`#product-${this.props.productId}-price`));
         });
@@ -62,7 +61,7 @@ export class ProductCatalogOrderLine extends Component {
 
     get productUnitPrice() {
         const { currencyId, digits } = this.env;
-        const productUnitPrice = this.props.price * (this.props.productUomFactor || 1);
+        const productUnitPrice = this.props.price * (this.productUom.factor / this.uom.factor || 1);
         return formatMonetary(productUnitPrice, { currencyId, digits });
     }
 
@@ -72,8 +71,28 @@ export class ProductCatalogOrderLine extends Component {
         return parseFloat(formatFloat(this.props.quantity, options));
     }
 
+    get isUoMFeatureEnabled() {
+        return this.props.availableUoms?.length > 0;
+    }
+
+    get hasMultipleUoms() {
+        return this.isUoMFeatureEnabled && this.props.availableUoms.length > 1;
+    }
+
+    get uom() {
+        return this.props.availableUoms?.find((elem) => elem.id == this.props.uomId);
+    }
+
+    get uomDisplayName() {
+        return this.uom?.display_name;
+    }
+
+    get productUom() {
+        return this.props.availableUoms?.find((elem) => elem.id == this.props.productUomId)
+    }
+
     get uomSelectStyle() {
-        const name = this.props.uomDisplayName || "";
+        const name = this.uomDisplayName || "";
         return `width: ${name.length + 5}ch;`;
     }
 
@@ -86,12 +105,10 @@ export class ProductCatalogOrderLine extends Component {
     }
 
     get displayPriceByProductUoM() {
-        const { uomDisplayName, productUomDisplayName } = this.props;
         return (
-            uomDisplayName != productUomDisplayName &&
-            this.productUnitPrice &&
-            productUomDisplayName &&
             this.showPrice
+            && this.isUoMFeatureEnabled
+            && this.props.uomId != this.props.productUomId
         );
     }
 }
