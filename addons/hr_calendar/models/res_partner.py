@@ -42,12 +42,18 @@ class ResPartner(models.Model):
             return {}
         interval_by_calendar = defaultdict()
         resources_by_calendar = defaultdict(lambda: self.env['resource.resource'])
+        variable_hours_resources = self.env['resource.resource']
+        variable_hours_periods = set()
 
         # Compute employee's calendars's period and order employee by his involved calendars
         employees = sum(employees_by_partner.values(), start=self.env['hr.employee'])
         calendar_periods_by_employee = employees._get_calendar_periods(start_period.date(), stop_period.date())
         for employee, calendar_periods in calendar_periods_by_employee.items():
-            for _start, _stop, calendar in calendar_periods:
+            for start, _stop, calendar in calendar_periods:
+                if not calendar and not employee.sudo()._get_version(start).hours_per_day:
+                    variable_hours_resources |= employee.resource_id
+                    variable_hours_periods.add((employee.id, start))
+                    continue
                 calendar = calendar or self.env.company.resource_calendar_id
                 resources_by_calendar[calendar] += employee.resource_id
 
@@ -62,21 +68,36 @@ class ResPartner(models.Model):
             else:
                 interval_by_calendar[calendar] = work_intervals
 
+        # Flexible employees with variable hours per day are
+        # available at any time, except during their time off.
+        interval_by_variable_hours_resource = {}
+        if variable_hours_resources:
+            leave_intervals = self.env.company.resource_calendar_id._leave_intervals_batch(
+                start_period, stop_period, resources_per_tz=variable_hours_resources._get_resources_per_tz(),
+            )
+            for resource in variable_hours_resources:
+                interval_by_variable_hours_resource[resource.id] = Intervals([(
+                    start_period, stop_period, self.env['resource.calendar.attendance'],
+                )]) - leave_intervals[resource.id]
+
         # Compute employee's schedule based own his calendar's periods
         schedule_by_employee = defaultdict(list)
         for employee, calendar_periods in calendar_periods_by_employee.items():
             employee_interval = Intervals([])
             for (start, stop, calendar) in calendar_periods:
-                calendar = calendar or self.env.company.resource_calendar_id # No calendar if fully flexible
                 tz = ZoneInfo(employee._get_tz(start))
                 interval = Intervals([(
                     datetime.combine(start, time.min, tz),
                     datetime.combine(stop, time.max, tz),
                     self.env['resource.calendar'])])
-                if merge:
-                    calendar_interval = interval_by_calendar[calendar]
+                if (employee.id, start) in variable_hours_periods:  # No working schedule and no hours per day
+                    calendar_interval = interval_by_variable_hours_resource[employee.resource_id.id]
                 else:
-                    calendar_interval = interval_by_calendar[calendar][employee.resource_id.id]
+                    calendar = calendar or self.env.company.resource_calendar_id  # No calendar if flexible
+                    if merge:
+                        calendar_interval = interval_by_calendar[calendar]
+                    else:
+                        calendar_interval = interval_by_calendar[calendar][employee.resource_id.id]
                 employee_interval = employee_interval | (calendar_interval & interval)
             schedule_by_employee[employee] = employee_interval
 
