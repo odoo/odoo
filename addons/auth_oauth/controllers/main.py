@@ -2,9 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
 import functools
+import hashlib
 import json
 import logging
 import os
+import re
+from datetime import timedelta
 
 import werkzeug.urls
 import werkzeug.utils
@@ -14,13 +17,19 @@ from odoo import api, http, SUPERUSER_ID, _
 from odoo.exceptions import AccessDenied
 from odoo.http import request, Response
 from odoo import registry as registry_get
-from odoo.tools.misc import clean_context
+from odoo.tools.misc import clean_context, consteq, hash_sign, verify_hash_signed
 
 from odoo.addons.auth_signup.controllers.main import AuthSignupHome as Home
 from odoo.addons.web.controllers.utils import ensure_db, _get_login_redirect_url
 
 
 _logger = logging.getLogger(__name__)
+
+NATIVE_REDIRECT_URL = 'com.odoo.mobile:/oauth'
+NATIVE_FLOW_ID = re.compile(r'[0-9a-f]{32}')
+NATIVE_CHALLENGE = re.compile(r'[A-Za-z0-9_-]{43}')
+NATIVE_CODE_SCOPE = 'auth_oauth.native'
+NATIVE_CODE_LIFETIME = timedelta(minutes=5)
 
 
 #----------------------------------------------------------
@@ -132,6 +141,13 @@ class OAuthController(http.Controller):
         ensure_db(db=dbname)
 
         provider = state['p']
+        native_challenge = state.get('nc')
+        native_flow = state.get('nf')
+        if not (
+            isinstance(native_challenge, str) and NATIVE_CHALLENGE.fullmatch(native_challenge)
+            and isinstance(native_flow, str) and NATIVE_FLOW_ID.fullmatch(native_flow)
+        ):
+            native_challenge = native_flow = None
         request.update_context(**clean_context(state.get('c', {})))
         try:
             # auth_oauth may create a new user, the commit makes it
@@ -150,31 +166,101 @@ class OAuthController(http.Controller):
             elif menu:
                 url = '/odoo?menu_id=%s' % menu
 
-            credential = {'login': login, 'token': key, 'type': 'oauth_token'}
-            auth_info = request.session.authenticate(dbname, credential)
-            resp = request.redirect(_get_login_redirect_url(auth_info['uid'], url), 303)
-            resp.autocorrect_location_header = False
+            if native_challenge:
+                # the mobile app opened this flow in a system browser tab: hand the
+                # login over to the app instead of creating a session in that browser.
+                # The code lives as long as the user may take to confirm.
+                code = hash_sign(
+                    request.env(su=True), NATIVE_CODE_SCOPE,
+                    {'login': login, 'challenge': native_challenge, 'redirect': url},
+                    expiration=NATIVE_CODE_LIFETIME,
+                )
+                return self._native_confirm(login, self._native_url(native_flow, db=dbname, code=code))
 
-            # Since /web is hardcoded, verify user has right to land on it
-            if werkzeug.urls.url_parse(resp.location).path == '/web' and not request.env.user._is_internal():
-                resp.location = '/'
-            return resp
+            return self._login_and_redirect(dbname, login, key, url)
         except AttributeError:  # TODO juc master: useless since ensure_db()
             # auth_signup is not installed
             _logger.error("auth_signup not installed on database %s: oauth sign up cancelled.", dbname)
-            url = "/web/login?oauth_error=1"
+            error = '1'
         except AccessDenied:
             # oauth credentials not valid, user could be on a temporary session
             _logger.info('OAuth2: access denied, redirect to main page in case a valid session exists, without setting cookies')
-            url = "/web/login?oauth_error=3"
+            error = '3'
         except Exception:
             # signup error
             _logger.exception("Exception during request handling")
-            url = "/web/login?oauth_error=2"
+            error = '2'
 
-        redirect = request.redirect(url, 303)
+        if native_challenge:
+            return self._native_redirect(native_flow, error=error)
+
+        redirect = request.redirect(f"/web/login?oauth_error={error}", 303)
         redirect.autocorrect_location_header = False
         return redirect
+
+    @http.route('/auth_oauth/native/exchange', type='http', auth='none', methods=['POST'], csrf=False, readonly=False)
+    def native_exchange(self, db=None, code=None, verifier=None, **kw):
+        """Exchange a code issued by signin() for a session, from the mobile
+        app's own web view. The verifier proves that the caller is the app that
+        started the flow, as the code itself went through a custom URL scheme.
+
+        The app posts without a page to take a CSRF token from, so cross-site
+        posts are rejected from the Sec-Fetch-Site and Origin headers instead."""
+        headers = request.httprequest.headers
+        origin = headers.get('Origin')
+        if headers.get('Sec-Fetch-Site') not in (None, 'none', 'same-origin') or (
+            origin not in (None, 'null') and origin != request.httprequest.host_url.rstrip('/')
+        ):
+            return BadRequest()
+        if not (db and code and verifier) or not http.db_filter([db]):
+            return BadRequest()
+        ensure_db(db=db)
+
+        try:
+            payload = verify_hash_signed(request.env(su=True), NATIVE_CODE_SCOPE, code)
+        except ValueError:
+            payload = None
+        challenge = base64.urlsafe_b64encode(hashlib.sha256(verifier.encode()).digest()).decode().rstrip('=')
+        if not payload or not consteq(payload['challenge'], challenge):
+            return request.redirect("/web/login?oauth_error=3", 303)
+
+        user = request.env['res.users'].sudo().search([('login', '=', payload['login'])], limit=1)
+        try:
+            return self._login_and_redirect(db, user.login, user.oauth_access_token, payload['redirect'])
+        except AccessDenied:
+            return request.redirect("/web/login?oauth_error=3", 303)
+
+    def _login_and_redirect(self, dbname, login, key, url):
+        credential = {'login': login, 'token': key, 'type': 'oauth_token'}
+        auth_info = request.session.authenticate(dbname, credential)
+        resp = request.redirect(_get_login_redirect_url(auth_info['uid'], url), 303)
+        resp.autocorrect_location_header = False
+
+        # Since /web is hardcoded, verify user has right to land on it
+        if werkzeug.urls.url_parse(resp.location).path == '/web' and not request.env.user._is_internal():
+            resp.location = '/'
+        return resp
+
+    def _native_url(self, flow, **params):
+        # one redirect URI per flow (RFC 8252 8.9/8.10): the app only accepts the one it started
+        return f"{NATIVE_REDIRECT_URL}/{flow}?{werkzeug.urls.url_encode(params)}"
+
+    def _native_redirect(self, flow, **params):
+        resp = request.redirect(self._native_url(flow, **params), 303, local=False)
+        resp.autocorrect_location_header = False
+        return resp
+
+    def _native_confirm(self, login, native_url):
+        """Any app can claim the com.odoo.mobile scheme and start a flow with its
+        own challenge, and a provider session completes the login without any
+        interaction. The code is therefore only handed over once the user follows
+        the link of this page (RFC 8252 8.6)."""
+        request.env['ir.http']._auth_method_public()
+        response = request.render('auth_oauth.native_confirm', {'login': login, 'native_url': native_url})
+        response.headers['X-Frame-Options'] = 'DENY'
+        response.headers['Content-Security-Policy'] = "frame-ancestors 'none'"
+        response.headers['Cache-Control'] = 'no-store'
+        return response
 
     @http.route('/auth_oauth/oea', type='http', auth='none', readonly=False)
     def oea(self, **kw):
