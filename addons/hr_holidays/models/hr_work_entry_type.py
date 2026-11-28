@@ -274,7 +274,10 @@ been taken for this time type. Changing it now would affect existing employee ba
                 allowed_excess = work_entry_type.max_allowed_negative if work_entry_type.allows_negative else 0
                 allocations = allocations.filtered(lambda alloc:
                     alloc.accrual_plan_id
-                    or (alloc.max_leaves > 0 and alloc.virtual_remaining_leaves > -allowed_excess)
+                    or (
+                        (alloc.max_leaves > 0 or work_entry_type.allows_negative)
+                        and alloc.virtual_remaining_leaves > -allowed_excess
+                    )
                 )
                 if allocations:
                     valid_types += work_entry_type
@@ -553,7 +556,7 @@ been taken for this time type. Changing it now would affect existing employee ba
         filtered_employee_work_entry_type_infos = [
             work_entry_type_info
             for work_entry_type_info in employee_work_entry_type_infos
-            if work_entry_type_info[1]["max_leaves"]
+            if work_entry_type_info[1]["has_allocation"]
         ]
         return filtered_employee_work_entry_type_infos
 
@@ -573,7 +576,8 @@ been taken for this time type. Changing it now would affect existing employee ba
         :param bool subtract_future_leaves: whether to subtract future leaves linked to an
             accrual plan (used by dashboard)
         :return: ``{employee: [(type name, data, requires_allocation, type id), ...]}``, where
-            ``data`` holds ``max_leaves``, ``leaves_taken`` and ``remaining_leaves`` (approved),
+            ``data`` holds ``max_leaves``, ``has_allocation`` (a valid allocation exists, even of
+            0 day), ``leaves_taken`` and ``remaining_leaves`` (approved),
             ``virtual_leaves_taken`` and ``virtual_remaining_leaves`` (also to approve),
             ``leaves_requested``, ``leaves_approved``, ``accrual_bonus``,
             ``closest_allocation_expire`` (formatted date), ``closest_allocation_remaining``,
@@ -604,6 +608,7 @@ been taken for this time type. Changing it now would affect existing employee ba
                         'remaining_leaves': 0,
                         'virtual_remaining_leaves': 0,
                         'max_leaves': 0,
+                        'has_allocation': False,
                         'accrual_bonus': 0,
                         'leaves_taken': 0,
                         'virtual_leaves_taken': 0,
@@ -681,6 +686,7 @@ been taken for this time type. Changing it now would affect existing employee ba
                             continue
                         if same_year_only and allocation.date_from.year != target_date.year:
                             continue
+                        lt_info[1]['has_allocation'] = True
                     lt_info[1]['remaining_leaves'] += data[f'{primary_unit}_remaining_leaves']
                     lt_info[1]['virtual_remaining_leaves'] += data[f'{primary_unit}_virtual_remaining_leaves']
                     lt_info[1]['max_leaves'] += data[f'{primary_unit}_max_leaves']

@@ -1582,7 +1582,7 @@ class HrLeave(models.Model):
                 for employee in employees:
                     if is_cancellation:
                         continue
-                    if not leave_data[employee][0][1]['max_leaves']:
+                    if not leave_data[employee][0][1]['has_allocation']:
                         if self.env.context.get('multi_leave_request', False):
                             employees_without_allocation |= employee
                         else:
@@ -1603,7 +1603,7 @@ class HrLeave(models.Model):
             for employee in employees:
                 previous_emp_data = previous_leave_data[employee] and previous_leave_data[employee][0][1]['virtual_excess_data']
                 emp_data = leave_data[employee] and leave_data[employee][0][1]['virtual_excess_data']
-                if not leave_data[employee][0][1]['max_leaves']:
+                if not leave_data[employee][0][1]['has_allocation']:
                     if self.env.context.get('multi_leave_request', False):
                         employees_without_allocation |= employee
                     else:
@@ -2938,7 +2938,7 @@ class HrLeave(models.Model):
             work_entry_type = leave.work_entry_type_id
             date = leave.date_from.date()
             work_entry_type_data = work_entry_type.get_allocation_data(leave.employee_id, date)
-            if not work_entry_type_data[leave.employee_id][0][1]['max_leaves']:
+            if not work_entry_type_data[leave.employee_id][0][1]['has_allocation']:
                 leave._force_cancel(reason, 'mail.mt_note')
                 continue
             exceeding_duration = work_entry_type_data[leave.employee_id][0][1]['total_virtual_excess']
