@@ -34,6 +34,11 @@ class TestTimesheetHolidays(TestCommonTimesheet):
     def setUpClass(cls):
         super().setUpClass()
         cls.env.company.country_id = cls.env.ref('base.us')
+        # a database installed without tests enabled holds the generated public holidays of its companies
+        cls.env['resource.calendar.leaves'].search([
+            ('company_id', '=', cls.env.company.id),
+            ('resource_id', '=', False),
+        ]).unlink()
         cls.calendar_flexible_40_8 = cls.env['resource.calendar'].create({
             'name': 'Flexible Calendar 40h/week',
             'calendar_type': 'undefined',
