@@ -691,6 +691,8 @@ class HrLeave(models.Model):
                 else:
                     work_days_data = work_days_data_mapped[leave.date_from, leave.date_to, leave.work_entry_type_id.include_public_holidays_in_duration, calendar, leave.work_entry_type_id.allow_request_on_top][leave.employee_id.id]
                     hours, days = work_days_data['hours'], work_days_data['days']
+                    if leave.work_entry_type_request_unit == 'hour':
+                        days = hours / (calendar.hours_per_day or HOURS_PER_DAY)
             else:
                 today_hours = calendar.get_work_hours_count(
                     datetime.combine(leave.date_from.date(), time.min),
