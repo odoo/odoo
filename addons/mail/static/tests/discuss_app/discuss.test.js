@@ -3097,3 +3097,19 @@ test("Blank search term in chatter should show the thread", async () => {
     await waitFor(".o-mail-Thread .o-mail-Message:count(1)");
     expect(".o-mail-SearchMessageResult").toHaveCount(0);
 });
+
+test("document composer hidden without post access", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Readonly", hasWriteAccess: false });
+    pyEnv["mail.message"].create({
+        body: "Message on Readonly",
+        model: "res.partner",
+        res_id: partnerId,
+    });
+    await start();
+    await openDiscuss(`res.partner_${serverState.partnerId}`);
+    await waitFor(".o-mail-Composer:count(1)");
+    await openDiscuss(`res.partner_${partnerId}`);
+    await waitFor(".o-mail-Message-body:text(Message on Readonly):count(1)");
+    expect(".o-mail-Composer").toHaveCount(0);
+});

@@ -58,7 +58,7 @@
                 </div>
             </div>
             <t t-if="this.state.composerType">
-                <Composer composer="this.state.thread.composer"
+                <Composer t-if="this.state.thread.canPostMessage" composer="this.state.thread.composer"
                     autofocus="true" className="this.state.composerType === 'message' ? '' : 'pt-4'" mode="'extended'"
                     onPostCallback.bind="this.onPostCallback" onCloseFullComposerCallback.bind="this.onCloseFullComposerCallback"
                     dropzoneRef="this.rootRef" thread="this.state.thread" type="this.state.composerType" t-key="this.thread().id"
