@@ -1,3 +1,21 @@
+.product-screen .pads > .control-buttons,
+.product-screen .actionpad > .d-flex:has(> .set-partner) {
+    flex-wrap: wrap;
+
+    > .btn {
+        flex-shrink: 0;
+        max-width: 100%;
+        padding-inline: .5rem;
+    }
+
+    > .set-partner,
+    > .btn.border-0.text-truncate {
+        white-space: normal !important;
+        text-overflow: clip !important;
+        overflow-wrap: anywhere;
+    }
+}
+
 .control-buttons-modal {
     grid-template-columns: repeat(3, 1fr);
 
