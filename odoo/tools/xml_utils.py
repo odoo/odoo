@@ -345,11 +345,12 @@ def find_xml_value(xpath, xml_element, namespaces=None):
 def get_xml_embedded_attachment_nodes(tree: etree._Element):
     """Yield leaf attachment nodes in `tree`.
 
-    Finds EmbeddedDocumentBinaryObject (UBL) and Attachment nodes.
+    Finds EmbeddedDocumentBinaryObject (UBL), AttachmentBinaryObject (CII), and Attachment nodes.
     :param tree: tree with comments and processing instructions removed.
     """
     for attachment_node in chain(
         tree.iterfind('.//{*}EmbeddedDocumentBinaryObject'),
+        tree.iterfind('.//{*}AttachmentBinaryObject'),
         tree.iterfind('.//{*}Attachment'),
     ):
         if len(attachment_node):  # the node has children

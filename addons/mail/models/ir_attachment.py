@@ -129,3 +129,9 @@ class IrAttachment(models.Model):
     def _get_thumbnail_token(self):
         self.ensure_one()
         return limited_field_access_token(self, "thumbnail", scope="binary")
+
+    def _is_xml_content_relevant(self):
+        """Hook: return whether this attachment, which is not indexed (e.g. an XML file stored
+        as ``application/xml``), has content worth reading as text.
+        """
+        return False
