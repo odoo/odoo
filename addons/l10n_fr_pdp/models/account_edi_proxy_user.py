@@ -87,6 +87,15 @@ PAYMENT_TYPE_CODES = MappingProxyType({
     'MEN': _lt("Amount collected (including tax)"),  # Montant encaissé (TTC)
 })
 
+# Some statuses are not transmitted to the Public Entity by Chorus Pro. See:
+# "Dossier de spécifications externes de la facturation électronique - Document Chorus Pro"
+# 4.2.2 Réception des statuts de factures
+# 4.2.2.1 Circuit B2G
+CPRO_OMITTED_STATUSES = frozenset({
+    'PD',  # 212
+    'cancelled',  # 220
+})
+
 DEMO_ENDPOINTS = {  # pdp reports specific endpoints not already mocked by l10n_fr_pdp demo utils
     'pilot_phase': lambda params: {
         'annuaire_line_start_date': fields.Date.today(),
@@ -415,6 +424,12 @@ class AccountEdiProxyClientUser(models.Model):
         sent_moves = responses.move_id
         unsent_moves = reference_moves - sent_moves
 
+        cpro_omitted_addendum = Markup('<br/>') + self.env._("Note: This status is not transmitted to the public entity by Chorus Pro.")
+        if status in CPRO_OMITTED_STATUSES:
+            cpro_omitted_moves = reference_moves.filtered(lambda move: self.env['account.edi.xml.ubl_21_fr']._pdp_is_b2g(move.partner_id))
+        else:
+            cpro_omitted_moves = self.env['account.move']
+
         sent_message = self.env._(
             "A French e-invoicing response with Response Code '%(status)s' was sent to the Approved Platform.",
             status=status_string,
@@ -424,7 +439,7 @@ class AccountEdiProxyClientUser(models.Model):
             status=status_string,
         )
         message_bodies = {
-            **{move.id: sent_message for move in sent_moves},
+            **{move.id: sent_message + (cpro_omitted_addendum if move in cpro_omitted_moves else "") for move in sent_moves},
             **{move.id: unsent_message + (Markup('<br/>') + error if (error := response_info.get(move, {}).get('error', {}).get('message')) else "") for move in unsent_moves},
         }
         reference_moves._message_log_batch(bodies=message_bodies)
