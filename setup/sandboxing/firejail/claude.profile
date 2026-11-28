@@ -87,6 +87,7 @@ whitelist ${HOME}/.local/bin/claude
 whitelist ${HOME}/.local/share/claude
 whitelist ${HOME}/.local/state/claude
 
+whitelist ${RUNUSER}/claude-sandbox
 # ============================================================================
 # D-BUS
 # ============================================================================
