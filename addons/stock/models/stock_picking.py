@@ -157,16 +157,19 @@ class StockPickingType(models.Model):
     def create(self, vals_list):
         for vals in vals_list:
             if not vals.get('sequence_id') and vals.get('sequence_code'):
+                sequence_code = vals.pop('sequence_code')
                 if vals.get('warehouse_id'):
                     wh = self.env['stock.warehouse'].browse(vals['warehouse_id'])
                     vals['sequence_id'] = self.env['ir.sequence'].sudo().create({
-                        'name': _('%(warehouse)s Sequence %(code)s', warehouse=wh.name, code=vals['sequence_code']),
+                        'name': _('%(warehouse)s Sequence %(code)s', warehouse=wh.name, code=sequence_code),
+                        'prefix': sequence_code,
                         'padding': 5,
                         'company_id': wh.company_id.id,
                     }).id
                 else:
                     vals['sequence_id'] = self.env['ir.sequence'].sudo().create({
-                        'name': _('Sequence %(code)s', code=vals['sequence_code']),
+                        'name': _('Sequence %(code)s', code=sequence_code),
+                        'prefix': sequence_code,
                         'padding': 5,
                         'company_id': vals.get('company_id') or self.env.company.id,
                     }).id
@@ -187,19 +190,21 @@ class StockPickingType(models.Model):
             for picking_type in self:
                 if picking_type.company_id.id != vals['company_id']:
                     raise UserError(_("Changing the company of this record is forbidden at this point, you should rather archive it and create a new one."))
+        sequence_vals = {}
         if 'sequence_code' in vals:
+            sequence_code = sequence_vals['prefix'] = vals.pop('sequence_code')
             for picking_type in self:
                 if vals.get('sequence_id') is False:  # revert the sequence_id
                     vals['sequence_id'] = picking_type.sequence_id.id
                 if picking_type.warehouse_id:
                     picking_type.sequence_id.sudo().write({
-                        'name': _('%(warehouse)s Sequence %(code)s', warehouse=picking_type.warehouse_id.name, code=vals['sequence_code']),
+                        'name': _('%(warehouse)s Sequence %(code)s', warehouse=picking_type.warehouse_id.name, code=sequence_code),
                         'padding': 5,
                         'company_id': picking_type.warehouse_id.company_id.id,
                     })
                 else:
                     picking_type.sequence_id.sudo().write({
-                        'name': _('Sequence %(code)s', code=vals['sequence_code']),
+                        'name': _('Sequence %(code)s', code=sequence_code),
                         'padding': 5,
                         'company_id': picking_type.env.company.id,
                     })
@@ -219,7 +224,10 @@ class StockPickingType(models.Model):
                     moves = self.env['stock.move'].search([('picking_type_id', 'in', picking_types.ids), ('state', 'not in', ('assigned', 'done', 'cancel'))])
                     moves.reservation_date = False
 
-        return super().write(vals)
+        res = super().write(vals)
+        if sequence_vals:
+            self.sequence_id.sudo().write(sequence_vals)
+        return res
 
     @api.model
     def _search_is_favorite(self, operator, value):
