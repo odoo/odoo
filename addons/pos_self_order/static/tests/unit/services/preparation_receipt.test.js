@@ -48,6 +48,30 @@ describe("preparation ticket", () => {
         expect(result).toBe(true);
     });
 
+    test("generated order name isn't printed as order label", async () => {
+        const store = await setupSelfPosEnv("mobile");
+        const order = await getFilledSelfOrder(store);
+        order.source = "mobile";
+        const getOrderLabel = () => {
+            const generator = store.ticketPrinter.getGenerator({ models: store.models, order });
+            const changes = generator.generatePreparationData(store.config.preparationCategories);
+            return changes[0].extra_data.order_label;
+        };
+
+        // Set by selectTableDependingOnMode, the table number is already printed below
+        order.floating_order_name = "Self-Order T 5";
+        order.preset_id = store.models["pos.preset"].get(22); // identification "none"
+        expect(getOrderLabel()).toBe(false);
+
+        order.preset_id = false;
+        expect(getOrderLabel()).toBe(false);
+
+        // Typed by the customer: printed
+        order.floating_order_name = "Sam";
+        order.preset_id = store.models["pos.preset"].get(23); // identification "name"
+        expect(getOrderLabel()).toBe("Sam");
+    });
+
     test("delivery preset shows name, address, phone and email", async () => {
         const store = await setupSelfPosEnv("kiosk");
         store.config.company_id.country_id.state_ids = [];

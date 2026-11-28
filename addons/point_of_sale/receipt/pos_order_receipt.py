@@ -587,8 +587,8 @@ class PosOrderReceipt(models.AbstractModel):
                     'order_label': self.floating_order_name,
                     "reprint": False,
                     "time": format_datetime(self.env, fields.Datetime.now(), tz=receipt_tz, dt_format='HH:mm'),
-                    "internal_note": _get_str_notes(change.get("internal_note")) or False,
-                    "general_customer_note": _get_str_notes(change.get("general_customer_note")) or False,
+                    "internal_note": _get_str_notes(order_change.get("internal_note")) or False,
+                    "general_customer_note": _get_str_notes(order_change.get("general_customer_note")) or False,
                     "employee_name": self.user_id.name,  # PoS HR not needed, this will only be used by self order.
                     "preset_time": self._order_receipt_preset_datetime(),
                     "customer": self._get_preset_customer_info() if self.preset_id else False,
