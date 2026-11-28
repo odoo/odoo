@@ -31,7 +31,7 @@
                                 </div>
                             </t>
                             <t t-if="state.isValid">
-                                <button class="btn btn-sm btn-link o_domain_show_selection_button" data-tooltip="Show matching records" type="button" t-on-click.stop="onButtonClick">
+                                <button t-if="state.recordCount !== null" class="btn btn-sm btn-link o_domain_show_selection_button" data-tooltip="Show matching records" type="button" t-on-click.stop="onButtonClick">
                                     <t t-esc="state.recordCount" /> record(s)
                                 </button>
                             </t>
@@ -61,7 +61,7 @@
                         </t>
                         <t t-else="">
                             <t t-if="state.isValid">
-                                <button class="btn btn-sm btn-link o_domain_show_selection_button" type="button" t-on-click.stop="onButtonClick">
+                                <button t-if="state.recordCount !== null" class="btn btn-sm btn-link o_domain_show_selection_button" type="button" t-on-click.stop="onButtonClick">
                                     <t t-esc="state.recordCount" /> record(s)
                                 </button>
                             </t>

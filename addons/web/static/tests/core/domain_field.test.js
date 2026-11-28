@@ -24,6 +24,7 @@ import {
     defineModels,
     fields,
     getService,
+    makeServerError,
     models,
     mountView,
     mountWithCleanup,
@@ -1017,6 +1018,82 @@ test("add condition in empty foldable domain", async function () {
     // Domain is now unfolded with the default condition
     expect(".o_model_field_selector").toHaveCount(1);
     expect(SELECTORS.debugArea).toHaveValue('[("id", "=", 1)]');
+});
+
+test("valid domain on a model the user cannot read is valid without record count", async function () {
+    Partner._records[0].foo = "[('name', '=', 'x')]";
+    onRpc("search_count", () => {
+        throw makeServerError({ type: "AccessError" });
+    });
+    onRpc("/web/domain/validate", async (request) => {
+        const { params } = await request.json();
+        expect.step(`validate ${params.model} ${JSON.stringify(params.domain)}`);
+        return true;
+    });
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: `
+            <form>
+                <field name="foo" widget="domain" options="{'model': 'partner.type'}"/>
+            </form>`,
+    });
+    expect(".o_field_domain_panel").toHaveCount(1);
+    expect(".o_field_domain_panel").not.toHaveText("Invalid domain");
+    expect(".o_field_domain_panel .text-warning").toHaveCount(0);
+    expect(".o_field_domain_panel .fa-spin").toHaveCount(0);
+    expect(".o_domain_show_selection_button").toHaveCount(0);
+    expect.verifySteps([`validate partner.type [["name","=","x"]]`]);
+});
+
+test("foldable valid domain on a model the user cannot read has no record count", async function () {
+    Partner._records[0].foo = "[('name', '=', 'x')]";
+    onRpc("search_count", () => {
+        throw makeServerError({ type: "AccessError" });
+    });
+    onRpc("/web/domain/validate", async (request) => {
+        const { params } = await request.json();
+        expect.step(`validate ${params.model} ${JSON.stringify(params.domain)}`);
+        return true;
+    });
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: `
+            <form>
+                <field name="foo" widget="domain" options="{'model': 'partner.type', 'foldable': true}"/>
+            </form>`,
+    });
+    expect(".fa-caret-right").toHaveCount(1);
+    expect(".o_domain_show_selection_button").toHaveCount(0);
+    expect(".o_field_domain").not.toHaveText("Invalid domain");
+    expect.verifySteps([`validate partner.type [["name","=","x"]]`]);
+});
+
+test("invalid domain on a model the user cannot read is reported invalid", async function () {
+    Partner._records[0].foo = "[('name', '=', 'x')]";
+    onRpc("search_count", () => {
+        throw makeServerError({ type: "AccessError" });
+    });
+    onRpc("/web/domain/validate", async (request) => {
+        const { params } = await request.json();
+        expect.step(`validate ${params.model} ${JSON.stringify(params.domain)}`);
+        return false;
+    });
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: `
+            <form>
+                <field name="foo" widget="domain" options="{'model': 'partner.type'}"/>
+            </form>`,
+    });
+    expect(".o_field_domain_panel").toHaveText("Invalid domain");
+    expect(".o_domain_show_selection_button").toHaveCount(0);
+    expect.verifySteps([`validate partner.type [["name","=","x"]]`]);
 });
 
 test("foldable domain field unfolds and hides caret when domain is invalid", async function () {
