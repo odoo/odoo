@@ -12,7 +12,7 @@
             <xpath expr="//t[@t-set='layout_document_title']" position="before">
                 <t t-set="cas_vals" t-value="o._l10n_ph_cas_get_invoice_report_values()"/>
             </xpath>
-            <xpath expr="//t[@name='invoice_title']/.." position="after">
+            <xpath expr="//t[@t-set='layout_document_title']/t[@t-if='not proforma']" position="inside">
                 <span t-if="cas_vals['category'] == 'vat_exempt'" class="fs-4 d-block">VAT-EXEMPT SALES</span>
                 <span t-elif="cas_vals['category'] == 'zero_rated'" class="fs-4 d-block">ZERO-RATED SALES</span>
             </xpath>
@@ -25,6 +25,15 @@
             <xpath expr="//t[@name='cancelled_invoice_title']/.." position="attributes">
                 <attribute name="class">text-uppercase fs-1</attribute>
             </xpath>
+            <xpath expr="//t[@name='credit_note_title']/.." position="attributes">
+                <attribute name="class">text-uppercase fs-1</attribute>
+            </xpath>
+            <xpath expr="//t[@name='draft_credit_note_title']/.." position="attributes">
+                <attribute name="class">text-uppercase fs-1</attribute>
+            </xpath>
+            <xpath expr="//t[@name='cancelled_credit_note_title']/.." position="attributes">
+                <attribute name="class">text-uppercase fs-1</attribute>
+            </xpath>
             <xpath expr="//t[@t-set='layout_document_title']/span[@t-field='o.name']" position="attributes">
                 <attribute name="class">fs-5 fw-normal d-block mt-3</attribute>
             </xpath>
@@ -32,13 +41,16 @@
             <!-- Buyer's Information -->
             <!-- The buyer's details must be clearly labelled as such, the label floating beside the name. -->
             <xpath expr="//t[@name='address_not_same_as_shipping']/address" position="before">
-                <strong class="float-start me-1">Sold To:</strong>
+                <strong t-if="o.move_type == 'out_refund'" class="float-start me-1">Billed To:</strong>
+                <strong t-else="" class="float-start me-1">Sold To:</strong>
             </xpath>
             <xpath expr="//t[@name='address_same_as_shipping']/address" position="before">
-                <strong class="float-start me-1">Sold To:</strong>
+                <strong t-if="o.move_type == 'out_refund'" class="float-start me-1">Billed To:</strong>
+                <strong t-else="" class="float-start me-1">Sold To:</strong>
             </xpath>
             <xpath expr="//t[@name='no_shipping']/address" position="before">
-                <strong class="float-start me-1">Sold To:</strong>
+                <strong t-if="o.move_type == 'out_refund'" class="float-start me-1">Billed To:</strong>
+                <strong t-else="" class="float-start me-1">Sold To:</strong>
             </xpath>
 
             <!-- A non-VAT-registered seller has no output VAT to show against its lines. -->
@@ -122,9 +134,11 @@
 
         <template id="report_invoice" inherit_id="account.report_invoice">
             <xpath expr='//t[@t-call="account.report_invoice_document"]' position="after">
-                <t t-elif="o._get_name_invoice_report() == 'l10n_ph.report_invoice_document'"
-                   t-call="l10n_ph.report_invoice_document"
-                   t-lang="lang"/>
+                <t t-elif="o._get_name_invoice_report() == 'l10n_ph.report_invoice_document'">
+                    <!-- BIR layout for the Invoice PDF and the Reprint; the "PDF without Payment" keeps the standard document -->
+                    <t t-if="print_with_payments or l10n_ph_reprint" t-call="l10n_ph.report_invoice_document" t-lang="lang"/>
+                    <t t-else="" t-call="account.report_invoice_document" t-lang="lang"/>
+                </t>
             </xpath>
         </template>
 
@@ -139,7 +153,7 @@
             <field name="report_name">l10n_ph.report_invoice_reprint</field>
             <field name="binding_model_id" ref="account.model_account_move"/>
             <field name="binding_type">report</field>
-            <field name="domain">[('country_code', '=', 'PH'), ('move_type', '=', 'out_invoice')]</field>
+            <field name="domain">[('country_code', '=', 'PH'), ('move_type', 'in', ('out_invoice', 'out_refund'))]</field>
         </record>
 
         <template id="report_commercial_invoice">

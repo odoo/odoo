@@ -18,6 +18,9 @@ class TestCasInvoiceReport(TestPhCommon):
         cls.tax_withholding = chart_template.ref('l10n_ph_tax_sale_10_wi011')
         cls.tax_percentage = chart_template.ref('l10n_ph_tax_sale_3_pt010')
 
+    def assertTitle(self, html, title):
+        self.assertRegex(html, rf'<span class="text-uppercase fs-1">\s*{title}\s*</span>')
+
     def test_commercial_invoice_uses_the_standard_document(self):
         invoice = self._create_invoice(
             partner_id=self.partner_a,
@@ -31,6 +34,24 @@ class TestCasInvoiceReport(TestPhCommon):
         self.assertNotIn('Total Amount Due', html)
         self.assertNotIn('VATable Sales', html)
 
+    def test_pdf_without_payment_uses_the_standard_document(self):
+        invoice = self._create_invoice(
+            partner_id=self.partner_a,
+            post=True,
+            invoice_line_ids=[self._prepare_invoice_line(product_id=self.product_a, tax_ids=self.tax_vatable)],
+        )
+        self._register_payment(invoice)
+        credit_note = self._reverse_invoice(invoice, post=True)
+        for move in invoice + credit_note:
+            with self.subTest(move_type=move.move_type):
+                self.assertIn('Total Amount Due', self._render(move))
+                html = self._render(move, report='account.report_invoice')
+                self.assertNotIn('Paid on', html)
+                self.assertNotIn('Sold To:', html)
+                self.assertNotIn('Billed To:', html)
+                self.assertNotIn('Total Amount Due', html)
+                self.assertNotIn('text-uppercase fs-1', html)
+
     def test_invoice_report_selection(self):
         invoice = self._create_invoice(
             partner_id=self.partner_a,
@@ -42,7 +63,13 @@ class TestCasInvoiceReport(TestPhCommon):
             partner_id=self.partner_a,
             invoice_line_ids=[self._prepare_invoice_line(product_id=self.product_a, tax_ids=self.tax_vatable)],
         )
-        self.assertEqual(credit_note._get_name_invoice_report(), 'account.report_invoice_document')
+        self.assertEqual(credit_note._get_name_invoice_report(), 'l10n_ph.report_invoice_document')
+        vendor_credit_note = self._create_invoice(
+            move_type='in_refund',
+            partner_id=self.partner_a,
+            invoice_line_ids=[self._prepare_invoice_line(product_id=self.product_a)],
+        )
+        self.assertEqual(vendor_credit_note._get_name_invoice_report(), 'account.report_invoice_document')
 
     def test_company_vat_registration_label(self):
         invoice = self._create_invoice(
@@ -52,6 +79,7 @@ class TestCasInvoiceReport(TestPhCommon):
         )
         html = self._render(invoice)
         self.assertIn('Sold To:', html)
+        self.assertNotIn('Billed To:', html)
         self.assertIn('VAT REG TIN', html)
         self.assertNotIn('NON VAT REG TIN', html)
 
@@ -153,3 +181,59 @@ class TestCasInvoiceReport(TestPhCommon):
         # The total due is the invoiced amount: it is left untouched by a credit note or a payment
         self._reverse_invoice(invoice, post=True)
         self.assertIn(expected_total_due, self._render(invoice))
+
+    def test_credit_note_layout(self):
+        invoice = self._create_invoice(
+            partner_id=self.partner_a,
+            post=True,
+            invoice_line_ids=[self._prepare_invoice_line(
+                product_id=self.product_a, tax_ids=self.tax_vatable + self.tax_withholding, price_unit=100.0,
+            )],
+        )
+        credit_note = self._reverse_invoice(invoice)
+        self.assertTitle(self._render(credit_note), 'Draft Credit Note')
+
+        credit_note.action_post()
+        html = self._render(credit_note)
+        self.assertTitle(html, 'Credit Note')
+        self.assertIn('Billed To:', html)
+        self.assertNotIn('Sold To:', html)
+        self.assertIn('Gross Sales', html)
+        self.assertIn('Add: VAT', html)
+        self.assertIn('Less: Withholding Tax', html)
+        self.assertIn('Total Amount Due', html)
+        expected_total_due = self.env['ir.qweb.field.monetary'].value_to_html(
+            invoice.amount_total - invoice.withholding_total_amount_currency, {'display_currency': invoice.currency_id},
+        )
+        self.assertIn(expected_total_due, html)
+        self.assertNotIn('REPRINT', html)
+        self.assertIn('REPRINT', self._render(credit_note, report='l10n_ph.report_invoice_reprint'))
+
+        # The PDF attached by the Send wizard uses the BIR layout as well
+        send_report = self.env['account.move.send']._get_default_pdf_report_id(credit_note)
+        send_html = self._render(credit_note, report=send_report.report_name)
+        self.assertTitle(send_html, 'Credit Note')
+        self.assertIn('Billed To:', send_html)
+        self.assertIn('Total Amount Due', send_html)
+
+    def test_vat_exempt_label_in_every_state(self):
+        """ The VAT-exempt sales line follows the title in every state, without replacing any title. """
+        line_vals = [self._prepare_invoice_line(product_id=self.product_a, tax_ids=self.tax_vat_exempt)]
+        for move_type, title in (('out_invoice', 'Invoice'), ('out_refund', 'Credit Note')):
+            with self.subTest(move_type=move_type):
+                move = self._create_invoice(move_type=move_type, partner_id=self.partner_a, invoice_line_ids=line_vals)
+                html = self._render(move)
+                self.assertTitle(html, f'Draft {title}')
+                self.assertIn('VAT-EXEMPT SALES', html)
+
+                move.action_post()
+                html = self._render(move)
+                self.assertTitle(html, title)
+                self.assertIn('VAT-EXEMPT SALES', html)
+                self.assertIn('NOT VALID FOR CLAIM', html)
+
+                move.button_draft()
+                move.button_cancel()
+                html = self._render(move)
+                self.assertTitle(html, f'Cancelled {title}')
+                self.assertIn('VAT-EXEMPT SALES', html)

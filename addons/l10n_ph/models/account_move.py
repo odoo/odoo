@@ -9,7 +9,7 @@ class AccountMove(models.Model):
     def _get_name_invoice_report(self):
         self.ensure_one()
         if (
-            self.move_type == 'out_invoice'
+            self.move_type in ('out_invoice', 'out_refund')
             and self.company_id.account_fiscal_country_id.code == 'PH'
             and all(self._l10n_ph_cas_get_tax_groups().values())
         ):
