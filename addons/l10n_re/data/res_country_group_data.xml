@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="re_only" model="res.country.group">
+        <field name="name">La Réunion</field>
+        <field name="code">RE</field>
+        <field name="country_ids" eval="[Command.set([ref('base.re')])]"/>
+    </record>
+    <record id="gp_and_mq" model="res.country.group">
+        <field name="name">Guadeloupe and Martinique</field>
+        <field name="code">GP-MQ</field>
+        <field name="country_ids" eval="[Command.set([ref('base.gp'), ref('base.mq')])]"/>
+    </record>
+    <record id="gf_and_yt" model="res.country.group">
+        <field name="name">French Guiana and Mayotte</field>
+        <field name="code">GF-YT</field>
+        <field name="country_ids" eval="[Command.set([ref('base.gf'), ref('base.yt')])]"/>
+    </record>
+</odoo>
