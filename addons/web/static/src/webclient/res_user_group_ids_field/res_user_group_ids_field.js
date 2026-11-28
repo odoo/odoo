@@ -27,14 +27,16 @@ class ResUserGroupIdsField extends Component {
     debugMode = usePlugin(DebugModePlugin);
 
     setup() {
-        const { groups, privileges, categories } = toRaw(
-            this.props.record.data.view_group_hierarchy
-        );
+        const hierarchy = toRaw(this.props.record.data.view_group_hierarchy);
+        const { groups, privileges } = hierarchy;
+        // copy the categories, as they are extended below: the hierarchy must stay as received, as
+        // its content is the key used to remount this component (see ResUserGroupIdsFieldContainer)
+        const categories = hierarchy.categories.map((category) => ({ ...category }));
 
         // Generate the "other" category (for privileges that do not belong to any category)
         const privilegesWithoutCategory = Object.values(privileges)
-            .filter((privilege) => !privilege.category_id)
-            .sort((privilege) => privilege.sequence);
+            .filter((privilege) => !privilege.category_id && privilege.group_ids.length)
+            .sort((p1, p2) => p1.sequence - p2.sequence || localeCompare(p1.name, p2.name));
         if (privilegesWithoutCategory.length) {
             categories.push({
                 id: "other",
@@ -266,8 +268,27 @@ class ResUserGroupIdsField extends Component {
     }
 }
 
+/**
+ * ResUserGroupIdsField builds its fields and arch from 'view_group_hierarchy' once, in setup.
+ * The record may first be rendered from the RPC cache, then updated with fresh data (e.g. after
+ * privileges have been reordered or recategorized), so remount it when the hierarchy changes.
+ */
+class ResUserGroupIdsFieldContainer extends Component {
+    static template = "web.ResUserGroupIdsFieldContainer";
+    static components = { ResUserGroupIdsField };
+    props = useProps({
+        ...standardFieldProps,
+    });
+
+    get hierarchyKey() {
+        // the record gets a new object each time it is (re)loaded, so use the content as key to
+        // only remount when the hierarchy actually changes
+        return JSON.stringify(toRaw(this.props.record.data.view_group_hierarchy));
+    }
+}
+
 const resUserGroupIdsField = {
-    component: ResUserGroupIdsField,
+    component: ResUserGroupIdsFieldContainer,
     fieldDependencies: [{ name: "view_group_hierarchy", type: "json", readonly: true }],
     additionalClasses: ["w-100"],
 };
