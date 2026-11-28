@@ -370,6 +370,8 @@ export class FormCompiler extends ViewCompiler {
                 ) {
                     mainSlot.setAttribute("subType", "'label'");
                     child.classList.remove("o_wrap_label");
+                } else if (!isOuterGroup) {
+                    mainSlot.setAttribute("subType", "'cell_custom'");
                 }
                 slotContent = this.compileNode(child, { ...params, currentSlot: mainSlot }, false);
             }
