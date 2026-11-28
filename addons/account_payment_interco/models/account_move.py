@@ -23,7 +23,7 @@ class AccountMove(models.Model):
                 and m.transaction_ids.payment_id.company_id.account_interco_receivable_id
             ))
             and m.transaction_ids.payment_id.filtered(
-                lambda x: x.state in ('in_process', 'paid')
+                lambda x: x.state in ('paid', 'reconciled')
                       and x.company_id != m.company_id
                       and x.company_id.account_interco_clearing_journal_id.id
             )
