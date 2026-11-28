@@ -44,7 +44,7 @@ function assertSelectedComboItemCount(count) {
         content: `Assert that there are ${count} selected combo items`,
         trigger: '.sale-combo-configurator-dialog',
         run() {
-            const selector = `.sale-combo-configurator-dialog .row .product-card.selected`;
+            const selector = `.sale-combo-configurator-dialog .product-card.selected:not(.o_combo_included .product-card)`;
             if (document.querySelectorAll(selector).length !== count) {
                 console.error(`Assertion failed`);
             }
@@ -57,7 +57,7 @@ function assertPreselectedComboItemCount(count) {
         content: `Assert that there are ${count} preselected combo items`,
         trigger: '.sale-combo-configurator-dialog',
         run() {
-            const selector = '.sale-combo-configurator-dialog div[name="preselected_product_name"]';
+            const selector = '.sale-combo-configurator-dialog .o_combo_included .product-card';
             if (document.querySelectorAll(selector).length !== count) {
                 console.error(`Assertion failed`);
             }
@@ -83,7 +83,7 @@ function assertComboItemSelected(comboItemName) {
 function assertComboItemPreselected(comboItemName) {
     return {
         content: `Assert that combo item ${comboItemName} is preselected`,
-        trigger: `[name="preselected_product_name"]:contains(${comboItemName})`,
+        trigger: `.sale-combo-configurator-dialog .o_combo_included .product-card:has([name="product_card_title"]:contains("${comboItemName}"))`,
     };
 }
 
