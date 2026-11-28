@@ -29,9 +29,9 @@ def _mock_call_peppol_proxy(func, self, endpoint, params=None):
     }[endpoint](self, endpoint, params=params)
 
 
-def _mock_register_proxy_user(func, self, company, proxy_type, edi_mode):
+def _mock_register_proxy_user(func, self, company, proxy_type, edi_mode, sender_only=False):
     # The function already has some special logic to create an edi user.
-    edi_user = func(self, company, proxy_type, edi_mode)
+    edi_user = func(self, company, proxy_type, edi_mode, sender_only=sender_only)
     if edi_user.proxy_type != 'pdp':
         return edi_user
 
