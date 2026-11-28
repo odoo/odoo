@@ -3,7 +3,6 @@ from stdnum import (
     lei,
 )
 
-from stdnum.at import uid as at_en
 from stdnum.au import acn as au_acn
 from stdnum.be import vat as be_vat
 from stdnum.br import cpf as br_cn
@@ -21,7 +20,7 @@ from stdnum.se import orgnr as se_en
 from stdnum.sg import uen as sg_en
 
 from odoo.tools.translate import LazyTranslate
-from odoo.addons.account.tools.partner_identifier_validation import nl_kvk_validate, nl_oin_validate
+from odoo.addons.account.tools.partner_identifier_validation import at_en_validate, nl_kvk_validate, nl_oin_validate
 from odoo.addons.account.tools.country_groups import FR_AND_DOM_TOM, SEPA_COUNTRIES
 
 
@@ -75,9 +74,11 @@ IDENTIFIERS_METADATA = {
         'sequence': 10,
         'scheme': '9915',
         'label': _lt('Company registry'),
-        'help': _lt('Austrian company registry number (UID).'),
+        'help': _lt('Austrian Commercial Register Number (Firmenbuchnummer).'),
+        'placeholder': '199081t',
+        'examples': ['123456a'],
         'category': 'EN',
-        'validation_function': at_en.validate,
+        'validation_function': at_en_validate,
         'countries': ['AT'],
     },
     'AT_VAT': {
@@ -891,8 +892,6 @@ def get_deduced_identifiers(key, value):
     Example: FR_SIRET => FR_SIREN, BE_VAT => BE_EN.
     """
     deduced = {}
-    if key == 'AT_VAT':
-        deduced['AT_EN'] = get_non_prefixed_identifier('AT', value)
     if key == 'AU_ACN':
         deduced['AU_ANB'] = au_acn.to_abn(value)
     if key == 'BE_VAT':

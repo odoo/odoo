@@ -115,16 +115,24 @@ class TestAdditionalIdentifiers(AccountTestInvoicingCommon):
             '12345674',
         )
 
-    def test_vat_deduces_at_en(self):
-        """Setting an Austrian VAT should automatically deduce AT_EN."""
+    def test_additional_identifiers_at(self):
+        """Setting an Austrian VAT should not automatically deduce AT_EN (anymore).
+        Plus testing at_en validation."""
         partner = self.env['res.partner'].create({
             'name': 'AT Partner',
             'country_id': self.env.ref('base.at').id,
         })
         partner.vat = 'ATU12345675'
+        self.assertFalse((partner.additional_identifiers or {}).get('AT_EN'))
+        partner.additional_identifiers = {'AT_EN': 'U12345675'}
         self.assertEqual(
             (partner.additional_identifiers or {}).get('AT_EN'),
             'U12345675',
+        )
+        partner.additional_identifiers = {'AT_EN': 'FN345678c'}
+        self.assertEqual(
+            (partner.additional_identifiers or {}).get('AT_EN'),
+            '345678c',
         )
 
     def test_unknown_key_dropped(self):
