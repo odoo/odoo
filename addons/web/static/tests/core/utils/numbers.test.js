@@ -29,6 +29,8 @@ test("range", () => {
     expect(range(-10, 6, 2)).toEqual([-10, -8, -6, -4, -2, 0, 2, 4]);
     expect(range(0, -10, -1)).toEqual([0, -1, -2, -3, -4, -5, -6, -7, -8, -9]);
     expect(range(4, -4, -1)).toEqual([4, 3, 2, 1, 0, -1, -2, -3]);
+    expect(range(0, 5, 2)).toEqual([0, 2, 4]);
+    expect(range(5, 0, -2)).toEqual([5, 3, 1]);
     expect(range(1, 4, -1)).toEqual([]);
     expect(range(1, -4, 1)).toEqual([]);
 });

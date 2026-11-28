@@ -25,7 +25,7 @@ export function clamp(num, min, max) {
  */
 export function range(start, stop, step = 1) {
     const array = [];
-    const nsteps = Math.floor((stop - start) / step);
+    const nsteps = Math.ceil((stop - start) / step);
     for (let i = 0; i < nsteps; i++) {
         array.push(start + step * i);
     }
