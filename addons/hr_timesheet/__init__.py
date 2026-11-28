@@ -50,3 +50,5 @@ def _uninstall_hook(env):
 
     if rule := env.ref('project.account_analytic_line_rule_manager', raise_if_not_found=False):
         rule.active = True
+    if rule := env.ref('analytic.analytic_line_analytic', raise_if_not_found=False):
+        rule.active = True
