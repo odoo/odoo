@@ -1,4 +1,4 @@
-import { Component, computed, proxy, t, untrack, useEffect, useProps } from "@odoo/owl";
+import { Component, proxy, t, untrack, useEffect, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useBus } from "@web/core/utils/hooks";
@@ -47,56 +47,22 @@ export class ReferenceField extends Component {
 
     props = useProps(referenceFieldProps);
 
-    isCharField = computed(() => this.props.record.fields[this.props.name].type === "char");
-
-    /** @type {import("@odoo/owl").ReactiveValue<ReferenceValue>} */
-    getValue = computed(() =>
-        this.isCharField() ? this.state.formattedCharValue : this.props.record.data[this.props.name]
-    );
-
     setup() {
-        /** @type {{formattedCharValue?: ReferenceValue, modelName?: string}} */
+        this.isCharField = this.props.record.fields[this.props.name].type === "char";
+        /** @type {{formattedCharValue?: ReferenceValue, currentRelation?: string}} */
         this.state = proxy({
             formattedCharValue: undefined, // Value extracted from reference char field
-            modelName: undefined, // Name get of the value of the model field
-            currentRelation: undefined,
+            currentRelation: undefined, // Model set by the model field, the model selector or the value
         });
         const { model } = this.props.record;
         useBus(model.bus, "WILL_SAVE_URGENTLY", () => this.validate());
-        useBus(model.bus, "NEED_LOCAL_CHANGES", ({ detail }) =>
-            detail.proms.push(this.validate())
-        );
-        if (this.isCharField()) {
-            /** Fetch the display name of the record referenced by the field */
-            let currentValue = undefined;
-            useRecordObserver(async (record) => {
-                const recordValue = record.data[this.props.name];
-                if (currentValue !== recordValue) {
-                    this.state.formattedCharValue = await this._fetchReferenceCharData();
-                    currentValue = recordValue;
-                }
-            });
+        useBus(model.bus, "NEED_LOCAL_CHANGES", ({ detail }) => detail.proms.push(this.validate()));
+        if (this.isCharField) {
+            this._useCharValue();
         } else if (this.props.modelField) {
-            /** Fetch the technical name of the co model */
-            useRecordObserver(async (record) => {
-                const { modelField, name } = this.props;
-                const recordId = record.data[modelField]?.id;
-                if (this.currentModelId !== recordId) {
-                    this.state.modelName = await this._fetchModelTechnicalName();
-                    if (this.currentModelId !== undefined) {
-                        record.update({ [name]: false });
-                    }
-                    this.currentModelId = recordId;
-                }
-            });
+            this._useModelField();
         } else {
-            /** Sync the currentRelation with current value's resModel */
-            useEffect(() => {
-                const resModel = this.props.record.data[this.props.name]?.resModel;
-                if (resModel && untrack(() => this.state.currentRelation) !== resModel) {
-                    this.state.currentRelation = resModel;
-                }
-            });
+            this._useCurrentRelationSync();
         }
     }
 
@@ -110,7 +76,7 @@ export class ReferenceField extends Component {
         };
     }
     get selection() {
-        if (!this.isCharField() && !this.hideModelSelector) {
+        if (!this.isCharField && !this.hideModelSelector) {
             return this.props.record.fields[this.props.name].selection;
         }
         return [];
@@ -131,29 +97,24 @@ export class ReferenceField extends Component {
         return _t("Search a record...");
     }
 
-    getRelation() {
-        const modelName = this.getModelName();
-        if (modelName) {
-            return modelName;
-        }
-
-        const value = this.getValue();
-        if (value && value.resModel) {
-            return value.resModel;
-        } else {
-            return this.state.currentRelation;
-        }
+    /**
+     * @returns {ReferenceValue}
+     */
+    getValue() {
+        return this.isCharField
+            ? this.state.formattedCharValue
+            : this.props.record.data[this.props.name];
     }
 
     /**
      * @returns {string|undefined}
      */
-    getModelName() {
-        return this.hideModelSelector && this.state.modelName;
+    getRelation() {
+        return this.state.currentRelation || this.getValue()?.resModel;
     }
 
     validate() {
-        const resModel = this.state.currentRelation || this.getRelation();
+        const resModel = this.getRelation();
         const recordData = this.props.record.data[this.props.name];
         if (resModel && !recordData) {
             this.props.record.setInvalidField(this.props.name);
@@ -166,10 +127,9 @@ export class ReferenceField extends Component {
     }
 
     updateM2O(value) {
-        const resModel = this.state.currentRelation || this.getRelation();
         this.props.record.update({
             [this.props.name]: value && {
-                resModel,
+                resModel: this.getRelation(),
                 resId: value.id,
                 displayName: value.display_name,
             },
@@ -177,27 +137,65 @@ export class ReferenceField extends Component {
     }
 
     /**
+     * Fetch the display name of the record referenced by the field
+     */
+    _useCharValue() {
+        let currentValue = undefined;
+        useRecordObserver(async (record) => {
+            const recordValue = record.data[this.props.name];
+            if (currentValue !== recordValue) {
+                this.state.formattedCharValue = await this._fetchReferenceCharData(recordValue);
+                currentValue = recordValue;
+            }
+        });
+    }
+
+    /**
+     * Fetch the technical name of the co model
+     */
+    _useModelField() {
+        let currentModelId = undefined;
+        useRecordObserver(async (record) => {
+            const { modelField, name } = this.props;
+            const recordId = record.data[modelField]?.id;
+            if (currentModelId !== recordId) {
+                this.state.currentRelation = await this._fetchModelTechnicalName(recordId);
+                if (currentModelId !== undefined) {
+                    record.update({ [name]: false });
+                }
+                currentModelId = recordId;
+            }
+        });
+    }
+
+    /**
+     * Sync the currentRelation with current value's resModel
+     */
+    _useCurrentRelationSync() {
+        useEffect(() => {
+            const resModel = this.props.record.data[this.props.name]?.resModel;
+            if (resModel && untrack(() => this.state.currentRelation) !== resModel) {
+                this.state.currentRelation = resModel;
+            }
+        });
+    }
+
+    /**
      * Fetch special data if the reference field is a char field.
      * It fetches the display name of the record.
      */
-    async _fetchReferenceCharData() {
-        const recordData = this.props.record.data[this.props.name];
+    async _fetchReferenceCharData(recordData) {
         if (!recordData) {
             return false;
         }
         const [resModel, _resId] = recordData.split(",");
         const resId = parseInt(_resId, 10);
         if (resModel && resId) {
-            const { specialDataCaches, orm } = this.props.record.model;
             const key = `__reference__name_get-${recordData}`;
-            if (!specialDataCaches[key]) {
-                specialDataCaches[key] = orm.read(resModel, [resId], ["display_name"]);
-            }
-            const result = await specialDataCaches[key];
             return {
                 resId,
                 resModel,
-                displayName: result[0].display_name,
+                displayName: await this._readOnce(key, resModel, resId, "display_name"),
             };
         }
         return false;
@@ -222,20 +220,22 @@ export class ReferenceField extends Component {
      *
      * @returns {Promise<string|false>}
      */
-    async _fetchModelTechnicalName() {
+    async _fetchModelTechnicalName(modelId) {
         this._assertMany2OneToIrModel();
-        const { modelField, record } = this.props;
-        const modelId = record.data[modelField]?.id;
         if (!modelId) {
             return false;
         }
-        const { specialDataCaches, orm } = record.model;
         const key = `__reference__ir_model-${modelId}`;
+        return this._readOnce(key, "ir.model", modelId, "model");
+    }
+
+    async _readOnce(key, resModel, resId, fieldName) {
+        const { specialDataCaches, orm } = this.props.record.model;
         if (!specialDataCaches[key]) {
-            specialDataCaches[key] = orm.read("ir.model", [modelId], ["model"]);
+            specialDataCaches[key] = orm.read(resModel, [resId], [fieldName]);
         }
         const result = await specialDataCaches[key];
-        return result[0].model;
+        return result[0][fieldName];
     }
 }
 

@@ -3,6 +3,7 @@ import { describe, expect, test } from "@odoo/hoot";
 import { click } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import {
+    clickSave,
     defineModels,
     editSelectMenu,
     fields,
@@ -49,7 +50,10 @@ class SmsTemplate extends models.Model {
 
     name = fields.Char();
 
-    _records = [{ id: 1, name: "SMS template 1" }];
+    _records = [
+        { id: 1, name: "SMS template 1" },
+        { id: 2, name: "SMS template 2" },
+    ];
 }
 class SomeTemplate extends models.Model {
     _name = "some.template";
@@ -125,4 +129,23 @@ test("Reference field displays right icons", async () => {
 
     expect(".o_field_cell:eq(1) [data-icon='smartphone']").toHaveCount(0);
     expect(".o_field_cell:eq(1) [data-icon='mail'].oi-filled").toHaveCount(0);
+});
+
+test("Reference field keeps the model of its value when picking another record", async () => {
+    onRpc("web_save", ({ args }) => expect.step(args[1]));
+
+    await mountView({
+        type: "form",
+        resModel: "event.mail",
+        resId: 2,
+        arch: `<form><field name="template_ref" widget="EventMailTemplateReferenceField"/></form>`,
+    });
+    expect(".o_select_menu input").toHaveValue("SMS Template");
+
+    await click(".o_field_many2one_selection input");
+    await animationFrame();
+    await click(".o-autocomplete--dropdown-item:contains(SMS template 2)");
+    await animationFrame();
+    await clickSave();
+    expect.verifySteps([{ template_ref: "sms.template,2" }]);
 });

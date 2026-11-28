@@ -7,14 +7,13 @@ export class EventMailTemplateReferenceField extends ReferenceField {
     static template = "event.mailTemplateReferenceField";
 
     setup() {
-        const returnVal = super.setup();
+        super.setup();
         // select the first value by default
         // selection is [['mail', 'Mail Template'], ['sms', 'Sms Template'], ...]
         const defaultSelect = this.selection?.[0][0];
-        if (defaultSelect) {
+        if (defaultSelect && !this.getValue()) {
             this.state.currentRelation = defaultSelect;
         }
-        return returnVal;
     }
 
     /**
