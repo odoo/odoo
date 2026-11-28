@@ -83,7 +83,7 @@ class ProductPricelistItem(models.Model):
         ondelete='cascade', check_company=True, index='btree_not_null',
         ui_domain="[('product_tmpl_id', '=', product_tmpl_id)]",
         help="Specify a product if this rule only applies to one product. Keep empty otherwise.")
-    product_uom_name = fields.Char(related='product_tmpl_id.uom_name')
+    relative_uom_id = fields.Many2one(comodel_name='uom.uom', compute="_compute_relative_uom_id")
     product_variant_count = fields.Integer(related='product_tmpl_id.product_variant_count')
     uom_id = fields.Many2one(string="Packaging", comodel_name='uom.uom')
     allowed_uom_ids = fields.Many2many('uom.uom', compute='_compute_allowed_uom_ids')
@@ -121,6 +121,11 @@ class ProductPricelistItem(models.Model):
     )
 
     fixed_price = fields.Float(string="Fixed Price", min_display_digits='Product Price')
+    packaging_price = fields.Float(
+        string="Packaging Price",
+        compute="_compute_packaging_price",
+        inverse="_inverse_packaging_price",
+    )
 
     price_discount = fields.Float(
         string="Price Discount",
@@ -188,6 +193,11 @@ class ProductPricelistItem(models.Model):
                 or item.company_id.currency_id
                 or item.env.company.currency_id
             )
+
+    @api.depends("product_tmpl_id", "uom_id")
+    def _compute_relative_uom_id(self):
+        for item in self:
+            item.relative_uom_id = item.product_tmpl_id.uom_id or item.uom_id.relative_uom_id or item.uom_id
 
     @api.depends('product_tmpl_id', 'product_tmpl_id.uom_id', 'product_tmpl_id.uom_ids')
     def _compute_allowed_uom_ids(self):
@@ -273,6 +283,29 @@ class ProductPricelistItem(models.Model):
                     base=base_str,
                     extra=extra_fee_str,
                 )
+
+    @api.depends("fixed_price", "relative_uom_id", "uom_id")
+    def _compute_packaging_price(self):
+        for item in self:
+            uom = item.uom_id or item.relative_uom_id
+            min_qty = item.min_quantity or 1
+
+            if not item.relative_uom_id or not uom or item.relative_uom_id == uom:
+                item.packaging_price = item.fixed_price * min_qty
+                continue
+
+            item.packaging_price = item.relative_uom_id._compute_price(item.fixed_price, uom) * min_qty
+
+    def _inverse_packaging_price(self):
+        for item in self:
+            uom = item.uom_id or item.relative_uom_id
+            min_qty = item.min_quantity or 1
+
+            if not item.relative_uom_id or not uom or item.relative_uom_id == uom:
+                item.fixed_price = item.packaging_price / min_qty
+                continue
+
+            item.fixed_price = uom._compute_price(item.packaging_price / min_qty, item.relative_uom_id)
 
     @api.depends('price_discount')
     def _compute_price_markup(self):
@@ -443,6 +476,7 @@ class ProductPricelistItem(models.Model):
             self.product_id = False
         if self.product_tmpl_id:
             self.categ_id = False
+        self.uom_id = False
 
     @api.onchange('categ_id')
     def _onchange_categ_id(self):
@@ -463,6 +497,14 @@ class ProductPricelistItem(models.Model):
     @api.onchange('date_start', 'date_end')
     def _onchange_validity_period(self):
         self._check_date_range()
+
+    @api.onchange("packaging_price")
+    def _onchange_packaging_price(self):
+        self._inverse_packaging_price()
+
+    @api.onchange("min_quantity")
+    def _onchange_min_quantity(self):
+        self._inverse_packaging_price()
 
     #=== CRUD METHODS ===#
 
