@@ -16,24 +16,26 @@
             <button class="btn btn-link align-self-end" t-on-click="this.onClickAddOption"><i class="oi me-1" data-icon="add"/> Add another option</button>
             <div t-if="this.optionsMissing" class="text-danger form-text ms-1">At least two options are required</div>
         </div>
-        <div class="d-flex justify-content-between gap-3">
+        <div class="d-flex flex-column flex-md-row justify-content-md-between align-items-start gap-3">
             <label class="d-flex align-items-center">
                 <span class="fw-bold me-2">Allow multiple options</span>
                 <input class="form-check-input mt-0" type="checkbox" name="poll_allow_multiple_options" t-model.proxy="this.state.allowMultipleOptions"/>
             </label>
-            <label class="d-flex align-items-center">
-                <span class="fw-bold me-2">Duration</span>
-                <select class="form-select" name="poll_duration" style="width: fit-content;" t-model.proxy="this.state.duration">
-                    <option value="10">10 minutes</option>
-                    <option value="60">1 hour</option>
-                    <option value="240">4 hours</option>
-                    <option value="480">8 hours</option>
-                    <option value="1440">24 hours</option>
-                    <option value="4320">3 days</option>
-                    <option value="10080">1 week</option>
-                    <option value="20160">2 weeks</option>
-                </select>
-        </label>
+            <div class="d-flex align-items-start">
+                <span class="fw-bold me-2 pt-2">Duration</span>
+                <div class="d-flex flex-column align-items-start">
+                    <Dropdown noClasses="true" menuClass="this.store.discussDropdownMenuClass()">
+                        <button type="button" class="form-select text-start" style="width: fit-content;" name="poll_duration" t-ref="this.durationRef" t-on-click.capture="this.onClickDuration" t-out="this.durationLabel()"/>
+                        <t t-set-slot="content">
+                            <DropdownItem t-foreach="this.durationOptions" t-as="option" t-key="option.value" class="{ 'active': this.state.duration === option.value }" onSelected="() => this.onSelectDuration(option.value)">
+                                <t t-out="option.label"/>
+                            </DropdownItem>
+                        </t>
+                    </Dropdown>
+                    <div t-if="this.state.endDtError === 'missing'" class="text-danger form-text">Please select an end time.</div>
+                    <div t-elif="this.state.endDtError === 'past'" class="text-danger form-text">Choose an end time in the future.</div>
+                </div>
+            </div>
         </div>
         <t t-set-slot="footer">
             <button class="btn btn-primary me-2" t-on-click="this.onClickSubmit">Post</button>
