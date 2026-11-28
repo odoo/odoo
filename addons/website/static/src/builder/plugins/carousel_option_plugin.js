@@ -46,6 +46,7 @@ export class CarouselOptionPlugin extends Plugin {
             SetAutoplayAction,
             SlideCarouselAction,
             ToggleControllersAction,
+            SetControllersOrderAction,
             ToggleCardImgAction,
             SetCarouselTypeAction,
             SetCarouselTimespanAction,
@@ -419,6 +420,55 @@ export class ToggleControllersAction extends BuilderAction {
         carouselEl.classList.toggle("s_carousel_controllers_hidden", areControllersHidden);
     }
 }
+
+/**
+ * Returns the visual order of the arrows and indicators of a horizontal
+ * controllers row (`.o_horizontal_controllers_row`).
+ *
+ * @param {HTMLElement} rowEl
+ * @returns {"arrows_first"|"indicators_first"}
+ */
+function getHorizontalControllersOrder(rowEl) {
+    const arrowsEl = rowEl.querySelector(":scope > .o_arrows_wrapper");
+    const indicatorsEl = rowEl.querySelector(":scope > .carousel-indicators");
+    const isDomArrowsFirst = !!arrowsEl && arrowsEl.nextElementSibling === indicatorsEl;
+    // Compatibility: the order used to be reversed visually with the
+    // `flex-row-reverse` class.
+    const isReversed = rowEl.classList.contains("flex-row-reverse");
+    return isDomArrowsFirst !== isReversed ? "arrows_first" : "indicators_first";
+}
+
+/**
+ * Sets the position of the arrows and indicators of a horizontal controllers
+ * row. Instead of reversing them visually, the elements are moved in the DOM
+ * so that the keyboard navigation follows the visual order.
+ */
+export class SetControllersOrderAction extends BuilderAction {
+    static id = "setControllersOrder";
+    isApplied({ editingElement: rowEl, params: { mainParam: order } }) {
+        const isCentered = rowEl.classList.contains("justify-content-center");
+        return order === "centered" ? isCentered : getHorizontalControllersOrder(rowEl) === order;
+    }
+    apply({ editingElement: rowEl, params: { mainParam: order } }) {
+        const isCentered = order === "centered";
+        // When centering, keep the current visual order.
+        const newOrder = isCentered ? getHorizontalControllersOrder(rowEl) : order;
+        rowEl.classList.remove("flex-row-reverse");
+        rowEl.classList.toggle("justify-content-center", isCentered);
+        rowEl.classList.toggle("justify-content-between", !isCentered);
+
+        const arrowsEl = rowEl.querySelector(":scope > .o_arrows_wrapper");
+        const indicatorsEl = rowEl.querySelector(":scope > .carousel-indicators");
+        if (arrowsEl && indicatorsEl) {
+            if (newOrder === "arrows_first") {
+                indicatorsEl.before(arrowsEl);
+            } else {
+                arrowsEl.before(indicatorsEl);
+            }
+        }
+    }
+}
+
 export class ToggleCardImgAction extends BuilderAction {
     static id = "toggleCardImg";
     static dependencies = ["websiteBridge"];

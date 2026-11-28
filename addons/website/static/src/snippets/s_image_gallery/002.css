@@ -354,6 +354,16 @@
                     inset: calc(var(--o-bs-carousel-indicator-spacer) * -1);
                     transform: scale(.8);
                 }
+
+                /* Keyboard focus: show the focus ring around the dot. */
+                &:focus-visible {
+                    /* Keep the focused dot in line with the others. */
+                    inset: auto;
+
+                    &:before {
+                        inset: 0;
+                    }
+                }
             }
         }
 

@@ -5,6 +5,7 @@ import {
 } from "@website/../tests/builder/website_helpers";
 import { contains } from "@web/../tests/web_test_helpers";
 import { queryFirst } from "@odoo/hoot-dom";
+import { unfoldAllOptionsGroups } from "@html_builder/../tests/helpers";
 
 defineWebsiteModels();
 
@@ -189,4 +190,107 @@ test("Test carousel item height matches configured section height", async () => 
     expect(carouselItemEl.getBoundingClientRect().height).toBeCloseTo(iframeHeight * 0.75, {
         margin: 1,
     });
+});
+
+/**
+ * Returns the controllers of the given container in DOM order, so that it
+ * can be compared to their visual order.
+ *
+ * @param {HTMLElement} containerEl
+ * @returns {string[]}
+ */
+function getControllersOrder(containerEl) {
+    const controllers = {
+        o_carousel_pause: "pause",
+        "carousel-control-prev": "prev",
+        "carousel-control-next": "next",
+        "carousel-indicators": "indicators",
+        o_arrows_wrapper: "arrows",
+    };
+    return [...containerEl.children]
+        .map((el) => Object.entries(controllers).find(([cls]) => el.classList.contains(cls))?.[1])
+        .filter(Boolean);
+}
+
+/**
+ * Opens the select of the given option row and clicks on the given item.
+ *
+ * @param {string} rowLabel
+ * @param {string} itemLabel
+ */
+async function selectOption(rowLabel, itemLabel) {
+    await contains(`.o_hb_row[data-label='${rowLabel}'] button`).click();
+    await contains(`.o_hb_select_dropdown_item:contains('${itemLabel}')`).click();
+}
+
+test("Carousel controllers DOM order follows the 'Control' option (s_carousel_intro)", async () => {
+    const { getEditor, getEditableContent, waitSidebarUpdated } =
+        await setupWebsiteBuilderWithSnippet("s_carousel_intro", { loadIframeBundles: true });
+    const rowEl = getEditableContent().querySelector(".o_horizontal_controllers_row");
+    // Reproduce the legacy layout using `flex-row-reverse`.
+    rowEl.prepend(rowEl.querySelector(":scope > .o_arrows_wrapper"));
+    rowEl.classList.add("flex-row-reverse");
+    getEditor().shared.history.commit();
+
+    await contains(":iframe .s_carousel_intro .carousel-item.active").click();
+    await waitSidebarUpdated();
+    await unfoldAllOptionsGroups();
+    // Visually, the indicators are first: it is the default layout.
+    expect(".o_hb_row[data-label='Control'] button").toHaveText("Default");
+
+    // Reversed: the class is removed and the arrows are first in the DOM.
+    await selectOption("Control", "Reversed");
+    expect(rowEl).not.toHaveClass("flex-row-reverse");
+    expect(getControllersOrder(rowEl)).toEqual(["arrows", "indicators"]);
+    expect(".o_hb_row[data-label='Control'] button").toHaveText("Reversed");
+
+    // Default: the indicators are first in the DOM.
+    await selectOption("Control", "Default");
+    expect(getControllersOrder(rowEl)).toEqual(["indicators", "arrows"]);
+    expect(".o_hb_row[data-label='Control'] button").toHaveText("Default");
+
+    // Undo restores the previous markup.
+    getEditor().shared.history.undo();
+    await waitSidebarUpdated();
+    expect(getControllersOrder(rowEl)).toEqual(["arrows", "indicators"]);
+    expect(".o_hb_row[data-label='Control'] button").toHaveText("Reversed");
+
+    // Centered (only available when a controller is hidden) keeps the order.
+    await selectOption("Indicators", "Hidden");
+    await selectOption("Control", "Centered");
+    expect(rowEl).toHaveClass("justify-content-center");
+    expect(rowEl).not.toHaveClass("justify-content-between");
+    expect(getControllersOrder(rowEl)).toEqual(["arrows", "indicators"]);
+});
+
+test("Carousel controllers DOM order follows the 'Control' option (s_image_gallery)", async () => {
+    const { getEditor, getEditableContent, waitSidebarUpdated } =
+        await setupWebsiteBuilderWithSnippet("s_image_gallery", {
+            loadIframeBundles: true,
+            loadIframeBuilderTemplates: true,
+        });
+    const getOrder = () =>
+        getControllersOrder(getEditableContent().querySelector(".o_carousel_controllers"));
+    // Default: "Outside, at left".
+    expect(getOrder()).toEqual(["pause", "indicators", "prev", "next"]);
+
+    await contains(":iframe .s_image_gallery").click();
+    await waitSidebarUpdated();
+    await unfoldAllOptionsGroups();
+
+    await selectOption("Control", "Outside, center");
+    expect(getOrder()).toEqual(["pause", "prev", "indicators", "next"]);
+
+    await selectOption("Control", "Outside, at right");
+    expect(getOrder()).toEqual(["pause", "prev", "next", "indicators"]);
+
+    await selectOption("Control", "Classic");
+    expect(getOrder()).toEqual(["prev", "next", "pause", "indicators"]);
+
+    getEditor().shared.history.undo();
+    await waitSidebarUpdated();
+    expect(getOrder()).toEqual(["pause", "prev", "next", "indicators"]);
+
+    await contains("[data-action-id='removeAllImages']").click();
+    expect(getOrder()).toEqual(["pause", "prev", "next", "indicators"]);
 });
