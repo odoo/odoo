@@ -447,6 +447,30 @@ class TestWarehouse(TestStockCommon):
         # Ensure there still no quants in distribution warehouse
         self.assertEqual(sum(self.env['stock.quant']._gather(product, warehouse_distribution_wavre.lot_stock_id).mapped('quantity')), 0)
 
+    def test_replenish_resupplied_warehouses_with_different_partner_addresses(self):
+        """
+        Replenishing several orderpoints at once should keep their transfers separate when they have different partners.
+        """
+        warehouse_2, warehouse_3 = self.env['stock.warehouse'].create([{
+            'name': f'Warehouse {i}',
+            'code': f'WH{i}',
+            'resupply_wh_ids': [Command.set(self.warehouse_1.ids)],
+        } for i in (2, 3)])
+        for warehouse, partner in [(warehouse_2, self.partner), (warehouse_3, self.partner_1)]:
+            warehouse.resupply_route_ids.rule_ids.filtered(lambda r: r.location_src_id == self.stock_location).partner_address_id = partner
+        orderpoints = self.env['stock.warehouse.orderpoint'].create([{
+            'product_id': self.productA.id,
+            'location_id': warehouse.lot_stock_id.id,
+            'route_id': warehouse.resupply_route_ids.id,
+            'trigger': 'manual',
+            'qty_to_order': 1,
+        } for warehouse in (warehouse_2, warehouse_3)])
+
+        orderpoints.action_replenish()
+
+        deliveries = self.env['stock.picking'].search([('picking_type_id', '=', self.picking_type_out.id), ('product_id', '=', self.productA.id)])
+        self.assertEqual(deliveries.partner_id, self.partner | self.partner_1)
+
     def test_add_resupply_warehouse_one_by_one(self):
         """ Checks that selecting a warehouse as a resupply warehouse one after another correctly sets the routes as well.
         """
