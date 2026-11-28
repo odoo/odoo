@@ -1613,3 +1613,10 @@ class TestPoSBasicConfig(TestPoSCommon):
         orders.with_user(pos_only_user)._generate_pos_order_invoice()
 
         self.assertEqual(orders.account_move.review_state, 'no_review')
+
+    def test_pos_category_name_create(self):
+        parent_id, _name = self.env['pos.category'].name_create('Drinks')
+        parent = self.env['pos.category'].browse(parent_id)
+        self.assertEqual(parent.name, 'Drinks')
+        child = self.env['pos.category'].create({'name': 'Soft', 'parent_id': parent.id})
+        self.assertEqual(child.display_name, 'Drinks / Soft')
