@@ -944,3 +944,12 @@ class TestTimesheet(TestCommonTimesheet):
             self.project,
             self.env['project.project'].search([('is_project_overtime', '=', True)])
         )
+
+
+class TestTimesheetGroupsIsolation(TransactionCase):
+
+    def test_timesheet_admin_is_not_hr_officer(self):
+        """ Timesheets rights must not give access to the Employees app """
+        user = new_test_user(self.env, login='timesheet_admin', groups='base.group_user,hr_timesheet.group_timesheet_manager')
+        self.assertTrue(user.has_group('hr_timesheet.group_hr_timesheet_approver'))
+        self.assertFalse(user.has_group('hr.group_hr_user'))
