@@ -188,7 +188,7 @@ class TestConfiguratorPreview(odoo.tests.HttpCase):
     def setUp(self):
         super().setUp()
 
-        def preview_url_mocked(website, theme_name):
+        def preview_url_mocked(website, theme_name, is_dark=False):
             # No module in the test addons path ships a preview file.
             if theme_name == 'theme_default':
                 return '/theme_default/static/description/preview.html'
