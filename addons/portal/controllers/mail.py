@@ -56,6 +56,11 @@ class MailController(mail.MailController):
                             if (isinstance(record_sudo, request.env.registry['mail.thread'])
                                     and validate_thread_with_hash_pid(record_sudo, hash, pid)):
                                 url = request.env['ir.http']._portal_localize_url_for_partner(url, pid)
+                        if highlight_message_id := kwargs.get('highlight_message_id'):
+                            url = urls.url_parse(url)
+                            url_params = url.decode_query()
+                            url_params['highlight_message_id'] = highlight_message_id
+                            url = url.replace(query=urls.url_encode(url_params, sort=True)).to_url()
                         return request.redirect(url)
         return super(MailController, cls)._redirect_to_record(model, res_id, access_token=access_token, **kwargs)
 

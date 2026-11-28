@@ -7418,7 +7418,10 @@ class AccountMove(models.Model):
         if self.move_type != 'entry':
             partner_ids = (message.partner_ids | message.partner_cc_ids).ids
             self._portal_ensure_token()
-            access_link = self._notify_get_action_link('view', access_token=self.access_token)
+            access_link = self._notify_get_action_link(
+                'view', access_token=self.access_token,
+                **self._notify_get_access_link_params(message),
+            )
 
             # Create a new group for partners that have been manually added as recipients.
             # Those partners should have access to the invoice.

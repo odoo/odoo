@@ -4,6 +4,8 @@ from contextlib import contextmanager
 from datetime import date
 from unittest.mock import patch
 
+from markupsafe import Markup
+
 from odoo import Command
 from odoo.exceptions import UserError
 from odoo.tests import Form, tagged, users, warmup
@@ -495,6 +497,39 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
             author=self.user_account_other.partner_id,
             content='access_token=',
         )
+        # sending the invoice: link to the invoice itself, not to the message
+        for body in self._new_mails.mapped('body_html'):
+            self.assertNotIn('highlight_message_id', body)
+
+    def test_invoice_mention_additional_partner(self):
+        """
+        Make sure that when a partner who is not the invoiced customer is
+        mentioned in the chatter of an invoice, they receive a link containing
+        an access token and pointing to the message, so that it is highlighted
+        in the conversation.
+        """
+        test_move = self.test_account_moves[1].with_env(self.env)
+        additional_partner = self.env['res.partner'].create({
+            'name': "Additional Partner",
+            'email': "additional@example.com",
+        })
+
+        with self.mock_mail_gateway(mail_unlink_sent=False):
+            message = test_move.message_post(
+                body=Markup('<p>Could you check this invoice?</p>'),
+                message_type='comment',
+                partner_ids=additional_partner.ids,
+                subtype_xmlid='mail.mt_comment',
+            )
+
+        for content in ('access_token=', f'highlight_message_id={message.id}'):
+            self.assertMailMail(
+                additional_partner,
+                'sent',
+                author=message.author_id,
+                content=content,
+                mail_message=message,
+            )
 
     def test_move_composer_attachments_order(self):
         """ The sent email lists the invoice PDF first, then the other files in

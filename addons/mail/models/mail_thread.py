@@ -4395,7 +4395,10 @@ class MailThread(models.AbstractModel):
 
         :return: updated groups;
         """
-        access_link = self._notify_get_action_link('view', model=message.model, res_id=message.res_id)
+        access_link = self._notify_get_action_link(
+            'view', model=message.model, res_id=message.res_id,
+            **self._notify_get_access_link_params(message),
+        )
 
         if model_description:
             view_title = _('View %s', model_description)
@@ -4519,6 +4522,29 @@ class MailThread(models.AbstractModel):
             link = self[0].get_base_url() + link
 
         return link
+
+    def _notify_get_access_link_params(self, message):
+        """ Additional parameters of the access link ('View Document' button)
+        of notification emails. Discussion messages (e.g. a comment mentioning
+        someone) are highlighted so that recipients land directly on them in
+        the conversation. Messages using a specific layout (e.g. sending a
+        quotation or an invoice) keep pointing to the document itself.
+
+        The message is only a hint: the link is still based on model and
+        res_id, so it keeps working even if the message is removed.
+
+        :param record message: <mail.message> record being notified;
+
+        :return: parameters to give to '_notify_get_action_link' for 'view' links;
+        :rtype: dict
+        """
+        if (
+            message and message.message_type == 'comment'
+            and not message.email_layout_xmlid
+            and message._is_thread_message(thread=self)
+        ):
+            return {'highlight_message_id': message.id}
+        return {}
 
     def _notify_thread_with_out_of_office(self, message, recipients_data, **kwargs):
         """ Out-of-office automated answer at posting time. """
@@ -4654,6 +4680,9 @@ class MailThread(models.AbstractModel):
             if key in ('action', 'token', 'access_token', 'auth_signup_token',
                        'auth_login', 'pid', 'hash')
         })
+        # - view: highlight_message_id (message to highlight in the conversation)
+        if link_type == 'view' and kwargs.get('highlight_message_id'):
+            params['highlight_message_id'] = kwargs['highlight_message_id']
         if link_type == 'controller':
             params.pop('model')
         elif link_type not in ['view', 'assign', 'follow', 'unfollow']:

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from markupsafe import Markup
 from unittest.mock import patch
 from werkzeug.urls import url_parse, url_decode, url_encode
 
@@ -444,6 +445,48 @@ class TestPortalFlow(MailCommon, HttpCase):
         self.assertEqual(len(self._mails), 1)
         self.assertIn(f'"{html_escape(self.record_portal_url_auth)}"', self._mails[0].get('body'))
         self.assertEqual(f'Your quotation "{self.record_portal.name}"', self._mails[0].get('subject'))  # Check that the template is used
+
+    @mute_logger('odoo.addons.mail.models.mail_mail', 'werkzeug')
+    @users('employee')
+    def test_send_message_to_customer_highlight_message(self):
+        """ Discussion message (e.g. mentioning the customer in the chatter): the
+        access link points to the message, which is highlighted when following
+        the link, either on the portal page (token) or in the backend (access). """
+        with self.mock_mail_gateway(mail_unlink_sent=True):
+            message = self.record_portal.with_env(self.env).message_post(
+                body=Markup('<p>Hello Mathias Delvaux, could you check this?</p>'),
+                message_type='comment',
+                partner_ids=self.customer.ids,
+                subtype_xmlid='mail.mt_comment',
+            )
+
+        self.assertEqual(len(self._mails), 1)
+        parsed_url = url_parse(self.record_portal_url_auth)
+        access_url = parsed_url.replace(query=url_encode({
+            **url_decode(parsed_url.query),
+            'highlight_message_id': message.id,
+        }, sort=True)).to_url()
+        self.assertIn(f'"{html_escape(access_url)}"', self._mails[0].get('body'))
+
+        # not logged: portal page with token, message highlighted
+        self.authenticate(None, None)
+        res = self.url_open(access_url)
+        self.assertEqual(res.status_code, 200)
+        self.assertURLEqual(
+            res.url,
+            f'{self.portal_web_url}?' + url_encode({
+                'access_token': self.record_portal.access_token,
+                'hash': self.record_portal_hash,
+                'highlight_message_id': message.id,
+                'pid': self.customer.id,
+            }, sort=True),
+        )
+
+        # logged with access: backend, message highlighted
+        self.authenticate(self.user_employee.login, self.user_employee.login)
+        res = self.url_open(access_url)
+        self.assertEqual(res.status_code, 200)
+        self.assertURLEqual(res.url, f'{self.portal_backend_local_url}?highlight_message_id={message.id}')
 
     def test_redirect_to_user_lang_page(self):
         """Check that users are redirected to a page in their language or in the backend if they have access."""

@@ -33,6 +33,7 @@ class MailThread(models.AbstractModel):
             # sudo: mail.thread - user posting with read access should be able to get/create signup
             # token when notifying other customers that need it
             params.update(customer.sudo().signup_get_auth_param()[customer.id])
+            params.update(self._notify_get_access_link_params(message))
             access_link = self._notify_get_action_link('view', **params)
 
             new_group = [
