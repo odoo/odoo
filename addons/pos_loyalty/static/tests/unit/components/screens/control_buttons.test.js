@@ -54,3 +54,25 @@ test("more button catches attention when rewards are available", async () => {
     expect(moreButtonSelector).toHaveClass("o_catch_attention_reward");
     expect(`${moreButtonSelector} .o_reward-star`).toHaveCount(1);
 });
+
+test("an order paid to the cent is no refund", async () => {
+    const store = await setupPosEnv();
+    const order = store.addNewOrder();
+    const program = store.models["loyalty.program"].get(2);
+    const template = store.models["product.template"].get(60);
+    const product = store.models["product.product"].get(60);
+    // Rounded lines summed back, e.g. 21.00 paid as 9.00 + 12.00 by two eWallets.
+    Object.defineProperty(order, "priceIncl", {
+        get: () => -1.7763568394002505e-15,
+        configurable: true,
+    });
+
+    await mountWithCleanup(ControlButtons, {});
+    expect("button:contains('eWallet Refund')").toHaveCount(0);
+
+    const line = await store.addLineToCurrentOrder(
+        { product_tmpl_id: template, product_id: product, price_unit: 50 },
+        { paymentProgram: program }
+    );
+    expect(line.price_unit).toBe(50);
+});
