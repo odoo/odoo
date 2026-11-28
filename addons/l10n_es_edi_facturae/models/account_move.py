@@ -353,21 +353,21 @@ class AccountMove(models.Model):
             'UnitOfMeasure': line.product_uom_id.l10n_es_edi_facturae_uom_code,
             'DiscountsAndRebates': [],
             'Charges': [],
-            'GrossAmount': float_round(tax_details['raw_total_excluded_currency'], precision_digits=8),
+            'GrossAmount': self.currency_id.round(tax_details['raw_total_excluded_currency']),
         }
 
         if line.discount == 100.0:
             raw_total_cost = line.price_unit * line.quantity
         else:
             raw_total_cost = tax_details['raw_total_excluded_currency'] / (1 - (line.discount / 100.0))
-        xml_values['TotalCost'] = float_round(raw_total_cost, precision_digits=8)
+        xml_values['TotalCost'] = self.currency_id.round(raw_total_cost)
 
         if line.quantity:
             xml_values['UnitPriceWithoutTax'] = float_round(raw_total_cost / line.quantity, precision_digits=8)
         else:
             xml_values['UnitPriceWithoutTax'] = 0.0
 
-        discount_amount = xml_values['TotalCost'] - xml_values['GrossAmount']
+        discount_amount = self.currency_id.round(xml_values['TotalCost'] - xml_values['GrossAmount'])
         if float_compare(discount_amount, 0.0, precision_digits=8) > 0:
             xml_values['DiscountsAndRebates'].append({
                 'DiscountReason': '/',
@@ -483,7 +483,7 @@ class AccountMove(models.Model):
         base_lines_aggregated_values = AccountTax._aggregate_base_lines_tax_details(base_lines, grouping_function_per_tax)
         for base_line, aggregated_values in base_lines_aggregated_values:
             invoice_line_values = self._l10n_es_edi_facturae_prepare_inv_line(base_line, aggregated_values)
-            invoice_values['TotalGrossAmount'] += invoice_line_values['GrossAmount']
+            invoice_values['TotalGrossAmount'] += base_line['tax_details']['raw_total_excluded_currency']
             invoice_values['Items'].append(invoice_line_values)
 
         def grouping_function_per_base_line_tax(base_line, tax_data):
