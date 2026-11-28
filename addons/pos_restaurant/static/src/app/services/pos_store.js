@@ -1039,7 +1039,9 @@ patch(PosStore.prototype, {
         );
     },
     setOrder(order) {
-        order?.ensureCourseSelection();
+        if (order?.uuid !== this.selectedOrderUuid) {
+            order?.ensureCourseSelection();
+        }
         super.setOrder(order);
     },
     addCourse({ backendCourse } = {}) {
