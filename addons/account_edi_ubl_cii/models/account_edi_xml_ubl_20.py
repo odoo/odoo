@@ -2,7 +2,7 @@ from collections import defaultdict
 from lxml import etree
 
 from odoo import _, models, Command
-from odoo.tools import html2plaintext, cleanup_xml_node, float_is_zero, float_repr, float_round
+from odoo.tools import html2plaintext, cleanup_xml_node, float_is_zero
 from odoo.addons.account.tools import dict_to_xml
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import EAS_MAPPING
 from odoo.addons.account_edi_ubl_cii.models.account_edi_ubl import UBL_NAMESPACES  # noqa: F401 (other modules still import it from ubl_20)
@@ -2022,14 +2022,10 @@ class AccountEdiXmlUBL20(models.AbstractModel):
 
     def _add_document_line_price_nodes(self, line_node, vals):
         currency_suffix = vals['currency_suffix']
-        product_price_dp = self.env['decimal.precision'].precision_get('Product Price')
 
         line_node['cac:Price'] = {
             'cbc:PriceAmount': {
-                '_text': float_round(
-                    vals[f'gross_price_unit{currency_suffix}'],
-                    precision_digits=product_price_dp,
-                ),
+                '_text': vals[f'gross_price_unit{currency_suffix}'],
                 'currencyID': vals['currency_name'],
             },
         }
