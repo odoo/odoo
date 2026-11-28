@@ -2963,15 +2963,16 @@ class AccountEdiUBL(models.AbstractModel):
 
         line_extension_amount_str = line_tree.findtext('.//{*}LineExtensionAmount')
         price_amount_str = line_tree.findtext('.//{*}Price/{*}PriceAmount')
-        invoiced_quantity_str = (
-            line_tree.findtext('.//{*}InvoicedQuantity')
-            or line_tree.findtext('.//{*}CreditedQuantity')
-        )
-        base_quantity_str = line_tree.findtext('./{*}Price/{*}BaseQuantity')
+        invoiced_quantity_node = line_tree.find('.//{*}InvoicedQuantity')
+        if invoiced_quantity_node is None:
+            invoiced_quantity_node = line_tree.find('.//{*}CreditedQuantity')
+        base_quantity_node = line_tree.find('./{*}Price/{*}BaseQuantity')
         line_extension_amount = line_extension_amount_str and float(line_extension_amount_str) * file_document_sign
         price_amount = price_amount_str and float(price_amount_str)
-        invoiced_quantity = invoiced_quantity_str and float(invoiced_quantity_str) * file_document_sign
-        base_quantity = base_quantity_str and float(base_quantity_str)
+        invoiced_quantity = invoiced_quantity_node is not None and invoiced_quantity_node.text and float(invoiced_quantity_node.text) * file_document_sign
+        invoiced_quantity_uom = invoiced_quantity_node is not None and self._get_uom_from_unece_code(invoiced_quantity_node.attrib.get('unitCode'))
+        base_quantity = base_quantity_node is not None and base_quantity_node.text and float(base_quantity_node.text)
+        base_quantity_uom = base_quantity_node is not None and self._get_uom_from_unece_code(base_quantity_node.attrib.get('unitCode'))
 
         total_allowances = sum(allowance['amount'] for allowance in collected_values['allowances'])
         total_charges = sum(charge['amount'] for charge in collected_values['charges'])
@@ -3050,8 +3051,9 @@ class AccountEdiUBL(models.AbstractModel):
             # quantity = 6.0
             # discount_amount = 300.0
             if not currency.is_zero(price_subtotal):
-                price_unit = price_subtotal / price_quantity
-                discount_amount += price_discount_amount * quantity / price_quantity
+                uom_factor = invoiced_quantity_uom._compute_quantity(1.0, base_quantity_uom, round=False, raise_if_failure=False)
+                price_unit = price_subtotal * uom_factor / price_quantity
+                discount_amount += price_discount_amount * uom_factor * quantity / price_quantity
         else:
             quantity = 0.0
             price_unit = 0.0

@@ -109,6 +109,39 @@ class TestUblImportBis3InvoiceBEDecodeInvoiceLine(TestUblImportBis3InvoiceBE):
             'discount': 9.523809523809524,
         }])
 
+    def test_partial_import_invoice_line_price_amount_base_quantity_invoiced_quantity_different_uom(self):
+        # net_price = 1€ for 2L
+        # gross_price = 2€ for 2L (allowance on price = 1€)
+        # net_price per liter = 0.5€
+        # invoiced_qty = 2m³ = 2000L
+        # gross_price per m³ = 2 * 1000 / 2 = 1000€
+        # charge = 50 => charge per m³ = 25 => price_unit = 1025
+        # allowance = 100 + price allowance (1 * 1000 / 2 * 2 = 1000) = 1100
+        # discount = 1100 / (1025 * 2) * 100 = 53.658...
+        # line extension amount = 0.5 * 2000 - 100 + 50 = 950
+        invoice = self._import_invoice_as_attachment_on(test_name='test_partial_import_invoice_line_price_amount_base_quantity_invoiced_quantity_different_uom')
+        self.assertRecordValues(invoice.invoice_line_ids, [{
+            'price_unit': 1025.0,
+            'quantity': 2.0,
+            'product_uom_id': self.ref('uom.product_uom_cubic_meter'),
+            'discount': 53.65853658536585,
+            'price_subtotal': 950.0,
+        }])
+
+    def test_partial_import_invoice_line_price_amount_base_quantity_invoiced_quantity_smaller_uom(self):
+        # gross_price = 1000€ per m³, price allowance = 500€ => net_price = 500€ per m³ = 0.5€ per L
+        # billed_qty = 2000L
+        # price_unit = 1€ + charge per L (50 / 2000) = 1.025€
+        # discount = (100 + 500 * 2) / (1.025 * 2000) * 100 = 53.658...
+        invoice = self._import_invoice_as_attachment_on(test_name='test_partial_import_invoice_line_price_amount_base_quantity_invoiced_quantity_smaller_uom')
+        self.assertRecordValues(invoice.invoice_line_ids, [{
+            'price_unit': 1.025,
+            'quantity': 2000.0,
+            'product_uom_id': self.ref('uom.product_uom_litre'),
+            'discount': 53.65853658536585,
+            'price_subtotal': 950.0,
+        }])
+
     def test_partial_import_invoice_line_negative_lines_and_total(self):
         invoice = self._import_invoice_as_attachment_on(test_name='test_partial_import_invoice_line_negative_lines_and_total')
         self.assertRecordValues(invoice.invoice_line_ids, [

@@ -1224,16 +1224,17 @@ class AccountEdiCii(models.AbstractModel):
 
         line_total_amount_str = line_tree.findtext('.//{*}SpecifiedTradeSettlementLineMonetarySummation/{*}LineTotalAmount')
         price_amount_str = line_tree.findtext('.//{*}NetPriceProductTradePrice/{*}ChargeAmount')
-        billed_quantity_str = line_tree.findtext('.//{*}BilledQuantity')
-        base_quantity_str = (
-            line_tree.findtext('.//{*}GrossPriceProductTradePrice/{*}BasisQuantity')
-            or line_tree.findtext(".//{*}NetPriceProductTradePrice/{*}BasisQuantity")
-        )
+        billed_quantity_node = line_tree.find('.//{*}BilledQuantity')
+        base_quantity_node = line_tree.find('.//{*}GrossPriceProductTradePrice/{*}BasisQuantity')
+        if base_quantity_node is None:
+            base_quantity_node = line_tree.find('.//{*}NetPriceProductTradePrice/{*}BasisQuantity')
 
         line_total_amount = line_total_amount_str and float(line_total_amount_str) * file_document_sign
         price_amount = price_amount_str and float(price_amount_str)
-        billed_quantity = billed_quantity_str and float(billed_quantity_str) * file_document_sign
-        base_quantity = base_quantity_str and float(base_quantity_str)
+        billed_quantity = billed_quantity_node is not None and billed_quantity_node.text and float(billed_quantity_node.text) * file_document_sign
+        billed_quantity_uom = billed_quantity_node is not None and self._get_uom_from_unece_code(billed_quantity_node.attrib.get('unitCode'))
+        base_quantity = base_quantity_node is not None and base_quantity_node.text and float(base_quantity_node.text)
+        base_quantity_uom = base_quantity_node is not None and self._get_uom_from_unece_code(base_quantity_node.attrib.get('unitCode'))
 
         total_allowances = sum(allowance['amount'] for allowance in collected_values['allowances'])
         total_charges = sum(charge['amount'] for charge in collected_values['charges'])
@@ -1312,11 +1313,11 @@ class AccountEdiCii(models.AbstractModel):
             # quantity = 6.0
             # discount_amount = 300.0
             if not currency.is_zero(price_subtotal):
-                price_unit = (price_subtotal + price_discount_amount) / price_quantity
-                line_price_discount_amount = price_discount_amount * quantity / price_quantity
-
+                uom_factor = billed_quantity_uom._compute_quantity(1.0, base_quantity_uom, round=False, raise_if_failure=False)
+                price_unit = (price_subtotal + price_discount_amount) * uom_factor / price_quantity
+                line_price_discount_amount = price_discount_amount * uom_factor * quantity / price_quantity
                 line_total_discount_amount = (price_unit * quantity) - subtotal
-                rounding_tolerance = max(currency.rounding, 0.01) * abs(quantity) / price_quantity
+                rounding_tolerance = max(currency.rounding, 0.01) * abs(quantity) * uom_factor / price_quantity
                 if price_discount_amount and currency.compare_amounts(abs(line_total_discount_amount - line_price_discount_amount), rounding_tolerance) <= 0:
                     line_price_discount_amount = line_total_discount_amount
                 discount_amount += line_price_discount_amount
