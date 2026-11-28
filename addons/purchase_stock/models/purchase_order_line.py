@@ -374,9 +374,10 @@ class PurchaseOrderLine(models.Model):
         description_picking = ''
         if values.get('product_description_variants'):
             description_picking = values['product_description_variants']
+        orderpoint_only = values['orderpoint_id'] and not values['move_dest_ids']
         lines = self.filtered(
             lambda l: l.propagate_cancel == values['propagate_cancel']
-            and (l.orderpoint_id == values['orderpoint_id'] if values['orderpoint_id'] and not values['move_dest_ids'] else True)
+            and (l.orderpoint_id == values['orderpoint_id'] if orderpoint_only else not l.orderpoint_id or l.move_dest_ids)
         )
 
         # In case 'product_description_variants' is in the values, we also filter on the PO line
