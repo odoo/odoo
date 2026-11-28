@@ -503,13 +503,15 @@ class PosPaymentMethod(models.Model):
                     'name': self.name,
                     'account_id': partner_account.id,
                     'partner_id': partner.id,
-                    'balance': amount,
+                    'currency_id': session.currency_id.id,
+                    'amount_currency': amount,
                 }),
                 Command.create({
                     'name': self.name,
                     'account_id': session_account.id,
                     'partner_id': session.config_id.default_partner_id.id,
-                    'balance': -amount,
+                    'currency_id': session.currency_id.id,
+                    'amount_currency': -amount,
                 }),
             ],
         })
