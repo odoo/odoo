@@ -1464,3 +1464,67 @@ test("test_self_order_preset_btn: check preset button displays correct preset", 
     await Utils.isCartPageShown();
     await Utils.checkPreset("Delivery");
 });
+
+test("self_order_combo: single choice opens configurator and fixed item is validated and added to cart", async () => {
+    const store = await setupSelfPosEnv(
+        "mobile",
+        "counter",
+        "each",
+        { use_presets: false, available_preset_ids: [] },
+        true
+    );
+    const models = store.models;
+    const configurableChoice = models["product.combo"].create({
+        name: "Configurable Choice",
+        base_price: 0,
+        is_upsell: false,
+        qty_free: 1,
+        qty_max: 1,
+        sequence: 1,
+    });
+    models["product.combo.item"].create({
+        combo_id: configurableChoice,
+        product_id: models["product.combo.item"].get(213).product_id,
+        extra_price: 0,
+    });
+    const fixedChoice = models["product.combo"].create({
+        name: "Fixed Choice",
+        base_price: 0,
+        is_upsell: false,
+        qty_free: 1,
+        qty_max: 1,
+        sequence: 2,
+    });
+    models["product.combo.item"].create({
+        combo_id: fixedChoice,
+        product_id: models["product.combo.item"].get(204).product_id,
+        extra_price: 0,
+    });
+    models["product.template"].get(231).combo_ids = [configurableChoice, fixedChoice];
+
+    await Utils.clickOrderNow();
+    await Utils.clickCategory("Test Category");
+    await Utils.clickProduct("Test Combo");
+    Utils.checkAttributeShown("Size");
+    Utils.checkAttributeShown("Fabric");
+    await Utils.setupAttribute([
+        { name: "Size", value: "M" },
+        { name: "Fabric", value: "Leather" },
+    ]);
+    await Utils.clickBtn("Next");
+    await Utils.verifyConfirmationPageShown();
+    await Utils.verifyConfirmationHasProduct("Desk Organizer");
+    await Utils.verifyConfirmationHasProduct("Combo Product 5");
+    await Utils.clickBtn("Add to cart");
+    await Utils.clickBtn("Checkout");
+    await Utils.checkComboInCart("Test Combo", [
+        {
+            product: "Desk Organizer",
+            attributes: [
+                { name: "Size", value: "M" },
+                { name: "Fabric", value: "Leather" },
+            ],
+        },
+        { product: "Combo Product 5", attributes: [] },
+    ]);
+});
