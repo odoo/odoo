@@ -252,7 +252,9 @@ class MicrosoftSync(models.AbstractModel):
         Update Odoo events from Outlook recurrence and events.
         """
         # get the list of events to update ...
-        events_to_update = events.filter(lambda e: e.seriesMasterId == self.microsoft_id)
+        # seriesMasterId is specific to the calendar of the syncing user, which may not be the one
+        # that imported the recurrence (and whose id is stored in microsoft_id)
+        events_to_update = events.filter(lambda e: e.seriesMasterId == recurrence.id)
         if self.end_type in ['count', 'forever']:
             events_to_update = list(events_to_update)[:MAX_RECURRENT_EVENT]
 

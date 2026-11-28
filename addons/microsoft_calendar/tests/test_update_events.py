@@ -878,6 +878,52 @@ class TestUpdateEvents(TestCommon):
             "The added attendee should only be on the modified occurrence",
         )
 
+    @freeze_time('2021-09-22')
+    @patch.object(MicrosoftCalendarService, 'get_events')
+    def test_update_recurrence_with_exception_from_outlook_attendee_calendar(self, mock_get_events):
+        """
+        Once the organizer has synced a recurrence with an exception, the attendee syncs the same
+        recurrence, whose Outlook ids are specific to the attendee calendar. No event should be
+        deleted or recreated.
+        """
+        # arrange: an occurrence is moved 1h later in Outlook and synced by the organizer
+        new_start = self.start_date + timedelta(days=2 * self.recurrent_event_interval, hours=1)
+        exception_values = {
+            'type': 'exception',
+            'start': {'dateTime': new_start.strftime("%Y-%m-%dT%H:%M:%S.0000000"), 'timeZone': 'UTC'},
+            'end': {'dateTime': (new_start + timedelta(hours=1)).strftime("%Y-%m-%dT%H:%M:%S.0000000"), 'timeZone': 'UTC'},
+            'lastModifiedDateTime': _modified_date_in_the_future(self.recurrent_base_event),
+        }
+        organizer_events = list(self.recurrent_event_from_outlook_organizer)
+        organizer_events[3] = dict(organizer_events[3], **exception_values)
+        mock_get_events.return_value = (MicrosoftEvent(organizer_events), None)
+        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar()
+
+        events = self.recurrence.calendar_event_ids
+        exception_event = events.filtered(lambda e: e.ms_universal_event_id == organizer_events[3]['iCalUId'])
+        self.assertEqual(exception_event.start, new_start)
+
+        # act: the attendee syncs the same recurrence, with the ids of its own calendar
+        attendee_events = [
+            dict(e, id=f"ATTENDEE_{e['id']}", seriesMasterId=e['seriesMasterId'] and 'ATTENDEE_REC123')
+            for e in self.recurrent_event_from_outlook_attendee
+        ]
+        # self.recurrence ends after a number of occurrences, not at a date
+        master_recurrence = attendee_events[0]['recurrence']
+        attendee_events[0].update(
+            lastModifiedDateTime=_modified_date_in_the_future(self.recurrence),
+            recurrence=dict(master_recurrence, range=dict(
+                master_recurrence['range'], type='numbered', numberOfOccurrences=self.recurrent_events_count,
+            )),
+        )
+        attendee_events[3].update(exception_values)
+        mock_get_events.return_value = (MicrosoftEvent(attendee_events), None)
+        self.attendee_user.with_user(self.attendee_user).sudo()._sync_microsoft_calendar()
+
+        # assert
+        self.assertEqual(self.recurrence.calendar_event_ids, events, "No event should have been deleted or recreated")
+        self.assertEqual(exception_event.start, new_start)
+
     @patch.object(MicrosoftSync, '_write_from_microsoft', autospec=True)
     def test_recreate_recurrence_when_only_serialized_dtstart_changes(self, mock_write_from_microsoft):
         recurrence = self.recurrence.with_context(dont_notify=True)
@@ -1207,6 +1253,8 @@ class TestUpdateEvents(TestCommon):
         for e in updated_events:
             self.assertEqual(e.name, ms_events_to_update[e.microsoft_id])
             self.assertEqual(e.follow_recurrence, True)
+        # Outlook returns the dates in UTC, which is not the time zone of the recurrence
+        self.assertEqual(self.recurrence.event_tz, 'Europe/London')
 
     def _prepare_outlook_events_for_all_events_start_date_update(self, nb_of_events, new_start_date=datetime(2021, 9, 21, 10, 0, 0)):
         """
