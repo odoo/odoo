@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from collections import defaultdict
 
 from odoo import api, fields, models, _
 from odoo.fields import Domain
@@ -49,15 +50,29 @@ class SaleOrderLine(models.Model):
             is_time_product = line.product_uom_id and line.product_uom_id._has_common_reference(self.env.ref('uom.product_uom_hour'))
             line.remaining_hours_available = is_ordered_prepaid and is_time_product
 
-    @api.depends('remaining_hours_available', 'qty_delivered', 'product_uom_qty', 'product_uom_id')
+    @api.depends('remaining_hours_available', 'qty_delivered', 'qty_delivered_method', 'product_uom_qty', 'product_uom_id')
     def _compute_remaining_hours(self):
         uom_hour = self.env.ref('uom.product_uom_hour')
+        ts_lines = self.filtered(lambda line: line.remaining_hours_available and line.qty_delivered_method == 'timesheet')
+        mapped_hours = defaultdict(float)
+        if ts_lines:
+            for uom, so_line, unit_amount in self.env['account.analytic.line'].sudo()._read_group(
+                Domain.AND([
+                    ts_lines._timesheet_compute_delivered_quantity_domain(),
+                    [('so_line', 'in', ts_lines.ids)],
+                ]),
+                ['product_uom_id', 'so_line'],
+                ['unit_amount:sum'],
+            ):
+                if uom:
+                    mapped_hours[so_line.id] += uom._compute_quantity(unit_amount, uom_hour, round=False)
         for line in self:
-            remaining_hours = None
-            if line.remaining_hours_available:
-                qty_left = line.product_uom_qty - line.qty_delivered
-                remaining_hours = line.product_uom_id._compute_quantity(qty_left, uom_hour, round=False)
-            line.remaining_hours = remaining_hours
+            if not line.remaining_hours_available:
+                line.remaining_hours = False
+            elif line.qty_delivered_method == 'timesheet':
+                line.remaining_hours = line.product_uom_id._compute_quantity(line.product_uom_qty, uom_hour, round=False) - mapped_hours[line.id]
+            else:
+                line.remaining_hours = line.product_uom_id._compute_quantity(line.product_uom_qty - line.qty_delivered, uom_hour, round=False)
 
     @api.depends('product_id')
     def _compute_qty_delivered_method(self):
