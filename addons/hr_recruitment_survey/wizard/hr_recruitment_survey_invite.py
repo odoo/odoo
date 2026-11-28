@@ -67,7 +67,7 @@ class HrRecruitmentSurveyInvite(models.TransientModel):
             if not invite.single_survey_id:
                 invite.survey_access_mode = 'token'
             else:
-                invite.survey_access_mode = self.single_survey_id.access_mode
+                invite.survey_access_mode = invite.single_survey_id.access_mode
 
     @api.depends('survey_ids', 'survey_id')
     def _compute_survey_start_url(self):

@@ -188,3 +188,17 @@ class TestRecruitmentSurvey(common.TransactionCase):
     def _prepare_invite(self, survey, applicant):
         survey.write({'access_mode': 'public', 'users_login_required': False})
         return Form.from_action(self.env, applicant.action_send_survey()).save()
+
+    def test_survey_access_mode_multi_record(self):
+        """Computing survey_access_mode on multiple wizards with different surveys must not fail."""
+        self.survey_sysadmin.access_mode = 'public'
+        self.survey_developer.access_mode = 'token'
+        invite_sysadmin = self.env['hr.recruitment.survey.invite'].create({
+            'survey_ids': self.survey_sysadmin.ids,
+        })
+        invite_developer = self.env['hr.recruitment.survey.invite'].create({
+            'survey_ids': self.survey_developer.ids,
+        })
+        invites = invite_sysadmin | invite_developer
+        invites.invalidate_recordset(['survey_access_mode'])
+        self.assertEqual(invites.mapped('survey_access_mode'), ['public', 'token'])
