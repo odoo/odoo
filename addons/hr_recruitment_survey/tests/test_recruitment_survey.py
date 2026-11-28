@@ -107,6 +107,16 @@ class TestRecruitmentSurvey(common.TransactionCase):
         self.job_applicant.interviewer_ids = self.hr_recruitment_user
         self.job_applicant.with_user(self.hr_recruitment_user).action_print_survey()
 
+    def test_allowed_survey_types_of_several_surveys(self):
+        """ Surveys read together (list, export) compute their allowed types in one batch. """
+        survey_developer = self.env['survey.survey'].create({
+            'title': 'Questions for Developer job offer',
+            'survey_type': 'recruitment',
+        })
+        surveys = (self.survey_sysadmin | survey_developer).with_user(self.hr_recruitment_manager)
+        for values in surveys.read(['allowed_survey_types']):
+            self.assertIn('recruitment', values['allowed_survey_types'])
+
     def _prepare_invite(self, survey, applicant):
         survey.write({'access_mode': 'public', 'users_login_required': False})
         return Form.from_action(self.env, applicant.action_send_survey()).save()
