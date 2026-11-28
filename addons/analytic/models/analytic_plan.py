@@ -310,6 +310,10 @@ class AccountAnalyticPlan(models.Model):
         return self.env['ir.model.fields'].sudo().search(domain)
 
     def _sync_all_plan_column(self):
+        if not self.env['ir.config_parameter'].sudo().get_int('analytic.project_plan'):
+            # Install time: the plan being created will become the project plan,
+            # which uses `account_id`, so no dynamic column is needed.
+            return
         model_names = self.env.registry.descendants(['analytic.plan.fields.mixin'], '_inherit') - {'analytic.plan.fields.mixin'}
         for model in model_names:
             self._sync_plan_column(model)
