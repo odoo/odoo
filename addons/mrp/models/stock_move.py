@@ -76,12 +76,13 @@ class StockMove(models.Model):
     def _compute_location_id(self):
         ids_to_super = set()
         for move in self:
+            if move.is_scrap or (not move.production_id and not move.raw_material_production_id):
+                ids_to_super.add(move.id)
+                continue
             if move.production_id:
                 move.location_id = move.product_id.with_company(move.company_id).property_stock_production.id
-            elif move.raw_material_production_id:
-                move.location_id = move.raw_material_production_id.location_src_id
             else:
-                ids_to_super.add(move.id)
+                move.location_id = move.raw_material_production_id.location_src_id
         return super(StockMove, self.browse(ids_to_super))._compute_location_id()
 
     @api.depends('raw_material_production_id.location_dest_id', 'production_id.location_dest_id')
