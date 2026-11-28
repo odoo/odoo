@@ -301,7 +301,7 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
             self.assertEqual(format_res['rating_id']['publisher_avatar'], f'/web/image/res.partner/{self.partner_admin.id}/avatar_128/50x50')
             self.assertEqual(format_res['rating_id']['publisher_comment'], 'Comment')
             self.assertEqual(format_res['rating_id']['publisher_id'], self.partner_admin.id)
-            self.assertEqual(" ".join(format_res['rating_id']['publisher_datetime'].split()), '05/13/2023 10:30:05 AM')
+            self.assertEqual(format_res['rating_id']['publisher_datetime'], '2023-05-13 10:30:05')
             self.assertEqual(format_res['rating_id']['publisher_name'], self.partner_admin.display_name)
             self.assertDictEqual(
                 format_res['rating_stats'],
