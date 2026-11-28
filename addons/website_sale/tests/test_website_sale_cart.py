@@ -795,10 +795,16 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon):
                 product_template_id=variant.product_tmpl_id.id,
                 product_id=variant.id,
             )['tracking_info'][0]
-            purchase = self.WebsiteSaleController._prepare_shop_payment_confirmation_values(
+            # Lines without a product (notes, sections) must not break the `purchase` event.
+            request.cart.order_line = [
+                Command.create({'display_type': 'line_note', 'name': "Gift wrap"}),
+            ]
+            purchase_items = self.WebsiteSaleController._prepare_shop_payment_confirmation_values(
                 request.cart,
-            )['order_tracking_info']['items'][0]
+            )['order_tracking_info']['items']
 
+        self.assertEqual(len(purchase_items), 1, "The note must not be sent as an item")
+        purchase = purchase_items[0]
         for event in (view_item, add_to_cart, purchase):
             self.assertEqual(event['item_id'], 'SOFA-RED')
             self.assertEqual(
