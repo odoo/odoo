@@ -13,6 +13,11 @@ class EventType(models.Model):
     website_track_proposal = fields.Boolean(
         string='Tracks Proposals on Website', compute='_compute_website_track_menu_data',
         readonly=False, store=True)
+    track_stage_ids = fields.Many2many(
+        'event.track.stage', 'event_track_stage_event_type_rel', 'event_type_id', 'stage_id',
+        string='Track Stages',
+        help="Track stages given to events created from this template. If empty, "
+             "events get the default track stages.")
 
     @api.depends('website_menu')
     def _compute_website_track_menu_data(self):

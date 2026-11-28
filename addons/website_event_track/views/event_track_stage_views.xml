@@ -8,6 +8,9 @@
         <field name="arch" type="xml">
             <search string="Track Stage">
                <field name="name" string="Track Stages"/>
+               <field name="event_ids"/>
+               <filter string="Not Linked to Any Event" name="filter_no_event" domain="[('event_ids', '=', False)]"/>
+               <filter string="Event" name="groupby_event" context="{'group_by': 'event_ids'}"/>
             </search>
         </field>
     </record>
@@ -21,6 +24,8 @@
                     <group>
                         <group>
                             <field name="name"/>
+                            <field name="event_ids" widget="many2many_tags"/>
+                            <field name="event_type_ids" widget="many2many_tags"/>
                             <field name="mail_template_id"/>
                             <field name="is_visible_in_agenda" readonly="is_cancel"/>
                             <field name="is_fully_accessible" readonly="is_cancel"/>
@@ -64,6 +69,7 @@
             <list string="Track Stage">
                 <field name="sequence" widget="handle" groups="event.group_event_manager"/>
                 <field name="name"/>
+                <field name="event_ids" widget="many2many_tags" optional="show"/>
                 <field name="is_visible_in_agenda"/>
                 <field name="is_fully_accessible"/>
                 <field name="is_cancel"/>
@@ -91,6 +97,7 @@
         <field name="res_model">event.track.stage</field>
         <field name="view_mode">list,kanban,form</field>
         <field name="view_id" ref="event_track_stage_view_tree"/>
+        <field name="context">{'search_default_groupby_event': 1}</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
             Add a new stage in the task pipeline

@@ -4,6 +4,14 @@
         <field name="website_menu" eval="True"/>
         <field name="website_track" eval="True"/>
         <field name="website_track_proposal" eval="True"/>
+        <!-- this event does not refuse proposals: no "Refused" stage -->
+        <field name="track_stage_ids" eval="[Command.set([
+            ref('event_track_stage0'),
+            ref('event_track_stage1'),
+            ref('event_track_stage2'),
+            ref('event_track_stage3'),
+            ref('event_track_stage5'),
+        ])]"/>
     </record>
     <record id="event.event_7" model="event.event">
         <field name="website_menu" eval="True"/>
