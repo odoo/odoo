@@ -105,6 +105,29 @@ class TestExport(XlsxCreatorCase):
             ],
         )
 
+    def test_export_without_field_type(self):
+        self.env['res.currency'].create({
+            'name': "bottlecap",
+            'symbol': "b",
+            'rounding': 0.001,
+            'decimal_places': 3,
+        })
+        self.make([{'float_min': 42.5, 'float_monetary': 10.0}])
+        params = {
+            'fields': [
+                {'name': 'float_min', 'label': 'Float Min'},
+                {'name': 'float_monetary', 'label': 'Float Monetary'},
+            ]
+        }
+        export = self.export(params=params)
+        self.assertExportEqual(
+            export,
+            [
+                ['Float Min', 'Float Monetary'],
+                ['42.50', '10.000'],
+            ],
+        )
+
     def test_export_template(self):
         def get_namelist(export_id):
             res = self.url_open(

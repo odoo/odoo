@@ -241,7 +241,7 @@ class ExportXlsxWriter:
             cell_style = self.date_style
         elif isinstance(cell_value, float):
             field = self.fields[column]
-            cell_style = self.monetary_style if field['type'] == 'monetary' else self.float_style
+            cell_style = self.monetary_style if field.get('type') == 'monetary' else self.float_style
         self.write(row, column, cell_value, cell_style)
 
 
@@ -276,9 +276,9 @@ class GroupExportXlsxWriter(ExportXlsxWriter):
             column += 1
             aggregated_value = aggregates.get(field['name'])
             header_style = self.header_bold_style
-            if field['type'] == 'monetary':
+            if field.get('type') == 'monetary':
                 header_style = self.header_bold_style_monetary
-            elif field['type'] == 'float':
+            elif field.get('type') == 'float':
                 header_style = self.header_bold_style_float
             else:
                 aggregated_value = str(aggregated_value if aggregated_value is not None else '')
@@ -559,6 +559,10 @@ class ExportFormat(object):
         Model = request.env[model].with_context(import_compat=import_compat, **params.get('context', {}))
         if not Model._is_an_ordinary_table():
             fields = [field for field in fields if field['name'] != 'id']
+
+        for field in fields:
+            if 'type' not in field and field['name'] in Model._fields:
+                field['type'] = Model._fields[field['name']].type
 
         field_names = [f['name'] for f in fields]
         if import_compat:
