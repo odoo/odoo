@@ -2901,6 +2901,10 @@ class AccountMoveLine(models.Model):
 
         journal = self._get_exchange_journal(company)
         accounting_exchange_date = journal.with_context(move_date=exchange_date).accounting_date if journal else date.min
+        if exchange_date and exchange_date < accounting_exchange_date == fields.Date.context_today(self):
+            temp_move = self.env['account.move'].new({'journal_id': journal.id})
+            if not temp_move._get_violated_lock_dates(exchange_date, False):
+                accounting_exchange_date = exchange_date
 
         move_vals = {
             'move_type': 'entry',

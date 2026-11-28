@@ -319,6 +319,21 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                     {'reconciled': False},
                 ])
 
+    def test_exchange_difference_date_in_current_period(self):
+        """ An exchange entry generated today keeps the date of the reconciled lines. """
+        foreign_curr = self.other_currency
+        today = fields.Date.from_string('2026-11-28')
+        line_date = fields.Date.from_string('2026-11-01')
+
+        with patch.object(fields.Date, 'context_today', return_value=today):
+            line_1 = self.create_line_for_reconciliation(60.0, 120.0, foreign_curr, line_date)
+            line_2 = self.create_line_for_reconciliation(-40.0, -120.0, foreign_curr, line_date)
+            (line_1 + line_2).reconcile()
+
+            exchange_move = self._get_partials(line_1 + line_2).exchange_move_id
+            self.assertTrue(exchange_move)
+            self.assertEqual(exchange_move.date, line_date)
+
     def test_invoice_draft_fully_paid_if_zero(self):
         """ Tests that Invoices with zero balance are marked as paid and reconciled
         """
