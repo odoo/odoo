@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Vacation days of each year of service (LFT, art. 76), granted on its anniversary:
+             one milestone per change of the legal days, reached after Y1, Y2, ... years. -->
+        <record id="l10n_mx_accrual_plan_statutory" model="hr.leave.accrual.plan">
+            <field name="name">Mexico: Statutory Vacations</field>
+            <field name="work_entry_type_id" ref="hr_work_entry.mx_work_entry_type_legal_leave"/>
+            <field name="accrued_gain_time">start</field>
+            <field name="can_be_carryover" eval="True"/>
+            <field name="carryover_date">allocation</field>
+        </record>
+
+        <record id="l10n_mx_accrual_plan_statutory_level_year_1" model="hr.leave.accrual.level">
+            <field name="accrual_plan_id" ref="l10n_mx_accrual_plan_statutory"/>
+            <field name="milestone_date">after</field>
+            <field name="start_count">1</field>
+            <field name="start_type">year</field>
+            <field name="added_value">12</field>
+            <field name="added_value_type">day</field>
+            <field name="frequency">yearly</field>
+            <field name="yearly_option">anniversary</field>
+            <field name="action_with_unused_accruals">all</field>
+            <field name="carryover_options">limited</field>
+            <field name="max_carriedover_duration">12</field>
+            <field name="accrual_validity" eval="True"/>
+            <field name="accrual_validity_count">6</field>
+            <field name="accrual_validity_type">month</field>
+        </record>
+
+        <record id="l10n_mx_accrual_plan_statutory_level_year_2" model="hr.leave.accrual.level">
+            <field name="accrual_plan_id" ref="l10n_mx_accrual_plan_statutory"/>
+            <field name="milestone_date">after</field>
+            <field name="start_count">2</field>
+            <field name="start_type">year</field>
+            <field name="added_value">14</field>
+            <field name="added_value_type">day</field>
+            <field name="frequency">yearly</field>
+            <field name="yearly_option">anniversary</field>
+            <field name="action_with_unused_accruals">all</field>
+            <field name="carryover_options">limited</field>
+            <field name="max_carriedover_duration">14</field>
+            <field name="accrual_validity" eval="True"/>
+            <field name="accrual_validity_count">6</field>
+            <field name="accrual_validity_type">month</field>
+        </record>
+
+        <record id="l10n_mx_accrual_plan_statutory_level_year_3" model="hr.leave.accrual.level">
+            <field name="accrual_plan_id" ref="l10n_mx_accrual_plan_statutory"/>
+            <field name="milestone_date">after</field>
+            <field name="start_count">3</field>
+            <field name="start_type">year</field>
+            <field name="added_value">16</field>
+            <field name="added_value_type">day</field>
+            <field name="frequency">yearly</field>
+            <field name="yearly_option">anniversary</field>
+            <field name="action_with_unused_accruals">all</field>
+            <field name="carryover_options">limited</field>
+            <field name="max_carriedover_duration">16</field>
+            <field name="accrual_validity" eval="True"/>
+            <field name="accrual_validity_count">6</field>
+            <field name="accrual_validity_type">month</field>
+        </record>
+
+        <record id="l10n_mx_accrual_plan_statutory_level_year_4" model="hr.leave.accrual.level">
+            <field name="accrual_plan_id" ref="l10n_mx_accrual_plan_statutory"/>
+            <field name="milestone_date">after</field>
+            <field name="start_count">4</field>
+            <field name="start_type">year</field>
+            <field name="added_value">18</field>
+            <field name="added_value_type">day</field>
+            <field name="frequency">yearly</field>
+            <field name="yearly_option">anniversary</field>
+            <field name="action_with_unused_accruals">all</field>
+            <field name="carryover_options">limited</field>
+            <field name="max_carriedover_duration">18</field>
+            <field name="accrual_validity" eval="True"/>
+            <field name="accrual_validity_count">6</field>
+            <field name="accrual_validity_type">month</field>
+        </record>
+
+        <record id="l10n_mx_accrual_plan_statutory_level_year_5" model="hr.leave.accrual.level">
+            <field name="accrual_plan_id" ref="l10n_mx_accrual_plan_statutory"/>
+            <field name="milestone_date">after</field>
+            <field name="start_count">5</field>
+            <field name="start_type">year</field>
+            <field name="added_value">20</field>
+            <field name="added_value_type">day</field>
+            <field name="frequency">yearly</field>
+            <field name="yearly_option">anniversary</field>
+            <field name="action_with_unused_accruals">all</field>
+            <field name="carryover_options">limited</field>
+            <field name="max_carriedover_duration">20</field>
+            <field name="accrual_validity" eval="True"/>
+            <field name="accrual_validity_count">6</field>
+            <field name="accrual_validity_type">month</field>
+        </record>
+
+        <record id="l10n_mx_accrual_plan_statutory_level_year_6" model="hr.leave.accrual.level">
+            <field name="accrual_plan_id" ref="l10n_mx_accrual_plan_statutory"/>
+            <field name="milestone_date">after</field>
+            <field name="start_count">6</field>
+            <field name="start_type">year</field>
+            <field name="added_value">22</field>
+            <field name="added_value_type">day</field>
+            <field name="frequency">yearly</field>
+            <field name="yearly_option">anniversary</field>
+            <field name="action_with_unused_accruals">all</field>
+            <field name="carryover_options">limited</field>
+            <field name="max_carriedover_duration">22</field>
+            <field name="accrual_validity" eval="True"/>
+            <field name="accrual_validity_count">6</field>
+            <field name="accrual_validity_type">month</field>
+        </record>
+
+        <record id="l10n_mx_accrual_plan_statutory_level_year_11" model="hr.leave.accrual.level">
+            <field name="accrual_plan_id" ref="l10n_mx_accrual_plan_statutory"/>
+            <field name="milestone_date">after</field>
+            <field name="start_count">11</field>
+            <field name="start_type">year</field>
+            <field name="added_value">24</field>
+            <field name="added_value_type">day</field>
+            <field name="frequency">yearly</field>
+            <field name="yearly_option">anniversary</field>
+            <field name="action_with_unused_accruals">all</field>
+            <field name="carryover_options">limited</field>
+            <field name="max_carriedover_duration">24</field>
+            <field name="accrual_validity" eval="True"/>
+            <field name="accrual_validity_count">6</field>
+            <field name="accrual_validity_type">month</field>
+        </record>
+
+        <record id="l10n_mx_accrual_plan_statutory_level_year_16" model="hr.leave.accrual.level">
+            <field name="accrual_plan_id" ref="l10n_mx_accrual_plan_statutory"/>
+            <field name="milestone_date">after</field>
+            <field name="start_count">16</field>
+            <field name="start_type">year</field>
+            <field name="added_value">26</field>
+            <field name="added_value_type">day</field>
+            <field name="frequency">yearly</field>
+            <field name="yearly_option">anniversary</field>
+            <field name="action_with_unused_accruals">all</field>
+            <field name="carryover_options">limited</field>
+            <field name="max_carriedover_duration">26</field>
+            <field name="accrual_validity" eval="True"/>
+            <field name="accrual_validity_count">6</field>
+            <field name="accrual_validity_type">month</field>
+        </record>
+
+        <record id="l10n_mx_accrual_plan_statutory_level_year_21" model="hr.leave.accrual.level">
+            <field name="accrual_plan_id" ref="l10n_mx_accrual_plan_statutory"/>
+            <field name="milestone_date">after</field>
+            <field name="start_count">21</field>
+            <field name="start_type">year</field>
+            <field name="added_value">28</field>
+            <field name="added_value_type">day</field>
+            <field name="frequency">yearly</field>
+            <field name="yearly_option">anniversary</field>
+            <field name="action_with_unused_accruals">all</field>
+            <field name="carryover_options">limited</field>
+            <field name="max_carriedover_duration">28</field>
+            <field name="accrual_validity" eval="True"/>
+            <field name="accrual_validity_count">6</field>
+            <field name="accrual_validity_type">month</field>
+        </record>
+
+        <record id="l10n_mx_accrual_plan_statutory_level_year_26" model="hr.leave.accrual.level">
+            <field name="accrual_plan_id" ref="l10n_mx_accrual_plan_statutory"/>
+            <field name="milestone_date">after</field>
+            <field name="start_count">26</field>
+            <field name="start_type">year</field>
+            <field name="added_value">30</field>
+            <field name="added_value_type">day</field>
+            <field name="frequency">yearly</field>
+            <field name="yearly_option">anniversary</field>
+            <field name="action_with_unused_accruals">all</field>
+            <field name="carryover_options">limited</field>
+            <field name="max_carriedover_duration">30</field>
+            <field name="accrual_validity" eval="True"/>
+            <field name="accrual_validity_count">6</field>
+            <field name="accrual_validity_type">month</field>
+        </record>
+
+        <record id="l10n_mx_accrual_plan_statutory_level_year_31" model="hr.leave.accrual.level">
+            <field name="accrual_plan_id" ref="l10n_mx_accrual_plan_statutory"/>
+            <field name="milestone_date">after</field>
+            <field name="start_count">31</field>
+            <field name="start_type">year</field>
+            <field name="added_value">32</field>
+            <field name="added_value_type">day</field>
+            <field name="frequency">yearly</field>
+            <field name="yearly_option">anniversary</field>
+            <field name="action_with_unused_accruals">all</field>
+            <field name="carryover_options">limited</field>
+            <field name="max_carriedover_duration">32</field>
+            <field name="accrual_validity" eval="True"/>
+            <field name="accrual_validity_count">6</field>
+            <field name="accrual_validity_type">month</field>
+        </record>
+
+        <record id="l10n_mx_accrual_plan_statutory_level_year_36" model="hr.leave.accrual.level">
+            <field name="accrual_plan_id" ref="l10n_mx_accrual_plan_statutory"/>
+            <field name="milestone_date">after</field>
+            <field name="start_count">36</field>
+            <field name="start_type">year</field>
+            <field name="added_value">34</field>
+            <field name="added_value_type">day</field>
+            <field name="frequency">yearly</field>
+            <field name="yearly_option">anniversary</field>
+            <field name="action_with_unused_accruals">all</field>
+            <field name="carryover_options">limited</field>
+            <field name="max_carriedover_duration">34</field>
+            <field name="accrual_validity" eval="True"/>
+            <field name="accrual_validity_count">6</field>
+            <field name="accrual_validity_type">month</field>
+        </record>
+
+        <record id="l10n_mx_accrual_plan_statutory_level_year_41" model="hr.leave.accrual.level">
+            <field name="accrual_plan_id" ref="l10n_mx_accrual_plan_statutory"/>
+            <field name="milestone_date">after</field>
+            <field name="start_count">41</field>
+            <field name="start_type">year</field>
+            <field name="added_value">36</field>
+            <field name="added_value_type">day</field>
+            <field name="frequency">yearly</field>
+            <field name="yearly_option">anniversary</field>
+            <field name="action_with_unused_accruals">all</field>
+            <field name="carryover_options">limited</field>
+            <field name="max_carriedover_duration">36</field>
+            <field name="accrual_validity" eval="True"/>
+            <field name="accrual_validity_count">6</field>
+            <field name="accrual_validity_type">month</field>
+        </record>
+
+        <record id="l10n_mx_accrual_plan_statutory_level_year_46" model="hr.leave.accrual.level">
+            <field name="accrual_plan_id" ref="l10n_mx_accrual_plan_statutory"/>
+            <field name="milestone_date">after</field>
+            <field name="start_count">46</field>
+            <field name="start_type">year</field>
+            <field name="added_value">38</field>
+            <field name="added_value_type">day</field>
+            <field name="frequency">yearly</field>
+            <field name="yearly_option">anniversary</field>
+            <field name="action_with_unused_accruals">all</field>
+            <field name="carryover_options">limited</field>
+            <field name="max_carriedover_duration">38</field>
+            <field name="accrual_validity" eval="True"/>
+            <field name="accrual_validity_count">6</field>
+            <field name="accrual_validity_type">month</field>
+        </record>
+
+        <record id="l10n_mx_accrual_plan_statutory_level_year_51" model="hr.leave.accrual.level">
+            <field name="accrual_plan_id" ref="l10n_mx_accrual_plan_statutory"/>
+            <field name="milestone_date">after</field>
+            <field name="start_count">51</field>
+            <field name="start_type">year</field>
+            <field name="added_value">40</field>
+            <field name="added_value_type">day</field>
+            <field name="frequency">yearly</field>
+            <field name="yearly_option">anniversary</field>
+            <field name="action_with_unused_accruals">all</field>
+            <field name="carryover_options">limited</field>
+            <field name="max_carriedover_duration">40</field>
+            <field name="accrual_validity" eval="True"/>
+            <field name="accrual_validity_count">6</field>
+            <field name="accrual_validity_type">month</field>
+        </record>
+
+        <record id="l10n_mx_accrual_plan_statutory_level_year_56" model="hr.leave.accrual.level">
+            <field name="accrual_plan_id" ref="l10n_mx_accrual_plan_statutory"/>
+            <field name="milestone_date">after</field>
+            <field name="start_count">56</field>
+            <field name="start_type">year</field>
+            <field name="added_value">42</field>
+            <field name="added_value_type">day</field>
+            <field name="frequency">yearly</field>
+            <field name="yearly_option">anniversary</field>
+            <field name="action_with_unused_accruals">all</field>
+            <field name="carryover_options">limited</field>
+            <field name="max_carriedover_duration">42</field>
+            <field name="accrual_validity" eval="True"/>
+            <field name="accrual_validity_count">6</field>
+            <field name="accrual_validity_type">month</field>
+        </record>
+    </data>
+</odoo>
