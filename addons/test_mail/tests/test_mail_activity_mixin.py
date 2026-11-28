@@ -359,6 +359,37 @@ class TestActivityMixin(TestActivityCommon):
         records = self.env['mail.test.activity'].search([('activity_exception_decoration', '!=', False)])
         self.assertEqual(records, record_warning)
 
+    def test_mail_activity_mixin_search_exception_decoration_done(self):
+        """Done activities are archived: a record whose activities are all done
+        has no exception, and the "Warnings" filter must not return it."""
+        MailTestActivity = self.env['mail.test.activity']
+        record_done_todo, record_done_warning = MailTestActivity.create([
+            {'name': 'Done To-Do'},
+            {'name': 'Done warning'},
+        ])
+        record_done_todo.activity_schedule(
+            'test_mail.mail_act_test_todo', user_id=self.env.user.id).action_feedback()
+        record_done_warning.activity_schedule(
+            'mail.mail_activity_data_warning', user_id=self.env.user.id).action_feedback()
+        records = record_done_todo | record_done_warning
+        self.assertEqual(records.mapped('activity_exception_decoration'), [False, False])
+        domain = [('id', 'in', records.ids)]
+        self.assertFalse(MailTestActivity.search(domain + [('activity_exception_decoration', '!=', False)]))
+        self.assertEqual(MailTestActivity.search(domain + [('activity_exception_decoration', '=', False)]), records)
+
+    def test_mail_activity_mixin_search_exception_decoration_mixed(self):
+        """A record with a warning activity and a regular one shows the warning:
+        the "Warnings" filter must return it."""
+        MailTestActivity = self.env['mail.test.activity']
+        record_mixed = MailTestActivity.create({'name': 'Warning and To-Do'})
+        record_mixed.activity_schedule('mail.mail_activity_data_warning', user_id=self.env.user.id)
+        record_mixed.activity_schedule('test_mail.mail_act_test_todo', user_id=self.env.user.id)
+        self.assertEqual(record_mixed.activity_exception_decoration, 'warning')
+        domain = [('id', '=', record_mixed.id)]
+        self.assertEqual(
+            MailTestActivity.search(domain + [('activity_exception_decoration', '!=', False)]), record_mixed)
+        self.assertFalse(MailTestActivity.search(domain + [('activity_exception_decoration', '=', False)]))
+
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.tests')
     def test_mail_activity_mixin_search_state_basic(self):
         """Test the search method on the "activity_state".
