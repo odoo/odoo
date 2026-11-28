@@ -32,7 +32,6 @@ import {
 } from "@spreadsheet/../tests/helpers/getters";
 import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
 import { createSpreadsheetWithPivot } from "@spreadsheet/../tests/helpers/pivot";
-import { makeStoreWithModel } from "@spreadsheet/../tests/helpers/stores";
 import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
 
 import { localization } from "@web/core/l10n/localization";
@@ -46,7 +45,7 @@ import { Partner, Product } from "../../helpers/data";
 import { createSheet, deleteSheet } from "../../helpers/commands";
 const { toZone } = spreadsheet.helpers;
 const { pivotRegistry, pivotNormalizationValueRegistry } = spreadsheet.registries;
-const { PivotSidePanelStore } = spreadsheet.stores;
+const { PivotSidePanelPlugin } = spreadsheet.owlPlugins;
 
 describe.current.tags("headless");
 defineSpreadsheetModels();
@@ -2696,9 +2695,13 @@ test("Stored reference fields are available as pivot measures", async function (
             store: false,
         }),
     };
-    const { model, pivotId } = await createSpreadsheetWithPivot();
-    const { store } = makeStoreWithModel(model, PivotSidePanelStore, pivotId);
-    const referenceMeasures = store.measureFields.filter((field) => field.type === "reference");
+    const { pivotId, getPlugin } = await createSpreadsheetWithPivot({
+        providedPlugins: [PivotSidePanelPlugin],
+    });
+    const pivotSidePanelPlugin = getPlugin(PivotSidePanelPlugin, { pivotId });
+    const referenceMeasures = pivotSidePanelPlugin
+        .measureFields()
+        .filter((field) => field.type === "reference");
 
     expect(referenceMeasures.map((field) => field.name)).toEqual(["ref"]);
 });
