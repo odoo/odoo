@@ -635,7 +635,7 @@ class TestProjectMailFeatures(TestProjectCommon, MailCommon):
         description when a task is created from an email alias.
         """
 
-        gmail_email_source = f"""From: "{self.user_portal.name}" <{self.user_portal.email_formatted}>
+        gmail_email_source = f"""From: {self.user_portal.email_formatted}
 To: {self.project_followers_alias.alias_full_name}
 Subject: Test Gmail Signature Removal
 Content-Type: text/html;
@@ -649,7 +649,7 @@ Content-Type: text/html;
 </div>
 """
 
-        outlook_email_source = f"""From: "{self.user_portal.name}" <{self.user_portal.email_formatted}>
+        outlook_email_source = f"""From: {self.user_portal.email_formatted}
 To: {self.project_followers_alias.alias_full_name}
 Subject: Test Outlook Signature Removal
 Content-Type: text/html;
