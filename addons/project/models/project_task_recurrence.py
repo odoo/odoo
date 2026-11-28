@@ -3,7 +3,7 @@
 
 from odoo import _, api, Command, fields, models
 from odoo.exceptions import ValidationError
-
+from datetime import datetime, UTC
 from dateutil.relativedelta import relativedelta
 
 
@@ -108,6 +108,7 @@ class ProjectTaskRecurrence(models.Model):
                 'stage_id': task.sudo().project_id.type_ids[0].id if task.sudo().project_id.type_ids else task.stage_id.id,
                 'child_ids': [Command.create(vals) for vals in self._create_next_occurrences_values({child: recurrence for child in task.child_ids})]
             }
+
             create_values.update({
                 field: value[0] if isinstance(value, tuple) else value
                 for field, value in fields_to_copy.items()
@@ -116,7 +117,71 @@ class ProjectTaskRecurrence(models.Model):
                 field: value and value + recurrence._get_recurrence_delta()
                 for field, value in fields_to_postpone.items()
             })
+
+            if fields_to_postpone.get('date_deadline'):
+                copy_data = self._filter_non_working_employees(
+                    copy_data,
+                    self._get_original_task(recurrence),
+                    task,
+                    create_values.get('planned_date_begin', False),
+                    create_values.get('date_deadline'))
+
             copy_data.update(create_values)
             list_create_values.append(copy_data)
 
         return list_create_values
+
+    def _filter_non_working_employees(self, data, original_task, last_task, next_task_date_begin, next_task_date_deadline):
+        '''
+        Filters out all users that should not be assign to this perticular reccurent task
+        and adds back in the user that should be assigned, if they weren't in the previous task.
+
+        :param data: the data used to creat this recurent task
+
+        :param original_task: the task that originaly started the recurrence
+
+        :param last_task: the previous task that trigger the creation of this task
+
+        :param next_task_date_begin: the begin datetime for this task
+
+        :param next_task_date_deadline: the end/deadline for this task
+
+        :return: the updated data with the correct users.
+        '''
+        # make search interval
+        users_to_add = self.env['res.users']
+        users_to_remove = self.env['res.users']
+        leave_check_start = next_task_date_begin or next_task_date_deadline
+        leave_check_end = next_task_date_deadline if next_task_date_begin else next_task_date_deadline + relativedelta(microseconds=1)
+        leave_check_start = leave_check_start.replace(tzinfo=UTC)
+        leave_check_end = leave_check_end.replace(tzinfo=UTC)
+
+        # add back user out of vacation
+        removed_users = original_task.user_ids - last_task.user_ids
+        work_interval = removed_users.resource_ids._get_valid_work_intervals(
+            leave_check_start,
+            leave_check_end,
+        )[0]
+        users_to_add += removed_users.resource_ids.filtered(lambda r: work_interval[r.id]).user_id
+
+        # filter out users
+        work_interval = last_task.user_ids.resource_ids._get_valid_work_intervals(
+                    leave_check_start,
+                    leave_check_end,
+        )[0]
+        users_to_remove += last_task.user_ids.resource_ids.filtered(lambda r: not work_interval[r.id]).user_id
+
+        data.setdefault('user_ids', [])
+        data['user_ids'] += [Command.link(user_id) for user_id in users_to_add.ids]
+        data['user_ids'] += [Command.unlink(user_id) for user_id in users_to_remove.ids]
+        return data
+
+    def _get_original_task(self, recurrence):
+        return recurrence.task_ids[0]
+
+    def plan_day_not_hour(self, dt, delta, cal):
+        '''
+        Plan days so that they fall on working days but are not forced to fall on working hours
+        '''
+        time_adjusted_dt = dt.replace(hour=0, minute=0, second=1)
+        return datetime.combine(cal.plan_hours(0, time_adjusted_dt + delta, True).date(), dt.time())
