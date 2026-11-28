@@ -85,7 +85,8 @@ class ReportPosOrder(models.Model):
                 l.product_id AS product_id,
                 pt.categ_id AS product_categ_id,
                 p.product_tmpl_id,
-                ps.config_id,
+                -- future preset orders lose their session on closing, but keep their config
+                COALESCE(ps.config_id, s.config_id) AS config_id,
                 s.pricelist_id,
                 s.session_id,
                 s.account_move IS NOT NULL AS invoiced,
