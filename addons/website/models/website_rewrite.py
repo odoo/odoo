@@ -75,21 +75,32 @@ class WebsiteRewrite(models.Model):
 
     sequence = fields.Integer()
 
-    @api.depends('url_from', 'redirect_type')
+    @api.depends('url_from', 'redirect_type', 'website_id')
     def _compute_is_url_from_exist(self):
-        for rewrite in self:
-            exists = False
-            if rewrite.url_from and rewrite.redirect_type in ['301', '302']:
-                url = rewrite.url_from.rstrip('/')
-                exists = self.env['website.page'].search_count([('url', '=', rewrite.url_from)], limit=1) > 0
-                if not exists:
-                    try:
-                        self.env['ir.http']._match(url)
-                        exists = True
-                    except werkzeug.exceptions.NotFound:
-                        exists = False
-
-            rewrite.is_url_from_exist = exists
+        all_websites = self.env['website'].search([])
+        self.is_url_from_exist = False
+        # The redirection is served as a fallback when the visitors end up in a
+        # 404 or a 403 (e.g. missing or unpublished record), so the url is
+        # checked as the visitors of each website of the redirection.
+        url_by_rewrite = {
+            rewrite: rewrite.url_from.split('?')[0].rstrip('/') or '/'
+            for rewrite in self
+            if rewrite.redirect_type in ('301', '302') and rewrite.url_from
+        }
+        for website in all_websites:
+            rewrites = [
+                rewrite for rewrite in url_by_rewrite
+                if website in (rewrite.website_id or all_websites)
+            ]
+            if not rewrites:
+                continue
+            served_urls = website.with_user(website.user_id)._get_served_urls(
+                {url_by_rewrite[rewrite] for rewrite in rewrites}, only_published=True,
+            )
+            for rewrite in rewrites:
+                if url_by_rewrite[rewrite] in served_urls:
+                    rewrite.is_url_from_exist = True
+                    del url_by_rewrite[rewrite]
 
     @api.onchange('route_id')
     def _onchange_route_id(self):
