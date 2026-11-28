@@ -303,41 +303,39 @@ async function handlePushEvent(notification) {
         }, 500);
     });
 }
-self.addEventListener("pushsubscriptionchange", async (event) => {
-    if (!event.oldSubscription) {
-        return;
-    }
-    const subscription = await self.registration.pushManager.subscribe(
-        event.oldSubscription.options
-    );
-    // Encode the VAPID public key as base64url to pass to the server for validation.
-    // Without this, register_devices always raises InvalidVapidError and the renewed
-    // subscription is never saved, breaking push notifications after a few days.
-    const vapid_public_key = arrayBufferToBase64Url(subscription.options.applicationServerKey);
-    await fetch("/web/dataset/call_kw/mail.push.device/register_devices", {
+async function postPushDevice(route, params) {
+    const response = await fetch(route, {
         headers: {
             "Content-type": "application/json",
         },
-        body: JSON.stringify({
-            id: 1,
-            jsonrpc: "2.0",
-            method: "call",
-            params: {
-                model: "mail.push.device",
-                method: "register_devices",
-                args: [],
-                kwargs: {
-                    ...subscription.toJSON(),
-                    previousEndpoint: event.oldSubscription.endpoint,
-                    vapid_public_key,
-                },
-                context: {},
-            },
-        }),
+        body: JSON.stringify({ id: 1, jsonrpc: "2.0", method: "call", params }),
         method: "POST",
-        mode: "cors",
         credentials: "include",
     });
+    return response.json();
+}
+self.addEventListener("pushsubscriptionchange", (event) => {
+    if (!event.oldSubscription) {
+        return;
+    }
+    event.waitUntil(
+        (async () => {
+            const subscription = await self.registration.pushManager.subscribe(
+                event.oldSubscription.options
+            );
+            const params = {
+                ...subscription.toJSON(),
+                vapid_public_key: arrayBufferToBase64Url(subscription.options.applicationServerKey),
+                previousEndpoint: event.oldSubscription.endpoint,
+            };
+            const refreshed = await postPushDevice("/web/push/device/refresh", params).catch(
+                () => null
+            );
+            if (!refreshed?.result?.success) {
+                await postPushDevice("/web/push/device/register", params);
+            }
+        })()
+    );
 });
 self.addEventListener("message", async ({ data, source }) => {
     switch (data.name) {

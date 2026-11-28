@@ -3,6 +3,8 @@
 
 import json
 import logging as logger
+import secrets
+from datetime import timedelta
 
 from requests import Session
 
@@ -19,6 +21,8 @@ from ..tools.web_push import (
 _logger = logger.getLogger(__name__)
 
 MAX_DIRECT_PUSH = 5
+# Refresh token lifetime: stored in an HttpOnly cookie by the browser.
+_REFRESH_TOKEN_LIFETIME = timedelta(days=30)
 
 
 class MailPushDevice(models.Model):
@@ -35,11 +39,38 @@ class MailPushDevice(models.Model):
                              "          keep the private key secret and use it for decrypting the payload\n"
                              "- auth: The auth value should be treated as a secret and not shared outside of Odoo"))
     expiration_time = fields.Datetime(string='Expiration Token Date')
+    refresh_token = fields.Char(
+        string='Refresh Token',
+        copy=False,
+        groups=fields.NO_ACCESS,
+        help="One-time-use token (30 days) stored in an HttpOnly cookie by the browser. "
+             "Lets the service worker renew the push subscription without an active "
+             "login session.",
+    )
+    refresh_token_expiry = fields.Datetime(
+        string='Refresh Token Expiry',
+        copy=False,
+        groups=fields.NO_ACCESS,
+    )
 
     _endpoint_unique = models.Constraint(
         'unique(endpoint)',
         'The endpoint must be unique !',
     )
+
+    def _issue_refresh_token(self, **vals):
+        """Write ``vals`` and a fresh refresh token (30 d) to self.
+
+        :returns: the plain-text refresh token, for the controller to set as cookie
+        :rtype: str
+        """
+        refresh_token = secrets.token_urlsafe(32)
+        self.write({
+            **vals,
+            'refresh_token': refresh_token,
+            'refresh_token_expiry': fields.Datetime.now() + _REFRESH_TOKEN_LIFETIME,
+        })
+        return refresh_token
 
     @api.model
     def get_web_push_vapid_public_key(self):
@@ -76,12 +107,13 @@ class MailPushDevice(models.Model):
                     'partner_id': self.env.user.partner_id,
                 })
         else:
-            self.sudo().create([{
+            mail_push_device = self.sudo().create([{
                 'endpoint': endpoint,
                 'expiration_time': kw.get('expirationTime'),
                 'keys': json.dumps(browser_keys),
                 'partner_id': self.env.user.partner_id.id,
             }])
+        return mail_push_device._issue_refresh_token()
 
     @api.model
     def unregister_devices(self, **kw):
@@ -93,6 +125,40 @@ class MailPushDevice(models.Model):
         ])
         if mail_push_device:
             mail_push_device.unlink()
+
+    @api.model
+    def _refresh_subscription(self, refresh_token, previous_endpoint, endpoint, keys,
+                              vapid_public_key, expiration_time=None):
+        """Update a push subscription without a user session.
+
+        Called by POST /web/push/device/refresh from the service worker's
+        pushsubscriptionchange handler. The device is looked up by its previous
+        endpoint and authenticated by the refresh token from the HttpOnly cookie,
+        which is rotated (one-time use) on success.
+
+        :param str refresh_token: refresh token from the HttpOnly cookie
+        :param str previous_endpoint: old endpoint used to locate the device record
+        :param str endpoint: new push subscription endpoint URL
+        :param dict keys: new push subscription keys (p256dh, auth)
+        :param str vapid_public_key: server VAPID public key (cross-check)
+        :param expiration_time: optional new expiration timestamp
+        :returns: the new refresh token, or ``None`` on failure
+        :rtype: str or None
+        """
+        if not refresh_token or not previous_endpoint or not endpoint or not keys:
+            return None
+        if not self._verify_vapid_public_key(vapid_public_key):
+            return None
+        device = self.sudo().search([('endpoint', '=', previous_endpoint)], limit=1)
+        if not device.refresh_token or not secrets.compare_digest(device.refresh_token, refresh_token):
+            return None
+        if not device.refresh_token_expiry or device.refresh_token_expiry < fields.Datetime.now():
+            return None
+        return device._issue_refresh_token(
+            endpoint=endpoint,
+            keys=json.dumps(keys),
+            expiration_time=expiration_time,
+        )
 
     def _verify_vapid_public_key(self, sw_public_key):
         ir_params_sudo = self.env['ir.config_parameter'].sudo()

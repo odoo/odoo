@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from collections import defaultdict
 
+from odoo import http
 from odoo.exceptions import AccessError, MissingError
 from odoo.fields import Domain
 from odoo.http import request
@@ -9,6 +10,10 @@ from odoo.addons.mail.controllers.thread import ThreadController
 from odoo.addons.mail.models.mail_message import SHARE_DOMAIN
 from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.mail.tools.store_handler import store_handler
+
+# HttpOnly cookie used to store the push refresh token (30-day sliding credential).
+_PUSH_REFRESH_COOKIE = 'push_refresh_token'
+_PUSH_REFRESH_COOKIE_MAX_AGE = 30 * 24 * 60 * 60  # seconds
 
 
 class WebclientController(ThreadController):
@@ -260,6 +265,56 @@ class WebclientController(ThreadController):
         }
         record = request.env[model].with_context(**context).search([("id", "=", id)])
         store.add(record, "_store_avatar_card_fields")
+
+    @http.route("/web/push/device/register", methods=["POST"], type="jsonrpc", auth="user")
+    def push_device_register(self, **kwargs):
+        """Register (or update) a push subscription for the logged-in user.
+
+        Uses a JSON-RPC route (instead of a plain ORM call) so that the server can
+        set the refresh token as an HttpOnly cookie via ``request.future_response``.
+
+        Expects the fields from PushSubscription.toJSON() plus ``vapid_public_key``
+        and optionally ``previousEndpoint``.
+        """
+        refresh_token = request.env["mail.push.device"].register_devices(**kwargs)
+        if refresh_token:
+            self._set_push_refresh_cookie(refresh_token)
+
+    @http.route("/web/push/device/refresh", methods=["POST"], type="jsonrpc", auth="public")
+    def push_device_refresh(self, endpoint=None, keys=None, vapid_public_key=None,
+                            previousEndpoint=None, expirationTime=None, **kwargs):
+        """Refresh a push subscription endpoint without requiring an active session.
+
+        The service worker calls this route from its pushsubscriptionchange handler,
+        when the user's Odoo session may have expired. Authentication is based on the
+        refresh token in the HttpOnly cookie set by /web/push/device/register, which
+        the browser attaches automatically and which is rotated on success.
+
+        :returns: {'success': bool}
+        """
+        new_refresh_token = request.env["mail.push.device"].sudo()._refresh_subscription(
+            refresh_token=request.httprequest.cookies.get(_PUSH_REFRESH_COOKIE),
+            previous_endpoint=previousEndpoint,
+            endpoint=endpoint,
+            keys=keys,
+            vapid_public_key=vapid_public_key,
+            expiration_time=expirationTime,
+        )
+        if not new_refresh_token:
+            return {'success': False}
+        self._set_push_refresh_cookie(new_refresh_token)
+        return {'success': True}
+
+    def _set_push_refresh_cookie(self, refresh_token):
+        request.future_response.set_cookie(
+            _PUSH_REFRESH_COOKIE,
+            refresh_token,
+            httponly=True,
+            secure=True,
+            samesite='Strict',
+            max_age=_PUSH_REFRESH_COOKIE_MAX_AGE,
+            path='/web/push/device/',
+        )
 
     @classmethod
     def _get_supported_avatar_card_models(self):
