@@ -365,8 +365,7 @@ class CalendarEvent(models.Model):
             values['microsoft_id'] = microsoft_event.id
             values['ms_universal_event_id'] = microsoft_event.iCalUId
 
-
-        if microsoft_event.is_recurrent():
+        if microsoft_event.is_recurrent_not_master():
             values['microsoft_recurrence_master_id'] = microsoft_event.seriesMasterId
 
         alarm_commands = self._odoo_reminders_commands_m(microsoft_event)

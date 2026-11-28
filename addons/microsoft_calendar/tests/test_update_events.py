@@ -5,7 +5,7 @@ import psycopg2.errors
 from dateutil.parser import parse
 import logging
 import pytz
-from unittest.mock import patch, ANY
+from unittest.mock import patch, ANY, Mock
 from freezegun import freeze_time
 
 from odoo import Command
@@ -1555,6 +1555,86 @@ class TestUpdateEvents(TestCommon):
         self.attendee_user.with_user(self.attendee_user).restart_microsoft_synchronization()
         self.organizer_user.with_user(self.organizer_user).restart_microsoft_synchronization()
         self.assertTrue(all(ev.need_sync_m for ev in self.recurrent_events))
+
+    @patch_api
+    @patch.object(MicrosoftCalendarService, 'get_events')
+    def test_rebuild_recurrence_exception_preserves_ids(self, mock_get_events):
+        original_events = self.recurrence.calendar_event_ids
+        events = [dict(e) for e in self.recurrent_event_from_outlook_organizer]
+        # Changing the master's duration recreates the normal occurrences.
+        # Keep the exception's original duration to recreate it from rec_values.
+        for index, values in enumerate(events):
+            if index != 2:
+                values['end'] = dict(values['end'], dateTime=(
+                    parse(values['end']['dateTime']) + timedelta(minutes=30)
+                ).isoformat())
+        events[0]['lastModifiedDateTime'] = _modified_date_in_the_future(self.recurrence)
+        events[2] = dict(events[2], type='exception', subject='Rebuilt exception')
+        mock_get_events.return_value = (MicrosoftEvent(events), 'next-token')
+        user = self.organizer_user.with_user(self.organizer_user).sudo()
+        with patch.object(MicrosoftCalendarSync, '_microsoft_insert', Mock(spec=[])) as insert:
+            user._sync_microsoft_calendar()
+            self.assertEqual(len(self.recurrence.calendar_event_ids), self.recurrent_events_count)
+            self.assertNotEqual(self.recurrence.calendar_event_ids, original_events)
+            exception = self.recurrence.calendar_event_ids.filtered(lambda e: e.name == 'Rebuilt exception')
+            self.assertEqual(len(exception), 1)
+            self.assertEqual(exception.microsoft_id, events[2]['id'])
+            self.assertEqual(exception.ms_universal_event_id, events[2]['iCalUId'])
+            mock_get_events.return_value = (MicrosoftEvent(), 'next-token')
+            user._sync_microsoft_calendar()
+            insert.assert_not_called()
+
+        # The master can have been imported from the attendee's calendar while
+        # the exception carries the organizer's ID. UIDs are shared, IDs are not.
+        self.recurrence.microsoft_id = 'ATTENDEE_MASTER'
+        attendee_events = [dict(
+            events[0], id='ATTENDEE_MASTER', isOrganizer=False,
+            lastModifiedDateTime=_modified_date_in_the_future(self.recurrence),
+        ), dict(
+            events[2], id='ATTENDEE_EXCEPTION', seriesMasterId='ATTENDEE_MASTER',
+            isOrganizer=False, subject='Updated by attendee', _odoo_id=False,
+            lastModifiedDateTime=_modified_date_in_the_future(exception),
+        )]
+        mock_get_events.return_value = (MicrosoftEvent(attendee_events), 'attendee-token')
+        self.attendee_user.with_user(self.attendee_user).sudo()._sync_microsoft_calendar()
+        self.assertEqual(exception.name, 'Updated by attendee')
+        self.assertEqual(exception.user_id, self.organizer_user)
+        self.assertEqual(exception.microsoft_id, events[2]['id'])
+        self.assertEqual(exception.ms_universal_event_id, events[2]['iCalUId'])
+        self.assertEqual(exception.microsoft_recurrence_master_id, events[2]['seriesMasterId'])
+
+    @patch_api
+    @patch.object(MicrosoftCalendarService, 'get_events')
+    def test_import_exception_without_uid_does_not_insert(self, mock_get_events):
+        """A reconciled occurrence must recover its identity before the next export."""
+        event = self.recurrent_events[1]
+        event.with_context(dont_notify=True).write({
+            'microsoft_id': False,
+            'ms_universal_event_id': False,
+            'need_sync_m': False,
+        })
+        self.assertFalse(event.ms_universal_event_id)
+        self.assertTrue(event.follow_recurrence)
+        exception = dict(
+            self.recurrent_event_from_outlook_organizer[2],
+            type='exception', subject='Exception', id='REC123_EXCEPTION_2',
+        )
+        user = self.organizer_user.with_user(self.organizer_user).sudo()
+        mock_get_events.return_value = (MicrosoftEvent([
+            dict(self.recurrent_event_from_outlook_organizer[0]), exception,
+        ]), 'next-token')
+
+        with patch.object(MicrosoftCalendarSync, '_microsoft_insert', Mock(spec=[])) as insert:
+            user._sync_microsoft_calendar()
+            self.assertFalse(event.follow_recurrence)
+            self.assertEqual(event.ms_universal_event_id, exception['iCalUId'])
+            self.assertEqual(event.microsoft_id, exception['id'])
+            insert.assert_not_called()
+
+            # The imported event no longer belongs to synced_events in these cycles.
+            mock_get_events.return_value = (MicrosoftEvent(), 'next-token')
+            user._sync_microsoft_calendar()
+            insert.assert_not_called()
 
     @freeze_time('2021-09-22')
     @patch.object(MicrosoftCalendarService, 'get_events')
