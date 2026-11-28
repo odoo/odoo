@@ -11,6 +11,7 @@ from stdnum.ee import registrikood as ee_en
 from stdnum.fi import ytunnus as fi_en
 from stdnum.fr import nir as fr_cn, siret as fr_siret, siren as fr_siren
 from stdnum.gb import vat as gb_vat
+from stdnum.hr import vat as hr_en
 from stdnum.ie import pps as ie_ppsn
 from stdnum.jp import cn as jp_en
 from stdnum.lv import pvn as lv_en
@@ -24,6 +25,7 @@ from odoo.tools.translate import LazyTranslate
 from odoo.tools.partner_identifier_validation import (
     NON_DIGIT_RE,
     ae_tin_validate,
+    hr_mb_validate,
     nl_kvk_validate,
     nl_oin_validate,
     th_branch_code_validate,
@@ -673,11 +675,20 @@ ADDITIONAL_IDENTIFIERS_METADATA = {
         'countries': ['HK'],
     },
     'HR_EN': {
-        **GLN_SHARED_VALS,
         'sequence': 10,
         'label': _lt('Company ID'),
         'help': _lt('Croatian company ID number.'),
         'category': 'EN',
+        'placeholder': '33392005961',
+        'validation_function': hr_en.validate,
+        'countries': ['HR'],
+    },
+    'HR_MB': {
+        'label': _lt('MB'),
+        'help': _lt('Business Identification Number (Matični broj).'),
+        'placeholder': '02737043',
+        'category': 'EN',
+        'validation_function': hr_mb_validate,
         'countries': ['HR'],
     },
     'HU_EN': {
@@ -986,6 +997,8 @@ def get_deduced_identifiers(key, value):
         deduced['DK_CVR'] = get_non_prefixed_identifier('DK', value)
     if key == 'FR_SIRET':
         deduced['FR_SIREN'] = fr_siret.to_siren(value)
+    if key == 'HR_VAT':
+        deduced['HR_EN'] = get_non_prefixed_identifier('HR', value)
     if key == 'HU_TIN':
         deduced['HU_VAT'] = get_prefixed_identifier('HU', value)[:10]  # "HU" + 8 digits
     if key == 'SG_GST':
