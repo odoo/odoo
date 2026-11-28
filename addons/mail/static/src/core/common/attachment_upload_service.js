@@ -150,13 +150,16 @@ export class AttachmentUploadService {
     /**
      * @param {import("models").Thread} thread
      * @param {() => void} onFileUploaded
+     * @returns {() => void} function to remove the listener
      */
     onFileUploaded(thread, onFileUploaded) {
-        this._fileUploadBus.addEventListener("UPLOAD", ({ detail }) => {
+        const listener = ({ detail }) => {
             if (thread.eq(detail)) {
                 onFileUploaded();
             }
-        });
+        };
+        this._fileUploadBus.addEventListener("UPLOAD", listener);
+        return () => this._fileUploadBus.removeEventListener("UPLOAD", listener);
     }
 
     _buildFormData(formData, tmpURL, thread, composer, tmpId, options) {
