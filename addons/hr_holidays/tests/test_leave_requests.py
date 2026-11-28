@@ -71,6 +71,32 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         cls.set_employee_create_date(cls.employee_emp_id, '2010-02-03 00:00:00')
         cls.set_employee_create_date(cls.employee_hruser_id, '2010-02-03 00:00:00')
 
+    def test_refuse_leave_approvers(self):
+        """ The refusal is set on the approver of the current approval step,
+        without overwriting the approver of the previous step. """
+        self.employee_emp.leave_manager_id = self.user_hruser
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Two approvals',
+            'requires_allocation': 'no',
+            'leave_validation_type': 'both',
+        })
+        leave_1, leave_2 = self.env['hr.leave'].create([{
+            'name': 'Leave %s' % day,
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': leave_type.id,
+            'request_date_from': date(2024, 4, day),
+            'request_date_to': date(2024, 4, day),
+        } for day in (8, 9)])
+
+        leave_1.with_user(self.user_hruser).action_approve()
+        self.assertEqual(leave_1.state, 'validate1')
+        leave_1.with_user(self.user_hrmanager).action_refuse()
+        leave_2.with_user(self.user_hruser).action_refuse()
+        self.assertRecordValues(leave_1 | leave_2, [
+            {'state': 'refuse', 'first_approver_id': self.employee_hruser.id, 'second_approver_id': self.employee_hrmanager.id},
+            {'state': 'refuse', 'first_approver_id': self.employee_hruser.id, 'second_approver_id': False},
+        ])
+
     def _check_holidays_count(self, holidays_count_result, ml, lt, rl, vrl, vlt):
         self.assertEqual(holidays_count_result['max_leaves'], ml)
         self.assertEqual(holidays_count_result['remaining_leaves'], rl)
