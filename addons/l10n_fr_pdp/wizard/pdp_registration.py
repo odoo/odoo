@@ -159,10 +159,11 @@ class PdpRegistration(models.TransientModel):
                 warnings["company_pdp_annuaire_warning"] = {
                     "level": "warning",
                     "message": self.env._(
-                        "Another platform is already assigned to this identifier in the annuaire (Platform%(platform_name)s with ID %(platform_id)s). "
+                        "Another platform is already assigned to this identifier in the annuaire (Platform%(platform_name)s with ID %(platform_id)s at %(date_start)s ). "
                         "By registering, you confirm that you want to migrate to Odoo.",
                         platform_name=platform_name,
                         platform_id=participant_info.get("platform_id"),
+                        date_start=participant_info.get("date_start"),
                     ),
                 }
             wizard.warnings = warnings or False
