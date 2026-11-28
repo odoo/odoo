@@ -332,6 +332,7 @@ class TestUblCiiFRCommon(TestUblCiiCommon):
             'zip': "35400",
             'city': "Saint-Malo",
             'vat': 'FR23334175221',
+            'company_registry': False,
             'country_id': cls.env.ref('base.fr').id,
             'peppol_eas': '9957',
             'peppol_endpoint': 'FR23334175221',

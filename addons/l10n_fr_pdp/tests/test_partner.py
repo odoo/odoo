@@ -90,6 +90,10 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon):
         }])
         self.assertEqual(partner._l10n_fr_pdp_get_base_identifier(), ('siren', '334175221'))
 
+        # Clear the computed registry to exercise the PDP fallback to VAT directly.
+        partner.company_registry = False
+        self.assertEqual(partner._l10n_fr_pdp_get_base_identifier(), ('siren', '334175221'))
+
     def test_pdp_edi_formats(self):
         partner = self.partner_a
         partner.invoice_sending_method = 'peppol'

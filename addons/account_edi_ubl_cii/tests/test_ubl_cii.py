@@ -264,6 +264,63 @@ class TestAccountEdiUblCii(TestUblCiiCommon):
         extra_attachments = self.env['account.move.send']._get_invoice_extra_attachments(move)
         self.assertIn(move.ubl_cii_xml_id, extra_attachments)
 
+    def test_french_endpoint_from_vat(self):
+        for country, vat, eas, endpoint in (
+            ('fr', 'FR23334175221', '0225', '334175221'),
+            ('fr', 'fr 23 334 175 221', '0225', '334175221'),
+            ('be', 'FR23334175221', '0225', '334175221'),
+            (False, 'FR23334175221', '0225', '334175221'),
+            ('be', 'BE0477472701', '0208', '0477472701'),
+            ('de', 'DE123456788', '9930', 'DE123456788'),
+        ):
+            with self.subTest(country=country, vat=vat):
+                partner = self.env['res.partner'].create({
+                    'name': 'Partner with only a VAT number',
+                    'country_id': self.env.ref(f'base.{country}').id if country else False,
+                    'vat': vat,
+                })
+                self.assertRecordValues(partner, [{
+                    'peppol_eas': eas,
+                    'peppol_endpoint': endpoint,
+                }])
+
+        partner = self.env['res.partner'].create({
+            'name': 'French partner without a VAT number yet',
+            'country_id': self.env.ref('base.fr').id,
+        })
+        self.assertFalse(partner.peppol_endpoint)
+        partner.vat = 'FR23334175221'
+        self.assertRecordValues(partner, [{
+            'peppol_eas': '0225',
+            'peppol_endpoint': '334175221',
+        }])
+
+    def test_french_siren_preserves_existing_registry(self):
+        for registry in ('968515759', '96851575905877', '.', '/'):
+            with self.subTest(registry=registry):
+                partner = self.env['res.partner'].create({
+                    'name': 'French partner with an existing company registry',
+                    'country_id': self.env.ref('base.fr').id,
+                    'vat': 'FR23334175221',
+                    'company_registry': registry,
+                })
+                partner.vat = 'FR35562153452'
+                self.assertEqual(partner.company_registry, registry)
+
+    def test_french_endpoint_preserves_selected_scheme(self):
+        partner = self.env['res.partner'].create({
+            'name': 'French partner with a selected electronic address scheme',
+            'country_id': self.env.ref('base.fr').id,
+            'vat': 'FR23334175221',
+            'peppol_eas': '9957',
+            'peppol_endpoint': 'FR23334175221',
+        })
+        partner.vat = 'FR35562153452'
+        self.assertRecordValues(partner, [{
+            'peppol_eas': '9957',
+            'peppol_endpoint': 'FR35562153452',
+        }])
+
     def test_import_partner_peppol_fields(self):
         """ Check that the peppol fields are used to retrieve the partner when importing a Bis 3 xml. """
         invoice = self.env['account.move'].create({
