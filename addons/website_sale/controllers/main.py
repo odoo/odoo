@@ -546,7 +546,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
         ribbon_assign_values = set(auto_assign_ribbons.mapped("assign"))
 
         on_sale_ids = set()
-        sold_out_ids = set()
         if "sale" in ribbon_assign_values:
             sales_prices = search_product._get_sales_prices(
                 request.pricelist.with_context(self.env.context),
@@ -554,19 +553,30 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 website.with_context(self.env.context),
             )
             on_sale_ids = {pid for pid, prices in sales_prices.items() if "base_price" in prices}
+        # Only the products that track their inventory and can't be sold when out of stock can be
+        # sold out (see `_is_sold_out`). Listing one of them is enough to show the "In stock"
+        # filter: their stock is only computed when the filter is applied, not on every page load.
+        stock_dependent_products = self.env["product.template"]
         if "out_of_stock" in ribbon_assign_values:
-            sold_out_ids = {p.id for p in search_product if p._is_sold_out()}
+            stock_dependent_products = stock_dependent_products.search(
+                Domain("id", "in", search_product.ids)
+                & Domain("is_storable", "=", True)
+                & Domain("allow_out_of_stock_order", "=", False),
+                limit=None if in_stock_active else 1,
+                order="id",
+            )
 
         show_on_sale_filter = bool(on_sale_ids) or (
             on_sale_active and "sale" in ribbon_assign_values
         )
-        show_in_stock_filter = bool(sold_out_ids) or (
+        show_in_stock_filter = bool(stock_dependent_products) or (
             in_stock_active and "out_of_stock" in ribbon_assign_values
         )
 
         if on_sale_active and "sale" in ribbon_assign_values:
             search_product = search_product.filtered(lambda p: p.id in on_sale_ids)
         if in_stock_active and "out_of_stock" in ribbon_assign_values:
+            sold_out_ids = {p.id for p in stock_dependent_products if p._is_sold_out()}
             search_product = search_product.filtered(lambda p: p.id not in sold_out_ids)
         if on_sale_active or in_stock_active:
             product_count = len(search_product)
