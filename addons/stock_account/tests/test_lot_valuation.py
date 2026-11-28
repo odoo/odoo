@@ -881,3 +881,60 @@ class TestLotValuation(TestStockValuationCommon):
         self._make_in_move(self.product1, 10, 10, lot_ids=[self.lot2])
         out_move = self._make_out_move(self.product1, 1, lot_ids=[self.lot1])
         self.assertEqual(out_move.stock_valuation_layer_ids[0].value, 0)
+
+    def test_enable_lot_valuation_multicompany(self):
+        """ Enabling the lot valuation from a company should trigger the emptying and repleneshing
+        valuation layers from all companies of the user """
+        c1 = self.env.company
+        c2 = self.env['res.company'].create({'name': 'Test Company'})
+        wh2 = self.env['stock.warehouse'].search([('company_id', '=', c2.id)], limit=1)
+        self.product1.categ_id.property_cost_method = 'average'
+        self.product1.categ_id.property_valuation = 'manual_periodic'
+        self.product1.with_company(c2).categ_id.property_cost_method = 'average'
+        self.product1.with_company(c2).categ_id.property_valuation = 'manual_periodic'
+        self.product1.lot_valuated = False
+
+        self._make_in_move(self.product1, 10, 5, lot_ids=[self.lot1, self.lot2])
+        # self._make_in_move(self.product1, 8, 7, lot_ids=[self.lot1, self.lot2])
+        in_move_c2 = self.env['stock.move'].with_company(c2).create({
+            'name': 'in c2',
+            'product_id': self.product1.id,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': wh2.lot_stock_id.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1.0,
+            'price_unit': 7.0,
+            'picking_type_id': wh2.in_type_id.id,
+            'move_line_ids': [Command.create({
+                'product_id': self.product1.id,
+                'product_uom_id': self.uom_unit.id,
+                'quantity': 4.0,
+                'lot_id': lot.id,
+                'location_id': self.supplier_location.id,
+                'location_dest_id': wh2.lot_stock_id.id,
+            }) for lot in [self.lot1, self.lot2]],
+        })
+        in_move_c2._action_confirm()
+        in_move_c2.picked = True
+        in_move_c2._action_done()
+
+        svls = self.env['stock.valuation.layer'].with_context(allowed_company_ids=[c1.id, c2.id]).search([])
+
+        # set the product as lot_valuated with only c1 in the active companies
+        self.product1.product_tmpl_id.with_context(allowed_company_ids=c2.ids).lot_valuated = True
+
+        # check that the emptying and replenishment svls were created for both companies
+        new_svls = self.env['stock.valuation.layer'].with_context(allowed_company_ids=[c1.id, c2.id]).search([]) - svls
+        new_svls_c1 = new_svls.filtered(lambda svl: svl.company_id.id == c1.id)
+        new_svls_c2 = new_svls.filtered(lambda svl: svl.company_id.id == c2.id)
+
+        self.assertRecordValues(new_svls_c1, [
+            {'quantity': -10.0, 'value': -50, 'lot_id': False, 'company_id': c1.id},
+            {'quantity': 5.0, 'value': 25, 'lot_id': self.lot1.id, 'company_id': c1.id},
+            {'quantity': 5.0, 'value': 25, 'lot_id': self.lot2.id, 'company_id': c1.id},
+        ])
+        self.assertRecordValues(new_svls_c2, [
+            {'quantity': -8.0, 'value': -56, 'lot_id': False, 'company_id': c2.id},
+            {'quantity': 4.0, 'value': 28, 'lot_id': self.lot1.id, 'company_id': c2.id},
+            {'quantity': 4.0, 'value': 28, 'lot_id': self.lot2.id, 'company_id': c2.id},
+        ])

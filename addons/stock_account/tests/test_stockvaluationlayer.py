@@ -1161,21 +1161,47 @@ class TestStockValuationChangeCostMethod(TestStockValuationCommon):
     def test_standard_to_fifo_2(self):
         """ We want the same result as `test_standard_to_fifo_1` but by changing the category of
         `self.product1` to another one, not changing the current one.
+        We also check that the adjustment layers are generated in all companies.
         """
+        c1 = self.env.company
+        c2 = self.env['res.company'].create({'name': 'Test Company'})
         self.product1.product_tmpl_id.categ_id.property_cost_method = 'standard'
         self.product1.product_tmpl_id.categ_id.property_valuation = 'manual_periodic'
+        self.product1.product_tmpl_id.with_company(c2).categ_id.property_cost_method = 'standard'
+        self.product1.product_tmpl_id.with_company(c2).categ_id.property_valuation = 'manual_periodic'
         self.product1.product_tmpl_id.standard_price = 10
+        self.product1.product_tmpl_id.with_company(c2).standard_price = 12
 
         move1 = self._make_in_move(self.product1, 10)
         move2 = self._make_in_move(self.product1, 10)
         move3 = self._make_out_move(self.product1, 1)
+        c2_warehouse = self.env['stock.warehouse'].search([('company_id', '=', c2.id)], limit=1)
+        self.env = self.env(context=dict(self.env.context, allowed_company_ids=c2.ids))
+        self._make_in_move(self.product1, 5, loc_dest=c2_warehouse.lot_stock_id, pick_type=c2_warehouse.in_type_id)
+        self.env = self.env(context=dict(self.env.context, allowed_company_ids=c1.ids))
 
         cat2 = self.env['product.category'].create({'name': 'fifo'})
         cat2.property_cost_method = 'fifo'
+        cat2.with_company(c2).property_cost_method = 'fifo'
+        old_svls = self.env['stock.valuation.layer'].search([])
         self.product1.product_tmpl_id.categ_id = cat2
-        self.assertEqual(self.product1.value_svl, 190)
-        self.assertEqual(self.product1.quantity_svl, 19)
-        self.assertEqual(len(self.product1.stock_valuation_layer_ids), 5)
+        new_svls = self.env['stock.valuation.layer'].search([]) - old_svls
+
+        # 5 layers for company 1 (3 move + 2 new adjustement layer) 3 layers for company 2 (1 move + 2 new adjustment layers)
+        self.assertEqual(len(self.product1.stock_valuation_layer_ids), 8)
+
+        self.assertEqual(self.product1.with_company(c1).value_svl, 190)
+        self.assertEqual(self.product1.with_company(c1).quantity_svl, 19)
+        self.assertRecordValues(new_svls.filtered(lambda svl: svl.company_id == c1).sorted('id'), [
+            {'quantity': -19, 'value': -190},
+            {'quantity': 19, 'value': 190},
+        ])
+        self.assertEqual(self.product1.with_company(c2).value_svl, 60)
+        self.assertEqual(self.product1.with_company(c2).quantity_svl, 5)
+        self.assertRecordValues(new_svls.filtered(lambda svl: svl.company_id == c2).sorted('id'), [
+            {'quantity': -5, 'value': -60},
+            {'quantity': 5, 'value': 60},
+        ])
 
     def test_avco_to_fifo(self):
         """ The accounting impact of this cost method change is neutral.
