@@ -271,6 +271,29 @@ class TestMrpReplenish(TestMrpCommon):
         self.assertEqual(form.qty_to_order, 8)
         self.assertEqual(orderpoint.qty_to_order, 8)
 
+    def test_orderpoint_onchange_location_with_draft_mo(self):
+        """ Changing the location of a reordering rule linked to a draft MO recomputes
+            its quantities on a new record, whose id is a NewId. """
+        self.env.user.groups_id += self.env.ref('stock.group_stock_multi_locations')
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'product_id': self.product_4.id,
+            'product_min_qty': 2,
+            'product_max_qty': 2,
+        })
+        self.env['mrp.production'].create({
+            'product_id': self.product_4.id,
+            'product_qty': 5,
+            'orderpoint_id': orderpoint.id,
+        })
+        shelf = self.env['stock.location'].create({
+            'name': 'Shelf',
+            'location_id': self.warehouse_1.lot_stock_id.id,
+        })
+        with Form(orderpoint, view='stock.view_warehouse_orderpoint_tree_editable') as form:
+            form.location_id = shelf
+            qty_forecast = form.qty_forecast
+        self.assertEqual(qty_forecast, orderpoint.qty_forecast)
+
     def test_lead_time_with_no_bom(self):
         """Test that lead time is incremented by 365 days (1 year) when there
         is no BoM defined.
