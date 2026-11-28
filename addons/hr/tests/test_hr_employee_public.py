@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.exceptions import AccessError
+
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.hr.tests.common import TestHrCommon
 
@@ -32,3 +34,34 @@ class TestHrEmployee(TestHrCommon):
         res = self.env['resource.resource'].with_user(self.res_users_without_hr_right)
         res = res.search([('employee_id.department_id', '=', dep.id)])
         self.assertIn(emp.resource_id, res, "Resource should be found")
+
+    def test_search_current_version_field_access(self):
+        department = self.env['hr.department'].create({'name': 'Test department'})
+        employee = self.env['hr.employee'].create({
+            'name': 'Test employee',
+            'department_id': department.id,
+            'wage': 2000,
+        })
+        if payroll_group := self.env.ref('hr_payroll.group_hr_payroll_user', raise_if_not_found=False):
+            self.res_users_hr_manager.group_ids += payroll_group
+        PublicEmployee = self.env['hr.employee.public']
+        for operator, value in [('!=', False), ('=', 2000), ('>', 1000)]:
+            domain = [
+                ('id', '=', employee.id),
+                ('employee_id.current_version_id.wage', operator, value),
+            ]
+            with self.subTest(operator=operator, value=value):
+                with self.assertRaises(AccessError):
+                    PublicEmployee.with_user(self.res_users_without_hr_right).search(domain)
+                self.assertEqual(
+                    PublicEmployee.with_user(self.res_users_hr_manager).search(domain).ids,
+                    employee.ids,
+                )
+
+        self.assertEqual(
+            PublicEmployee.with_user(self.res_users_without_hr_right).search([
+                ('id', '=', employee.id),
+                ('employee_id.department_id', '=', department.id),
+            ]).ids,
+            employee.ids,
+        )

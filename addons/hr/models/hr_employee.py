@@ -1273,7 +1273,9 @@ We can redirect you to the public employee list."""
                 if isinstance(cond.value, Query):
                     query = cond.value.subselect(SQL.identifier(cond.value.table, 'employee_id'))
                 else:
-                    query = self.env['hr.version'].sudo()._search(Domain('id', 'any!', cond.value), active_test=False)
+                    query = self.env['hr.version']._search(
+                        Domain('id', 'any!', cond.value), active_test=False, bypass_access=True,
+                    )
                 return Domain('id', cond.operator, query)
             return Domain('id', cond.operator, cond.value)
         domain = domain.map_conditions(adapt_condition)
