@@ -32,12 +32,14 @@
             </div>
             <t t-set-slot="footer">
                 <button class="button btn btn-lg btn-primary"
-                t-if="!(this.pos.cashier._role === 'minimal')"
+                    t-att-class="{ 'col': ui.isSmall }"
+                    t-if="!(this.pos.cashier._role === 'minimal')"
                     t-on-click="confirm"
                     t-att-disabled="!env.utils.isValidFloat(state.openingCash)">
                     Open Register
                 </button>
                 <button class="backend-button button btn btn-lg btn-secondary"
+                    t-att-class="{ 'col': ui.isSmall }"
                     t-on-click="() => this.pos.showLoginScreen()">
                     Discard
                 </button>
