@@ -496,7 +496,8 @@ class IrHttp(models.AbstractModel):
                 if generated_path != current_path:
                     if request.lang != request.env['ir.http']._get_default_lang():
                         path = f'/{request.lang.url_code}{path}'
-                    redirect = request.redirect_query(path, request.httprequest.args, code=301)
+                    redirect = request.redirect_query(path, request.httprequest.args, code=302)
+                    redirect.headers['Cache-Control'] = 'no-store'
                     werkzeug.exceptions.abort(redirect)
 
     @classmethod
