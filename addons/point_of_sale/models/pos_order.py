@@ -582,7 +582,9 @@ class PosOrder(models.Model):
     def _complete_values_from_session(self, session, values):
         values.setdefault('pricelist_id', session.config_id.pricelist_id.id)
         values.setdefault('fiscal_position_id', session.config_id.default_fiscal_position_id.id)
-        values.setdefault('company_id', session.config_id.company_id.id)
+        # the frontend may send an empty company (e.g. not loaded in its store)
+        if not values.get('company_id'):
+            values['company_id'] = session.config_id.company_id.id
         if session.config_id.use_presets and session.config_id.default_preset_id:
             values.setdefault('preset_id', session.config_id.default_preset_id.id)
 
