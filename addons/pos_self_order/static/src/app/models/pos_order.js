@@ -10,6 +10,8 @@ patch(PosOrder.prototype, {
         this.uiState = {
             ...this.uiState,
             lineChanges: this.uiState.lineChanges || {},
+            // Order note edited on the cart page, written to general_customer_note on confirm
+            orderNote: this.general_customer_note || "",
         };
     },
     get unsentLines() {

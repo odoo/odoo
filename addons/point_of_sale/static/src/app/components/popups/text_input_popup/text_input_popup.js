@@ -12,6 +12,8 @@ export class TextInputPopup extends Component {
         placeholder: t.string().optional(""),
         rows: t.number().optional(1),
         removeNewLines: t.boolean().optional(),
+        maxLength: t.number().optional(),
+        allowEmpty: t.boolean().optional(false), // Apply an empty value, e.g. to clear a note
         getPayload: t.function(),
         close: t.function(),
     });
@@ -49,7 +51,7 @@ export class TextInputPopup extends Component {
     onKeydown(ev) {
         if (this.props.rows === 1 && ev.key.toUpperCase() === "ENTER") {
             ev.preventDefault();
-            if (this.state.inputValue.trim()) {
+            if (this.props.allowEmpty || this.state.inputValue.trim()) {
                 this.confirm();
             }
         }
