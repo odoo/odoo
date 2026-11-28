@@ -20,7 +20,7 @@ class PurchaseOrder(models.Model):
     incoming_picking_count = fields.Integer("Incoming Shipment count", compute='_compute_incoming_picking_count')
     picking_ids = fields.Many2many('stock.picking', compute='_compute_picking_ids', string='Receptions', copy=False, store=True)
     dest_address_id = fields.Many2one('res.partner', compute='_compute_dest_address_id', store=True, readonly=False)
-    picking_type_id = fields.Many2one('stock.picking.type', 'Deliver To', required=True, index=True, default=_default_picking_type, domain=lambda self: [('code', 'in', self._get_allowed_picking_code()), '|', ('warehouse_id.company_id', 'in', self.env.companies.ids), ('warehouse_id', '=', False)],
+    picking_type_id = fields.Many2one('stock.picking.type', 'Deliver To', compute='_compute_picking_type_id', store=True, readonly=False, index=True, domain=lambda self: [('code', 'in', self._get_allowed_picking_code()), '|', ('warehouse_id.company_id', 'in', self.env.companies.ids), ('warehouse_id', '=', False)],
         help="This will determine operation type of incoming shipment")
     default_location_dest_id_usage = fields.Selection(related='picking_type_id.default_location_dest_id.usage', string='Destination Location Type',
         help="Technical field used to display the Drop Ship Address", readonly=True)
@@ -77,6 +77,13 @@ class PurchaseOrder(models.Model):
     def _compute_dest_address_id(self):
         self.filtered(lambda po: po.picking_type_id.default_location_dest_id.usage != 'customer').dest_address_id = False
 
+    @api.depends('company_id')
+    def _compute_picking_type_id(self):
+        for order in self:
+            p_type = order.picking_type_id
+            if not (p_type and p_type.code == 'incoming' and (p_type.warehouse_id.company_id == order.company_id or not p_type.warehouse_id)):
+                order.picking_type_id = order._get_picking_type(order.company_id.id)
+
     @api.depends('order_line.date_promised', 'state')
     def _compute_date_promised(self):
         for order in self:
@@ -90,12 +97,6 @@ class PurchaseOrder(models.Model):
     def _onchange_date_promised(self):
         if self.date_promised:
             self.order_line.filtered(lambda line: not line.display_type).date_promised = self.date_promised
-
-    @api.onchange('company_id')
-    def _onchange_company_id(self):
-        p_type = self.picking_type_id
-        if not(p_type and p_type.code == 'incoming' and (p_type.warehouse_id.company_id == self.company_id or not p_type.warehouse_id)):
-            self.picking_type_id = self._get_picking_type(self.company_id.id)
 
     def onchange(self, values, field_names, fields_spec):
         """

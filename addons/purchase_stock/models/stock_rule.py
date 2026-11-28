@@ -182,9 +182,10 @@ class StockRule(models.Model):
         """
         delays, delay_description = super()._get_lead_days(product, bypass_delay_description=bypass_delay_description, **values)
         buy_rule = self.filtered(lambda r: r.action == 'buy')
-        seller_info = 'supplierinfo' in values and values['supplierinfo']._get_seller_info() or product.with_company(buy_rule.company_id)._select_seller(quantity=None)
         if not buy_rule:
             return delays, delay_description
+        seller_info = ('supplierinfo' in values and values['supplierinfo']._get_seller_info()) or \
+            self.env['stock.rule']._pick_supplier(buy_rule.company_id, product)
         if not seller_info:
             delays['total_delay'] += 365
             delays['no_vendor_found_delay'] += 365
@@ -403,7 +404,8 @@ class StockRule(models.Model):
                       p._select_seller(partner_id=partner, quantity=None, date=date, uom_id=uom, params=params) or \
                       p._select_seller(partner_id=partner, quantity=None, uom_id=uom, params=params) or \
                       p._select_seller(partner_id=partner, quantity=None, params=params) or \
-                      p._select_seller(partner_id=partner, quantity=None)
+                      p._select_seller(partner_id=partner, quantity=None) or \
+                      p._select_seller(partner_id=partner, quantity=None, valid=False)
 
         if not seller_info and not partner:  # Last fallback, also matching expired pricelists
             seller_info = p._select_seller(quantity=None) or p._prepare_sellers()[:1]._get_seller_info()

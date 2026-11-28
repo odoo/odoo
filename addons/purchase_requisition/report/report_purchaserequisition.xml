@@ -34,11 +34,15 @@
                 <table class="table table-borderless">
                 <t t-set="has_ordered_quantity" t-value="any(line.qty_ordered != 0 for line in o.line_ids if not line.display_type)"/>
                 <t t-set="has_uom_group" t-value="o.env.user.has_group('uom.group_uom')"/>
+                <t t-set="is_blanket_order" t-value="o.requisition_type == 'blanket_order'"/>
+                <t t-set="has_lead_time" t-value="is_blanket_order and any(line.lead_time for line in o.line_ids if not line.display_type)"/>
                     <thead>
                         <tr>
                             <th class="text-start">Product</th>
+                            <th t-if="has_lead_time" class="text-end">Lead Time</th>
                             <th class="text-end">Quantity</th>
                             <th t-if="has_ordered_quantity" class="text-end">Ordered</th>
+                            <th t-if="is_blanket_order" class="text-end">Received</th>
                             <th class="text-start" groups="uom.group_uom">Unit</th>
                             <th class="text-end">Unit Price</th>
                             <th class="text-end">Amount</th>
@@ -50,7 +54,7 @@
                             <t t-set="is_section" t-value="line_id.display_type == 'line_section'"/>
                             <t t-set="is_subsection" t-value="line_id.display_type == 'line_subsection'"/>
                             <tr t-if="is_section" name="tr_section" class="bg-200 fw-bold o_line_section">
-                                <td name="td_section_name" t-att-colspan="3 + (1 if has_ordered_quantity else 0) + (1 if has_uom_group else 0)">
+                                <td name="td_section_name" t-att-colspan="3 + (1 if has_ordered_quantity else 0) + (1 if has_uom_group else 0) + (1 if is_blanket_order else 0) + (1 if has_lead_time else 0)">
                                     <span t-field="line_id.name">Section title</span>
                                 </td>
                                 <td name="td_section_amount" class="text-end">
@@ -61,7 +65,7 @@
                                 </td>
                             </tr>
                             <tr t-elif="is_subsection" name="tr_subsection" class="bg-100 fw-bold o_line_subsection">
-                                <td name="td_subsection_name" t-att-colspan="3 + (1 if has_ordered_quantity else 0) + (1 if has_uom_group else 0)">
+                                <td name="td_subsection_name" t-att-colspan="3 + (1 if has_ordered_quantity else 0) + (1 if has_uom_group else 0) + (1 if is_blanket_order else 0) + (1 if has_lead_time else 0)">
                                     <span t-field="line_id.name">Subsection title</span>
                                 </td>
                                 <td name="td_subsection_amount" class="text-end">
@@ -88,11 +92,17 @@
                                         <span t-field="line_id.product_id.name">Product</span>
                                     </t>
                                 </td>
+                                <td class="text-end" t-if="has_lead_time">
+                                    <span t-field="line_id.lead_time">7</span> days
+                                </td>
                                 <td class="text-end">
                                     <span t-field="line_id.product_qty">5</span>
                                 </td>
                                 <td class="text-end" t-if="has_ordered_quantity">
                                     <span t-field="line_id.qty_ordered">5</span>
+                                </td>
+                                <td class="text-end" t-if="is_blanket_order">
+                                    <span t-field="line_id.received_qty">5</span>
                                 </td>
                                 <td class="text-start" groups="uom.group_uom">
                                     <span t-field="line_id.uom_id.name">Unit</span>

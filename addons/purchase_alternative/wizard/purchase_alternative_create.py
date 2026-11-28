@@ -40,7 +40,7 @@ class PurchaseAlternativeCreate(models.TransientModel):
 
     def action_create_alternative(self):
         vals = self._get_alternative_values()
-        alt_purchase_orders = self.env['purchase.order'].with_context(origin_po_id=self.origin_po_id.id, default_requisition_id=False).create(vals)
+        alt_purchase_orders = self.env['purchase.order'].with_context(origin_po_id=self.origin_po_id.id, default_requisition_ids=False).create(vals)
         alt_purchase_orders.order_line._compute_tax_id()
         action = {
             'type': 'ir.actions.act_window',

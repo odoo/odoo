@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import Command, fields, models
 
 
 class StockRule(models.Model):
@@ -12,24 +12,20 @@ class StockRule(models.Model):
         values = values[0]
         requisition = self._get_supplier_requisition(values)
         res['partner_ref'] = requisition.name
-        res['requisition_id'] = requisition.id
+        res['requisition_ids'] = [Command.set(requisition.ids)]
         if requisition.currency_id:
             res['currency_id'] = requisition.currency_id.id
         return res
-
-    def _make_po_get_domain(self, company_id, values, partner):
-        domain = super(StockRule, self)._make_po_get_domain(company_id, values, partner)
-        requisition = self._get_supplier_requisition(values)
-        if requisition:
-            domain += (
-                ('requisition_id', '=', requisition.id),
-            )
-        return domain
 
     def _get_supplier_requisition(self, values):
         # the seller information only holds a pricelist when it does not come from the purchase history
         seller_info = values.get('supplier') or {}
         return seller_info.get('supplierinfo', self.env['product.supplierinfo']).purchase_requisition_id
+
+    def _update_purchase_order_line(self, product_id, product_qty, product_uom, company_id, values, line):
+        if not self._get_supplier_requisition(values):
+            product_id = product_id.with_context(exclude_blanket_orders=True)
+        return super()._update_purchase_order_line(product_id, product_qty, product_uom, company_id, values, line)
 
 
 class StockMove(models.Model):

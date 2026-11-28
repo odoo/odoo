@@ -1,8 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from dateutil.relativedelta import relativedelta
+
+from odoo import Command, fields
 from odoo.addons.purchase_requisition.tests.common import TestPurchaseRequisitionCommon
 from odoo.tests import tagged
-from odoo import Command
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -69,9 +71,9 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
         })
         move2._action_confirm()
 
-        # As the supplier.info linked to the blanket order has the same price, the first one is stille used.
-        self.assertEqual(purchase1.order_line.product_qty, 20)
-
+        # Whenver a blanket order is available prefer to use it when creating a new PO
+        purchase2 = self.env['purchase.order'].search([('partner_id', '=', vendor2.id), ('requisition_ids', '=', requisition_blanket.id)])
+        self.assertEqual(purchase2.order_line.product_qty, 10)
         # Update the sequence of the blanket order's supplier info.
         supplier_info1.sequence = 2
         requisition_blanket.line_ids.supplier_info_ids.sequence = 1
@@ -91,9 +93,10 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
         move3._action_confirm()
 
         # Verifications
-        purchase2 = self.env['purchase.order'].search([('partner_id', '=', vendor2.id), ('requisition_id', '=', requisition_blanket.id)])
-        self.assertEqual(len(purchase2), 1)
-        self.assertEqual(purchase2.order_line.price_unit, 50, 'The price on the purchase order is not the blanquet order one')
+        purchase3 = self.env['purchase.order'].search([('partner_id', '=', vendor2.id), ('requisition_ids', '=', requisition_blanket.id)])
+        self.assertEqual(len(purchase3), 1)
+        self.assertEqual(purchase3.order_line.price_unit, 50, 'The price on the purchase order is not the blanquet order one')
+        self.assertEqual(purchase3.order_line.product_qty, 20, 'The two orders of the blanket order will merge into one')
 
     def test_blanket_order_line_unit_change_replenishment_price(self):
         """ Changing the unit of a line of a confirmed blanket order must be taken into
@@ -133,13 +136,13 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
         })
         move._action_confirm()
 
-        purchase_order = self.env['purchase.order'].search([('requisition_id', '=', blanket_order.id)])
+        purchase_order = self.env['purchase.order'].search([('requisition_ids', '=', blanket_order.id)])
         self.assertEqual(purchase_order.order_line.price_unit_product_uom, 10.0, "120 per dozen is 10 per unit")
         self.assertEqual(purchase_order.order_line.price_subtotal, 240.0)
 
     def test_03_purchase_requisition_stock(self):
-        """ Two blanket orders on different 'make to order' products must generate
-        two different purchase orders
+        """ Two blanket orders of the same vendor on different 'make to order' products
+        are ordered on the same purchase order, each line following its own blanket order.
         """
 
         # Product creation
@@ -210,19 +213,120 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
         move1._action_confirm()
         move2._action_confirm()
         # Verifications
-        POL1 = self.env['purchase.order.line'].search([('product_id', '=', product_1.id)]).order_id
-        POL2 = self.env['purchase.order.line'].search([('product_id', '=', product_2.id)]).order_id
-        self.assertFalse(POL1 == POL2, 'The two blanket orders should generate two purchase different purchase orders')
-        POL1.write({'order_line': [
-            (0, 0, {
-                'name': product_2.name,
-                'product_id': product_2.id,
-                'product_qty': 5.0,
-                'uom_id': product_2.uom_id.id,
-            })
-        ]})
-        order_line = self.env['purchase.order.line'].search([
-            ('product_id', '=', product_2.id),
-            ('product_qty', '=', 5.0),
+        line_1 = self.env['purchase.order.line'].search([('product_id', '=', product_1.id)])
+        line_2 = self.env['purchase.order.line'].search([('product_id', '=', product_2.id)])
+        purchase_order = line_1.order_id
+        self.assertEqual(line_2.order_id, purchase_order, 'One purchase order per vendor')
+        self.assertEqual(purchase_order.requisition_ids, requisition_1 | requisition_2)
+        self.assertEqual(line_1.requisition_line_id, requisition_1.line_ids)
+        self.assertEqual(line_2.requisition_line_id, requisition_2.line_ids)
+        self.assertEqual((line_1.price_unit, line_2.price_unit), (41, 42))
+
+        purchase_order.write({'order_line': [Command.create({'product_id': product_2.id, 'product_qty': 5.0})]})
+        order_line = purchase_order.order_line.filtered(lambda l: l.uom_id.compare(l.product_qty, 5.0) == 0)
+        self.assertEqual(order_line.requisition_line_id, requisition_2.line_ids)
+        self.assertEqual(order_line.price_unit, 42)
+
+
+@tagged('post_install', '-at_install')
+class TestBlanketOrderSupplierSelection(TestPurchaseRequisitionCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        route_buy = cls.env.ref('stock.warehouse0').buy_pull_id.route_id
+        route_buy.product_selectable = True
+        cls.vendor_a, cls.vendor_b, cls.vendor_c = cls.env['res.partner'].create([
+            {'name': 'Vendor A'}, {'name': 'Vendor B'}, {'name': 'Vendor C'},
         ])
-        self.assertEqual(order_line.price_unit, 50, 'The supplier info chosen should be the one without requisition id')
+        cls.product = cls.env['product.product'].create({
+            'name': 'BO Product',
+            'is_storable': True,
+            'route_ids': [Command.set([route_buy.id])],
+        })
+        cls.stock_location = cls.env.ref('stock.stock_location_stock')
+        cls.customer_location = cls.env.ref('stock.stock_location_customers')
+
+    def _create_blanket_order(self, vendor, qty, price, **kwargs):
+        blanket_order = self.env['purchase.requisition'].create({
+            'requisition_type': 'blanket_order',
+            'vendor_id': vendor.id,
+            'line_ids': [Command.create({
+                'product_id': self.product.id,
+                'product_qty': qty,
+                'price_unit': price,
+            })],
+            **kwargs,
+        })
+        blanket_order.action_confirm()
+        return blanket_order
+
+    def _exhaust_blanket_order(self, blanket_order):
+        bo_line = blanket_order.line_ids
+        po = self.env['purchase.order'].create({
+            'partner_id': blanket_order.vendor_id.id,
+            'requisition_ids': [Command.set(blanket_order.ids)],
+            'order_line': [Command.create({
+                'product_id': self.product.id,
+                'product_qty': bo_line.product_qty,
+                'requisition_line_id': bo_line.id,
+            })],
+        })
+        po.button_confirm()
+        self.assertEqual(bo_line.remaining_qty, 0)
+
+    def _replenish(self, qty=10.0):
+        move = self.env['stock.move'].create({
+            'procure_method': 'make_to_order',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product.id,
+            'product_uom_qty': qty,
+        })
+        move._action_confirm()
+        return self.env['purchase.order.line'].search(
+            [('product_id', '=', self.product.id), ('state', '=', 'draft')], order='id desc', limit=1)
+
+    def test_blanket_order_has_priority(self):
+        """ A blanket order's pricelist defaults to a priority sequence, so it is chosen
+        before a plain vendor pricelist, even if the latter is cheaper. """
+        self.env['product.supplierinfo'].create({
+            'product_id': self.product.id, 'partner_id': self.vendor_a.id, 'price': 10,
+        })
+        bo_b = self._create_blanket_order(self.vendor_b, 100, 50)
+
+        po_line = self._replenish()
+        self.assertEqual(po_line.order_id.requisition_ids, bo_b)
+        self.assertEqual(po_line.price_unit, 50)
+
+    def test_exhausted_blanket_order_uses_alternative(self):
+        """ A blanket order without remaining quantity, or out of its validity, is skipped in
+        favor of any other pricelist, even one only found by relaxing its constraints (min qty). """
+        self.env['product.supplierinfo'].create({
+            'product_id': self.product.id, 'partner_id': self.vendor_a.id, 'price': 60, 'min_qty': 100,
+        })
+        self._exhaust_blanket_order(self._create_blanket_order(self.vendor_b, 5, 50))
+        expired = self._create_blanket_order(self.vendor_c, 100, 40)
+        expired.write({'date_start': fields.Date.today() - relativedelta(days=10), 'date_end': fields.Date.today() - relativedelta(days=1)})
+
+        po_line = self._replenish()
+        self.assertEqual(po_line.partner_id, self.vendor_a)
+        self.assertFalse(po_line.order_id.requisition_ids)
+
+    def test_exhausted_blanket_order_without_alternative(self):
+        blanket_order = self._create_blanket_order(self.vendor_b, 5, 50)
+
+        po_line = self._replenish(qty=10)
+        self.assertEqual(po_line.requisition_line_id, blanket_order.line_ids)
+        self.assertEqual(po_line.price_unit, 50)
+        self.assertTrue(po_line.order_too_big_warning)
+        po_line.order_id.button_confirm()
+        self.assertEqual(blanket_order.line_ids.remaining_qty, -5)
+
+        po_line = self._replenish(qty=3)
+        self.assertEqual(po_line.order_id.requisition_ids, blanket_order)
+        self.assertEqual(po_line.price_unit, 0)
+
+        self._replenish(qty=3)
+        self.assertEqual(po_line.product_qty, 6)
+        self.assertEqual(po_line.price_unit, 0)

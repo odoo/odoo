@@ -223,9 +223,9 @@ class TestPurchaseAlternative(TestPurchaseAlternativeCommon):
         self.assertEqual(po_2.order_line[0].uom_id, po_1.order_line[0].uom_id)
         self.assertEqual(po_2.order_line[0].price_unit, 120)
 
-    def test_11_alternative_po_from_po_with_requisition_id(self):
+    def test_11_alternative_po_from_po_with_requisition_ids(self):
         """Create a purchase order from a blanket order, then check that the alternative purchase order
-            can be created and that the requisition_id is not set on it.
+            can be created and that the requisition_ids is not set on it.
         """
         if 'purchase.requisition' not in self.env:
             self.skipTest('This test requires the following module: purchase_requisition')
@@ -244,10 +244,10 @@ class TestPurchaseAlternative(TestPurchaseAlternativeCommon):
         })
         requisition_blanket.action_confirm()
         # lazy reproduction of clicking on "New Quotation" act_window button
-        po_form = Form(self.env['purchase.order'].with_context({"default_requisition_id": requisition_blanket.id, "default_user_id": False}))
+        po_form = Form(self.env['purchase.order'].with_context({"default_requisition_ids": [requisition_blanket.id], "default_user_id": False}))
         po_1 = po_form.save()
         po_1.button_confirm()
-        self.assertTrue(po_1.requisition_id, "The requisition_id should be set in the purchase order")
+        self.assertTrue(po_1.requisition_ids, "The requisition_ids should be set in the purchase order")
 
         # Creates an alternative PO.
         action = po_1.action_create_alternative()
@@ -258,7 +258,7 @@ class TestPurchaseAlternative(TestPurchaseAlternativeCommon):
         alt_po_wizard.action_create_alternative()
 
         po_2 = po_1.alternative_po_ids - po_1
-        self.assertFalse(po_2.requisition_id, "The requisition_id should not be set in the alternative purchase order")
+        self.assertFalse(po_2.requisition_ids, "The requisition_ids should not be set in the alternative purchase order")
 
     def test_12_alternative_po_line_different_currency(self):
         """ Check alternative PO with different currency is compared correctly"""

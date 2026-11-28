@@ -7,7 +7,8 @@
         <field name="inherit_id" ref="product.product_supplierinfo_tree_view"/>
         <field name="arch" type="xml">
           <xpath expr="//field[@name='product_id']" position="after">
-              <field name="purchase_requisition_id" optional="hide"/>
+              <field name="purchase_requisition_line_id" string="Agreement" optional="hide" readonly="1"
+                  context="{'show_remaining_qty': True}"/>
           </xpath>
         </field>
     </record>

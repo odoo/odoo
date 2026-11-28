@@ -1281,7 +1281,7 @@ class ProductProduct(models.Model):
         sellers = self.seller_ids._get_filtered_supplier(self.env.company, self, params)
         return sellers.sorted(lambda s: (s.sequence, -s.min_qty, s.price, s.id))
 
-    def _get_filtered_sellers(self, partner_id=False, quantity=0.0, date=None, uom_id=False, params=False):
+    def _get_filtered_sellers(self, partner_id=False, quantity=0.0, date=None, uom_id=False, params=False, valid=True):
         self.ensure_one()
         if not date:
             date = fields.Date.context_today(self)
@@ -1307,10 +1307,12 @@ class ProductProduct(models.Model):
                 continue
             if seller.product_id and seller.product_id != self:
                 continue
+            if valid and not seller.is_valid:
+                continue
             sellers |= seller
         return sellers
 
-    def _select_seller(self, partner_id=False, quantity=0.0, date=None, uom_id=False, ordered_by='price_discounted', params=False):
+    def _select_seller(self, partner_id=False, quantity=0.0, date=None, uom_id=False, ordered_by='price_discounted', params=False, valid=True):
         # Always sort by discounted price but another field can take the primacy through the `ordered_by` param.
         sort_key = ('price_discounted', 'sequence', 'id')
         if ordered_by != 'price_discounted':
@@ -1327,7 +1329,7 @@ class ProductProduct(models.Model):
                 ),
             }
             return [vals.get(key, record[key]) for key in sort_key]
-        sellers = self._get_filtered_sellers(partner_id=partner_id, quantity=quantity, date=date, uom_id=uom_id, params=params)
+        sellers = self._get_filtered_sellers(partner_id=partner_id, quantity=quantity, date=date, uom_id=uom_id, params=params, valid=valid)
         res = self.env['product.supplierinfo']
         for seller in sellers:
             if not res or res.partner_id == seller.partner_id:

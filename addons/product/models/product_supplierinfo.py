@@ -40,6 +40,7 @@ class ProductSupplierinfo(models.Model):
         required=True)
     date_start = fields.Date('Start Date', help="Start date for this vendor price")
     date_end = fields.Date('End Date', help="End date for this vendor price")
+    is_valid = fields.Boolean('Valid', compute='_compute_is_valid')
     product_id = fields.Many2one(
         'product.product', 'Product Variant', check_company=True,
         ui_domain="[('product_tmpl_id', '=', product_tmpl_id)] if product_tmpl_id else []",
@@ -91,6 +92,15 @@ class ProductSupplierinfo(models.Model):
         """Clear product variant if it no longer matches the product template."""
         if self.product_id and self.product_id not in self.product_tmpl_id.product_variant_ids:
             self.product_id = False
+
+    @api.depends('date_start', 'date_end')
+    def _compute_is_valid(self):
+        today = fields.Date.context_today(self)
+        for supplierinfo in self:
+            supplierinfo.is_valid = (
+                (not supplierinfo.date_start or supplierinfo.date_start <= today)
+                and (not supplierinfo.date_end or supplierinfo.date_end >= today)
+            )
 
     @api.constrains('date_start', 'date_end')
     def _check_dates(self):

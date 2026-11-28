@@ -87,7 +87,7 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         bo.action_confirm()
 
         # lazy reproduction of clicking on "New Quotation" act_window button
-        po_form = Form(self.env['purchase.order'].with_context({"default_requisition_id": bo.id, "default_user_id": False}))
+        po_form = Form(self.env['purchase.order'].with_context({"default_requisition_ids": [bo.id], "default_user_id": False}))
         po = po_form.save()
 
         self.assertEqual(po.order_line.price_unit, bo.line_ids.price_unit, 'The blanket order unit price should have been copied to purchase order')
@@ -187,7 +187,7 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
 
         purchase_template.action_confirm()
 
-        po_form = Form(self.env['purchase.order'].with_context({"default_requisition_id": purchase_template.id, "default_user_id": False}))
+        po_form = Form(self.env['purchase.order'].with_context({"default_requisition_ids": [purchase_template.id], "default_user_id": False}))
         po = po_form.save()
         self.assertEqual(po.partner_id, purchase_template.vendor_id, 'The purchase template vendor should have been copied to purchase order')
         self.assertEqual(po.order_line[0].price_unit, purchase_template.line_ids[0].price_unit, 'The purchase template unit price should have been copied to purchase order')
@@ -245,7 +245,7 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         self.assertEqual(line.price_unit, 10.0, "120 per dozen is 10 per unit")
 
         purchase_template.action_confirm()
-        po_form = Form(self.env['purchase.order'].with_context(default_requisition_id=purchase_template.id))
+        po_form = Form(self.env['purchase.order'].with_context(default_requisition_ids=[purchase_template.id]))
         po = po_form.save()
         self.assertEqual(po.order_line.price_subtotal, 240.0)
 
@@ -258,9 +258,9 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         self.bo_requisition.requisition_type = 'purchase_template'
         requisition_2 = self.bo_requisition.copy({'name': 'requisition_2'})
         # Create purchase order from purchase requisition
-        po_form = Form(self.env['purchase.order'].with_context(default_requisition_id=requisition_2.id))
+        po_form = Form(self.env['purchase.order'].with_context(default_requisition_ids=[requisition_2.id]))
         po = po_form.save()
-        self.assertEqual(po.requisition_id, requisition_2)
+        self.assertEqual(po.requisition_ids, requisition_2)
         po.button_confirm()
         self.assertEqual(po.state, 'purchase')
         (self.bo_requisition.line_ids | requisition_2.line_ids)._compute_ordered_qty()
@@ -297,7 +297,7 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         purchase_requisition.action_confirm()
 
         po_form = Form(self.env['purchase.order'].with_company(child_company.id))
-        po_form.requisition_id = purchase_requisition
+        po_form.requisition_ids = purchase_requisition
         po = po_form.save()
         self.assertEqual(po.partner_id, purchase_requisition.vendor_id, 'The partner should have been set from the purchase requisition')
         self.assertEqual(po.order_line.price_unit, purchase_requisition.line_ids.price_unit, 'The unit price should have been set from the purchase requisition')
@@ -307,7 +307,7 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         """ Only POs in draft are cancelled when the requisition is cancelled. """
         def _make_po():
             return self.env['purchase.order'].create({
-                'requisition_id': self.bo_requisition.id,
+                'requisition_ids': [self.bo_requisition.id],
                 'partner_id': self.res_partner_1.id,
                 'order_line': [
                     Command.create({
@@ -328,3 +328,34 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         self.assertEqual(self.bo_requisition.state, 'cancel')
         self.assertEqual(po_draft.state, 'cancel')
         self.assertEqual(po_confirmed.state, 'purchase')
+
+    def test_blanket_order_po_warnings(self):
+        """ The ordered quantity is compared in the unit of the agreement line, and the order
+        date in the user's timezone. """
+        self.env.user.tz = 'Europe/Brussels'
+        bo = self.env['purchase.requisition'].create({
+            'requisition_type': 'blanket_order',
+            'vendor_id': self.res_partner_1.id,
+            'date_start': '2026-01-01',
+            'date_end': '2026-01-31',
+            'line_ids': [Command.create({'product_id': self.product_09.id, 'product_qty': 10, 'price_unit': 10})],
+        })
+        bo.action_confirm()
+        po = self.env['purchase.order'].create({
+            'partner_id': self.res_partner_1.id,
+            'requisition_ids': [Command.set(bo.ids)],
+            'date_order': '2026-01-31 22:30:00',
+            'order_line': [Command.create({
+                'product_id': self.product_09.id,
+                'product_qty': 1,
+                'uom_id': self.env.ref('uom.product_uom_dozen').id,
+                'requisition_line_id': bo.line_ids.id,
+            })],
+        })
+        self.assertTrue(po.order_line.order_too_big_warning)
+        po.order_line.product_qty = 0.5
+        self.assertFalse(po.order_line.order_too_big_warning)
+
+        self.assertFalse(po.date_order_warning)
+        po.date_order = '2026-01-31 23:30:00'
+        self.assertIn(bo.name, po.date_order_warning)

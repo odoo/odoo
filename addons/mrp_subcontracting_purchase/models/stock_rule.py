@@ -14,7 +14,10 @@ class StockRule(models.Model):
             return super()._get_lead_days(product, bypass_delay_description=bypass_delay_description, **values)
 
         buy_rule = self.filtered(lambda r: r.action == 'buy')
-        seller_info = 'supplierinfo' in values and values['supplierinfo']._get_seller_info() or product.with_company(buy_rule.company_id)._select_seller(quantity=None)
+        seller_info = buy_rule and (
+            'supplierinfo' in values and values['supplierinfo']._get_seller_info()
+            or self.env['stock.rule']._pick_supplier(buy_rule.company_id, product)
+        )
         if not buy_rule or not seller_info:
             return super()._get_lead_days(product, bypass_delay_description=bypass_delay_description, **values)
         bom = self.env['mrp.bom'].sudo()._bom_subcontract_find(
