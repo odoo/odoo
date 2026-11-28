@@ -59,16 +59,14 @@ function processPopupHTML({
         modalEl.dataset.showAfter = showAfter;
         modalEl.dataset.display = display;
         popupEl.querySelector(".modal-content").innerHTML = `
-        ${
-            closeButton
-                ? '<button class="s_popup_close js_close_popup border-0 p-0 o_we_no_overlay o_not_editable" aria-label="Close">×</button>'
-                : ""
-        }
         <section>
             ${content}
             <a href="#" class="btn btn-primary ${extraPrimaryBtnClasses}">Primary button</a>
             ${focusableElements ? '<button id="focus">Button 1</button>' : ""}
         </section>`;
+        if (!closeButton) {
+            popupEl.querySelector(".s_popup_close")?.remove();
+        }
     };
 }
 

@@ -2,6 +2,8 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 import { Plugin, shared } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 
+const SHADOW_CLASSES = ["shadow", "shadow-sm", "shadow-lg", "o-shadow-custom"];
+
 export class CookiesBarOptionPlugin extends Plugin {
     static id = "CookiesBarOptionPlugin";
     static shared = shared(["getSavedSelectors"]);
@@ -70,6 +72,15 @@ export class SelectLayoutAction extends BuilderAction {
         }
 
         contentEl.replaceChildren(templateEl);
+
+        if (layout === "popup") {
+            if (!SHADOW_CLASSES.some((cls) => contentEl.classList.contains(cls))) {
+                contentEl.classList.add("shadow");
+            }
+        } else {
+            contentEl.classList.remove("rounded", "border", ...SHADOW_CLASSES);
+            contentEl.style.removeProperty("box-shadow");
+        }
 
         switch (layout) {
             case "discrete":

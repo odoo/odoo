@@ -15,6 +15,10 @@
         </BuilderSelectItem>
     </BuilderSelect>
 </BuilderRow>
+<BuilderContext t-if="this.isActiveItem('layout_popup_opt')" applyTo="'.modal-content'">
+    <ShadowOption/>
+    <BorderConfigurator label.translate="Border" withRadiusPresets="false"/>
+</BuilderContext>
 <BuilderRow label.translate="Close Button Color">
     <BuilderColorPicker styleAction="'color'" applyTo="'.o_cookies_bar_close'" enabledTabs="['solid', 'custom']"/>
 </BuilderRow>

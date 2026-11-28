@@ -4,6 +4,8 @@ import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { ShowOnOption } from "../floating_snippets_plugin";
+import { setStyle } from "@html_builder/core/core_builder_action_plugin";
+import { CSS_SHORTHANDS } from "@html_builder/utils/utils_css";
 
 export class PopupOption extends BaseOptionComponent {
     static id = "popup_option";
@@ -42,6 +44,7 @@ export class PopupOptionPlugin extends Plugin {
         on_will_remove_handlers: this.onWillRemove.bind(this),
         no_parent_containers: ".s_popup",
         anchor_excluded_selectors: ".s_popup",
+        apply_custom_css_style_overrides: this.applyRadius.bind(this),
     };
 
     setPopupEditorMessage() {
@@ -133,6 +136,28 @@ export class PopupOptionPlugin extends Plugin {
 
     assignUniqueID(editingElement) {
         editingElement.closest(".s_popup").id = `sPopup${Date.now()}`;
+    }
+
+    applyRadius({ editingElement, styleName, value, params }) {
+        const radiusVariables = ["--box-border-radius", ...CSS_SHORTHANDS["--box-border-radius"]];
+        if (
+            !radiusVariables.includes(styleName) ||
+            !editingElement.matches(".s_popup .modal-content")
+        ) {
+            return false;
+        }
+        setStyle(editingElement, styleName, value, params);
+        const isZero = value
+            .trim()
+            .split(/\s+/)
+            .every((v) => parseFloat(v) === 0);
+        if (isZero) {
+            editingElement.classList.remove("rounded");
+            for (const prop of radiusVariables) {
+                editingElement.style.removeProperty(prop);
+            }
+        }
+        return true;
     }
 }
 
