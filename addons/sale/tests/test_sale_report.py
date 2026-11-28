@@ -148,3 +148,35 @@ class TestSaleReportCurrencyRate(SaleCommon):
 
         self.assertEqual(float_compare(amount_line['untaxed_amount_invoiced:sum'], 200, precision_rounding=order.currency_id.rounding), 0)
         self.assertEqual(float_compare(amount_line['untaxed_amount_to_invoice:sum'], self.product.lst_price - 200, precision_rounding=order.currency_id.rounding), 0)
+
+    def test_sale_report_price_unit_in_product_uom(self):
+        """ Ensure unit prices are correctly computed when order lines are in different UoMs,
+        and that the average is weighted by the ordered quantity. """
+        order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product.id,
+                    'product_uom_qty': 1,
+                    'price_unit': 10,
+                }),
+                Command.create({
+                    'product_id': self.product.id,
+                    'product_uom_id': self.uom_pack_6.id,
+                    'product_uom_qty': 1,
+                    'price_unit': 50,
+                }),
+            ],
+        })
+
+        domain = [('order_reference', '=', f'sale.order,{order.id}')]
+        report_lines = self.env['sale.report'].search(domain, order='price_unit')
+        self.assertEqual(report_lines.mapped('product_uom_qty'), [6, 1])
+        self.assertAlmostEqual(report_lines[0].price_unit, 50 / 6)
+        self.assertAlmostEqual(report_lines[1].price_unit, 10)
+
+        [result] = self.env['sale.report'].formatted_read_group(
+            domain, aggregates=['price_unit:avg', 'product_uom_qty:sum'],
+        )
+        self.assertEqual(result['product_uom_qty:sum'], 7)
+        self.assertAlmostEqual(result['price_unit:avg'], 60 / 7)
