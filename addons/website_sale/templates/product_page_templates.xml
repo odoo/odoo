@@ -502,17 +502,16 @@
                 Product Name
             </h1>
             <t t-if="is_view_active('website_sale.product_comment')">
+                <t t-set="trans_text_plural">%s reviews</t>
+                <t t-set="trans_text_singular">%s review</t>
                 <a
                     href="#o_product_page_reviews"
-                    class="o_product_page_reviews_link d-block mb-2 text-decoration-none"
+                    class="o_product_page_reviews_link d-block mb-2 text-decoration-none text-reset"
+                    t-att-aria-label="(trans_text_plural if product.rating_count != 1 else trans_text_singular) % product.rating_count"
                 >
-                    <t t-set="trans_text_plural">%s reviews</t>
-                    <t t-set="trans_text_singular">%s review</t>
                     <t t-call="portal_rating.rating_widget_stars_static"
                         rating_avg="product.sudo().rating_avg"
-                        trans_text_plural="trans_text_plural"
-                        trans_text_singular="trans_text_singular"
-                        rating_count="(trans_text_plural if product.rating_count > 1 else trans_text_singular) % product.rating_count">
+                        rating_count="'(%s)' % product.rating_count">
                         <!-- sudo: product.product - visitor can access product average rating -->
                     </t>
                 </a>

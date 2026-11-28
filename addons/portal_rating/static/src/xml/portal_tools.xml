@@ -9,13 +9,13 @@
              t-attf-aria-label="#{Math.round(val * 100) / 100} stars on 5"
              t-attf-title="#{Math.round(val * 100) / 100} stars on 5">
             <t t-foreach="Array(val_integer)" t-as="num" t-key="num_index">
-                <i class="oi oi-filled" data-icon="star" role="img"></i>
+                <i class="oi oi-filled" data-icon="star" role="img" aria-hidden="true"/>
             </t>
             <t t-if="val_decimal">
-                <i class="oi" data-icon="star_half" role="img"></i>
+                <i class="oi" data-icon="star_half" role="img" aria-hidden="true"/>
             </t>
             <t t-foreach="Array(empty_star)" t-as="num" t-key="num_index">
-                <i class="oi text-black-25" data-icon="star" role="img"></i>
+                <i class="oi opacity-25" data-icon="star" role="img" aria-hidden="true"/>
             </t>
         </div>
     </t>
@@ -59,8 +59,7 @@
                             <div class="o_website_rating_table_progress flex-grow-1 py-2"
                                 t-att-class="{ 'opacity-50': !row_selected and selected_rating }">
                                 <div class="progress rounded">
-                                    <div class="progress-bar o_rating_progressbar" role="progressbar" t-att-aria-valuenow="percents[percent]" aria-valuemin="0" aria-valuemax="100" t-att-style="'width:' + percents[percent] + '%;'" aria-label="Progress bar">
-                                    </div>
+                                    <div class="o_rating_progressbar progress-bar text-reset" role="progressbar" t-att-aria-valuenow="percents[percent]" aria-valuemin="0" aria-valuemax="100" t-att-style="'width:' + percents[percent] + '%;'" aria-label="Progress bar"/>
                                 </div>
                             </div>
                         </div>
