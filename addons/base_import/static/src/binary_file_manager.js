@@ -1,5 +1,6 @@
 import { Mutex } from "@web/core/utils/concurrency";
 import { checkFileSize } from "@web/core/utils/files";
+import { _t } from "@web/core/l10n/translation";
 
 export class BinaryFileManager {
     constructor(resModel, fields, parameters, context, orm, notificationService) {
@@ -70,7 +71,20 @@ export class BinaryFileManager {
             });
         } catch (error) {
             console.error(error);
+            this.notificationService.add(
+                _t("An error occurred while importing the binary files."),
+                { type: "warning" }
+            );
             return { error };
+        }
+        const errors = res?.messages?.filter((message) => message.type === "error") ?? [];
+        if (errors.length) {
+            // The records are imported, only the files are missing: warn
+            // without blocking the import.
+            this.notificationService.add(
+                _t("Some binary files could not be imported (%s).", errors.length),
+                { type: "warning" }
+            );
         }
         return res;
     }
