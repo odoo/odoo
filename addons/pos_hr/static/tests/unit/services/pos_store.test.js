@@ -56,6 +56,15 @@ test("addLineToCurrentOrder", async () => {
     });
     expect(result.order_id.employee_id.id).toBe(2);
 });
+test("getSyncAllOrdersContext only sends employee IDs as current_cashier_id", async () => {
+    const store = await setupPosEnv();
+    store.setCashier(store.models["hr.employee"].get(3));
+    expect(store.getSyncAllOrdersContext([]).current_cashier_id).toBe(3);
+
+    // Without employee login, the cashier is a res.users record
+    store.config.module_pos_hr = false;
+    expect(store.getSyncAllOrdersContext([]).current_cashier_id).toBe(undefined);
+});
 test("canEditPayment", async () => {
     const store = await setupPosEnv();
     store.addNewOrder();
