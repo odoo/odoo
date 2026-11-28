@@ -63,27 +63,58 @@ def resolve_mro(model: BaseModel, name: str, predicate) -> list[typing.Any]:
     return result
 
 
-def determine(needle, records: BaseModel, *args):
-    """ Simple helper for calling a method given as a string or a function.
-
-    :param needle: callable or name of method to call on ``records``
-    :param BaseModel records: recordset to call ``needle`` on or with
-    :param args: additional arguments to pass to the determinant
-    :returns: the determined value if the determinant is a method name or callable
-    :raise TypeError: if ``records`` is not a recordset, or ``needle`` is not
-                      a callable or valid method name
+def _method_caller(name: str) -> Callable[..., typing.Any]:
+    """ Return a function that calls the method ``name`` on the recordset given
+    as first argument, with the remaining arguments.
     """
-    if not isinstance(records, _models.BaseModel):
-        raise TypeError("Determination requires a subject recordset")
-    if isinstance(needle, str):
-        needle = getattr(records, needle)
-        if needle.__name__.find('__'):
-            return needle(*args)
-    elif callable(needle):
-        if needle.__name__.find('__'):
-            return needle(records, *args)
+    def call_method(records, /, *args, **kw):
+        return getattr(records, name)(*args, **kw)
+    call_method.__name__ = call_method.__qualname__ = name
+    return call_method
 
-    raise TypeError("Determination requires a callable or method name")
+
+def _resolve_field_method(attr: str, *, values_allowed: bool = False) -> functools.cached_property:
+    """ Return a cached property ``determine__{attr}`` for a field class.  Its
+    value is a callable taking records as first argument for the attribute
+    ``attr`` of the field, which is a method name or a callable, or ``None`` if
+    the attribute is not set.  If ``values_allowed`` is set, other values of the
+    attribute give ``None``.
+
+    Method names are resolved when called on shared fields, as those are used
+    by several registries.  On other fields, the method is resolved on the
+    model class during the first call, and the result replaces the attribute
+    ``determine__{attr}`` of the field.
+
+    The cached property is reset at the end of the field's setup().
+    """
+    determinant = f'determine__{attr}'
+
+    def determine(field: Field) -> Callable[..., typing.Any] | None:
+        value = getattr(field, attr)
+        if not value:
+            return None
+        if isinstance(value, str):
+            name = value
+            if field._shareable:
+                method = _method_caller(name)
+            else:
+                def method(self, /, *args, **kw):
+                    assert isinstance(self, _models.BaseModel)
+                    func = getattr(type(self), name)
+                    setattr(field, determinant, func)
+                    return func(self, *args, **kw)
+        elif callable(value):
+            method, name = value, getattr(value, '__name__', '')
+        elif values_allowed:
+            return None
+        else:
+            raise TypeError(f"{field}: {attr}={value!r} must be a callable or a method name")
+        if name.startswith('__'):
+            raise TypeError(f"{field}: {attr}={value!r} cannot be a private method")
+        return method
+
+    determine.__name__ = determine.__qualname__ = determinant
+    return functools.cached_property(determine)
 
 
 class Field[T, C]:
@@ -597,6 +628,16 @@ class Field[T, C]:
             self._setup_done = True
             # column_type might be changed during Field.setup
             reset_cached_properties(self)
+
+    # Callables taking records as first argument, resolved from the attributes
+    # compute, compute_sql, etc.; they are reset at the end of setup().
+
+    determine__compute = _resolve_field_method('compute')
+    determine__compute_sql = _resolve_field_method('compute_sql')
+    determine__inverse = _resolve_field_method('inverse')
+    determine__search = _resolve_field_method('search')
+    determine__group_expand = _resolve_field_method('group_expand')
+    determine__init_storage = _resolve_field_method('init_storage')
 
     def get_depends(self, model: BaseModel) -> tuple[Iterable[str], Iterable[str]]:
         """ Return the field's dependencies and cache dependencies. """
@@ -1327,7 +1368,7 @@ class Field[T, C]:
         # Check if we have a custom init function
         if self.init_storage:
             _logger.debug("Table '%s': call %s for column %s", model._table, self.init_storage, self.name)
-            to_compute = determine(self.init_storage, model)
+            to_compute = self.determine__init_storage(model)
         else:
             to_compute = 'default'
         # Get the default value; ideally, we should use default_get(), but it
@@ -1384,7 +1425,7 @@ class Field[T, C]:
             if self.compute_sudo:
                 model = model.sudo()
                 table = table._with_model(model)
-            sql_field = determine(self.compute_sql, model, table)
+            sql_field = self.determine__compute_sql(model, table)
             assert isinstance(sql_field, SQL), f"{self} invalid return of compute_sql"
             return sql_field
         if not self.store or not self.column_type:
@@ -2090,18 +2131,6 @@ class Field[T, C]:
                 if field.store:
                     env.add_to_compute(field, records)
             raise
-
-    def determine_inverse(self, records):
-        """ Given the value of ``self`` on ``records``, inverse the computation. """
-        determine(self.inverse, records)
-
-    def determine_domain(self, records: BaseModel, operator: str, value) -> typing.Any:
-        """ Return a domain representing a condition on ``self``. """
-        return determine(self.search, records, operator, value)
-
-    def determine_group_expand(self, records, values, domain):
-        """ Return the groups to add when grouping by ``self`` (see ``group_expand``). """
-        return determine(self.group_expand, records, values, domain)
 
 
 # forward-reference to models because we have this last cyclic dependency

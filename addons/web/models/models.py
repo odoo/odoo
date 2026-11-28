@@ -1224,11 +1224,11 @@ class Base(models.AbstractModel):
         if field.relational:
             # groups is a recordset; determine order on groups's model
             values = self.env[field.comodel_name].browse(value.id for value in values)
-            expand_values = field.determine_group_expand(self, values, domain)
+            expand_values = field.determine__group_expand(self, values, domain)
             all_record_ids = tuple(unique(expand_values._ids + values._ids))
         else:
             # groups is a list of values
-            expand_values = field.determine_group_expand(self, values, domain)
+            expand_values = field.determine__group_expand(self, values, domain)
 
         if (groupby_spec + ' desc') in order.lower():
             expand_values = reversed(expand_values)

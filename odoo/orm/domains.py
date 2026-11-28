@@ -1066,7 +1066,7 @@ class DomainCondition(Domain):
         # use the `Field.search` function
         original_exception = None
         try:
-            computed_domain = field.determine_domain(model, operator, value)
+            computed_domain = field.determine__search(model, operator, value)
         except (NotImplementedError, UserError) as e:
             computed_domain = NotImplemented
             original_exception = e
@@ -1076,10 +1076,10 @@ class DomainCondition(Domain):
         # try with the positive operator
         if (
             original_exception is None
-            and (inversed_opeator := _INVERSE_OPERATOR.get(operator))
+            and (inversed_operator := _INVERSE_OPERATOR.get(operator))
         ):
             try:
-                computed_domain = field.determine_domain(model, inversed_opeator, value)
+                computed_domain = field.determine__search(model, inversed_operator, value)
             except (NotImplementedError, UserError):
                 pass
             else:
@@ -1099,9 +1099,9 @@ class DomainCondition(Domain):
         # compatibility for '=' and '!='
         try:
             if operator == 'in':
-                return Domain.OR(Domain(field.determine_domain(model, '=', v), internal=True) for v in value)
+                return Domain.OR(Domain(field.determine__search(model, '=', v), internal=True) for v in value)
             if operator == 'not in':
-                return Domain.AND(Domain(field.determine_domain(model, '!=', v), internal=True) for v in value)
+                return Domain.AND(Domain(field.determine__search(model, '!=', v), internal=True) for v in value)
         except (NotImplementedError, UserError) as e:
             if original_exception is None:
                 original_exception = e

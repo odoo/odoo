@@ -57,7 +57,7 @@ from odoo.tools.translate import _, LazyTranslate
 from . import decorators as api
 from .commands import Command
 from .domains import Domain
-from .fields import Field, determine
+from .fields import Field
 from .fields_misc import Id
 from .fields_temporal import Datetime
 from .fields_textual import Char, StoredTranslations
@@ -4134,7 +4134,7 @@ class BaseModel(metaclass=MetaModel):
 
                 # inverse records that are not being computed
                 try:
-                    fields[0].determine_inverse(self)
+                    fields[0].determine__inverse(self)
                 except AccessError as e:
                     if fields[0].inherited:
                         description = self.env['ir.model']._get(self._name).name
@@ -4385,7 +4385,7 @@ class BaseModel(metaclass=MetaModel):
                     inv_rec_ids.append(record.id)
 
                 inv_records = self.browse(inv_rec_ids)
-                next(iter(fields)).determine_inverse(inv_records)
+                next(iter(fields)).determine__inverse(inv_records)
                 # Values of non-stored fields were cached before running inverse methods. In case of x2many create
                 # commands, the cache may therefore hold NewId records. We must now invalidate those values.
                 inv_relational_fnames = [field.name for field in fields if field.type in ('one2many', 'many2many') and not field.store]
@@ -4620,7 +4620,7 @@ class BaseModel(metaclass=MetaModel):
         return records
 
     def _compute_field_value(self, field: Field) -> None:
-        determine(field.compute, self)
+        field.determine__compute(self)
 
         if field.store and any(self._ids):
             # check constraints of the fields that have been computed
