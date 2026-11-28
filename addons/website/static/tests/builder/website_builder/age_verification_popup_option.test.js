@@ -1,9 +1,12 @@
 import { expect, test } from "@odoo/hoot";
+import { animationFrame, queryOne, setInputRange } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
 import {
     defineWebsiteModels,
+    setupWebsiteBuilder,
     setupWebsiteBuilderWithSnippet,
 } from "@website/../tests/builder/website_helpers";
+import { getStructureSnippet } from "@website/../tests/snippet_helpers";
 
 defineWebsiteModels();
 
@@ -12,8 +15,10 @@ test("Age verification popup options works correctly", async () => {
         loadIframeBundles: true,
         loadAssetsFrontendJS: true,
         loadIframeBuilderTemplates: true,
+        interactions: ["website.age_verification_popup_blur"],
     });
-    await contains(":iframe .s_age_verification_popup .modal").click();
+    const modalSelector = ":iframe .s_age_verification_popup .modal";
+    await contains(modalSelector).click();
     expect("[data-label='Display']").toHaveCount(0);
     expect("[data-label='Delay']").toHaveCount(0);
     expect("[data-label='Confirmation'] .dropdown-toggle").toHaveText("Yes or No");
@@ -40,4 +45,54 @@ test("Age verification popup options works correctly", async () => {
     expect(":iframe #verification_error").not.toBeVisible();
     await contains("[data-class-action='d-none'] [data-icon='visibility_off']").click();
     expect(":iframe #verification_error").toBeVisible();
+
+    const backgroundBlurSelector = "[data-label='Background blur'] input[type='range']";
+    const getBlurVariable = () =>
+        queryOne(":iframe body").style.getPropertyValue("--o-age-popup-background-blur");
+    expect(modalSelector).toHaveAttribute("data-blur-background", "16");
+    expect(backgroundBlurSelector).toHaveValue(16);
+    expect(getBlurVariable()).toBe("16px");
+    await setInputRange(backgroundBlurSelector, 24);
+    await animationFrame();
+    expect(modalSelector).toHaveAttribute("data-blur-background", "24");
+    expect(getBlurVariable()).toBe("24px");
+
+    await contains(".o_website_builder_sidebar [data-icon='undo']").click();
+    expect(modalSelector).toHaveAttribute("data-blur-background", "16");
+    expect(getBlurVariable()).toBe("16px");
+    await contains(".o_website_builder_sidebar [data-icon='redo']").click();
+    expect(modalSelector).toHaveAttribute("data-blur-background", "24");
+    expect(getBlurVariable()).toBe("24px");
+
+    await setInputRange(backgroundBlurSelector, 0);
+    await animationFrame();
+    expect(modalSelector).not.toHaveAttribute("data-blur-background");
+    expect(getBlurVariable()).toBe("");
+});
+
+test("Age verification popup background blur of popups saved with a checkbox", async () => {
+    const popupEl = await getStructureSnippet("s_age_verification_popup");
+    popupEl.querySelector(".modal").dataset.blurBackground = "true";
+    await setupWebsiteBuilder(popupEl.outerHTML, {
+        loadIframeBundles: true,
+        loadAssetsFrontendJS: true,
+        loadIframeBuilderTemplates: true,
+        interactions: ["website.age_verification_popup_blur"],
+    });
+    const modalSelector = ":iframe .s_age_verification_popup .modal";
+    await contains(modalSelector).click();
+
+    const backgroundBlurSelector = "[data-label='Background blur'] input[type='range']";
+    const getBlurVariable = () =>
+        queryOne(":iframe body").style.getPropertyValue("--o-age-popup-background-blur");
+    // The default blur of the stylesheet applies.
+    expect(backgroundBlurSelector).toHaveValue(16);
+    expect(getBlurVariable()).toBe("");
+    await contains("[data-label='Background blur'] input:not([type='range'])").edit("8");
+    expect(modalSelector).toHaveAttribute("data-blur-background", "8");
+    expect(getBlurVariable()).toBe("8px");
+
+    await contains(".o_website_builder_sidebar [data-icon='undo']").click();
+    expect(modalSelector).toHaveAttribute("data-blur-background", "true");
+    expect(getBlurVariable()).toBe("");
 });

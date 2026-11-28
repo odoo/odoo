@@ -13,6 +13,7 @@ class AgeVerificationOptionPlugin extends Plugin {
     resources = {
         builder_actions: {
             SetAgeConfirmationTemplateAction,
+            SetAgeVerificationBackgroundBlurAction,
         },
         properties: { predicate: ".o_age_verification_btn", immutableLink: true },
         submit_button_selectors: [".o_age_verification_btn"],
@@ -37,6 +38,23 @@ export class SetAgeConfirmationTemplateAction extends BuilderAction {
         };
         const selector = confirmationTypeSelectors[confirmationType];
         return selector ? !!editingElement.querySelector(selector) : false;
+    }
+}
+
+export class SetAgeVerificationBackgroundBlurAction extends BuilderAction {
+    static id = "setAgeVerificationBackgroundBlur";
+
+    getValue({ editingElement }) {
+        const value = editingElement.dataset.blurBackground;
+        return value === "true" ? "16" : value || "0";
+    }
+
+    apply({ editingElement, value }) {
+        if (value === "0") {
+            delete editingElement.dataset.blurBackground;
+        } else {
+            editingElement.dataset.blurBackground = value;
+        }
     }
 }
 
