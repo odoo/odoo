@@ -83,6 +83,55 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
             'code': 'SBC',
         })
 
+    def test_split_subcontracted_production_splits_receipt_move(self):
+        """ Splitting an untracked subcontracting MO must split its receipt move too, so that
+        each production keeps its own receipt move. """
+        picking_receipt = self.env['stock.picking'].create({
+            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+            'partner_id': self.subcontractor_partner1.id,
+            'move_ids': [Command.create({
+                'product_id': self.finished.id,
+                'product_uom_qty': 3,
+            })],
+        })
+        picking_receipt.action_confirm()
+
+        mo = picking_receipt._get_subcontract_production()
+        self.assertEqual(len(mo), 1)
+        self.assertEqual(len(picking_receipt.move_ids), 1)
+
+        # Split the subcontracting MO in batches of 2 through the generic split wizard
+        split = self.env['mrp.production.split'].create({'production_id': mo.id})
+        split.max_batch_size = 2
+        self.assertEqual(split.production_detailed_vals_ids.mapped('quantity'), [2, 1])
+        split.action_split()
+
+        # The receipt move must have been split along with the MO
+        self.assertEqual(len(picking_receipt.move_ids), 2)
+        self.assertTrue(all(m.is_subcontract for m in picking_receipt.move_ids))
+        self.assertEqual(picking_receipt.move_ids.mapped('product_uom_qty'), [2, 1])
+        # `_split` only shrinks the demand, the original move must not keep its pre-split quantity
+        self.assertEqual(picking_receipt.move_ids.mapped('quantity'), [2, 1])
+
+        # The split must not leave any extra production behind
+        all_productions = self.env['mrp.production'].search([('bom_id', '=', self.bom.id)])
+        self.assertEqual(len(all_productions), 2)
+        self.assertEqual(all_productions.mapped('product_qty'), [2, 1])
+
+        # Each receipt move is linked to exactly one production, and they are distinct
+        productions = self.env['mrp.production']
+        for move in picking_receipt.move_ids:
+            move_production = move._get_subcontract_production()
+            self.assertEqual(len(move_production), 1, "each receipt move must keep a single production")
+            productions |= move_production
+        self.assertEqual(productions, all_productions)
+
+        # Updating the quantity used to raise a singleton error here, and the sync should
+        # not bring the production back to the quantity of the move before the split
+        move_to_update = picking_receipt.move_ids[0]
+        move_to_update.move_line_ids.quantity = 2
+        self.assertEqual(move_to_update._get_subcontract_production().product_qty, 2)
+
     def test_flow_1(self):
         """ Don't tick any route on the components and trigger the creation of the subcontracting
         manufacturing order through a receipt picking. Create a reordering rule in the
