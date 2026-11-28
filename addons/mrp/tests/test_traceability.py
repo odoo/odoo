@@ -5,7 +5,7 @@ from odoo.tests import Form
 from odoo.addons.mrp.tests.common import TestMrpCommon
 from odoo.exceptions import UserError
 
-from datetime import datetime
+from datetime import datetime, timedelta
 import logging
 from freezegun import freeze_time
 
@@ -748,6 +748,7 @@ class TestTraceability(TestMrpCommon):
         """ Confirm a MO for 3 serial numbers. generate 3 serial number and split the mo"""
         mo, _, _, _, _ = self.generate_mo(tracking_final='serial', qty_final=3)
         mo.action_confirm()
+        mo.date_start += timedelta(days=10)
 
         wizard = self.env['mrp.production.serials'].with_context(active_id=mo.id).create({
             'production_id': mo.id,
@@ -762,6 +763,7 @@ class TestTraceability(TestMrpCommon):
         for smo in split_mos:
             self.assertIn(smo.lot_producing_ids.name, serials)
             self.assertNotEqual(smo.state, 'done')
+            self.assertEqual(smo.date_start, mo.date_start)
 
     def test_split_and_assign_serials_after_apply(self):
         """
