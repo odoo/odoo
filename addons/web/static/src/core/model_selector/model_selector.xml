@@ -2,14 +2,7 @@
 <templates>
     <t t-name="web.ModelSelector">
         <div class="o_model_selector" t-ref="autocomplete_container">
-            <input t-if="env.isSmall"
-                type="text"
-                class="o_input"
-                readonly=""
-                t-att-id="props.id"
-                t-att-value="props.value"
-            />
-            <AutoComplete t-else=""
+            <AutoComplete
                 id="props.id"
                 value="props.value || ''"
                 sources="sources"
