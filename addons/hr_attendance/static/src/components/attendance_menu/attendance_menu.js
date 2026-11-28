@@ -1,4 +1,4 @@
-import { Component, onWillStart, proxy } from "@odoo/owl";
+import { Component, onWillStart, providePlugins, proxy, usePlugin } from "@odoo/owl";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
@@ -12,6 +12,7 @@ import { _t } from "@web/core/l10n/translation";
 import { Record } from "@web/model/record";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useSubEnv } from "@web/owl2/utils";
+import { ReminderPlugin } from "@hr/plugins/reminder_plugin";
 import { AttendanceInlineForm } from "@hr_attendance/components/attendance_inline_form/attendance_inline_form";
 import { AttendanceVideoStream } from "@hr_attendance/components/attendance_video_stream/attendance_video_stream";
 
@@ -66,9 +67,20 @@ export class ActivityMenu extends Component {
 
         this.cameraCapture = null;
         this.attendanceRecord = null;
-        this.dropdown = useDropdownState();
+        this.dropdown = useDropdownState({ onOpen: () => this.reminder.close?.() });
+
+        providePlugins([ReminderPlugin]);
+        this.reminder = usePlugin(ReminderPlugin);
+        this.reminderButtonRef = this.reminder.schedule(
+            () => this.isReminderEligible(),
+            _t("Looks like you're working. Don't forget to check in."),
+            this.dropdown
+        );
 
         onWillStart(() => {
+            this.lazySession.getValue("attendance_based", (value) => {
+                this.attendanceBased = value;
+            });
             this.lazySession.getValue("attendance_check_in_ability", (hasAbility) => {
                 this.state.isDisplayed = hasAbility;
             });
@@ -87,6 +99,10 @@ export class ActivityMenu extends Component {
         });
     }
 
+    isReminderEligible() {
+        return this.state.isDisplayed && !this.state.checkedIn && this.attendanceBased;
+    }
+
     async searchReadEmployee() {
         const employee = await rpc("/hr_attendance/attendance_user_data");
         this._searchReadEmployeeFill(employee);
@@ -101,7 +117,13 @@ export class ActivityMenu extends Component {
             return;
         }
 
+        const wasCheckedIn = this.state.checkedIn;
         this.state.checkedIn = employee.attendance_state === "checked_in";
+        if (!wasCheckedIn && this.state.checkedIn) {
+            this.reminder.dismiss();
+        } else if (wasCheckedIn && !this.state.checkedIn) {
+            this.reminder.reset();
+        }
 
         const activeAttendanceId = this.state.activeAttendance?.id;
         this.state.attendances = [...(employee.today_attendance_ids || [])].sort(

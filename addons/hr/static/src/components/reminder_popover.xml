@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="hr.ReminderPopover">
+        <div class="d-flex align-items-start">
+            <button class="p-3 pe-2 border-0 bg-transparent text-start"
+                    t-on-click="this.props.onAction">
+                <span t-out="this.props.message"/>
+            </button>
+            <button class="p-3 ps-2 border-0 bg-transparent opacity-50 opacity-100-hover"
+                    aria-label="Close" t-on-click="this.props.close">
+                <i class="oi" data-icon="close"/>
+            </button>
+        </div>
+    </t>
+</templates>
