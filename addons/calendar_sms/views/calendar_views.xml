@@ -30,8 +30,13 @@
         <field name="model">calendar.event</field>
         <field name="inherit_id" ref="calendar.view_calendar_event_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//div[@name='send_buttons']" position="inside">
-                <button name="action_send_sms" class="btn btn-sm btn-secondary" help="Send SMS to attendees" type="object" string="SMS" icon="smartphone" invisible="not user_can_edit"/>
+            <xpath expr="//button[@name='action_open_composer'][@icon='mail']" position="after">
+                <button name="action_send_sms"
+                    class="btn btn-sm btn-secondary"
+                    help="Send SMS to attendees"
+                    type="object" string="SMS"
+                    icon="smartphone"
+                    invisible="not attendees_count or not user_can_edit"/>
             </xpath>
             <xpath expr="//field[@name='phone']" position="attributes">
                 <attribute name="options">{'enable_sms': false}</attribute>
