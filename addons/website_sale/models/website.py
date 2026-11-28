@@ -1003,7 +1003,6 @@ class Website(models.Model):
         suggested_controllers.append((
             self.env._("eCommerce"),
             self.env["ir.http"]._url_for("/shop"),
-            "website_sale",
         ))
         return suggested_controllers
 

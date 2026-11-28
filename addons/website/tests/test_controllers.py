@@ -52,7 +52,7 @@ class TestControllers(tests.HttpCase):
         resp = json.loads(res.content)
         assert 'result' in resp
         suggested_links = resp['result']
-        last_modified_history = next(o for o in suggested_links['others'] if o["title"] == "Last modified pages")
+        last_modified_history = suggested_links['others'][0]
         last_modified_values = map(lambda o: o['value'], last_modified_history['values'])
 
         matching_pages = set(map(lambda o: o['value'], suggested_links['matching_pages']))
