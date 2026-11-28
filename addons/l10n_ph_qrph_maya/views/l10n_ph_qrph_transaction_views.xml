@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="l10n_ph_qrph_transaction_view_form" model="ir.ui.view">
+        <field name="name">l10n_ph.qrph.transaction.form</field>
+        <field name="model">l10n_ph.qrph.transaction</field>
+        <field name="arch" type="xml">
+            <form string="QRPH Transaction" create="0" edit="0" delete="0">
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="pending,paid"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="maya_payment_id"/>
+                            <field name="maya_status"/>
+                            <field name="reference"/>
+                            <field name="bank_id"/>
+                        </group>
+                        <group>
+                            <field name="amount"/>
+                            <field name="settled_date"/>
+                            <field name="create_date"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>
