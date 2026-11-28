@@ -11,6 +11,12 @@ class AccountChartTemplate(models.AbstractModel):
             'code_digits': 4,
         }
 
+    @template('uz', 'account.account')
+    def _get_uz_account_account(self):
+        return {
+            'uz5710': {'reconcile': True},
+        }
+
     @template('uz', 'res.company')
     def _get_uz_res_company(self):
         return {
