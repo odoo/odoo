@@ -55,6 +55,26 @@ describe("pos.order.line - loyalty", () => {
         expect(giftCardLine.isGlobalDiscountApplicable()).toBe(false);
     });
 
+    test("gift card top up lines are excluded from global discount", async () => {
+        const store = await setupPosEnv();
+        const models = store.models;
+        const order = store.addNewOrder();
+
+        const program = models["loyalty.program"].get(3);
+        const giftCardProduct = models["product.product"].get(8);
+        program.update({ trigger_product_ids: [["link", giftCardProduct]] });
+
+        const regularLine = await addProductLineToOrder(store, order);
+        expect(regularLine.isGlobalDiscountApplicable()).toBe(true);
+
+        const topUpLine = await addProductLineToOrder(store, order, {
+            templateId: giftCardProduct.product_tmpl_id.id,
+            productId: giftCardProduct.id,
+        });
+        expect(topUpLine.isGiftCardOrEWalletTopUp()).toBe(true);
+        expect(topUpLine.isGlobalDiscountApplicable()).toBe(false);
+    });
+
     test("promotion reward lines are not excluded from global discount", async () => {
         const store = await setupPosEnv();
         const models = store.models;
