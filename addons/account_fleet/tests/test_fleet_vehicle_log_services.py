@@ -1,8 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from lxml import etree
+
 from odoo import Command
 from odoo.exceptions import UserError, ValidationError
-from odoo.tests import tagged
+from odoo.tests import Form, new_test_user, tagged
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
@@ -398,3 +400,53 @@ class TestFleetVehicleLogServices(AccountTestInvoicingCommon):
 
         with self.assertRaises(ValidationError):
             service.account_move_line_ids = [Command.link(other_line.id)]
+
+    def test_service_create_bill_button_hidden_without_accounting_rights(self):
+        """A fleet manager without access to Invoicing does not see the button creating the bill of a service."""
+        fleet_manager = new_test_user(self.env, login='fleet_manager', groups='base.group_user,fleet.fleet_group_manager')
+        fleet_accountant = new_test_user(
+            self.env, login='fleet_manager_accountant',
+            groups='base.group_user,fleet.fleet_group_manager,account.group_account_invoice',
+        )
+        for user, button_visible in ((fleet_manager, False), (fleet_accountant, True)):
+            with self.subTest(user=user.login):
+                arch = self.env['fleet.vehicle.log.services'].with_user(user).get_views([(False, 'form')])['views']['form']['arch']
+                self.assertEqual(bool(etree.fromstring(arch).xpath("//button[@name='action_create_account_move']")), button_visible)
+
+        with Form(self.env['fleet.vehicle.log.services'].with_user(fleet_manager)) as service_form:
+            service_form.vehicle_id = self.car_1
+            service_form.service_type_id = self.fleet_service_type
+            service_form.amount = 300
+        self.assertEqual(service_form.record.amount, 300)
+
+    def test_service_bill_post_by_accountant_with_read_access_to_fleet(self):
+        """An accountant who can only read the fleet services can post a bill with a vehicle:
+        the service of the vehicle is created, then completed when the bill is posted again."""
+        accountant = new_test_user(
+            self.env, login='fleet_accountant',
+            groups='base.group_user,account.group_account_invoice,fleet.fleet_group_user',
+        )
+        bill = self.env['account.move'].with_user(accountant).create({
+            'move_type': 'in_invoice',
+            'partner_id': self.vendor.id,
+            'invoice_date': '2019-01-01',
+            'invoice_line_ids': [Command.create({
+                'name': 'Tyre change',
+                'price_unit': 300.0,
+                'vehicle_id': self.car_2.id,
+            })],
+        })
+        bill.action_post()
+        service = self.car_2.log_services
+        self.assertEqual(service.account_move_line_ids.move_id, bill)
+        self.assertEqual(service.amount, 300)
+
+        bill.button_draft()
+        bill.write({'invoice_line_ids': [Command.create({
+            'name': 'Oil change',
+            'price_unit': 80.0,
+            'vehicle_id': self.car_2.id,
+        })]})
+        bill.action_post()
+        self.assertEqual(self.car_2.log_services, service)
+        self.assertEqual(service.amount, 380)
