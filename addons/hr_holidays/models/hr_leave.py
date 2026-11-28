@@ -2899,7 +2899,9 @@ class HrLeave(models.Model):
                 calendar = employee.sudo()._get_version(request_date_from).resource_calendar_id
                 day_start = self._to_utc(request_date_from, 0, employee).replace(tzinfo=UTC)
                 day_end = self._to_utc(request_date_from + timedelta(days=1), 0, employee).replace(tzinfo=UTC)
-                planned_hours = calendar.get_work_hours_count(day_start, day_end, compute_leaves=False)
+                # a flexible schedule plans no hours of its own: the day lasts its average day
+                planned_hours = calendar.calendar_type != 'undefined' \
+                    and calendar.get_work_hours_count(day_start, day_end, compute_leaves=False)
                 hour_to = min(hour_from + (planned_hours or calendar.hours_per_day or HOURS_PER_DAY), 24)
 
         return (hour_from, hour_to)
