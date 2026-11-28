@@ -3,7 +3,7 @@
 from collections import defaultdict
 from datetime import date, datetime
 
-from odoo import api, models
+from odoo import _, api, models
 from odoo.fields import Domain
 from odoo.tools import format_date, OrderedSet
 
@@ -99,14 +99,18 @@ class StockForecasted_Product_Product(models.AbstractModel):
         """Return a dictionary with product lead times."""
         products = self._get_products(product_template_ids, product_ids)
         location = self._get_warehouse().lot_stock_id
+        values = {}
+        if supplier_id := self.env.context.get('forecast_supplier_id'):
+            values['supplierinfo'] = self.env['product.supplierinfo'].browse(supplier_id)
         for product in products:
             rule = product._get_rules_from_location(location)
-            leadtime = rule._get_lead_days(product)
+            leadtime = rule._get_lead_days(product, description='report', **values)
             if not leadtime:
-                leadtime = [{'total_delay': 0}, {}]
+                leadtime = [{'total_delay': 0}, []]
+            leadtime[1].insert(0, (_('Earliest Possible Arrival'), 'total_delay_title'))
             res['product'][product.id]['leadtime'] = {
                 'total_delay': leadtime[0].get('total_delay', 0),
-                'details': leadtime[1]
+                'details': leadtime[1],
             }
 
     def _get_report_header(self, product_template_ids, product_ids, wh_location_ids):

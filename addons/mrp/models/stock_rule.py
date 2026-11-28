@@ -208,11 +208,11 @@ class StockRule(models.Model):
             date_planned = date_planned - relativedelta(hours=1)
         return date_planned
 
-    def _get_lead_days(self, product, bypass_delay_description=False, **values):
+    def _get_lead_days(self, product, description='all', **values):
         """Add the product and company manufacture delay to the cumulative delay
         and cumulative description.
         """
-        delays, delay_description = super()._get_lead_days(product, bypass_delay_description=bypass_delay_description, **values)
+        delays, delay_description = super()._get_lead_days(product, description=description, **values)
         manufacture_rule = self.filtered(lambda r: r.action == 'manufacture')
         if not manufacture_rule:
             return delays, delay_description
@@ -221,27 +221,32 @@ class StockRule(models.Model):
         if not bom:
             delays['total_delay'] += 365
             delays['no_bom_found_delay'] += 365
-            if not bypass_delay_description:
+            if description != 'none':
                 delay_description.append((_('No BoM Found'), _('+ %s days', 365)))
         manufacture_delay = bom.produce_delay
         delays['total_delay'] += manufacture_delay
         delays['manufacture_delay'] += manufacture_delay
-        if not bypass_delay_description:
-            delay_description.append((_('Production End Date'), manufacture_delay))
-            delay_description.append((_('Manufacturing Lead Time'), _('+ %d days', manufacture_delay)))
+        wh_delay_description = []
         if bom.type == 'normal':
             # pre-production rules
             warehouse = self.location_dest_id.warehouse_id
             for wh in warehouse:
                 if wh.manufacture_steps != 'mrp_one_step':
                     wh_manufacture_rules = product._get_rules_from_location(product.property_stock_production, route_ids=wh.pbm_route_id)
-                    extra_delays, extra_delay_description = (wh_manufacture_rules - self).with_context(global_horizon_days=0)._get_lead_days(product, bypass_delay_description=bypass_delay_description, **values)
+                    extra_delays, extra_delay_description = (wh_manufacture_rules - self).with_context(global_horizon_days=0)._get_lead_days(product, description=description, **values)
                     for key, value in extra_delays.items():
                         delays[key] += value
-                    delay_description += extra_delay_description
+                    wh_delay_description += extra_delay_description
+        if description == 'all':
+            delay_description.insert(int('horizon_time' in delays), (_('Production End Date'), delays['total_delay']))
+        if description == 'report':
+            delay_description.insert(0, (_('Earliest Production End Date'), 'total_delay_title'))
+        if description != 'none':
+            delay_description.append((_('Manufacturing Lead Time'), _('+ %d days', manufacture_delay)))
+            delay_description += wh_delay_description
         days_to_order = values.get('days_to_order', bom.days_to_prepare_mo)
         delays['total_delay'] += days_to_order
-        if not bypass_delay_description:
+        if description != 'none':
             delay_description.append((_('Production Start Date'), days_to_order))
             delay_description.append((_('Days to Supply Components'), _('+ %d days', days_to_order)))
         return delays, delay_description

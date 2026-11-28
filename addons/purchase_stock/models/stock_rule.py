@@ -177,10 +177,10 @@ class StockRule(models.Model):
     def _notify_responsible(self, procurement):
         pass  # Override in sale_purchase_stock and purchase_mrp to notify salesperson or MO responsible
 
-    def _get_lead_days(self, product, bypass_delay_description=False, **values):
+    def _get_lead_days(self, product, description='all', **values):
         """Add the supplier delay to the cumulative delay and cumulative description.
         """
-        delays, delay_description = super()._get_lead_days(product, bypass_delay_description=bypass_delay_description, **values)
+        delays, delay_description = super()._get_lead_days(product, description=description, **values)
         buy_rule = self.filtered(lambda r: r.action == 'buy')
         seller_info = 'supplierinfo' in values and values['supplierinfo']._get_seller_info() or product.with_company(buy_rule.company_id)._select_seller(quantity=None)
         if not buy_rule:
@@ -188,7 +188,7 @@ class StockRule(models.Model):
         if not seller_info:
             delays['total_delay'] += 365
             delays['no_vendor_found_delay'] += 365
-            if not bypass_delay_description:
+            if description != 'none':
                 delay_description.append((_('No Vendor Found'), _('+ %s days', 365)))
             return delays, delay_description
         buy_rule.ensure_one()
@@ -196,12 +196,13 @@ class StockRule(models.Model):
             supplier_delay = seller_info['delay']
             delays['total_delay'] += supplier_delay
             delays['purchase_delay'] += supplier_delay
-            if not bypass_delay_description:
+            if description == 'all':
                 delay_description.append((_('Receipt Date'), supplier_delay))
+            if description != 'none':
                 delay_description.append((_('Vendor Lead Time'), _('+ %d days', supplier_delay)))
         days_to_order = buy_rule.company_id.days_to_purchase
         delays['total_delay'] += days_to_order
-        if not bypass_delay_description:
+        if description != 'none':
             delay_description.append((_('Order Deadline'), days_to_order))
             delay_description.append((_('Days to Purchase'), _('+ %d days', days_to_order)))
         return delays, delay_description

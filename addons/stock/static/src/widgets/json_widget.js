@@ -4,7 +4,7 @@ import { Component, useProps, usePlugin } from "@odoo/owl";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { ORM } from "@web/core/orm_plugin";
 
-export class JsonPopOver extends Component {
+export class JsonWidget extends Component {
     static template = "";
 
     props = useProps(standardFieldProps);
@@ -14,8 +14,8 @@ export class JsonPopOver extends Component {
     }
 }
 
-export const jsonPopOver = {
-    component: JsonPopOver,
+export const jsonWidget = {
+    component: JsonWidget,
     displayName: _t("Json Popup"),
     supportedTypes: ["char"],
 };
@@ -24,15 +24,15 @@ export const jsonPopOver = {
 // Lead Days
 // --------------------------------------------------------------------------
 
-export class PopOverLeadDays extends JsonPopOver {
+export class LeadDaysWidget extends JsonWidget {
     static template = "stock.leadDays";
 }
 
-export const popOverLeadDays = {
-    ...jsonPopOver,
-    component: PopOverLeadDays,
+export const leadDaysWidget = {
+    ...jsonWidget,
+    component: LeadDaysWidget,
 };
-registry.category("fields").add("lead_days_widget", popOverLeadDays);
+registry.category("fields").add("lead_days_widget", leadDaysWidget);
 
 // --------------------------------------------------------------------------
 // Update Button

@@ -1,7 +1,17 @@
+import { formatDate } from "@web/core/l10n/dates";
 import { formatFloat } from "@web/views/fields/formatters";
-import { Component, markup, t, useProps, usePlugin } from "@odoo/owl";
+import { Component, markup, signal, t, useProps, usePlugin } from "@odoo/owl";
 import { ORM } from "@web/core/orm_plugin";
 import { ActionPlugin } from "@web/webclient/actions/action_plugin";
+import { usePopover } from "@web/core/popover/popover_hook";
+
+export class LeadDaysPopover extends Component {
+    static template = "stock.LeadDaysPopover";
+    props = useProps({
+        leadTime: t.object(),
+        close: t.function().optional(),
+    });
+}
 
 export class ForecastedHeader extends Component {
     static template = "stock.ForecastedHeader";
@@ -9,12 +19,20 @@ export class ForecastedHeader extends Component {
         docs: t.object(),
         openView: t.function(),
     });
+    static components = { LeadDaysPopover };
 
-    setup(){
+    setup() {
         this.orm = usePlugin(ORM);
         this.action = usePlugin(ActionPlugin);
-
+        this.popover = usePopover(LeadDaysPopover, { position: "bottom" });
+        this.leadTimeRef = signal.ref();
         this._formatFloat = (num) => formatFloat(num, { digits: [0, this.props.docs.precision] });
+    }
+
+    openPopover() {
+        if (!this.popover.isOpen) {
+            this.popover.open(this.leadTimeRef(), { leadTime: this.leadTime });
+        }
     }
 
     async _onClickInventory(){
@@ -35,7 +53,7 @@ export class ForecastedHeader extends Component {
             return null;
         }
         const productsArray = Object.values(this.products || {});
-        const product = productsArray.reduce((minProduct, p) => {
+        const leadTime = structuredClone(productsArray.reduce((minProduct, p) => {
             if (
             !minProduct ||
             (p.leadtime && p.leadtime.total_delay < (minProduct.leadtime?.total_delay ?? Infinity))
@@ -43,11 +61,28 @@ export class ForecastedHeader extends Component {
             return p;
             }
             return minProduct;
-        }, null);
-        const today = new Date(Date.now());
-        product.leadtime["today"] = today.toLocaleDateString();
-        product.leadtime["earliestPossibleArrival"] = this.addDays(today, product.leadtime.total_delay);
-        return product.leadtime;
+        }, null).leadtime);
+        const today = luxon.DateTime.now();
+        leadTime.today = formatDate(today);
+        leadTime.earliestPossibleArrival = formatDate(today.plus({ days: leadTime.total_delay }));
+        const formattedDetails = [];
+        let intermediaryDate = today;
+        for (const [title, delay] of leadTime.details.reverse()) {
+            if (delay === "total_delay_title") {
+                formattedDetails.push([
+                    title,
+                    "= " + leadTime.earliestPossibleArrival,
+                    "table-info",
+                ]);
+            } else if (typeof delay === "string") {
+                formattedDetails.push([title, delay, ""]);
+            } else {
+                intermediaryDate = intermediaryDate.plus({ days: delay });
+                formattedDetails.push([title, formatDate(intermediaryDate), "table-secondary"]);
+            }
+        }
+        leadTime.details = formattedDetails;
+        return leadTime;
     }
 
     get leadTimeShort() {
@@ -76,15 +111,5 @@ export class ForecastedHeader extends Component {
 
     get uom() {
         return Object.values(this.products)[0].uom;
-    }
-
-    addDays(date, days) {
-        const result = new Date(date);
-        result.setDate(result.getDate() + days);
-        return result.toLocaleDateString();
-    }
-
-    toJsonString(obj) {
-        return JSON.stringify(obj);
     }
 }
