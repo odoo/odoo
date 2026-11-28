@@ -3016,7 +3016,9 @@ export const rtcService = {
     start(env, services) {
         const store = services["mail.store"];
         const rtc = store.rtc;
-        rtc.pttExtService = usePlugin(PttExtensionPlugin);
+        const pttExtension = usePlugin(PttExtensionPlugin);
+        pttExtension.rtc = rtc;
+        rtc.pttExtService = pttExtension;
         usePlugin(CallInvitationsPlugin);
         rtc.pip = usePlugin(PipPlugin);
         rtc.onChange(
