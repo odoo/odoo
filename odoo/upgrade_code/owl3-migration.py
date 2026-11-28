@@ -1130,6 +1130,7 @@ SERVICES_MAPPING = {
     "home_menu": ['HomeMenuPlugin', '@web_enterprise/webclient/home_menu/home_menu_plugin'],
     "hotkey": ['HotkeyPlugin', '@web/core/hotkeys/hotkey_plugin'],
     "iapNotification": ['IapNotificationPlugin', '@iap_mail/js/services/iap_notification_plugin'],
+    "iot_longpolling": ['IoTLongpollingPlugin', '@iot/network_utils/iot_longpolling_plugin'],
     "knowledge.toc": ['KnowledgeTocPlugin', '@knowledge/services/knowledge_toc_plugin'],
     "knowledgeCommandsService": ['KnowledgeCommandsPlugin', '@knowledge/services/knowledge_commands_plugin'],
     "knowledgeEmbedViewsFilters": ['KnowledgeEmbedViewsFiltersPlugin', '@knowledge/services/knowledge_embedded_filters_plugin'],
