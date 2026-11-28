@@ -52,7 +52,6 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_mm_account_account(self):
         return {
             'l10n_mm_account_1305': {
-                'account_stock_expense_id': 'l10n_mm_account_5000',
                 'account_stock_variation_id': 'l10n_mm_account_5100',
             },
         }
