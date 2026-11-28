@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_picking_type_form_inherit_pt" model="ir.ui.view">
+        <field name="name">stock.picking.type.form.inherit.pt</field>
+        <field name="model">stock.picking.type</field>
+        <field name="inherit_id" ref="stock.view_picking_type_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='hardware']" position="after">
+                <page string="Portugal" invisible="country_code != 'PT'">
+                    <div class="alert alert-warning" role="alert"
+                         invisible="code not in ('outgoing', 'internal') or l10n_pt_stock_at_series_id">
+                        Without an AT series, the transfers of this type that travel to a destination in Portugal
+                        (deliveries, and moves between two of the company's warehouses) issue no transport
+                        document: they are validated without a Transport Guide (GT).
+                    </div>
+                    <div class="alert alert-warning" role="alert"
+                         invisible="code != 'outgoing' or l10n_pt_stock_return_at_series_id">
+                        Without an AT series for returns, the goods returned to their supplier with this type are
+                        validated without a Return Note (GD).
+                    </div>
+                    <group>
+                        <!-- No quick create: a series also needs a prefix. "Create and edit" presets the type. -->
+                        <field name="l10n_pt_stock_at_series_id"
+                               invisible="code not in ('outgoing', 'internal')"
+                               context="{'l10n_pt_series_document_types': l10n_pt_stock_series_document_types, 'default_company_id': company_id}"
+                               options="{'no_quick_create': True}"/>
+                        <field name="l10n_pt_stock_return_at_series_id"
+                               invisible="code != 'outgoing'"
+                               context="{'l10n_pt_series_document_types': ['incoming'], 'default_company_id': company_id}"
+                               options="{'no_quick_create': True}"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

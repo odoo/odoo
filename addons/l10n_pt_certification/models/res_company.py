@@ -1,0 +1,143 @@
+from stdnum.pt import nif
+
+from odoo import api, fields, models
+from odoo.exceptions import AccessError, RedirectWarning
+from odoo.tools.misc import format_datetime
+
+from odoo.addons.l10n_pt_certification.models.l10n_pt_document_mixin import (
+    l10n_pt_shared_series_access_error,
+)
+from odoo.addons.l10n_pt_certification.utils import hashing as pt_hash_utils
+
+
+class ResCompany(models.Model):
+    _inherit = "res.company"
+
+    l10n_pt_region_code = fields.Char('Region Code', compute='_compute_l10n_pt_region_code', store=True, readonly=False)
+    l10n_pt_clock_confirmed_entry_date = fields.Datetime(
+        string="System Clock Confirmed Against",
+        readonly=True,
+        help="The SystemEntryDate of the last issued document when a user confirmed that the system "
+             "clock, although earlier, was correct.",
+    )
+
+    def _l10n_pt_get_last_system_entry_date(self):
+        """The latest SystemEntryDate of any document issued under the root company's NIF, branches included."""
+        self.ensure_one()
+        last_dates = []
+        for model_name in self.env['l10n_pt.at.series']._l10n_pt_document_models():
+            # sudo: every branch's documents count, whichever companies the user may see.
+            documents = self.env[model_name].sudo()
+            if 'l10n_pt_hashed_on' not in documents._fields:
+                continue
+            [(last_date,)] = documents._read_group(
+                [('company_id', 'child_of', self.root_id.id), ('l10n_pt_hashed_on', '!=', False)],
+                aggregates=['l10n_pt_hashed_on:max'],
+            )
+            if last_date:
+                last_dates.append(last_date)
+        return max(last_dates, default=False)
+
+    def _l10n_pt_check_system_clock(self):
+        """
+        Before issuing, a system date and time earlier than that of the last document issued, of any
+        type and series, has to be confirmed by the user (Despacho 8632/2014 3.4.3). Confirming
+        holds until a later document is issued.
+        """
+        now = fields.Datetime.now()
+        for root in self.root_id:
+            last_date = root._l10n_pt_get_last_system_entry_date()
+            confirmed = root.l10n_pt_clock_confirmed_entry_date
+            if last_date and now < last_date and not (confirmed and confirmed >= last_date):
+                raise RedirectWarning(
+                    self.env._(
+                        "The system date and time (%(now)s) are earlier than those of the last document "
+                        "issued (%(last)s). Check the clock of the server. If it is correct, confirm it, "
+                        "then issue the document again.",
+                        now=format_datetime(self.env, now),
+                        last=format_datetime(self.env, last_date),
+                    ),
+                    self.env.ref('l10n_pt_certification.action_l10n_pt_confirm_system_clock').id,
+                    self.env._("The clock is correct"),
+                )
+
+    def _l10n_pt_check_company_vat(self):
+        """
+        A document is issued under the NIF of its company, which it prints, signs and exports to the
+        SAF-T: a missing or invalid one has to be fixed before the document is numbered and signed.
+        """
+        if self.filtered(lambda company: not company.vat or not nif.is_valid(company.vat)):
+            raise RedirectWarning(
+                self.env._("Please define the VAT on your company (e.g. PT123456789)"),
+                self.env.ref('base.action_res_company_form').id,
+                self.env._("Company Settings"),
+            )
+
+    @api.model
+    def _l10n_pt_confirm_system_clock(self):
+        """Run from the warning of `_l10n_pt_check_system_clock`, by the user it was shown to."""
+        for root in self.env.companies.root_id:
+            # sudo: any user issuing documents confirms the clock, not only those who may edit the company.
+            root.sudo().l10n_pt_clock_confirmed_entry_date = root._l10n_pt_get_last_system_entry_date()
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'type': 'success',
+                'message': self.env._("The system date and time are confirmed. Issue the document again."),
+                'next': {'type': 'ir.actions.act_window_close'},
+            },
+        }
+
+    def _l10n_pt_get_legal_tz(self):
+        """The time zone of the company's region, in which the documents print their times."""
+        self.ensure_one()
+        return {'PT-AC': 'Atlantic/Azores', 'PT-MA': 'Atlantic/Madeira'}.get(self.l10n_pt_region_code, 'Europe/Lisbon')
+
+    @api.depends('country_id', 'state_id')
+    def _compute_l10n_pt_region_code(self):
+        for company in self.filtered(lambda c: c.country_id.code == 'PT'):
+            if company.state_id == self.env.ref('base.state_pt_pt-20'):
+                company.l10n_pt_region_code = 'PT-AC'
+            elif company.state_id == self.env.ref('base.state_pt_pt-30'):
+                company.l10n_pt_region_code = 'PT-MA'
+            else:
+                company.l10n_pt_region_code = 'PT'
+
+    @api.onchange('country_id')
+    def _onchange_country_id_l10n_pt(self):
+        """
+        Portuguese companies use round_globally as tax_calculation_rounding_method to ensure
+        rounding conforms with the requirements from Autoridade Tributaria
+        """
+        for company in self.filtered(lambda c: c.country_id.code == "PT"):
+            company.tax_calculation_rounding_method = 'round_globally'
+
+    def _get_hash_versioning_list(self):
+        # For PT, the signing service's public keys by key version: each signature is verified with the
+        # key of the version stored in its hash (see `_verify_hashed_move`).
+        if self.account_fiscal_country_id.code != 'PT':
+            return super()._get_hash_versioning_list()
+        return pt_hash_utils.get_public_keys(self.env)
+
+    def _check_hash_integrity(self):
+        # EXTEND account
+        try:
+            return super()._check_hash_integrity()
+        except AccessError as e:
+            if self.account_fiscal_country_id.code == 'PT' and (shared_series_error := l10n_pt_shared_series_access_error(self.env, e)):
+                raise shared_series_error from e
+            raise
+
+    def _verify_hashed_move(self, move, previous_hash, versioning_list, current_versioning_index):
+        if self.account_fiscal_country_id.code != 'PT':
+            return super()._verify_hashed_move(move, previous_hash, versioning_list, current_versioning_index)
+        if not move._l10n_pt_is_signed_for_at():
+            # Hashed by core: verified against core's hash versions, not the AT signing keys.
+            return super()._verify_hashed_move(move, previous_hash, super()._get_hash_versioning_list(), current_versioning_index)
+        __, previous_hash = pt_hash_utils.split_inalterable_hash(previous_hash)
+        message = pt_hash_utils.get_message_to_hash(move._l10n_pt_get_hash_values(), previous_hash)
+        public_key = pt_hash_utils.get_public_key(versioning_list, move.inalterable_hash)
+        return bool(public_key) and pt_hash_utils.verify_integrity(
+            message, move.inalterable_hash, public_key,
+        ), current_versioning_index

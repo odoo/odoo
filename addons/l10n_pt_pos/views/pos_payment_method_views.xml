@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_payment_method_view_form" model="ir.ui.view">
+        <field name="name">pos.payment.method.form.inherit.l10n_pt_pos</field>
+        <field name="model">pos.payment.method</field>
+        <field name="inherit_id" ref="point_of_sale.pos_payment_method_view_form"/>
+        <field name="arch" type="xml">
+            <field name="company_id" position="after">
+                <field name="l10n_pt_pos_payment_mechanism" invisible="country_code != 'PT'"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="pos_payment_method_view_tree" model="ir.ui.view">
+        <field name="name">pos.payment.method.list.inherit.l10n_pt_pos</field>
+        <field name="model">pos.payment.method</field>
+        <field name="inherit_id" ref="point_of_sale.pos_payment_method_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="journal_id" position="after">
+                <field name="l10n_pt_pos_payment_mechanism" optional="hide" invisible="country_code != 'PT'"/>
+            </field>
+        </field>
+    </record>
+</odoo>
