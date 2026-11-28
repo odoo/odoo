@@ -846,7 +846,8 @@ export class ProductPage extends Interaction {
         const productIdElements = parent.querySelectorAll('[data-product-id]');
         productIdElements.forEach(el => el.dataset.productId = combination.product_id || 0);
         parent.dispatchEvent(new CustomEvent(
-            'product_changed', { detail: { productId: combination.product_id || 0 } }
+            'product_changed',
+            { detail: { productId: combination.product_id || 0, wishId: combination.wish_id } },
         ));
 
         this.handleCustomValues(ev.target);

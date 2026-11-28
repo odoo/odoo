@@ -340,10 +340,20 @@ class ProductProduct(models.Model):
                 product.image_variant_1920 = False
 
     def _is_in_wishlist(self):
+        return bool(self._get_wish())
+
+    def _get_wish(self, wishes=None):
+        """Return the current user's wishlist line for this product, if any.
+
+        :param wishes: the current user's wishlist lines, when already fetched
+        :rtype: product.wishlist
+        """
         if not self:
-            return False
+            return self.env["product.wishlist"]
         self.ensure_one()
-        return self in self.env["product.wishlist"].current().mapped("product_id")
+        if wishes is None:
+            wishes = self.env["product.wishlist"].current()
+        return wishes.filtered(lambda wish: wish.product_id == self)[:1]
 
     def _prepare_categories_for_display(self):
         """On the comparison page group on the same line the values of each

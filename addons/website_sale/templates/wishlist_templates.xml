@@ -171,37 +171,24 @@
 
     <!-- Wishlist button -->
     <template id="website_sale.wishlist_button">
-        <t t-if="product_variant">
-            <!-- If the variant is known, check whether that specific variant is in wishlist -->
-            <t
-                t-if="products_in_wishlist is not None"
-                t-set="in_wish"
-                t-value="product_variant in products_in_wishlist"
-            />
-            <t t-else="" t-set="in_wish" t-value="product_variant._is_in_wishlist()"/>
-        </t>
-        <!-- If not, check whether any variant of its template is in wishlist -->
-        <t
-            t-else=""
-            t-set="in_wish" t-value="templates_in_wishlist and product in templates_in_wishlist"
-        />
-        <t t-set="btnTitle">Add to wishlist</t>
-        <t t-set="btnTitleActive">Handle your wishlist from the menu icon.</t>
+        <t t-set="wish" t-value="product_variant._get_wish(wishes)"/>
+        <t t-if="wish" t-set="btnTitle">Remove from wishlist</t>
+        <t t-else="" t-set="btnTitle">Add to wishlist</t>
 
         <button
-            t-attf-class="btn o_add_wishlist #{in_wish and 'o_in_wishlist'}"
-            t-att-disabled="in_wish"
+            class="btn o_add_wishlist"
             t-att-data-product-id="product_variant.id"
             t-att-data-product-template-id="product.id"
-            t-att-title="in_wish and btnTitleActive or btnTitle"
+            t-att-data-wish-id="wish.id"
+            t-att-title="btnTitle"
         >
             <span
-                t-attf-class="oi o_not-animable #{in_wish and 'oi-filled' or ''}"
+                t-attf-class="oi o_not-animable #{'oi-filled' if wish else ''}"
                 data-icon="favorite"
                 role="presentation"
             />
-            <span t-if="not in_wish" class="o_label small ms-2">Add to wishlist</span>
-            <span t-else="" class="o_label small ms-2">In your wishlist</span>
+            <span t-if="wish" class="o_label small ms-2">In your wishlist</span>
+            <span t-else="" class="o_label small ms-2">Add to wishlist</span>
         </button>
     </template>
 

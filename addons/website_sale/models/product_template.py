@@ -1106,6 +1106,9 @@ class ProductTemplate(models.Model):
         if not self.env.context.get("website_sale_product_page"):
             return combination_info
 
+        if product_or_template.is_product_variant:
+            combination_info["wish_id"] = product_or_template._get_wish().id
+
         if product_or_template.minimum_quantity and product_or_template.is_product_variant:
             product_sudo = product_or_template.sudo()
             minimum_quantity = request.cart._get_remaining_minimum_qty(product_sudo, uom=uom)
@@ -1173,7 +1176,6 @@ class ProductTemplate(models.Model):
                 "out_of_stock_message": product_sudo.out_of_stock_message,
                 "has_stock_notification": has_stock_notification,
                 "stock_notification_email": stock_notification_email,
-                "is_in_wishlist": product_sudo._is_in_wishlist(),
                 "is_sold_out": (
                     not product_sudo.allow_out_of_stock_order and (free_qty - cart_quantity) < 1
                 ),
