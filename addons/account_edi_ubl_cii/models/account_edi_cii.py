@@ -623,7 +623,7 @@ class AccountEdiCii(models.AbstractModel):
         partner_shipping = vals['partner_shipping']
         return self._cii_get_partner_trade_party_node(vals, {
             'gln': 'global_location_number' in partner_shipping._fields and partner_shipping.global_location_number,
-            'name': partner_shipping.name,
+            'name': partner_shipping.display_name,
             'partner_specified_legal_organization': False,
             'partner_specified_legal_organization_scheme': None,
             'contact_values': {
