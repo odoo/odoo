@@ -3093,6 +3093,23 @@ class AccountMove(models.Model):
     # -------------------------------------------------------------------------
     # EARLY PAYMENT DISCOUNT
     # -------------------------------------------------------------------------
+    def _get_unreconciled_payment_epd_discount(self):
+        """ Early payment discount granted to the payments already paid but not yet reconciled.
+        The discount holds only if a single payment, made before the discount deadline, covers the
+        discounted amount. A payment in several parts loses the discount.
+        """
+        self.ensure_one()
+        payments = self._get_unreconciled_paid_payments()
+        if len(payments) != 1 or not self._is_eligible_for_early_payment_discount(payments.currency_id, payments.date):
+            return 0.0
+        term_lines = self.line_ids.filtered(lambda line: line.display_type == 'payment_term')
+        discounted_amount = -self.direction_sign * sum(term_lines.mapped('discount_amount_currency'))
+        paid_amount = payments.currency_id._convert(payments.amount, self.currency_id, self.company_id, payments.date)
+        if self.currency_id.compare_amounts(paid_amount, discounted_amount) < 0:
+            return 0.0
+        # Never consider more than what is left to pay.
+        return max(0.0, min(self.amount_residual - discounted_amount, self.amount_residual - paid_amount))
+
     def _is_eligible_for_early_payment_discount(self, currency, reference_date):
         self.ensure_one()
         payment_terms = self.line_ids.filtered(lambda line: line.display_type == 'payment_term')
@@ -6982,28 +6999,63 @@ class AccountMove(models.Model):
         term_lines = self.line_ids.filtered(lambda l: l.display_type == 'payment_term')
         return term_lines._get_installments_data()
 
+    def _get_unreconciled_paid_payments(self):
+        """ Payments linked to these moves, already paid but not yet reconciled/matched. """
+        return self.sudo().reconciled_payment_ids.filtered(
+            lambda p: not p.is_reconciled and not p.is_matched and p.state == 'paid'
+        )
+
+    def _get_unreconciled_paid_amount(self, currency=None):
+        """ Amount of the payments already paid but not yet reconciled/matched with these moves.
+
+        :param currency: The currency of the returned amount, the move currency by default.
+        """
+        if not currency:
+            self.ensure_one()
+            currency = self.currency_id
+        company = self[:1].company_id
+        return sum(
+            payment.currency_id._convert(payment.amount, currency, company, payment.date)
+            for payment in self._get_unreconciled_paid_payments()
+        )
+
+    def _get_not_reconciled_installments_minus_paid(self, installments, paid_amount):
+        """ Allocate the amount of the payments already paid but not yet reconciled to the installments,
+        by due date, as if they were reconciled. The fully covered installments are removed.
+        """
+        self.ensure_one()
+        remaining_installments = []
+        for installment in installments:
+            if installment['type'] == 'early_payment_discount':
+                remaining_installments.append(installment)
+                continue
+            amount = installment['amount_residual_currency_unsigned']
+            covered = min(amount, paid_amount)
+            paid_amount -= covered
+            remaining = amount - covered
+            if self.currency_id.is_zero(remaining):
+                continue
+            # Keep the amount in company currency consistent, at the rate of the installment.
+            remaining_balance = self.company_currency_id.round(installment['amount_residual_unsigned'] * remaining / amount)
+            remaining_installments.append({
+                **installment,
+                'amount_residual_currency_unsigned': remaining,
+                'amount_residual_currency': -self.direction_sign * remaining,
+                'amount_residual_unsigned': remaining_balance,
+                'amount_residual': -self.direction_sign * remaining_balance,
+            })
+        return remaining_installments
+
     def _get_invoice_next_payment_values(self, custom_amount=None):
         self.ensure_one()
         term_lines = self.line_ids.filtered(lambda line: line.display_type == 'payment_term')
         if not term_lines:
             return {}
-        unreconciled_paid_amount = sum(
-            payment.currency_id._convert(
-                payment.amount,
-                self.currency_id,
-                self.company_id,
-                payment.date
-            )
-            for payment in self.sudo().reconciled_payment_ids.filtered(
-                lambda p: (
-                    not p.is_reconciled
-                    and not p.is_matched
-                    and p.state == 'paid'
-                )
-            )
-        )
+        unreconciled_paid_amount = self._get_unreconciled_paid_amount()
         installments = term_lines._get_installments_data()
         not_reconciled_installments = [x for x in installments if not x['reconciled']]
+        if unreconciled_paid_amount:
+            not_reconciled_installments = self._get_not_reconciled_installments_minus_paid(not_reconciled_installments, unreconciled_paid_amount)
         overdue_installments = [x for x in not_reconciled_installments if x['type'] == 'overdue']
         # Early payment discounts can only have one installment at most
         epd_installment = next((installment for installment in installments if installment['type'] == 'early_payment_discount'), {})
@@ -7012,17 +7064,18 @@ class AccountMove(models.Model):
 
         if show_installments and overdue_installments:
             installment_state = 'overdue'
-            amount_due = self.amount_residual
+            amount_due = self.amount_residual - unreconciled_paid_amount
             next_amount_to_pay = sum(x['amount_residual_currency_unsigned'] for x in overdue_installments)
             next_payment_reference = f"{self.name}-{overdue_installments[0]['number']}"
             next_due_date = overdue_installments[0]['date_maturity']
         elif show_installments and not_reconciled_installments:
             installment_state = 'next'
-            amount_due = self.amount_residual
+            amount_due = self.amount_residual - unreconciled_paid_amount
             next_amount_to_pay = not_reconciled_installments[0]['amount_residual_currency_unsigned']
             next_payment_reference = f"{self.name}-{not_reconciled_installments[0]['number']}"
             next_due_date = not_reconciled_installments[0]['date_maturity']
-        elif epd_installment:
+        elif epd_installment and not unreconciled_paid_amount:
+            # As soon as the invoice is paid in several parts, the early payment discount is lost.
             installment_state = 'epd'
             amount_due = epd_installment['amount_residual_currency_unsigned']
             next_amount_to_pay = self.amount_residual
@@ -7053,8 +7106,10 @@ class AccountMove(models.Model):
             })
         else:
             installment_state = None
-            amount_due = self.amount_residual - unreconciled_paid_amount
-            next_amount_to_pay = self.amount_residual - unreconciled_paid_amount
+            # The discount still holds when a single payment covered the discounted amount.
+            already_paid = unreconciled_paid_amount + self._get_unreconciled_payment_epd_discount()
+            amount_due = max(0.0, self.amount_residual - already_paid)
+            next_amount_to_pay = amount_due
             next_payment_reference = self.name
             next_due_date = self.invoice_date_due
 

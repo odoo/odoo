@@ -491,6 +491,43 @@ class TestAccountPaymentRegister(AccountTestInvoicingWithBanksCommon, PaymentCom
             },
         ])
 
+    def test_register_payment_not_grouped_with_unreconciled_paid_payment(self):
+        """ Paying two invoices separately while one of them already has a paid (but not yet reconciled)
+        payment must deduct that amount from the payment created for that invoice only.
+        """
+        invoice_1 = self.init_invoice('out_invoice', amounts=[1200.0], post=True)
+        invoice_2 = self.init_invoice('out_invoice', amounts=[1200.0], post=True)
+        invoice_3 = self.init_invoice('out_invoice', amounts=[1200.0], post=True)
+
+        # Register payments without outstanding account: they are 'paid' but not reconciled with the invoices.
+        self.inbound_payment_method_line.payment_account_id = False
+        for invoice, amount in ((invoice_1, 500.0), (invoice_3, 1200.0)):
+            self.env['account.payment.register']\
+                .with_context(active_model='account.move', active_ids=invoice.ids)\
+                .create({'amount': amount, 'payment_method_line_id': self.inbound_payment_method_line.id})\
+                ._create_payments()
+        self.inbound_payment_method_line.payment_account_id = self.payment_debit_account_id
+
+        payment_register = self.env['account.payment.register']\
+            .with_context(active_model='account.move', active_ids=(invoice_1 + invoice_2 + invoice_3).ids)\
+            .create({'payment_method_line_id': self.inbound_payment_method_line.id})
+        self.assertRecordValues(payment_register, [{
+            'group_payment': False,
+            'unreconciled_paid_amount': 1700.0,
+            'amount': 1900.0,
+        }])
+
+        payments = payment_register._create_payments()
+        # invoice_3 is fully covered by the unreconciled payment: no new payment for it.
+        self.assertRecordValues(payments.sorted('amount'), [
+            {'amount': 700.0, 'reconciled_invoice_ids': invoice_1.ids},
+            {'amount': 1200.0, 'reconciled_invoice_ids': invoice_2.ids},
+        ])
+        self.assertRecordValues(invoice_1 + invoice_2, [
+            {'amount_residual': 500.0},
+            {'amount_residual': 0.0},
+        ])
+
     def test_register_payment_different_type_single_batch_not_grouped(self):
         """ Choose to pay a bill and a refund with separated payments (1000 + -2000)."""
         active_ids = (self.in_invoice_1 + self.in_refund_1).ids
@@ -2338,3 +2375,217 @@ class TestAccountPaymentRegister(AccountTestInvoicingWithBanksCommon, PaymentCom
         ).create({})
 
         self.assertEqual(register_wizard.currency_id, self.company_data['currency'])
+
+    def test_epd_wizard_amount_unreconciled_payments(self):
+        """
+        As soon as an invoice is paid in several parts, the early payment discount is lost, even when
+        the first payment is paid but not yet reconciled with the invoice.
+        """
+        invoice = self._create_invoice_one_line(
+            price_unit=100.0,
+            invoice_payment_term_id=self.invoice_payment_term_1,
+            post=True,
+        )
+        ctx = {'active_model': 'account.move', 'active_ids': invoice.ids}
+        self.inbound_payment_method_line.payment_account_id = False
+        wizard = self.env['account.payment.register'].with_context(**ctx).create({'payment_method_line_id': self.inbound_payment_method_line.id})
+
+        self.assertRecordValues(wizard, [{
+            'amount': 98.0,
+            'payment_difference': 2.0,
+            'early_payment_discount_mode': True,
+        }])
+        # Create a non-reconciled payment of 50
+        wizard.amount = 50.0
+        wizard._create_payments()
+
+        # Portal: the EPD is cancelled and the amount already paid is deducted
+        next_payment_values = invoice._get_invoice_next_payment_values()
+        self.assertEqual(next_payment_values['installment_state'], None)
+        self.assertEqual(next_payment_values['amount_due'], 50.0)
+        self.assertEqual(next_payment_values['next_amount_to_pay'], 50.0)
+        self.assertNotIn('epd_discount_amount_currency', next_payment_values)
+
+        # Check if the EPD is cancelled and the new amount proposed is correct
+        wizard = self.env['account.payment.register'].with_context(**ctx).create({'payment_method_line_id': self.inbound_payment_method_line.id})
+        self.assertRecordValues(wizard, [{
+            'amount': 50.0,
+            'payment_difference': 0.0,
+            'early_payment_discount_mode': False,
+        }])
+        wizard._create_payments()
+
+        # Everything should be paid now
+        wizard = self.env['account.payment.register'].with_context(**ctx).create({})
+        self.assertRecordValues(wizard, [{
+            'amount': 0.0,
+            'payment_difference': 0.0,
+            'early_payment_discount_mode': False,
+        }])
+
+    def _create_epd_invoices_with_unreconciled_payment(self):
+        """ Two invoices of 100 with an early payment discount of 2%, the first one already partially
+        paid (50) by a payment not yet reconciled.
+        """
+        invoice_1, invoice_2 = (
+            self._create_invoice_one_line(
+                price_unit=100.0,
+                invoice_payment_term_id=self.invoice_payment_term_1,
+                post=True,
+            )
+            for _i in range(2)
+        )
+        self.inbound_payment_method_line.payment_account_id = False
+        self.env['account.payment.register']\
+            .with_context(active_model='account.move', active_ids=invoice_1.ids)\
+            .create({'amount': 50.0, 'payment_method_line_id': self.inbound_payment_method_line.id})\
+            ._create_payments()
+        self.inbound_payment_method_line.payment_account_id = self.payment_debit_account_id
+        return invoice_1, invoice_2
+
+    def test_epd_multiple_invoices_grouped_unreconciled_payment(self):
+        """ The invoice already partially paid loses its discount, the other one keeps it. """
+        invoice_1, invoice_2 = self._create_epd_invoices_with_unreconciled_payment()
+        wizard = self.env['account.payment.register']\
+            .with_context(active_model='account.move', active_ids=(invoice_1 + invoice_2).ids)\
+            .create({'group_payment': True, 'payment_method_line_id': self.inbound_payment_method_line.id})
+        self.assertRecordValues(wizard, [{
+            'unreconciled_paid_amount': 50.0,
+            # 50 left on invoice_1 (no discount) + 98 on invoice_2 (discount).
+            'amount': 148.0,
+            'early_payment_discount_mode': True,
+            'payment_difference': 2.0,
+        }])
+
+        payment = wizard._create_payments()
+        self.assertRecordValues(payment, [{'amount': 148.0}])
+        # invoice_2 is paid first (EPD), the rest goes on invoice_1 until the first payment is reconciled.
+        self.assertEqual(sum((invoice_1 + invoice_2).mapped('amount_residual')), 50.0)
+
+    def test_epd_multiple_invoices_not_grouped_unreconciled_payment(self):
+        """ One payment per invoice: no discount on the invoice already partially paid. """
+        invoice_1, invoice_2 = self._create_epd_invoices_with_unreconciled_payment()
+        wizard = self.env['account.payment.register']\
+            .with_context(active_model='account.move', active_ids=(invoice_1 + invoice_2).ids)\
+            .create({'group_payment': False, 'payment_method_line_id': self.inbound_payment_method_line.id})
+
+        payments = wizard._create_payments()
+        self.assertRecordValues(payments.sorted('amount'), [
+            {'amount': 50.0, 'reconciled_invoice_ids': invoice_1.ids},
+            {'amount': 98.0, 'reconciled_invoice_ids': invoice_2.ids},
+        ])
+        self.assertRecordValues(invoice_1 + invoice_2, [
+            {'amount_residual': 50.0},
+            {'amount_residual': 0.0},
+        ])
+
+    def test_epd_portal_amount_unreconciled_payment_with_discount(self):
+        """ A single unreconciled payment of the discounted amount keeps the discount: nothing left to pay. """
+        invoice = self._create_invoice_one_line(
+            price_unit=100.0,
+            invoice_payment_term_id=self.invoice_payment_term_1,
+            post=True,
+        )
+        ctx = {'active_model': 'account.move', 'active_ids': invoice.ids}
+        self.inbound_payment_method_line.payment_account_id = False
+        self.env['account.payment.register'].with_context(**ctx).create({
+            'payment_method_line_id': self.inbound_payment_method_line.id,
+        })._create_payments()
+
+        next_payment_values = invoice._get_invoice_next_payment_values()
+        self.assertEqual(next_payment_values['installment_state'], None)
+        self.assertEqual(next_payment_values['amount_due'], 0.0)
+        self.assertEqual(next_payment_values['next_amount_to_pay'], 0.0)
+
+    def test_installments_with_unreconciled_paid_payment(self):
+        """
+        When the next installment is already paid but the payment is not yet reconciled,
+        a zero amount is proposed, and it is still possible to switch to the full remaining amount.
+        """
+        payment_term = self.env['account.payment.term'].create({
+            'name': '30% now, 70% in 30 days',
+            'line_ids': [
+                Command.create({'value': 'percent', 'value_amount': 30.0, 'nb_days': 0}),
+                Command.create({'value': 'percent', 'value_amount': 70.0, 'nb_days': 30}),
+            ],
+        })
+        invoice = self._create_invoice_one_line(
+            price_unit=1000.0,
+            invoice_payment_term_id=payment_term.id,
+            post=True,
+        )
+
+        # Pay the first installment without reconciling the payment
+        ctx = {'active_model': 'account.move', 'active_ids': invoice.ids}
+        self.inbound_payment_method_line.payment_account_id = False
+        wizard = self.env['account.payment.register'].with_context(**ctx).create({
+            'amount': 300.0,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
+        })
+        wizard._create_payments()
+
+        # Portal: the remaining amount is proposed.
+        next_payment_values = invoice._get_invoice_next_payment_values()
+        self.assertEqual(next_payment_values['installment_state'], 'next')
+        self.assertEqual(next_payment_values['amount_due'], 700.0)
+        self.assertEqual(next_payment_values['next_amount_to_pay'], 700.0)
+
+        # Wizard: nothing proposed for the installment but the full amount is still reachable.
+        wizard = self.env['account.payment.register'].with_context(**ctx).create({
+            'payment_method_line_id': self.inbound_payment_method_line.id,
+        })
+        self.assertRecordValues(wizard, [{
+            'amount': 0.0,
+            'installments_mode': 'next',
+            'installments_switch_amount': 700.0,
+            'payment_difference': 0.0,
+        }])
+        self.assertIn('This is the next unreconciled installment.', wizard.installments_switch_html)
+
+        wizard.amount = wizard.installments_switch_amount
+        self.assertRecordValues(wizard, [{
+            'installments_mode': 'full',
+            'payment_difference': 0.0,
+        }])
+        payment = wizard._create_payments()
+        self.assertRecordValues(payment, [{'amount': 700.0}])
+
+    def test_installments_with_partial_unreconciled_paid_payment(self):
+        """
+        When the next installment is partially paid but the payment is not yet reconciled,
+        only the remaining part of the installment is proposed.
+        """
+        payment_term = self.env['account.payment.term'].create({
+            'name': '30% now, 70% in 30 days',
+            'line_ids': [
+                Command.create({'value': 'percent', 'value_amount': 30.0, 'nb_days': 0}),
+                Command.create({'value': 'percent', 'value_amount': 70.0, 'nb_days': 30}),
+            ],
+        })
+        invoice = self._create_invoice_one_line(
+            price_unit=1000.0,
+            invoice_payment_term_id=payment_term.id,
+            post=True,
+        )
+
+        ctx = {'active_model': 'account.move', 'active_ids': invoice.ids}
+        self.inbound_payment_method_line.payment_account_id = False
+        self.env['account.payment.register'].with_context(**ctx).create({
+            'amount': 100.0,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
+        })._create_payments()
+
+        next_payment_values = invoice._get_invoice_next_payment_values()
+        self.assertEqual(next_payment_values['installment_state'], 'next')
+        self.assertEqual(next_payment_values['amount_due'], 900.0)
+        self.assertEqual(next_payment_values['next_amount_to_pay'], 200.0)
+
+        wizard = self.env['account.payment.register'].with_context(**ctx).create({
+            'payment_method_line_id': self.inbound_payment_method_line.id,
+        })
+        self.assertRecordValues(wizard, [{
+            'amount': 200.0,
+            'installments_mode': 'next',
+            'installments_switch_amount': 900.0,
+            'payment_difference': 0.0,
+        }])
