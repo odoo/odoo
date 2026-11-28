@@ -277,9 +277,11 @@ export class TicketScreen extends Component {
             (l) => l.refunded_orderline_id.combo_line_ids.length > 0
         );
         for (const refundComboParent of refundComboParentLines) {
+            // Only the refund lines of this order, the combo may have been partially refunded before
             const children = refundComboParent.refunded_orderline_id.combo_line_ids
                 .map((l) => l.refund_orderline_ids)
-                .flat();
+                .flat()
+                .filter((l) => l.order_id?.uuid === destinationOrder.uuid);
             refundComboParent.update({
                 combo_line_ids: [["link", ...children]],
             });
