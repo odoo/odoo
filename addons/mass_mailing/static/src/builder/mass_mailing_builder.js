@@ -39,6 +39,7 @@ export class MassMailingBuilder extends Component {
             "BuilderFontPlugin", // Makes call to Google API (can't be used for emails)
             "FontTypePlugin",
             "SavePlugin",
+            "EscapeTextNodesPlugin",
             "AnchorPlugin",
             "ColorUIPlugin",
             "EmbeddedFilePlugin",
