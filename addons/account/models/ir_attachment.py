@@ -87,3 +87,13 @@ class IrAttachment(models.Model):
             files_data.extend(move._unwrap_attachments(files_data))
             move._extend_with_attachments(files_data)
         super()._post_add_create(**kwargs)
+
+    def _is_xml_content_relevant(self):
+        """Add electronic documents recognized by the import (e.g. UBL or CII invoices received through Peppol)"""
+        self.ensure_one()
+        if super()._is_xml_content_relevant():
+            return True
+        if not (self.mimetype or '').endswith('/xml'):
+            return False
+        file_data = self.env['account.move']._to_files_data(self)[0]
+        return file_data['xml_tree'] is not None and bool(file_data['import_file_type'])
