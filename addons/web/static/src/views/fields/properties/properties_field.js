@@ -49,6 +49,8 @@ export class PropertiesField extends Component {
             arrow: false,
         });
         this.propertiesRef = useRef("properties");
+        // values sent to the record, but not applied yet
+        this.pendingValues = {};
 
         let currentResId;
         useRecordObserver((record) => {
@@ -490,9 +492,20 @@ export class PropertiesField extends Component {
      * @param {object} propertyValue
      */
     onPropertyValueChange(propertyName, propertyValue) {
-        const propertiesValues = this.propertiesList;
-        propertiesValues.find((property) => property.name === propertyName).value = propertyValue;
-        this.props.record.update({ [this.props.name]: propertiesValues });
+        // The record applies the updates one after the other, each one once its
+        // onchange returned: build on the values not applied yet, or applying
+        // this update would restore their previous value.
+        this.pendingValues[propertyName] = propertyValue;
+        const propertiesValues = this.propertiesList.map((property) =>
+            property.name in this.pendingValues
+                ? { ...property, value: this.pendingValues[property.name] }
+                : property
+        );
+        this.props.record.update({ [this.props.name]: propertiesValues }).finally(() => {
+            if (this.pendingValues[propertyName] === propertyValue) {
+                delete this.pendingValues[propertyName];
+            }
+        });
     }
 
     /**
