@@ -159,8 +159,13 @@ class ProductTemplate(models.Model):
 
             # Remove attribute values that were removed in Gelato.
             if removed_values := self.attribute_line_ids.value_ids - all_existing_pavs:
+                emptied_attribute_lines = self.env["product.template.attribute.line"]
                 for attribute_line in self.attribute_line_ids:
-                    attribute_line.value_ids -= removed_values
+                    if remaining_values := attribute_line.value_ids - removed_values:
+                        attribute_line.value_ids = remaining_values
+                    else:  # The attribute has no value left; it doesn't apply anymore.
+                        emptied_attribute_lines += attribute_line  # List it for removal
+                emptied_attribute_lines.unlink()
 
             # Delete the incompatible variants that were created but not allowed by Gelato.
             variants_without_gelato = self.env['product.product'].search([
