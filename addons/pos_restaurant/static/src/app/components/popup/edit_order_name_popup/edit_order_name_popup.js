@@ -9,12 +9,18 @@ export class EditOrderNamePopup extends TextInputPopup {
     setup() {
         this.pos = usePos();
         this.dialog = useService("dialog");
+        this.ui = useService("ui");
         super.setup();
     }
-    transferOrder(order) {
-        this.pos.transferOrder(this.currentOrder.uuid, null, order);
-        this.pos.setOrder(order);
-        this.dialog.closeAll();
+    async transferOrder(order) {
+        this.ui.block();
+        try {
+            await this.pos.transferOrder(this.currentOrder.uuid, null, order);
+            this.pos.setOrder(order);
+            this.dialog.closeAll();
+        } finally {
+            this.ui.unblock();
+        }
     }
     get currentOrder() {
         return this.pos.getOrder();
