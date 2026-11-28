@@ -4213,3 +4213,22 @@ class TestStockValuation(TestStockValuationCommon):
             'qty_available': 3,
             'avg_cost': 23.33,
         }])
+
+    def test_periodic_closing_location_reclassification_sign(self):
+        """Goods sent from stock to a location with its own valuation account (consumption, gifts) must
+        debit that account (by their cost) at the periodic closing."""
+        product = self.product_fifo
+        # SETUP: master data -> sudo
+        product.product_tmpl_id.categ_id.sudo().property_valuation = 'periodic'
+        expense = self.env['account.account'].sudo().create({
+            'name': 'Consumed', 'code': '600999', 'account_type': 'expense',
+        })
+        location = self.env['stock.location'].sudo().create({
+            'name': 'Consumption', 'usage': 'inventory', 'valuation_account_id': expense.id,
+        })
+        self._make_in_move(product, 10, 5)
+        self._make_out_move(product, 2, location_dest_id=location.id)
+        closing_move = self._close()
+        expense_line = closing_move.line_ids.filtered(lambda l: l.account_id == expense)
+        self.assertEqual(expense_line.debit, 10.0)
+        self.assertEqual(expense_line.credit, 0.0)
