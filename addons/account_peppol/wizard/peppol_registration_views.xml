@@ -40,10 +40,6 @@
                                 <field name="contact_email"
                                        readonly="use_parent_connection"
                                        string="Email"/>
-                                <field name="phone_number"
-                                       required="edi_mode not in ('demo', 'test')"
-                                       readonly="use_parent_connection"
-                                       string="Phone"/>
                             </group>
                         </group>
                         <div class="text-muted col" invisible="edi_mode != 'prod'">
