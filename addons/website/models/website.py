@@ -16,7 +16,7 @@ import werkzeug.routing
 from collections import defaultdict
 from lxml import etree, html
 from markupsafe import Markup
-from urllib.parse import urlparse, urlsplit
+from urllib.parse import unquote, urlparse, urlsplit
 from werkzeug import urls
 
 from odoo import api, fields, models, tools, release
@@ -1863,11 +1863,7 @@ class Website(models.Model):
         # the current URL.
         current_url = request.httprequest.url_root[:-1] + request.httprequest.environ['REQUEST_URI']
         canonical_url = self._get_canonical_url()
-        # A request path with quotable characters (such as ",") is never
-        # canonical because request.httprequest.base_url is always unquoted,
-        # and canonical url is always quoted, so it is never possible to tell
-        # if the current URL is indeed canonical or not.
-        return current_url == canonical_url
+        return unquote(current_url) == unquote(canonical_url)
 
     @tools.ormcache('self.id')
     def _get_cached_values(self):

@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urlsplit
 import odoo.tests
 import lxml
 
@@ -95,3 +95,22 @@ class TestIsMultiLang(odoo.tests.HttpCase):
         res.raise_for_status()
 
         self.assertEqual(res.status_code, 200, "Should not be redirected")
+
+    def test_05_head_alternate_non_ascii_slug(self):
+        website = self.env['website'].browse(1)
+        zh = self.env.ref('base.lang_zh_CN').sudo()
+        en = self.env.ref('base.lang_en').sudo()
+        country = self.env['res.country'].create({'name': "My Super Country", 'code': 'ZV'})
+
+        zh.active = True
+        website.domain = self.base_url()
+        website.default_lang_id = en
+        website.language_ids = en + zh
+        country.update_field_translations('name', {zh.code: '我的国家'})
+
+        r = self.url_open(f'/{zh.url_code}/test_lang_url/{country.id}')
+        body = lxml.html.fromstring(r.content)
+        self.assertEqual(
+            [urlsplit(href).path for href in body.xpath('./head/link[@hreflang="zh"]/@href')],
+            [f'/{zh.url_code}/test_lang_url/我的国家-{country.id}'],
+        )
