@@ -50,6 +50,9 @@ class TestSaleOrderEDIGen(TestSaleCommon):
         with file_open('sale_edi_ubl/tests/data/test_so_edi.xml', 'r') as f:
             current_date = f'{so.create_date.date()}'
             validity_date = f'{so.validity_date}'
-            xml_template = f.read().encode().replace(b'create_date_placeholder', current_date.encode()).replace(b'validity_date_placeholder', validity_date.encode())
+            xml_template = f.read().encode().replace(b'create_date_placeholder', current_date.encode())\
+                .replace(b'validity_date_placeholder', validity_date.encode())\
+                .replace(b'line_id_placeholder_1', str(so.order_line[0].id).encode())\
+                .replace(b'line_id_placeholder_2', str(so.order_line[1].id).encode())
             expected_xml = etree.fromstring(xml_template)
         self.assertXmlTreeEqual(generated_xml, expected_xml)

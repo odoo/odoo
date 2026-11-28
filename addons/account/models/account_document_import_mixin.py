@@ -153,27 +153,35 @@ class AccountDocumentImportMixin(models.AbstractModel):
         # Perform a grouping to determine how many invoices to create
         file_data_groups = grouping_method(files_data)
 
-        records = self.create([self._create_records_from_attachments_default_create_values()] * len(file_data_groups))
-        for record, file_data_group in zip(records, file_data_groups):
-            attachment_records = self._from_files_data(file_data_group)
-            attachment_records.write({
-                'res_model': record._name,
-                'res_id': record.id,
-            })
-            record.message_post(
-                body=self.env._("This document was created from the following attachment(s)."),
-                attachment_ids=attachment_records.ids
-            )
+        record_data = []
+        records = self
+        for file_data_group in file_data_groups:
+            record, new = self._get_record_for_file_group(file_data_group)
+            record_data.append((record, new, file_data_group))
+            records |= record
 
         # Call _extend_with_attachments at the end, because it commits the transaction.
-        for record, file_data_group in zip(records, file_data_groups):
-            record_extended = record._extend_with_attachments(file_data_group, new=True)
+        for record, new, file_data_group in record_data:
+            record_extended = record._extend_with_attachments(file_data_group, new=new)
             if not record_extended:
                 record.message_post(
                     body=self.env._("There was an error while importing the bill, you can find attached the incoming XML"),
                 )
 
         return records
+
+    def _get_record_for_file_group(self, file_data_group):
+        record = self.create([self._create_records_from_attachments_default_create_values()])
+        attachment_records = self._from_files_data(file_data_group)
+        attachment_records.write({
+            'res_model': record._name,
+            'res_id': record.id,
+        })
+        record.message_post(
+            body=self.env._("This document was created from the following attachment(s)."),
+            attachment_ids=attachment_records.ids,
+        )
+        return record, True
 
     @api.model
     def _create_records_from_attachments_default_create_values(self):

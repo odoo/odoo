@@ -50,6 +50,8 @@ class TestPurchaseOrderEDIGen(AccountTestInvoicingCommon):
 
         with file_open('purchase_edi_ubl_bis3/tests/data/test_po_edi.xml', 'r') as f:
             current_date = f'{datetime.today().date()}'
-            xml_template = f.read().encode().replace(b'create_date_placeholder', current_date.encode())
+            xml_template = f.read().encode().replace(b'create_date_placeholder', current_date.encode())\
+                                            .replace(b'line_id_placeholder_1', str(po.order_line[0].id).encode())\
+                                            .replace(b'line_id_placeholder_2', str(po.order_line[1].id).encode())
             expected_xml = etree.fromstring(xml_template)
         self.assertXmlTreeEqual(generated_xml, expected_xml)

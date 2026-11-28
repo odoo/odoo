@@ -29,6 +29,14 @@ class PurchaseOrder(models.Model):
             }
         return super()._get_edi_decoder(file_data, new)
 
+    def _get_record_for_file_group(self, file_data_group):
+        xml_trees = [file['xml_tree'] for file in file_data_group if file.get('import_file_type', '') == 'purchase.edi.xml.ubl_bis3' and file.get('xml_tree') is not None]
+        if len(xml_trees) == 1 and (xml_id := xml_trees[0].findtext('./{*}OriginatorDocumentReference/{*}ID')):
+            existing_po = self.env['purchase.order'].search([('name', '=', xml_id), ('state', '!=', 'cancel'), ('company_id', '=', self.env.company.id)])
+            if len(existing_po) == 1:
+                return existing_po, False
+        return super()._get_record_for_file_group(file_data_group)
+
     def _create_activity_set_details(self, body):
         """ Create activity on purchase order to set details.
         :return: None.

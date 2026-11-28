@@ -462,6 +462,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         order_vals, logs = self._retrieve_order_vals(order, tree)
         if order:
             order.write(order_vals)
-            order.message_post(body=Markup("<strong>%s</strong>") % _("Format used to import the document: %s", self._description))
+            if new:
+                order.message_post(body=Markup("<strong>%s</strong>") % _("Format used to import the document: %s", self._description))
             if logs:
                 order._create_activity_set_details(Markup("<ul>%s</ul>") % Markup().join(Markup("<li>%s</li>") % l for l in logs))
