@@ -185,10 +185,8 @@ describe("Form action options", () => {
         await contains("[data-label='Action'] button:contains('Send an E-mail')").click();
         await contains("div.o-dropdown-item:contains('Create a Customer')").click();
 
-        await contains(
-            "[data-label='Preferred Job'] button:contains('Choose a record...')"
-        ).click();
-        await contains("span.o-dropdown-item:contains('Test job')").click();
+        // The oldest record is preset, as the field is required.
+        await waitFor("[data-label='Preferred Job'] button:contains('Test job')");
         expect(":iframe form .s_website_form_dnone input[name='job_id']").toHaveValue("42");
         expect("[data-label='Preferred Job'] button[aria-label='Unselect']").toHaveCount(0);
     });
@@ -205,6 +203,182 @@ describe("Form action options", () => {
         expect(":iframe form .s_website_form_dnone input[name='ref']").toHaveValue("REF-1");
         expect("[data-label='Reference'] input").toHaveValue("REF-1");
     });
+});
+
+/**
+ * The "apply_job" action comes from website_hr_recruitment, which website
+ * tests do not load: register a job field with the given properties.
+ */
+function withJobField(fieldProps) {
+    return (registry) =>
+        registry.category("website.form_editor_actions").add("apply_job", {
+            fields: [
+                {
+                    name: "job_id",
+                    type: "many2one",
+                    relation: "hr.job",
+                    string: "Applied Job",
+                    ...fieldProps,
+                },
+            ],
+        });
+}
+
+test("required many2one action field without records offers to create one", async () => {
+    onRpc("get_authorized_fields", () => ({}));
+    // The user may create job positions: without that right, there is no "+".
+    onRpc("has_access", () => true);
+    onRpc("hr.job", "search", () => []);
+    let isWebsiteCompanyActive = false;
+    await setupWebsiteBuilderWithSnippet("s_website_form", {
+        withIframeRegistry: withJobField({
+            required: true,
+            noRecordMessage: "Create a job position first.",
+            createAction: "hr.action_hr_job",
+            checkWebsiteCompanyIsActive: () => isWebsiteCompanyActive,
+        }),
+    });
+    await contains(":iframe section").click();
+    await contains(".o_hb_row[data-label='Action'] button").click();
+    await contains("div.o-dropdown-item:contains('Apply for a Job')").click();
+
+    expect(
+        ".alert:contains('Create a job position first.') ~ .o_hb_row[data-label='Action']"
+    ).toHaveCount(1);
+    expect(".o_hb_row[data-label='Applied Job'] .o_select_menu").toHaveCount(0);
+    expect(".o_hb_row[data-label='Applied Job'] button.btn-success").toHaveCount(1);
+
+    await contains(".o_hb_row[data-label='Applied Job'] button.btn-success").click();
+    // The real check (website_hr_recruitment) would also show a "Company
+    // Mismatch" alert here; it is not loaded in website tests, so no dialog opens.
+    expect(".o_dialog").toHaveCount(0);
+
+    isWebsiteCompanyActive = true;
+    await contains(".o_hb_row[data-label='Applied Job'] button.btn-success").click();
+    expect(".o_dialog").toHaveCount(1);
+    await contains(".modal-footer button:contains('Stay here')").click();
+
+    await contains(".o_hb_row[data-label='Action'] button").click();
+    await contains("div.o-dropdown-item:contains('Create a Customer')").click();
+    expect(".alert:contains('Create a job position first.')").toHaveCount(0);
+});
+
+test("required many2one field defaults to its oldest record, no '+' without rights", async () => {
+    onRpc("get_authorized_fields", () => ({}));
+    // The user may not create job positions, so the "+" must not be shown.
+    onRpc("has_access", () => false);
+    // The records come in the model's order: the oldest one must be asked for.
+    onRpc("hr.job", "search", ({ kwargs }) => {
+        expect(kwargs).toMatchObject({ limit: 1, order: "id" });
+    });
+    await setupWebsiteBuilderWithSnippet("s_website_form", {
+        withIframeRegistry: withJobField({ required: true, createAction: "hr.action_hr_job" }),
+    });
+    await contains(":iframe section").click();
+    await contains(".o_hb_row[data-label='Action'] button").click();
+    await contains("div.o-dropdown-item:contains('Apply for a Job')").click();
+
+    expect(".o_hb_row[data-label='Applied Job'] button[title='Create New']").toHaveCount(0);
+    expect(":iframe input[name='job_id']").toHaveValue("42");
+    expect(".o_hb_row[data-label='Applied Job'] .o_select_menu_toggler").toHaveText("Test job");
+});
+
+test("a field shared by two actions gets the '+' of the selected action", async () => {
+    onRpc("get_authorized_fields", () => ({}));
+    onRpc("has_access", () => true);
+    // Both actions have a "job_id" field, each with its own "+" dialog.
+    const jobField = {
+        name: "job_id",
+        type: "many2one",
+        relation: "hr.job",
+        createAction: "hr.action_hr_job",
+    };
+    await setupWebsiteBuilderWithSnippet("s_website_form", {
+        withIframeRegistry: (registry) =>
+            registry
+                .category("website.form_editor_actions")
+                .add("apply_job", {
+                    fields: [
+                        {
+                            ...jobField,
+                            string: "Applied Job",
+                            dialogTitle: "Create a Job Position",
+                        },
+                    ],
+                })
+                .add("create_customer", {
+                    fields: [
+                        {
+                            ...jobField,
+                            string: "Preferred Job",
+                            dialogTitle: "Create a Preferred Job",
+                        },
+                    ],
+                }),
+    });
+    await contains(":iframe section").click();
+    await contains(".o_hb_row[data-label='Action'] button").click();
+    await contains("div.o-dropdown-item:contains('Apply for a Job')").click();
+    await waitFor(".o_hb_row[data-label='Applied Job'] button[title='Create New']");
+    await contains(".o_hb_row[data-label='Action'] button").click();
+    await contains("div.o-dropdown-item:contains('Create a Customer')").click();
+
+    await contains(".o_hb_row[data-label='Preferred Job'] button[title='Create New']").click();
+    expect(".modal-title").toHaveText("Create a Preferred Job");
+});
+
+test("required many2one field of a saved form gets its oldest record when selected", async () => {
+    onRpc("get_authorized_fields", () => ({}));
+    await setupWebsiteBuilderWithSnippet("s_website_form", {
+        withIframeRegistry: withJobField({ required: true }),
+        // The form was saved with this action and no job position.
+        onIframeLoaded: (iframe) => {
+            const formEl = iframe.contentDocument.querySelector(".s_website_form form");
+            formEl.dataset.model_name = "hr.applicant";
+        },
+    });
+    await contains(":iframe section").click();
+
+    expect(":iframe input[name='job_id']").toHaveValue("42");
+    expect(".o_hb_row[data-label='Applied Job'] .o_select_menu_toggler").toHaveText("Test job");
+});
+
+test("many2one field filled by the server is preset only on action selection", async () => {
+    onRpc("get_authorized_fields", () => ({}));
+    await setupWebsiteBuilderWithSnippet("s_website_form", {
+        withIframeRegistry: withJobField({ required: true, serverDefault: true }),
+        // The form was saved with this action and no job position.
+        onIframeLoaded: (iframe) => {
+            const formEl = iframe.contentDocument.querySelector(".s_website_form form");
+            formEl.dataset.model_name = "hr.applicant";
+        },
+    });
+    await contains(":iframe section").click();
+    await waitFor(".o_hb_row[data-label='Applied Job']");
+    expect(":iframe input[name='job_id']").toHaveCount(0);
+
+    await contains(".o_hb_row[data-label='Action'] button").click();
+    await contains("div.o-dropdown-item:contains('Create a Customer')").click();
+    await contains(".o_hb_row[data-label='Action'] button").click();
+    await contains("div.o-dropdown-item:contains('Apply for a Job')").click();
+    expect(":iframe input[name='job_id']").toHaveValue("42");
+});
+
+test("required many2one field that the visitor fills in is not preset", async () => {
+    onRpc("get_authorized_fields", () => ({}));
+    await setupWebsiteBuilderWithSnippet("s_website_form", {
+        withIframeRegistry: withJobField({ required: true }),
+        // The job was added to the saved form as a visible field.
+        onIframeLoaded: (iframe) => {
+            const formEl = iframe.contentDocument.querySelector(".s_website_form form");
+            formEl.dataset.model_name = "hr.applicant";
+            formEl.querySelector("input[name='email_from']").name = "job_id";
+        },
+    });
+    await contains(":iframe section").click();
+
+    expect(":iframe [name='job_id']").toHaveCount(1);
+    expect(":iframe .s_website_form_dnone [name='job_id']").toHaveCount(0);
 });
 
 test("'Author' field's type stays selected when you modify the option list", async () => {

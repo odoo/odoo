@@ -8,6 +8,26 @@ import { user } from "@web/core/user";
 import { _t } from "@web/core/l10n/translation";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
+/**
+ * `/jobs/add` creates the job in the website's company, and the job page then
+ * opens in edit mode with the active companies: that company must be one of
+ * them.
+ */
+export function canCreateJobOnCurrentWebsite({ website, dialog }) {
+    const websiteCompanyId = website.currentWebsite.company_id;
+    if (!websiteCompanyId || user.activeCompanies.some((c) => c.id === websiteCompanyId)) {
+        return true;
+    }
+    const websiteCompany = user.allowedCompanies.find((c) => c.id === websiteCompanyId);
+    dialog.add(AlertDialog, {
+        title: _t("Company Mismatch"),
+        body: websiteCompany
+            ? _t("This website belongs to %(company)s, which isn't one of your active companies. Switch to it first, then try again.", { company: websiteCompany.name })
+            : _t("This website belongs to a company you don't have access to. Ask your administrator for access before creating a Job Position here."),
+    });
+    return false;
+}
+
 patch(NewContentSystrayItem.prototype, {
     setup() {
         super.setup();
@@ -18,23 +38,8 @@ patch(NewContentSystrayItem.prototype, {
         newJobElement.model = 'hr.job';
     },
 
-    canCreateJobOnCurrentWebsite() {
-        const websiteCompanyId = this.website.currentWebsite.company_id;
-        if (!websiteCompanyId || user.activeCompanies.some((c) => c.id === websiteCompanyId)) {
-            return true;
-        }
-        const websiteCompany = user.allowedCompanies.find((c) => c.id === websiteCompanyId);
-        this.dialogs.add(AlertDialog, {
-            title: _t("Company Mismatch"),
-            body: websiteCompany
-                ? _t("This website belongs to %(company)s, which isn't one of your active companies. Switch to it first, then try again.", { company: websiteCompany.name })
-                : _t("This website belongs to a company you don't have access to. Ask your administrator for access before creating a Job Position here."),
-        });
-        return false;
-    },
-
     async createNewJob() {
-        if (!this.canCreateJobOnCurrentWebsite()) {
+        if (!canCreateJobOnCurrentWebsite({ website: this.website, dialog: this.dialogs })) {
             return;
         }
         const url = await rpc('/jobs/add');
