@@ -5,5 +5,5 @@ import { graphView } from "@web/views/graph/graph_view";
 
 registry.category("views").add("im_livechat.channel_report_graph_views", {
     ...graphView,
-    Renderer: LivechatGraphRendererMixin("im_livechat.report.channel"),
+    Renderer: LivechatGraphRendererMixin("discuss.channel"),
 });
