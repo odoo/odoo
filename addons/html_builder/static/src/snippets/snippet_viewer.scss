@@ -21,6 +21,8 @@
             $-snippet-margin-bottom: map-get($spacers, 3) * 4;
             --SnippetViewer-zoom: 1;
             min-height: 100px;
+            content-visibility: auto;
+            contain-intrinsic-size: auto 1000px;
             box-shadow: 0 0 6rem rgba(0, 0, 0, 0.16);
             margin: 0 calc(#{$-snippet-margin-x} / var(--SnippetViewer-zoom)) calc(#{$-snippet-margin-bottom} / var(--SnippetViewer-zoom));
             background-color: var(--body-bg);
