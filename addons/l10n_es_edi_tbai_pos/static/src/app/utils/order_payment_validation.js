@@ -3,13 +3,11 @@ import { patch } from "@web/core/utils/patch";
 
 patch(OrderPaymentValidation.prototype, {
     async afterOrderValidation() {
-        if (this.pos.company.l10n_es_tbai_is_enabled) {
-            const l10n_es_pos_tbai_qrurl = await this.pos.data.call(
-                "pos.order",
-                "get_l10n_es_pos_tbai_qrurl",
-                [this.order.id]
-            );
-            this.order.uiState.l10n_es_pos_tbai_qrsrc = l10n_es_pos_tbai_qrurl;
+        if (this.pos.config._l10n_es_pos_fiscal_mode === "tbai") {
+            const url = await this.pos.data.call("pos.order", "get_l10n_es_pos_tbai_qrurl", [
+                this.order.id,
+            ]);
+            this.order.uiState.l10n_es_pos_tbai_qrurl = url || undefined;
         }
         return super.afterOrderValidation(...arguments);
     },

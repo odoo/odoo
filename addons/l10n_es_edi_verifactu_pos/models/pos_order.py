@@ -7,7 +7,7 @@ class PosOrder(models.Model):
 
     l10n_es_edi_verifactu_required = fields.Boolean(
         string="Veri*Factu Required",
-        related='company_id.l10n_es_edi_verifactu_required',
+        compute='_compute_l10n_es_edi_verifactu_required',
     )
     l10n_es_edi_verifactu_document_ids = fields.One2many(
         comodel_name='l10n_es_edi_verifactu.document',
@@ -42,17 +42,10 @@ class PosOrder(models.Model):
         string="Veri*Factu QR Code",
         compute='_compute_l10n_es_edi_verifactu_qr_code',
     )
-    l10n_es_invoice_type = fields.Selection(
-        selection="_l10n_es_refund_reason_selection",
-        string="Veri*Factu Refund Reason",
-        help="BOE-A-1992-28740. Law 37/1992, of 28 December, on Value Added Tax. Article "
-             "80. Modification of the taxable base.",
-        copy=False,
-    )
 
-    @api.model
-    def _l10n_es_refund_reason_selection(self):
-        return self.env['account.move']._l10n_es_refund_reason_selection()
+    def _compute_l10n_es_edi_verifactu_required(self):
+        for order in self:
+            order.l10n_es_edi_verifactu_required = order.company_id._l10n_es_pos_get_fiscal_mode() == 'verifactu'
 
     @api.depends('state', 'l10n_es_edi_verifactu_state', 'l10n_es_edi_verifactu_document_ids',
                  'l10n_es_edi_verifactu_document_ids.state', 'l10n_es_edi_verifactu_document_ids.errors')
@@ -86,7 +79,8 @@ class PosOrder(models.Model):
     @api.depends('l10n_es_edi_verifactu_document_ids', 'l10n_es_edi_verifactu_document_ids.json_attachment_id')
     def _compute_l10n_es_edi_verifactu_qr_code(self):
         for order in self:
-            invoice = order.account_move
+            # Once the session is closed 'account_move' is the session closing entry for the orders that were not invoiced.
+            invoice = order.account_move if order.is_singly_invoiced else False
             if invoice:
                 url = invoice.l10n_es_edi_verifactu_qr_code
             else:
@@ -150,7 +144,7 @@ class PosOrder(models.Model):
         # again after a cancellation (else we get the error '[3000] Registro de facturación duplicado.').
         rejected_before = documents._get_last(document_type).state == 'rejected'
         refunded_order = self.refunded_order_id
-        if refunded_order.account_move:
+        if refunded_order.is_singly_invoiced:
             # We invoiced the refunded order
             refunded_document = refunded_order.account_move.l10n_es_edi_verifactu_document_ids._get_last('submission')
         else:
@@ -204,9 +198,6 @@ class PosOrder(models.Model):
     def _process_saved_order(self, draft):
         self.ensure_one()
         if self.l10n_es_edi_verifactu_required:
-            if not self.to_invoice and self.amount_total > self.company_id.l10n_es_simplified_invoice_limit:
-                raise UserError(_("The order needs to be invoiced since its total amount is above %s€.",
-                                  self.company_id.l10n_es_simplified_invoice_limit))
             refunded_order = self.refunded_order_id
             if refunded_order:
                 if not self.l10n_es_invoice_type:
@@ -276,14 +267,7 @@ class PosOrder(models.Model):
         return res
 
     def _l10n_es_edi_verifactu_get_simplified_invoice_name(self):
-        return str(self.config_id.id) + '/' + str(self.sequence_number).zfill(6)
+        return self._l10n_es_pos_get_simplified_invoice_name()
 
     def l10n_es_edi_verifactu_get_invoice_name(self):
-        if self.account_move:
-            return self.account_move.name
-        return self._l10n_es_edi_verifactu_get_simplified_invoice_name()
-
-    def _update_sequence_number(self, session, values):
-        """ Override: do not allow updating the sequence number for Spanish pos orders"""
-        if not session.config_id.l10n_es_edi_verifactu_required or not values.get('to_invoice'):
-            super()._update_sequence_number(session, values)
+        return self._l10n_es_pos_get_invoice_name()

@@ -30,6 +30,17 @@ class TestPosEdi(TestEsEdiTbaiCommonGipuzkoa, CommonPosEsEdiTest):
         ):
             pos_make_payment.with_context(context_make_payment).check()
 
+    def _close_pos_session(self):
+        session = self.pos_config_usd.current_session_id
+        session.close_session_from_ui()
+        return session
+
+    def test_fiscal_mode_tbai(self):
+        company = self.env.company
+        self.assertIn('tbai', company._l10n_es_pos_get_available_fiscal_modes())
+        company.sudo().l10n_es_tbai_tax_agency = False
+        self.assertNotIn('tbai', company._l10n_es_pos_get_available_fiscal_modes())
+
     def test_tbai_pos_order(self):
         self.ten_dollars_with_10_incl.product_variant_id.lst_price = 100
         order, _ = self.create_backend_pos_order({
@@ -112,12 +123,14 @@ class TestPosEdi(TestEsEdiTbaiCommonGipuzkoa, CommonPosEsEdiTest):
         )
 
         # SerieFactura and NumFactura are limited to 20 characters, the number is numeric
+        # The number comes from the series of simplified invoices of the PoS, assigned by the
+        # server: unlike `pos_reference`, it does not depend on the counter of each device.
         for order, doc in ((order_1, doc_1), (order_2, doc_2)):
             doc._generate_xml(order._l10n_es_tbai_get_values())
             header = doc._get_xml().find("Factura/CabeceraFactura")
             serie, number = header.find("SerieFactura").text, header.find("NumFactura").text
-            self.assertEqual(serie, f"{order.pos_reference.rsplit('-', 1)[0]}-TEST")
-            self.assertEqual(number, '000001')
+            self.assertEqual(serie, f"{self.pos_config_usd.id}TEST")
+            self.assertEqual(number, str(order.sequence_number).zfill(6))
             self.assertLessEqual(len(serie), 20)
             self.assertLessEqual(len(number), 20)
             self.assertTrue(number.isdigit())
@@ -147,9 +160,10 @@ class TestPosEdi(TestEsEdiTbaiCommonGipuzkoa, CommonPosEsEdiTest):
         self.assertEqual(pos_refund.state, 'paid')
         self.assertEqual(pos_refund.l10n_es_tbai_state, 'sent')
 
-        orig_num = order.l10n_es_tbai_post_document_id._get_tbai_sequence_and_number()[1]
-        refund_num = pos_refund.l10n_es_tbai_post_document_id._get_tbai_sequence_and_number()[1]
-        self.assertNotEqual(orig_num, refund_num)
+        orig_serie, orig_num = order.l10n_es_tbai_post_document_id._get_tbai_sequence_and_number()
+        refund_serie, refund_num = pos_refund.l10n_es_tbai_post_document_id._get_tbai_sequence_and_number()
+        self.assertNotEqual((orig_serie, orig_num), (refund_serie, refund_num))
+        self.assertEqual(refund_serie, f"R{str(pos_refund.config_id.id).zfill(2)}TEST")
 
     def test_tbai_refund_invoiced_pos_order(self):
         self.ten_dollars_with_10_incl.product_variant_id.lst_price = 100
@@ -299,3 +313,48 @@ class TestPosEdi(TestEsEdiTbaiCommonGipuzkoa, CommonPosEsEdiTest):
         assert_order_line(order_lines[1], "1.00000000", "10.00000000", "12.10000000")
         assert_order_line(order_lines[2], "1.00000000", "20.00000000", "24.20000000")
         self.assertEqual(xml_doc.find("Factura/DatosFactura/ImporteTotalFactura").text, "-84.70")
+
+    def test_receipt_qr_code_only_when_accepted(self):
+        """ The TicketBAI QR code is only printed once the tax agency accepted the document:
+        before, there is nothing to validate. """
+        self.ten_dollars_with_10_incl.product_variant_id.lst_price = 100
+        line_data = [{'product_id': self.ten_dollars_with_10_incl.product_variant_id.id}]
+
+        rejected, _ = self.create_backend_pos_order({'line_data': line_data})
+        self.pay_pos_order(rejected, with_error=True)
+        self.assertNotIn('l10n_es_pos_tbai_qrsrc', rejected.order_receipt_generate_data()['image'])
+
+        accepted, _ = self.create_backend_pos_order({'line_data': line_data})
+        self.pay_pos_order(accepted)
+        self.assertIn('l10n_es_pos_tbai_qrsrc', accepted.order_receipt_generate_data()['image'])
+
+    def test_tbai_refund_pos_order_after_session_closing(self):
+        """ Once the session is closed, `account_move` is the session closing entry for the
+        orders that were not invoiced: their refunds are still simplified credit notes. """
+        self.ten_dollars_with_10_incl.product_variant_id.lst_price = 100
+        order, _ = self.create_backend_pos_order({
+            'line_data': [{'product_id': self.ten_dollars_with_10_incl.product_variant_id.id}],
+        })
+        self.pay_pos_order(order)
+        self._close_pos_session()
+        self.assertTrue(order.is_globally_invoiced)
+
+        self.pos_config_usd.open_ui()
+        pos_refund = self.env['pos.order'].browse(order.refund()['res_id'])
+        self.pay_pos_order(pos_refund)
+
+        self.assertEqual(pos_refund.state, 'paid')
+        self.assertEqual(pos_refund.l10n_es_tbai_state, 'sent')
+
+    def test_tbai_state_after_session_closing(self):
+        """ An order not sent to TicketBAI yet keeps its state once the session is closed,
+        so that it can still be sent from the backend. """
+        self.ten_dollars_with_10_incl.product_variant_id.lst_price = 100
+        order, _ = self.create_backend_pos_order({
+            'line_data': [{'product_id': self.ten_dollars_with_10_incl.product_variant_id.id}],
+        })
+        self.pay_pos_order(order, with_error=True)
+        self._close_pos_session()
+
+        self.assertTrue(order.is_globally_invoiced)
+        self.assertEqual(order.l10n_es_tbai_state, 'to_send')

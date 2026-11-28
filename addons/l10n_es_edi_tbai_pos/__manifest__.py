@@ -4,6 +4,7 @@
     'category': 'Accounting/Localizations/Point of Sale',
     'depends': [
         'l10n_es_edi_tbai',
+        'l10n_es_edi_pos',
         'point_of_sale',
     ],
     'data': [

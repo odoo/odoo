@@ -9,12 +9,28 @@ definePosModels();
 
 test("TicketBAI receipt QR encodes the url", async () => {
     const url = "https://tbai-receipt-url/1234";
-    onRpc("pos.order", "get_l10n_es_pos_tbai_qrurl", () => url);
+    let rpcArgs;
+    onRpc("pos.order", "get_l10n_es_pos_tbai_qrurl", ({ args }) => {
+        rpcArgs = args;
+        return url;
+    });
     const store = await setupPosEnv();
     const order = await getFilledOrder(store);
     const validation = new OrderPaymentValidation({ pos: store, orderUuid: order.uuid });
     await validation.finalizeValidation();
     const receipt = store.ticketPrinter.getOrderReceiptData(order);
-    expect(order.uiState.l10n_es_pos_tbai_qrsrc).toBe(url);
+    expect(rpcArgs).toEqual([order.id]);
+    expect(order.uiState.l10n_es_pos_tbai_qrurl).toBe(url);
     expect(receipt.image.l10n_es_pos_tbai_qrsrc).toBe(generateQRCodeDataUrl(url));
+});
+
+test("TicketBAI receipt without QR code until the document is accepted", async () => {
+    onRpc("pos.order", "get_l10n_es_pos_tbai_qrurl", () => false);
+    const store = await setupPosEnv();
+    const order = await getFilledOrder(store);
+    const validation = new OrderPaymentValidation({ pos: store, orderUuid: order.uuid });
+    await validation.finalizeValidation();
+    const receipt = store.ticketPrinter.getOrderReceiptData(order);
+    expect(order.uiState.l10n_es_pos_tbai_qrurl).toBe(undefined);
+    expect(receipt.image.l10n_es_pos_tbai_qrsrc).toBe(undefined);
 });

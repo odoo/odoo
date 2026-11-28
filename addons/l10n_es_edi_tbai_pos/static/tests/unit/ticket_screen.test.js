@@ -9,7 +9,11 @@ definePosModels();
 
 test("TicketBAI reprinted receipt QR encodes the url", async () => {
     const url = "https://tbai-receipt-url/1234";
-    onRpc("pos.order", "get_l10n_es_pos_tbai_qrurl", () => url);
+    let rpcArgs;
+    onRpc("pos.order", "get_l10n_es_pos_tbai_qrurl", ({ args }) => {
+        rpcArgs = args;
+        return url;
+    });
     const store = await setupPosEnv();
     const order = await getFilledOrder(store);
     await store.syncAllOrders();
@@ -17,6 +21,7 @@ test("TicketBAI reprinted receipt QR encodes the url", async () => {
     const ticketScreen = await mountWithCleanup(TicketScreen);
     await ticketScreen.print(order);
     const receipt = store.ticketPrinter.getOrderReceiptData(order);
-    expect(order.uiState.l10n_es_pos_tbai_qrsrc).toBe(url);
+    expect(rpcArgs).toEqual([order.id]);
+    expect(order.uiState.l10n_es_pos_tbai_qrurl).toBe(url);
     expect(receipt.image.l10n_es_pos_tbai_qrsrc).toBe(generateQRCodeDataUrl(url));
 });

@@ -6,7 +6,6 @@ from unittest import mock
 from odoo.addons.point_of_sale.models.pos_order import PosOrder
 from odoo.exceptions import UserError
 from odoo.tests import tagged
-from odoo.tools import mute_logger
 
 from .common import TestL10nEsEdiVerifactuPosCommon
 
@@ -80,6 +79,13 @@ class TestL10nEsEdiVerifactuPosOrder(TestL10nEsEdiVerifactuPosCommon):
             results = self.env['pos.order'].sync_from_ui([order_data])
         return self.env['pos.order'].browse(results['pos.order'][0]['id'])
 
+    def test_fiscal_mode_verifactu(self):
+        """ Veri*Factu declares its fiscal mode only when it is active on the company.
+        Which mode prevails over the others is decided by l10n_es_edi_pos. """
+        self.assertIn('verifactu', self.company._l10n_es_pos_get_available_fiscal_modes())
+        self.company.sudo().l10n_es_edi_verifactu_required = False
+        self.assertNotIn('verifactu', self.company._l10n_es_pos_get_available_fiscal_modes())
+
     def test_record_identifier(self):
         with self.with_pos_session():
             with self._mock_zeep_registration_operation_certificate_issue():
@@ -108,17 +114,6 @@ class TestL10nEsEdiVerifactuPosOrder(TestL10nEsEdiVerifactuPosCommon):
                }
             record_identifier = order.l10n_es_edi_verifactu_document_ids._get_record_identifier()
             self.assertDictEqual(record_identifier, expected_record_identifier | record_identifier)
-
-    def test_error_above_simplified_limit(self):
-        with self.with_pos_session():
-            with self.assertRaisesRegex(UserError, "The order needs to be invoiced since its total amount is above 400.0€."), \
-                 mute_logger('odoo.addons.point_of_sale.models.pos_order'):
-                self._create_order({
-                    'pos_order_lines_ui_args': [
-                        (self.product, 10.0),
-                    ],
-                    'payments': [(self.bank_pm1, 1210.0)],
-                })
 
     def test_order_not_invoiced(self):
         with self.with_pos_session():
@@ -175,7 +170,7 @@ class TestL10nEsEdiVerifactuPosOrder(TestL10nEsEdiVerifactuPosCommon):
         self.assertEqual(order_document._get_document_dict(), json_contents)
 
         json_contents = self._json_file_to_dict('l10n_es_edi_verifactu_pos/tests/files/test_order_not_invoiced_refund.json')
-        json_contents['RegistroAlta']['IDFactura']['NumSerieFactura'] = str(self.basic_config.id) + '/000002'
+        json_contents['RegistroAlta']['IDFactura']['NumSerieFactura'] = 'R' + str(self.basic_config.id).zfill(2) + '/000001'
         json_contents['RegistroAlta']['FacturasRectificadas'][0]['IDFacturaRectificada']['NumSerieFactura'] = invoice_number
         self.assertEqual(refund_document._get_document_dict(), json_contents)
 
@@ -325,3 +320,56 @@ class TestL10nEsEdiVerifactuPosOrder(TestL10nEsEdiVerifactuPosCommon):
 
                 self.assertEqual(order_submission_invoice_number, order_cancellation_invoice_number)
                 self.assertNotEqual(order_cancellation_invoice_number, invoice_invoice_number)
+
+    def test_refund_after_session_closing(self):
+        """ Once the session is closed, `account_move` is the session closing entry for the orders that
+        were not invoiced: the simplified invoice keeps its QR code, and its refund still rectifies it. """
+        with self._mock_zeep_registration_operation_certificate_issue():
+            with self.with_pos_session():
+                order = self._create_order({
+                    'pos_order_lines_ui_args': [(self.product, 1.0)],
+                    'payments': [(self.bank_pm1, 121.0)],
+                })
+            self.assertTrue(order.is_globally_invoiced)
+            self.assertTrue(order.l10n_es_edi_verifactu_qr_code)
+
+            with self.with_pos_session():
+                refund = self.env['pos.order'].browse(order.refund()['res_id'])
+                refund.l10n_es_invoice_type = 'R5'
+                self.make_payment(refund, self.bank_pm1, refund.amount_total)
+
+        order_record = order.l10n_es_edi_verifactu_document_ids._get_document_dict()['RegistroAlta']
+        refund_record = refund.l10n_es_edi_verifactu_document_ids._get_document_dict()['RegistroAlta']
+        self.assertEqual(
+            refund_record['FacturasRectificadas'][0]['IDFacturaRectificada']['NumSerieFactura'],
+            order_record['IDFactura']['NumSerieFactura'],
+        )
+    
+    def test_invoiced_refund_after_session_closing(self):
+        """ The refund of a simplified invoice from a closed session can be invoiced (e.g. for a
+        customer asking for it): it rectifies the simplified invoice, so it is always a R5. """
+        with self._mock_zeep_registration_operation_certificate_issue():
+            with self.with_pos_session():
+                order = self._create_order({
+                    'pos_order_lines_ui_args': [(self.product, 1.0)],
+                    'payments': [(self.bank_pm1, 121.0)],
+                })
+            self.assertTrue(order.is_globally_invoiced)
+
+            with self.with_pos_session():
+                refund = self.env['pos.order'].browse(order.refund()['res_id'])
+                refund.write({
+                    'partner_id': self.partner_a.id,
+                    'to_invoice': True,
+                    'l10n_es_invoice_type': 'R5',
+                })
+                self.make_payment(refund, self.bank_pm1, refund.amount_total)
+
+        self.assertTrue(refund.is_singly_invoiced)
+        order_record = order.l10n_es_edi_verifactu_document_ids._get_document_dict()['RegistroAlta']
+        refund_record = refund.account_move.l10n_es_edi_verifactu_document_ids._get_document_dict()['RegistroAlta']
+        self.assertEqual(refund_record['TipoFactura'], 'R5')
+        self.assertEqual(
+            refund_record['FacturasRectificadas'][0]['IDFacturaRectificada']['NumSerieFactura'],
+            order_record['IDFactura']['NumSerieFactura'],
+        )

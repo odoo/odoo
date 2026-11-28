@@ -23,4 +23,8 @@ export class AddTbaiRefundReasonPopup extends Component {
         this.props.getPayload(this.state);
         this.props.close();
     }
+
+    get refundReasons() {
+        return this.pos.config._l10n_es_refund_reasons.filter((reason) => reason.value !== "R5");
+    }
 }
