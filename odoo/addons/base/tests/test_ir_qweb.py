@@ -1037,6 +1037,38 @@ class TestQWebBasic(TransactionCase):
         rendered = self.env['ir.qweb']._render(t.id)
         self.assertEqual(etree.fromstring(rendered), etree.fromstring(result))
 
+    def test_att_direct_output(self):
+        """ The attributes whose post-processing cannot change anything are
+        output without calling `_post_processing_att`, as they would be
+        output after it. """
+        t = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'arch_db': '''<t t-name="bibi">
+                <div class="a" t-att-class="cls" id="x" t-attf-data-x="{{ val }}-{{ 1 }}" t-att-data-x="val"/>
+                <span t-att-empty="''" t-att-none="None" t-att-false="False" t-att-zero="0" t-att-true="True" t-out="val"/>
+                <p t-foreach="[1, 2]" t-as="v" t-att-data-v="v" t-att-data-markup="markup"/>
+                <a t-att-href="url"/>
+                <div t-att="{'data-dict': val}"/>
+            </t>'''
+        })
+        result = """
+                <div class="b" id="x" data-x="&lt;v&gt;"></div>
+                <span empty="" true="True">&lt;v&gt;</span>
+                <p data-v="1" data-markup="&lt;b&gt;"></p><p data-v="2" data-markup="&lt;b&gt;"></p>
+                <a href=""></a>
+                <div data-dict="&lt;v&gt;"></div>
+            """
+        IrQweb = self.registry['ir.qweb']
+        values = {'cls': 'b', 'val': '<v>', 'markup': markupsafe.Markup('<b>'), 'url': 'javascript:alert(1)'}
+        with patch.object(IrQweb, '_post_processing_att', autospec=True, side_effect=IrQweb._post_processing_att) as post_processing:
+            rendered = self.env['ir.qweb']._render(t.id, values)
+        self.assertEqual(rendered.strip(), result.strip())
+        self.assertEqual(
+            [call.args[1] for call in post_processing.call_args_list], ['a', 'div'],
+            "only the href (checked for malicious schemes) and the unknown attributes are post-processed",
+        )
+
     def test_set_1(self):
         t = self.env['ir.ui.view'].create({
             'name': 'test',
