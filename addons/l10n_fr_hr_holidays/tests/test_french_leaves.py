@@ -140,13 +140,11 @@ class TestFrenchLeaves(TransactionCase):
             'employee_id': self.employee.id,
             'request_date_from': '2021-09-10',
             'request_date_to': '2021-09-10',
-            'request_date_from_period': 'am',
-            'request_date_to_period': 'am',
+            'request_duration': 'am',
         })
         # Since the employee works on the afternoon, the date_to is not post-poned
         self.assertEqual(leave.number_of_days, 0.5, 'The number of days should be equal to 0.5.')
-        leave.request_date_to_period = 'pm'
-        leave.request_date_from_period = 'pm'
+        leave.request_duration = 'pm'
         # This however should push the date_to
         self.assertEqual(leave.number_of_days, 2.5, 'The number of days should be equal to 2.5.')
 
@@ -325,15 +323,15 @@ class TestFrenchLeaves(TransactionCase):
         self.company.resource_calendar_id = company_calendar
         self.employee.resource_calendar_id = employee_calendar
 
-        leave_1, leave_2, leave_3, leave_4, leave_5 = self.env['hr.leave'].with_context(leave_fast_create=True).create([
+        (leave_1, leave_2, leave_3_pm, leave_3_am, leave_4_full, leave_4_am, leave_5_pm,
+         leave_5_am) = self.env['hr.leave'].with_context(leave_fast_create=True).create([
             {
                 'name': 'Test',
                 'work_entry_type_id': self.time_off_type.id,
                 'employee_id': self.employee.id,
                 'request_date_from': '2024-07-29',
                 'request_date_to': '2024-07-29',
-                'request_date_from_period': 'am',
-                'request_date_to_period': 'am',
+                'request_duration': 'am',
             },
             {
                 'name': 'Test full day leave on tuesday',
@@ -341,35 +339,53 @@ class TestFrenchLeaves(TransactionCase):
                 'employee_id': self.employee.id,
                 'request_date_from': '2024-07-30',
                 'request_date_to': '2024-07-30',
-                'request_date_from_period': 'am',
-                'request_date_to_period': 'pm',
             },
             {
-                'name': 'Test Monday PM to Tuesday AM',
+                'name': 'Test Monday PM',
                 'work_entry_type_id': self.time_off_type.id,
                 'employee_id': self.employee.id,
                 'request_date_from': '2024-08-05',
-                'request_date_to': '2024-08-06',
-                'request_date_from_period': 'pm',
-                'request_date_to_period': 'am',
+                'request_date_to': '2024-08-05',
+                'request_duration': 'pm',
             },
             {
-                'name': 'Test Monday AM to Tuesday AM',
+                'name': 'Test Tuesday AM',
+                'work_entry_type_id': self.time_off_type.id,
+                'employee_id': self.employee.id,
+                'request_date_from': '2024-08-06',
+                'request_date_to': '2024-08-06',
+                'request_duration': 'am',
+            },
+            {
+                'name': 'Test Monday',
                 'work_entry_type_id': self.time_off_type.id,
                 'employee_id': self.employee.id,
                 'request_date_from': '2024-08-12',
-                'request_date_to': '2024-08-13',
-                'request_date_from_period': 'am',
-                'request_date_to_period': 'am',
+                'request_date_to': '2024-08-12',
             },
             {
-                'name': 'Test Tuesday PM to Wednesday PM',
+                'name': 'Test Tuesday AM after a full Monday',
+                'work_entry_type_id': self.time_off_type.id,
+                'employee_id': self.employee.id,
+                'request_date_from': '2024-08-13',
+                'request_date_to': '2024-08-13',
+                'request_duration': 'am',
+            },
+            {
+                'name': 'Test Tuesday PM',
                 'work_entry_type_id': self.time_off_type.id,
                 'employee_id': self.employee.id,
                 'request_date_from': '2024-08-20',
+                'request_date_to': '2024-08-20',
+                'request_duration': 'pm',
+            },
+            {
+                'name': 'Test Wednesday AM',
+                'work_entry_type_id': self.time_off_type.id,
+                'employee_id': self.employee.id,
+                'request_date_from': '2024-08-21',
                 'request_date_to': '2024-08-21',
-                'request_date_from_period': 'pm',
-                'request_date_to_period': 'am',
+                'request_duration': 'am',
             }
         ])
         self.assertEqual(leave_1.number_of_days, 0.5, 'The duration should be 0.5 day.')
@@ -379,16 +395,18 @@ class TestFrenchLeaves(TransactionCase):
 
         self.assertEqual(leave_2.number_of_days, 1)
         self.assertEqual(leave_2.number_of_hours, 7, "Leave duration should be based on employee's calendar")
-        leave_2.request_date_to_period = 'am'
+        leave_2.request_duration = 'am'
         self.assertEqual(leave_2.number_of_days, 0.5)
 
-        self.assertEqual(leave_3.number_of_days, 1)
-        self.assertEqual(leave_4.number_of_days, 1.5, "Employee works PM, time off duration should not count the afternoon")
-        self.assertEqual(leave_5.number_of_days, 1)
-        self.assertEqual(leave_5.date_to.date(), date(2024, 8, 21), "Time off end should not be pushed as employee works in the afternoon")
+        self.assertEqual(leave_3_pm.number_of_days, 0.5)
+        self.assertEqual(leave_3_am.number_of_days, 0.5)
+        self.assertEqual(leave_4_full.number_of_days, 1)
+        self.assertEqual(leave_4_am.number_of_days, 0.5)
+        self.assertEqual(leave_5_pm.number_of_days, 0.5)
+        self.assertEqual(leave_5_am.number_of_days, 0.5)
+        self.assertEqual(leave_5_am.date_to.date(), date(2024, 8, 21), "Time off end should not be pushed as employee works in the afternoon")
 
-        leave_1.request_date_to_period = 'pm'
-        leave_1.request_date_from_period = 'pm'
+        leave_1.request_duration = 'pm'
         self.assertEqual(leave_1.number_of_days, 0.5, 'The duration should be 0.5 day.')
         self.assertEqual(leave_1.date_from.date(), date(2024, 7, 29))
         self.assertEqual(leave_1.date_to.date(), date(2024, 7, 29))

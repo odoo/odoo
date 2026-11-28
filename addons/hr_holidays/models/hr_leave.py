@@ -29,8 +29,8 @@ def get_employee_from_context(values, context, user_employee_id):
     return employee_id_value or context.get('default_employee_id', context.get('employee_id', user_employee_id))
 
 
-POSITION_DEPENDS = ('date_from', 'date_to', 'tz', 'request_date_from', 'request_date_to',
-                    'request_date_from_period', 'request_date_to_period', 'work_entry_type_request_unit')
+POSITION_DEPENDS = ('date_from', 'date_to', 'tz', 'request_date_from', 'request_date_to', 'request_duration',
+                    'work_entry_type_request_unit')
 
 
 class HrLeave(models.Model):
@@ -238,13 +238,6 @@ class HrLeave(models.Model):
     # one compute each, on purpose: see _compute_request_date_hour_from
     request_date_hour_from = fields.Datetime(compute='_compute_request_date_hour_from', readonly=False, search='_search_request_date_hour_from', inverse='_inverse_request_date_hour_from_to')
     request_date_hour_to = fields.Datetime(compute='_compute_request_date_hour_to', readonly=False, search='_search_request_date_hour_to', inverse='_inverse_request_date_hour_from_to')
-    # used only when the leave is taken in half days
-    request_date_from_period = fields.Selection([
-        ('am', 'Morning'), ('pm', 'Afternoon')],
-        string="Date Period Start", default='am')
-    request_date_to_period = fields.Selection([
-        ('am', 'Morning'), ('pm', 'Afternoon')],
-        string="Date Period End", default='pm')
     # view
     is_hatched = fields.Boolean('Hatched', compute='_compute_is_hatched')
     is_striked = fields.Boolean('Striked', compute='_compute_is_hatched')
@@ -421,13 +414,8 @@ class HrLeave(models.Model):
     @api.model
     def _get_request_duration_values(self, work_entry_type, request_duration, employee, request_date_from,
                                      request_date_to, request_hour_from=0.0, request_hour_to=0.0):
-        """Return the periods or the hours ``request_duration`` stands for on a request of ``work_entry_type``."""
-        if work_entry_type.request_unit == "half_day":
-            if request_duration == "full":
-                return {"request_date_from_period": "am", "request_date_to_period": "pm"}
-            if request_duration in ("am", "pm"):
-                return {"request_date_from_period": request_duration, "request_date_to_period": request_duration}
-        elif work_entry_type.request_unit == "hour" and request_duration in ("full", "am", "pm") \
+        """Return the hours ``request_duration`` stands for on a request of ``work_entry_type``."""
+        if work_entry_type.request_unit == "hour" and request_duration in ("full", "am", "pm") \
                 and employee and request_date_from and request_date_to:
             explicit_hours = (request_hour_from, request_hour_to)
             if request_duration == "full":
@@ -485,9 +473,9 @@ class HrLeave(models.Model):
             return (False, False)
         is_half_day = self.work_entry_type_request_unit == 'half_day'
         start = datetime.combine(self.request_date_from, time.min) + timedelta(
-            hours=12 if is_half_day and self.request_date_from_period == 'pm' else 0)
+            hours=12 if is_half_day and self.request_duration == 'pm' else 0)
         stop = datetime.combine(self.request_date_to, time.min) + timedelta(
-            hours=12 if is_half_day and self.request_date_to_period == 'am' else 24)
+            hours=12 if is_half_day and self.request_duration == 'am' else 24)
         # same as stamping and converting, 20x cheaper -- runs for every request read
         return start - reader_tz.utcoffset(start), stop - reader_tz.utcoffset(stop)
 
@@ -508,7 +496,7 @@ class HrLeave(models.Model):
         return Domain('source_leave_id', '!=', False) | Domain('time_rule_id', '!=', False)
 
     @api.depends('employee_id', 'state', 'request_date_from', 'request_date_to',
-            'request_hour_from', 'request_hour_to', 'request_date_from_period', 'request_date_to_period')
+            'request_hour_from', 'request_hour_to', 'request_duration')
     def _compute_dashboard_warning_message(self):
         not_generated = ~self._get_generated_leave_domain()
         check_warning_leaves = self.filtered_domain(
@@ -625,6 +613,8 @@ class HrLeave(models.Model):
         # mirrors _get_request_date_hours
         starts = date_field == 'request_date_from'
         half_day_hours = {'am': 0.0, 'pm': 12.0} if starts else {'am': 12.0, 'pm': 24.0}
+        # a half day starts on the afternoon or ends on the morning, a whole day does neither
+        half_day_duration = 'pm' if starts else 'am'
         # a whole day starts where its morning does and ends where its afternoon does
         whole_day = half_day_hours['am' if starts else 'pm']
         spans_the_day = Domain.TRUE if stands(whole_day, hour) else Domain.FALSE
@@ -636,7 +626,7 @@ class HrLeave(models.Model):
                 no_hours & spans_the_day,
             ]),
             Domain('work_entry_type_request_unit', '=', 'half_day') & Domain.OR([
-                Domain(f'{date_field}_period', '=', period)
+                Domain('request_duration', '=' if period == half_day_duration else '!=', half_day_duration)
                 for period, stands_on in half_day_hours.items()
                 if stands(stands_on, hour)
             ]),
@@ -734,9 +724,8 @@ class HrLeave(models.Model):
                           end_date=format_date(self.env, version.date_end) if version.date_end else self.env._("undefined"),
                       ) for version in versions)))
 
-    @api.depends('request_date_from_period', 'request_date_to_period', 'request_hour_from',
-                 'request_hour_to', 'request_date_from', 'request_date_to', 'employee_id',
-                 'work_entry_type_id')
+    @api.depends('request_duration', 'request_hour_from', 'request_hour_to', 'request_date_from',
+                 'request_date_to', 'employee_id', 'work_entry_type_id')
     def _compute_date_from_to(self):
         """Compute ``date_from`` and ``date_to`` (naive UTC) from the request fields.
 
@@ -794,16 +783,10 @@ class HrLeave(models.Model):
                     hour_from, hour_to = holiday._get_hour_from_to(holiday.request_date_from, holiday.request_date_to)
 
             elif holiday.work_entry_type_request_unit == 'half_day':
-                period_map = {'am': 'morning', 'pm': 'afternoon'}
-                from_period = period_map.get(holiday.request_date_from_period)
-                to_period = period_map.get(holiday.request_date_to_period)
-                if holiday.request_date_from == holiday.request_date_to:
-                    day_period = from_period if from_period == to_period else None
-                    hour_from, hour_to = holiday._get_hour_from_to(holiday.request_date_from, holiday.request_date_to,
-                        day_period, count_non_working_days=is_calendar_leave)
-                else:
-                    hour_from, _ = holiday._get_hour_from_to(holiday.request_date_from, holiday.request_date_from, from_period, count_non_working_days=is_calendar_leave)
-                    _, hour_to = holiday._get_hour_from_to(holiday.request_date_to, holiday.request_date_to, to_period, count_non_working_days=is_calendar_leave)
+                hour_from, hour_to = holiday._get_hour_from_to(
+                    holiday.request_date_from, holiday.request_date_to,
+                    {'am': 'morning', 'pm': 'afternoon'}.get(holiday.request_duration),
+                    count_non_working_days=is_calendar_leave)
 
             else:
                 hour_from, hour_to = holiday._get_hour_from_to(holiday.request_date_from, holiday.request_date_to, count_non_working_days=is_calendar_leave)
@@ -1043,11 +1026,11 @@ class HrLeave(models.Model):
                                 weekend_dates.remove(start_date)
                             else:
                                 if start_date in weekend_dates:
-                                    days += 0.5 if leave.request_date_from_period == 'pm' else 1
+                                    days += 1
                                     hours += max(0, day_end - max(day_start, leave.request_hour_from))
                                     weekend_dates.remove(start_date)
                                 if end_date in weekend_dates:
-                                    days += 1 if leave.request_date_to_period == 'pm' else 0.5
+                                    days += 1
                                     hours += max(0, min(day_end, leave.request_hour_to) - day_start)
                                     weekend_dates.remove(end_date)
 
@@ -1079,12 +1062,9 @@ class HrLeave(models.Model):
                             ph_start + timedelta(days=day) for day in range((ph_end - ph_start).days + 1)
                         )
                     days = len(off_dates)
-                    # a half day bound is only off half a day, unless it is a public holiday (not counted at all)
-                    if leave.work_entry_type_request_unit == 'half_day':
-                        if leave.request_date_from_period == 'pm' and leave.request_date_from in off_dates:
-                            days -= 0.5
-                        if leave.request_date_to_period == 'am' and leave.request_date_to in off_dates:
-                            days -= 0.5
+                    # a half day is only off half a day, unless it is a public holiday (not counted at all)
+                    if leave._is_half_day() and leave.request_date_from in off_dates:
+                        days -= 0.5
                     days = max(0, days)
                 else:
                     days = hours / 24
@@ -1182,15 +1162,6 @@ class HrLeave(models.Model):
                 display = f"{duration} {unit}"
             leave.duration_display = display
 
-    @api.model
-    def _get_request_duration(self, date_from, period_from, date_to, period_to):
-        """Return the ``request_duration`` of a request given its bounds.
-
-        :return: ``period_from`` (``'am'`` or ``'pm'``) for a lone half day, ``'full'`` otherwise
-        :rtype: str
-        """
-        return period_from if (date_from, period_from) == (date_to, period_to) else 'full'
-
     def _get_request_vals_from_date_hours(self, date_hour_from, date_hour_to):
         """Return the request values matching bounds drawn by a calendar view.
 
@@ -1199,7 +1170,7 @@ class HrLeave(models.Model):
 
         :param datetime date_hour_from: new start, naive UTC
         :param datetime date_hour_to: new end, naive UTC
-        :return: values to write (request dates, periods, hours, ``request_duration``), ``{}``
+        :return: values to write (request dates, hours, ``request_duration``), ``{}``
             when the bounds are invalid or unchanged
         :rtype: dict
         """
@@ -1228,22 +1199,18 @@ class HrLeave(models.Model):
             'request_duration': 'full',
         }
         unit = self.work_entry_type_request_unit
-        if unit == 'half_day':
-            from_period = 'am' if local_from.hour < 12 else 'pm'
-            to_period = 'am' if local_to_incl.hour < 12 else 'pm'
-            vals['request_date_from_period'] = from_period
-            vals['request_date_to_period'] = to_period
-            vals['request_duration'] = self._get_request_duration(
-                vals['request_date_from'], from_period, vals['request_date_to'], to_period)
+        if (unit == 'half_day' and vals['request_date_from'] == vals['request_date_to']
+                and (local_from.hour < 12) == (local_to_incl.hour < 12)):
+            vals['request_duration'] = 'am' if local_from.hour < 12 else 'pm'
         elif unit == 'hour':
             # a request_hour of 0 reads as unset everywhere: keep the hour it already has
             vals['request_duration'] = 'specific'
             vals['request_hour_from'] = (self.request_hour_from if local_from.time() == time.min
                                          else time_to_float(local_from.time()))
             vals['request_hour_to'] = 24.0 if local_to.time() == time.min else time_to_float(local_to.time())
-        elif self.request_date_from and self.request_date_to and (
+        elif self.request_duration == 'full' and self.request_date_from and self.request_date_to and (
                 local_from.time() != time.min or local_to.time() != time.min):
-            # days have no boundary to snap on: quantize the move on wall clocks, or the
+            # whole days have no boundary to snap on: quantize the move on wall clocks, or the
             # two bounds part ways at a change of offset
             for fname, days_after, moved in (('request_date_from', 0, local_from),
                                              ('request_date_to', 1, local_to)):
@@ -1522,6 +1489,17 @@ class HrLeave(models.Model):
                         requested=leave.number_of_hours
                     )
                 )
+
+    def _is_half_day(self):
+        return self.work_entry_type_request_unit == 'half_day' and self.request_duration in ('am', 'pm')
+
+    @api.constrains('request_duration', 'request_date_from', 'request_date_to', 'work_entry_type_id')
+    def _check_half_day(self):
+        if any(
+            leave._is_half_day() and leave.request_date_from != leave.request_date_to
+            for leave in self
+        ):
+            raise ValidationError(_("A half day is a time off of its own, it cannot start or end a time off of several days."))
 
     @api.constrains('date_from', 'date_to', 'employee_id', 'state')
     def _check_date(self):
@@ -2141,7 +2119,7 @@ class HrLeave(models.Model):
                 "%(employee)s on Time Off : %(duration)s",
                 employee=holiday.employee_id.name,
                 duration=holiday.duration_display)
-            allday_value = (holiday.work_entry_type_request_unit != 'half_day' or holiday.request_date_from_period == 'am' and holiday.request_date_to_period == 'pm')
+            allday_value = not holiday._is_half_day()
             if holiday.work_entry_type_request_unit == 'hour':
                 allday_value = float_compare(holiday.number_of_days, 1.0, 1) >= 0
 
@@ -2294,28 +2272,18 @@ class HrLeave(models.Model):
         for leave in multi_day_leaves:
             new_leave_vals = []
             target_leave_vals = []
-            # both parts are whole where they are cut, not the half day of the original
             if leave.request_date_from < split_date_from:
                 date_to = split_date_from + timedelta(days=-1)
-                period_to = leave.request_date_to_period if date_to == leave.request_date_to else 'pm'
                 new_leave_vals.append(leave.with_context(skip_copy_check=True).copy_data({
                     'request_date_to': date_to,
-                    'request_date_to_period': period_to,
-                    'request_duration': leave._get_request_duration(
-                        leave.request_date_from, leave.request_date_from_period, date_to, period_to),
                     'state': leave.state,
                     **leave._get_split_hour_vals(date_to=date_to),
                 })[0])
 
             # Do the same for the new leave after the split
             if leave.request_date_to >= split_date_to:
-                period_from = (leave.request_date_from_period
-                               if split_date_to == leave.request_date_from else 'am')
                 new_leave_vals.append(leave.with_context(skip_copy_check=True).copy_data({
                     'request_date_from': split_date_to,
-                    'request_date_from_period': period_from,
-                    'request_duration': leave._get_request_duration(
-                        split_date_to, period_from, leave.request_date_to, leave.request_date_to_period),
                     'state': leave.state,
                     **leave._get_split_hour_vals(date_from=split_date_to),
                 })[0])
@@ -2333,7 +2301,6 @@ class HrLeave(models.Model):
                     # date_from/date_to too, so this part is not left waiting for a recompute
                     fname: vals[fname]
                     for fname in ('request_date_from', 'request_date_to', 'request_duration',
-                                  'request_date_from_period', 'request_date_to_period',
                                   'request_hour_from', 'request_hour_to', 'date_from', 'date_to')
                     if fname in vals
                 })
@@ -2967,21 +2934,10 @@ class HrLeave(models.Model):
         date_to = leave_to.date_from.astimezone(ZoneInfo(leave_to.tz)).date()
         full_days = (date_to - date_from).days + 1
 
-        from_period = (
-            leave_from.request_date_to_period
-            if leave_from.work_entry_type_request_unit == "half_day"
-            else "pm"
-        )
-        to_period = (
-            leave_to.request_date_from_period
-            if leave_to.work_entry_type_request_unit == "half_day"
-            else "am"
-        )
-
         half_days_correction = -2.0
-        if from_period == "am":
+        if leave_from.work_entry_type_request_unit == "half_day" and leave_from.request_duration == "am":
             half_days_correction += 0.5
-        if to_period == "pm":
+        if leave_to.work_entry_type_request_unit == "half_day" and leave_to.request_duration == "pm":
             half_days_correction += 0.5
 
         return full_days + half_days_correction
@@ -2998,14 +2954,8 @@ class HrLeave(models.Model):
         date_from = max(date_min, self.date_from.astimezone(leave_tz).date())
         date_to = min(date_max, self.date_to.astimezone(leave_tz).date())
         days = (date_to - date_from).days + 1
-        if self.work_entry_type_request_unit == "half_day":
-            if self.request_date_from_period == self.request_date_to_period:
-                return days - 0.5
-            elif (
-                self.request_date_from_period == "pm"
-                and self.request_date_to_period == "am"
-            ):
-                return days - 1
+        if self._is_half_day():
+            return days - 0.5
         return days
 
     def _create_leaves_from_split(self, leave_split, use_worked_days=False):
@@ -3050,6 +3000,8 @@ class HrLeave(models.Model):
                 compined_intervals[start.date()] = 1
             days_data = sorted(compined_intervals.items())
 
+        period_from = 'pm' if self.request_duration == 'pm' else 'am'
+        request_date_to = self.request_date_to
         for work_entry_type, nbr_days in leave_split:
             full_days = floor(nbr_days)
             half_days = nbr_days - full_days
@@ -3057,49 +3009,59 @@ class HrLeave(models.Model):
             remaining_days -= nbr_days
 
             if use_worked_days:
-                if half_days or current_leave.request_date_from_period == 'pm':
-                    new_request_date_to, new_request_date_to_period = current_leave._get_request_date_to_with_period(nbr_days, work_intervals)
+                if half_days or period_from == 'pm':
+                    new_request_date_to, period_to = current_leave._get_request_date_to_with_period(nbr_days, work_intervals, period_from)
                 else:
                     new_request_date_to = current_leave._get_request_date_to(nbr_days, days_data)
-                    new_request_date_to_period = 'pm'
+                    period_to = 'pm'
             else:
                 new_request_date_to = current_leave.request_date_from + relativedelta(days=full_days - 1)
                 if half_days:
-                    new_request_date_to_period = current_leave.request_date_from_period
+                    period_to = period_from
                 else:
-                    new_request_date_to_period = 'am' if current_leave.request_date_from_period == 'pm' else 'pm'
+                    period_to = 'am' if period_from == 'pm' else 'pm'
 
-                if half_days or current_leave.request_date_from_period == 'pm':
+                if half_days or period_from == 'pm':
                     new_request_date_to += relativedelta(days=1)
 
-            old_request_date_to = current_leave.request_date_to
-            old_request_date_to_period = current_leave.request_date_to_period
-
-            current_leave.request_date_to = new_request_date_to
-            current_leave.request_date_to_period = new_request_date_to_period
-            current_leave.work_entry_type_id = work_entry_type
-
-            new_leave_request_date_from = new_request_date_to + relativedelta(days=1)
-            new_leave_request_date_from_period = 'am'
-            if new_request_date_to_period == 'am':
-                new_leave_request_date_from_period = 'pm'
-                new_leave_request_date_from -= relativedelta(days=1)
+            first_day = current_leave.request_date_from
+            bounds = [(first_day, new_request_date_to, period_from if period_from == period_to else 'full')]
+            # a half day is a request of its own, the one at either end of several days is split off
+            if work_entry_type.request_unit == 'half_day' and first_day != new_request_date_to:
+                bounds = [(first_day, first_day, 'pm')] if period_from == 'pm' else []
+                last_day = new_request_date_to - relativedelta(days=1) if period_to == 'am' else new_request_date_to
+                if period_from == 'pm':
+                    first_day += relativedelta(days=1)
+                if first_day <= last_day:
+                    bounds.append((first_day, last_day, 'full'))
+                if period_to == 'am':
+                    bounds.append((new_request_date_to, new_request_date_to, 'am'))
+            (date_from, date_to, duration), *split_off_bounds = bounds
+            current_leave.write({
+                'request_date_from': date_from,
+                'request_date_to': date_to,
+                'work_entry_type_id': work_entry_type.id,
+                **({'request_duration': duration} if work_entry_type.request_unit == 'half_day' else {}),
+            })
+            res += current_leave
+            for date_from, date_to, duration in split_off_bounds:
+                res += current_leave.with_context(skip_copy_check=True, leave_fast_create=True).copy(default={
+                    'request_date_from': date_from,
+                    'request_date_to': date_to,
+                    'request_duration': duration,
+                })
 
             if remaining_days:
-                new_leave = current_leave.with_context({'skip_copy_check': True, 'leave_fast_create': True}).copy(
-                    default={
-                        'request_date_from': new_leave_request_date_from,
-                        'request_date_from_period': new_leave_request_date_from_period,
-                        'request_date_to': old_request_date_to,  # Will be recomputed at next iteration
-                        'request_date_to_period': old_request_date_to_period,  # Will be recomputed at next iteration
-                        'request_duration': False,
-                        **current_leave._get_extra_default_leave_values_for_split(),
-                    }
-                )
-                res += current_leave
-                current_leave = new_leave
-            else:
-                res += current_leave
+                period_from = 'pm' if period_to == 'am' else 'am'
+                new_leave_request_date_from = new_request_date_to + relativedelta(days=1 if period_from == 'am' else 0)
+                # the afternoon left of a morning is a half day of its own until the next part ends it
+                afternoon = period_from == 'pm' and work_entry_type.request_unit == 'half_day'
+                current_leave = current_leave.with_context(skip_copy_check=True, leave_fast_create=True).copy(default={
+                    'request_date_from': new_leave_request_date_from,
+                    'request_date_to': new_leave_request_date_from if afternoon else request_date_to,
+                    'request_duration': 'pm' if afternoon else False,
+                    **current_leave._get_extra_default_leave_values_for_split(),
+                })
         return res
 
     def _get_extra_default_leave_values_for_split(self):
@@ -3127,11 +3089,12 @@ class HrLeave(models.Model):
                 return day
         return False
 
-    def _get_request_date_to_with_period(self, number_of_days, work_intervals):
+    def _get_request_date_to_with_period(self, number_of_days, work_intervals, period_from):
         """Return the day and the period at which ``number_of_days`` working days are reached.
 
         :param float number_of_days: number of working days, possibly with a half day
         :param work_intervals: work intervals of the request
+        :param str period_from: ``'pm'`` if the request starts on the afternoon of its first day, ``'am'`` otherwise
         :return: ``(date, 'am' or 'pm')``, ``False`` if not reached
         """
         self.ensure_one()
@@ -3143,7 +3106,7 @@ class HrLeave(models.Model):
                 continue
             if interval[0] < date_from:
                 interval = (date_from, interval[1], interval[2])
-            is_first_afternoon = self.request_date_from_period == 'pm' and interval[1].date() == self.request_date_from
+            is_first_afternoon = period_from == 'pm' and interval[1].date() == self.request_date_from
             interval_days = self.resource_calendar_id._get_attendance_intervals_days_data([interval])['days']
             if number_of_days < interval_days:
                 return (interval[1].date(), 'am')

@@ -82,16 +82,14 @@ class TestFlexibleResourceCalendar(TransactionCase):
             'employee_id': self.flex_employee.id,
             'request_date_from': date(2025, 7, 28),
             'request_date_to': date(2025, 7, 28),
-            'request_date_from_period': 'am',
-            'request_date_to_period': 'am',
+            'request_duration': 'am',
         }, {
             'name': 'Half 2',
             'work_entry_type_id': half_day_leave.id,
             'employee_id': self.flex_employee.id,
             'request_date_from': date(2025, 7, 30),
             'request_date_to': date(2025, 7, 30),
-            'request_date_from_period': 'pm',
-            'request_date_to_period': 'pm',
+            'request_duration': 'pm',
         }, {
             'name': 'Custom',
             'work_entry_type_id': custom_leave.id,
@@ -106,16 +104,14 @@ class TestFlexibleResourceCalendar(TransactionCase):
             'employee_id': self.fully_flex_employee.id,
             'request_date_from': date(2025, 7, 28),
             'request_date_to': date(2025, 7, 28),
-            'request_date_from_period': 'am',
-            'request_date_to_period': 'am',
+            'request_duration': 'am',
         }, {
             'name': 'Half 2',
             'work_entry_type_id': half_day_leave.id,
             'employee_id': self.fully_flex_employee.id,
             'request_date_from': date(2025, 7, 30),
             'request_date_to': date(2025, 7, 30),
-            'request_date_from_period': 'pm',
-            'request_date_to_period': 'pm',
+            'request_duration': 'pm',
         }, {
             'name': 'Custom',
             'work_entry_type_id': custom_leave.id,
@@ -252,13 +248,8 @@ class TestFlexibleResourceCalendar(TransactionCase):
             'calendar_id': False,
             'date_from': datetime(2025, 7, 23, 0, 0),
             'date_to': datetime(2025, 7, 23, 23, 59, 59),
-        }, {
-            'name': 'Public Holiday on Monday',
-            'calendar_id': False,
-            'date_from': datetime(2025, 8, 4, 0, 0),
-            'date_to': datetime(2025, 8, 4, 23, 59, 59),
         }])
-        week_leave, week_with_holiday_leave, half_days_leave, half_days_with_holiday_leave = self.env['hr.leave'].create([{
+        week_leave, week_with_holiday_leave, first_pm, middle_days, last_am = self.env['hr.leave'].create([{
             'name': 'Monday to Friday',
             'work_entry_type_id': day_type.id,
             'employee_id': self.fully_flex_employee.id,
@@ -271,27 +262,29 @@ class TestFlexibleResourceCalendar(TransactionCase):
             'request_date_from': date(2025, 7, 21),
             'request_date_to': date(2025, 7, 25),
         }, {
-            'name': 'Monday afternoon to Friday morning',
+            'name': 'Monday afternoon',
             'work_entry_type_id': half_day_type.id,
             'employee_id': self.fully_flex_employee.id,
             'request_date_from': date(2025, 7, 28),
-            'request_date_to': date(2025, 8, 1),
-            'request_date_from_period': 'pm',
-            'request_date_to_period': 'am',
+            'request_date_to': date(2025, 7, 28),
+            'request_duration': 'pm',
         }, {
-            'name': 'Monday afternoon to Friday morning, public holiday on Monday',
+            'name': 'Tuesday to Thursday',
             'work_entry_type_id': half_day_type.id,
             'employee_id': self.fully_flex_employee.id,
-            'request_date_from': date(2025, 8, 4),
-            'request_date_to': date(2025, 8, 8),
-            'request_date_from_period': 'pm',
-            'request_date_to_period': 'am',
+            'request_date_from': date(2025, 7, 29),
+            'request_date_to': date(2025, 7, 31),
+        }, {
+            'name': 'Friday morning',
+            'work_entry_type_id': half_day_type.id,
+            'employee_id': self.fully_flex_employee.id,
+            'request_date_from': date(2025, 8, 1),
+            'request_date_to': date(2025, 8, 1),
+            'request_duration': 'am',
         }])
         self.assertEqual(week_leave.number_of_days, 5)
         self.assertEqual(week_with_holiday_leave.number_of_days, 4)
-        self.assertEqual(half_days_leave.number_of_days, 4)
-        # Monday is not counted at all: Tuesday to Thursday and Friday morning
-        self.assertEqual(half_days_with_holiday_leave.number_of_days, 3.5)
+        self.assertEqual((first_pm | middle_days | last_am).mapped('number_of_days'), [0.5, 3, 0.5])
 
     def test_duration_multi_day_leave_fully_flexible_employee_timezone(self):
         """The public holidays are subtracted on the days of the timezone of the employee."""

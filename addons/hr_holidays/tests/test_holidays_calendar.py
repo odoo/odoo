@@ -96,8 +96,7 @@ class TestHolidaysCalendar(HttpCase, TestHrHolidaysCommon):
             'work_entry_type_id': leave_type_half.id,
             'request_date_from': test_date_half,
             'request_date_to': test_date_half,
-            'request_date_from_period': 'pm',
-            'request_date_to_period': 'pm',
+            'request_duration': 'pm',
         })
 
         leave_half.action_approve()

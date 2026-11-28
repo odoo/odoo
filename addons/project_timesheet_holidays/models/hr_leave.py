@@ -47,7 +47,7 @@ class HrLeave(models.Model):
                 leave_date = leave.date_from.astimezone(employee_timezone).date()
                 if leave.work_entry_type_request_unit == 'hour':
                     hours = leave.request_hour_to - leave.request_hour_from
-                elif leave.work_entry_type_request_unit == 'half_day' and leave.request_date_from_period == leave.request_date_to_period:
+                elif leave._is_half_day():
                     hours = leave_version_sudo.resource_calendar_id.hours_per_day / 2
                 else:  # Single-day leave
                     hours = leave_version_sudo.resource_calendar_id.hours_per_day

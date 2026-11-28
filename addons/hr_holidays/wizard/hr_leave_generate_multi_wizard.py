@@ -35,12 +35,9 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
     hour_from = fields.Float(string='Hour from')
     hour_to = fields.Float(string='Hour to')
     work_entry_type_request_unit = fields.Selection(related='work_entry_type_id.request_unit')
-    date_from_period = fields.Selection([
-        ('am', 'Morning'), ('pm', 'Afternoon')],
-        string="Date Period Start", default='am')
-    date_to_period = fields.Selection([
-        ('am', 'Morning'), ('pm', 'Afternoon')],
-        string="Date Period End", default='pm')
+    request_duration = fields.Selection([
+        ('full', 'Full Day'), ('am', 'Morning'), ('pm', 'Afternoon')],
+        string="Day Period", default='full')
     valid_work_entry_type_ids = fields.Many2many("hr.work.entry.type", compute="_compute_valid_work_entry_type_ids")
 
     @api.depends('company_id')
@@ -77,9 +74,8 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
                 if self.work_entry_type_request_unit == 'hour':
                     employee_values['request_hour_from'] = self.hour_from
                     employee_values['request_hour_to'] = self.hour_to
-                if self.work_entry_type_request_unit == 'half_day':
-                    employee_values['request_date_from_period'] = self.date_from_period
-                    employee_values['request_date_to_period'] = self.date_to_period
+                if self.work_entry_type_request_unit == 'half_day' and self.date_from == self.date_to:
+                    employee_values['request_duration'] = self.request_duration
                 values.append(employee_values)
         return values
 

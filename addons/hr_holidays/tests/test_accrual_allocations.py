@@ -1713,8 +1713,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'work_entry_type_id': work_entry_type.id,
                 'request_date_from': '2017-12-06 08:00:00',
                 'request_date_to': '2017-12-06 17:00:00',
-                'request_date_from_period': 'am',
-                'request_date_to_period': 'am',
+                'request_duration': 'am',
             })
             leave.action_approve()
 

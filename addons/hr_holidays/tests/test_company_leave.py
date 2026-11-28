@@ -155,8 +155,6 @@ class TestCompanyLeave(TransactionCase):
             'work_entry_type_id': self.paid_time_off.id,
             'request_date_from': date(2020, 1, 7),
             'request_date_to': date(2020, 1, 7),
-            'request_date_from_period': 'am',
-
         })
         leave._compute_date_from_to()
 

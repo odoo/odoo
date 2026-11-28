@@ -298,8 +298,6 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
             'work_entry_type_id': self.work_entry_type.id,
             'request_date_from': date(2026, 4, 20),
             'request_date_to': date(2026, 4, 24),
-            'request_date_from_period': 'am',
-            'request_date_to_period': 'pm',
         })
 
         self.assertEqual(leave.number_of_days, 5)
