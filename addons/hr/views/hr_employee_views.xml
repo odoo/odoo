@@ -327,12 +327,24 @@
                                 </field>
                             </page>
                             <page name="personal_information" string="Personal" groups="hr.group_hr_user">
-                                <group>
-                                    <group string="Private Contact">
-                                        <field name="private_email" placeholder="e.g. myprivateemail@example.com" string="Email"/>
-                                        <field name="private_phone_sanitized" invisible="1"/> <!-- read by the phone widget of private_phone for the tel: link -->
-                                        <field name="private_phone_formatted" invisible="1"/> <!-- read by the phone widget of private_phone for the displayed format -->
-                                        <field name="private_phone" widget="phone" string="Phone"/>
+                                <group string="Personal Information">
+                                    <group name="hr_birth_group">
+                                        <field name="legal_name" invisible="split_legal_name"/>
+                                        <label for="birthday"/>
+                                        <div class="d-flex align-items-center gap-2" name="birth_and_age">
+                                            <field name="birthday" nolabel="1" class="oe_inline o_hr_narrow_field"/>
+                                            <span class="text-muted ms-3" invisible="not birthday">(<label for="age" class="d-inline"/> <field name="age" nolabel="1" class="oe_inline o_hr_narrow_field"/>)</span>
+                                        </div>
+                                        <field name="birthday_public_display" invisible="not birthday" widget="boolean_toggle"/>
+                                        <label for="place_of_birth"/>
+                                        <div class="o_row" name="birth_location">
+                                            <field name="place_of_birth" class="oe_inline o_hr_narrow_field" nolabel="1" placeholder="City"/>
+                                            <div class="mx-3 flex-grow-0">─</div>
+                                            <field name="country_of_birth" class="oe_inline o_hr_narrow_field" nolabel="1" placeholder="Country"/>
+                                        </div>
+                                    </group>
+                                    <group name="hr_personal_group">
+                                        <field name="sex"/>
                                         <field name="has_multiple_bank_accounts" invisible="1"/> <!-- drives invisible of the two bank account blocks below -->
                                         <field name="is_trusted_bank_account" invisible="1"/> <!-- drives invisible of the trusted/untrusted labels and of the trust toggle button -->
                                         <field name="bank_account_ids" invisible="1"
@@ -381,21 +393,26 @@
                                             </div>
                                         </div>
                                     </group>
-                                    <group string="Personal Information" name="hr_birth_group">
-                                        <field name="legal_name" invisible="split_legal_name"/>
-                                        <label for="birthday"/>
-                                        <div class="d-flex align-items-center gap-2" name="birth_and_age">
-                                            <field name="birthday" nolabel="1" class="oe_inline o_hr_narrow_field"/>
-                                            <span class="text-muted ms-3" invisible="not birthday">(<label for="age" class="d-inline"/> <field name="age" nolabel="1" class="oe_inline o_hr_narrow_field"/>)</span>
+                                </group>
+                                
+                                <group name="hr_personal_sections">
+                                    <group string="Address" name="hr_location_group">
+                                        <label for="private_street" string="Private Address"/>
+                                        <div class="o_address_format o_hr_address">
+                                            <field name="private_street" placeholder="Street..." class="o_address_street"/>
+                                            <field name="private_street2" placeholder="Street 2..." class="o_address_street"/>
+                                            <field name="private_city" placeholder="City" class="o_address_city"/>
+                                            <field name="private_state_id" class="o_address_state" placeholder="State"
+                                                options='{"no_open": True, "no_create": True}' context="{'default_country_id': private_country_id}"
+                                                domain="[('id', 'in', allowed_country_state_ids)]"/>
+                                            <field name="private_zip" placeholder="ZIP" class="o_address_zip"/>
+                                            <field name="private_country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
                                         </div>
-                                        <field name="birthday_public_display" invisible="not birthday" widget="boolean_toggle"/>
-                                        <label for="place_of_birth"/>
-                                        <div class="o_row" name="birth_location">
-                                            <field name="place_of_birth" class="oe_inline o_hr_narrow_field" nolabel="1" placeholder="City"/>
-                                            <div class="mx-3 flex-grow-0">─</div>
-                                            <field name="country_of_birth" class="oe_inline o_hr_narrow_field" nolabel="1" placeholder="Country"/>
+                                        <label for="distance_home_work"/>
+                                        <div class="o_row" name="div_km_home_work">
+                                            <field name="distance_home_work" class="o_hr_narrow_field-4"/>
+                                            <span><field name="distance_home_work_unit" class="o_hr_narrow_field-4"/></span>
                                         </div>
-                                        <field name="sex"/>
                                     </group>
                                     <group name="citizenship" string="Citizenship">
                                         <field name="country_id" options='{"no_open": True, "no_create": True}'/>
@@ -407,7 +424,7 @@
                                             <field name="passport_expiration_date" invisible="not passport_id"/>
                                         </div>
                                     </group>
-                                    <group string="Visa &amp; Work Permit">
+                                    <group string="Visa &amp; Work Permit" name="hr_visa_group" invisible="not country_id or country_id == company_country_id">
                                         <label for="visa_no"/>
                                         <div class="o_wrap_label d-flex flex-row gap-3 align-items-baseline">
                                             <field name="visa_no" />
@@ -423,39 +440,29 @@
                                         <field name="work_permit_name" invisible="1"/> <!-- filename of the has_work_permit binary widget -->
                                         <field name="has_work_permit" widget="binary" filename="work_permit_name" string="Document"/>
                                     </group>
-                                    <group string="Emergency Contact">
-                                        <field name="emergency_contact" string="Contact Name"/>
+                                    <group string="Contact" name="hr_contact_group">
+                                        <field name="private_email" placeholder="e.g. myprivateemail@example.com" string="Email"/>
+                                        <field name="private_phone_sanitized" invisible="1"/> <!-- read by the phone widget of private_phone for the tel: link -->
+                                        <field name="private_phone_formatted" invisible="1"/> <!-- read by the phone widget of private_phone for the displayed format -->
+                                        <field name="private_phone" widget="phone" string="Phone"/>
+
                                         <field name="emergency_phone_sanitized" invisible="1"/> <!-- read by the phone widget of emergency_phone for the tel: link -->
                                         <field name="emergency_phone_formatted" invisible="1"/> <!-- read by the phone widget of emergency_phone for the displayed format -->
-                                        <field name="emergency_phone" widget="phone" class="o_force_ltr" string="Phone"/>
+                                        <label for="emergency_contact"/>
+                                        <div class="d-flex flex-column gap-1" name="emergency_contact">
+                                            <field name="emergency_contact" nolabel="1" placeholder="Name"/>
+                                            <field name="emergency_phone" widget="phone" class="o_force_ltr" nolabel="1" placeholder="Phone Number"/>
+                                        </div>
                                     </group>
-                                    <group string="Location" name="hr_location_group">
-                                        <label for="private_street" string="Private Address"/>
-                                        <div class="o_address_format o_hr_address">
-                                            <field name="private_street" placeholder="Street..." class="o_address_street"/>
-                                            <field name="private_street2" placeholder="Street 2..." class="o_address_street"/>
-                                            <field name="private_city" placeholder="City" class="o_address_city"/>
-                                            <field name="private_state_id" class="o_address_state" placeholder="State" 
-                                                options='{"no_open": True, "no_create": True}' context="{'default_country_id': private_country_id}"
-                                                domain="[('id', 'in', allowed_country_state_ids)]"/>
-                                            <field name="private_zip" placeholder="ZIP" class="o_address_zip"/>
-                                            <field name="private_country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
-                                        </div>
-                                        <label for="distance_home_work"/>
-                                        <div class="o_row" name="div_km_home_work">
-                                            <field name="distance_home_work"/>
-                                            <span><field name="distance_home_work_unit"/></span>
-                                        </div>
+                                    <group string="Education" name="hr_education_group">
+                                        <field name="certificate"/>
+                                        <field name="study_field" placeholder="e.g. Engineering, Commerce, Business Administration, ..."/>
                                     </group>
                                     <group string="Family" name="hr_family_group">
                                         <field name="marital"/>
                                         <field name="spouse_complete_name" invisible="marital not in ['married', 'cohabitant']"/>
                                         <field name="spouse_birthdate" invisible="marital not in ['married', 'cohabitant']"/>
                                         <field name="children"/>
-                                    </group>
-                                    <group string="Education" name="hr_education_group">
-                                        <field name="certificate"/>
-                                        <field name="study_field" placeholder="e.g. Engineering, Commerce, Business Administration, ..."/>
                                     </group>
                                     <group string="Documents" name="hr_document_group">
                                         <field name="id_card_name" invisible="1"/> <!-- filename of the id_card binary widget -->
