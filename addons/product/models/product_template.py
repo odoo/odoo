@@ -125,7 +125,9 @@ class ProductTemplate(models.Model):
     list_price = fields.Float(
         'Sales Price', default=1.0,
         min_display_digits='Product Price',
+        copy=True,
         tracking=True,
+        company_dependent=True,
         help="Price at which the product is sold to customers.",
     )
     standard_price = fields.Float(
@@ -405,14 +407,16 @@ class ProductTemplate(models.Model):
             self_ctx._check_duplicated_variant_barcodes(barcodes_within_company, company_id)
 
     @api.depends('company_id')
+    @api.depends_context('company')
     def _compute_currency_id(self):
-        main_company = self.env['res.company']._get_main_company()
+        env_currency_id = self.env.company.currency_id.id
         for template in self:
-            template.currency_id = template.company_id.sudo().currency_id.id or main_company.currency_id.id
+            template.currency_id = template.company_id.sudo().currency_id.id or env_currency_id
 
     def _compute_sql_currency_id(self, table):
-        main_company = self.env['res.company']._get_main_company()
-        return SQL("COALESCE(%s, %s)", table.company_id.currency_id, main_company.currency_id.id)
+        return SQL(
+            "COALESCE(%s, %s)", table.company_id.currency_id, self.env.company.currency_id.id,
+        )
 
     @api.depends('company_id')
     @api.depends_context('company')
@@ -767,6 +771,7 @@ class ProductTemplate(models.Model):
         return self.base_unit_count and price / self.base_unit_count
 
     @api.depends('list_price', 'base_unit_count')
+    @api.depends_context('company')
     def _compute_base_unit_price(self):
         for template in self:
             template.base_unit_price = template._get_base_unit_price(template.list_price)
@@ -829,6 +834,7 @@ class ProductTemplate(models.Model):
         ''' Store the initial standard price in order to be able to retrieve the cost of a product template for a given date'''
         templates = super().create(vals_list)
         if self.env.context.get("create_product_product", True):
+            templates._set_list_price_in_all_companies()
             templates.with_context(with_warning_too_many_combination=True)._create_variant_ids()
 
         # This is needed to set given values to first variant after creation
@@ -844,6 +850,15 @@ class ProductTemplate(models.Model):
             templates._check_barcode_uniqueness()
 
         return templates
+
+    def _set_list_price_in_all_companies(self):
+        """Set the sales price of the shared templates in the other companies, which can then
+        change their own."""
+        companies = self.env['res.company'].sudo().search([('id', '!=', self.env.company.id)])
+        shared_templates = self.filtered(lambda template: not template.company_id)
+        for template in shared_templates.sudo().with_context(mail_notrack=True):
+            for company in companies:
+                template.with_company(company).list_price = template.list_price
 
     def write(self, vals):
         if 'uom_id' in vals:

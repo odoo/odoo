@@ -49,6 +49,8 @@ class ProductProduct(models.Model):
         min_display_digits='Product Price',
         readonly=False,
         store=True,
+        company_dependent=True,
+        prefetch=True,  # read with the variant
         help="The sale price can be set manually or computed from the product template. Click on the 'Configure Variants' button to set the extra attribute prices.")
 
     default_code = fields.Char('Internal Reference', index=True)
@@ -475,8 +477,10 @@ class ProductProduct(models.Model):
 
     @api.depends('list_price', 'price_extra')
     def _compute_product_lst_price(self):
-        for product in self:
-            product.lst_price = product.list_price + product.price_extra
+        # all companies at once, as a stored compute is only done in the company triggering it
+        for company in self.env['res.company'].search([]):
+            for product in self.with_company(company):
+                product.lst_price = product.list_price + product.price_extra
 
     def _inverse_product_lst_price(self):
         for product in self:
@@ -652,6 +656,7 @@ class ProductProduct(models.Model):
         return self.base_unit_count and price / self.base_unit_count
 
     @api.depends('lst_price', 'base_unit_count')
+    @api.depends_context('company')
     def _compute_base_unit_price(self):
         for product in self:
             if not product.id:
@@ -908,6 +913,12 @@ class ProductProduct(models.Model):
         )
         # Make sure the `create_product_product` context is not kept, unless it was already set.
         products = products.with_env(self.env)
+        # a template created with its variant gets its sales price in all the companies
+        products.browse(
+            product.id
+            for product, vals in zip(products, vals_list)
+            if 'product_tmpl_id' not in vals and ('list_price' in vals or 'lst_price' in vals)
+        ).product_tmpl_id._set_list_price_in_all_companies()
         if any('barcode' in vals or 'company_id' in vals for vals in vals_list):
             products._check_barcode_uniqueness()
         return products

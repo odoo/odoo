@@ -588,13 +588,15 @@ class ProductTemplate(models.Model):
                            AND pt2.active    = TRUE
                            AND pt2.sale_ok   = TRUE
                            AND pt2.is_published = TRUE
-                           AND pt2.list_price < pt.list_price
+                           AND %(pt2_list_price)s < %(pt_list_price)s
                            AND sol2.combo_item_id IS NULL
                            AND pt2.id        != pt.id
                          GROUP BY pt.id, pt2.id) ranked
                  WHERE rn <= %(max_products)s
                 """,
                 pt_ids=list(self.ids),
+                pt2_list_price=self._field_to_sql("pt2", "list_price"),
+                pt_list_price=self._field_to_sql("pt", "list_price"),
                 max_products=max_products,
             )
         )

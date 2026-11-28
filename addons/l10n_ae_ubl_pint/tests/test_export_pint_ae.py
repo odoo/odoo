@@ -205,6 +205,7 @@ class TestExportPintAe(TestUblCiiCommon):
             'currency_id': self.env.ref('base.USD').id,
             'company_id': self.company_data['company'].id,
         })
+        self.product_a.lst_price = 3672.50  # 1000 USD
 
         self.partner_ae.peppol_verification_state = 'not_valid'
         # The Peppol check makes the buyer valid in demo mode.

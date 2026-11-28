@@ -60,6 +60,7 @@ class TestWebsiteSalePerformanceNoPricelist(WebsiteSaleCommon, UtilPerf, Product
     def _get_shop_page_queries(self):
         res = defaultdict(int)
         res.update({
+            "account_account": 1,
             "account_tax": 2,
             "account_tax_repartition_line": 2,
             "ir_ui_view": 2,
@@ -98,6 +99,7 @@ class TestWebsiteSalePerformanceNoPricelist(WebsiteSaleCommon, UtilPerf, Product
     def _get_product_page_queries(self):
         res = defaultdict(int)
         res.update({
+            "account_account": 1,
             "account_tax": 2,
             "account_tax_repartition_line": 2,
             "ir_attachment": 1,
@@ -244,6 +246,10 @@ class TestWebsiteSalePerformanceWithPricelist(TestWebsiteSalePerformanceWithPric
     def _get_product_page_queries(self):
         res = super()._get_product_page_queries()
         res["product_pricelist_item"] += 1
+        if "website_sale_subscription" not in self.installed_modules:
+            # FIXME VFE magic comeback when sub is installed makes no **** sense
+            # Seems to come from the `website_sale` template, not the sub override strangely
+            del res["account_account"]
         return res
 
     def test_product_page_generation(self):
