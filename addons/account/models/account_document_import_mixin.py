@@ -1,3 +1,4 @@
+import base64
 from contextlib import contextmanager
 from copy import deepcopy
 import difflib
@@ -164,6 +165,7 @@ class AccountDocumentImportMixin(models.AbstractModel):
                 body=self.env._("This document was created from the following attachment(s)."),
                 attachment_ids=attachment_records.ids
             )
+            record._set_invoice_pdf_file(file_data_group)
 
         # Call _extend_with_attachments at the end, because it commits the transaction.
         for record, file_data_group in zip(records, file_data_groups):
@@ -174,6 +176,43 @@ class AccountDocumentImportMixin(models.AbstractModel):
                 )
 
         return records
+
+    def _set_invoice_pdf_file(self, files_data):
+        self.ensure_one()
+        for file_data in files_data:
+            if file_data.get('import_file_type') == 'pdf':
+                self.env['ir.attachment'].create({
+                    'name': file_data.get('name') or '',
+                    'mimetype': file_data.get('mimetype') or 'application/pdf',
+                    'raw': file_data['raw'],
+                    'res_model': self._name,
+                    'res_id': self.id,
+                    'res_field': 'invoice_pdf_report_file',
+                })
+            elif file_data.get('xml_tree') is not None:
+                for doc in file_data['xml_tree'].xpath("//*[contains(local-name(), 'EmbeddedDocumentBinaryObject')]"):
+                    if not doc.text:
+                        continue
+                    embedded = {
+                        'name': doc.get('filename', ''),
+                        'raw': base64.b64decode(doc.text),
+                        'mimetype': doc.get('mimeCode', ''),
+                        'attachment': None,
+                        'origin_attachment': None,
+                        'origin_import_file_type': None,
+                        'xml_tree': None,
+                        'import_file_type': None,
+                    }
+                    if self._get_import_file_type(embedded) != 'pdf':
+                        continue
+                    self.env['ir.attachment'].create({
+                        'name': embedded['name'] or 'invoice.pdf',
+                        'mimetype': embedded['mimetype'] or 'application/pdf',
+                        'raw': embedded['raw'],
+                        'res_model': self._name,
+                        'res_id': self.id,
+                        'res_field': 'invoice_pdf_report_file',
+                    })
 
     @api.model
     def _create_records_from_attachments_default_create_values(self):
