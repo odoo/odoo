@@ -18,6 +18,7 @@ class MailTestAccess(models.Model):
     email_from = fields.Char()
     phone = fields.Char()
     customer_id = fields.Many2one('res.partner', 'Customer')
+    related_partner_ids = fields.Many2many('res.partner', string='Related Partners')
     access = fields.Selection(
         [
             ('public', 'public'),

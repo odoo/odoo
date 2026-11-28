@@ -454,8 +454,11 @@ class Base(models.AbstractModel):
                 }
 
                 if 'display_name' in field_spec['fields']:
-                    for rec in co_records.sudo():
-                        many2one_data[rec.id]['display_name'] = rec.display_name
+                    for rec in co_records:
+                        many2one_data[rec.id]['display_name'] = (
+                            rec.sudo().display_name if rec.has_access('read')
+                            else self.env._("Restricted record")
+                        )
 
                 for values in values_list:
                     if values[field_name] is False:
