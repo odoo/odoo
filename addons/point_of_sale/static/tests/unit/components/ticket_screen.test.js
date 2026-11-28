@@ -159,3 +159,13 @@ test("many presets keep the search bar and its filter menu usable", async () => 
         queryRect(".ticket-screen").left
     );
 });
+
+test("changing the filter resets the ticket screen to page 1", async () => {
+    await setupPosEnv();
+    const comp = await mountWithCleanup(TicketScreen, {
+        props: { stateOverride: { nbrByPage: 1, page: 2 } },
+    });
+    expect(comp.state.page).toBe(2);
+    await comp.onFilterSelected("PAYMENT");
+    expect(comp.state.page).toBe(1);
+});
