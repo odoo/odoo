@@ -72,6 +72,7 @@ export class SelfOrder extends Reactive {
         this.orderSubscribtion = new Set();
         this.productCategories = [];
         this.currentCategory = null;
+        this.productListScrollTop = 0;
         this.productByCategIds = {};
         this.availableCategories = [];
         this.snoozeTracker = new SnoozeTracker();
@@ -455,6 +456,7 @@ export class SelfOrder extends Reactive {
             return;
         }
         this.currentCategory = this.availableCategories[0];
+        this.productListScrollTop = 0;
     }
 
     get paymentMethods() {

@@ -12,8 +12,6 @@ import { useDraggableScroll } from "../../utils/scroll_dnd_hook";
 import { scrollItemIntoViewX } from "../../utils/scroll";
 import { useScrollShadow, useHorizontalScrollShadow } from "../../utils/scroll_shadow_hook";
 
-let savedScrollTop = 0;
-
 export class ProductListPage extends Component {
     static template = "pos_self_order.ProductListPage";
     static components = { OrderWidget, ProductCard };
@@ -77,13 +75,13 @@ export class ProductListPage extends Component {
             this.toggleSubCategoryPanel();
             this.ensureCategoryVisible();
             if (this.productListRef()) {
-                this.productListRef().scrollTop = savedScrollTop;
+                this.productListRef().scrollTop = this.selfOrder.productListScrollTop;
             }
         });
 
         onWillUnmount(() => {
             this.selfOrder.currentCategory = this.state.selectedCategory;
-            savedScrollTop = this.productListRef()?.scrollTop || 0;
+            this.selfOrder.productListScrollTop = this.productListRef()?.scrollTop || 0;
         });
     }
 
