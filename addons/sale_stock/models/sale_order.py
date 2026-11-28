@@ -90,21 +90,37 @@ class SaleOrder(models.Model):
     @api.depends('picking_ids', 'picking_ids.state')
     def _compute_delivery_status(self):
         for order in self:
-            if not order.picking_ids or \
-                (
-                    all(p.state in ['done', 'cancel'] for p in order.picking_ids) and
-                    all(line.qty_delivered_method != 'stock_move' or float_is_zero(line.qty_delivered, precision_rounding=line.product_uom_id.rounding)
-                    for line in order.order_line)
-                ):
+            # check if anything has been delivered
+            has_stock_delivered = any(
+                line.qty_delivered_method == 'stock_move'
+                and not float_is_zero(line.qty_delivered, precision_rounding=line.product_uom_id.rounding)
+                for line in order.order_line
+            )
+            outgoing_pickings = order.picking_ids.filtered(lambda p: p.picking_type_code == 'outgoing')
+
+            # if there are no pickings, all of them are canceled or an outgoing shipping is cancelled with 0 delivered, no delivery status
+            if not order.picking_ids or all(p.state == 'cancel' for p in order.picking_ids) or (
+                outgoing_pickings and all(p.state == 'cancel' for p in outgoing_pickings) and not has_stock_delivered
+            ):
                 order.delivery_status = False
+
+            # if all pickings are either done or cancelled but nothing as been delivered that means something was returned, set it to pending to indicate that you still need to send something
+            elif all(p.state in ['done', 'cancel'] for p in order.picking_ids) and not has_stock_delivered:
+                order.delivery_status = 'pending'
+
+            # if all pickings are either done or cancelled the delivery has been made
             elif all(p.state in ['done', 'cancel'] for p in order.picking_ids):
                 order.delivery_status = 'full'
-            elif any(p.state == 'done' for p in order.picking_ids) and any(
-                    line.qty_delivered_method == 'stock_move' and not float_is_zero(line.qty_delivered, precision_rounding=line.product_uom_id.rounding)
-                    for line in order.order_line):
+
+            # some goods have been deliveried and there is a picking that is done, it's in progress
+            elif any(p.state == 'done' for p in order.picking_ids) and has_stock_delivered:
                 order.delivery_status = 'partial'
+
+            # some picking has been done but nothing has been delivered yet, meaning some internal picking is done, therefore the delivery has started
             elif any(p.state == 'done' for p in order.picking_ids):
                 order.delivery_status = 'started'
+
+            # default
             else:
                 order.delivery_status = 'pending'
 
