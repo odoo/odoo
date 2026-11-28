@@ -18,6 +18,22 @@
 }
 /*  ********* Generic element styling  ********* */
 
+.btn-secondary {
+    --btn-bg: #F4F4F4;
+    --btn-border-color: #cccccc;
+    --btn-color: var(--o-gray-900);
+    --btn-disabled-bg: var(--btn-bg);
+    --btn-disabled-color: var(--o-gray-700);
+    --btn-disabled-border-color: var(--btn-border-color);
+    &:disabled, &.disabled {
+        filter: saturate(0);
+    }
+}
+
+.bg-secondary {
+    --background-color: #F4F4F4;
+}
+
 .dvh-100 {
   /* we specify the 100vh as a fallback in case the browser does not */
   /* know dvh */

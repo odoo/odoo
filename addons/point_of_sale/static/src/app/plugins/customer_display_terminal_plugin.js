@@ -30,9 +30,16 @@ export class CustomerDisplayTerminalPlugin extends Plugin {
         // changing `init`'s signature.
         this.context = {};
 
+        // Chain of the payloads being dispatched
+        this.dispatching = Promise.resolve();
+
         // Fallback communication channel used when the request fails (e.g. network loss).
         // NOTE: Works only between contexts within the same browser (tabs/windows sharing the same origin).
         this.channel = new BroadcastChannel("UPDATE_CUSTOMER_DISPLAY");
+
+        // Actions taken by the customer on a display, by type, see `onAction`.
+        this.actionListeners = new Map();
+        this.actionChannel = new BroadcastChannel("CUSTOMER_DISPLAY_ACTION");
     }
 
     /**
@@ -48,10 +55,12 @@ export class CustomerDisplayTerminalPlugin extends Plugin {
         this.watching = true;
 
         const { bus, accessToken, identifier } = this.context;
-        getOnNotified(bus, accessToken)(
-            `REGISTER_CUSTOMER_DISPLAY_DEVICE-${identifier}`,
-            (message) => this.trackDevice(message)
+        const onNotified = getOnNotified(bus, accessToken);
+        onNotified(`REGISTER_CUSTOMER_DISPLAY_DEVICE-${identifier}`, (message) =>
+            this.trackDevice(message)
         );
+        onNotified(`CUSTOMER_DISPLAY_ACTION-${identifier}`, (message) => this._onAction(message));
+        this.actionChannel.onmessage = ({ data }) => this._onAction(data);
         // Displays opened before this terminal started have already announced
         // themselves; ask them to do it again.
         this.ping();
@@ -85,6 +94,34 @@ export class CustomerDisplayTerminalPlugin extends Plugin {
     }
 
     /**
+     * Subscribes to the actions of a given type taken by the customer on a
+     * display. The listener validates the data: it comes from a public page.
+     *
+     * @param {string} type - e.g. `"tip"`
+     * @param {(data: Object) => void} callback
+     * @returns {() => void} unsubscribe
+     */
+    onAction(type, callback) {
+        if (!this.actionListeners.has(type)) {
+            this.actionListeners.set(type, new Set());
+        }
+        const listeners = this.actionListeners.get(type);
+        listeners.add(callback);
+        return () => listeners.delete(callback);
+    }
+
+    _onAction(message) {
+        const data = message?.data;
+        const isObject = data && typeof data === "object" && !Array.isArray(data);
+        if (typeof message?.type !== "string" || !isObject) {
+            return;
+        }
+        for (const listener of this.actionListeners.get(message.type) || []) {
+            listener(data);
+        }
+    }
+
+    /**
      * Hook to extend the payload sent to the customer display.
      *
      * Override this method to customize the data derived from the order before
@@ -99,12 +136,18 @@ export class CustomerDisplayTerminalPlugin extends Plugin {
 
         const orderData = generator.generateReceiptData();
         const scale = this.context.scale;
+        // The paid amount includes the tip, which is also shown on its own.
+        const tipAmount =
+            order.is_tipped && order.tip_amount
+                ? order.formatAmountInCurrency(order.tip_amount, order.orderCurrency)
+                : 0;
 
         return {
             ...orderData,
             qrData: getQrData?.() || null,
             displayScreenSaver: false,
             paymentAmountInCurrency: order.paymentAmountInCurrency,
+            tipAmount,
             amountSettlements: order.remainingDueAmount !== order.totalDue && {
                 label: order.remainingDueLabel,
                 amount: formatCurrency(Math.abs(order.remainingDueAmount), order.orderCurrency.id),
@@ -130,7 +173,7 @@ export class CustomerDisplayTerminalPlugin extends Plugin {
         this.send(order ? this._buildDisplayPayload(order) : { clearData: true });
     }
 
-    async send(payload) {
+    send(payload) {
         // Checked here rather than in `sendOrder` so that every dispatch is
         // covered, including the screen saver and the validation flags which
         // are sent through `send` directly.
@@ -138,6 +181,14 @@ export class CustomerDisplayTerminalPlugin extends Plugin {
             return;
         }
         const payloadStr = JSON.stringify(payload);
+        // One request at a time: the display applies payloads in the order they
+        // arrive, and on a slow network a request can overtake an earlier one
+        // (e.g. a stale tip screen arriving after `tipScreen: false`).
+        this.dispatching = this.dispatching.then(() => this._dispatch(payloadStr));
+        return this.dispatching;
+    }
+
+    async _dispatch(payloadStr) {
         try {
             await this.orm.call("pos.config", "update_customer_display", [
                 [odoo.pos_config_id],

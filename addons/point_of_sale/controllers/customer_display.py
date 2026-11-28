@@ -37,3 +37,10 @@ class PosCustomerDisplay(http.Controller):
         if not consteq(access_token, pos_config_sudo.access_token):
             raise Unauthorized
         pos_config_sudo._notify(f"REGISTER_CUSTOMER_DISPLAY_DEVICE-{identifier}", payload)
+
+    @http.route("/pos_customer_display/action", auth="public", type="jsonrpc", website=True)
+    def customer_display_action(self, config_id, identifier, access_token, payload):
+        pos_config_sudo = request.env["pos.config"].sudo().browse(int(config_id))
+        if not consteq(access_token, pos_config_sudo.access_token):
+            raise Unauthorized
+        pos_config_sudo._notify(f"CUSTOMER_DISPLAY_ACTION-{identifier}", payload)

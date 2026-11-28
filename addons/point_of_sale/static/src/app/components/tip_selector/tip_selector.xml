@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="point_of_sale.TipSelector">
+        <div class="tip-screen screen h-100 bg-100" t-att-class="this.props.class">
+            <div class="screen-content d-flex flex-column h-100">
+                <div class="top-content d-flex align-items-center p-2 border-bottom text-center">
+                    <button t-if="this.props.onBack" class="button btn btn-lg btn-outline-primary" t-on-click="() => this.props.onBack()">
+                        <i class="oi me-2" data-icon="keyboard_double_arrow_left"/>
+                        <span class="d-none d-sm-inline">Back</span>
+                    </button>
+                    <h2 class="mb-0 text-center"
+                        t-att-class="this.props.onBack ? 'position-absolute start-50 translate-middle-x' : 'w-100 py-1'"
+                        t-out="this.props.title"/>
+                </div>
+                <div class="d-flex flex-column flex-lg-row flex-grow-1 overflow-hidden">
+                    <div class="flex-grow-1 w-100 w-lg-50 border-end border-bottom">
+                        <div class="d-flex flex-column h-100 justify-content-center align-items-center w-100">
+                            <div class="total-amount text-center fw-bold"
+                                style="font-size:clamp(50px, 12vmin, 125px);">
+                                <PriceFormatter price="this.props.overallAmount"/>
+                            </div>
+                            <div class="text-primary text-center fw-bold mb-lg-5"
+                                style="font-size:clamp(22px, 4vmin, 48px); height:3em;"
+                                t-out="this.props.tipSubText"/>
+                        </div>
+                    </div>
+                    <div class="tip-options d-flex flex-column w-100 w-lg-50 p-2 justify-content-between">
+                        <div class="d-flex flex-column justify-content-center flex-grow-1">
+                            <div class="tip-amount-options rounded p-3 d-flex flex-column gap-3 w-100">
+                                <div class="percentage-amounts d-flex gap-2 flex-wrap">
+                                    <button t-foreach="this.props.percentageTips" t-as="tip" t-key="tip_index"
+                                            class="button btn btn-lg btn-secondary rounded-4 flex-fill py-4 fs-3"
+                                            t-attf-class="{{ this.props.selectedPercentage == tip.percentage ? 'border border-2 border-primary' : 'opacity-75' }}"
+                                            t-att-disabled="this.props.disabled"
+                                            t-on-click="() => this.props.onSelect(tip)">
+                                        <div class="percentage fs-1 text-center fw-bold" t-out="tip.percentage"/>
+                                        <div class="amount text-primary fs-2 fw-semibold text-center">
+                                            <PriceFormatter price="tip.amount"/>
+                                        </div>
+                                    </button>
+                                </div>
+                                <div class="custom-amount-form d-flex input-group input-group-lg w-100">
+                                    <span class="input-group-text bg-secondary">Tip Amount</span>
+                                    <input type="number" min="0" inputmode="decimal"
+                                           class="item form-control fs-3"
+                                           t-att-value="this.props.inputValue"
+                                           t-att-data-amount="this.props.inputValue"
+                                           t-att-disabled="this.props.disabled"
+                                           t-on-input="(ev) => this.props.onInput(ev.target.value)"/>
+                                    <span class="input-group-text" t-out="this.props.currencySymbol"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-2 p-2 mt-4">
+                            <button class="no-tip button btn btn-lg btn-secondary rounded-4 flex-fill py-4 fs-3"
+                                    t-att-disabled="this.props.disabled"
+                                    t-on-click="() => this.props.onNoTip()">
+                                No Tip
+                            </button>
+                            <button class="settle button highlight next btn btn-lg btn-primary rounded-4 flex-fill py-4 fs-3"
+                                    t-att-disabled="this.props.disabled or !this.canSettle"
+                                    t-on-click="() => this.props.onSettle()">
+                                Settle <i class="oi" data-icon="keyboard_double_arrow_right"/>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

@@ -1,7 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime
+from unittest.mock import patch
+
 import odoo
+from odoo.tests.common import JsonRpcException
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
 
@@ -509,3 +512,25 @@ class TestPoSController(TestPointOfSaleHttpCommon):
         res = self.url_open('/pos/ticket', data={**form_data, 'pos_reference': f'  {order.pos_reference}  '}, allow_redirects=False)
         self.assertEqual(res.status_code, 303)
         self.assertIn(f'/pos/ticket/validate?access_token={order.access_token}', res.headers['Location'])
+
+    def test_customer_display_action_is_relayed_to_the_terminal(self):
+        """The display relays the customer's actions only with the config access token."""
+        config = self.main_pos_config
+        config._ensure_access_token()
+        params = {
+            'config_id': config.id,
+            'identifier': 'device-1',
+            'payload': {'type': 'tip', 'data': {'orderUuid': 'order-1', 'action': 'select', 'percentage': '15%'}},
+        }
+        self.authenticate(None, None)
+        with patch.object(self.env.registry['bus.bus'], '_sendone') as mock_send:
+            with self.assertRaises(JsonRpcException):
+                self.make_jsonrpc_request('/pos_customer_display/action', {**params, 'access_token': 'wrong'})
+            mock_send.assert_not_called()
+
+            self.make_jsonrpc_request('/pos_customer_display/action', {**params, 'access_token': config.access_token})
+            mock_send.assert_called_once_with(
+                config.access_token,
+                f'{config.access_token}-CUSTOMER_DISPLAY_ACTION-device-1',
+                params['payload'],
+            )
