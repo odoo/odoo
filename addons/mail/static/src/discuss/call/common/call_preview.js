@@ -33,7 +33,15 @@ import { useService } from "@web/core/utils/hooks";
 
 export class CallPreview extends Component {
     static template = "mail.CallPreview";
+<<<<<<< 18f033cd7fa36eac97435f6ec8ed2572d767649c
     static components = { ActionList, CameraPreview, DeviceSelect };
+||||||| c7f4cc9f344027a969d8604a8ec900fd031472e8
+    static components = { ActionList, DeviceSelect };
+=======
+    static components = { ActionList, DeviceSelect };
+    /** ids of the latest camera and microphone requests, older ones are discarded */
+    requestIds = { camera: 0, mic: 0 };
+>>>>>>> 947d4143bdd3b5ee7523b2e8e4cf43854a5afa3b
 
     audioRef = signal.ref();
     /**
@@ -231,19 +239,29 @@ export class CallPreview extends Component {
     });
 
     async enableMicrophone() {
+        const micRequestId = ++this.requestIds.mic;
         if (
             this.rtc.microphonePermission !== "granted" &&
             !(await this.rtc.askForBrowserPermission({ audio: true }))
         ) {
             return;
         }
-        this.state.audioStream = await navigator.mediaDevices.getUserMedia({
+        const audioStream = await navigator.mediaDevices.getUserMedia({
             audio: this.store.settings.audioConstraints,
         });
+<<<<<<< 18f033cd7fa36eac97435f6ec8ed2572d767649c
         if (this.scope.isDestroyed()) {
             closeStream(this.state.audioStream);
+||||||| c7f4cc9f344027a969d8604a8ec900fd031472e8
+        if (status(this) === "destroyed") {
+            closeStream(this.state.audioStream);
+=======
+        if (status(this) === "destroyed" || micRequestId !== this.requestIds.mic) {
+            closeStream(audioStream);
+>>>>>>> 947d4143bdd3b5ee7523b2e8e4cf43854a5afa3b
             return;
         }
+        this.state.audioStream = audioStream;
         if (this.audioRef()) {
             this.audioRef().srcObject = this.state.audioStream;
         }
@@ -251,6 +269,7 @@ export class CallPreview extends Component {
     }
 
     disableMicrophone() {
+        this.requestIds.mic++;
         closeStream(this.state.audioStream);
         this.state.audioStream = null;
         if (this.audioRef()) {
@@ -275,12 +294,81 @@ export class CallPreview extends Component {
         await this.enableMicrophone();
     }
 
+<<<<<<< 18f033cd7fa36eac97435f6ec8ed2572d767649c
     enableCamera() {
         this.state.isCameraActive = true;
+||||||| c7f4cc9f344027a969d8604a8ec900fd031472e8
+    async enableCamera() {
+        if (
+            this.rtc.cameraPermission !== "granted" &&
+            !(await this.rtc.askForBrowserPermission({ video: true }))
+        ) {
+            return;
+        }
+        this.state.videoStream = await navigator.mediaDevices.getUserMedia({
+            video: this.store.settings.cameraConstraints,
+        });
+        if (status(this) === "destroyed") {
+            closeStream(this.state.videoStream);
+            return;
+        }
+        if (this.videoRef()) {
+            this.videoRef().srcObject = this.state.videoStream;
+        }
+        this.props.onSettingsChanged?.({ camera: true });
+        if (this.store.settings.useBlur) {
+            await this.enableBlur();
+        }
+=======
+    async enableCamera() {
+        const cameraRequestId = ++this.requestIds.camera;
+        if (
+            this.rtc.cameraPermission !== "granted" &&
+            !(await this.rtc.askForBrowserPermission({ video: true }))
+        ) {
+            return;
+        }
+        const videoStream = await navigator.mediaDevices.getUserMedia({
+            video: this.store.settings.cameraConstraints,
+        });
+        if (status(this) === "destroyed" || cameraRequestId !== this.requestIds.camera) {
+            closeStream(videoStream);
+            return;
+        }
+        this.state.videoStream = videoStream;
+        if (this.videoRef()) {
+            this.videoRef().srcObject = this.state.videoStream;
+        }
+        this.props.onSettingsChanged?.({ camera: true });
+        if (this.store.settings.useBlur) {
+            await this.enableBlur();
+        }
+>>>>>>> 947d4143bdd3b5ee7523b2e8e4cf43854a5afa3b
     }
 
     disableCamera() {
+<<<<<<< 18f033cd7fa36eac97435f6ec8ed2572d767649c
         this.state.isCameraActive = false;
+||||||| c7f4cc9f344027a969d8604a8ec900fd031472e8
+        closeStream(this.state.videoStream);
+        this.state.videoStream = null;
+        this.state.blurManager?.close();
+        this.state.blurManager = undefined;
+        if (this.videoRef()) {
+            this.videoRef().srcObject = null;
+        }
+        this.props.onSettingsChanged?.({ camera: false });
+=======
+        this.requestIds.camera++;
+        closeStream(this.state.videoStream);
+        this.state.videoStream = null;
+        this.state.blurManager?.close();
+        this.state.blurManager = undefined;
+        if (this.videoRef()) {
+            this.videoRef().srcObject = null;
+        }
+        this.props.onSettingsChanged?.({ camera: false });
+>>>>>>> 947d4143bdd3b5ee7523b2e8e4cf43854a5afa3b
     }
 
     async toggleCamera() {
@@ -296,7 +384,80 @@ export class CallPreview extends Component {
             });
             return;
         }
+<<<<<<< 18f033cd7fa36eac97435f6ec8ed2572d767649c
         this.enableCamera();
+||||||| c7f4cc9f344027a969d8604a8ec900fd031472e8
+        await this.enableCamera();
+    }
+
+    async enableBlur() {
+        this.store.settings.useBlur = true;
+        if (!this.videoRef()) {
+            return;
+        }
+        try {
+            this.state.blurManager = await this.rtc.applyBlurEffect(this.state.videoStream);
+            this.videoRef().srcObject = await this.state.blurManager.stream;
+        } catch (_e) {
+            this.notification.add(_e.message, { type: "warning" });
+            this.disableBlur();
+        }
+    }
+
+    disableBlur() {
+        this.store.settings.useBlur = false;
+        if (this.videoRef()) {
+            this.videoRef().srcObject = this.state.videoStream;
+        }
+        this.state.blurManager?.close();
+        this.state.blurManager = undefined;
+    }
+
+    toggleBlur() {
+        if (this.state.blurManager) {
+            this.disableBlur();
+            return;
+        }
+        this.enableBlur();
+=======
+        await this.enableCamera();
+    }
+
+    async enableBlur() {
+        this.store.settings.useBlur = true;
+        if (!this.videoRef()) {
+            return;
+        }
+        const cameraRequestId = this.requestIds.camera;
+        this.state.blurManager?.close();
+        try {
+            this.state.blurManager = await this.rtc.applyBlurEffect(this.state.videoStream);
+            this.videoRef().srcObject = await this.state.blurManager.stream;
+        } catch (_e) {
+            if (cameraRequestId !== this.requestIds.camera) {
+                return;
+            }
+            this.notification.add(_e.message, { type: "warning" });
+            this.disableBlur();
+        }
+    }
+
+    disableBlur() {
+        this.store.settings.useBlur = false;
+        if (this.videoRef()) {
+            this.videoRef().srcObject = this.state.videoStream;
+        }
+        this.state.blurManager?.close();
+        this.state.blurManager = undefined;
+    }
+
+    toggleBlur() {
+        if (this.state.blurManager) {
+            this.disableBlur();
+            return;
+        }
+        this.enableBlur();
+>>>>>>> 947d4143bdd3b5ee7523b2e8e4cf43854a5afa3b
     }
 
     onClickSettings() {
