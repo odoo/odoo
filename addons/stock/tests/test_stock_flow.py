@@ -2620,6 +2620,42 @@ class TestStockFlow(TestStockCommon):
         backorder.button_validate()
         self.assertEqual(backorder.state, 'done')
 
+    def test_discard_backorder_wizard(self):
+        """ Discarding the backorder wizard should leave the picking as it was
+        before trying to validate it: the "Reserve" button is still shown and
+        the picking can be unreserved.
+        """
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 4)
+        picking = self.env['stock.picking'].create({
+            'picking_type_id': self.picking_type_out.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'move_ids': [Command.create({
+                'product_id': self.productA.id,
+                'product_uom_qty': 10,
+                'location_id': self.stock_location.id,
+                'location_dest_id': self.customer_location.id,
+            })],
+        })
+        picking.action_assign()
+        self.assertRecordValues(picking.move_ids, [{'state': 'partially_available', 'quantity': 4, 'picked': False}])
+
+        action = picking.button_validate()
+        self.assertEqual(action.get('res_model'), 'stock.backorder.confirmation')
+        # Discard the wizard: nothing should have changed on the picking
+        self.assertRecordValues(picking.move_ids, [{'state': 'partially_available', 'quantity': 4, 'picked': False}])
+        self.assertFalse(picking.move_line_ids.picked)
+        self.assertTrue(picking.show_check_availability)
+
+        picking.do_unreserve()
+        self.assertRecordValues(picking.move_ids, [{'state': 'confirmed', 'quantity': 0}])
+
+        picking.action_assign()
+        Form.from_action(self.env, picking.button_validate()).save().process()
+        self.assertEqual(picking.state, 'done')
+        self.assertEqual(picking.move_ids.quantity, 4)
+        self.assertEqual(picking.backorder_ids.move_ids.product_uom_qty, 6)
+
     def test_picking_mixed_tracking_with_backorder(self):
         self.productB.tracking = 'lot'
         picking = self.env['stock.picking'].create({

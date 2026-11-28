@@ -1284,6 +1284,7 @@ class StockPicking(models.Model):
             return res
 
         # Call `_action_done`.
+        self._get_moves_to_auto_pick().picked = True
         pickings_not_to_backorder = self.filtered(lambda p: p.picking_type_id.create_backorder == 'never')
         if self.env.context.get('picking_ids_not_to_backorder'):
             pickings_not_to_backorder |= self.browse(self.env.context['picking_ids_not_to_backorder']).filtered(
@@ -1357,7 +1358,8 @@ class StockPicking(models.Model):
             'res_id': backorder.id,
         }
 
-    def _pre_action_done_hook(self):
+    def _get_moves_to_auto_pick(self):
+        moves = self.env['stock.move']
         for picking in self:
             has_quantity = False
             has_pick = False
@@ -1371,7 +1373,10 @@ class StockPicking(models.Model):
                 if has_quantity and has_pick:
                     break
             if has_quantity and not has_pick:
-                picking.move_ids.picked = True
+                moves |= picking.move_ids
+        return moves
+
+    def _pre_action_done_hook(self):
         if not self.env.context.get('skip_backorder'):
             pickings_to_backorder = self._check_backorder()
             if pickings_to_backorder:
@@ -1441,11 +1446,12 @@ class StockPicking(models.Model):
     def _check_backorder(self):
         prec = self.env["decimal.precision"].precision_get("Product Unit")
         backorder_pickings = self.browse()
+        moves_to_pick_ids = self._get_moves_to_auto_pick().ids
         for picking in self:
             if picking.picking_type_id.create_backorder != 'ask':
                 continue
             if any(
-                    (move.product_uom_qty and not move.picked) or
+                    (move.product_uom_qty and not move.picked and move.id not in moves_to_pick_ids) or
                     float_compare(move._get_picked_quantity(), move.product_uom_qty, precision_digits=prec) < 0
                     for move in picking.move_ids
                     if move.state != 'cancel'
