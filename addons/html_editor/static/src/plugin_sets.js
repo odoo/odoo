@@ -50,6 +50,7 @@ import { PowerButtonsPlugin } from "./main/power_buttons_plugin";
 import { PositionPlugin } from "./main/position_plugin";
 import { PowerboxPlugin } from "./main/powerbox/powerbox_plugin";
 import { MediaUrlPastePlugin } from "./main/link/powerbox_url_paste_plugin";
+import { MarkdownPlugin } from "./main/markdown/markdown_plugin";
 import { SearchPowerboxPlugin } from "./main/powerbox/search_powerbox_plugin";
 import { StarPlugin } from "./main/star_plugin";
 import { TableAlignPlugin } from "./main/table/table_align_plugin";
@@ -83,6 +84,7 @@ import { TableBorderPlugin } from "./main/table/table_border_plugin";
 import { ContrastPlugin } from "./main/font/contrast_plugin";
 import { DatePlugin } from "./others/embedded_components/plugins/date_plugin/date_plugin";
 import { EmbeddedWhiteboardPlugin } from "./others/embedded_components/plugins/embedded_whiteboard_plugin/embedded_whiteboard_plugin";
+import { session } from "@web/session";
 
 export const CORE_PLUGINS = [
     LegacyCompatibilityPlugin,
@@ -130,6 +132,7 @@ export const MAIN_PLUGINS = [
     PowerboxPlugin,
     SearchPowerboxPlugin,
     MediaUrlPastePlugin,
+    ...(session.markdown_paste_available ? [MarkdownPlugin] : []),
     StarPlugin,
     TablePlugin,
     TableBorderPlugin,
