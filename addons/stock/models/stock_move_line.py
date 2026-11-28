@@ -1474,8 +1474,7 @@ class StockMoveLine(models.Model):
         if not self.picking_id \
            or (self.picking_id.state != 'assigned' or self.uom_id.is_zero(self.quantity)) and not self.env.context.get('skip_auto_waveable')  \
            or self.batch_id.is_wave \
-           or not self.picking_type_id._is_auto_wave_grouped() \
-           or (self.picking_type_id.wave_group_by_category and self.product_id.categ_id not in self.picking_type_id.wave_category_ids):  # noqa: SIM103
+           or not self.picking_type_id._is_auto_wave_grouped():  # noqa: SIM103
             return False
         return True
 
@@ -1484,34 +1483,46 @@ class StockMoveLine(models.Model):
         otherwise create new waves when possible/appropriate. """
         batchable_line_ids = OrderedSet()
         lines_nearest_parent_locations = defaultdict(lambda: self.env['stock.location'])
-        wave_locs_by_picking_type = {}
-        for picking_type in self.picking_type_id:
-            if not picking_type.wave_group_by_location:
-                continue
-            wave_locs_by_picking_type[picking_type] = set(picking_type.wave_location_ids.ids)
+        lines_nearest_parent_categories = defaultdict(lambda: self.env['product.category'])
+        wave_locs_by_picking_type = {ptype: ptype.wave_location_ids.ids for ptype in self.picking_type_id}
+        wave_cats_by_picking_type = {ptype: ptype.wave_category_ids.ids for ptype in self.picking_type_id}
+
+        def get_closest_parent(child, parent_fname, candidate_ids):
+            while (child):
+                if child.id in candidate_ids:
+                    return child
+                child = getattr(child, parent_fname)
+            return False
 
         for line in self:
             if not line._is_auto_waveable():
                 continue
-            if not line.picking_type_id.wave_group_by_location:
-                batchable_line_ids.add(line.id)
-                continue
-            # We want to find the most descendant location in the wave locations list that is a parent of the line location.
-            # Since the wave locations are ordered by complete_name (from the most descendant to the most ancestor), we can iterate in reverse order.
-            wave_locs_set = wave_locs_by_picking_type[line.picking_type_id]
-            loc = line.location_id
-            while (loc):
-                if loc.id in wave_locs_set:
-                    lines_nearest_parent_locations[line] = loc
-                    batchable_line_ids.add(line.id)
-                    break
-                loc = loc.location_id
-        batchable_lines = self.env['stock.move.line'].browse(batchable_line_ids)
+            if line.picking_type_id.wave_group_by_location:
+                location = get_closest_parent(line.location_id, 'location_id', wave_locs_by_picking_type[line.picking_type_id])
+                if not location:
+                    continue
+                lines_nearest_parent_locations[line] = location
+            if line.picking_type_id.wave_group_by_category:
+                category = get_closest_parent(line.product_category_id, 'parent_id', wave_cats_by_picking_type[line.picking_type_id])
+                if not category:
+                    continue
+                lines_nearest_parent_categories[line] = category
+            batchable_line_ids.add(line.id)
 
-        remaining_line_ids = batchable_lines._auto_wave_lines_into_existing_waves(nearest_parent_locations=lines_nearest_parent_locations)
+        batchable_lines = self.env['stock.move.line'].browse(batchable_line_ids)
+        remaining_line_ids = batchable_lines.with_context(
+            nearest_parent_categories=lines_nearest_parent_categories,
+        )._auto_wave_lines_into_existing_waves(
+            nearest_parent_locations=lines_nearest_parent_locations,
+        )
         remaining_lines = self.env['stock.move.line'].browse(remaining_line_ids)
-        if remaining_lines:
-            remaining_lines._auto_wave_lines_into_new_waves(nearest_parent_locations=lines_nearest_parent_locations)
+        if not remaining_lines:
+            return
+        remaining_lines.with_context(
+            nearest_parent_categories=lines_nearest_parent_categories,
+        )._auto_wave_lines_into_new_waves(
+            nearest_parent_locations=lines_nearest_parent_locations,
+        )
 
     def _get_potential_existing_waves_extra_domain(self, domain_list, picking_type):
         """Extend extra conditions here"""
@@ -1537,6 +1548,7 @@ class StockMoveLine(models.Model):
             and the value is the nearest parent location in the wave locations list.
         """
         remaining_lines = OrderedSet()
+        nearest_parent_categories = self.env.context.get('nearest_parent_categories', defaultdict(int))
         batches_to_validate_ids = self.env.context.get('batches_to_validate', False)
         for (picking_type, lines) in self.grouped(lambda l: l.picking_type_id).items():
             if lines:
@@ -1588,7 +1600,17 @@ class StockMoveLine(models.Model):
                                 waves_nearest_parent_locations[wave] = wave_location.id
                                 valid_wave_ids.add(wave.id)
                                 break
-                    potential_waves = self.env['stock.picking.batch'].browse(valid_wave_ids)
+                    potential_waves = potential_waves.browse(valid_wave_ids)
+                waves_nearest_parent_categories = defaultdict(int)
+                if picking_type.wave_group_by_category:
+                    valid_wave_ids = set()
+                    for wave in potential_waves:
+                        for wave_category in picking_type.wave_category_ids.sorted(key=lambda c: c._depth(), reverse=True):
+                            if all(cat._child_of(wave_category) for cat in wave.move_line_ids.product_category_id):
+                                waves_nearest_parent_categories[wave] = wave_category.id
+                                valid_wave_ids.add(wave.id)
+                                break
+                    potential_waves = potential_waves.browse(valid_wave_ids)
 
                 for line in lines:
                     wave_found = False
@@ -1599,7 +1621,7 @@ class StockMoveLine(models.Model):
                         or (picking_type.batch_group_by_src_loc and line.location_id != wave.picking_ids.location_id) \
                         or (picking_type.batch_group_by_dest_loc and line.location_dest_id != wave.picking_ids.location_dest_id) \
                         or (picking_type.wave_group_by_product and line.product_id != wave.move_line_ids.product_id) \
-                        or (picking_type.wave_group_by_category and line.product_id.categ_id != wave.move_line_ids.product_id.categ_id) \
+                        or (picking_type.wave_group_by_category and waves_nearest_parent_categories[wave] != nearest_parent_categories[line].id) \
                         or (picking_type.wave_group_by_location and waves_nearest_parent_locations[wave] != nearest_parent_locations[line].id) \
                         or (picking_type.wave_group_by_date and not picking_type._validate_line_date_for_wave(line, wave)) \
                         or not line._is_potential_existing_wave_extra(wave):
@@ -1638,6 +1660,7 @@ class StockMoveLine(models.Model):
     def _auto_wave_lines_into_new_waves(self, nearest_parent_locations=False):
         """ Create new waves for the move lines that could not be added to existing waves. """
         picking_types = self.picking_type_id
+        nearest_parent_categories = self.env.context.get('nearest_parent_categories', defaultdict(int))
         for picking_type in picking_types:
             lines = self.filtered(lambda l: l.picking_type_id == picking_type)
             domains = [Domain([
@@ -1649,6 +1672,8 @@ class StockMoveLine(models.Model):
                 ('batch_id', '=', False),
                 ('batch_id.is_wave', '=', False),
             ])]
+            if picking_type.wave_group_by_category:
+                domains.append(Domain('product_id.categ_id', 'child_of', lines.product_id.categ_id.ids))
             if picking_type.wave_group_by_location:
                 domains.append(Domain('location_id', 'child_of', picking_type.wave_location_ids.ids))
             domains = lines._get_potential_new_waves_extra_domain(domains, picking_type)
@@ -1660,6 +1685,14 @@ class StockMoveLine(models.Model):
                     for location in reversed(picking_type.wave_location_ids):
                         if line.location_id._child_of(location):
                             lines_nearest_parent_locations[line] = location.id
+                            break
+
+            lines_nearest_parent_categories = defaultdict(int)
+            if picking_type.wave_group_by_category:
+                for line in potential_lines:
+                    for category in picking_type.wave_category_ids.sorted(key=lambda c: c._depth(), reverse=True):
+                        if line.product_category_id._child_of(category):
+                            lines_nearest_parent_categories[line] = category.id
                             break
 
             line_to_lines = defaultdict(set)
@@ -1677,7 +1710,7 @@ class StockMoveLine(models.Model):
                     or (picking_type.batch_group_by_src_loc and line.location_id != potential_line.location_id) \
                     or (picking_type.batch_group_by_dest_loc and line.location_dest_id != potential_line.location_dest_id) \
                     or (picking_type.wave_group_by_product and line.product_id != potential_line.product_id) \
-                    or (picking_type.wave_group_by_category and line.product_id.categ_id != potential_line.product_id.categ_id) \
+                    or (picking_type.wave_group_by_category and lines_nearest_parent_categories[potential_line] != nearest_parent_categories[line].id) \
                     or (picking_type.wave_group_by_location and lines_nearest_parent_locations[potential_line] != nearest_parent_locations[line].id)  \
                     or (picking_type.wave_group_by_date and not picking_type._validate_line_date_for_wave(line, potential_line)) \
                     or not line._is_new_potential_line_extra(potential_line, picking_type):
@@ -1703,7 +1736,7 @@ class StockMoveLine(models.Model):
                     new_wave = self.env['stock.picking.batch'].create({
                         'is_wave': True,
                         'picking_type_id': picking_type.id,
-                        'description': line._get_auto_wave_description(nearest_parent_locations[line]),
+                        'description': line.with_context(category=nearest_parent_categories[line])._get_auto_wave_description(nearest_parent_locations[line]),
                     })
                     wave_move_ids = set()
                     wave_picking_ids = set()
@@ -1733,7 +1766,7 @@ class StockMoveLine(models.Model):
             remaining_waves = self.env['stock.picking.batch'].create([{
                 'is_wave': True,
                 'picking_type_id': picking_type.id,
-                'description': remaining_line._get_auto_wave_description(nearest_parent_locations[remaining_line]),
+                'description': remaining_line.with_context(category=nearest_parent_categories[remaining_line])._get_auto_wave_description(nearest_parent_locations[remaining_line]),
             } for remaining_line in remaining_lines])
             for (line, wave) in zip(remaining_lines, remaining_waves):
                 line._add_to_wave(wave)
@@ -1747,8 +1780,8 @@ class StockMoveLine(models.Model):
 
         if self.picking_type_id.wave_group_by_product:
             description_items.append(self.product_id.display_name)
-        if self.picking_type_id.wave_group_by_category:
-            description_items.append(self.product_id.categ_id.complete_name)
+        if self.picking_type_id.wave_group_by_category and 'category' in self.env.context:
+            description_items.append(self.env.context.get('category').complete_name)
         if self.picking_type_id.wave_group_by_location:
             description_items.append(nearest_parent_location.complete_name)
         if self.picking_type_id.wave_group_by_date:
