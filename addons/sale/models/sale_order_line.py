@@ -1134,16 +1134,19 @@ class SaleOrderLine(models.Model):
                         quantity=uom_qty_to_consider,
                         product=line.product_id,
                         partner=line.order_id.partner_shipping_id)['total_excluded']
-                inv_lines = line._get_invoice_lines()
+                # Only posted invoices count (cancelled and the draft ones are ignored)
+                inv_lines = line._get_invoice_lines().filtered(lambda l: l.move_id.state == 'posted')
                 if any(inv_lines.mapped(lambda l: l.discount != line.discount)):
                     # In case of re-invoicing with different discount we try to calculate manually the
                     # remaining amount to invoice
                     amount = 0
                     for l in inv_lines:
+                        # credit notes decrease the invoiced amount
+                        sign = -1 if l.move_id.move_type == 'out_refund' else 1
                         if len(l.tax_ids.filtered(lambda tax: tax.price_include)) > 0:
-                            amount += l.tax_ids.compute_all(l.currency_id._convert(l.price_unit, line.currency_id, line.company_id, l.date or fields.Date.today(), round=False) * l.quantity)['total_excluded']
+                            amount += sign * l.tax_ids.compute_all(l.currency_id._convert(l.price_unit, line.currency_id, line.company_id, l.date or fields.Date.today(), round=False) * l.quantity)['total_excluded']
                         else:
-                            amount += l.currency_id._convert(l.price_unit, line.currency_id, line.company_id, l.date or fields.Date.today(), round=False) * l.quantity
+                            amount += sign * l.currency_id._convert(l.price_unit, line.currency_id, line.company_id, l.date or fields.Date.today(), round=False) * l.quantity
 
                     amount_to_invoice = max(price_subtotal - amount, 0)
                 else:
