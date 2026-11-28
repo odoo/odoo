@@ -58,8 +58,8 @@ class TestResUsers(TransactionCase):
         not useful tracking these fields for non-internal users.
         """
         username_and_group = {
-            'PORTAL': 'base.group_portal',
-            'PUBLIC': 'base.group_public',
+            'PORTAL0': 'base.group_portal',
+            'PUBLIC0': 'base.group_public',
         }
 
         for username, group in username_and_group.items():
