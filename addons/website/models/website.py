@@ -36,6 +36,7 @@ from odoo.models import Query
 from odoo.modules.module import get_manifest
 from odoo.tools import BinaryBytes, BinaryValue, file_open, lazy
 from odoo.tools.image import image_process
+from odoo.tools.json import scriptsafe as json_safe
 from odoo.tools.sql import SQL, escape_like_value
 from odoo.tools.translate import _
 
@@ -2815,6 +2816,42 @@ class Website(models.CachedModel):
             'url': base_url,
             'logo': f'{base_url}/web/image/website/{self.id}/logo',
         }
+
+    def _render_page_jsonld(self, structured_data, seo_object):
+        """Render the JSON-LD of the page in one graph: its structured data, then
+        the one written in its SEO settings.
+
+        :param list structured_data: Schema.org dictionaries of the page, see ``_render_jsonld``.
+        :param seo_object: record whose SEO settings the page shows.
+        :return: JSON-LD string.
+        :rtype: str
+        """
+        def make_urls_absolute(value, page_url, prop=None):
+            # an id "#..." belongs to the page and a path "/..." to the website,
+            # other values are kept as written
+            if isinstance(value, dict):
+                return {key: make_urls_absolute(val, page_url, key) for key, val in value.items()}
+            if isinstance(value, list):
+                return [make_urls_absolute(val, page_url, prop) for val in value]
+            # text only: the SEO settings may hold any JSON value
+            if prop in ('@id', 'image', 'url', 'target') and isinstance(value, str):
+                if value.startswith('#'):
+                    return page_url + value
+                if value.startswith('/') and not value.startswith('//'):
+                    return self.get_base_url() + value
+            return value
+
+        nodes = structured_data
+        custom_jsonld = 'website_meta_jsonld' in seo_object and seo_object.sudo().website_meta_jsonld
+        if custom_jsonld:
+            schemas = json_safe.loads(custom_jsonld)
+            if isinstance(schemas, dict):
+                schemas = [schemas]
+            nodes = structured_data + make_urls_absolute(schemas, self._get_canonical_url())
+        return json_safe.dumps(
+            {'@context': 'https://schema.org', '@graph': nodes},
+            ensure_ascii=False,
+        )
 
     @api.model
     def _get_settings_to_copy_onto_new_default_website(self):

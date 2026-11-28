@@ -975,6 +975,133 @@ class TestUi(HttpCaseWithWebsiteUser):
             login="admin",
         )
 
+    def _seo_jsonld_page_arch(self, content):
+        # like a record page: a block rendered by Odoo, then a zone where the editor drops snippets
+        return (
+            '<t t-name="website.seo_jsonld_page"><t t-call="website.layout"><div id="wrap">'
+            '<section><h3>Rendered by Odoo</h3></section>'
+            f'<div class="oe_structure">{content}</div>'
+            '</div></t></t>'
+        )
+
+    def _create_seo_jsonld_page(self, url, content):
+        # a published page showing the content, for the AI to describe
+        website = self.env.ref('base.default_website')
+        view = self.env['ir.ui.view'].create({
+            'name': 'SEO JSON-LD Page',
+            'type': 'qweb',
+            'website_id': website.id,
+            'arch': self._seo_jsonld_page_arch(content),
+        })
+        self.env['website.page'].create({
+            'url': url,
+            'view_id': view.id,
+            'website_id': website.id,
+            'is_published': True,
+        })
+        return view
+
+    def test_website_seo_jsonld_ai(self):
+        # the structured data of the SEO settings, written by the AI from the content of the page
+        tony_section = (
+            '<section><div class="row"><div class="col-6"><div class="row">'
+            '<div class="col-3"><img src="/web/image/website.s_banner_default_image" alt="Tony smiling"/></div>'
+            '<div class="col-9"><h3>Tony</h3><div><strong>CEO</strong> <small>since 2010</small><p>Founder</p></div></div>'
+            '</div></div></div></section>'
+        )
+        view = self._create_seo_jsonld_page(
+            '/seo_jsonld_page',
+            f'{tony_section}{tony_section}<section><h3>Fred</h3><p>{"Fred " * 1600}</p></section>',
+        )
+        calls = []
+
+        def generate_text(url, params=None, **kwargs):
+            self.assertIn('/api/olg/1/chat', url)
+            calls.append(params)
+            # the AI points to the texts of the page, and gives its own ids and types
+            if 'Tony' in params['prompt']:
+                nodes = (
+                    '{"@id": "/#organization"}, {"@id": "#person-1", "@type": "Person", "name": {"@block": 1},'
+                    ' "jobTitle": {"@block": 2, "part": 0}, "description": "Invented by the AI", "alternateName": "founder"},'
+                    ' {"@type": "StatisticalPopulation", "name": "250+"}'
+                )
+            else:
+                nodes = (
+                    '{"@id": "#person-1", "@type": "Person", "name": {"@block": 4}},'
+                    ' {"@type": "Organization", "member": {"@id": "#person-1"}}'
+                )
+            return {'status': 'success', 'content': f'Here it is:\n```json\n[{nodes}]\n```'}
+
+        with patch('odoo.addons.iap.tools.iap_tools.iap_jsonrpc', generate_text):
+            self.start_tour(self.env['website'].get_client_action_url('/seo_jsonld_page'), 'website.seo_jsonld_ai', login='admin')
+        self.assertEqual(len(calls), 2, "The page is too long for one request: a request per section")
+        self.assertEqual(calls[0]['conversation_history'][0]['role'], 'system')
+        [tony_prompt] = [call['prompt'] for call in calls if 'Tony' in call['prompt']]
+        self.assertIn(
+            '[{"i":0,"card":0,"tag":"img","src":"/web/image/website.s_banner_default_image","alt":"Tony smiling"},'
+            '{"i":1,"card":0,"tag":"h3","text":"Tony"},{"i":2,"card":0,"tag":"div","text":["CEO","since 2010"]},'
+            '{"i":3,"card":0,"tag":"p","text":"Founder"}]',
+            tony_prompt,
+            "The AI reads the numbered blocks: their card, their texts without the blocks they hold, in parts when held apart, and the URLs it may use",
+        )
+        self.assertEqual(tony_prompt.count('"text":"Tony"'), 1, "A section showing the same content as an earlier one is read once")
+        self.assertNotIn('Fred', tony_prompt, "A section is never split between requests")
+        prompts = ' '.join(call['prompt'] for call in calls)
+        self.assertNotIn('Rendered by Odoo', prompts, "Content rendered from records has its own structured data")
+        self.assertEqual(
+            json.loads(view.website_meta_jsonld),
+            [
+                {'@id': '#person-1', '@type': 'Person', 'name': 'Tony', 'jobTitle': 'CEO', 'alternateName': 'founder'},
+                {'@id': '#person-1-2', '@type': 'Person', 'name': 'Fred'},
+                {'@type': 'Organization', 'member': {'@id': '#person-1-2'}},
+            ],
+            "The texts are the ones of the page, the answers are joined in reading order, an id of an earlier answer"
+            " is renamed, without nodes of other types nor texts the page does not show",
+        )
+
+    def test_website_seo_jsonld_ai_translated(self):
+        # on a page in another language, the AI reads the content in English, the texts stay the ones of the page
+        self.add_fr_language_to_website()
+        view = self._create_seo_jsonld_page('/seo_jsonld_translated_page', '<section><h3>Tony</h3></section>')
+        calls = []
+
+        def generate_text(url, params=None, **kwargs):
+            calls.append(params)
+            if params['conversation_history'][0]['content'].startswith('You translate'):
+                blocks = json.loads(params['prompt'])
+                return {'status': 'success', 'content': json.dumps([dict(block, text='Tony in English') for block in blocks])}
+            return {'status': 'success', 'content': '[{"@type": "Person", "name": {"@block": 0}}]'}
+
+        with patch('odoo.addons.iap.tools.iap_tools.iap_jsonrpc', generate_text):
+            self.start_tour(self.env['website'].get_client_action_url('/fr/seo_jsonld_translated_page'), 'website.seo_jsonld_ai', login='admin')
+        self.assertEqual(len(calls), 2, "The content is translated, then described")
+        self.assertIn('Tony in English', calls[1]['prompt'], "The AI reads the content translated in English")
+        self.assertEqual(
+            json.loads(view.with_context(lang='fr_FR').website_meta_jsonld),
+            [{'@type': 'Person', 'name': 'Tony'}],
+            "The texts are the ones of the page",
+        )
+
+    def test_website_seo_jsonld_outdated(self):
+        # the SEO dialog warns when the page content changed since its structured data was written
+        view = self._create_seo_jsonld_page('/seo_jsonld_outdated_page', '<section><h3>Tony</h3></section>')
+        page_url = self.env['website'].get_client_action_url('/seo_jsonld_outdated_page')
+
+        def generate_text(url, params=None, **kwargs):
+            return {'status': 'success', 'content': '[{"@type": "Person", "name": "Tony"}]'}
+
+        with patch('odoo.addons.iap.tools.iap_tools.iap_jsonrpc', generate_text):
+            self.start_tour(page_url, 'website.seo_jsonld_ai', login='admin')
+        self.assertTrue(view.website_meta_jsonld_source_checksum, "The checksum of the content is saved with the structured data")
+
+        # a design change keeps the content
+        view.arch = self._seo_jsonld_page_arch('<section class="bg-primary"><h3>Tony</h3></section>')
+        self.start_tour(page_url, 'website.seo_jsonld_up_to_date', login='admin')
+
+        # a text change: the structured data may describe the old content
+        view.arch = self._seo_jsonld_page_arch('<section class="bg-primary"><h3>Tony Stark</h3></section>')
+        self.start_tour(page_url, 'website.seo_jsonld_outdated', login='admin')
+
     @mute_logger("odoo.http")
     def test_website_replace_remove_image(self):
         self.start_tour(self.env['website'].get_client_action_url("/", True), "website_replace_remove_image", login="admin")

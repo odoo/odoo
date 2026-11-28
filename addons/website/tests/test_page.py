@@ -1,12 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
 from unittest.mock import patch
 from freezegun import freeze_time
 from datetime import date
 
 from lxml import html
 
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, ValidationError
 from odoo.fields import Command
 from odoo.http.session import session_store
 from odoo.tests import HttpCase, common, tagged
@@ -1048,3 +1049,28 @@ class TestUrlDependencies(TransactionCaseWithUserDemo):
             dependencies['Website'][0]['record_name'],
             website.display_name,
         )
+
+
+@tagged('-at_install', 'post_install')
+class TestPageJsonld(HttpCase):
+
+    def test_page_jsonld_seo(self):
+        # the structured data of the SEO settings follows the one of the page, its URLs resolved from the page URL
+        website = self.env.ref('base.default_website')
+        page_view = self.env.ref('website.website_info')
+        page_view.website_meta_jsonld = (
+            '{"@id": "#info", "@type": "Thing", "image": "/web/image/b.png", "publisher": {"@id": "/#organization"}}'
+        )
+        scripts = html.fromstring(self.url_open('/website/info').content).xpath('//script[@type="application/ld+json"]/text()')
+        self.assertEqual(json.loads(scripts[0])['@graph'], [
+            website._prepare_jsonld_vals(),
+            {
+                '@id': f'{self.base_url()}/website/info#info',
+                '@type': 'Thing',
+                'image': f'{self.base_url()}/web/image/b.png',
+                'publisher': {'@id': f'{self.base_url()}/#organization'},
+            },
+        ])
+        for value in ['{"@type": ', '"Thing"', '[1]', '{"@type": "Thing", "name": NaN}']:
+            with self.subTest(value=value), self.assertRaises(ValidationError):
+                page_view.website_meta_jsonld = value

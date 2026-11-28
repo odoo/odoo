@@ -1800,6 +1800,8 @@ class Website(Home):
                 - `website_meta_title` (str): Title for SEO.
                 - `website_meta_description` (str): Description for SEO.
                 - `website_meta_keywords` (str): Keywords for SEO.
+                - `website_meta_jsonld` (str): Structured data (JSON-LD) for SEO.
+                - `website_meta_jsonld_source_checksum` (str): Checksum of the page content the structured data was written for.
                 - `website_meta_og_img` (str): URL of the OpenGraph image.
                 - `has_social_default_image` (bool): Whether the site has a default social sharing image.
                 - `seo_name` (str, optional): Slugified custom SEO name (if supported).
@@ -1852,7 +1854,10 @@ class Website(Home):
         # Translatable fields
         # Use view_id for website.page translations
         source_record = record.view_id if res_model == 'website.page' else record
-        for field_name in ['website_meta_title', 'website_meta_description', 'website_meta_keywords']:
+        for field_name in [
+            'website_meta_title', 'website_meta_description', 'website_meta_keywords',
+            'website_meta_jsonld', 'website_meta_jsonld_source_checksum',
+        ]:
             res[field_name] = _get_translation(source_record, field_name)
             # The client needs to know whether the default language is empty
             # before writing from another language, otherwise the translated
