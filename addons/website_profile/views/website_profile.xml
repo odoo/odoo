@@ -13,10 +13,13 @@
                     </div>
                     <nav aria-label="breadcrumb" class="col d-none d-md-flex">
                         <ol class="breadcrumb bg-transparent mb-0 ps-0 py-0">
-                            <li t-attf-class="breadcrumb-item #{'active' if not view_user else ''}">
+                            <li
+                                t-attf-class="breadcrumb-item #{'active' if not view_user else ''}"
+                                t-att-aria-current="'page' if not view_user else None"
+                            >
                                 <a href="/profile/users">Users</a>
                             </li>
-                            <li t-if="view_user" class="breadcrumb-item active">
+                            <li t-if="view_user" class="breadcrumb-item active" aria-current="page">
                                 <a><t t-out="view_user"/></a>
                             </li>
                         </ol>

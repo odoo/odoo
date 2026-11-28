@@ -47,39 +47,41 @@
                 >
                     <div class="o_wsale_content_contained container d-flex flex-wrap align-items-center py-3">
                         <div class="d-flex align-items-center flex-grow-1">
-                            <ol class="o_wsale_breadcrumb breadcrumb m-0 p-0">
-                                <li class="breadcrumb-item d-none d-lg-inline-block">
-                                    <a t-att-href="keep(shop_path)">
-                                        <t t-call="website_sale.all_products_link_name"/>
-                                    </a>
-                                </li>
-                                <t t-foreach="category.parents_and_self" t-as="cat">
-                                    <li
-                                        class="breadcrumb-item d-none d-lg-inline-block"
-                                    >
-                                        <a
-                                            class="py-2 py-lg-0"
-                                            t-att-href="keep(cat.website_url)"
-                                        >
-                                            <i
-                                                class="oi d-lg-none me-1" data-icon="chevron_backward"
-                                                role="img" aria-hidden="true"
-                                            />
-                                            <t t-out="cat.name"/>
+                            <nav aria-label="breadcrumb">
+                                <ol class="o_wsale_breadcrumb breadcrumb m-0 p-0">
+                                    <li class="breadcrumb-item d-none d-lg-inline-block">
+                                        <a t-att-href="keep(shop_path)">
+                                            <t t-call="website_sale.all_products_link_name"/>
                                         </a>
                                     </li>
-                                </t>
-                                <li class="breadcrumb-item d-none d-lg-inline-block active">
-                                    <span t-field="product.name" />
-                                </li>
-                                <li class="breadcrumb-item d-lg-none">
-                                    <a t-att-href="keep(category.website_url or shop_path)">
-                                        <i class="oi me-2" data-icon="chevron_backward" role="img" aria-hidden="true"/>
-                                        <t t-if="category.name" t-out="category.name"/>
-                                        <t t-else="" t-call="website_sale.all_products_link_name"/>
-                                    </a>
-                                </li>
-                            </ol>
+                                    <t t-foreach="category.parents_and_self" t-as="cat">
+                                        <li
+                                            class="breadcrumb-item d-none d-lg-inline-block"
+                                        >
+                                            <a
+                                                class="py-2 py-lg-0"
+                                                t-att-href="keep(cat.website_url)"
+                                            >
+                                                <i
+                                                    class="oi d-lg-none me-1" data-icon="chevron_backward"
+                                                    role="img" aria-hidden="true"
+                                                />
+                                                <t t-out="cat.name"/>
+                                            </a>
+                                        </li>
+                                    </t>
+                                    <li class="breadcrumb-item d-none d-lg-inline-block active" aria-current="page">
+                                        <span t-field="product.name" />
+                                    </li>
+                                    <li class="breadcrumb-item d-lg-none">
+                                        <a t-att-href="keep(category.website_url or shop_path)">
+                                            <i class="oi me-2" data-icon="chevron_backward" role="img" aria-hidden="true"/>
+                                            <t t-if="category.name" t-out="category.name"/>
+                                            <t t-else="" t-call="website_sale.all_products_link_name"/>
+                                        </a>
+                                    </li>
+                                </ol>
+                            </nav>
                             <div class="d-flex d-md-none gap-2 ms-auto">
                                 <t t-call="website.website_search_box_input"
                                     search_type.f="products"
