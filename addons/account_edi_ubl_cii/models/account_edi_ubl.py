@@ -25,20 +25,11 @@ from odoo.addons.account_edi_ubl_cii.tools.ubl_20_optional_fields import (
 
 _logger = logging.getLogger(__name__)
 
-UBL_NAMESPACES = {
-    'cbc': "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2",
-    'cac': "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2",
-}
-
 
 class AccountEdiUBL(models.AbstractModel):
     _name = "account.edi.ubl"
     _inherit = 'account.edi.common'
     _description = "Base helpers for UBL"
-
-    def _find_value(self, xpath, tree, nsmap=False):
-        # EXTENDS account.edi.common
-        return super()._find_value(xpath, tree, UBL_NAMESPACES)
 
     # -------------------------------------------------------------------------
     # BASE LINES HELPERS
@@ -103,30 +94,6 @@ class AccountEdiUBL(models.AbstractModel):
         :return:    True if the 'base_line' is a cash rounding line, False otherwise.
         """
         return base_line['special_type'] == 'cash_rounding'
-
-    def _ubl_should_export_early_payment_discount_as_line(self, vals):
-        """ Indicate if the early payment discount lines are exported as lines, or as document level allowances/charges.
-
-        :param vals:    Some custom data.
-        :return:        True to export them as lines, False as allowances/charges.
-        """
-        return True
-
-    def _ubl_should_export_global_discount_as_line(self, vals):
-        """ Indicate if the global discount lines are exported as lines, or as document level allowances/charges.
-
-        :param vals:    Some custom data.
-        :return:        True to export them as lines, False as allowances/charges.
-        """
-        return True
-
-    def _ubl_should_export_cash_rounding_as_line(self, vals):
-        """ Indicate if the cash rounding lines are exported as lines, or in PayableRoundingAmount.
-
-        :param vals:    Some custom data.
-        :return:        True to export them as lines, False in PayableRoundingAmount.
-        """
-        return True
 
     def _ubl_default_tax_category_grouping_key(self, base_line, tax_data, vals, currency):
         """ Give the values about the tax category for a given tax.
@@ -985,6 +952,7 @@ class AccountEdiUBL(models.AbstractModel):
         base_line = vals['line_vals']['base_line']
         product = base_line['product_id']
 
+        item_node['cac:AdditionalItemIdentification'] = []
         if product.default_code:
             item_node['cac:SellersItemIdentification'] = {
                 'cbc:ID': {'_text': product.default_code},
@@ -1075,8 +1043,6 @@ class AccountEdiUBL(models.AbstractModel):
             cg_code = base_line.get('cg_item_classification_code') or product.l10n_hr_kpd_category_id
             if cg_code.name:
                 nodes.append(self._ubl_get_line_item_commodity_classification_node_from_cg_code(vals, cg_code))
-
-        return nodes
 
     def _ubl_get_line_item_node_classified_tax_category_node(self, vals, tax_category):
         """ Generate the node 'cac:ClassifiedTaxCategory' in 'cac:Item'.
@@ -1371,12 +1337,6 @@ class AccountEdiUBL(models.AbstractModel):
     def _line_nodes_filter_base_lines(self, vals, filter_function=None):
         index = 1
         for base_line in vals['base_lines']:
-            if (
-                (self._ubl_is_early_payment_base_line(base_line) and not self._ubl_should_export_early_payment_discount_as_line(vals))
-                or (self._ubl_is_global_discount_base_line(base_line) and not self._ubl_should_export_global_discount_as_line(vals))
-                or (self._ubl_is_cash_rounding_base_line(base_line) and not self._ubl_should_export_cash_rounding_as_line(vals))
-            ):
-                continue
             if not filter_function or filter_function(base_line):
                 line_vals = {'base_line': base_line, 'index': index}
                 line_node = {}
@@ -1817,6 +1777,9 @@ class AccountEdiUBL(models.AbstractModel):
     def _ubl_add_profile_id_node(self, vals):
         vals['document_node']['cbc:ProfileID'] = {'_text': None}
 
+    def _ubl_add_profile_execution_id_node(self, vals):
+        vals['document_node']['cbc:ProfileExecutionID'] = {'_text': None}
+
     def _ubl_add_id_node(self, vals):
         vals['document_node']['cbc:ID'] = {'_text': None}
 
@@ -1825,6 +1788,9 @@ class AccountEdiUBL(models.AbstractModel):
 
     def _ubl_add_copy_indicator_node(self, vals):
         vals['document_node']['cbc:CopyIndicator'] = {'_text': None}
+
+    def _ubl_add_uuid_node(self, vals):
+        vals['document_node']['cbc:UUID'] = {'_text': None}
 
     def _ubl_add_issue_date_node(self, vals):
         issue_date_node = vals['document_node']['cbc:IssueDate'] = {'_text': None}
@@ -2106,12 +2072,6 @@ class AccountEdiUBL(models.AbstractModel):
 
     def _ubl_add_allowance_charge_nodes(self, vals):
         vals['document_node']['cac:AllowanceCharge'] = []
-
-        if self._is_document(vals, 'invoice', 'credit_note', 'self_invoice', 'self_credit_note'):
-            if not self._ubl_should_export_early_payment_discount_as_line(vals):
-                self._ubl_add_allowance_charge_nodes_early_payment_discount(vals)
-            if not self._ubl_should_export_global_discount_as_line(vals):
-                self._ubl_add_allowance_charge_nodes_global_discount(vals)
 
     def _ubl_get_tax_category_node(self, vals, tax_category):
         """ Generate the node 'cac:TaxCategory' in 'cac:SubTotal'.
@@ -2529,8 +2489,11 @@ class AccountEdiUBL(models.AbstractModel):
         self._ubl_add_version_id_node(vals)
         self._ubl_add_customization_id_node(vals)
         self._ubl_add_profile_id_node(vals)
+        self._ubl_add_profile_execution_id_node(vals)
         self._ubl_add_invoice_period_nodes(vals)
         self._ubl_add_id_node(vals)
+        self._ubl_add_copy_indicator_node(vals)
+        self._ubl_add_uuid_node(vals)
         self._ubl_add_issue_date_node(vals)
         self._ubl_add_due_date_node(vals)
         self._ubl_add_invoice_type_code_node(vals)
@@ -2539,6 +2502,7 @@ class AccountEdiUBL(models.AbstractModel):
         self._ubl_add_tax_currency_code_node(vals)
         self._ubl_add_buyer_reference_node(vals)
         self._ubl_add_order_reference_node(vals)
+        self._ubl_add_billing_reference_nodes(vals)
         self._ubl_add_accounting_supplier_party_node(vals)
         self._ubl_add_accounting_customer_party_node(vals)
         self._ubl_add_delivery_nodes(vals)
@@ -2553,8 +2517,11 @@ class AccountEdiUBL(models.AbstractModel):
         self._ubl_add_version_id_node(vals)
         self._ubl_add_customization_id_node(vals)
         self._ubl_add_profile_id_node(vals)
+        self._ubl_add_profile_execution_id_node(vals)
         self._ubl_add_invoice_period_nodes(vals)
         self._ubl_add_id_node(vals)
+        self._ubl_add_copy_indicator_node(vals)
+        self._ubl_add_uuid_node(vals)
         self._ubl_add_issue_date_node(vals)
         self._ubl_add_credit_note_type_code_node(vals)
         self._ubl_add_notes_nodes(vals)
@@ -2562,6 +2529,7 @@ class AccountEdiUBL(models.AbstractModel):
         self._ubl_add_tax_currency_code_node(vals)
         self._ubl_add_buyer_reference_node(vals)
         self._ubl_add_order_reference_node(vals)
+        self._ubl_add_billing_reference_nodes(vals)
         self._ubl_add_accounting_supplier_party_node(vals)
         self._ubl_add_accounting_customer_party_node(vals)
         self._ubl_add_delivery_nodes(vals)
@@ -2576,14 +2544,18 @@ class AccountEdiUBL(models.AbstractModel):
         self._ubl_add_version_id_node(vals)
         self._ubl_add_customization_id_node(vals)
         self._ubl_add_profile_id_node(vals)
+        self._ubl_add_profile_execution_id_node(vals)
         self._ubl_add_invoice_period_nodes(vals)
         self._ubl_add_id_node(vals)
+        self._ubl_add_copy_indicator_node(vals)
+        self._ubl_add_uuid_node(vals)
         self._ubl_add_issue_date_node(vals)
         self._ubl_add_notes_nodes(vals)
         self._ubl_add_document_currency_code_node(vals)
         self._ubl_add_tax_currency_code_node(vals)
         self._ubl_add_buyer_reference_node(vals)
         self._ubl_add_order_reference_node(vals)
+        self._ubl_add_billing_reference_nodes(vals)
         self._ubl_add_accounting_supplier_party_node(vals)
         self._ubl_add_accounting_customer_party_node(vals)
         self._ubl_add_delivery_nodes(vals)
@@ -2788,6 +2760,12 @@ class AccountEdiUBL(models.AbstractModel):
 
         base_lines, vals['tax_lines'] = invoice._get_rounded_base_and_tax_lines()
         vals['base_lines'] = self._preprocess_base_lines(invoice, base_lines)
+        for base_line in vals['base_lines']:
+            invoice_line = base_line['record']
+            if isinstance(invoice_line, models.Model):
+                base_line['invoice_line'] = invoice_line
+            else:
+                base_line['invoice_line'] = None
         return vals
 
     def _export_invoice(self, invoice):
@@ -2817,9 +2795,6 @@ class AccountEdiUBL(models.AbstractModel):
     # IMPORT: INVOICE
     # -------------------------------------------------------------------------
 
-    def _import_ubl_init_collected_values(self, invoice, collected_values):
-        return self._import_init_collected_values(invoice, collected_values)
-
     def _get_import_document_amount_sign(self, tree):
         """
         In UBL, an invoice has tag 'Invoice' and a credit note has tag 'CreditNote'. However, a credit note can be
@@ -2834,6 +2809,9 @@ class AccountEdiUBL(models.AbstractModel):
         if tree.tag == '{urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2}CreditNote':
             return 'refund', 1
         return None, None
+
+    def _import_ubl_init_collected_values(self, invoice, collected_values):
+        return self._import_init_collected_values(invoice, collected_values)
 
     def _import_ubl_invoice_document_sign(self, collected_values):
         self._import_invoice_document_sign(collected_values)
@@ -3502,18 +3480,21 @@ class AccountEdiUBL(models.AbstractModel):
         elif invoice.move_type == 'in_refund':
             line_fields = PEPPOL_CREDIT_NOTE_OPTIONAL_LINE_FIELDS
 
-        vals = {}
         AccountMoveLine = self.env['account.move.line']
+        vals = {'document_node': {'_nsmap': {}}}
+        self._fill_nsmap_values(vals)
+        result = {}
         for field_name, config in line_fields.items():
             node_value = self._find_value(
                 './/' + '/'.join(config.get('path')),
                 line_tree,
+                nsmap=vals['document_node']['_nsmap'],
             )
             field = AccountMoveLine._fields.get(field_name)
             if not field or field.type not in config['supported_types'] or not node_value:
                 continue
-            vals[field_name] = node_value
-        return vals
+            result[field_name] = node_value
+        return result
 
     def _import_ubl_invoice_add_invoice_line_values(self, collected_values):
         lines_collected_values = collected_values['lines_collected_values'] = []
@@ -3577,10 +3558,13 @@ class AccountEdiUBL(models.AbstractModel):
             invoice_fields = PEPPOL_CREDIT_NOTE_OPTIONAL_FIELDS
 
         AccountMove = self.env['account.move']
+        vals = {'document_node': {'_nsmap': {}}}
+        self._fill_nsmap_values(vals)
         for field_name, config in invoice_fields.items():
             node_value = self._find_value(
                 './/' + '/'.join(config.get('path')),
                 tree,
+                nsmap=vals['document_node']['_nsmap'],
             )
             field = AccountMove._fields.get(field_name)
             if not field or field.type not in config['supported_types'] or not node_value:

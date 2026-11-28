@@ -149,10 +149,6 @@ class AccountMove(models.Model):
 
         return super()._get_import_file_type(file_data)
 
-    def _get_ubl_cii_importable_models(self):
-        # EXTENDS 'account_edi_ubl_cii'
-        return [*super()._get_ubl_cii_importable_models(), 'account.edi.xml.pint_ae']
-
     def _l10n_ae_pint_get_errors(self):
         """ The PINT AE rules on the invoice's own data.
 
@@ -219,13 +215,3 @@ class AccountMove(models.Model):
             return moves.filtered(lambda move: move.move_type == invoice_type and move.name and move.name != '/')
 
         return named_invoices(self._get_reconciled_invoices()) or named_invoices(self.reversed_entry_id)
-
-    def l10n_ae_get_payment_means_details(self):
-        """ The UNCL4461 payment means code and name, from the preferred payment method's journal. """
-        self.ensure_one()
-        payment_method_line = self.preferred_payment_method_line_id
-        if payment_method_line.journal_id.type == 'cash':
-            return 10, 'In cash'
-        if payment_method_line.journal_id.type == 'bank' or self.partner_bank_id:
-            return 30, 'Credit transfer'
-        return 1, 'Instrument not defined'
