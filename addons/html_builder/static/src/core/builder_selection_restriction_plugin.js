@@ -1,8 +1,18 @@
 import { Plugin } from "@html_editor/plugin";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
-import { getDeepestPosition, isElement, isIconElement } from "@html_editor/utils/dom_info";
+import {
+    getDeepestPosition,
+    isElement,
+    isIconElement,
+    phrasingContent,
+} from "@html_editor/utils/dom_info";
 import { DIRECTIONS, leftPos, nodeSize, rightPos } from "@html_editor/utils/position";
 import { closestElement } from "@html_editor/utils/dom_traversal";
+import { BASE_CONTAINER_CLASS } from "@html_editor/utils/base_container";
+
+const PHRASING_SELECTOR = [...phrasingContent].filter((name) => name !== "#text").join(", ");
+// A `div` with a class other than `o-paragraph` or with non-phrasing content is a block.
+const BLOCK_DIV_SELECTOR = `div:is([class]:not(.${BASE_CONTAINER_CLASS}), :has(> :not(${PHRASING_SELECTOR})))`;
 
 /** @typedef {import("plugins").CSSSelector} CSSSelector */
 /**
@@ -19,7 +29,7 @@ export class BuilderSelectionRestrictionPlugin extends Plugin {
 
     /** @type {import("plugins").BuilderResources} */
     resources = {
-        uncrossable_element_selector: ["blockquote", "form", "div", "section", ".row"],
+        uncrossable_element_selector: ["blockquote", "form", BLOCK_DIV_SELECTOR, "section", ".row"],
     };
 
     setup() {
@@ -97,7 +107,7 @@ export class BuilderSelectionRestrictionPlugin extends Plugin {
     }
 
     /**
-     * Restricts the mouse selection inside the closest div.
+     * Restricts the mouse selection inside the closest block div.
      *
      * @param {Event} ev
      */
@@ -161,14 +171,14 @@ export class BuilderSelectionRestrictionPlugin extends Plugin {
 
     /**
      * Returns the element in which the selection should be restricted (by
-     * default, the closest `div` element, or the closest [contenteditable=true]
+     * default, the closest block `div` element, or the closest [contenteditable=true]
      * if the div is not editable).
      *
      * @param {Node} anchorNode the current selection anchorNode
      * @returns {HTMLElement}
      */
     getRestrictingElement(anchorNode) {
-        let restrictingEl = closestElement(anchorNode, "div");
+        let restrictingEl = closestElement(anchorNode, BLOCK_DIV_SELECTOR);
         if (!restrictingEl.isContentEditable) {
             restrictingEl = closestElement(anchorNode, "[contenteditable=true]") ?? restrictingEl;
         }

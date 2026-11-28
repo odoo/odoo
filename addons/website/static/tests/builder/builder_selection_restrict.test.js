@@ -265,7 +265,9 @@ test("the selection is restricted when the uncrossable element has no previous e
 });
 
 test("the selection is restricted when the uncrossable element has no previous sibling", async () => {
-    const { getEditableContent } = await setupWebsiteBuilder(`<div><div>salut</div>bug</div>`);
+    const { getEditableContent } = await setupWebsiteBuilder(
+        `<div><div><p>salut</p></div>bug</div>`
+    );
     const editableContent = getEditableContent();
     const parentEl = editableContent.firstElementChild;
     setSelection({
@@ -276,5 +278,84 @@ test("the selection is restricted when the uncrossable element has no previous s
         isMouseEventSimulated: true,
     });
     await animationFrame();
-    expect(getContent(editableContent)).toBe(`<div>[]<div>salut</div>bug</div>`);
+    expect(getContent(editableContent)).toBe(`<div>[]<div><p>salut</p></div>bug</div>`);
+});
+
+const pastedLinesSnippet = unformat(`
+    <section class="o_colored_level">
+        <div>
+            <p>text</p>
+            <div>first line</div>
+            <div class="o-paragraph">second line</div>
+            <div>third line</div>
+        </div>
+    </section>
+`);
+
+test("ctrl+a in a line of text selects the content of its container", async () => {
+    const { getEditableContent, getEditor } = await setupWebsiteBuilder(pastedLinesSnippet);
+    const editableContent = getEditableContent();
+    const editor = getEditor();
+    const secondLineEl = editor.editable.querySelector("section > div").children[2];
+    setSelection({ anchorNode: secondLineEl.firstChild, anchorOffset: 0 });
+    await manuallyDispatchProgrammaticEvent(editor.editable, "keydown", {
+        key: "a",
+        ctrlKey: true,
+    });
+    expect(getContent(editableContent)).toBe(
+        unformat(
+            `<section class="o_colored_level">
+                <div>
+                    <p>[text</p>
+                    <div>first line</div>
+                    <div class="o-paragraph">second line</div>
+                    <div>third line]</div>
+                </div>
+            </section>`
+        )
+    );
+});
+
+test("the selection is not restricted when it crosses lines of text", async () => {
+    const { getEditableContent, getEditor } = await setupWebsiteBuilder(pastedLinesSnippet);
+    const editableContent = getEditableContent();
+    const editor = getEditor();
+    const [, firstLineEl, , thirdLineEl] = editor.editable.querySelector("section > div").children;
+    setSelection({
+        anchorNode: firstLineEl.firstChild,
+        anchorOffset: 0,
+        focusNode: thirdLineEl.firstChild,
+        focusOffset: 5,
+        isMouseEventSimulated: true,
+    });
+    await animationFrame();
+    expect(getContent(editableContent)).toBe(
+        unformat(
+            `<section class="o_colored_level">
+                <div>
+                    <p>text</p>
+                    <div>[first line</div>
+                    <div class="o-paragraph">second line</div>
+                    <div>third] line</div>
+                </div>
+            </section>`
+        )
+    );
+});
+
+test("ctrl+a in a column with only text selects the column content", async () => {
+    const { getEditableContent, getEditor } = await setupWebsiteBuilder(
+        `<div class="row"><div class="col-6">News</div><div class="col-6">Shop</div></div>`
+    );
+    const editableContent = getEditableContent();
+    const editor = getEditor();
+    const shopColumnEl = editor.editable.querySelectorAll(".col-6")[1];
+    setSelection({ anchorNode: shopColumnEl.firstChild, anchorOffset: 0 });
+    await manuallyDispatchProgrammaticEvent(editor.editable, "keydown", {
+        key: "a",
+        ctrlKey: true,
+    });
+    expect(getContent(editableContent)).toBe(
+        `<div class="row"><div class="col-6">News</div><div class="col-6">[Shop]</div></div>`
+    );
 });
