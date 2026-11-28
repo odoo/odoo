@@ -160,6 +160,30 @@ class TestName(TransactionCase):
         self.assertEqual(custom_value.with_context(lang='fr_FR').display_name, 'Taille: Custom: 3 x 4 m')
         self.assertEqual(custom_value.with_context(lang='en_US').display_name, 'Size: Custom: 3 x 4 m')
 
+    def test_translated_product_category_order(self):
+        Category = self.env['product.category']
+        categ_a = Category.create({'name': 'Test Categ A'})
+        categ_b = Category.create({'name': 'Test Categ B'})
+        Category.create([
+            {'name': 'A', 'parent_id': categ_b.id},
+            {'name': 'B', 'parent_id': categ_a.id},
+            {'name': 'A', 'parent_id': categ_a.id},
+        ])
+        domain = [('id', 'child_of', (categ_a + categ_b).ids)]
+        self.assertEqual(
+            Category.search(domain).mapped('display_name'),
+            ['Test Categ A', 'Test Categ A / A', 'Test Categ A / B', 'Test Categ B', 'Test Categ B / A'],
+            "Categories should be sorted alphabetically by their complete name.",
+        )
+
+        self.env['res.lang']._activate_lang('fr_FR')
+        categ_a.with_context(lang='fr_FR').name = 'Test Categ C'
+        self.assertEqual(
+            Category.with_context(lang='fr_FR').search(domain).mapped('display_name'),
+            ['Test Categ B', 'Test Categ B / A', 'Test Categ C', 'Test Categ C / A', 'Test Categ C / B'],
+            "Categories should be sorted by their complete name in the user's language.",
+        )
+
     def test_product_product_name_search_favorite_first(self):
         # `is_favorite` was removed from product.product's `_order` for name_search
         # performance reasons; name_search must still surface favorites first when

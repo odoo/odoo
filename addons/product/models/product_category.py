@@ -3,6 +3,7 @@
 
 from odoo import api, fields, models, _
 from odoo.fields import Domain
+from odoo.tools import SQL
 
 
 class ProductCategory(models.Model):
@@ -12,12 +13,14 @@ class ProductCategory(models.Model):
     _parent_name = "parent_id"
     _parent_store = True
     _rec_name = 'complete_name'
-    _order = 'parent_path'
+    _order = 'complete_name'
 
     name = fields.Char('Name', index='trigram', required=True, translate=True)
     complete_name = fields.Char(
         string='Complete Name',
         compute='_compute_complete_name',
+        compute_sql='_compute_sql_complete_name',
+        compute_sudo=False,
         search='_search_complete_name',
         recursive=True,
     )
@@ -37,6 +40,24 @@ class ProductCategory(models.Model):
                 category.complete_name = '%s / %s' % (category.parent_id.complete_name, category.name)
             else:
                 category.complete_name = category.name
+
+    def _compute_sql_complete_name(self, table):
+        # complete_name is not stored (name is translatable): rebuild it from
+        # the parents in parent_path so that categories can be ordered by it
+        parent = table._make_alias('parent', self)
+        parent_ids = SQL("STRING_TO_ARRAY(RTRIM(%s, '/'), '/')::int[]", table.parent_path)
+        return SQL(
+            """(
+                SELECT STRING_AGG(%(name)s, ' / ' ORDER BY ARRAY_POSITION(%(parent_ids)s, %(id)s))
+                FROM %(table)s AS %(parent)s
+                WHERE %(id)s = ANY(%(parent_ids)s)
+            )""",
+            name=parent.name,
+            parent_ids=parent_ids,
+            id=parent.id,
+            table=SQL.identifier(self._table),
+            parent=parent,
+        )
 
     def _search_complete_name(self, operator, value):
         if operator in Domain.NEGATIVE_OPERATORS:
