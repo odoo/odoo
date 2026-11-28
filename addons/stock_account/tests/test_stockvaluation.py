@@ -3858,6 +3858,17 @@ class TestStockValuation(TestStockValuationCommon):
             with self.assertRaises(UserError):
                 self._close()
 
+    def test_periodic_closing_inventory_loss_debits_loss_account(self):
+        self._use_inventory_location_accounting()
+        product = self.product_standard
+        self._make_in_move(product, 2)
+        self._make_out_move(product, 1, location_dest_id=self.inventory_location.id)
+        closing_move = self._close()
+        loss_aml = closing_move.line_ids.filtered(lambda l: l.account_id == self.account_inventory)
+        self.assertRecordValues(loss_aml, [{'debit': 10, 'credit': 0}])
+        valuation_aml = closing_move.line_ids.filtered(lambda l: l.account_id == self.account_stock_valuation)
+        self.assertEqual(sum(valuation_aml.mapped('balance')), 10)
+
     def test_closing_after_past_date_closing_uses_company_day(self):
         """ With the company in UTC-5, an inventory adjustment at 2026-06-30 20:00
         local time is posted by a closing at June 30, so the next closing has

@@ -120,7 +120,7 @@ class ResCompany(models.Model):
         account_balance = defaultdict(float)
         for location, category, value in moves_in_by_location:
             stock_valuation_acc = category.property_stock_valuation_account_id or self.account_stock_valuation_id
-            account_balance[location.valuation_account_id, stock_valuation_acc] += value
+            account_balance[location.valuation_account_id, stock_valuation_acc] -= value
 
         for location, category, value in moves_out_by_location:
             stock_valuation_acc = category.property_stock_valuation_account_id or self.account_stock_valuation_id
