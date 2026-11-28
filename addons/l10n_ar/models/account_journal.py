@@ -13,7 +13,8 @@ class AccountJournal(models.Model):
         help="Argentina: Specify which type of system will be used to create the electronic invoice. This will depend on the type of invoice to be created.",
     )
     l10n_ar_afip_pos_number = fields.Integer(
-        'ARCA POS Number', help='This is the point of sale number assigned by ARCA in order to generate invoices')
+        'ARCA POS Number', copy=False,
+        help='This is the point of sale number assigned by ARCA in order to generate invoices')
     company_partner = fields.Many2one('res.partner', related='company_id.partner_id')
     l10n_ar_afip_pos_partner_id = fields.Many2one(
         'res.partner', 'ARCA POS Address', help='This is the address used for invoice reports of this POS',
@@ -151,9 +152,6 @@ class AccountJournal(models.Model):
 
     @api.constrains('l10n_ar_afip_pos_number')
     def _check_afip_pos_number(self):
-        if self.filtered(lambda j: j.l10n_ar_is_pos and j.l10n_ar_afip_pos_number == 0):
-            raise ValidationError(_('Please define an ARCA POS number'))
-
         if self.filtered(lambda j: j.l10n_ar_is_pos and j.l10n_ar_afip_pos_number > 99999):
             raise ValidationError(_('Please define a valid ARCA POS number (5 digits max)'))
 
