@@ -727,13 +727,40 @@ class WebsiteSearchableMixin(models.AbstractModel):
     def _search_fetch(self, search_detail, search, limit, order):
         fields = search_detail['search_fields']
         base_domain = search_detail['base_domain']
-        domain = self._search_build_domain(base_domain, search, fields, search_detail.get('search_extra'))
+        extra = search_detail.get('search_extra')
+        domain = self._search_build_domain(base_domain, search, fields, extra)
         model = self.sudo() if search_detail.get('requires_sudo') else self
-        results = model.search(
-            domain,
-            limit=limit,
-            order=search_detail.get('order', order)
-        )
+        effective_order = search_detail.get('order', order)
+
+        search_terms = [escape_psql(t) for t in search.split()] if search else []
+        if len(search_terms) > 2:
+            query = model._search(domain, limit=limit, order=effective_order)
+            relevance_parts = []
+            if model._rec_name and model._rec_name in fields:
+                escaped_search = escape_psql(search.strip())
+                exact_sql = Domain(model._rec_name, '=ilike', escaped_search).optimize_full(model)._to_sql(query.table)
+                phrase_sql = Domain(model._rec_name, 'ilike', escaped_search).optimize_full(model)._to_sql(query.table)
+                relevance_parts.append(
+                    SQL("(CASE WHEN (%s) THEN 2 WHEN (%s) THEN 1 ELSE 0 END) DESC", exact_sql, phrase_sql)
+                )
+            case_parts = []
+            for search_term in search_terms:
+                subdomains = [Domain(field, "ilike", search_term) for field in fields]
+                if extra:
+                    subdomains.append(extra(self.env, search_term))
+                term_sql = Domain.OR(subdomains).optimize_full(model)._to_sql(query.table)
+                case_parts.append(SQL("(CASE WHEN (%s) THEN 1 ELSE 0 END)", term_sql))
+            relevance_parts.append(SQL("(%s) DESC", SQL(" + ").join(case_parts)))
+            if query.order:
+                relevance_parts.append(query.order)
+            query.order = SQL(", ").join(relevance_parts)
+            results = model.browse(query)
+        else:
+            results = model.search(
+                domain,
+                limit=limit,
+                order=effective_order,
+            )
         count = model.search_count(domain) if limit and limit == len(results) else len(results)
         return results, count
 
