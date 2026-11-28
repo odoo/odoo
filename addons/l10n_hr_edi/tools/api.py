@@ -105,10 +105,13 @@ def _make_request(company, endpoint_type, params=False):
 
 
 def _call_mer_service(company, endpoint, params=None):
+    # The credentials are restricted to accounting managers, but any user allowed to
+    # process the documents must be able to call the service.
+    company_sudo = company.sudo()
     params_base = {
-        'Username': company.l10n_hr_mer_username,
-        'Password': company.l10n_hr_mer_password,
-        'CompanyId': company.l10n_hr_mer_company_ident,
+        'Username': company_sudo.l10n_hr_mer_username,
+        'Password': company_sudo.l10n_hr_mer_password,
+        'CompanyId': company_sudo.l10n_hr_mer_company_ident,
         'CompanyBu': company.partner_id.l10n_hr_business_unit_code,
         'SoftwareId': company.l10n_hr_mer_software_ident,
     }
