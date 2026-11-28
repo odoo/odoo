@@ -27,26 +27,6 @@ patch(PaymentScreenPaymentLines.prototype, {
             };
         }
 
-        const state = super.getPaymentActionState(...arguments);
-        if (
-            this.vivaApp.use(line.payment_method_id) &&
-            this.vivaApp.hasRefused() &&
-            !line.isDone()
-        ) {
-            state.actions = [
-                ...state.actions,
-                {
-                    id: "viva_use_app",
-                    label: _t("Use Viva app"),
-                    title: _t("Pay with the Viva Wallet application"),
-                    action: () => {
-                        this.vivaApp.forgetIntegration();
-                        this.props.deleteLine(line.uuid);
-                    },
-                    severity: "warning",
-                },
-            ];
-        }
-        return state;
+        return super.getPaymentActionState(...arguments);
     },
 });

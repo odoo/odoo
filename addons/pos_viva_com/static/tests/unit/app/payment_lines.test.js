@@ -54,7 +54,7 @@ test("getPaymentActionState", async () => {
     });
 
     // Mock vivaApp non-integration
-    comp.vivaApp = { isIntegrated: () => false, use: () => false, hasRefused: () => false };
+    comp.vivaApp = { isIntegrated: () => false };
     expect(normalizeActionState(comp.getPaymentActionState(paymentline))).toEqual({
         id: "waiting_card",
         icon: "autorenew",
@@ -75,44 +75,6 @@ test("getPaymentActionState", async () => {
                 action: "function",
                 severity: "danger",
                 show: true,
-            },
-        ],
-    });
-
-    // Mock vivaApp refused app to app payment
-    comp.vivaApp = {
-        isIntegrated: () => false,
-        use: () => true,
-        hasRefused: () => true,
-        forgetIntegration: () => {},
-    };
-    expect(normalizeActionState(comp.getPaymentActionState(paymentline))).toEqual({
-        id: "waiting_card",
-        icon: "autorenew",
-        iconClass: "oi-spin",
-        title: "Waiting for card",
-        actions: [
-            {
-                id: "force_done",
-                label: "Force done",
-                action: "function",
-                severity: "warning",
-                show: true,
-            },
-            {
-                id: "cancel",
-                label: "Cancel",
-                title: "Send Cancel Request",
-                action: "function",
-                severity: "danger",
-                show: true,
-            },
-            {
-                id: "viva_use_app",
-                label: "Use Viva app",
-                title: "Pay with the Viva Wallet application",
-                action: "function",
-                severity: "warning",
             },
         ],
     });
