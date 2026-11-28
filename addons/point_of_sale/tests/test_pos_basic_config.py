@@ -575,6 +575,28 @@ class TestPoSBasicConfig(TestPoSCommon):
         with self.assertRaisesRegex(UserError, "currently in use in a point of sale"):
             category1.unlink()
 
+    def test_edit_payment_method_with_opening_control_session(self):
+        self.config.open_ui()
+        self.pos_session = self.config.current_session_id
+        self.currency = self.pos_session.currency_id
+        self.pricelist = self.config.pricelist_id
+        self.assertEqual(self.pos_session.state, 'opening_control')
+        self.assertFalse(self.bank_pm1.open_session_ids)
+
+        self.bank_pm1.receivable_account_id = self.cash_pm1.receivable_account_id
+        with self.assertRaisesRegex(UserError, "while it has an open session"):
+            self.bank_pm1.config_ids = [Command.unlink(self.config.id)]
+
+        self.env['pos.order'].sync_from_ui([self.create_ui_order_data(
+            [(self.product1, 1)],
+            payments=[(self.bank_pm1, 10.0)],
+        )])
+        self.assertEqual(self.pos_session.state, 'opening_control')
+        self.bank_pm1.invalidate_recordset(['open_session_ids'])
+        self.assertTrue(self.bank_pm1.open_session_ids)
+        with self.assertRaisesRegex(UserError, "close and validate"):
+            self.bank_pm1.receivable_account_id = self.pos_receivable_bank
+
     def test_set_journal_on_bank_payment_method_with_open_session(self):
         bank_pm = self.env['pos.payment.method'].create({
             'name': 'Bank without journal',

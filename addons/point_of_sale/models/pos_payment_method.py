@@ -185,7 +185,11 @@ class PosPaymentMethod(models.Model):
     @api.depends('config_ids')
     def _compute_open_session_ids(self):
         for payment_method in self:
-            payment_method.open_session_ids = self.env['pos.session'].search([('config_id', 'in', payment_method.config_ids.ids), ('state', '!=', 'closed')])
+            payment_method.open_session_ids = self.env['pos.session'].search([
+                ('config_id', 'in', payment_method.config_ids.ids),
+                ('state', '!=', 'closed'),
+                '|', ('state', '!=', 'opening_control'), ('order_ids', '!=', False),
+            ])
 
     @api.constrains('type', 'currency_ids')
     def _check_currency_ids(self):
@@ -323,12 +327,12 @@ class PosPaymentMethod(models.Model):
                 removed_ids = [config_id for config_id in payment_method.config_ids.ids if config_id not in new_ids]
                 if not removed_ids:
                     continue
-                blocking_sessions = payment_method.open_session_ids.filtered(lambda s: s.config_id.id in removed_ids)
-                if blocking_sessions:
+                blocking_configs = self.env['pos.config'].browse(removed_ids).filtered('current_session_id')
+                if blocking_configs:
                     raise UserError(_(
                         "You cannot remove '%(pm)s' from %(configs)s while it has an open session.",
                         pm=payment_method.name,
-                        configs=', '.join(blocking_sessions.config_id.mapped('name')),
+                        configs=', '.join(blocking_configs.mapped('name')),
                     ))
 
         if 'payment_method_type' in vals:
