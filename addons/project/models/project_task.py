@@ -1359,7 +1359,16 @@ class ProjectTask(models.Model):
             vals.update(additional_vals)
         elif additional_vals:
             super(ProjectTask, self.sudo()).write(additional_vals)
+        portal_parent_change = 'parent_id' in vals and self.env.user._is_portal() and not self.env.su
+        if portal_parent_change:
+            subtasks = self.with_context(active_test=False)._get_all_subtasks()
+            forbidden_subtasks = subtasks - subtasks._filtered_access('write')
+            project_per_subtask = {task: task.project_id for task in forbidden_subtasks.sudo()}
         result = super().write(vals)
+        if portal_parent_change:
+            self.check_access('write')
+            if any(task.project_id != project for task, project in project_per_subtask.items()):
+                raise self.env['ir.rule']._make_access_error('write', forbidden_subtasks)
 
         if 'user_ids' in vals:
             self._populate_missing_personal_stages()
