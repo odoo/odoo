@@ -55,21 +55,28 @@
                 </div>
             </div>
 
+            <t t-set="lines_to_report" t-value="o.order_line.filtered(lambda l: l.display_type or l.product_qty != 0)"/>
+            <t t-set="product_lines" t-value="lines_to_report.filtered(lambda l: not l.display_type)"/>
+            <!-- Is there a discount on at least one line? -->
+            <t t-set="display_discount" t-value="any(l.discount for l in product_lines)"/>
+            <!-- Are there any taxes on at least one line? -->
+            <t t-set="display_taxes" t-value="any(l.tax_ids for l in product_lines)"/>
+
             <table class="o_has_total_table table o_main_table table-borderless">
                 <thead style="display: table-row-group">
                     <tr>
                         <th name="th_description" class="text-start"><strong>Description</strong></th>
                         <th name="th_quantity" class="text-end"><strong>Qty</strong></th>
                         <th name="th_price_unit" class="text-end"><strong>Unit Price</strong></th>
-                        <th name="th_discount" class="text-end"><strong>Disc.</strong></th>
-                        <th name="th_taxes" class="text-end"><strong>Taxes</strong></th>
+                        <th name="th_discount" t-if="display_discount" class="text-end"><strong>Disc.</strong></th>
+                        <th name="th_taxes" t-if="display_taxes" class="text-end"><strong>Taxes</strong></th>
                         <th name="th_subtotal" class="text-end">
                             <strong>Amount</strong>
                         </th>
                     </tr>
                 </thead>
                 <tbody>
-                    <t t-foreach="o.order_line.filtered(lambda l: l.display_type or l.product_qty != 0)" t-as="line">
+                    <t t-foreach="lines_to_report" t-as="line">
                         <tr t-att-class="'fw-bolder o_line_section' if line.display_type == 'line_section' else 'fw-bold o_line_subsection' if line.display_type == 'line_subsection' else 'fst-italic o_line_note' if line.display_type == 'line_note' else ''">
                             <t t-if="not line.display_type">
                                 <td id="product" class="text-start">
@@ -86,10 +93,10 @@
                                 <td class="text-end">
                                     <span t-field="line.price_unit"/>
                                 </td>
-                                <td class="text-end">
+                                <td class="text-end" t-if="display_discount">
                                     <span class="text-align-bottom"><span t-field="line.discount"/>%</span>
                                 </td>
-                                <td class="text-end">
+                                <td class="text-end" t-if="display_taxes">
                                     <span t-out="', '.join(tax.tax_label for tax in line.tax_ids if tax.tax_label)"/>
                                 </td>
                                 <td class="text-end">
@@ -98,7 +105,7 @@
                                 </td>
                             </t>
                             <t t-if="line.display_type in ('line_section', 'line_subsection')">
-                                <td colspan="5" id="section">
+                                <td t-att-colspan="3 + (1 if display_discount else 0) + (1 if display_taxes else 0)" id="section">
                                     <span t-field="line.name"/>
                                 </td>
                                 <td class="text-end">
