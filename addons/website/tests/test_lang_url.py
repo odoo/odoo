@@ -314,6 +314,30 @@ class TestTranslateUrl(TestLangUrl):
         self.assertEqual(r.status_code, 200)
         self.assertEqual(r.url, self.base + '/fr' + self.name_page_fr)
 
+    def test_alternate_translated_url(self):
+        # A page could have a different URL in each language (/page-en, /page-fr).
+        # Its alternate links must point to each of those URLs
+        self.page.view_id.arch = '<t t-call="website.layout"><div>NewPage</div></t>'
+        expected_alternates = {
+            'en': self.base + self.name_page_en,
+            'fr': self.base + '/fr' + self.name_page_fr,
+            'x-default': self.base + self.name_page_en,
+        }
+
+        r = self.url_open(self.name_page_en)
+        en_alternates = {
+            link.get('hreflang'): link.get('href')
+            for link in lxml.html.fromstring(r.content).xpath('//link[@rel="alternate"]')
+        }
+        self.assertEqual(en_alternates, expected_alternates)
+
+        r = self.url_open('/fr' + self.name_page_fr)
+        fr_alternates = {
+            link.get('hreflang'): link.get('href')
+            for link in lxml.html.fromstring(r.content).xpath('//link[@rel="alternate"]')
+        }
+        self.assertEqual(fr_alternates, expected_alternates)
+
     def test_access_translated_homepage(self):
         # From the homepage, changing the language of the website should
         # redirect to the french url of the specific homepage (as it is the

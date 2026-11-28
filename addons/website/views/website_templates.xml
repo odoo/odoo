@@ -174,10 +174,12 @@
         <t t-set="canonical_domain" t-value="website.get_base_url()"/>
         <!-- no hreflang on non-canonical pages or if no alternate language -->
         <t t-if="request.is_frontend_multilang and website._is_canonical_url() and len(frontend_languages) &gt; 1">
+            <!-- pages are not routes: url_localized can't translate their URL -->
+            <t t-set="page_urls" t-value="main_object and main_object._name == 'website.page' and main_object.sudo()._get_stored_translations('url')"/>
             <t t-foreach="frontend_languages.values()" t-as="lg">
-        <link rel="alternate" t-att-hreflang="lg.hreflang" t-att-href="url_localized(lang_code=lg.code, prefetch_langs=True, canonical_domain=canonical_domain)"/>
+        <link rel="alternate" t-att-hreflang="lg.hreflang" t-att-href="url_localized(url=page_urls and page_urls[lg.code], lang_code=lg.code, prefetch_langs=True, canonical_domain=canonical_domain)"/>
             </t>
-        <link rel="alternate" hreflang="x-default" t-att-href="url_localized(lang_code=website.default_lang_id.code, canonical_domain=canonical_domain)"/>
+        <link rel="alternate" hreflang="x-default" t-att-href="url_localized(url=page_urls and page_urls[website.default_lang_id.code], lang_code=website.default_lang_id.code, canonical_domain=canonical_domain)"/>
         </t>
         <link rel="canonical" t-att-href="website._get_canonical_url()"/>
         <!-- TODO: Once we have style in DB, add this preconnect only if a
