@@ -667,6 +667,15 @@ Versions:
                     work_time_per_day_list = work_time_per_day_mapped[leave.date_from, leave.date_to, leave.holiday_status_id.include_public_holidays_in_duration, calendar][leave.employee_id.id]
                     days = len(work_time_per_day_list)
                     hours = sum(map(lambda t: t[1], work_time_per_day_list))
+                elif leave.leave_type_request_unit == 'hour' and calendar.duration_based:
+                    # The attendances of such a schedule only have a duration, their hours are an
+                    # arbitrary window centered on 12:00 that the user never sees: count the requested
+                    # length instead of its overlap with that window.
+                    days, hours = leave._get_custom_hours_duration(
+                        calendar,
+                        domain=domain,
+                        compute_leaves=not leave.holiday_status_id.include_public_holidays_in_duration,
+                    )
                 else:
                     work_days_data = work_days_data_mapped[leave.date_from, leave.date_to, leave.holiday_status_id.include_public_holidays_in_duration, calendar][leave.employee_id.id]
                     hours, days = work_days_data['hours'], work_days_data['days']
@@ -683,6 +692,65 @@ Versions:
                 days = float_round(days, precision_rounding=0.5)
             result[leave.id] = (days, hours)
         return result
+
+    def _get_custom_hours_duration(self, calendar, domain=None, compute_leaves=True):
+        """ Duration of a custom hours request for an employee whose schedule is duration based.
+
+        Each day counts the requested length (without the time overlapping a public holiday or a
+        leave when ``compute_leaves``), capped at the hours the schedule expects on that day minus
+        the ones other leaves already take. A day without attendance is never counted.
+
+        :return: ``(number_of_days, number_of_hours)``
+        """
+        self.ensure_one()
+        employee = self.employee_id
+        resource = employee.resource_id
+        tz = pytz.timezone(employee.tz or self.env.user.tz or 'UTC')
+        date_from = pytz.utc.localize(self.date_from).astimezone(tz)
+        date_to = pytz.utc.localize(self.date_to).astimezone(tz)
+
+        first_day = datetime.combine(date_from.date(), time.min)
+        last_day = datetime.combine(date_to.date(), time.min) + timedelta(days=1)
+        # the attendances of the whole days, not clipped to the request
+        attendance_intervals = calendar._attendance_intervals_batch(
+            tz.localize(first_day), tz.localize(last_day), resource)[resource.id]
+        capacity_hours = defaultdict(float)
+        capacity_days = defaultdict(float)
+        for start, stop, attendances in attendance_intervals:
+            capacity_hours[start.date()] += (stop - start).total_seconds() / 3600
+            capacity_days[start.date()] += sum(attendances.mapped('duration_days'))
+
+        def hours_per_day(intervals):
+            result = defaultdict(float)
+            for start, stop, _meta in intervals:
+                # an interval may span several days, split it at midnight
+                while start < stop:
+                    midnight = tz.localize(datetime.combine(start.date() + timedelta(days=1), time.min))
+                    end_of_day = min(stop, midnight)
+                    result[start.date()] += (end_of_day - start).total_seconds() / 3600
+                    start = end_of_day
+            return result
+
+        requested = Intervals([(date_from, date_to, self)])
+        taken_hours = defaultdict(float)
+        if compute_leaves:
+            leave_intervals = calendar._leave_intervals_batch(
+                tz.localize(first_day), tz.localize(last_day), resource, domain, tz=tz)[resource.id]
+            requested -= leave_intervals
+            # merged, so that overlapping leaves (e.g. a public holiday) are not counted twice
+            taken_hours = hours_per_day(Intervals(list(leave_intervals)))
+        requested_hours = hours_per_day(requested)
+
+        hours = days = 0.0
+        for day, day_requested_hours in requested_hours.items():
+            # the hours already taken by other leaves that day are not available anymore
+            available_hours = capacity_hours[day] - min(taken_hours[day], capacity_hours[day])
+            day_hours = min(day_requested_hours, available_hours)
+            if not day_hours:
+                continue
+            hours += day_hours
+            days += capacity_days[day] * day_hours / capacity_hours[day]
+        return float_round(days, precision_rounding=0.001), hours
 
     @api.depends('date_from', 'date_to', 'resource_calendar_id', 'holiday_status_id.request_unit')
     def _compute_duration(self):
