@@ -69,9 +69,13 @@ export class GenerateDialog extends Component {
         const newlines = [];
         let lines = []
         lines = this.props.move.data.move_line_ids;
+        let quantity = 0;
+        const skipOnchange = !this.keepLines.el.checked
+            && move_line_vals[0]?.product_uom_id.id === this.props.move.data.product_uom[0];
 
         // create records directly from values to bypass onchanges
         for (const values of move_line_vals) {
+            quantity += values.quantity;
             newlines.push(
                 lines._createRecordDatapoint(values, {
                     mode: 'readonly',
@@ -86,13 +90,33 @@ export class GenerateDialog extends Component {
                 currentId,
             ]));
         }
-        lines.records.push(...newlines);
-        lines._commands.push(...newlines.map((record) => [
-            x2ManyCommands.CREATE,
-            record._virtualId,
-        ]));
-        lines._currentIds.push(...newlines.map((record) => record._virtualId));
-        await lines._onUpdate();
+
+        for (const record of newlines) {
+            lines._commands.push([x2ManyCommands.CREATE, record._virtualId]);
+            lines._currentIds.push(record._virtualId);
+        }
+        lines.count = lines._currentIds.length;
+
+        if (lines.offset) {
+            lines.model._updateConfig(lines.config, { offset: 0 }, { reload: false });
+        }
+
+        lines.records = lines._currentIds
+            .slice(0, lines.limit)
+            .map((id) => lines._cache[id]);
+
+        // `move_line_ids: []` is an empty command list, not a value: it marks
+        // the field as changed on the move so `_getChanges()` includes it on
+        // save, without reapplying any commands, since `lines` above already
+        // reflects the new state.
+        const moveChanges = { move_line_ids: [] };
+        if (skipOnchange && 'quantity' in this.props.move.activeFields) {
+            moveChanges.quantity = quantity;
+        }
+        if ('move_lines_count' in this.props.move.activeFields) {
+            moveChanges.move_lines_count = lines.count;
+        }
+        await this.props.move._update(moveChanges, { withoutOnchange: skipOnchange });
         this.props.close();
     }
 }
