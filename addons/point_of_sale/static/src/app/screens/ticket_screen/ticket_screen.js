@@ -512,6 +512,10 @@ export class TicketScreen extends Component {
             return this.state.selectedOrderlineIds[this.getSelectedOrder().id];
         }
     }
+    // Orders with a higher priority are listed first.
+    getOrderSortPriority(_order) {
+        return 0;
+    }
     isOrderDoneOrPaid(order) {
         return order.state === "done" || order.state === "paid";
     }
@@ -577,6 +581,10 @@ export class TicketScreen extends Component {
 
         const sortOrders = (orders, ascending = false) =>
             orders.sort((a, b) => {
+                const priorityDiff = this.getOrderSortPriority(b) - this.getOrderSortPriority(a);
+                if (priorityDiff) {
+                    return priorityDiff;
+                }
                 const dateA = a.date_order;
                 const dateB = b.date_order;
 

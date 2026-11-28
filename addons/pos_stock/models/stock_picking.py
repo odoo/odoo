@@ -156,10 +156,11 @@ class StockPicking(models.Model):
                         returnable_qty_by_product[keys] -= move.quantity
 
     def _send_confirmation_email(self):
-        # Over the counter sales need no Mail/SMS confirmation
+        # Over the counter sales and pickups need no Mail/SMS confirmation
         pickings = self.filtered(lambda p:
             p.picking_type_id != p.picking_type_id.warehouse_id.pos_type_id
             and not (p.pos_session_id and not p.pos_order_id.shipping_date)
+            and not p.pos_order_id.pickup_later
         )
         return super(StockPicking, pickings)._send_confirmation_email()
 

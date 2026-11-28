@@ -1,4 +1,11 @@
+import { patch } from "@web/core/utils/patch";
 import { SaleOrder } from "@pos_sale/../tests/unit/data/sale_order.data";
+
+patch(SaleOrder.prototype, {
+    _load_pos_data_fields() {
+        return [...super._load_pos_data_fields(...arguments), "pos_initial_picking_date"];
+    },
+});
 
 SaleOrder._records = [
     ...SaleOrder._records,

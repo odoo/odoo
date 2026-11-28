@@ -1357,6 +1357,73 @@ class TestPosStockFlow(CommonPosStockTest):
         self.assertIn(mapped_expense, used_accounts)
         self.assertNotIn(default_expense, used_accounts)
 
+    def test_pickup_later_picking_validated_on_pickup_date(self):
+        """The cron validates pickup pickings on their pickup date, with the lot chosen in the POS.
+        A picking it cannot validate (no lot) is left to the warehouse with a single warning activity.
+        """
+        self.pos_config_usd.write({
+            'ship_later': True,
+            'payment_method_ids': [(6, 0, self.cash_payment_method.ids)],
+        })
+        self.pos_config_usd.open_ui()
+        tracked_product = self.env['product.product'].create({
+            'name': 'Lot Product',
+            'is_storable': True,
+            'tracking': 'lot',
+            'available_in_pos': True,
+        })
+        lot = self.env['stock.lot'].create({'name': 'LOT1', 'product_id': tracked_product.id})
+        self.env['stock.quant']._update_available_quantity(
+            tracked_product, self.company_data['default_warehouse'].lot_stock_id, 1, lot_id=lot)
+        today = fields.Date.today()
+        orders = self.env['pos.order']
+        for pickup_date, product, lot_names in (
+            (today, self.ten_dollars_no_tax.product_variant_id, []),
+            (today + relativedelta(days=1), self.ten_dollars_no_tax.product_variant_id, []),
+            (today, tracked_product, [lot.name]),
+            (today, tracked_product, []),
+        ):
+            order = self.env['pos.order'].create({
+                'session_id': self.pos_config_usd.current_session_id.id,
+                'partner_id': self.partner.id,
+                'lines': [Command.create({
+                    'product_id': product.id,
+                    'price_unit': 10.0,
+                    'qty': 1.0,
+                    'price_subtotal': 10.0,
+                    'price_subtotal_incl': 10.0,
+                    'pack_lot_ids': [Command.create({'lot_name': name}) for name in lot_names],
+                })],
+                'amount_tax': 0.0,
+                'amount_total': 10.0,
+                'amount_paid': 0.0,
+                'amount_return': 0.0,
+                'shipping_date': pickup_date,
+                'pickup_later': True,
+            })
+            context = {'active_ids': order.ids, 'active_id': order.id}
+            self.env['pos.make.payment'].with_context(context).create({
+                'amount': 10.0,
+                'payment_method_id': self.cash_payment_method.id,
+            }).with_context(context).check()
+            orders |= order
+        due_order, later_order, lot_order, no_lot_order = orders
+
+        self.env['pos.order']._cron_process_pos_orders()
+        # A second run must not warn again about the picking it could not validate.
+        self.env['pos.order']._cron_process_pos_orders()
+        self.assertEqual(due_order.picking_ids.mapped('state'), ['done'])
+        self.assertNotIn('done', later_order.picking_ids.mapped('state'))
+        self.assertEqual(lot_order.picking_ids.mapped('state'), ['done'])
+        self.assertEqual(lot_order.picking_ids.move_line_ids.lot_id, lot)
+        # Without a lot, the picking waits for the warehouse, warned once.
+        self.assertNotIn('done', no_lot_order.picking_ids.mapped('state'))
+        self.assertEqual(
+            no_lot_order.picking_ids.activity_ids.activity_type_id,
+            self.env.ref('mail.mail_activity_data_warning'),
+        )
+        self.assertEqual(len(no_lot_order.picking_ids.activity_ids), 1)
+
     def test_refund_ship_later_cancels_picking(self):
         self.pos_config_usd.write({
             'ship_later': True,

@@ -4,6 +4,13 @@ import { patch } from "@web/core/utils/patch";
 import { PosStore } from "@point_of_sale/app/services/pos_store";
 
 patch(PosStore.prototype, {
+    async settleSO(sale_order) {
+        const result = await super.settleSO(...arguments);
+        if (this.config.ship_later && sale_order.pos_initial_picking_date) {
+            this.getOrder().shipping_date = sale_order.pos_initial_picking_date;
+        }
+        return result;
+    },
     async updateSOLines(line, convertedLine, newLine, newLineValues, state) {
         if (
             ["lot", "serial"].includes(newLine.getProduct().tracking) &&

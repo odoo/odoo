@@ -2,7 +2,7 @@ export function clickShipLaterButton() {
     return [
         {
             content: "click ship later button",
-            trigger: ".button:contains('Ship Later')",
+            trigger: ".button:contains('Schedule for later')",
             run: "click",
         },
         {
@@ -16,7 +16,7 @@ export function clickShipLaterButton() {
 export function shippingLaterHighlighted() {
     return {
         content: "Shipping later button is highlighted",
-        trigger: ".button:contains('Ship Later').highlight",
+        trigger: ".button:contains('Schedule for later').highlight",
     };
 }
 
@@ -24,7 +24,7 @@ export function setShipLaterDate(date) {
     return [
         {
             content: "click ship later button",
-            trigger: ".button:contains('Ship Later')",
+            trigger: ".button:contains('Schedule for later')",
             run: "click",
         },
         {

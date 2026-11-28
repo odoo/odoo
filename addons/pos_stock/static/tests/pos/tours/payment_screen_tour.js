@@ -14,7 +14,7 @@ registry.category("web_tour.tours").add("StockPaymentScreenTour2", {
             ProductScreen.clickPayButton(),
 
             // check that ship later button is present
-            { trigger: ".payment-buttons button:contains('Ship Later')" },
+            { trigger: ".payment-buttons button:contains('Schedule for later')" },
             // payment line is been in case of mobile as paymentlines are required to manually enter the amount
             {
                 isActive: ["mobile"],
