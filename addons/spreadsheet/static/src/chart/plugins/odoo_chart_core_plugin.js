@@ -28,6 +28,7 @@ const CHART_PLACEHOLDER_DISPLAY_NAME = {
     scatter: _t("Odoo Scatter Chart"),
     combo: _t("Odoo Combo Chart"),
     funnel: _t("Odoo Funnel Chart"),
+    heatmap: _t("Odoo Heatmap Chart"),
 };
 
 export class OdooChartCorePlugin extends OdooCorePlugin {
