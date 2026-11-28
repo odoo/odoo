@@ -123,9 +123,10 @@ class EventSlot(models.Model):
             query = """ SELECT event_slot_id, state, count(event_slot_id)
                         FROM event_registration
                         WHERE event_slot_id IN %s AND state IN ('open', 'done') AND active = true
+                          AND main_registration_id IS NULL
                         GROUP BY event_slot_id, state
                     """
-            self.env['event.registration'].flush_model(['event_slot_id', 'state', 'active'])
+            self.env['event.registration'].flush_model(['event_slot_id', 'state', 'active', 'main_registration_id'])
             self.env.cr.execute(query, (tuple(self.ids),))
             res = self.env.cr.fetchall()
             for slot_id, state, num in res:
