@@ -94,7 +94,6 @@ export class AttendeeCalendarController extends CalendarController {
      */
     async deleteRecord(record) {
         if (
-            user.partnerId === record.attendeeId &&
             user.partnerId === record.rawRecord.partner_id[0]
         ) {
             await this.archiveOrUnlinkCalendarEvent({
@@ -106,11 +105,6 @@ export class AttendeeCalendarController extends CalendarController {
                 start: record.start,
                 defaultAction: () => this.displayDialog(ConfirmationDialog, this.deleteConfirmationDialogProps(record)),
             });
-        } else {
-            // Decline event
-            this.orm
-                .call("calendar.attendee", "do_decline", [record.calendarAttendeeId])
-                .then(this.model.load.bind(this.model));
         }
     }
 }
