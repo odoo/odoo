@@ -75,10 +75,9 @@ class PosPreset(models.Model):
         usage = defaultdict(int)
         orders = self.env['pos.order'].search([
             ('preset_id', '=', self.id),
-            ('session_id.state', '=', 'opened'),
-            ('preset_time', '!=', False),
+            ('preset_time', '>=', fields.Datetime.now()),
             ('state', 'in', ['draft', 'paid', 'done']),
-            ('create_date', '>=', fields.Datetime.now() - timedelta(days=1))
+            ('date_order', '>=', fields.Datetime.now() - timedelta(days=7))
         ])
         for order in orders:
             sql_datetime_str = order.preset_time.strftime("%Y-%m-%d %H:%M:%S")
