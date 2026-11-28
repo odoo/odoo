@@ -103,7 +103,7 @@ class Authenticate(http.Controller):
 
         auth_message = json.loads(data)
         # Check the expiration
-        if datetime.datetime.utcnow() - datetime.datetime.fromtimestamp(auth_message['timestamp']) > datetime.timedelta(
+        if datetime.datetime.now(datetime.UTC) - datetime.datetime.fromtimestamp(auth_message['timestamp'], datetime.UTC) > datetime.timedelta(
                 minutes=3):
             return None
 
@@ -117,7 +117,7 @@ class Authenticate(http.Controller):
         auth_dict = {
             'scope': scope,
             'name': name,
-            'timestamp': int(datetime.datetime.utcnow().timestamp()),
+            'timestamp': int(datetime.datetime.now(datetime.UTC).timestamp()),
             # <- elapsed time should be < 3 mins when verifying
             'uid': request.env.uid,
         }
