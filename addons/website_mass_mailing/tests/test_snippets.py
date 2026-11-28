@@ -31,3 +31,10 @@ class TestSnippets(HttpCase):
             "snippet_newsletter_block_with_edit",
             login='admin'
         )
+
+    def test_snippet_newsletter_block_switch_template(self):
+        self.start_tour(
+            self.env['website'].get_client_action_url('/'),
+            "snippet_newsletter_block_switch_template",
+            login='admin'
+        )
