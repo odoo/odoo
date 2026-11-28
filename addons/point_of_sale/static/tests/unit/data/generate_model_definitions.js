@@ -49,6 +49,7 @@ import { PosPrepOrder } from "./pos_prep_order.data";
 import { PosPrepLine } from "./pos_prep_line.data";
 import { PosSnooze } from "./pos_snooze.data";
 import { IrUiView } from "./ir_ui_view.data";
+import { PosReport } from "./pos_report.data";
 
 export const hootPosModels = [
     ResCountry,
@@ -100,6 +101,7 @@ export const hootPosModels = [
     PosPrepLine,
     PosSnooze,
     IrUiView,
+    PosReport,
 ];
 
 export const definePosModels = () => {

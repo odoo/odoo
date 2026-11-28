@@ -15,7 +15,7 @@ class PosOrderLine(models.Model):
     _description = "Point of Sale Order Line"
     _rec_name = 'product_id'
     _parent_name = 'combo_parent_id'
-    _inherit = ['pos.load.mixin', 'res.currency.rate.consolidation.mixin']
+    _inherit = ['pos.load.mixin', 'res.currency.rate.consolidation.mixin', 'pos.snapshot.mixin']
 
     company_id = fields.Many2one('res.company', string='Company', related='order_id.company_id', store=True)
     name = fields.Char(string='Line No', required=True, copy=False)
@@ -123,6 +123,9 @@ class PosOrderLine(models.Model):
         self.ensure_one()
         tip_product = self.order_id.config_id.tip_product_id
         return bool(self.order_id.config_id.iface_tipproduct) and bool(tip_product) and self.product_id == tip_product
+
+    def _snapshot_session_path(self):
+        return 'order_id.session_id'
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -267,6 +270,10 @@ class PosOrderLine(models.Model):
 
     def _has_discount(self):
         return self.discount > 0
+
+    def _is_discount_product(self):
+        """Whether the line is a global discount, left out of product and tax details."""
+        return False
 
     def _get_price_no_discount(self, config_id):
         def get_total(line):

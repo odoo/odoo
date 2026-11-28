@@ -3,6 +3,7 @@
 from . import account_bank_statement
 from . import account_bank_statement_line
 from . import pos_load_mixin
+from . import pos_snapshot
 from . import account_account
 from . import account_cash_rounding
 from . import account_payment
@@ -37,7 +38,6 @@ from . import ir_http
 from . import pos_payment
 from . import pos_payment_method
 from . import pos_bill
-from . import report_sale_details
 from . import pos_printer
 from . import pos_note
 from . import res_users

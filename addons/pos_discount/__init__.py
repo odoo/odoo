@@ -3,6 +3,7 @@
 
 from . import models
 from . import receipt
+from . import report
 
 
 def uninstall_hook(env):

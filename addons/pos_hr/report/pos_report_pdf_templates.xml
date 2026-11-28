@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="pos_report_pdf_header_employee" inherit_id="point_of_sale.pos_sales_detail_pdf_header">
+            <xpath expr="//h2[@id='title']" position="attributes">
+                <attribute name="t-out"/>
+            </xpath>
+            <xpath expr="//h2[@id='title']" position="inside">
+                <t t-if="report_context.get('employee_name')">Employee Sales Report</t>
+                <t t-else="" t-out="report_context.get('report_name')"/>
+            </xpath>
+
+            <xpath expr="//div[@id='meta']" position="inside">
+                <t t-if="report_context.get('employee_name')">
+                    <h5>
+                        Employee: <span t-out="report_context['employee_name']"/>
+                    </h5>
+                </t>
+            </xpath>
+        </template>
+    </data>
+</odoo>
