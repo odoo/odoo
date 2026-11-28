@@ -53,9 +53,9 @@ export class DiscussChannel extends Record {
             () => this.onPinStateUpdated(),
             { immediate: true, initialRun: false }
         );
-        // Handles subscriptions for non-members. Subscriptions for channels
-        // that the user is a member of are handled by
-        // `ir_websocket@_build_bus_channel_list`.
+        // Handles subscriptions for non-members. Members listen to their channels from
+        // `ir_websocket@_build_bus_channel_list` and `discuss.channel.member` joining and
+        // leaving them on the server.
         this.onChange(
             () => {
                 const shouldSubscribe =
@@ -71,21 +71,6 @@ export class DiscussChannel extends Record {
                     return () => busService.deleteChannel(busChannel);
                 }
             }
-        );
-        let lastSubscription = "not_member";
-        this.onChange(
-            () => [this.memberBusSubscription],
-            function onChangeMemberBusSubscription(subscription) {
-                const wasMember = lastSubscription !== "not_member";
-                lastSubscription = subscription;
-                if (
-                    subscription === "member_after_start" ||
-                    (wasMember && subscription === "not_member")
-                ) {
-                    this.store.updateBusSubscription();
-                }
-            },
-            { immediate: true }
         );
         this.onChange(
             () => [this.isDisplayed, this.self_member_id],
@@ -218,14 +203,6 @@ export class DiscussChannel extends Record {
             (!this.avatar_cache_key || this.avatar_cache_key === "no-avatar") &&
             Boolean(this.correspondent)
         );
-    }
-    get memberBusSubscription() {
-        const member = this.self_member_id;
-        if (!member) {
-            return "not_member";
-        }
-        const { startedAt } = this.store.env.services.bus_service;
-        return member.memberSince >= startedAt ? "member_after_start" : "member_before_start";
     }
     get avatarUrl() {
         if (!this.hasCorrespondentAvatar) {

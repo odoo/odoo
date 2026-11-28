@@ -8,6 +8,7 @@ from odoo import api, fields, models
 from odoo.tools import SQL, config
 from odoo.tools.misc import OrderedSet
 
+from ..bus_dispatcher import INTERNAL_CHANNEL, SUBSCRIPTIONS_TYPE
 from ..tools.notifications import fetch_bus_notifications, json_dump
 
 _logger = logging.getLogger(__name__)
@@ -108,6 +109,26 @@ class BusBus(models.Model):
             )
         self.env.cr.precommit.data["bus.bus.values"].append((channel, notification_type, message))
 
+    def _update_subscriptions(self, subscribers, channels, *, join):
+        """Make the websockets listening to the ``subscribers`` records join or leave
+        ``channels``."""
+        if not subscribers or not channels:
+            return
+        self._ensure_hooks()
+        changes = self.env.cr.precommit.data["bus.bus.subscriptions"]
+        change = {
+            "model": subscribers._name,
+            "ids": subscribers.ids,
+            "channels": [channel_with_db(self.env.cr.dbname, channel) for channel in channels],
+            "join": join,
+        }
+        previous = changes[-1] if changes else {}
+        if all(previous.get(key) == change[key] for key in ("model", "ids", "join")):
+            # Same subscribers, same direction: one change, e.g. a user joining many channels.
+            previous["channels"] += change["channels"]
+        else:
+            changes.append(change)
+
     def _prepare_payload(self, payload):
         """Compute and return the final payload for a bus notification. This method is
         called **just before sending the notification**, allowing deferred computation.
@@ -118,12 +139,22 @@ class BusBus(models.Model):
     def _ensure_hooks(self):
         if "bus.bus.values" not in self.env.cr.precommit.data:
             self.env.cr.precommit.data["bus.bus.values"] = []
+            self.env.cr.precommit.data["bus.bus.subscriptions"] = []
 
             @self.env.cr.precommit.add
             def create_bus():
                 values = []
                 channels = OrderedSet()
-                for channel, type_, payload in self.env.cr.precommit.data.pop("bus.bus.values"):
+                notifications = self.env.cr.precommit.data.pop("bus.bus.values")
+                if subscriptions := self.env.cr.precommit.data.pop("bus.bus.subscriptions"):
+                    # First, so that a channel joined here gets this transaction's
+                    # notifications: the join fetches from this row's id on.
+                    notifications.insert(0, (
+                        channel_with_db(self.env.cr.dbname, INTERNAL_CHANNEL),
+                        SUBSCRIPTIONS_TYPE,
+                        subscriptions,
+                    ))
+                for channel, type_, payload in notifications:
                     formatted_payload = self._prepare_payload(payload)
                     if formatted_payload is SKIP_NOTIFICATION:
                         continue

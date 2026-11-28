@@ -773,7 +773,20 @@ class DiscussChannel(models.Model):
                 self.env._("Only the channel owner or database admins can convert a meeting to a chat."),
             )
         old_names = {channel: channel.name for channel in self} if "name" in vals else {}
+        channels_by_old_group = self.grouped("group_public_id") if "group_public_id" in vals else {}
         result = super().write(vals)
+        for old_group, channels in channels_by_old_group.items():
+            if not channels.group_public_id or channels.group_public_id == old_group:
+                continue
+            # Users of `base.group_system` read every channel: they keep it.
+            groups_after = channels.group_public_id | self.env.ref("base.group_system")
+            domain = Domain("all_group_ids", "not in", groups_after.ids)
+            if old_group:
+                domain &= Domain("all_group_ids", "in", old_group.ids)
+            # sudo: res.users - can read the users of a group to follow their channel access
+            self.env["res.users"].sudo().search(domain)._bus_leave(
+                *(channels | channels.sub_channel_ids),
+            )
         if vals.get('group_ids'):
             self._subscribe_users_automatically()
         if old_names:
