@@ -87,6 +87,31 @@ test("Cashdrawer: the default printer is restored after a refresh", async () => 
     expect.verifySteps(["cashbox opened"]);
 });
 
+test("A failed print offers to retry and to print from the browser", async () => {
+    const { store, printer } = await setupSinglePrinter();
+    patchWithCleanup(printer._instance, {
+        print() {
+            return { successful: false, message: { title: "Printing failed", body: "" } };
+        },
+    });
+    let popupProps;
+    patchWithCleanup(store.ticketPrinter.dialog, {
+        add(_component, props) {
+            popupProps = props;
+        },
+    });
+    patchWithCleanup(store.ticketPrinter, {
+        printWeb() {
+            expect.step("printed from the browser");
+        },
+    });
+    const iframe = document.createElement("iframe");
+    await store.ticketPrinter.printWithFallback({ iframe, image: {}, printer, fallbacks: [] });
+    expect(popupProps.canRetry).toBe(true);
+    popupProps.download();
+    expect.verifySteps(["printed from the browser"]);
+});
+
 test("printWeb gives the focus back to the POS window after printing", async () => {
     const store = await setupPosEnv();
     const iframe = document.createElement("iframe");
