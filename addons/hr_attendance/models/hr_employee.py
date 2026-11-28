@@ -7,7 +7,7 @@ from zoneinfo import ZoneInfo
 from dateutil.relativedelta import relativedelta
 from odoo.tools.intervals import Intervals
 from odoo import SUPERUSER_ID, models, fields, api, exceptions
-from odoo.tools import BinaryBytes
+from odoo.tools import BinaryBytes, float_round
 from odoo.tools.date_utils import sum_intervals
 
 
@@ -218,9 +218,9 @@ class HrEmployee(models.Model):
                 )
                 hours = sum(att.worked_hours or 0 for att in current_month_attendances if not att.time_rule_id)
                 overtime_hours = sum(att.worked_hours or 0 for att in current_month_attendances if att.time_rule_id)
-                employee.hours_last_month = round(hours, 2)
+                employee.hours_last_month = float_round(hours, precision_digits=2)
                 employee.hours_last_month_display = self.env._("%(hours)g h in %(month)s") % {'hours': employee.hours_last_month, 'month': now_tz.strftime('%b')}
-                employee.hours_last_month_overtime = round(overtime_hours, 2)
+                employee.hours_last_month_overtime = float_round(overtime_hours, precision_digits=2)
 
     @api.depends('attendance_ids', 'attendance_ids.check_in', 'attendance_ids.check_out', 'attendance_ids.break_duration')
     def _compute_hours_today(self):

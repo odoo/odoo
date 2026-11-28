@@ -6,7 +6,7 @@ from collections import defaultdict
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, RedirectWarning
-from odoo.tools import SQL
+from odoo.tools import SQL, float_round
 from odoo.fields import Domain
 from odoo.addons.rating.models.rating_data import OPERATOR_MAPPING, OPMAP
 
@@ -116,7 +116,7 @@ class ProjectTask(models.Model):
             if (task.allocated_hours > 0.0):
                 task_total_hours = task.effective_hours + task.subtask_effective_hours
                 task.overtime = max(task_total_hours - task.allocated_hours, 0)
-                task.progress = round(task_total_hours / task.allocated_hours, 2)
+                task.progress = float_round(task_total_hours / task.allocated_hours, precision_digits=2)
             else:
                 task.progress = 0.0
                 task.overtime = 0
@@ -325,7 +325,7 @@ class ProjectTask(models.Model):
     def _convert_hours_to_days(self, time):
         uom_hour = self.env.ref('uom.product_uom_hour')
         uom_day = self.env.ref('uom.product_uom_day')
-        return round(uom_hour._compute_quantity(time, uom_day, raise_if_failure=False), 2)
+        return float_round(uom_hour._compute_quantity(time, uom_day, raise_if_failure=False), precision_digits=2)
 
     def _get_portal_total_hours_dict(self):
         if not (timesheetable_tasks := self.filtered('allow_timesheets')):

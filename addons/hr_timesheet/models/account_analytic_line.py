@@ -7,6 +7,7 @@ from datetime import datetime, time
 from odoo import api, fields, models
 from odoo.exceptions import UserError, AccessError, ValidationError
 from odoo.fields import Domain
+from odoo.tools import float_round
 from odoo.tools.translate import _
 
 
@@ -502,7 +503,7 @@ class AccountAnalyticLine(models.Model):
     def _convert_hours_to_days(self, time):
         uom_hour = self.env.ref('uom.product_uom_hour')
         uom_day = self.env.ref('uom.product_uom_day')
-        return round(uom_hour._compute_quantity(time, uom_day, raise_if_failure=False), 2)
+        return float_round(uom_hour._compute_quantity(time, uom_day, raise_if_failure=False), precision_digits=2)
 
     def _get_timesheet_time_day(self):
         return self._convert_hours_to_days(self.unit_amount)

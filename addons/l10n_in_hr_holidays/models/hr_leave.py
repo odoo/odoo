@@ -69,7 +69,7 @@ class HrLeave(models.Model):
                     self.env['l10n.in.hr.leave.optional.holiday']
                 )])
             common_intervals = leave_intervals & optional_holidays_intervals
-            if round(sum_intervals(common_intervals), 2) != round(sum_intervals(leave_intervals), 2):
+            if float_compare(sum_intervals(common_intervals), sum_intervals(leave_intervals), precision_digits=2) != 0:
                 invalid_leaves.append(leave.display_name)
         if invalid_leaves:
             raise ValidationError(

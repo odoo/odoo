@@ -877,7 +877,7 @@ class HrEmployee(models.Model):
                             remaining_primary = _consume_from_allocation(primary, remaining_primary, allocation, duration_info, partial, leave)
                             remaining_secondary = _consume_from_allocation(secondary, remaining_secondary, allocation, duration_info, partial, leave)
 
-                        leave_duration = round(remaining_primary, 2)
+                        leave_duration = float_round(remaining_primary, precision_digits=2)
                         if leave_duration > 0:
                             primary['to_recheck']['excess_days'][leave.date_to.date()] = {
                                 'amount': leave_duration,
@@ -885,7 +885,7 @@ class HrEmployee(models.Model):
                                 'leave_id': leave.id,
                             }
                         if last_allocation is not None:
-                            deficit = round(remaining_secondary, 2)
+                            deficit = float_round(remaining_secondary, precision_digits=2)
                             if deficit > 0:
                                 secondary['data'][last_allocation]['virtual_leaves_taken'] += deficit
                                 secondary['data'][last_allocation]['virtual_remaining_leaves'] -= deficit
@@ -928,7 +928,7 @@ class HrEmployee(models.Model):
                     for leave in content['to_recheck_leaves']:
                         additional_leaves_duration += leave.number_of_hours if work_entry_type.unit_of_measure == 'hour' else leave.number_of_days
                     latest_remaining = virtual_remaining - date_accrual_bonus + latest_accrual_bonus
-                    content['exceeding_duration'] = round(min(0, latest_remaining - additional_leaves_duration), 2)
+                    content['exceeding_duration'] = float_round(min(0, latest_remaining - additional_leaves_duration), precision_digits=2)
 
         return (allocations_leaves_consumed, to_recheck_leaves_per_work_entry_type)
 
