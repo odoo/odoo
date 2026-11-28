@@ -1,6 +1,6 @@
 import { parseRequestParams, registerRoute } from "@mail/../tests/mock_server/mail_mock_server";
 import { Store } from "@mail/../tests/mock_server/store";
-import { Command } from "@web/../tests/web_test_helpers";
+import { Command, serverState } from "@web/../tests/web_test_helpers";
 import { loadBundle } from "@web/core/assets";
 import { session } from "@web/session";
 
@@ -224,6 +224,42 @@ async function session_update_note(request) {
     DiscussChannel.write([channel_id], {
         livechat_note: note,
     });
+    return true;
+}
+
+registerRoute("/im_livechat/session/update_lang", session_update_lang);
+/** @type {RouteCallback} */
+async function session_update_lang(request) {
+    /** @type {import("mock_models").BusBus} */
+    const BusBus = this.env["bus.bus"];
+    /** @type {import("mock_models").DiscussChannel} */
+    const DiscussChannel = this.env["discuss.channel"];
+    /** @type {import("mock_models").ResLang} */
+    const ResLang = this.env["res.lang"];
+    const { channel_id, lang_code } = await parseRequestParams(request);
+    if (!this.env.user.group_ids.includes(serverState.groupLivechatId)) {
+        return false;
+    }
+    const [channel] = DiscussChannel._filter([
+        ["id", "=", channel_id],
+        ["channel_type", "=", "livechat"],
+    ]);
+    const [lang] = ResLang._filter([["code", "=", lang_code]]);
+    if (!channel || !lang) {
+        return false;
+    }
+    DiscussChannel.write([channel_id], { livechat_lang_id: lang.id });
+    BusBus._sendone(
+        channel,
+        "mail.record/insert",
+        new Store()
+            .add(DiscussChannel.browse(channel_id), (res) =>
+                res.one("livechat_lang_id", ["name", "code"], {
+                    value: (channel) => ResLang.browse(channel.livechat_lang_id),
+                })
+            )
+            .as_dict()
+    );
     return true;
 }
 

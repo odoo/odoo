@@ -12,7 +12,8 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 
 import { describe, expect, test } from "@odoo/hoot";
-import { waitFor } from "@odoo/hoot-dom";
+import { advanceTime, waitFor } from "@odoo/hoot-dom";
+import { mockDate } from "@odoo/hoot-mock";
 
 import { Command, mockService, serverState } from "@web/../tests/web_test_helpers";
 
@@ -35,6 +36,23 @@ test("live chat tab displays kanban action when empty", async () => {
     );
     await click(".o-mail-MessagingMenuEmpty button:text(Connect)");
     await expect.waitForSteps(["im_livechat.im_livechat_channel_action"]);
+});
+
+test("live chat tab opens the live chat channels in a dialog", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.users"].write([serverState.userId], {
+        group_ids: pyEnv["res.groups"]
+            .search_read([["id", "=", serverState.groupLivechatId]])
+            .map(({ id }) => id),
+    });
+    mockService("action", {
+        doAction: (action) => expect.step(`${action.xml_id} ${action.target}`),
+        loadAction: async (xmlId) => ({ xml_id: xmlId, target: "current" }),
+    });
+    await start();
+    await openMessagingMenu(MENU_ACTIVE_IDS.LIVECHAT);
+    await click("button[title='Join or leave live chat channels']:text('Channel')");
+    await expect.waitForSteps(["im_livechat.im_livechat_channel_action new"]);
 });
 
 test("live chat tab display live chat channels", async () => {
@@ -98,6 +116,62 @@ test("live chat tab has a need help filter", async () => {
     await waitFor(".o-mail-NotificationItem:has(:text('Visitor #1')):count(1)");
 });
 
+test("live chat tab shows my sessions by default", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.users"].write([serverState.userId], {
+        group_ids: pyEnv["res.groups"]
+            .search_read([["id", "=", serverState.groupLivechatId]])
+            .map(({ id }) => id),
+    });
+    const [guest1, guest2, guest3] = pyEnv["mail.guest"].create([
+        { name: "Visitor #1" },
+        { name: "Visitor #2" },
+        { name: "Visitor #3" },
+    ]);
+    pyEnv["discuss.channel"].create([
+        {
+            channel_member_ids: [
+                Command.create({
+                    partner_id: serverState.partnerId,
+                    livechat_member_type: "agent",
+                }),
+                Command.create({ guest_id: guest1, livechat_member_type: "visitor" }),
+            ],
+            channel_type: "livechat",
+        },
+        {
+            channel_member_ids: [
+                Command.create({ guest_id: guest2, livechat_member_type: "visitor" }),
+            ],
+            channel_type: "livechat",
+            livechat_status: "need_help",
+        },
+        {
+            channel_member_ids: [
+                Command.create({
+                    partner_id: serverState.partnerId,
+                    is_pinned: false,
+                    livechat_member_type: "agent",
+                }),
+                Command.create({ guest_id: guest3, livechat_member_type: "visitor" }),
+            ],
+            channel_type: "livechat",
+            livechat_status: "need_help",
+        },
+    ]);
+    await start();
+    await openMessagingMenu(MENU_ACTIVE_IDS.LIVECHAT);
+    await waitFor("button.o-active:text('My Sessions'):count(1)");
+    await waitFor(".o-mail-NotificationItem:count(2)");
+    await waitFor(".o-mail-NotificationItem:has(:text('Visitor #1')):count(1)");
+    await waitFor(".o-mail-NotificationItem:has(:text('Visitor #3')):count(1)");
+    await click("button:text('All')");
+    await waitFor(".o-mail-NotificationItem:count(3)");
+    await waitFor(".o-mail-NotificationItem:has(:text('Visitor #1')):count(1)");
+    await waitFor(".o-mail-NotificationItem:has(:text('Visitor #2')):count(1)");
+    await waitFor(".o-mail-NotificationItem:has(:text('Visitor #3')):count(1)");
+});
+
 test("live chat tab has an unread filter", async () => {
     const pyEnv = await startServer();
     const [guest1, guest2] = pyEnv["mail.guest"].create([
@@ -154,6 +228,49 @@ test("live chat tab has an unread filter", async () => {
     await waitFor(".o-mail-NotificationItem:count(2)");
     await waitFor(".o-mail-NotificationItem:has(:text('Visitor #1')):count(1)");
     await waitFor(".o-mail-NotificationItem:has(:text('Visitor #2')):count(1)");
+});
+
+test("live chat sessions show how long ago their last message was posted", async () => {
+    mockDate("2023-01-10 14:00:00", 0);
+    const pyEnv = await startServer();
+    const lastMessageDateByVisitor = {
+        "Visitor #1": "2023-01-10 13:55:00",
+        "Visitor #2": "2023-01-10 11:00:00",
+        "Visitor #3": "2023-01-09 20:00:00",
+        "Visitor #4": "2023-01-04 10:00:00",
+        "Visitor #5": "2023-01-02 10:00:00",
+    };
+    for (const [name, date] of Object.entries(lastMessageDateByVisitor)) {
+        const guestId = pyEnv["mail.guest"].create({ name });
+        const channelId = pyEnv["discuss.channel"].create({
+            channel_member_ids: [
+                Command.create({
+                    partner_id: serverState.partnerId,
+                    livechat_member_type: "agent",
+                }),
+                Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
+            ],
+            channel_type: "livechat",
+        });
+        pyEnv["mail.message"].create({
+            author_guest_id: guestId,
+            body: "hello",
+            date,
+            model: "discuss.channel",
+            res_id: channelId,
+        });
+    }
+    await start();
+    await openMessagingMenu(MENU_ACTIVE_IDS.LIVECHAT);
+    const dateOf = (name) =>
+        `.o-mail-NotificationItem:has(:text('${name}')) .o-mail-NotificationItem-date`;
+    await waitFor(`${dateOf("Visitor #1")}:text('5m')`);
+    await waitFor(`${dateOf("Visitor #2")}:text('3h')`);
+    await waitFor(`${dateOf("Visitor #3")}:text('Yesterday')`);
+    await waitFor(`${dateOf("Visitor #4")}:text('Wed')`);
+    await waitFor(`${dateOf("Visitor #5")}:text('Jan 2')`);
+    await advanceTime(60 * 60 * 1000);
+    await waitFor(`${dateOf("Visitor #1")}:text('1h')`);
 });
 
 test("light user's messaging menu only has the discuss tabs", async () => {

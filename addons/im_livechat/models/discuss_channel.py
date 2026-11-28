@@ -18,6 +18,7 @@ from odoo.addons.base.models.ir_qweb_fields import nl2br
 from odoo.addons.mail.tools.discuss import Store
 
 _lt = LazyTranslate(__name__)
+CHATBOT_WELCOME_MESSAGE = object()
 
 
 def is_livechat_channel(channel):
@@ -494,6 +495,7 @@ class DiscussChannel(models.Model):
         res[None].attr("livechat_end_dt", predicate=is_livechat_channel)
         res[None].one("chatbot_current_step_id", [], predicate=is_livechat_channel)
         res["internal_users"].attr("description", predicate=is_livechat_channel)
+        res["internal_users"].one("livechat_lang_id", ["name", "code"], predicate=is_livechat_channel)
         res["internal_users"].attr("livechat_note", predicate=is_livechat_channel)
         res["internal_users"].attr("livechat_status", predicate=is_livechat_channel)
         res["internal_users"].attr("livechat_looking_for_help_since_dt", predicate=is_livechat_channel)
@@ -957,8 +959,9 @@ class DiscussChannel(models.Model):
             self.env["chatbot.message"].sudo().create(chatbot_message_vals)
 
         author_history = self.env["im_livechat.channel.member.history"]
+        is_welcome_message = self.env.context.get("livechat_message") is CHATBOT_WELCOME_MESSAGE
         # sudo - discuss.channel: accessing history to update its state is acceptable
-        if message.author_id or message.author_guest_id:
+        if (message.author_id or message.author_guest_id) and not is_welcome_message:
             author_history = self.sudo().livechat_channel_member_history_ids.filtered(
                 lambda h: (
                     h.partner_id == message.author_id
@@ -1059,18 +1062,35 @@ class DiscussChannel(models.Model):
             # as member, remove bot from channel, rename channel and finally broadcast the channel to the new operator).
             channel_sudo = self.sudo()
             bot_member = channel_sudo.channel_member_ids.filtered(lambda m: m.livechat_member_type == "bot")
+            # read before adding the operator: overrides of _add_members may remove the bot
+            bot_partner = bot_member.partner_id
 
             # next, add the human_operator to the channel and post a "Operator invited to the channel" notification
             create_member_params = {'livechat_member_type': 'agent'}
             if chatbot_script_step.operator_expertise_ids:
                 create_member_params['agent_expertise_ids'] = chatbot_script_step.operator_expertise_ids.ids
                 channel_sudo.livechat_expertise_ids |= chatbot_script_step.operator_expertise_ids
-            channel_sudo._add_members(
+            agent_member = channel_sudo._add_members(
                 create_member_params=create_member_params,
-                inviting_partner=bot_member.partner_id,
+                inviting_partner=bot_partner,
+                post_joined_message=False,
                 users=human_operator,
                 skip_chatbot_current_step_reset=True,
             )
+            channel_sudo.message_post(
+                author_id=bot_partner.id,
+                body=Markup('<div class="o_mail_notification" data-oe-type="channel-joined">%s</div>')
+                % channel_sudo._get_member_join_notification(agent_member),
+                message_type="notification",
+                subtype_xmlid="mail.mt_important_notification",
+            )
+            if chatbot_script_step.welcome_message:
+                channel_sudo.with_context(livechat_message=CHATBOT_WELCOME_MESSAGE).message_post(
+                    author_id=human_operator.partner_id.id,
+                    body=chatbot_script_step.welcome_message,
+                    message_type="comment",
+                    subtype_xmlid="mail.mt_comment",
+                )
             bot_member.exists().unlink()
 
             # finally, rename the channel to include the operator's name

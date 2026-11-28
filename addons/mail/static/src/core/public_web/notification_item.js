@@ -28,6 +28,7 @@ export class NotificationItem extends Component {
         this.props = useProps({
             className: t.string().optional(""),
             counter: t.number().optional(0),
+            dateText: t.string().optional(),
             datetime: t.instanceOf(DateTime).optional(),
             hasMarkAsReadButton: t.boolean().optional(),
             iconSrc: t.string().optional(),

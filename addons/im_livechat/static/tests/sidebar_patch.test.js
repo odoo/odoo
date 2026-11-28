@@ -322,6 +322,7 @@ test("show looking for help duration in the sidebar", async () => {
     ]);
     await start();
     await openDiscuss(channelId);
+    await click("button:text('All')");
     await waitFor(
         ".o-mail-MessagingMenuItem:has(:text(Visitor #1)) .o-livechat-LookingForHelp-timer:text(< 1m)"
     );
@@ -377,6 +378,7 @@ test("show looking for help duration when the agent is a member of the chat", as
     ]);
     await start();
     await openDiscuss(channelId);
+    await click("button:text('All')");
     await waitFor(
         ".o-mail-MessagingMenuItem:has(:text(Visitor #1)) .o-livechat-LookingForHelp-timer:text(< 1m)"
     );

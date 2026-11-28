@@ -144,8 +144,8 @@ class TestLivechatChatbotUI(TestLivechatChatbotUICommon):
         ]
 
         self.assertEqual(len(conversation_messages), len(expected_messages))
-        # New members land at latest message, so operator unread counter is 0.
-        self.assertEqual(operator_member.message_unread_counter, 0)
+        # The "invited" notification is important, so it is unread for the operator.
+        self.assertEqual(operator_member.message_unread_counter, 1)
 
         # check that the whole conversation is correctly saved
         # including welcome steps: see chatbot.script#_post_welcome_steps

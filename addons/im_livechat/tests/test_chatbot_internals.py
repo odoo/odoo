@@ -275,11 +275,6 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                 ),
                 BusResult(
                     discuss_channel,
-                    "discuss.channel/new_message",
-                    {"store_data": joined_message_data, "id": discuss_channel.id},
-                ),
-                BusResult(
-                    discuss_channel,
                     "mail.record/insert",
                     {
                         "discuss.channel": [{"id": discuss_channel.id, "member_count": 2}],
@@ -341,6 +336,11 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                 ),
                 BusResult(
                     discuss_channel,
+                    "discuss.channel/new_message",
+                    {"store_data": joined_message_data, "id": discuss_channel.id},
+                ),
+                BusResult(
+                    discuss_channel,
                     "mail.record/insert",
                     {
                         "discuss.channel": [{"id": discuss_channel.id, "member_count": 2}],
@@ -380,12 +380,33 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
         self.assertEqual(discuss_channel.name, "OdooBot Ernest Employee")
         self.assertEqual(discuss_channel.livechat_agent_partner_ids, self.partner_employee)
         self.assertEqual(discuss_channel.livechat_outcome, "no_answer")
-        self.assertTrue(
-            discuss_channel.channel_member_ids.filtered(
-                lambda m: m.partner_id == self.partner_employee
-                and m.livechat_member_type == "agent"
-            )
+        agent_member = discuss_channel.channel_member_ids.filtered(
+            lambda m: m.partner_id == self.partner_employee and m.livechat_member_type == "agent",
         )
+        self.assertTrue(agent_member)
+        self.assertEqual(agent_member.message_unread_counter, 1, "the hand-over is unread for the agent")
+
+    def test_forward_to_operator_posts_welcome_message(self):
+        self.step_forward_operator.welcome_message = "<p>How can I help you?</p>"
+        data = self.make_jsonrpc_request(
+            "/im_livechat/get_session",
+            {
+                "channel_id": self.livechat_channel.id,
+                "chatbot_script_id": self.chatbot_script.id,
+            },
+        )
+        discuss_channel = self.env["discuss.channel"].sudo().browse(data["channel_id"])
+        discuss_channel._forward_human_operator(self.step_forward_operator, users=self.user_employee)
+        welcome_message = discuss_channel.message_ids[0]
+        self.assertEqual(welcome_message.author_id, self.partner_employee)
+        self.assertEqual(welcome_message.body, "<p>How can I help you?</p>")
+        agent_member = discuss_channel.channel_member_ids.filtered(lambda m: m.livechat_member_type == "agent")
+        self.assertEqual(agent_member.message_unread_counter, 2, "the agent did not read the hand-over nor the welcome")
+        agent_history = discuss_channel.livechat_channel_member_history_ids.filtered(
+            lambda h: h.livechat_member_type == "agent",
+        )
+        self.assertEqual(agent_history.message_count, 0)
+        self.assertFalse(agent_history.response_time_hour)
 
     def test_chatbot_multiple_rules_on_same_url(self):
         bob_user = new_test_user(

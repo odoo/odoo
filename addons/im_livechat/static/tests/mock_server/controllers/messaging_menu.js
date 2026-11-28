@@ -24,6 +24,9 @@ patch(messagingMenuHelpers, {
         return super._get_menu_tab_priority_domain(env, tab_id);
     },
     _get_menu_tab_filter_domain(env, tab_id, filter_id) {
+        if (tab_id === "livechat" && filter_id === "livechat_my") {
+            return [["self_member_id", "!=", false]];
+        }
         if (tab_id === "livechat" && filter_id === "livechat_need_help") {
             return [["livechat_status", "=", "need_help"]];
         }
