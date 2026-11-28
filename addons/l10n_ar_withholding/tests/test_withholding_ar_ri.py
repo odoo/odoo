@@ -474,3 +474,60 @@ class TestArWithholdingArRi(TestArCommon):
         line_2 = payment.l10n_ar_withholding_ids.filtered(lambda x: x.tax_line_id.id == tax_wth_0.id)
         self.assertEqual(-100.0, line_1.balance)
         self.assertEqual(0.0, line_2.balance)
+
+    def test_earnings_withholding_non_taxable_amount_foreign_currency(self):
+        """ Earnings withholding on two USD payments in the same period: the non-taxable amount and the
+        accumulated base (in company currency) must both be handled in ARS. Rate: 1 USD = 100 ARS. """
+        tax = self.tax_wth_earnings_incurred_test_6
+        tax.write({
+            'l10n_ar_non_taxable_amount': 50000,
+            'amount': 10,
+            'amount_type': 'percent',
+            'l10n_ar_minimum_threshold': 0,
+            'l10n_ar_withholding_sequence_id': self.earnings_withholding_sequence.id
+        })
+        invoice = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'date': '2023-01-01',
+            'invoice_date': '2023-01-01',
+            'partner_id': self.res_partner_adhoc.id,
+            'currency_id': self.other_currency.id,
+            'l10n_latam_document_number': '0001-00000001',
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'price_unit': 1000,
+                }),
+            ],
+        })
+        invoice.action_post()
+        taxes = [{'id': tax.id, 'base_amount': invoice.amount_untaxed}]
+        wizard = self.new_payment_register(invoice, taxes)
+        # Taxable: 1000 USD * 100 ARS/USD - 50000 ARS = 50000 ARS
+        # Tax: 10% * 50000 ARS = 5000 ARS = 50 USD
+        self.assertEqual(wizard.amount, 1210.0)
+        self.assertEqual(wizard.l10n_ar_withholding_ids.base_amount, 1000.0)
+        self.assertEqual(wizard.l10n_ar_withholding_ids.amount, 50.0)
+        self.assertEqual(wizard.l10n_ar_net_amount, 1160.0)
+        wizard.action_create_payments()
+
+        invoice_2 = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'date': '2023-01-01',
+            'invoice_date': '2023-01-01',
+            'partner_id': self.res_partner_adhoc.id,
+            'currency_id': self.other_currency.id,
+            'l10n_latam_document_number': '0001-00000002',
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'price_unit': 1000,
+                }),
+            ],
+        })
+        invoice_2.action_post()
+        wizard = self.new_payment_register(invoice_2, [{'id': tax.id, 'base_amount': invoice_2.amount_untaxed}])
+        # Taxable: 100000 ARS + 100000 ARS (same period) - 50000 ARS = 150000 ARS
+        # Tax: 10% * 150000 ARS - 5000 ARS (same period) = 10000 ARS = 100 USD
+        self.assertEqual(wizard.l10n_ar_withholding_ids.amount, 100.0)
+        self.assertEqual(wizard.l10n_ar_net_amount, 1110.0)
