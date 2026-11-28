@@ -2079,7 +2079,7 @@ test("Access to Pinned Messages from Meeting Chat", async () => {
     await click(".dropdown-item:text('Pin')");
     await click(".modal-footer button:text('Pin Message')");
     await contains(
-        ".o-mail-ActionPanel-header:has(:text('In call messages')) button[title='Pinned Messages'] .badge:text('1')"
+        ".o-mail-ActionPanel-header:has(:text('In call messages')) button[title='Pinned Messages']"
     );
     await click(".o-mail-ActionPanel-header button[title='Pinned Messages']");
     await contains(".o-mail-ActionPanel-header:has(:text('Pinned Messages'))");
@@ -2152,4 +2152,41 @@ test("camera turns on without blur when the blur model fails", async () => {
     await waitFor(".o_notification:has(:text('Background blur could not be loaded'))");
     await waitFor("button[title='Stop camera']");
     await expect.waitForSteps(["warn: Blur model unavailable", "blur model closed"]);
+});
+
+test("meeting chat shows pinned messages button when pinned message is not loaded", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    pyEnv["mail.message"].create({
+        body: "Pinned message",
+        model: "discuss.channel",
+        res_id: channelId,
+        pinned_at: "2025-10-09 11:15:04",
+    });
+    let lastMessageId;
+    for (let i = 0; i < 40; i++) {
+        lastMessageId = pyEnv["mail.message"].create({
+            body: `Message ${i}`,
+            model: "discuss.channel",
+            res_id: channelId,
+        });
+    }
+    // mark all as read so the thread loads the most recent messages
+    const [selfMember] = pyEnv["discuss.channel.member"].search_read([
+        ["partner_id", "=", serverState.partnerId],
+        ["channel_id", "=", channelId],
+    ]);
+    pyEnv["discuss.channel.member"].write([selfMember.id], {
+        new_message_separator: lastMessageId + 1,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Message", { count: 30 });
+    await contains(".o-mail-Message", { text: "Pinned message", count: 0 });
+    await click("[title='Start Video Call']");
+    await click("button[title='Fullscreen']");
+    await click(".o-mail-Meeting button[title='Chat']");
+    await contains(".o-mail-MeetingChat .o-mail-Message", { text: "Pinned message", count: 0 });
+    await click(".o-mail-ActionPanel-header button[title='Pinned Messages']");
+    await contains(".o-mail-ActionPanel-content .o-mail-Message", { text: "Pinned message", count: 1 });
 });
