@@ -8,11 +8,7 @@ registry.category("web_tour.tours").add("website_sale.basic_shop_flow", {
         tourUtils.goToCart(),
         tourUtils.goToCheckout(),
         tourUtils.confirmOrder(),
-        ...tourUtils.payWithTransfer({
-            redirect: true,
-            expectUnloadPage: true,
-            waitFinalizeYourPayment: true,
-        }),
+        ...tourUtils.payWithDummy(),
     ],
 });
 

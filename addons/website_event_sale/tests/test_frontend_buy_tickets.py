@@ -8,13 +8,14 @@ from odoo.fields import Datetime
 from odoo.tests import tagged
 from odoo.tools import mute_logger
 
+from odoo.addons.account_payment.tests.common import AccountPaymentFlowCommon
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.payment.tests.http_common import PaymentHttpCommon
 from .common import TestWebsiteEventSaleCommon
 
 
 @tagged('post_install', '-at_install')
-class TestUi(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon):
+class TestUi(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon, AccountPaymentFlowCommon):
     _test_user_groups = (
         'base.group_user',
         'product.group_product_manager',
@@ -23,20 +24,9 @@ class TestUi(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon):
 
     _test_user_name = 'Test Sales & Product Manager'
 
-    def setUp(self):
-        super().setUp()
-
-        if self.env['ir.module.module']._get('payment_custom').state != 'installed':
-            self.skipTest("Transfer provider is not installed")
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-
-        cls.env.ref('payment.payment_provider_transfer').sudo().write({
-            'is_live': True,
-            'is_published': True,
-        })
 
         cls.env['event.event.ticket'].sudo().create({
             'name': 'VIP',
@@ -89,35 +79,20 @@ class TestUi(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon):
         # we have to force company currency as USDs only for this test
         self.cr.execute("UPDATE res_company SET currency_id = %s WHERE id = %s", [self.env.ref('base.USD').id, self.env.ref('base.main_company').id])
         self.env['product.pricelist'].sudo().create({'name': "Public Pricelist"})
-
-        transfer_provider = self.env.ref('payment.payment_provider_transfer').sudo()
-        transfer_provider.write({
-            'is_live': True,
-            'is_published': True,
-        })
+        self._enable_complete_payment_flow()
 
         self.start_tour("/event", 'event_buy_tickets', login="admin")
 
     def test_demo(self):
         self.env['product.pricelist'].sudo().with_context(active_test=False).search([]).unlink()
-        transfer_provider = self.env.ref('payment.payment_provider_transfer').sudo()
-        transfer_provider.write({
-            'is_live': True,
-            'is_published': True,
-        })
-
         #  Ensure the use of USD (company currency)
         self.env['product.pricelist'].create({'name': "Public Pricelist"})
+        self._enable_complete_payment_flow()
 
         self.start_tour("/event", 'event_buy_tickets', login="demo")
 
     def test_buy_last_ticket(self):
-        transfer_provider = self.env.ref('payment.payment_provider_transfer').sudo()
-        transfer_provider.write({
-            'is_live': True,
-            'is_published': True,
-        })
-
+        self._enable_complete_payment_flow()
         self.start_tour("/event", 'event_buy_last_ticket')
 
     def test_pricelists_different_currencies(self):

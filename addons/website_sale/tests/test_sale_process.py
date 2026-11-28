@@ -7,6 +7,7 @@ import lxml.html
 from odoo.fields import Command
 from odoo.tests import tagged
 
+from odoo.addons.account_payment.tests.common import AccountPaymentFlowCommon
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.website.tests.common import HttpCaseWithWebsiteUser
 from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
@@ -15,7 +16,9 @@ _logger = logging.getLogger(__name__)
 
 
 @tagged("post_install", "-at_install")
-class TestSaleProcess(HttpCaseWithUserDemo, WebsiteSaleCommon, HttpCaseWithWebsiteUser):
+class TestSaleProcess(
+    HttpCaseWithUserDemo, WebsiteSaleCommon, HttpCaseWithWebsiteUser, AccountPaymentFlowCommon
+):
     _test_user_groups = (
         'base.group_user',
         'product.group_product_manager',
@@ -75,30 +78,20 @@ class TestSaleProcess(HttpCaseWithUserDemo, WebsiteSaleCommon, HttpCaseWithWebsi
         cls.env.ref("base.partner_admin").write(cls.dummy_partner_address_values)
         cls.partner_website_user.write(cls.dummy_partner_address_values)
 
-        if cls.env["ir.module.module"]._get("payment_custom").state == "installed":
-            transfer_provider = cls.env.ref("payment.payment_provider_transfer")
-            transfer_provider.is_published = True
-
     def test_01_cart_update_check(self):
         self.start_tour("/shop", "website_sale.update_cart", login="admin")
 
     def test_02_admin_checkout(self):
-        if self.env["ir.module.module"]._get("payment_custom").state != "installed":
-            self.skipTest("Transfer provider is not installed")
-
+        self._enable_complete_payment_flow()
         self.start_tour("/shop", "website_sale.basic_shop_flow", login="admin")
 
     def test_03_demo_checkout(self):
         self.partner_demo.sudo().write(self.dummy_partner_address_values)
-        if self.env["ir.module.module"]._get("payment_custom").state != "installed":
-            self.skipTest("Transfer provider is not installed")
-
+        self._enable_complete_payment_flow()
         self.start_tour("/shop", "website_sale.basic_shop_flow", login="demo")
 
     def test_04_admin_website_sale_tour(self):
-        if self.env["ir.module.module"]._get("payment_custom").state != "installed":
-            self.skipTest("Transfer provider is not installed")
-
+        self._enable_complete_payment_flow()
         self.env.company.sudo().country_id = self.country_us
         tax_group = self.env["account.tax.group"].sudo().create({"name": "Tax 15%"})
         tax = self.env["account.tax"].sudo().create({

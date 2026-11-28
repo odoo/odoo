@@ -3,15 +3,13 @@
 from odoo.fields import Command
 from odoo.tests import HttpCase, tagged
 
+from odoo.addons.account_payment.tests.common import AccountPaymentFlowCommon
+
 
 @tagged("post_install", "-at_install")
-class TestUi(HttpCase):
+class TestUi(AccountPaymentFlowCommon, HttpCase):
     def test_01_free_delivery_when_exceed_threshold(self):
-        if self.env["ir.module.module"]._get("payment_custom").state != "installed":
-            self.skipTest("Transfer provider is not installed")
-
-        transfer_provider = self.env.ref("payment.payment_provider_transfer")
-        transfer_provider.is_published = True
+        self._enable_complete_payment_flow()
 
         if "enforce_cities" in self.env["res.country"]._fields:
             self.env.company.country_id.enforce_cities = False

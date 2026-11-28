@@ -302,6 +302,25 @@ export function payWithDemo() {
     }]
 }
 
+/**
+ * Pay with the dummy payment method of `PaymentCommon`, which accepts all payments.
+ */
+export function payWithDummy() {
+    return [
+        {
+            content: "Select the dummy payment method",
+            trigger: 'input[name="o_payment_radio"][data-payment-method-code="dummy"]',
+            run: "click",
+        },
+        ...pay({ expectUnloadPage: true }),
+        {
+            content: "Check that the payment is successful",
+            trigger: '[name="order_confirmation"]:contains("Your payment has been processed.")',
+            timeout: 30000,
+        },
+    ];
+}
+
 export function payWithTransfer({
     redirect = false,
     expectUnloadPage = false,

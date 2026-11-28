@@ -112,11 +112,7 @@ registry.category("web_tour.tours").add('website_sale.complete_flow_1', {
             content: "Check selected billing address is same as typed in previous step",
             trigger: '#delivery_and_billing :contains(Billing):contains(SO1 Billing Street Edited, 33):contains(SO1BillingCityEdited):contains(Afghanistan)',
         },
-        ...tourUtils.payWithTransfer({
-            redirect: false,
-            expectUnloadPage: true,
-            waitFinalizeYourPayment: true,
-        }),
+        ...tourUtils.payWithDummy(),
         {
             content: "Sign up",
             trigger: '.oe_cart a:contains("Sign Up")',
@@ -258,15 +254,7 @@ registry.category("web_tour.tours").add('website_sale.complete_flow_1', {
             expectUnloadPage: true,
         },
         tourUtils.confirmOrder(),
-        {
-            content: "Select `Wire Transfer` payment method",
-            trigger: 'input[name="o_payment_radio"][data-payment-method-code="wire_transfer"]',
-            run: "click",
-        },
-        {
-            trigger: 'input[name="o_payment_radio"][data-payment-method-code="wire_transfer"]:checked',
-        },
-        ...tourUtils.pay({ expectUnloadPage: true, waitFinalizeYourPayment: true }),
+        ...tourUtils.payWithDummy(),
         {
             trigger: '.oe_cart [name="order_confirmation"]',
         },
@@ -358,7 +346,7 @@ registry.category("web_tour.tours").add('website_sale.complete_flow_2', {
             run: "click",
             expectUnloadPage: true,
         },
-        ...tourUtils.payWithTransfer({ expectUnloadPage: true, waitFinalizeYourPayment: true }),
+        ...tourUtils.payWithDummy(),
         {
             content: "Check payment status confirmation window",
             trigger: '[name="order_confirmation"][data-order-tracking-info]',

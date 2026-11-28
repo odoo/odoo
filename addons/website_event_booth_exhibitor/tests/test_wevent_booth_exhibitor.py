@@ -13,15 +13,12 @@ from odoo.tests import tagged
 class TestWEventBoothExhibitorCommon(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
 
     def test_register(self):
-        if self.env['ir.module.module']._get('payment_custom').state != 'installed':
-            self.skipTest("Transfer provider is not installed")
+        module = self.env['ir.module.module']._get('website_event_booth_sale_exhibitor')
+        if module.state == 'installed':
+            self.skipTest("Booths are paid; covered by website_event_booth_sale_exhibitor")
+        self._register_booth()
 
-        transfer_provider = self.env.ref('payment.payment_provider_transfer')
-        transfer_provider.write({
-            'is_live': True,
-            'is_published': True,
-        })
-
+    def _register_booth(self):
         self.env.ref('base.user_admin').write({
             'name': 'Mitchell Admin',
             'email': 'mitchell.admin@example.com',

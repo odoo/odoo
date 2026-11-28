@@ -225,15 +225,7 @@ registry.category("web_tour.tours").add("website_sale.google_analytics_purchase"
         tourUtils.goToCheckout(),
         tourUtils.selectDeliveryCarrier("Test Delivery"),
         tourUtils.confirmOrder(),
-        {
-            content: "select wire transfer payment",
-            trigger: 'input[name="o_payment_radio"][data-payment-method-code="wire_transfer"]',
-            run: "click",
-        },
-        {
-            trigger: 'input[name="o_payment_radio"][data-payment-method-code="wire_transfer"]:checked',
-        },
-        ...tourUtils.pay({ expectUnloadPage: true }),
+        ...tourUtils.payWithDummy(),
         {
             content: "verify purchase and add_payment_info events were fired on confirmation page",
             trigger: "body[purchase-event][add-payment-info-event]",
