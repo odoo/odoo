@@ -27,6 +27,7 @@ Integrates with the ETA portal to automatically send and sign the Invoices to th
         'views/product_template_views.xml',
         'views/res_config_settings_view.xml',
         'views/report_invoice.xml',
+        'views/report_templates_views.xml',
         'wizards/l10n_eg_edi_cancel_wizard.xml',
         'data/res_country_data.xml',
         'views/res_company_view.xml',

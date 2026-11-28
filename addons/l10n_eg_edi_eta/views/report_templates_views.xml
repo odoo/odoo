@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="l10n_eg_external_layout_standard" inherit_id="web.external_layout_standard">
+        <!-- support for custom header, outside the logo cell so it also shows without a logo -->
+        <xpath expr="//table" position="after">
+            <t t-if="custom_header_eg" t-out="custom_header_eg"/>
+        </xpath>
+    </template>
+    <template id="l10n_eg_external_layout_folder" inherit_id="web.external_layout_folder">
+        <!-- support for custom header -->
+        <xpath expr="//img" position="after">
+            <t t-if="custom_header_eg" t-out="custom_header_eg"/>
+        </xpath>
+        <t t-set="header_shape_height" position="after">
+            <t t-set="header_shape_height" t-if="custom_header_eg">250</t>
+        </t>
+    </template>
+    <template id="l10n_eg_external_layout_wave" inherit_id="web.external_layout_wave">
+        <!-- support for custom header -->
+        <xpath expr="//img" position="after">
+            <t t-if="custom_header_eg" t-out="custom_header_eg"/>
+        </xpath>
+    </template>
+    <template id="l10n_eg_external_layout_bubble" inherit_id="web.external_layout_bubble">
+        <!-- support for custom header -->
+        <xpath expr="//img" position="after">
+            <t t-if="custom_header_eg" t-out="custom_header_eg"/>
+        </xpath>
+    </template>
+    <template id="l10n_eg_external_layout_center" inherit_id="web.external_layout_center">
+        <!-- support for custom header -->
+        <xpath expr="//img" position="after">
+            <t t-if="custom_header_eg" t-out="custom_header_eg"/>
+        </xpath>
+    </template>
+    <template id="l10n_eg_external_layout_dual" inherit_id="web.external_layout_dual">
+        <!-- support for custom header -->
+        <xpath expr="//img" position="after">
+            <t t-if="custom_header_eg" t-out="custom_header_eg"/>
+        </xpath>
+    </template>
+    <template id="l10n_eg_external_layout_lines" inherit_id="web.external_layout_lines">
+        <!-- support for custom header -->
+        <xpath expr="//img" position="after">
+            <t t-if="custom_header_eg" t-out="custom_header_eg"/>
+        </xpath>
+    </template>
+    <template id="l10n_eg_external_layout_compact" inherit_id="web.external_layout_compact">
+        <!-- support for custom header -->
+        <xpath expr="//img" position="after">
+            <t t-if="custom_header_eg" t-out="custom_header_eg"/>
+        </xpath>
+    </template>
+</odoo>
