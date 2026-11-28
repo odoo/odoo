@@ -103,7 +103,7 @@
             >
                 <t t-set-slot="bottomArea" t-slot-scope="select">
                     <DropdownItem
-                            t-if="select.data.searchValue and !this.choiceExists(select.data.searchValue, select.data.choices)"
+                            t-if="select.data.searchValue and !this.choiceExists(select.data.searchValue, this.state.choices.categories)"
                             class="'btn text-primary'"
                             onSelected="() => this.onClickCreateCategoryBtn(select.data.searchValue)"
                         >
@@ -124,7 +124,7 @@
             >
                 <t t-set-slot="bottomArea" t-slot-scope="select">
                     <DropdownItem
-                            t-if="select.data.searchValue and !this.choiceExists(select.data.searchValue, select.data.choices)"
+                            t-if="select.data.searchValue and !this.choiceExists(select.data.searchValue, this.state.choices.tags)"
                             class="'btn text-primary'"
                             onSelected="() => this.onClickCreateTagBtn(select.data.searchValue)"
                         >
