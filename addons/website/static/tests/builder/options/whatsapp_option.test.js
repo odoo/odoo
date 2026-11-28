@@ -1,6 +1,7 @@
 import { expect, test } from "@odoo/hoot";
 import { click, waitFor } from "@odoo/hoot-dom";
-import { contains } from "@web/../tests/web_test_helpers";
+import { dummyBase64Img } from "@html_builder/../tests/helpers";
+import { contains, dataURItoBlob, onRpc } from "@web/../tests/web_test_helpers";
 import {
     defineWebsiteModels,
     setupWebsiteBuilderWithSnippet,
@@ -69,4 +70,30 @@ test("whatsapp snippet is not a visible sibling of other snippets", async () => 
     await contains(":iframe .s_cover").click();
     await waitFor(".overlay");
     expect(".overlay .fa-angle-down").toHaveCount(0);
+});
+
+test("Replacing the agent avatar stores an attachment URL", async () => {
+    const avatarUrl = "/web/image/1-abcdef/agent.webp";
+    onRpc("ir.attachment", "search_read", () => [
+        {
+            id: 1,
+            name: "logo",
+            mimetype: "image/png",
+            image_src: "/web/image/hoot.png",
+            public: true,
+        },
+    ]);
+    onRpc("/html_editor/get_image_info", () => ({
+        attachment: { id: 1 },
+        original: { id: 1, image_src: "/web/image/hoot.png", mimetype: "image/png" },
+    }));
+    onRpc("/web/image/hoot.png", () => dataURItoBlob(dummyBase64Img));
+    onRpc("/html_editor/modify_image/1", () => ({ original: avatarUrl }));
+
+    await setupWebsiteBuilderWithSnippet("s_whatsapp");
+    await contains(":iframe .s_whatsapp").click();
+    await contains("[data-action-id='replaceAgentAvatar']").click();
+    await click(".o_existing_attachment_cell .o_button_area");
+    await waitFor(":iframe .s_whatsapp[data-agent-avatar-src^='/web/image/']");
+    expect(":iframe .s_whatsapp").toHaveAttribute("data-agent-avatar-src", avatarUrl);
 });
