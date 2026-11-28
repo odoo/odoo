@@ -160,6 +160,50 @@ class TestMrpByProduct(common.TransactionCase):
         self.assertEqual(mnf_product_a.move_raw_ids.product_id.id, self.product_c_id)
         self.assertFalse(mnf_product_a.move_byproduct_ids)
 
+    def test_change_product_with_byproduct(self):
+        """ Create a production order with by-products, then change its product for one without BoM and check
+        the production order still has a finished move for its new product. Then write the BoM of another product
+        with by-products but without the product and check the finished move follows the product of the new BoM."""
+        self.env.user.groups_id += self.env.ref('mrp.group_mrp_byproducts')
+        product_c = self.env['product.product'].browse(self.product_c_id)
+        product_d = self.env['product.product'].create({
+            'name': 'Product D',
+            'is_storable': True,
+        })
+        bom_product_c = self.MrpBom.create({
+            'product_tmpl_id': product_c.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'product_uom_id': self.uom_unit_id,
+        })
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = self.product_a
+        mo = mo_form.save()
+        self.assertEqual(mo.move_byproduct_ids.product_id, self.product_b)
+
+        mo_form = Form(mo)
+        mo_form.product_id = product_d
+        mo = mo_form.save()
+        self.assertRecordValues(mo.move_finished_ids, [{'product_id': product_d.id, 'product_uom_qty': 1.0}])
+
+        # Without product_id in the vals, the product is computed from the new BoM
+        byproduct_vals = {
+            'product_id': self.product_b.id,
+            'product_uom_qty': 1.0,
+            'location_id': product_c.property_stock_production.id,
+            'location_dest_id': self.warehouse.lot_stock_id.id,
+        }
+        mo.write({
+            'bom_id': bom_product_c.id,
+            'move_byproduct_ids': [Command.create(byproduct_vals)],
+            'move_finished_ids': [Command.delete(move.id) for move in mo.move_finished_ids] + [
+                Command.create({**byproduct_vals, 'product_id': product_c.id}),
+                Command.create(byproduct_vals),
+            ],
+        })
+        self.assertEqual(mo.product_id, product_c)
+        self.assertEqual(mo.move_finished_ids.product_id, product_c + self.product_b)
+
     def test_default_uom(self):
         """ Tests the `uom_id` on the byproduct gets set automatically while creating a byproduct with a product,
             without the need to call an onchange or to set the uom manually in the create.
