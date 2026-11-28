@@ -1,3 +1,8 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+import time
+import uuid
+
 from odoo.exceptions import UserError
 from odoo import fields, models, api, _
 
@@ -15,6 +20,49 @@ class PosPaymentMethod(models.Model):
 
     def _get_terminal_provider_selection(self):
         return super()._get_terminal_provider_selection() + [('razorpay', 'Razorpay')]
+
+    def action_razorpay_test_creds(self):
+        """Test the username, API key and device serial number.
+
+        No read-only endpoint validates the device (status and cancel answer the
+        same for any serial number, and pay checks the amount before the device),
+        so push a 1 INR payment request to the device and cancel it.
+        """
+        self.ensure_one()
+        razorpay = RazorpayPosRequest(self)
+        body = razorpay._razorpay_get_payment_request_body(payment_mode=True)
+        body.update({'amount': 1, 'externalRefNumber': f'odoo-test-{uuid.uuid4().hex[:16]}'})
+        response = razorpay._call_razorpay(endpoint='pay', payload=body)
+        if 'success' not in response:
+            raise UserError(self.env._('Could not reach Razorpay: %(error)s', error=response.get('errorMessage')))
+        if not response.get('success') or response.get('errorCode'):
+            if response.get('realCode') == 'AUTH_FAILED':
+                raise UserError(self.env._('Razorpay rejected the username or API key: %(error)s', error=response.get('errorMessage')))
+            raise UserError(self.env._(
+                'Razorpay could not reach the device %(device)s: %(error)s',
+                device=self.razorpay_tid, error=response.get('errorMessage'),
+            ))
+
+        # Let the device receive the request first, an earlier cancel is lost
+        time.sleep(5)
+        cancel_result = self.razorpay_cancel_payment_request({'p2pRequestId': str(response.get('p2pRequestId'))})
+        has_cancel_error = 'errorMessage' in cancel_result
+        message = (
+            self.env._(
+                'Credentials are valid, but the 1 INR test request could not be cancelled automatically. Please cancel it on the device %(device)s.',
+                device=self.razorpay_tid,
+            )
+            if has_cancel_error
+            else self.env._('Credentials are valid. A test request was sent to the device %(device)s and cancelled.', device=self.razorpay_tid)
+        )
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'type': 'warning' if has_cancel_error else 'success',
+                'message': message,
+            },
+        }
 
     def razorpay_make_refund_request(self, data):
         razorpay = RazorpayPosRequest(self)
