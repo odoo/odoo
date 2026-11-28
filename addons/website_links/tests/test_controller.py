@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from odoo.tests import tagged
 from odoo.tests.common import HttpCase
 
@@ -65,3 +66,34 @@ class TestWebsiteLinksRussian(HttpCase):
 
         res = self.url_open(f'/r/{no_link_code}', allow_redirects=False)
         self.assertEqual(res.status_code, 404, "No link tracker exists for the requested code")
+
+
+@tagged('post_install', '-at_install')
+class TestWebsiteLinksAddCode(HttpCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.link_a, cls.link_b = cls.env['link.tracker'].create([
+            {'url': 'https://www.example.com/a'},
+            {'url': 'https://www.example.com/b'},
+        ])
+
+    def _add_code(self, init_code, new_code):
+        self.authenticate('admin', 'admin')
+        return self.make_jsonrpc_request('/website_links/add_code', {
+            'init_code': init_code,
+            'new_code': new_code,
+        })
+
+    def test_add_new_code(self):
+        result = self._add_code(self.link_a.code, 'brand-new-code')
+        self.assertEqual(result[0]['code'], 'brand-new-code')
+        self.assertEqual(
+            self.env['link.tracker.code'].search([('code', '=', 'brand-new-code')]).link_id,
+            self.link_a,
+        )
+
+    def test_add_code_already_on_same_link(self):
+        result = self._add_code(self.link_a.code, self.link_a.code)
+        self.assertEqual(result[0]['code'], self.link_a.code)
