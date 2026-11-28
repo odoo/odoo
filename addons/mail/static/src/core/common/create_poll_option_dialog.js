@@ -23,6 +23,7 @@ export class CreatePollOptionDialog extends Component {
             model: t.object({
                 direction: t.selection(["forward", "backward", "none"]).optional(),
                 end: t.number().optional(),
+                id: t.string(),
                 label: t.string(),
                 start: t.number().optional(),
             }),
