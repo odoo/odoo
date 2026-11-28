@@ -16,12 +16,13 @@ class TestTbaiRecipientIdTypes(TestEsEdiTbaiCommon):
         cls.partner = cls.env['res.partner'].create({'name': 'TBAI ID Types Partner'})
 
     def _set_es_ids(self, passport=False, foreign_id=False, res_cert=False, other_id=False):
-        self.partner.write({
-            'l10n_es_passport': passport,
-            'l10n_es_foreign_id': foreign_id,
-            'l10n_es_res_cert': res_cert,
-            'l10n_es_other_id': other_id,
-        })
+        for identifier_type, value in (
+            ('ES_PASSPORT', passport),
+            ('ES_FOREIGN_ID', foreign_id),
+            ('ES_RES_CERT', res_cert),
+            ('ES_OTHER_ID', other_id),
+        ):
+            self.partner._set_additional_identifier(identifier_type, value)
 
     def test_es_partner_with_nif(self):
         self.partner.write({'country_id': self.env.ref('base.es').id, 'vat': 'ESF35999705'})

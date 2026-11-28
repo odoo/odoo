@@ -15,7 +15,7 @@ class TestVerifactuPartnerIdTypes(TransactionCase):
         cls.partner = cls.env['res.partner'].create({
             'name': 'VF Foreign Partner (Passport)',
             'country_id': cls.env.ref('base.us').id,
-            'l10n_es_passport': 'X1234567',
+            'additional_identifiers': {'ES_PASSPORT': 'X1234567'},
         })
 
     def test_verifactu_values_include_name_and_id_otro(self):
