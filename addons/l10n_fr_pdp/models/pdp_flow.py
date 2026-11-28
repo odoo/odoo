@@ -4,7 +4,12 @@ from markupsafe import Markup
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError
+<<<<<<< 007ec7858eae8edbdf02d56ebbebbadeb822d1b0
 from odoo.fields import Domain
+||||||| 99d265b784947438344a74d33408d7ad137fec6b
+from odoo.osv import expression
+=======
+>>>>>>> 6cf41f705022d7fecba696442d2bfb989c666f16
 
 _logger = logging.getLogger(__name__)
 
@@ -557,10 +562,20 @@ class PdpFlow(models.Model):
 
     def action_view_error_moves(self):
         """Open list view of invalid invoices."""
+<<<<<<< 007ec7858eae8edbdf02d56ebbebbadeb822d1b0
         action = self._get_moves()._get_records_action(name=self.env._("Invalid Invoices"))
         domain = action.get('domain') or []
         action['domain'] = Domain.AND([domain, [('l10n_fr_pdp_has_error', '=', True)]])
         return action
+||||||| 99d265b784947438344a74d33408d7ad137fec6b
+        action = self._get_moves()._get_records_action(name=self.env._("Invalid Invoices"))
+        domain = action.get('domain') or []
+        action['domain'] = expression.AND([domain, [('l10n_fr_pdp_has_error', '=', True)]])
+        return action
+=======
+        error_moves = self._get_moves().filtered('l10n_fr_pdp_has_error')
+        return self._open_pdp_moves(error_moves, self.env._("Invalid Invoices"))
+>>>>>>> 6cf41f705022d7fecba696442d2bfb989c666f16
 
     def action_open_send_wizard(self):
         """Open send wizard if errors exist, otherwise send directly."""
@@ -579,11 +594,16 @@ class PdpFlow(models.Model):
 
     def action_view_moves(self):
         """Open list view of related invoices."""
+        return self._open_pdp_moves(self._get_moves(), self.env._("Related Invoices"))
+
+    def _open_pdp_moves(self, moves, name):
+        """Return an action opening the given moves in the e-reporting list view."""
         ereporting_view = self.env.ref("l10n_fr_pdp.l10n_fr_pdp_list_view_move_ereporting", raise_if_not_found=False)
         view = ereporting_view.id if ereporting_view else False
-        return self._get_moves()._get_records_action(
-            name=self.env._("Related Invoices"),
+        return moves._get_records_action(
+            name=name,
             views=[(view, 'list'), (False, 'form')],
+            domain=[('id', 'in', moves.ids)],
             context={'create': False, 'group_by': ['move_type']},
         )
 
