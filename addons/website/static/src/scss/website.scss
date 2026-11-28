@@ -2978,6 +2978,123 @@ input[value*="data-oe-translation-source-sha"] {
     --wanim-opacity-adjustment: 1;
 }
 
+.o_block_hover {
+    --block-hover__overlay-color: rgba(0, 0, 0, .15);
+    --block-hover__translate-shift: 10px;
+    --block-hover__zoom-intensity: 10;
+
+    &.o_block_hover_overlay {
+        position: relative;
+
+        &::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            border-radius: inherit;
+            background-color: var(--block-hover__overlay-color);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .2s ease-out;
+        }
+
+        &:hover::before {
+            opacity: 1;
+        }
+    }
+
+    &.o_block_hover_translate,
+    &.o_block_hover_zoom_in,
+    &.o_block_hover_zoom_out {
+        transition: transform .2s ease-out;
+        transform-origin: center;
+
+        &:hover {
+            transform: var(--block-hover__transform);
+        }
+    }
+
+    /* A block moved away or shrunk on hover can leave the pointer near its
+       edge, which ends the hover and makes it flicker. Undo the transform on
+       pseudo-elements to keep the initial area hovered. They stay below the
+       content so that they do not catch its clicks. They take the borders of
+       the block, which are outside of their containing block, to cover them
+       too: one from the top left corner covers the bottom and right borders,
+       the other from the bottom right corner covers the top and left ones. */
+    &.o_block_hover_translate:hover,
+    &.o_block_hover_zoom_out:hover {
+        &::before,
+        &::after {
+            content: "";
+            position: absolute;
+            z-index: -1;
+            box-sizing: content-box;
+            width: 100%;
+            height: 100%;
+            border: inherit;
+            border-color: transparent;
+            transform: var(--block-hover__transform--inverse);
+        }
+
+        &::before {
+            top: 0;
+            left: 0;
+        }
+
+        &::after {
+            right: 0;
+            bottom: 0;
+        }
+    }
+
+    &.o_block_hover_translate {
+        /* Unitless zeros could not be negated with calc(). */
+        --block-hover__translate-shift--x: 0px;
+        --block-hover__translate-shift--y: calc(-1 * var(--block-hover__translate-shift));
+        --block-hover__transform: translate(
+            var(--block-hover__translate-shift--x),
+            var(--block-hover__translate-shift--y)
+        );
+        --block-hover__transform--inverse: translate(
+            calc(-1 * var(--block-hover__translate-shift--x)),
+            calc(-1 * var(--block-hover__translate-shift--y))
+        );
+
+        &.o_block_hover_translate_left {
+            --block-hover__translate-shift--x: calc(-1 * var(--block-hover__translate-shift));
+            --block-hover__translate-shift--y: 0px;
+
+            .o_rtl & {
+                --block-hover__translate-shift--x: var(--block-hover__translate-shift);
+            }
+        }
+
+        &.o_block_hover_translate_right {
+            --block-hover__translate-shift--x: var(--block-hover__translate-shift);
+            --block-hover__translate-shift--y: 0px;
+
+            .o_rtl & {
+                --block-hover__translate-shift--x: calc(-1 * var(--block-hover__translate-shift));
+            }
+        }
+
+        &.o_block_hover_translate_bottom {
+            --block-hover__translate-shift--y: var(--block-hover__translate-shift);
+        }
+    }
+
+    &.o_block_hover_zoom_in {
+        --block-hover__transform: scale(calc(1 + (var(--block-hover__zoom-intensity, 10) / 400)));
+    }
+
+    &.o_block_hover_zoom_out {
+        --block-hover__transform: scale(calc(1 - (var(--block-hover__zoom-intensity, 10) / 400)));
+        --block-hover__transform--inverse: scale(
+            calc(1 / (1 - (var(--block-hover__zoom-intensity, 10) / 400)))
+        );
+    }
+}
+
 /* Slide ////////////////////////////////////////////////////////////////////// */
 
 @keyframes o_anim_slide_in_down {

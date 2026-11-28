@@ -137,7 +137,8 @@ export class ImageHoverPlugin extends Plugin {
         },
         on_hover_animation_mode_cleaned_handlers: this.removeHoverEffect.bind(this),
         on_hover_animation_mode_applied_handlers: this.setHoverEffect.bind(this),
-        can_have_hover_effect_predicates: (el, dataset) => this.canHaveHoverEffect(el, dataset),
+        can_have_image_hover_effect_predicates: (el, dataset) =>
+            this.canHaveHoverEffect(el, dataset),
         hover_effect_image_dataset_providers: async (imgEl) => ({
             ...Object.assign({}, imgEl.dataset, await loadImageInfo(imgEl)),
             isCorsProtected: await isImageCorsProtected(imgEl),
@@ -209,13 +210,14 @@ export class ImageHoverPlugin extends Plugin {
         };
     }
     canHaveHoverEffect(imgEl, dataset) {
-        return (
-            imgEl.tagName === "IMG" &&
-            !dataset.isCorsProtected &&
-            !(this.dependencies.imageShapeOption.getShapeCategory(imgEl) === "devices") &&
-            !this.dependencies.imageShapeOption.isAnimableShape(dataset.shape) &&
-            !!dataset.isImageSupportedForShapes
-        );
+        if (imgEl.tagName === "IMG") {
+            return (
+                !dataset.isCorsProtected &&
+                !(this.dependencies.imageShapeOption.getShapeCategory(imgEl) === "devices") &&
+                !this.dependencies.imageShapeOption.isAnimableShape(dataset.shape) &&
+                !!dataset.isImageSupportedForShapes
+            );
+        }
     }
 }
 export class SetHoverEffectAction extends BuilderAction {

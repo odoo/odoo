@@ -6,7 +6,7 @@ declare module "plugins" {
     import { WebsiteFontPlugin } from "@website/builder/plugins/font/font_plugin";
     import { form_field_anchor_selectors, FormOptionPlugin } from "@website/builder/plugins/form/form_option_plugin";
     import { MenuDataPlugin } from "@website/builder/plugins/menu_data_plugin";
-    import { AnimateOptionPlugin, can_have_hover_effect_predicates, on_hover_animation_mode_cleaned_handlers, on_hover_animation_mode_applied_handlers } from "@website/builder/plugins/options/animate_option_plugin";
+    import { AnimateOptionPlugin, can_have_block_hover_effect_predicates, can_have_image_hover_effect_predicates, on_hover_animation_mode_cleaned_handlers, on_hover_animation_mode_applied_handlers } from "@website/builder/plugins/options/animate_option_plugin";
     import { WebsiteBackgroundVideoPlugin } from "@website/builder/plugins/options/background_option_plugin";
     import { CardImageOptionPlugin } from "@website/builder/plugins/options/card_image_option_plugin";
     import { ChartOptionPlugin } from "@website/builder/plugins/options/chart_option_plugin";
@@ -87,7 +87,8 @@ declare module "plugins" {
         on_website_color_updated_handlers: on_website_color_updated_handlers;
 
         // Predicates
-        can_have_hover_effect_predicates: can_have_hover_effect_predicates;
+        can_have_block_hover_effect_predicates: can_have_block_hover_effect_predicates;
+        can_have_image_hover_effect_predicates: can_have_image_hover_effect_predicates;
 
         // Processors
         reorder_items_processors: reorder_items_processors;

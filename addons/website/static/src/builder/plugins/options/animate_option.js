@@ -5,7 +5,9 @@ import { registry } from "@web/core/registry";
 import { useProps, t } from "@odoo/owl";
 
 export const animateOptionProps = {
+    allowBlockHover: t.boolean().optional(false),
     dropdownClass: t.string().optional("o_hb_select_dropdown"),
+    hoverApplyTo: t.string().optional(),
     requireAnimation: t.boolean().optional(false),
     slots: t.object().optional(),
 };
@@ -22,11 +24,20 @@ export class AnimateOption extends BaseOptionComponent {
             const hasAnimateClass = editingElement.classList.contains("o_animate");
             this.getDirectionsItems = this.dependencies.animateOption.getDirectionsItems;
             const { getEffectsItems } = this.dependencies.animateOption;
+            const hoverEl = this.props.hoverApplyTo
+                ? editingElement.querySelector(this.props.hoverApplyTo)
+                : editingElement;
 
             return {
                 isOptionActive: this.isOptionActive(editingElement),
                 hasAnimateClass: hasAnimateClass,
-                canHover: await this.dependencies.animateOption.canHaveHoverEffect(editingElement),
+                canHover:
+                    !!hoverEl &&
+                    (await this.dependencies.animateOption.canHaveHoverEffect(
+                        hoverEl,
+                        this.props.allowBlockHover
+                    )),
+                isImage: hoverEl?.tagName === "IMG",
                 canHaveScrollEffect:
                     this.dependencies.animateOption.canHaveScrollEffect(editingElement),
                 isLimitedEffect: this.limitedEffects.some((className) =>
