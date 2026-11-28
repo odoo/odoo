@@ -21,6 +21,7 @@ from odoo.addons.account.tools import format_structured_reference_iso
 from odoo.exceptions import UserError, ValidationError, AccessError, RedirectWarning
 from odoo.fields import Command, Domain
 from odoo.tools.misc import clean_context
+from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools import (
     date_utils,
     float_compare,
@@ -6877,7 +6878,13 @@ class AccountMove(models.Model):
         }
 
     def action_move_download_all(self):
-        moves_to_export = self.filtered(lambda m: m._get_move_zip_export_docs())
+        # A posted move without any stored file gets a proforma, so it is always exportable.
+        # Other moves are checked without generating anything: the download route does it.
+        moves_to_export = self.filtered(
+            lambda m: (
+                m.state == 'posted' and not (m.is_purchase_document(include_receipts=True) and m.attachment_ids)
+            ) or m._get_move_zip_export_docs(allow_fallback=False)
+        )
 
         if not moves_to_export:
             return {
@@ -8342,19 +8349,30 @@ class AccountMove(models.Model):
         """
         return []
 
-    def _get_move_zip_export_docs(self):
+    def _get_move_zip_export_docs(self, allow_fallback=True):
         self.ensure_one()
+        allow_fallback = allow_fallback and self.state == 'posted'
 
         if self.is_purchase_document(include_receipts=True):
             attachments = self.env['account.move.send']._get_invoice_extra_attachments(self)
             main = self.message_main_attachment_id
             if main and main not in attachments:
                 attachments = main | attachments
-            return [{
-                'filename': a.name,
-                'filetype': a.mimetype,
-                'content': a.raw,
-            } for a in attachments]
+            if not attachments:
+                # Files uploaded without being set as main attachment.
+                # XML e-invoices are never exported on their own.
+                attachments = self.attachment_ids.filtered(
+                    lambda a: not (a.mimetype == 'text/plain' and guess_mimetype(a.raw or b'').endswith('/xml'))
+                )
+            if attachments:
+                return [{
+                    'filename': a.name,
+                    'filetype': a.mimetype,
+                    'content': a.raw,
+                } for a in attachments]
+            if self.attachment_ids:
+                return []
+            return self._get_invoice_legal_documents_all(allow_fallback=allow_fallback)
 
         if self.state == 'draft' and (main := self.message_main_attachment_id):
             return [{
@@ -8363,7 +8381,7 @@ class AccountMove(models.Model):
                 'content': main.raw,
             }]
 
-        return self._get_invoice_legal_documents_all()
+        return self._get_invoice_legal_documents_all(allow_fallback=allow_fallback)
 
     def _get_move_lines_to_report(self):
         def show_line(line):
