@@ -4,6 +4,7 @@ import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { ORM } from "@web/core/orm_plugin";
 import { Record } from "@web/model/relational_model/record";
+import { getFieldDomain } from "@web/model/relational_model/utils";
 
 import { Component, onWillStart, proxy, types, usePlugin, useProps } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -15,7 +16,11 @@ export class MailComposerTemplateSelector extends Component {
     static components = { Dropdown, DropdownItem };
 
     setup() {
-        this.props = useProps({ record: types.instanceOf(Record) });
+        this.props = useProps({
+            domain: types.or([types.array(), types.function()]).optional(),
+            name: types.string(),
+            record: types.instanceOf(Record),
+        });
         this.action = useService("action");
         this.orm = usePlugin(ORM);
         this.limit = 80;
@@ -31,31 +36,29 @@ export class MailComposerTemplateSelector extends Component {
         });
     }
 
+    /**
+     * Saving the body as a template is allowed only when it can be edited, as
+     * it otherwise comes from the current template.
+     */
+    get canSaveTemplate() {
+        return this.props.record.data.can_edit_body;
+    }
+
+    get templateDomain() {
+        return getFieldDomain(this.props.record, this.props.name, this.props.domain);
+    }
+
+    get templateModel() {
+        return this.props.record.fields[this.props.name].relation;
+    }
+
     async fetchTemplates() {
-        const fields = ["display_name"];
-        const templates = await this.orm.searchRead(
-            "mail.template",
-            [
-                ["model", "=", this.props.record.data.render_model],
-                ["user_id", "=", user.userId],
-            ],
-            fields,
+        this.state.templates = await this.orm.searchRead(
+            this.templateModel,
+            this.templateDomain,
+            ["display_name"],
             { limit: this.limit }
         );
-        if (templates.length < this.limit) {
-            templates.push(
-                ...(await this.orm.searchRead(
-                    "mail.template",
-                    [
-                        ["model", "=", this.props.record.data.render_model],
-                        ["user_id", "=", false],
-                    ],
-                    fields,
-                    { limit: this.limit - templates.length }
-                ))
-            );
-        }
-        this.state.templates = templates;
     }
 
     /**
@@ -65,7 +68,7 @@ export class MailComposerTemplateSelector extends Component {
      */
     async onLoadTemplate(template) {
         await this.props.record.update({
-            template_id: { id: template.id },
+            [this.props.name]: { id: template.id },
         });
     }
 
@@ -94,15 +97,13 @@ export class MailComposerTemplateSelector extends Component {
 
     onSelectTemplateSearchMoreBtnClick() {
         this.env.services.dialog.add(SelectCreateDialog, {
-            resModel: "mail.template",
+            resModel: this.templateModel,
             title: _t("Select a Template"),
             multiSelect: false,
             noCreate: true,
-            domain: [["model", "=", this.props.record.data.render_model]],
+            domain: this.templateDomain,
             onSelected: async (templateIds) => {
-                await this.props.record.update({
-                    template_id: { id: templateIds[0] },
-                });
+                await this.onLoadTemplate({ id: templateIds[0] });
             },
         });
     }
@@ -110,10 +111,8 @@ export class MailComposerTemplateSelector extends Component {
 
 export const mailComposerTemplateSelector = {
     component: MailComposerTemplateSelector,
-    fieldDependencies: [
-        { name: "can_edit_body", type: "boolean" },
-        { name: "render_model", type: "string" },
-    ],
+    extractProps: (fieldInfo, dynamicInfo) => ({ domain: dynamicInfo.domain }),
+    fieldDependencies: [{ name: "can_edit_body", type: "boolean" }],
 };
 
 registry.category("fields").add("mail_composer_template_selector", mailComposerTemplateSelector);

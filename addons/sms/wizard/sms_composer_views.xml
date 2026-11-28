@@ -69,7 +69,7 @@
                     <button class="btn btn-secondary" special="cancel" data-hotkey="x"/>
                     <div class="d-flex align-items-center">
                         <field name="scheduled_date" widget="text_scheduled_date" invisible="composition_mode != 'comment'"/>
-                        <field name="template_id" widget="mail_composer_template_selector" options="{'no_label': True}" context="{'default_model_id': res_model}"/>
+                        <field name="template_id" widget="sms_composer_template_selector" options="{'no_label': True}" context="{'default_model_id': res_model}"/>
                     </div>
                     <widget name="sms_char_counter" class="ms-auto"/>
                 </footer>

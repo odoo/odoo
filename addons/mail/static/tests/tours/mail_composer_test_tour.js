@@ -97,9 +97,14 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
                 '.mail-composer-template-dropdown.popover .o-dropdown-item:contains("Test template")',
         },
         {
-            content: "Verify admin template is NOT listed",
+            content: "Check template of my role is listed first",
             trigger:
-                ".mail-composer-template-dropdown.popover:not(:has(.o-dropdown-item:contains(Test template for admin)))",
+                '.mail-composer-template-dropdown.popover .mail-composer-template-list > .o-dropdown-item:first-child:contains("Test template for my role")',
+        },
+        {
+            content: "Check template of other role is listed last, after generic ones",
+            trigger:
+                '.mail-composer-template-dropdown.popover .mail-composer-template-list > .o-dropdown-item:last-child:contains("Test template for other role")',
         },
         {
             content: "Send message from full composer",

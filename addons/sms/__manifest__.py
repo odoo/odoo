@@ -43,6 +43,10 @@ The service is provided by the In App Purchase Odoo platform.
         ],
         'web.assets_unit_tests': [
             'sms/static/tests/**/*',
+            ('remove', 'sms/static/tests/tours/**/*'),
+        ],
+        'web.assets_tests': [
+            'sms/static/tests/tours/**/*',
         ],
     },
     'author': 'Odoo S.A.',

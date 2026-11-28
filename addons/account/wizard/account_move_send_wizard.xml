@@ -31,7 +31,6 @@
                 <div invisible="'email' not in sending_methods">
                     <field name="model" invisible="1"/> <!-- read by mail_composer_form.js and mail_composer_template_selector.js -->
                     <field name="res_ids" invisible="1"/> <!-- read by mail_composer_form.js to build the composer context -->
-                    <field name="render_model" invisible="1"/> <!-- read by mail_composer_template_selector.js to filter templates -->
 
                     <group>
                         <field name="pdf_report_id" options="{'no_create': True, 'no_edit': True}" invisible="not display_pdf_report_id"/>
@@ -79,7 +78,7 @@
                             class="btn-secondary"/>
 
                     <field name="mail_attachments_widget" widget="account_move_send_attachments_selector" invisible="not display_attachments_widget"/>
-                    <field name="template_id" widget="mail_composer_template_selector"/>
+                    <field name="template_id" widget="mail_composer_template_selector" invisible="'email' not in sending_methods"/>
                 </footer>
             </form>
         </field>
