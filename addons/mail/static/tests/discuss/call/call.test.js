@@ -13,6 +13,7 @@ import {
     mockPipWindow,
     onRpcAfter,
     openDiscuss,
+    openFormView,
     openMessagingMenu,
     patchUiSize,
     setupChatHub,
@@ -39,6 +40,7 @@ import {
 import { ChannelMember } from "@mail/discuss/core/common/channel_member_model";
 import { Meeting } from "@mail/discuss/call/common/meeting";
 import { POLL_CLOSE_WINDOW_TIMEOUT } from "@mail/core/common/mail_popout_plugin";
+import { TalkingDetector } from "@mail/discuss/call/common/talking_detector";
 
 import {
     advanceTime,
@@ -54,7 +56,7 @@ import {
     queryFirst,
     test,
 } from "@odoo/hoot";
-import { animationFrame, press, waitFor, waitForNone, waitUntil } from "@odoo/hoot-dom";
+import { animationFrame, press, tick, waitFor, waitForNone, waitUntil } from "@odoo/hoot-dom";
 import {
     Command,
     contains,
@@ -3258,4 +3260,250 @@ test("camera turns on without blur when the blur model fails", async () => {
     await waitFor(".o_notification:has(:text('Background blur could not be loaded'))");
     await waitFor("button[title='Turn camera off']");
     await expect.waitForSteps(["warn: Blur model unavailable", "blur model closed"]);
+});
+
+async function setTalkingForXdutyCycle(session, dutyCycle, talking) {
+    const durationMs = TalkingDetector.WINDOW_MS * dutyCycle;
+    session.isTalking = talking;
+    await tick();
+    await advanceTime(durationMs);
+    if (talking) {
+        session.isTalking = false;
+    }
+}
+
+test("intentional talking while muted shows the suggestion", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    await contains("[title='Start Call']:count(1)").click();
+    await waitFor(".o-discuss-Call:count(1)");
+    const rtc = getService("discuss.rtc");
+    const session = rtc.selfSession;
+    session.is_muted = true;
+    freezeTime();
+    patch(TalkingDetector, { now: () => Date.now() });
+    // talk half the threshold
+    await setTalkingForXdutyCycle(session, TalkingDetector.DUTY_CYCLE_THRESHOLD / 2, true);
+    // don't talk for 10% of window, speech breaks (10% inactive)
+    await setTalkingForXdutyCycle(session, 0.1, false);
+    // talk for the other half of the threshold
+    await setTalkingForXdutyCycle(session, TalkingDetector.DUTY_CYCLE_THRESHOLD / 2, true);
+    await waitFor(".o_popover div:text('You are muted!'):count(1)");
+    // toggle mic off and on, the suggestion should disappear
+    await contains("button[title='Unmute']:count(1)").click();
+    await contains("button[title='Mute']:count(1)").click();
+    await waitForNone(".o_popover div:text('You are muted!')");
+    // continuous speech should show the suggestion.
+    session.isTalking = true;
+    await tick();
+    await advanceTime(TalkingDetector.DUTY_CYCLE_THRESHOLD * TalkingDetector.WINDOW_MS);
+    await waitFor(".o_popover div:text('You are muted!'):count(1)");
+    session.isTalking = false;
+    await tick();
+    await contains("button[title='Unmute']:count(1)").click();
+    await contains("button[title='Mute']:count(1)").click();
+    await waitForNone(".o_popover div:text('You are muted!')");
+    // unsustained talking should not show the suggestion
+    await setTalkingForXdutyCycle(session, TalkingDetector.DUTY_CYCLE_THRESHOLD / 2, true);
+    await animationFrame();
+    await advanceTime(TalkingDetector.WINDOW_MS);
+    await animationFrame();
+    await waitForNone(".o_popover div:text('You are muted!')");
+});
+
+test("mute suggestion auto-hides after prolonged silence", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    await contains("[title='Start Call']:count(1)").click();
+    await waitFor(".o-discuss-Call:count(1)");
+    const rtc = getService("discuss.rtc");
+    const session = rtc.selfSession;
+    session.is_muted = true;
+    freezeTime();
+    patch(TalkingDetector, { now: () => Date.now() });
+    await setTalkingForXdutyCycle(session, TalkingDetector.DUTY_CYCLE_THRESHOLD, true);
+    await waitFor(".o_popover div:text('You are muted!'):count(1)");
+    await advanceTime(TalkingDetector.AUTO_HIDE_DELAY_MS - 100);
+    await waitFor(".o_popover div:text('You are muted!'):count(1)");
+    await advanceTime(100);
+    await waitForNone(".o_popover div:text('You are muted!')");
+    await setTalkingForXdutyCycle(session, TalkingDetector.DUTY_CYCLE_THRESHOLD, true);
+    await waitFor(".o_popover div:text('You are muted!'):count(1)");
+});
+
+test("mute suggestion dismissal, reappearance and denial", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    await contains("[title='Start Call']:count(1)").click();
+    await waitFor(".o-discuss-Call:count(1)");
+    const rtc = getService("discuss.rtc");
+    const session = rtc.selfSession;
+    session.is_muted = true;
+    freezeTime();
+    patch(TalkingDetector, { now: () => Date.now() });
+    await setTalkingForXdutyCycle(session, TalkingDetector.DUTY_CYCLE_THRESHOLD, true);
+    await waitFor(".o_popover div:text('You are muted!'):count(1)");
+    await contains("div[title='Dismiss warning']:count(1)").click();
+    await waitForNone(".o_popover div:text('You are muted!')");
+    await contains("button[title='Unmute']:count(1)").click();
+    await contains("button[title='Mute']:count(1)").click();
+    await setTalkingForXdutyCycle(session, TalkingDetector.DUTY_CYCLE_THRESHOLD, true);
+    await waitFor(".o_popover div:text('You are muted!'):count(1)");
+    await contains('button:text("Don\'t show this again"):count(1)').click();
+    await waitForNone(".o_popover div:text('You are muted!')");
+    await contains("button[title='Unmute']:count(1)").click();
+    await contains("button[title='Mute']:count(1)").click();
+    await setTalkingForXdutyCycle(session, TalkingDetector.DUTY_CYCLE_THRESHOLD, true);
+    await animationFrame();
+    await waitForNone(".o_popover div:text('You are muted!')");
+    await contains(".o-discuss-CallActionList button[aria-label='Disconnect']:count(1)").click();
+    await waitForNone(".o-discuss-Call");
+    await contains("[title='Start Call']:count(1)").click();
+    await waitFor(".o-discuss-Call:count(1)");
+    rtc.selfSession.is_muted = true;
+    await setTalkingForXdutyCycle(rtc.selfSession, TalkingDetector.DUTY_CYCLE_THRESHOLD, true);
+    await waitFor(".o_popover div:text('You are muted!'):count(1)");
+});
+
+test("mute suggestion moves between the call view and the call menu", async () => {
+    const pyEnv = await startServer();
+    const [channelId, otherChannelId] = pyEnv["discuss.channel"].create([
+        { name: "General" },
+        { name: "Sales" },
+    ]);
+    pyEnv["discuss.channel.rtc.session"].create({
+        channel_id: otherChannelId,
+        channel_member_id: pyEnv["discuss.channel.member"].create({
+            channel_id: otherChannelId,
+            partner_id: pyEnv["res.partner"].create({ name: "Mario" }),
+        }),
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains("[title='Start Call']:count(1)").click();
+    await waitFor(".o-discuss-Call:count(1)");
+    const rtc = getService("discuss.rtc");
+    rtc.selfSession.is_muted = true;
+    freezeTime();
+    patch(TalkingDetector, { now: () => Date.now() });
+    await setTalkingForXdutyCycle(rtc.selfSession, TalkingDetector.DUTY_CYCLE_THRESHOLD, true);
+    // above the call view's mute button only
+    await waitFor(".o_popover[data-popper-placement='top'] div:text('You are muted!'):count(1)");
+    // another channel's call view hides its mute button, so the call menu shows it
+    await openDiscuss(otherChannelId);
+    await waitFor(".o-discuss-CallParticipantCard[aria-label='Mario']:count(1)");
+    await waitFor(".o_popover[data-popper-placement='bottom'] div:text('You are muted!'):count(1)");
+    await waitForNone(".o_popover[data-popper-placement='top'] div:text('You are muted!')");
+    await openFormView("res.partner", serverState.partnerId);
+    await waitFor(".o_last_breadcrumb_item:text('Mitchell Admin'):count(1)");
+    await waitFor(".o_popover[data-popper-placement='bottom'] div:text('You are muted!'):count(1)");
+    await contains(".o-discuss-CallMenu-actionsButton:count(1)").click();
+    await waitFor(".o-dropdown-item:text('Unmute'):count(1)");
+    // beside the dropdown menu
+    await waitFor(".o_popover[data-popper-placement='left'] div:text('You are muted!'):count(1)");
+    await waitForNone(".o_popover[data-popper-placement='bottom'] div:text('You are muted!')");
+});
+
+test("Cross tab calls: the host tab sends the mute suggestion to the other tabs", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const broadcastChannel = new BroadcastChannel("call_sync_state");
+    broadcastChannel.onmessage = (event) => {
+        if (event.data.type === CROSS_TAB_HOST_MESSAGE.TALK_WHILE_MUTED_SUGGESTION_CHANGE) {
+            expect.step(`show:${event.data.changes.showTalkWhileMutedSuggestion}`);
+        }
+    };
+    await start();
+    await openDiscuss(channelId);
+    await contains("[title='Start Call']:count(1)").click();
+    await waitFor(".o-discuss-Call:count(1)");
+    getService("discuss.rtc").showTalkWhileMutedSuggestion = true;
+    await expect.waitForSteps(["show:true"]);
+});
+
+test("Cross tab calls: the mute suggestion comes from the host tab", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const sessionId = pyEnv["discuss.channel.rtc.session"].create({
+        channel_member_id: pyEnv["discuss.channel.member"].search([
+            ["channel_id", "=", channelId],
+        ])[0],
+        channel_id: channelId,
+    });
+    const broadcastChannel = new BroadcastChannel("call_sync_state");
+    broadcastChannel.onmessage = (event) => {
+        if (event.data.type === CROSS_TAB_CLIENT_MESSAGE.REQUEST_ACTION) {
+            expect.step(Object.keys(event.data.changes).join());
+        }
+    };
+    const postSuggestion = (showTalkWhileMutedSuggestion) =>
+        broadcastChannel.postMessage({
+            type: CROSS_TAB_HOST_MESSAGE.TALK_WHILE_MUTED_SUGGESTION_CHANGE,
+            changes: { showTalkWhileMutedSuggestion },
+        });
+    await start();
+    await openDiscuss(channelId);
+    freezeTime();
+    patch(TalkingDetector, { now: () => Date.now() });
+    // the host stops syncing `isTalking` while muted, so its last value can be stale
+    broadcastChannel.postMessage({
+        type: CROSS_TAB_HOST_MESSAGE.UPDATE_REMOTE,
+        hostedChannelId: channelId,
+        hostedSessionId: sessionId,
+        changes: { [sessionId]: { is_deaf: false, is_muted: true, isTalking: true } },
+    });
+    await waitFor("[title='Unmute']:count(1)");
+    postSuggestion(true);
+    await waitFor(".o_popover div:text('You are muted!'):count(1)");
+    postSuggestion(false);
+    await waitForNone(".o_popover div:text('You are muted!')");
+    await advanceTime(TalkingDetector.WINDOW_MS);
+    await animationFrame();
+    expect(".o_popover div:text('You are muted!')").toHaveCount(0);
+    postSuggestion(true);
+    await waitFor(".o_popover div:text('You are muted!'):count(1)");
+    await contains("div[title='Dismiss warning']:count(1)").click();
+    await expect.waitForSteps(["isTalkWhileMutedSuggestionDismissed"]);
+    postSuggestion(false);
+    postSuggestion(true);
+    await waitFor(".o_popover div:text('You are muted!'):count(1)");
+    await contains('button:text("Don\'t show this again"):count(1)').click();
+    await expect.waitForSteps(["isTalkWhileMutedSuggestionDisabled"]);
+});
+
+test("system muted microphone warning moves between the call view and the call menu", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    await contains("[title='Start Call']:count(1)").click();
+    await waitFor(".o-discuss-Call:count(1)");
+    getService("discuss.rtc").isMicAudioTrackMuted = true;
+    // above the call view's mute button
+    await waitFor(
+        ".o_popover[data-popper-placement='top'] div:text('Microphone muted by system'):count(1)"
+    );
+    await openFormView("res.partner", serverState.partnerId);
+    await waitFor(".o_last_breadcrumb_item:text('Mitchell Admin'):count(1)");
+    await waitFor(
+        ".o_popover[data-popper-placement='bottom'] div:text('Microphone muted by system'):count(1)"
+    );
+    await waitForNone(
+        ".o_popover[data-popper-placement='top'] div:text('Microphone muted by system')"
+    );
+    await contains(".o-discuss-CallMenu-actionsButton:count(1)").click();
+    await waitFor(".o-dropdown-item:text('Mute'):count(1)");
+    // beside the dropdown menu
+    await waitFor(
+        ".o_popover[data-popper-placement='left'] div:text('Microphone muted by system'):count(1)"
+    );
+    await waitForNone(
+        ".o_popover[data-popper-placement='bottom'] div:text('Microphone muted by system')"
+    );
 });

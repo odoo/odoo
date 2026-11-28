@@ -57,17 +57,21 @@ export const muteAction = {
     onSelected: ({ action, store }) => store.rtc.toggleMicrophone({ rootRef: action.actionRef }),
     sequence: 10,
     sequenceGroup: 100,
-    setup({ action, owner, store }) {
+    setup({ action, ancestors, owner, store }) {
         if (owner instanceof Component) {
             const popover = usePopover(MicrophoneWarning, {
                 closeOnClickAway: false,
                 closeOnEscape: false,
                 position: "top-middle",
+                setActiveElement: false,
             });
             useEffect(() => {
                 const hasWarning =
                     store.rtc.showMicrophonePermissionWarning ||
-                    store.rtc.showMicrophoneSilentWarning;
+                    // the call menu shows these warnings
+                    ((store.rtc.showMicrophoneSilentWarning ||
+                        store.rtc.showTalkWhileMutedSuggestion) &&
+                        !ancestors.inCallMenu);
                 if (!popover.isOpen && action.actionRef() && hasWarning) {
                     popover.open(action.actionRef(), {});
                 } else {
