@@ -129,6 +129,10 @@ class ResPartner(models.Model):
             'views': [(self.env.ref('point_of_sale.view_partner_form_pos_ui').id, 'form')],
         }
 
+    def action_open_commercial_partner_view(self):
+        partner = self.commercial_partner_id
+        return {**partner.action_open_partner_view(), 'res_id': partner.id}
+
     def _get_current_partner(self, *, pos_order=False, **kwargs):
         """Override `portal` to get current partner from pos_order if user is not signed up."""
         if pos_order:
