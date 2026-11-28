@@ -349,3 +349,20 @@ class TestSaleMargin(SaleCommon):
             self.assertEqual(sol_form.price_unit, 77200.0)
             self.assertEqual(sol_form.margin, 2700.0)
             self.assertEqual(sol_form.margin_percent, 0.035)
+
+    def test_coefficient_sets_price_unit_and_follows_unit_cost(self):
+        with Form(self.so) as so_form, so_form.order_line.edit(0) as sol_form:
+            sol_form["coefficient"] = 3.0
+            self.assertAlmostEqual(sol_form["price_unit"], 150.0, delta=0.02)
+
+            sol_form["purchase_price"] = 25.0
+            self.assertAlmostEqual(sol_form["coefficient"], 6.0, delta=0.02)
+
+    def test_coefficient_ignores_included_taxes(self):
+        self.product_50_margin.taxes_id = [Command.link(self.tax_included.id)]
+        self.so._recompute_taxes()
+        with Form(self.so) as so_form, so_form.order_line.edit(0) as sol_form:
+            sol_form["coefficient"] = 3.0
+
+            # Price without taxes is 150, plus 50% included tax
+            self.assertAlmostEqual(sol_form["price_unit"], 225.0, delta=0.02)

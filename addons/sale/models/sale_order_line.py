@@ -261,6 +261,9 @@ class SaleOrderLine(models.Model):
         precompute=True,
     )
 
+    coefficient = fields.Float(
+        compute="_compute_coefficient", readonly=False, groups="base.group_user"
+    )
     margin = fields.Float(
         string="Margin",
         min_display_digits="Product Price",
@@ -1098,6 +1101,14 @@ class SaleOrderLine(models.Model):
                 line.price_total / line.product_uom_qty if line.product_uom_qty else 0.0
             )
 
+    @api.depends("price_unit", "purchase_price", "tax_ids", "document_tax_mode")
+    def _compute_coefficient(self):
+        for line in self:
+            if line.purchase_price:
+                line.coefficient = line._get_price_unit_excl_taxes() / line.purchase_price
+            else:
+                line.coefficient = 0.0
+
     @api.depends("product_id", "company_id", "currency_id", "product_uom_id")
     def _compute_purchase_price(self):
         for line in self:
@@ -1854,6 +1865,18 @@ class SaleOrderLine(models.Model):
         """
         self._inverse_label()
 
+    @api.onchange("coefficient")
+    def _onchange_coefficient(self):
+        if not self.purchase_price:
+            return
+
+        computed_coefficient = self._get_price_unit_excl_taxes() / self.purchase_price
+        if float_compare(computed_coefficient, self.coefficient, precision_digits=4) == 0:
+            # Nothing to do, onchange was triggered because of the compute
+            return
+
+        self._set_price_incl_taxes(self.purchase_price * self.coefficient)
+
     @api.onchange("margin")
     def _onchange_margin(self):
         if not (product_qty := self._get_product_qty()):
@@ -2351,6 +2374,18 @@ class SaleOrderLine(models.Model):
         """
         self.ensure_one()
         return 1 - self.discount / 100
+
+    def _get_price_unit_excl_taxes(self):
+        """Return the unit price of the line without included taxes, before discount.
+
+        :rtype: float
+        :returns: The unit price without included taxes.
+        """
+        self.ensure_one()
+        base_line = self._prepare_base_line_for_taxes_computation(quantity=1, discount=0)
+        company = self.company_id or self.env.company
+        self.env["account.tax"]._add_tax_details_in_base_line(base_line, company)
+        return base_line["tax_details"]["raw_total_excluded_currency"]
 
     def _set_price_incl_taxes(self, price):
         """Update the line price considering taxes that should be applied on.
