@@ -1436,3 +1436,35 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         self.assertEqual(mo.procurement_group_id.stock_move_ids.created_purchase_line_ids.product_qty, 5)
         mo.move_raw_ids.product_uom_qty = 2
         self.assertEqual(mo.procurement_group_id.stock_move_ids.created_purchase_line_ids.product_qty, 2)
+
+    def test_kit_never_attribute_components_on_receipt(self):
+        attribute = self.env['product.attribute'].create({
+            'name': 'Never',
+            'create_variant': 'no_variant',
+            'value_ids': [Command.create({'name': 'A'}), Command.create({'name': 'B'})],
+        })
+        kit = self.env['product.product'].create({'name': 'Never Kit', 'is_storable': True})
+        attribute_line = self.env['product.template.attribute.line'].create({
+            'attribute_id': attribute.id,
+            'product_tmpl_id': kit.product_tmpl_id.id,
+            'value_ids': [Command.set(attribute.value_ids.ids)],
+        })
+        ptav_a, ptav_b = attribute_line.product_template_value_ids
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': kit.product_tmpl_id.id,
+            'type': 'phantom',
+            'bom_line_ids': [
+                Command.create({'product_id': self.component_a.id, 'product_qty': 1, 'bom_product_template_attribute_value_ids': [Command.link(ptav_a.id)]}),
+                Command.create({'product_id': self.component_b.id, 'product_qty': 1, 'bom_product_template_attribute_value_ids': [Command.link(ptav_b.id)]}),
+            ],
+        })
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': kit.id,
+                'product_qty': 1,
+                'product_no_variant_attribute_value_ids': [Command.link(ptav_a.id)],
+            })],
+        })
+        po.button_confirm()
+        self.assertEqual(po.picking_ids.move_ids.product_id, self.component_a)
