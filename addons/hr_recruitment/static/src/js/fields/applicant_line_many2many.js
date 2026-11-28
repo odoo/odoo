@@ -12,7 +12,7 @@ export class ApplicantLineMany2Many extends Many2ManyTagsField {
     getTagProps(record){
         let applicant_name = record.data.display_name;
         let name = applicant_name;
-        let job_name = record.data.job_id[1];
+        let job_name = record.data.job_id.display_name;
         if (job_name){
             name = `${job_name} - ${applicant_name}`;
         }
