@@ -27,6 +27,7 @@ export class ActivityController extends Component {
 
         this.dialog = useService("dialog");
         this.action = useService("action");
+        this.notification = useService("notification");
         this.store = useService("mail.store");
         this.ui = useService("ui");
         usePager(() => {
@@ -78,7 +79,7 @@ export class ActivityController extends Component {
             title: _t("Search: %s", this.props.archInfo.title),
             multiSelect: false,
             context: this.props.context,
-            noCreate: this.props.context?.create === false,
+            noCreate: !this.props.archInfo.activeActions.create,
             onSelected: async (resIds) => {
                 await this.store.scheduleActivity(this.props.resModel, resIds);
             },
@@ -91,7 +92,18 @@ export class ActivityController extends Component {
         });
     }
 
-    openActivityFormView(resId, activityTypeId) {
+    async openActivityFormView(resId, activityTypeId) {
+        const thread = await this.store["mail.thread"].getOrFetch(
+            { model: this.props.resModel, id: resId },
+            ["hasWriteAccess", "canPostOnReadonly"]
+        );
+        if (!thread?.canPostMessage) {
+            this.notification.add(
+                _t("You are not allowed to schedule an activity on this record."),
+                { type: "warning" }
+            );
+            return;
+        }
         this.action.doAction(
             {
                 type: "ir.actions.act_window",
@@ -141,6 +153,7 @@ export class ActivityController extends Component {
             resModel: this.props.resModel,
             archInfo: this.props.archInfo,
             groupedActivities: this.model.activityData.grouped_activities,
+            canScheduleActivity: this.model.activityData.can_schedule_activity,
             scheduleActivity: this.scheduleActivity.bind(this),
             onReloadData: () => this.model.load(this.getSearchProps()),
             onEmptyCell: this.openActivityFormView.bind(this),

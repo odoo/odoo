@@ -1,7 +1,7 @@
 import { ActivityListPopoverItem } from "@mail/core/web/activity_list_popover_item";
 import { compareDatetime } from "@mail/utils/common/misc";
 
-import { Component, onWillUpdateProps } from "@odoo/owl";
+import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
 
@@ -34,6 +34,12 @@ export class ActivityListPopover extends Component {
         this.orm = useService("orm");
         this.store = useService("mail.store");
         this.updateFromProps(this.props);
+        onWillStart(async () => {
+            this.thread = await this.store["mail.thread"].getOrFetch(
+                { model: this.props.resModel, id: this.props.resId },
+                ["hasWriteAccess", "canPostOnReadonly"]
+            );
+        });
         onWillUpdateProps((props) => this.updateFromProps(props));
     }
 
@@ -43,6 +49,10 @@ export class ActivityListPopover extends Component {
         return allActivities
             .filter((activity) => this.props.activityIds.includes(activity.id))
             .sort((a, b) => compareDatetime(a.date_deadline, b.date_deadline) || a.id - b.id);
+    }
+
+    get canScheduleActivity() {
+        return Boolean(this.thread?.canPostMessage);
     }
 
     onClickAddActivityButton() {
