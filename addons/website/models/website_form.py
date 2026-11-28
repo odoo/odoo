@@ -112,7 +112,7 @@ class IrModel(models.Model):
             if not fields_get[field].get('readonly') and fields_get[field].get('type') == 'monetary':
                 set_currency_info(fields_get[field])
             if fields_get[field].get('readonly') or field in models.MAGIC_COLUMNS or \
-                    fields_get[field]['type'] in ('many2one_reference', 'json', 'reference'):
+                    fields_get[field]['type'] in ('many2one_reference', 'json', 'reference', 'serialized'):
                 del fields_get[field]
             elif fields_get[field]['type'] == 'properties':
                 property_field = fields_get[field]
