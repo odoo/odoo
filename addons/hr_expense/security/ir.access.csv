@@ -16,5 +16,6 @@ ir_rule_hr_expense_employee_not_draft,Employees can't modify an expense that is 
             ]"
 hr_expense_comp_rule,Expense multi company rule,hr.expense,,crud,"[('company_id', 'in', company_ids)]"
 access_mail_activity_type_expense_user,mail.activity.type.expense.user,mail.activity.type,hr_expense.group_hr_expense_manager,crud,
+access_res_partner_bank_expense_manager,res.partner.bank.expense.manager,res.partner.bank,hr_expense.group_hr_expense_manager,r,
 access_hr_expense_refuse_wizard,access.hr.expense.refuse.wizard,hr.expense.refuse.wizard,hr_expense.group_hr_expense_team_approver,cru,
 access_hr_expense_approve_duplicate,access.hr.expense.approve.duplicate,hr.expense.approve.duplicate,hr_expense.group_hr_expense_team_approver,cru,
