@@ -12,6 +12,7 @@ from odoo.http.requestlib import Request
 from odoo.http.session import (
     DEVICE_ACTIVITY_UPDATE_FREQUENCY,
     SESSION_LIFETIME,
+    finalize,
     session_store,
     update_device_fingerprint,
 )
@@ -642,6 +643,56 @@ class TestDevice(TestHttpBase):
                 headers={'User-Agent': USER_AGENT_linux_firefox},
             )
             self.assertNotIn('error', res.json())
+
+    # --------------------
+    # LOGIN METHOD
+    # --------------------
+
+    def test_login_method(self):
+        self.authenticate(None, None)
+        self.url_open('/web/login', data={
+            'login': self.user_internal.login,
+            'password': self.user_internal.login,
+            'csrf_token': self.csrf_token(),
+        }, allow_redirects=False)
+        self.hit(datetime.now(), '/test_http/greeting-user')
+
+        sessions, devices, logs = self.get_devices(self.user_internal)
+        self.assertEqual(logs.auth_method, 'password')
+        self.assertEqual(devices.auth_method, 'password')
+        self.assertEqual(sessions.auth_method, 'password')
+        # Check readable label through the res.session selection
+        field = sessions._fields['auth_method']
+        self.assertEqual(field.convert_to_export(sessions.auth_method, sessions), 'Password')
+
+    def test_login_custom_method(self):
+        ResUsers = self.registry['res.users']
+        self.patch(ResUsers, '_check_credentials', lambda user, credential, env: {
+            'uid': user.id, 'auth_method': 'custom_auth', 'mfa': 'default',
+        })
+        self.patch(ResUsers, '_mfa_type', lambda user: 'custom_mfa')
+        self.patch(ResUsers, '_mfa_url', lambda user: '/test_http/mfa')
+
+        # First factor
+        self.authenticate(None, None)
+        self.url_open('/web/login', data={
+            'login': self.user_internal.login,
+            'password': self.user_internal.login,
+            'csrf_token': self.csrf_token(),
+        }, allow_redirects=False)
+
+        # Second factor, as done (e.g. /web/login/totp)
+        session = session_store().get(self.opener.cookies['session_id'])
+        finalize(session, self.env, mfa_verified=True)
+        session_store().save(session)
+        self.hit(datetime.now(), '/test_http/greeting-user')
+
+        sessions, _devices, _logs = self.get_devices(self.user_internal)
+        self.assertEqual(sessions.auth_method, 'custom_auth')
+        self.assertEqual(sessions.mfa_method, 'custom_mfa')
+        # Check readable label through the res.session selection (no validation, raw value is used)
+        field = sessions._fields['auth_method']
+        self.assertEqual(field.convert_to_export(sessions.auth_method, sessions), 'custom_auth')
 
     # --------------------
     # FINGERPRINT

@@ -36,7 +36,7 @@ class Home(web_home.Home):
                 user_match = request.env['auth_totp.device']._check_credentials_for_uid(
                     scope="browser", key=key, uid=user.id)
                 if user_match:
-                    finalize(request.session, request.env)
+                    finalize(request.session, request.env, mfa_verified=False)
                     request.update_env(user=request.session.uid)
                     request.update_context(**request.session.context)
                     return request.redirect(self._login_redirect(request.session.uid, redirect=redirect))
@@ -54,7 +54,7 @@ class Home(web_home.Home):
             except ValueError:
                 error = _("Invalid authentication code format.")
             else:
-                finalize(request.session, request.env)
+                finalize(request.session, request.env, mfa_verified=True)
                 request.update_env(user=request.session.uid)
                 request.update_context(**request.session.context)
                 response = request.redirect(self._login_redirect(request.session.uid, redirect=redirect))

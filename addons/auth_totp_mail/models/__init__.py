@@ -3,4 +3,5 @@
 from . import auth_totp_device
 from . import ir_http
 from . import res_config_settings
+from . import res_device
 from . import res_users
