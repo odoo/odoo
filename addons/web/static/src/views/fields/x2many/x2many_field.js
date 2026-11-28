@@ -103,7 +103,7 @@ export class X2ManyField extends Component {
         };
         this.canOpenRecord =
             this.props.viewMode === "list"
-                ? !(this.archInfo.editable || this.props.editable)
+                ? !(this.archInfo.editable || this.props.editable || this.props.crudOptions['no_open'])
                 : true;
 
         const selectCreate = useSelectCreate({
