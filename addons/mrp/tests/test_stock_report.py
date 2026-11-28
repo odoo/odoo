@@ -449,6 +449,46 @@ class TestMrpStockReports(TestReportsCommon):
             mo_form.qty_producing = 2.0
         self.assertEqual(mo.components_availability, 'Available')
 
+    def test_component_forecast_availability_with_sublocations(self):
+        """
+        Check that the forecast_availability is correctly computed when moved product is in
+        multiple sublocations and quantity in one of the sublocations is negative
+        """
+        warehouse = self.env.ref('stock.warehouse0')
+        stock_location = warehouse.lot_stock_id
+        sublocation_1, sublocation_2 = self.env['stock.location'].create([
+            {
+            'name': 'Warehouse0 / Subloc1',
+            'barcode': 'TEST_BARCODE_LOCATION_1',
+            'location_id': stock_location.id,
+            },
+            {
+            'name': 'Warehouse0 / Subloc2',
+            'barcode': 'TEST_BARCODE_LOCATION_2',
+            'location_id': stock_location.id,
+            },
+        ])
+        final_product, component = self.product, self.product1
+        self.env['stock.quant']._update_available_quantity(component, sublocation_1, 10.0)
+        self.env['stock.quant']._update_available_quantity(component, sublocation_2, -9.0)
+        bom = self.env['mrp.bom'].create({
+            'product_id': final_product.id,
+            'product_tmpl_id': final_product.product_tmpl_id.id,
+            'product_uom_id': final_product.uom_id.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [
+                Command.create({'product_id': component.id, 'product_qty': 3}),
+            ],
+        })
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = bom
+        mo_form.product_qty = 1
+        mo = mo_form.save()
+        self.assertEqual(mo.move_raw_ids.forecast_availability, -2.0)
+        mo.action_confirm()
+        self.assertEqual(mo.move_raw_ids.forecast_availability, -2.0)
+
     def test_mo_overview_same_component(self):
         """
         Test that for an mo for a product which has 2+ component lines for the same product,
