@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.fields import Command
-from odoo.tests import Form, tagged
+from odoo.tests import Form, new_test_user, tagged
 
 from odoo.addons.stock_landed_costs.tests.common import TestStockLandedCostsCommon
 
@@ -76,6 +76,27 @@ class TestStockLandedCosts(TestStockLandedCostsCommon):
         self.assertEqual(oven_val_line.additional_landed_cost, 25)
         self.assertEqual(refrigerator_val_line.additional_landed_cost, 75)
         self.assertFalse(valuation_lines.filtered(lambda line: line.product_id == self.product_a))
+
+    def test_consumable_price_unit_without_inventory_access(self):
+        """ Valuing a consumable move reads its landed costs, restricted to inventory administrators. """
+        user = new_test_user(self.env, login='no_inventory_user', groups='base.group_user')
+        product = self.env['product.product'].create({
+            'name': 'Consumable',
+            'type': 'consu',
+            'is_storable': False,
+            'standard_price': 10.0,
+        })
+        move = self.env['stock.move'].create({
+            'product_id': product.id,
+            'product_uom_qty': 1,
+            'location_id': self.warehouse.lot_stock_id.id,
+            'location_dest_id': self.customer_location_id,
+        })
+        move._action_confirm()
+        move.quantity = 1
+        move.picked = True
+        move._action_done()
+        self.assertEqual(move.with_user(user)._get_price_unit(include_consumable=True), 10.0)
 
 
 class TestStockLandedCostsReevaluation(TestStockLandedCostsCommon):
