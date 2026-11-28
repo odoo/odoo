@@ -4821,3 +4821,62 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'request_date_to': '2026-08-15',
         })
         self.assertTrue(leave.action_validate())
+
+    def test_accrual_plan_start_timezone_behind_utc(self):
+        """ Assert that when the accrual cron runs in the window where UTC has reached
+            the nextcall date but the employee's local date has not, days are not deducted
+            from an employee on an advanced level of an accrual plan with gain time at start.
+        """
+        self.employee_emp.tz = 'America/Los_Angeles'
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
+            'name': 'Accrual Plan 2 Levels Start',
+            'accrued_gain_time': 'start',
+            'transition_mode': 'immediately',
+            'level_ids': [
+                Command.create({
+                    'start_count': 0,
+                    'added_value': 2,
+                    'added_value_type': 'day',
+                    'frequency': 'monthly',
+                    'first_day': 1,
+                }),
+                Command.create({
+                    'start_count': 1,
+                    'start_type': 'year',
+                    'added_value': 3,
+                    'added_value_type': 'day',
+                    'frequency': 'monthly',
+                    'first_day': 1,
+                }),
+            ],
+        })
+
+        with freeze_time('2024-01-01 12:00:00'):
+            allocation = self.env['hr.leave.allocation'].create({
+                'name': 'Accrual allocation for employee',
+                'accrual_plan_id': accrual_plan.id,
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': self.leave_type_day.id,
+                'allocation_type': 'accrual',
+                'date_from': '2024-01-01',
+            })
+            allocation.action_validate()
+
+        # Fast forward into the second level (after 1 year) and accrue up to Feb 1, 2025
+        with freeze_time('2025-02-01 12:00:00'):
+            allocation._update_accrual()
+            expected_days = allocation.number_of_days
+            self.assertEqual(expected_days, 29.0)
+
+        # On 2025-03-01 04:00:00 UTC:
+        # - UTC date is 2025-03-01 (nextcall), so cron picks up the allocation.
+        # - Local date in America/Los_Angeles (UTC-8) is 2025-02-28 20:00:00.
+        # Accrual should not process early, and days must NOT be deducted.
+        with freeze_time('2025-03-01 04:00:00'):
+            allocation._update_accrual()
+            self.assertEqual(allocation.number_of_days, expected_days)
+
+        # Once local date reaches 2025-03-01, accrual happens normally.
+        with freeze_time('2025-03-01 16:00:00'):
+            allocation._update_accrual()
+            self.assertEqual(allocation.number_of_days, expected_days + 3)

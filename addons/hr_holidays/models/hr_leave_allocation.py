@@ -617,7 +617,7 @@ class HolidaysAllocation(models.Model):
 
             # if plan.accrued_gain_time == 'start', process next period and set flag 'already_accrued', this will skip adding days
             # once, preventing double allocation.
-            if allocation.accrual_plan_id.accrued_gain_time == 'start':
+            if allocation.accrual_plan_id.accrued_gain_time == 'start' and not allocation.already_accrued:
                 # check that we are at the start of a period, not on a carry-over or level transition date
                 level_starts = {level._get_level_transition_date(allocation.date_from): level for level in level_ids}
                 current_level = level_starts.get(allocation.actual_lastcall) or current_level or first_level
