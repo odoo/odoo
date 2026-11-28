@@ -921,17 +921,18 @@ class Registry(Mapping[str, type["BaseModel"]]):
 
         # retrieve existing indexes with their table and access method
         cr.execute("""
-            SELECT idx.relname, tbl.relname, am.amname, ix.indpred IS NOT NULL
+            SELECT idx.relname, tbl.relname, am.amname, ix.indpred IS NOT NULL, d.description, ix.indisvalid
               FROM pg_index ix
               JOIN pg_class idx ON idx.oid = ix.indexrelid
               JOIN pg_class tbl ON tbl.oid = ix.indrelid
               JOIN pg_am am ON am.oid = idx.relam
+         LEFT JOIN pg_description d ON idx.oid = d.objoid
              WHERE idx.relname IN %s
                AND idx.relnamespace = current_schema::regnamespace
         """, [tuple(row[0] for row in expected)])
         existing = {
-            indexname: (tablename, method, partial)
-            for indexname, tablename, method, partial in cr.fetchall()
+            indexname: (tablename, method, partial, bool(comment), isvalid)
+            for indexname, tablename, method, partial, comment, isvalid in cr.fetchall()
         }
 
         for indexname, tablename, field in expected:
@@ -949,12 +950,20 @@ class Registry(Mapping[str, type["BaseModel"]]):
                 or (index == 'trigram' and self.has_trigram)
             )
             if indexname in existing:
-                # The index exists, check if it is stale.
-                expected_method = 'gin' if index == 'trigram' else 'btree'
-                stale = existing[indexname][1] != expected_method
-                if expected_method == 'btree':
-                    stale |= existing[indexname][2] != (index == 'btree_not_null')
-                will_index &= stale  # create only when stale
+                _, method, partial, has_comment, isvalid = existing[indexname]
+                if will_index and not has_comment:
+                    _schema.info("Index %s has no comment; consider it modified by user; keep it as is", indexname)
+                    will_index = False  # Don't touch indexes without comment
+                elif will_index and not isvalid:
+                    _schema.info("Keep invalid standard index %s as is", indexname)
+                    will_index = False  # Don't touch invalid indexes
+                else:
+                    # The index exists, check if it is stale.
+                    expected_method = 'gin' if index == 'trigram' else 'btree'
+                    stale = method != expected_method
+                    if expected_method == 'btree':
+                        stale |= partial != (index == 'btree_not_null')
+                    will_index &= stale  # create only when stale
             else:
                 stale = False
 
@@ -992,7 +1001,10 @@ class Registry(Mapping[str, type["BaseModel"]]):
                     with cr.savepoint(flush=False):
                         if stale:
                             sql.drop_index(cr, indexname, tablename)
-                        sql.create_index(cr, indexname, tablename, [expression], method, where)
+                        comment = f"({expression})"
+                        if where:
+                            comment += f" WHERE {where}"
+                        sql.create_index(cr, indexname, tablename, [expression], method, where, comment=comment)
                 except psycopg2.OperationalError:
                     _schema.error("Unable to add index %r for %s", indexname, self)
 
