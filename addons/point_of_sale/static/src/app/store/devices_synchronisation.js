@@ -86,6 +86,9 @@ export default class DevicesSynchronisation {
      */
     async readDataFromServer() {
         const { domain, recordsIds } = this.constructOrdersDomain();
+        const finalizedStates = new Map(
+            this.models["pos.order"].filter((o) => o.finalized).map((o) => [o.uuid, o.state])
+        );
         const response = await this.pos.data.call("pos.config", "read_config_open_orders", [
             odoo.pos_config_id,
             domain,
@@ -105,6 +108,11 @@ export default class DevicesSynchronisation {
                 },
                 { dynamicR: {}, staticR: {} }
             );
+            for (const order of dynamicR["pos.order"] || []) {
+                if (finalizedStates.has(order.uuid) && order.state === "draft") {
+                    order.state = finalizedStates.get(order.uuid);
+                }
+            }
 
             this.processStaticRecords(staticR);
             this.processDynamicRecords(dynamicR);
