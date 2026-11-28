@@ -276,9 +276,9 @@
                     </div>
                     <div class="oe_title">
                         <h1 class="o_outlined d-flex align-items-center gap-2">
-                            <field name="priority" widget="priority"/>
-                            <div invisible="id">New <field name="picking_type_code"/></div>
                             <field name="name" invisible="not id"/>
+                            <div invisible="id">New <field name="picking_type_code"/></div>
+                            <field name="priority" widget="priority" class="order-first"/>
                         </h1>
                     </div>
                     <group>
