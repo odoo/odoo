@@ -210,11 +210,14 @@ class CalendarRecurrence(models.Model):
 
     @api.model
     def _odoo_values(self, google_recurrence, calendar, default_reminders=()):
-        return {
+        values = {
             'rrule': google_recurrence.rrule,
             'google_id': google_recurrence.id,
-            'calendar_id': calendar.id,
         }
+        # Same as for events, see calendar.event._odoo_values
+        if not calendar.is_primary or self.env.user.id == google_recurrence.owner(self.env).id:
+            values['calendar_id'] = calendar.id
+        return values
 
     def _google_values(self):
         event = self._get_first_event()
