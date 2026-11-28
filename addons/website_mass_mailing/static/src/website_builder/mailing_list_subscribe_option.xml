@@ -3,7 +3,7 @@
 
 <t t-name="website_mass_mailing.MailingListSubscribeOption">
 
-    <BuilderRow label.translate="Newsletter" t-if="!this.isActiveItem('form_opt')">
+    <BuilderRow label.translate="Newsletter">
         <BuilderSelect dataAttributeAction="'listId'">
             <t t-foreach="this.mailingLists" t-as="item" t-key="item.id">
                 <BuilderSelectItem dataAttributeActionValue="item.id.toString()">
@@ -15,8 +15,15 @@
             </t>
         </BuilderSelect>
     </BuilderRow>
-    <BuilderRow label.translate="Display Thanks Message" t-if="!this.isActiveItem('form_opt')">
-        <BuilderCheckbox action="'toggleThanksMessage'"/>
+    <BuilderRow label.translate="On Success">
+        <BuilderSelect action="'newsletterSubscribeSuccess'" actionParam="'successMode'">
+            <BuilderSelectItem actionValue="'message'">Show Message</BuilderSelectItem>
+            <BuilderSelectItem actionValue="'redirect'" id="'on_success_redirect'">Redirect + Show Message</BuilderSelectItem>
+        </BuilderSelect>
+        <BuilderButton title.translate="Edit Message" icon="'visibility'" action="'toggleThanksMessage'" />
+    </BuilderRow>
+    <BuilderRow label.translate="URL" level="1" t-if="this.isActiveItem('on_success_redirect')">
+        <BuilderUrlPicker dataAttributeAction="'successPage'" />
     </BuilderRow>
 
 </t>
