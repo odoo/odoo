@@ -4,7 +4,7 @@ import { Wysiwyg } from "@html_editor/wysiwyg";
 import { animationFrame, expect, getFixture, queryOne, tick } from "@odoo/hoot";
 import { Component, markup, onWillDestroy, t, useApp, useProps, xml } from "@odoo/owl";
 import { toExplicitString } from "@web/../lib/hoot/hoot_utils";
-import { destroyApp, mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { destroyApp, isSmall, mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { processThroughCleanForSave } from "./dispatch";
 import { getContent, getSelection, setContent, setSelection } from "./selection";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
@@ -202,7 +202,9 @@ export async function testEditor(config) {
         contentAfter,
         contentAfterEdit,
         compareFunction,
-        testInBothDirections = true,
+        // Selection direction handling doesn't depend on screen size: covered
+        // by large screen tests
+        testInBothDirections = !isSmall(),
         reverseSelection = false,
     } = config;
     if (!compareFunction) {

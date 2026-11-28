@@ -155,7 +155,7 @@ test.todo("popover should not open for not editable image", async () => {
     await setupEditor(`<a href="#"><img src="${base64Img}" contenteditable="false"></a>`);
     await click("img");
     await animationFrame();
-    await expectElementCount(".o-we-linkpopover", 0);
+    await expectElementCount(".o-we-linkpopover", 0, { timeout: 200 });
 });
 test("label field should be hidden if <a> content is not text only", async () => {
     await setupEditor(`<p><a href="http://test.com/"><img src="${base64Img}">te[]xt</a></p>`);
