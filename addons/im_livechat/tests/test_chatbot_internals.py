@@ -326,6 +326,7 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                                 "email_normalized": "e.e@example.com",
                                 "id": self.partner_employee.id,
                                 "tz": False,
+                                "upcoming_meeting_ids": [],
                                 "user_ids": self.user_employee.ids,
                             },
                         ),

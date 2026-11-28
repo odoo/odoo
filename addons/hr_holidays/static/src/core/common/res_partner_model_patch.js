@@ -11,7 +11,8 @@ const resPartnerPatch = {
 
     statusSubtitleParts() {
         const parts = super.statusSubtitleParts();
-        if (!this.outOfOfficeDateEndText) {
+        // the meeting status of calendar takes priority over the time off
+        if (!this.outOfOfficeDateEndText || this.inMeetingEndText) {
             return parts;
         }
         return [

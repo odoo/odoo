@@ -3,6 +3,11 @@ declare module "models" {
 
     export interface CalendarEvent extends CalendarEventClass {}
 
+    export interface ResPartner {
+        upcoming_meeting_ids: CalendarEvent[];
+        inMeetingEndText: Readonly<string>;
+    }
+
     export interface Store {
         "calendar.event": StaticMailRecord<CalendarEvent, typeof CalendarEventClass>;
     }

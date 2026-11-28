@@ -120,6 +120,21 @@
             <field name="allday" eval="True"/>
         </record>
 
+        <record id="calendar_event_8" model="calendar.event">
+            <field name="active" eval="True"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="partner_ids" eval="[(6,0,[ref('base.partner_demo')])]"/>
+            <field name="name">Weekly team sync</field>
+            <field name="categ_ids" eval="[(6,0,[ref('categ_meet2')])]"/>
+            <field name="start" eval="(DateTime.now() - relativedelta(minutes=30)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="stop" eval="(DateTime.now() + relativedelta(hours=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="duration" eval="1.5"/>
+            <field name="allday" eval="False"/>
+        </record>
+        <function model="calendar.attendee" name="write">
+            <value model="calendar.attendee" search="[('event_id', '=', ref('calendar_event_8'))]"/>
+            <value eval="{'state': 'accepted'}"/>
+        </function>
 
     </data>
 </odoo>

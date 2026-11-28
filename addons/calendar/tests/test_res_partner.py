@@ -1,5 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from dateutil.relativedelta import relativedelta
+
+from odoo import fields
 from odoo.tests.common import new_test_user, tagged, TransactionCase
 from odoo.addons.mail.tests.common import mail_new_test_user
 
@@ -117,3 +120,58 @@ class TestResPartner(TransactionCase):
         self.env.invalidate_all()
         c1_partner_seen_from_c2 = company1_user.partner_id.with_user(allcompany_user).with_company(company2)
         self.assertEqual(c1_partner_seen_from_c2.meeting_count, 1, "Should compute meeting count without access error as partner is accessible in all companies")
+
+    def test_in_meeting_until(self):
+        """The running and upcoming meetings are sent, the client computes until when the partner is busy.
+        Only accepted, active, busy, public and non all-day meetings are taken into account."""
+        with self.mock_datetime_and_now("2025-04-08 12:00:00"):
+            now = fields.Datetime.now()
+            partner = self.env.user.partner_id
+            meetings = self.env["calendar.event"].create([{
+                "name": f"Meeting {start}",
+                "start": now + relativedelta(hours=start),
+                "stop": now + relativedelta(hours=start + 1),
+                "show_as": "busy",
+                "privacy": "public",
+            } for start in (-2, 0, 1, 3)])
+            self.assertEqual(partner.upcoming_meeting_ids, meetings[1:], "Ended meetings are not sent")
+
+            cases = [
+                ("archived", {"active": False}, "accepted"),
+                ("private", {"privacy": "private"}, "accepted"),
+                # time off events are confidential, and not all-day for half days or hours
+                ("confidential", {"privacy": "confidential"}, "accepted"),
+                ("available", {"show_as": "free"}, "accepted"),
+                ("all day", {"allday": True, "start_date": now.date(), "stop_date": now.date()}, "accepted"),
+                ("declined", {}, "declined"),
+                ("tentative", {}, "tentative"),
+                ("needs action", {}, "needsAction"),
+            ]
+            for description, values, state in cases:
+                with self.subTest(description=description):
+                    event = self.env["calendar.event"].create({
+                        "name": description,
+                        "start": now + relativedelta(hours=2),
+                        "stop": now + relativedelta(hours=3),
+                        "show_as": "busy",
+                        "privacy": "public",
+                        **values,
+                    })
+                    event.attendee_ids.state = state
+                    partner.invalidate_recordset(["upcoming_meeting_ids"])
+                    upcoming_meetings = partner.upcoming_meeting_ids
+                    event.unlink()  # keep the cases independent
+                    self.assertEqual(upcoming_meetings, meetings[1:])
+
+    def test_in_meeting_until_upcoming(self):
+        """The meetings starting within 24 hours are sent, not the later ones."""
+        with self.mock_datetime_and_now("2025-04-08 12:00:00"):
+            now = fields.Datetime.now()
+            meetings = self.env["calendar.event"].create([{
+                "name": f"Meeting {start}",
+                "start": now + relativedelta(hours=start),
+                "stop": now + relativedelta(hours=start + 1),
+                "show_as": "busy",
+                "privacy": "public",
+            } for start in (1, 2, 4, 25)])
+            self.assertEqual(self.env.user.partner_id.upcoming_meeting_ids, meetings[:3])

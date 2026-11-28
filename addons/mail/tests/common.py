@@ -2201,6 +2201,9 @@ class MailCommon(MailCase):
         if "ai.agent" not in self.env:
             for data in partners_data:
                 data.pop("agent_ids", None)
+        if "upcoming_meeting_ids" not in self.env["res.partner"]._fields:
+            for data in partners_data:
+                data.pop("upcoming_meeting_ids", None)
         return list(partners_data)
 
     def _filter_users_fields(self, /, *users_data):
