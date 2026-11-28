@@ -1473,3 +1473,11 @@ class TestAccountBankStatementLine(AccountTestInvoicingCommon):
 
         transaction = self.create_bank_transaction(1, '2020-01-10', journal=self.bank_journal_1)
         assert transaction.date == transaction.move_id.date == fields.Date.from_string('2020-01-10')
+
+    def test_statement_line_synchronize_empty_liquidity_lines(self):
+        statement_line = self.create_bank_transaction(100.0, '2019-01-01', journal=self.bank_journal_1)
+        statement_line.move_id.button_draft()
+        statement_line.move_id.with_context(skip_account_move_synchronization=True).line_ids.unlink()
+        statement_line.write({'payment_ref': 'updated'})
+        liquidity_lines, suspense_lines, _other_lines = statement_line._seek_for_lines()
+        self.assertEqual((len(liquidity_lines), len(suspense_lines)), (1, 1))
