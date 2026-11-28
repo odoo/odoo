@@ -115,19 +115,29 @@ registry.category("web_tour.tours").add("l10n_tw_edi_ecpay_pos.ecpay_check_print
                     const printed = [];
                     const originalPrint = printer._print;
                     printer._print = (printWindow) => {
-                        printed.push(printWindow.document.body.textContent);
+                        printed.push(printWindow.document.body.innerHTML);
                     };
                     try {
                         await printer.printOrderReceipt({ order });
+                        if (printed.length !== 1) {
+                            throw new Error(
+                                `Expected the POS receipt and both ECPay receipts in one browser print; got ${printed.length} browser prints`
+                            );
+                        }
+                        // Each receipt must be printed on its own page, in this order
+                        const pages = printed[0].split(
+                            '<div style="page-break-after: always;"></div>'
+                        );
                         if (
-                            printed.length !== 3 ||
-                            !printed[1].includes("電子發票證明聯") ||
-                            !printed[2].includes("交易明細") ||
-                            !printed[1].includes("AB11100099") ||
-                            !printed[2].includes("AB11100099")
+                            pages.length !== 3 ||
+                            !pages[0].includes("total-amount") ||
+                            !pages[1].includes("電子發票證明聯") ||
+                            !pages[1].includes("AB11100099") ||
+                            !pages[2].includes("交易明細") ||
+                            !pages[2].includes("AB11100099")
                         ) {
                             throw new Error(
-                                `Expected the POS receipt and both ECPay receipts; got ${printed.length} browser prints`
+                                `Expected the POS receipt, the certificate and the transaction receipt on separate pages; got ${pages.length} pages`
                             );
                         }
                         printed.length = 0;
