@@ -288,6 +288,27 @@ class TestPoSStock(TestPosStockCommon):
         expense_account_move_lines = self.env['account.move.line'].search([('account_id', '=', self.expense_account.id), ('product_id', '=', False)])
         self.assertEqual(sum(expense_account_move_lines.mapped('balance')), 0.0, "Expense account should be 0.0")
 
+    def test_05_orders_update_stock_at_closing(self):
+        """ The pickings created at the session closing must be valued in the closing entries """
+        self.env.company.point_of_sale_update_stock_quantities = 'closing'
+        self.open_new_session()
+        self.assertTrue(self.pos_session.update_stock_at_closing)
+        self._create_orders([
+            {'pos_order_lines_ui_args': [(self.product1, 10)], 'uuid': '00100-010-0001'},     # 10 items at a cost of 5.0
+            {'pos_order_lines_ui_args': [(self.product1, -1)], 'uuid': '00100-010-0002'},     # 1 item returned at 160 / 15 (stock left: 5 at 6.0, 10 at 13.0)
+        ])
+        self.assertFalse(self.pos_session.picking_ids)
+
+        self.pos_session.close_session_from_ui({self.cash_pm1.id: 90.0})
+        self.assertEqual(self.pos_session.state, 'closed')
+        self.assertEqual(len(self.pos_session.picking_ids), 2)
+
+        def expense_balance(moves):
+            return sum(moves.line_ids.filtered(lambda line: line.account_id == self.expense_account).mapped('balance'))
+
+        self.assertEqual(expense_balance(self.pos_session.sale_move_ids), 50.0)
+        self.assertEqual(expense_balance(self.pos_session.refund_move_ids), -10.67)
+
     def test_stock_duplicate_warehouse_with_PoS_operation_type(self):
         wh = self.env['stock.warehouse'].sudo().create({
             'name': 'WH1',

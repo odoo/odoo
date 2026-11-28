@@ -47,11 +47,15 @@ class PosSession(models.Model):
 
     def close_session_from_ui(self, payment_method_closing={}):
         result = super().close_session_from_ui(payment_method_closing)
+        self.picking_ids.move_ids.sudo()._trigger_scheduler()
+        return result
+
+    def _prepare_session_closing(self):
+        super()._prepare_session_closing()
+        # The pickings must exist before the closing entries, which book their valuation
         if self.update_stock_at_closing:
             self._create_picking_at_end_of_session()
             self._get_closed_orders().filtered(lambda o: not o.is_total_cost_computed)._compute_total_cost_at_session_closing()
-        self.picking_ids.move_ids.sudo()._trigger_scheduler()
-        return result
 
     def _create_picking_at_end_of_session(self):
         self.ensure_one()
@@ -131,7 +135,13 @@ class PosSession(models.Model):
 
     def _prepare_session_closing_extra_line_commands(self, orders, refund, payments=[]):
         lines = super()._prepare_session_closing_extra_line_commands(orders, refund, payments)
-        not_linked_to_order = self.picking_ids.filtered(lambda p: not p.pos_order_id).ids
+        session_pickings = self.picking_ids.filtered(lambda p: not p.pos_order_id)
+        # The pickings created at the session closing hold the sales and the refunds: when both
+        # closing entries are created, the sales one books the deliveries, the refunds one the returns
+        split_session_pickings = session_pickings and any(
+            line.qty for line in (self._get_invoiced_and_non_invoiced_orders()[0] - orders).lines
+        )
+        not_linked_to_order = session_pickings.ids
         linked_to_order = orders.filtered(lambda order: not order.shipping_date).picking_ids.ids
         all_picking_ids = not_linked_to_order + linked_to_order
 
@@ -147,6 +157,8 @@ class PosSession(models.Model):
 
         for stock_moves_batch in split_every(IN_MAX, stock_moves._ids, stock_moves.browse):
             for move in stock_moves_batch:
+                if split_session_pickings and move.picking_id in session_pickings and bool(move._is_in()) != refund:
+                    continue
                 product_accounts = move.with_company(move.company_id).product_id._get_product_accounts()
                 exp_key = product_accounts['expense']
                 stock_key = product_accounts['stock_valuation']
