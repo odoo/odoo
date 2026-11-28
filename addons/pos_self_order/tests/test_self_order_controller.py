@@ -325,31 +325,24 @@ class TestSelfOrderController(SelfOrderCommonTest):
                 'delivery_max_distance_km': 5.0,
             })
 
-        customer = self.env['res.partner'].create({
-            'name': 'Customer',
-            'street': 'Main St 2',
-            'city': 'Test City',
-            'zip': '1000',
-            'country_id': self.env.ref('base.be').id,
-            'partner_latitude': 50.001,
-            'partner_longitude': 4.001,
-        })
-
         params = {
             'access_token': self.pos_config.access_token,
             'preset_id': self.delivery_preset.id,
-            'partner_id': self.env['pos.order']._get_signed_self_partner_id(self.pos_config, customer.id),
-            'name': customer.name,
-            'phone': customer.phone,
-            'street': customer.street,
-            'zip': customer.zip,
-            'city': customer.city,
-            'country_id': customer.country_id.id,
-            'state_id': customer.state_id.id,
-            'email': customer.email,
+            'name': 'Customer',
+            'phone': False,
+            'street': 'Main St 2',
+            'zip': '1000',
+            'city': 'Test City',
+            'country_id': self.env.ref('base.be').id,
+            'state_id': False,
+            'email': False,
         }
 
-        with patch('odoo.addons.base_geolocalize.models.res_partner.ResPartner.geo_localize', return_value=True):
+        def geo_localize(partner):
+            partner.write({'partner_latitude': 50.001, 'partner_longitude': 4.001})
+            return True
+
+        with patch('odoo.addons.base_geolocalize.models.res_partner.ResPartner.geo_localize', autospec=True, side_effect=geo_localize):
             data = self.make_request_to_controller('/pos-self-order/validate-partner', params)
 
         self.assertIn('res.partner', data)
@@ -370,31 +363,24 @@ class TestSelfOrderController(SelfOrderCommonTest):
                 'delivery_max_distance_km': 1.0,
             })
 
-        customer = self.env['res.partner'].create({
-            'name': 'Customer Far',
-            'street': 'Far St 1',
-            'city': 'Test City',
-            'zip': '1000',
-            'country_id': self.env.ref('base.be').id,
-            'partner_latitude': 1.0,
-            'partner_longitude': 0.0,
-        })
-
         params = {
             'access_token': self.pos_config.access_token,
             'preset_id': self.delivery_preset.id,
-            'partner_id': self.env['pos.order']._get_signed_self_partner_id(self.pos_config, customer.id),
-            'name': customer.name,
-            'phone': customer.phone,
-            'street': customer.street,
-            'zip': customer.zip,
-            'city': customer.city,
-            'country_id': customer.country_id.id,
-            'state_id': customer.state_id.id,
-            'email': customer.email,
+            'name': 'Customer Far',
+            'phone': False,
+            'street': 'Far St 1',
+            'zip': '1000',
+            'city': 'Test City',
+            'country_id': self.env.ref('base.be').id,
+            'state_id': False,
+            'email': False,
         }
 
-        with patch('odoo.addons.base_geolocalize.models.res_partner.ResPartner.geo_localize', return_value=True):
+        def geo_localize(partner):
+            partner.write({'partner_latitude': 1.0, 'partner_longitude': 0.0})
+            return True
+
+        with patch('odoo.addons.base_geolocalize.models.res_partner.ResPartner.geo_localize', autospec=True, side_effect=geo_localize):
             data = self.make_request_to_controller('/pos-self-order/validate-partner', params)
 
         self.assertIn('error', data)

@@ -60,6 +60,16 @@ class SelfPartnerValidationChecks:
         signed = self._validate_partner(partner_id=forged)
         self.assertNotEqual(int(signed.split("-")[0]), self.existing_partner.id)
 
+    def test_a_signed_partner_id_is_scoped_to_its_session(self):
+        other_partner = self.env["res.partner"].create({"name": "Someone Else", "email": "someone@example.com"})
+        signed = self.env["pos.order"]._get_signed_self_partner_id(self.pos_config, other_partner.id)
+
+        result = self._validate_partner(partner_id=signed)
+        self.assertNotEqual(int(result.split("-")[0]), other_partner.id)
+
+        order = self._process_order(partner_id=signed)
+        self.assertFalse(order.partner_id)
+
     def test_resolve_rejects_a_token_signed_for_another_partner(self):
         signed = self._validate_partner()
         signature = signed.split("-", 1)[1]
