@@ -1094,3 +1094,32 @@ test("useHotkey can display an overlay over a DOM element ", async () => {
     await press("a");
     expect.verifySteps(["hotkey alt+a has been triggered"]);
 });
+
+test("useHotkey overlay belongs to the correct UI owner", async () => {
+    class A extends Component {
+        static template = xml`<div><button class="target">Should be overlayed</button></div>`;
+        static props = ["*"];
+        setup() {
+            useHotkey("alt+a", () => {}, { withOverlay: () => queryOne(".target") });
+        }
+    }
+
+    class B extends Component {
+        static template = xml`<div t-ref="active"><button data-hotkey="b">b</button></div>`;
+        static props = ["*"];
+        setup() {
+            useActiveElement("active");
+        }
+    }
+
+    await mountWithCleanup(A);
+    const b = await mountWithCleanup(B);
+    await keyDown("alt");
+    expect(getOverlays()).toEqual(["B"]);
+
+    await keyUp("alt");
+    destroy(b);
+    await Promise.resolve();
+    await keyDown("alt");
+    expect(getOverlays()).toEqual(["A"]);
+});

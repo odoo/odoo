@@ -308,6 +308,9 @@ export const hotkeyService = {
             // Gather the hotkeys to overlay registered through the useHotkey hook.
             const hotkeysFromHookToHighlight = [];
             for (const [, registration] of registrations) {
+                if (!registration.global && registration.activeElement !== activeElement) {
+                    continue;
+                }
                 const overlayElement = registration.withOverlay?.();
                 if (overlayElement) {
                     hotkeysFromHookToHighlight.push({
