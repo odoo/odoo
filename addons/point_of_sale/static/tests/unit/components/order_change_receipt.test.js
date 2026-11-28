@@ -1,5 +1,5 @@
 import { test, expect } from "@odoo/hoot";
-import { animationFrame } from "@odoo/hoot-dom";
+import { animationFrame, queryOne } from "@odoo/hoot-dom";
 import { renderToElement } from "@web/core/utils/render";
 import { setupPosEnv, setupAndMountPosApp, createComboSetup } from "../utils";
 import { definePosModels } from "../data/generate_model_definitions";
@@ -271,6 +271,14 @@ test("test_printer_restricts_to_allowed_categories_for_combo: only combo items i
         ],
         invisibleInDom: ["Combo Product 3", "Combo Product 8"],
     });
+    // The combo product is highlighted and its items are indented
+    const root = tickets[0];
+    expect(
+        queryOne('.orderline:has(.product-name:contains("Office Combo")) .text-huge', { root })
+    ).toHaveClass(["text-bold", "text-italic"]);
+    expect(
+        queryOne('.orderline:has(.product-name:contains("Combo Product 5"))', { root })
+    ).toHaveClass(["ps-5", "ms-4"]);
 });
 
 test("test_printer_not_linked_to_any_combo_category: printer only shows non-combo items in its category", async () => {
