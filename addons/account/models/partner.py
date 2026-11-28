@@ -933,8 +933,8 @@ class ResPartner(models.Model):
         if not vat:
             return
 
-        # Sometimes, the vat is specified with some whitespaces or dots.
-        normalized_vat = vat.replace(' ', '').replace('.', '')
+        # Sometimes, the vat is specified with some whitespaces, dots, or colons
+        normalized_vat = self._normalize_vat_number(vat)
         country_prefix = re.match('^[a-zA-Z]{2}|^', vat).group()
 
         criteria = []
@@ -1209,3 +1209,21 @@ class ResPartner(models.Model):
             """,
             (formats,),
         )
+
+    @api.model
+    def _clean_vat_number(self, vat):
+        """Remove generic separators (spaces and colons) that are never part of a VAT number.
+
+        Used when splitting and validating VAT numbers. Doesn't remove formatting characters
+        (like dots or hyphens) that may be required by country-specific validation rules.
+        """
+        return vat.replace(' ', '').replace(':', '')
+
+    @api.model
+    def _normalize_vat_number(self, vat):
+        """Normalize a VAT number by stripping common formatting characters (spaces, colons, dots).
+
+        Used for partner search, retrieval, and EDI comparison to loosely match stored
+        partners regardless of formatting in external documents.
+        """
+        return self._clean_vat_number(vat).replace('.', '')

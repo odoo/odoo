@@ -1184,10 +1184,10 @@ class AccountEdiCommon(models.AbstractModel):
           (ISO code or VAT-specific prefix, e.g. EL for Greece).
         """
         country = self._import_retrieve_country(collected_values)
-        customer_vat = customer.vat.replace(' ', '').upper()
-        vat_to_compare = vat.replace(' ', '').replace('.', '').upper()
+        customer_vat = self.env['res.partner']._normalize_vat_number(customer.vat).upper()
+        vat_to_compare = self.env['res.partner']._normalize_vat_number(vat).upper()
         if country and country.code == 'CH':
-            customer_vat = re.sub(r"(TVA|IVA|MWST)?$", "", customer_vat.replace('.', '').replace('-', ''))
+            customer_vat = re.sub(r"(TVA|IVA|MWST)?$", "", customer_vat.replace('-', ''))
             vat_to_compare = re.sub(r"(TVA|IVA|MWST)?$", "", vat_to_compare.replace('-', ''))
         if country:
             for prefix in {country.code, *{'GB': ('XI',), 'GR': ('EL',), 'JP': ('T',)}.get(country.code, ())}:
