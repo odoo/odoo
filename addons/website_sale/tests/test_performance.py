@@ -46,6 +46,10 @@ class TestWebsiteSalePerformanceNoPricelist(WebsiteSaleCommon, UtilPerf, Product
                 )
             ]).website_published = False
 
+        # Drop the default taxes of other companies, set on company-less products
+        products = cls.heavy_product + cls.product.product_tmpl_id + cls.service_product.product_tmpl_id
+        products.taxes_id = products.taxes_id.filtered(lambda t: t.company_id == cls.env.company)
+
         cls.installed_modules = cls.env["ir.module.module"]._installed()
 
         # Avoid additional queries when uoms are enabled
@@ -80,7 +84,6 @@ class TestWebsiteSalePerformanceNoPricelist(WebsiteSaleCommon, UtilPerf, Product
             "website_page": 1,
         })
         if self._has_demo_data():
-            res["res_company"] += 1
             if "website_sale_stock" in self.installed_modules:
                 res["product_template"] += 1
                 # Out of Stock Ribbon in demo data
@@ -125,8 +128,6 @@ class TestWebsiteSalePerformanceNoPricelist(WebsiteSaleCommon, UtilPerf, Product
             "website_page": 1,
             "website_sale_extra_field": 1,
         })
-        if self._has_demo_data():
-            res["res_company"] += 1
         if "website_helpdesk" in self.installed_modules:
             # Additional query used to check whether "Helpdesk" menu should be visible
             res["helpdesk_team"] += 1
