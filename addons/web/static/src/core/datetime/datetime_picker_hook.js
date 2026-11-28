@@ -2,7 +2,7 @@ import { untrack } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 /**
- * @param {import("./datetimepicker_service").DateTimePickerServiceParams} params
+ * @param {import("./datetimepicker_plugin").DateTimePickerServiceParams} params
  */
 export function useDateTimePicker(params) {
     function getInputs() {

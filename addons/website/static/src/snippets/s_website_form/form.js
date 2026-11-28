@@ -278,7 +278,7 @@ export class Form extends Interaction {
                     maxDate: isDateTime ? limits.maxDate?.endOf("day") : limits.maxDate,
                 },
             });
-            this.disableDateTimePickers.push(picker.destroy);
+            this.disableDateTimePickers.push(picker.destroy.bind(picker));
             // Disable virtual keyboard to fix popover display issues on small
             // screens
             inputEl.setAttribute("inputmode", "none");

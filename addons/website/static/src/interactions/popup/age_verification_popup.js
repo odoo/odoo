@@ -86,7 +86,7 @@ export class AgeVerificationPopup extends Popup {
             },
         });
         this.registerCleanup(this.datePicker.enable());
-        this.registerCleanup(this.datePicker.close);
+        this.registerCleanup(this.datePicker.close.bind(this.datePicker));
     }
 
     /**
