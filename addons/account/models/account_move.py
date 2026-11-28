@@ -318,12 +318,8 @@ class AccountMove(models.Model):
     hide_post_button = fields.Boolean(compute='_compute_hide_post_button', readonly=True)
     review_state = fields.Selection(
         string="Review",
-        selection=[
-            ('no_review', "No Review"),
-            *REVIEW_STATE_SELECTION,
-        ],
+        selection=REVIEW_STATE_SELECTION,
         tracking=True, copy=False,
-        default='no_review', required=True,
     )
     posted_before = fields.Boolean(copy=False)
     inventory_closing = fields.Boolean(string='Inventory Closing', default=False)
@@ -3999,8 +3995,8 @@ class AccountMove(models.Model):
         """Raise a AccessError if the current user cannot modify a record with the given review_state.
 
         - 'supervised': requires account.group_account_manager
-        - 'reviewed', 'no_review' or falsy: requires account.group_account_user or account.group_account_manager
-        - 'todo', 'anomaly': no restriction
+        - 'reviewed': requires account.group_account_user or account.group_account_manager
+        - 'todo', 'anomaly' or falsy: no restriction
         """
         # Since self might be empty, we fallback on the company
         if self.env.su or not all(self.mapped('set_to_review_documents')) or not self.env.company.set_to_review_documents:
@@ -4010,8 +4006,6 @@ class AccountMove(models.Model):
             raise AccessError(self.env._("This entry has already been supervised. You need the accounting manager role to change it."))
         if (review_state == 'reviewed') and not is_user_able_to_review:
             raise AccessError(self.env._("This entry has been reviewed by accountants, only them can edit it now."))
-        if (review_state == 'no_review' or not review_state) and not is_user_able_to_review:
-            raise AccessError(self.env._("You don't have the access rights to perform this action."))
 
     def _check_user_access(self, vals_list):
         for vals in vals_list:
@@ -4108,11 +4102,11 @@ class AccountMove(models.Model):
             if vals.get('state') == 'draft':
                 move._check_review_state_access(move.review_state)
             if (vals.get('state') == 'posted' and move.auto_post == 'no') or vals.get('auto_post', 'no') != 'no':
-                if is_user_able_to_review:
-                    if move.review_state != 'no_review':
+                if move.set_to_review_documents:
+                    if is_user_able_to_review:
                         move_ids_review_done.append(move.id)
-                elif move.set_to_review_documents:
-                    move_ids_review_todo.append(move.id)
+                    else:
+                        move_ids_review_todo.append(move.id)
             if not is_user_able_to_review and modified_accounting_fields and move.set_to_review_documents:
                 move_ids_review_todo.append(move.id)
 
