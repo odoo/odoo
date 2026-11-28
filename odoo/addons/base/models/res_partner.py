@@ -1993,11 +1993,12 @@ class ResPartner(models.Model):
             return check == int(num[8])
         return False
 
-    _check_vat_cr_re = re.compile(r'^(?:[1-9]\d{8}|\d{10}|[1-9]\d{10,11})$')
+    _check_vat_cr_re = re.compile(r'^(?:[1-9]\d{8}|\d{10}|[2-5]\d{3}[0-9A-Z]{6}|[1-9]\d{10,11})$')
 
     def check_vat_cr(self, vat):
         # CÉDULA FÍSICA: 9 digits
-        # CÉDULA JURÍDICA: 10 digits
+        # CÉDULA JURÍDICA: 10 digits; the Registro Nacional makes its last 6 characters alphanumeric
+        #   once they run out (e.g. 3-101-A00001, Decreto 44648-MJP art. 137)
         # CÉDULA DIMEX: 11 or 12 digits
         # CÉDULA NITE: 10 digits
 

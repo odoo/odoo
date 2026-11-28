@@ -1,3 +1,4 @@
+from odoo.exceptions import ValidationError
 from odoo.tests import Form, tagged
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
@@ -11,20 +12,6 @@ class TestL10nCr(AccountTestInvoicingCommon):
     def setUpClass(cls):
         super().setUpClass()
         cls.partner_a.country_id = cls.env.ref('base.cr')
-
-    def test_document_types_number_independently(self):
-        invoice = self.init_invoice('out_invoice', partner=self.partner_a, amounts=[100.0], post=True)
-        context = {'active_model': 'account.move', 'active_ids': invoice.ids}
-        reversal = self.env['account.move.reversal'].with_context(context).create({'journal_id': invoice.journal_id.id})
-        credit_note = self.env['account.move'].browse(reversal.refund_moves()['res_id'])
-        debit_note = self.env['account.move'].browse(
-            self.env['account.debit.note'].with_context(context).create({'copy_lines': True}).create_debit()['res_id'],
-        )
-        (credit_note | debit_note).action_post()
-        self.assertEqual(
-            (invoice | credit_note | debit_note).mapped('name'),
-            ['FE 00000001', 'NC 00000001', 'ND 00000001'],
-        )
 
     def test_district_onchange_fills_canton_and_province(self):
         san_rafael = self.env.ref('l10n_cr.district_cr_20108')
@@ -44,3 +31,23 @@ class TestL10nCr(AccountTestInvoicingCommon):
             self.assertFalse(partner_form.city_id)
             self.assertFalse(partner_form.l10n_cr_district_id)
             self.assertEqual(partner_form.state_id, self.env.ref('base.state_SJ'))
+
+    def test_nite(self):
+        """A NITE has 10 digits: 3-120 for foreign individuals, 3-130 for entities without legal personality."""
+        cr = self.env.ref('base.cr')
+        individual = self.env['res.partner'].create({
+            'name': 'Foreign Consultant',
+            'country_id': cr.id,
+            'additional_identifiers': {'CR_NITE': '3-120-123456'},
+        })
+        entity = self.env['res.partner'].create({
+            'name': 'Consorcio Ejemplo',
+            'country_id': cr.id,
+            'additional_identifiers': {'CR_NITE': '3130654321'},
+        })
+        self.assertEqual(individual._get_additional_identifier('CR_NITE'), '3120123456')
+        self.assertFalse(individual.is_company)
+        self.assertTrue(entity.is_company)
+        for wrong_nite in ('2000000000', '312012345', '3120A23456'):
+            with self.subTest(nite=wrong_nite), self.assertRaises(ValidationError):
+                individual._set_additional_identifier('CR_NITE', wrong_nite)

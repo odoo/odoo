@@ -1,3 +1,4 @@
+import uuid
 from importlib import metadata
 from contextlib import suppress
 
@@ -12,6 +13,7 @@ from odoo import _, api, fields, models
 from .key import STR_TO_HASH, _get_formatted_value
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import BinaryBytes, parse_version
+from odoo.addons.certificate.tools import xml_signature
 
 
 class CertificateCertificate(models.Model):
@@ -627,6 +629,32 @@ class CertificateCertificate(models.Model):
             raise UserError(_("No private key linked to the certificate, it is required to sign documents."))
 
         return self.private_key_id._sign(message, hashing_algorithm=hashing_algorithm, formatting=formatting)
+
+    def _sign_xml_xades(self, node, *, signing_time, canonicalization='inclusive', digest_algorithm='sha256', policy=None, signature_id=None):
+        ''' Sign `node` with an enveloped XAdES signature: XAdES-EPES when a policy is given, XAdES-BES otherwise.
+
+        The ds:Signature is appended as the last child of `node`, and covers the whole document
+        `node` belongs to (without the signature), the certificate and the signed properties.
+
+        :param lxml.etree._Element node: The element that receives the signature, usually the document root.
+        :param datetime signing_time: The signing time, an aware datetime.
+        :param optional,default='inclusive' canonicalization: 'inclusive' or 'exclusive' C14N 1.0.
+        :param optional,default='sha256' digest_algorithm: 'sha1' or 'sha256', for the digests and the signature.
+        :param optional policy: The signature policy, see `xml_signature.build_xades_signature`.
+        :param optional signature_id: The Id of the ds:Signature, a random one by default.
+        :return: The ds:Signature element.
+        '''
+        self.ensure_one()
+        signature = xml_signature.build_xades_signature(
+            signature_id=signature_id or f'id-{uuid.uuid4().hex}',
+            x509_certificate=x509.load_pem_x509_certificate(self.pem_certificate.content),
+            signing_time=signing_time,
+            canonicalization=canonicalization,
+            digest_algorithm=digest_algorithm,
+            policy=policy,
+        )
+        xml_signature.sign_enveloped(node, signature, self, canonicalization=canonicalization, digest_algorithm=digest_algorithm)
+        return signature
 
     def _get_certificate_chain(self):
         """
