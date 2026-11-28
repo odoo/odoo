@@ -34,17 +34,12 @@
             </field>
         </record>
 
-        <menuitem id="menu_l10n_es_edi_verifactu_root"
-                  name="Veri*Factu (Spain)"
-                  sequence="110"
-                  groups="account.group_account_manager"
-                  parent="account.menu_finance_configuration">
-            <menuitem id="menu_l10n_es_edi_verifactu_certificates"
-                      name="Certificates"
-                      action="l10n_es_edi_verifactu_certificate_action"
-                      sequence="100"
-                      groups="account.group_account_manager"/>
-        </menuitem>
+        <menuitem id="menu_l10n_es_edi_verifactu_certificates"
+                  name="Veri*Factu Certificates"
+                  action="l10n_es_edi_verifactu_certificate_action"
+                  sequence="20"
+                  parent="l10n_es.menu_l10n_es_root"
+                  groups="account.group_account_manager"/>        
 
     </data>
 </odoo>

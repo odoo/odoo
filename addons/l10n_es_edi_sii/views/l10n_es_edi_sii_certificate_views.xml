@@ -33,15 +33,10 @@
         </field>
     </record>
 
-        <menuitem id="menu_l10n_es_edi_sii_root"
-                  name="Spain SII"
-                  sequence="110"
-                  groups="account.group_account_manager"
-                  parent="account.menu_finance_configuration">
-            <menuitem id="menu_l10n_es_edi_sii_certificates"
-                      name="Certificates"
-                      action="l10n_es_edi_sii_certificate_action"
-                      sequence="100"
-                      groups="account.group_account_manager"/>
-        </menuitem>
+        <menuitem id="menu_l10n_es_edi_sii_certificates"
+          name="SII Certificates"
+          action="l10n_es_edi_sii_certificate_action"
+          parent="l10n_es.menu_l10n_es_root"
+          sequence="10"
+          groups="account.group_account_manager"/>
 </odoo>
