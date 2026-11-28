@@ -65,6 +65,7 @@ export class SelfOrder extends Reactive {
         this.priceLoading = false;
         this.rpcLoading = false;
         this.paymentError = false;
+        this.rescheduleSlot = false;
         this.selectedOrderUuid = null;
         this.orderSyncMutex = new Mutex();
         this.ordering = false;
@@ -844,8 +845,12 @@ export class SelfOrder extends Reactive {
     async _sendDraftOrderToServer() {
         const order = this.currentOrder;
         const hasTipLine = this.config.tip_product_id && order.lines.some((l) => l.isTipLine());
-        // tip is excluded from `changes`, so a tip-only update still needs a sync
-        if ((Object.keys(order.changes).length === 0 && !hasTipLine) || order.lines.length === 0) {
+        // tip and order fields (e.g. preset time) are excluded from `changes`, so updating them alone still needs a sync
+        const forceNextSync = Boolean(order.uiState.forceNextSync);
+        if (
+            (Object.keys(order.changes).length === 0 && !hasTipLine && !forceNextSync) ||
+            order.lines.length === 0
+        ) {
             return order;
         }
 
@@ -863,6 +868,7 @@ export class SelfOrder extends Reactive {
                     table_identifier: tableIdentifier, // Always trust URL one, is the one user scanned
                 }
             );
+            order.uiState.forceNextSync = false;
             const syncedOrder = this.models.connectNewData(data)["pos.order"][0];
             if (syncedOrder.uuid !== order.uuid) {
                 this.orderTakeAwayState[syncedOrder.uuid] = this.orderTakeAwayState[order.uuid];

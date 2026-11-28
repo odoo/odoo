@@ -97,15 +97,19 @@ class PosPreset(models.Model):
             'usage_utc': usage,
         }
 
-    def _compute_slots_usage(self):
-        usage = defaultdict(int)
-        orders = self.env['pos.order'].search([
+    def _get_slots_usage_domain(self):
+        self.ensure_one()
+        return [
             ('preset_id', '=', self.id),
             ('session_id.state', '!=', 'closed'),
             ('preset_time', '!=', False),
             ('state', 'in', ['draft', 'paid']),
             ('create_date', '>=', fields.Datetime.now() - timedelta(days=1)),
-        ])
+        ]
+
+    def _compute_slots_usage(self):
+        usage = defaultdict(int)
+        orders = self.env['pos.order'].search(self._get_slots_usage_domain())
         for order in orders:
             sql_datetime_str = order.preset_time.strftime("%Y-%m-%d %H:%M:%S")
 

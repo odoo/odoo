@@ -9,7 +9,7 @@
                 <div class="d-flex justify-content-between align-items-start mb-2">
                     <div>
                         <h3 t-out="this.props.title" class="mb-0 pb-0" />
-                        <span t-out="this.props.subtitle" />
+                        <span t-out="this.props.subtitle" t-att-class="{ 'text-danger': this.props.isError }"/>
                     </div>
                     <button class="btn btn-close" t-on-click="this.props.close"/>
                 </div>

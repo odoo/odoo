@@ -17,7 +17,11 @@ patch(PaymentForm.prototype, {
     },
 
     _handlePaymentProcessingError(processingValues) {
-        if (processingValues.pos_online_payment_nothing_to_pay && processingValues.exit_route) {
+        if (
+            (processingValues.pos_online_payment_nothing_to_pay ||
+                processingValues.pos_online_payment_slot_unavailable) &&
+            processingValues.exit_route
+        ) {
             redirect(processingValues.exit_route);
             return;
         }

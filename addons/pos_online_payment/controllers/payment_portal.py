@@ -23,6 +23,14 @@ class PaymentPortal(payment_portal.PaymentPortal):
             raise ValidationError(_("The order has been cancelled."))
         return order_sudo
 
+    def _check_additional_payment_guards(self, pos_order_sudo):
+        """ Hook to prevent the payment of the order, checked when the payment page is
+        rendered and again before the transaction is created.
+
+        :param pos_order_sudo: The POS order to pay, as a sudoed `pos.order` record
+        :raise: ValidationError if the order cannot be paid
+        """
+
     @staticmethod
     def _ensure_session_open(pos_order_sudo):
         if pos_order_sudo.session_id.state == 'closed':
@@ -141,6 +149,8 @@ class PaymentPortal(payment_portal.PaymentPortal):
             return self._render_pay(rendering_context)
         rendering_context['amount'] = amount_to_pay
 
+        self._check_additional_payment_guards(pos_order_sudo)
+
         # Select all the payment methods and tokens that match the payment context.
         providers_sudo = self._get_allowed_providers_sudo(pos_order_sudo, partner_sudo.id, amount_to_pay)
         payment_methods_sudo = providers_sudo._find_available_payment_methods(
@@ -231,6 +241,8 @@ class PaymentPortal(payment_portal.PaymentPortal):
                 'pos_online_payment_nothing_to_pay': True,
                 'exit_route': exit_route,
             }
+
+        self._check_additional_payment_guards(pos_order_sudo)
 
         pending_tx_sudo = request.env['payment.transaction'].sudo().search([
             ('pos_order_id', '=', pos_order_sudo.id),
