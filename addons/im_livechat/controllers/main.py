@@ -264,5 +264,27 @@ class LivechatController(http.Controller):
         This will clean the chat request and warn the operator that the conversation is over.
         This allows also to re-send a new chat request to the visitor, as while the visitor is
         in conversation with an operator, it's not possible to send the visitor a chat request."""
+<<<<<<< 5392ba4f1ad2c7689b3df1db95c0c11633ffb69a
         if channel := request.env["discuss.channel"].search([("id", "=", channel_id)]):
             channel._close_livechat_session()
+||||||| 1a68f7671bd0bf7594eb07d809763f147ee92c5a
+        # sudo: channel access is validated with uuid
+        channel_sudo = request.env["discuss.channel"].sudo().search([("uuid", "=", uuid)])
+        if not channel_sudo:
+            return
+        domain = [("channel_id", "=", channel_sudo.id), ("is_self", "=", True)]
+        member = request.env["discuss.channel.member"].search(domain)
+        # sudo: discuss.channel.rtc.session - member of current user can leave call
+        member.sudo()._rtc_leave_call()
+        channel_sudo._close_livechat_session()
+=======
+        # sudo: channel access is validated with uuid
+        channel_sudo = request.env["discuss.channel"].sudo().search([("uuid", "=", uuid)])
+        if not channel_sudo:
+            return
+        domain = [("channel_id", "=", channel_sudo.id), ("is_self", "=", True)]
+        if member := request.env["discuss.channel.member"].search(domain):
+            # sudo: discuss.channel.rtc.session - member of current user can leave call
+            member.sudo()._rtc_leave_call()
+            channel_sudo._close_livechat_session()
+>>>>>>> cecd05410210533c9ec966f7807f285df95a6b41

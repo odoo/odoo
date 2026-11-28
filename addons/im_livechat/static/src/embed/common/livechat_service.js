@@ -107,9 +107,100 @@ export class LivechatService {
      *
      * @returns {Promise<import("models").Thread|undefined>}
      */
+<<<<<<< 5392ba4f1ad2c7689b3df1db95c0c11633ffb69a
     async open() {
         await this._createThread({ persist: false });
         this.thread?.openChatWindow();
+||||||| 1a68f7671bd0bf7594eb07d809763f147ee92c5a
+    updateSession(values) {
+        if (Record.isRecord(values?.channel)) {
+            values.channel = values.channel.toData();
+        }
+        const ONE_DAY_TTL = 60 * 60 * 24;
+        if (this.thread?.uuid) {
+            if (this.thread.uuid) {
+                cookie.set(this.LIVECHAT_UUID_COOKIE, this.thread.uuid, ONE_DAY_TTL);
+            }
+        }
+        const session = this.savedState || {};
+        Object.assign(session, {
+            visitor_uid: this.visitorUid,
+            ...values,
+        });
+        expirableStorage.removeItem(this.SESSION_STORAGE_KEY);
+        cookie.delete(this.OPERATOR_COOKIE);
+        expirableStorage.setItem(
+            this.SESSION_STORAGE_KEY,
+            JSON.stringify(session).replaceAll("→", " "),
+            ONE_DAY_TTL
+        );
+        if (session?.operator_pid) {
+            cookie.set(this.OPERATOR_COOKIE, session.operator_pid[0], 7 * 24 * 60 * 60); // 1 week cookie.
+        }
+    }
+
+    /**
+     * @param {object} param0
+     * @param {boolean} param0.notifyServer Whether to call the
+     * `visitor_leave_session` route. Note that this route will
+     * never be called if the session was not persisted.
+     */
+    async leaveSession({ notifyServer = true } = {}) {
+        const session = JSON.parse(expirableStorage.getItem(this.SESSION_STORAGE_KEY) ?? "{}");
+        try {
+            if (session?.uuid && notifyServer) {
+                this.busService.deleteChannel(session.uuid);
+                await this.rpc("/im_livechat/visitor_leave_session", { uuid: session.uuid });
+            }
+        } finally {
+            expirableStorage.removeItem(this.SESSION_STORAGE_KEY);
+            this.state = SESSION_STATE.NONE;
+            this.sessionInitialized = false;
+        }
+=======
+    updateSession(values) {
+        if (Record.isRecord(values?.channel)) {
+            values.channel = values.channel.toData();
+        }
+        const ONE_DAY_TTL = 60 * 60 * 24;
+        if (this.thread?.uuid) {
+            if (this.thread.uuid) {
+                cookie.set(this.LIVECHAT_UUID_COOKIE, this.thread.uuid, ONE_DAY_TTL);
+            }
+        }
+        const session = this.savedState || {};
+        Object.assign(session, {
+            visitor_uid: this.visitorUid,
+            ...values,
+        });
+        expirableStorage.removeItem(this.SESSION_STORAGE_KEY);
+        cookie.delete(this.OPERATOR_COOKIE);
+        expirableStorage.setItem(
+            this.SESSION_STORAGE_KEY,
+            JSON.stringify(session).replaceAll("→", " "),
+            ONE_DAY_TTL
+        );
+        if (session?.operator_pid) {
+            cookie.set(this.OPERATOR_COOKIE, session.operator_pid[0], 7 * 24 * 60 * 60); // 1 week cookie.
+        }
+    }
+
+    /**
+     * @param {object} param0
+     * @param {boolean} param0.notifyServer Whether to call the
+     * `visitor_leave_session` route. Note that this route will
+     * never be called if the session was not persisted.
+     */
+    async leaveSession({ notifyServer = true } = {}) {
+        const session = JSON.parse(expirableStorage.getItem(this.SESSION_STORAGE_KEY) ?? "{}");
+        expirableStorage.removeItem(this.SESSION_STORAGE_KEY);
+        this.state = SESSION_STATE.NONE;
+        this.sessionInitialized = false;
+        if (session?.uuid && notifyServer) {
+            this.busService.deleteChannel(session.uuid);
+            await this.rpc("/im_livechat/visitor_leave_session", { uuid: session.uuid });
+        }
+>>>>>>> cecd05410210533c9ec966f7807f285df95a6b41
     }
 
     /**
