@@ -85,9 +85,11 @@ class HrApplicant(models.Model):
                     "skill_id": applicant_skill.skill_id.id,
                     "skill_level_id": applicant_skill.skill_level_id.id,
                     "skill_type_id": applicant_skill.skill_type_id.id,
+                    "valid_from": applicant_skill.valid_from,
+                    "valid_to": applicant_skill.valid_to,
                 },
             )
-            for applicant_skill in self.applicant_skill_ids
+            for applicant_skill in self.current_applicant_skill_ids
         ]
         return vals
 
