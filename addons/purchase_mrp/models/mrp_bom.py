@@ -16,11 +16,11 @@ class MrpBom(models.Model):
             if all(not bl.cost_share for bl in bom.bom_line_ids):
                 continue
             if any(bl.cost_share < 0 for bl in bom.bom_line_ids):
-                raise UserError(_("Components cost share have to be positive or equals to zero."))
+                raise UserError(_("Components cost share has to be positive or equal to zero."))
             for product in bom.product_tmpl_id.product_variant_ids:
                 total_variant_cost_share = sum(bom.bom_line_ids.filtered(lambda bl: not bl._skip_bom_line(product) and not float_is_zero(bl.product_qty, precision_rounding=bl.product_uom_id.rounding)).mapped('cost_share'))
                 if float_round(total_variant_cost_share, precision_digits=2) not in [0, 100]:
-                    raise UserError(_("The total cost share for a BoM's component have to be 100"))
+                    raise UserError(_("The total cost share for a BoM's component has to be 100"))
         return res
 
     @api.model
@@ -36,8 +36,8 @@ class MrpBomLine(models.Model):
 
     cost_share = fields.Float(
         "Cost Share (%)", digits=0,
-        help="The percentage of the component repartition cost when purchasing a kit."
-             "The total of all components' cost have to be equal to 100.")
+        help="The percentage of the component repartition cost when purchasing a kit. "
+             "The total of all components' cost has to be equal to 100.")
 
     def _get_cost_share(self):
         self.ensure_one()

@@ -9,8 +9,8 @@ class ResPartner(models.Model):
 
     property_stock_subcontractor = fields.Many2one(
         'stock.location', string="Subcontractor Location", company_dependent=True,
-        help="The stock location used as source and destination when sending\
-        goods to this contact during a subcontracting process.")
+        help="The stock location used as source and destination when sending "
+        "goods to this contact during a subcontracting process.")
     is_subcontractor = fields.Boolean(
         string="Subcontractor", store=False, search="_search_is_subcontractor", compute="_compute_is_subcontractor")
     bom_ids = fields.Many2many('mrp.bom', compute='_compute_bom_ids', string="BoMs for which the Partner is one of the subcontractors")

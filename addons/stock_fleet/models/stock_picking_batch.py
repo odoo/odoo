@@ -12,7 +12,7 @@ class StockPickingBatch(models.Model):
         compute='_compute_vehicle_category_id', store=True, readonly=False)
     dock_id = fields.Many2one('stock.location', string="Dock Location", domain="[('warehouse_id', '=', warehouse_id), ('is_a_dock', '=', True)]",
                               compute='_compute_dock_id', store=True, readonly=False)
-    vehicle_weight_capacity = fields.Float(string="Vehcilce Payload Capacity",
+    vehicle_weight_capacity = fields.Float(string="Vehicle Payload Capacity",
                               related='vehicle_category_id.weight_capacity')
     weight_uom_name = fields.Char(string='Weight unit of measure label', compute='_compute_weight_uom_name')
     vehicle_volume_capacity = fields.Float(string="Max Volume (m³)",

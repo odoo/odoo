@@ -27,7 +27,7 @@ class ResConfigSettings(models.TransientModel):
     use_po_lead = fields.Boolean(
         string="Security Lead Time for Purchase",
         config_parameter='purchase.use_po_lead',
-        help="Margin of error for vendor lead times. When the system generates Purchase Orders for reordering products,they will be scheduled that many days earlier to cope with unexpected vendor delays.")
+        help="Margin of error for vendor lead times. When the system generates Purchase Orders for reordering products, they will be scheduled that many days earlier to cope with unexpected vendor delays.")
 
     group_send_reminder = fields.Boolean("Receipt Reminder", implied_group='purchase.group_send_reminder', default=True,
         help="Allow automatically send email to remind your vendor the receipt date")

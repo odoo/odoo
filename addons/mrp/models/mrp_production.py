@@ -54,7 +54,7 @@ class MrpProduction(models.Model):
     priority = fields.Selection(
         PROCUREMENT_PRIORITIES, string='Priority', default='0',
         help="Components will be reserved first for the MO with the highest priorities.")
-    backorder_sequence = fields.Integer("Backorder Sequence", default=0, copy=False, help="Backorder sequence, if equals to 0 means there is not related backorder")
+    backorder_sequence = fields.Integer("Backorder Sequence", default=0, copy=False, help="Backorder sequence, if equals to 0 means there is no related backorder")
     origin = fields.Char(
         'Source', copy=False,
         help="Reference of the document that generated this production order request.")
@@ -156,7 +156,7 @@ class MrpProduction(models.Model):
         compute='_compute_state', copy=False, index=True, readonly=True,
         store=True, tracking=True,
         help=" * Draft: The MO is not confirmed yet.\n"
-             " * Confirmed: The MO is confirmed, the stock rules and the reordering of the components are trigerred.\n"
+             " * Confirmed: The MO is confirmed, the stock rules and the reordering of the components are triggered.\n"
              " * In Progress: The production has started (on the MO or on the WO).\n"
              " * To Close: The production is done, the MO has to be closed.\n"
              " * Done: The MO is closed, the stock moves are posted. \n"
@@ -164,7 +164,7 @@ class MrpProduction(models.Model):
     reservation_state = fields.Selection([
         ('confirmed', 'Waiting'),
         ('assigned', 'Ready'),
-        ('waiting', 'Waiting Another Operation')],
+        ('waiting', 'Awaiting Another Operation')],
         string='MO Readiness',
         compute='_compute_reservation_state', copy=False, index=True, readonly=True,
         store=True, tracking=True,
@@ -1231,7 +1231,7 @@ class MrpProduction(models.Model):
         moves = []
         for production in self:
             if production.product_id in production.bom_id.byproduct_ids.mapped('product_id'):
-                raise UserError(_("You cannot have %s  as the finished product and in the Byproducts", self.product_id.name))
+                raise UserError(_("You cannot have %s as the finished product and in the Byproducts", self.product_id.name))
             finished_move_values = production._get_move_finished_values(production.product_id.id, production.product_qty, production.product_uom_id.id)
             finished_move_values['location_final_id'] = self.location_final_id.id
             moves.append(finished_move_values)
@@ -2487,7 +2487,7 @@ class MrpProduction(models.Model):
         # set the new deadline of origin moves (stock to pre prod)
         production.move_raw_ids.move_orig_ids.with_context(date_deadline_propagate_ids=set(production.move_raw_ids.ids)).write({'date_deadline': production.date_start})
         for p in self:
-            p._message_log(body=_('This production has been merge in %s', production.display_name))
+            p._message_log(body=_('This production has been merged in %s', production.display_name))
 
         return {
             'type': 'ir.actions.act_window',
@@ -2817,9 +2817,9 @@ class MrpProduction(models.Model):
         if additional_raw_ids or additional_byproduct_ids:
             raise UserError(_("You can only merge manufacturing orders with no additional components or by-products."))
         if len(set(self.mapped('state'))) > 1:
-            raise UserError(_("You can only merge manufacturing with the same state."))
+            raise UserError(_("You can only merge manufacturing orders with the same state."))
         if len(set(self.mapped('picking_type_id'))) > 1:
-            raise UserError(_('You can only merge manufacturing with the same operation type'))
+            raise UserError(_('You can only merge manufacturing orders with the same operation type'))
         # TODO explode and check no quantity has been edited
         return True
 
