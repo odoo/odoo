@@ -2,7 +2,6 @@ import { Component, proxy, useEffect, useProps } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
-import { debounce } from "@web/core/utils/timing";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
 /**
@@ -37,8 +36,6 @@ export class AdditionalIdentifiersCommon extends Component {
             metadata: parseJson(this.props.record.data[METADATA_FIELD]),
         });
 
-        this.debouncedCommitChanges = debounce(this.commitChanges.bind(this), 50);
-
         useEffect(() => {
             this.state.identifiers = parseJson(this.props.record.data[this.props.name]);
             this.state.metadata = parseJson(this.props.record.data[METADATA_FIELD]);
@@ -71,7 +68,7 @@ export class AdditionalIdentifiersButton extends AdditionalIdentifiersCommon {
 
     onAdd(identifierType) {
         this.state.identifiers[identifierType] = "";
-        this.debouncedCommitChanges();
+        this.commitChanges();
     }
 }
 
@@ -105,7 +102,7 @@ export class AdditionalIdentifiersList extends AdditionalIdentifiersCommon {
         } else {
             this.state.identifiers[identifierType] = currentVal;
         }
-        this.debouncedCommitChanges();
+        this.commitChanges();
     }
 }
 
