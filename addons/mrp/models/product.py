@@ -7,6 +7,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
 
+# TODO: remove in master, along with `ProductProduct._search_qty_available_new` below.
 PY_OPERATORS = {
     '<': py_operator.lt,
     '>': py_operator.gt,
@@ -279,8 +280,9 @@ class ProductProduct(models.Model):
         This override is used to get the correct quantities of products
         with 'phantom' as BoM type.
         """
-        bom_kits = self.env['mrp.bom']._bom_find(self, bom_type='phantom', company_id=self.env.company.id)
-        kits = self.filtered(lambda p: bom_kits.get(p))
+        if self.env.context.get('skip_kit_qty_available'):
+            return super()._compute_quantities_dict(lot_id, owner_id, package_id, from_date=from_date, to_date=to_date)
+        kits = self.env['product.product'].with_context(prefetch_fields=False).search([('is_kits', '=', True), ('id', 'in', self.ids)])
         regular_products = self - kits
         res = (
             super(ProductProduct, regular_products)._compute_quantities_dict(lot_id, owner_id, package_id, from_date=from_date, to_date=to_date)
@@ -293,6 +295,8 @@ class ProductProduct(models.Model):
         # preload product phantom boms to avoid individual calls to _bom_find in explode method
         phantom_boms_cache = {}
         grouped_bom_ids = collections.defaultdict(set)
+        bom_kits = self.env['mrp.bom']._bom_find(kits, bom_type='phantom', company_id=self.env.company.id)
+
         for bom in bom_kits.values():
             grouped_bom_ids[bom.picking_type_id, bom.company_id.id].add(bom.id)
         for (picking_type, company_id), bom_ids in grouped_bom_ids.items():
@@ -429,6 +433,8 @@ class ProductProduct(models.Model):
         ])
         return super()._count_returned_sn_products_domain(sn_lot, or_domains)
 
+    # TODO: remove in master. `stock.product.product._search_qty_available_new` is no longer
+    # called, so this override is dead; kept only to minimize this stable-branch fix's diff.
     def _search_qty_available_new(self, operator, value, lot_id=False, owner_id=False, package_id=False):
         '''extending the method in stock.product to take into account kits'''
         op = PY_OPERATORS.get(operator)
