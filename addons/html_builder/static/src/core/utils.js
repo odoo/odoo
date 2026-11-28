@@ -1284,7 +1284,7 @@ export function getAllActionsAndOperations(props) {
     function getShorthandActions() {
         const actions = [];
         const shorthands = [
-            ["classAction", "classActionValue"],
+            ["classAction"],
             ["attributeAction", "attributeActionValue"],
             ["dataAttributeAction", "dataAttributeActionValue"],
             ["styleAction", "styleActionValue"],
@@ -1295,7 +1295,7 @@ export function getAllActionsAndOperations(props) {
                 actions.push({
                     actionId,
                     actionParam: convertParamToObject(actionParam),
-                    actionValue: props[actionValue],
+                    actionValue: actionValue && props[actionValue],
                 });
             }
         }
@@ -1469,7 +1469,6 @@ export const clickableBuilderComponentProps = {
 
     // Shorthand actions values.
     attributeActionValue: t.or([t.string(), t.array(), t.literal(null)]).optional(),
-    classActionValue: t.or([t.string(), t.array(), t.literal(null)]).optional(),
     dataAttributeActionValue: t.or([t.string(), t.array(), t.literal(null)]).optional(),
     styleActionValue: t.or([t.string(), t.array(), t.literal(null)]).optional(),
 };
