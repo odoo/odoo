@@ -22,6 +22,7 @@ import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { useCustomDropzone } from "@web/core/dropzone/dropzone_hook";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
+import { user } from "@web/core/user";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
@@ -504,6 +505,13 @@ const chatterPatch = {
         if (this.webChatterProps.record) {
             await this.webChatterProps.record.load();
         }
+    },
+
+    /**
+     * Light users get no chatter button to schedule an activity.
+     */
+    get canScheduleActivity() {
+        return user.isRegularUser;
     },
 
     async scheduleActivity() {

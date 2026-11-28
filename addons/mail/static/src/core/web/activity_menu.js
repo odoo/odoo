@@ -136,4 +136,8 @@ export class ActivityMenu extends Component {
 
 registry
     .category("systray")
-    .add("mail.activity_menu", { Component: ActivityMenu }, { sequence: 20 });
+    .add(
+        "mail.activity_menu",
+        { Component: ActivityMenu, isDisplayed: () => user.isRegularUser },
+        { sequence: 20 }
+    );
