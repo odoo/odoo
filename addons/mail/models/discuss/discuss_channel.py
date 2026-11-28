@@ -1576,7 +1576,11 @@ class DiscussChannel(models.Model):
 
     def _message_post_after_hook(self, message):
         # Automatically set the message posted by the current user as seen for themselves.
-        if self.self_member_id and message.is_current_user_or_guest_author:
+        if (
+            not self.env.context.get("mail_post_skip_read_update")
+            and self.self_member_id
+            and message.is_current_user_or_guest_author
+        ):
             self.self_member_id._set_last_seen_message(message, notify=False)
             self.self_member_id._set_new_message_separator(message.id + 1)
         # Invite mentioned partners to sub-channel.
