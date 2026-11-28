@@ -45,9 +45,8 @@ class TestMailingTest(TestMassMailCommon):
         with self.mock_mail_gateway():
             mailing_test.send_mail_test()
 
-        # not great but matches send_mail_test, maybe that should be a method
-        # on mailing_test?
-        record = self.env[mailing.mailing_model_real].search([], limit=1)
+        # the test email is rendered on the first record of the mailing's domain
+        record = self.test_records[0]
         first_child = lxml.html.fromstring(self._mails.pop()['body']).xpath('//body/*[1]')[0]
         self.assertEqual(first_child.tag, 'div')
         self.assertIn('display:none', first_child.get('style'),
@@ -75,6 +74,40 @@ class TestMailingTest(TestMassMailCommon):
         })
         with self.mock_mail_gateway(), self.assertRaises(Exception):
             mailing_test.send_mail_test()
+
+    @users('user_marketing')
+    @mute_logger('odoo.addons.mail.models.mail_render_mixin')
+    def test_mailing_test_button_record_of_domain(self):
+        """ The test email is rendered on a record of the mailing's domain (the
+        first one), not on the first record of the model. """
+        mailing = self.test_mailing_bl.with_env(self.env)
+        mailing.mailing_domain = [('id', 'in', self.test_records[3:].ids)]
+        mailing_test = self.env['mailing.mailing.test'].create({
+            'email_to': 'test@test.com',
+            'mass_mailing_id': mailing.id,
+        })
+
+        with self.mock_mail_gateway():
+            mailing_test.send_mail_test()
+
+        self.assertEqual(self._mails.pop()['subject'], f'[TEST] Subject {self.test_records[3].name}')
+
+    @users('user_marketing')
+    @mute_logger('odoo.addons.mail.models.mail_render_mixin')
+    def test_mailing_test_button_no_record_in_domain(self):
+        """ When the mailing's domain matches no record, the template is sent as
+        it is instead of being rendered on a record out of the domain. """
+        mailing = self.test_mailing_bl.with_env(self.env)
+        mailing.mailing_domain = [('id', 'in', [])]
+        mailing_test = self.env['mailing.mailing.test'].create({
+            'email_to': 'test@test.com',
+            'mass_mailing_id': mailing.id,
+        })
+
+        with self.mock_mail_gateway():
+            mailing_test.send_mail_test()
+
+        self.assertEqual(self._mails.pop()['subject'], '[TEST] Subject {{ object.name }}')
 
     @users('user_marketing')
     @mute_logger('odoo.addons.mail.models.mail_render_mixin')
