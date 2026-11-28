@@ -1,4 +1,4 @@
-import { Component, onWillStart, useProps } from "@odoo/owl";
+import { Component, onWillStart, signal, useProps } from "@odoo/owl";
 import { openComboConfigurator } from "@sale/js/combo_configurator_utils";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -15,12 +15,21 @@ export class ComboMenuWidget extends Component {
         this.orm = useService("orm");
         this.dialog = useService("dialog");
 
+        this.comboProducts = signal.Array([]);
+
         onWillStart(async () => {
-            this.comboProducts = await this.orm.searchRead(
-                "product.product",
-                [["type", "=", "combo"]],
-                ["id", "display_name"],
-            );
+            const comboProducts = await this.orm
+                .cache({
+                    type: "disk",
+                    update: "always",
+                    callback: (freshComboProducts, hasChanged) => {
+                        if (hasChanged) {
+                            this.comboProducts.set(freshComboProducts);
+                        }
+                    },
+                })
+                .searchRead("product.product", [["type", "=", "combo"]], ["id", "display_name"]);
+            this.comboProducts.set(comboProducts);
         });
     }
 

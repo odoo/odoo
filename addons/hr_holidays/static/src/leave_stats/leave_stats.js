@@ -25,6 +25,8 @@ export class LeaveStatsComponent extends Component {
             type: null,
             department_name: null,
         });
+        this.leavesLoadId = 0;
+        this.departmentLeavesLoadId = 0;
         this.date_format = { year: "numeric", month: "2-digit", day: "2-digit" };
         this.hour_format = { hour: "2-digit", minute: "2-digit" };
         this.state.date_from = this.props.record.data.date_from || DateTime.now();
@@ -84,25 +86,40 @@ export class LeaveStatsComponent extends Component {
 
         const dateFrom = serializeDateTime(this.state.date_from);
         const dateTo = serializeDateTime(this.state.date_to);
-        const leaves = await this.orm.webSearchRead(
-            "hr.leave",
-            [
-                ["department_id", "=", department.id],
-                ["state", "=", "validate"],
-                ["employee_id", "!=", employee.id],
-                ["date_from", "<=", dateTo],
-                ["date_to", ">=", dateFrom],
-            ],
-            {
-                specification: {
-                    employee_id: { fields: { display_name: {} } },
-                    id: {},
+        const loadId = ++this.departmentLeavesLoadId;
+        const leaves = await this.orm
+            .cache({
+                type: "disk",
+                update: "always",
+                callback: (freshLeaves, hasChanged) => {
+                    if (hasChanged && loadId === this.departmentLeavesLoadId) {
+                        this.setDepartmentLeaves(freshLeaves);
+                    }
                 },
-            }
-        );
+            })
+            .webSearchRead(
+                "hr.leave",
+                [
+                    ["department_id", "=", department.id],
+                    ["state", "=", "validate"],
+                    ["employee_id", "!=", employee.id],
+                    ["date_from", "<=", dateTo],
+                    ["date_to", ">=", dateFrom],
+                ],
+                {
+                    specification: {
+                        employee_id: { fields: { display_name: {} } },
+                        id: {},
+                    },
+                }
+            );
         if (!leaves) {
             return;
         }
+        this.setDepartmentLeaves(leaves);
+    }
+
+    setDepartmentLeaves(leaves) {
         this.state.departmentLeavesIds = leaves.records.map((leave) => leave.id);
         this.state.nbEmployee = new Set(leaves.records.map((leave) => leave.employee_id.id)).size;
     }
@@ -130,12 +147,25 @@ export class LeaveStatsComponent extends Component {
             this.state.leaves = [];
             return;
         }
-        const allocation_data = await this.orm.call(
-            "hr.work.entry.type",
-            "get_allocation_data_request",
-            [this.state.date_from],
-            { context: { employee_id: employee.id }, same_year_only: true }
-        );
+        const loadId = ++this.leavesLoadId;
+        const allocation_data = await this.orm
+            .cache({
+                type: "disk",
+                update: "always",
+                callback: (freshData, hasChanged) => {
+                    if (hasChanged && loadId === this.leavesLoadId) {
+                        this.setAllocationData(freshData);
+                    }
+                },
+            })
+            .call("hr.work.entry.type", "get_allocation_data_request", [this.state.date_from], {
+                context: { employee_id: employee.id },
+                same_year_only: true,
+            });
+        this.setAllocationData(allocation_data);
+    }
+
+    setAllocationData(allocation_data) {
         this.state.rawAllocationData = Object.fromEntries(
             allocation_data.map(([, vals, , id]) => [id, vals])
         );

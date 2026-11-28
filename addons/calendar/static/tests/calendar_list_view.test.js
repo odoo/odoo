@@ -1,6 +1,7 @@
 import { defineCalendarModels } from "@calendar/../tests/calendar_test_helpers";
 import { beforeEach, expect, test } from "@odoo/hoot";
 import { mockDate } from "@odoo/hoot-mock";
+import { browser } from "@web/core/browser/browser";
 import {
     contains,
     editSearch,
@@ -87,6 +88,20 @@ test("do not apply selected attendees when the action has a domain", async () =>
     expect(".o_data_cell[name='name']").toHaveText("Meeting 2");
 });
 
+test("use the filters stored by the calendar view when opened directly", async () => {
+    browser.sessionStorage.setItem("calendar_filters", JSON.stringify({ all: false, user: false }));
+    await mountView({ type: "list", resModel: "calendar.event", arch });
+    expect.verifySteps([
+        "get_selected_calendars_partner_ids",
+        [["partner_ids", "in", [serverData.partnerId_1]]],
+    ]);
+});
+
+test("do not filter the attendees when opened directly without stored filters", async () => {
+    await mountView({ type: "list", resModel: "calendar.event", arch });
+    expect.verifySteps([[]]);
+});
+
 test.tags("desktop");
 test("keep selected attendees when switching from the calendar view", async () => {
     mockDate("2016-12-12 08:00:00", 0);
@@ -119,6 +134,9 @@ test("keep selected attendees when switching from the calendar view", async () =
             [false, "list"],
         ],
     });
+    expect(browser.sessionStorage.getItem("calendar_filters")).toBe(
+        JSON.stringify({ all: false, user: true })
+    );
     await contains(".o_switch_view.o_list").click();
     expect.verifySteps([
         "get_selected_calendars_partner_ids",

@@ -1,7 +1,7 @@
 import { Component, proxy, t, useProps, xml } from "@odoo/owl";
 import { expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
-import { mountWithCleanup, onRpc } from "@web/../tests/web_test_helpers";
+import { getService, mountWithCleanup, onRpc } from "@web/../tests/web_test_helpers";
 import { useService } from "@web/core/utils/hooks";
 import { defineAnalyticModels } from "./analytic_test_helpers";
 
@@ -64,4 +64,22 @@ test("destroying the first caller of a batch does not break the other callers", 
     await animationFrame();
     expect("[data-account='2']").toHaveText("Sales");
     expect.verifySteps([]);
+});
+
+test("reads with different cache settings are not batched together", async () => {
+    onRpc("account.analytic.account", "read", ({ args }) => {
+        expect.step(args[0]);
+        return args[0].map((id) => ({ id, display_name: `Account ${id}` }));
+    });
+    await mountWithCleanup(Parent);
+    const batchedOrm = getService("batchedOrm");
+
+    await Promise.all([
+        batchedOrm.read("account.analytic.account", [1], ["display_name"]),
+        batchedOrm
+            .cache({ type: "disk" })
+            .read("account.analytic.account", [2], ["display_name"]),
+        batchedOrm.read("account.analytic.account", [3], ["display_name"]),
+    ]);
+    expect.verifySteps([[1, 3], [2]]);
 });

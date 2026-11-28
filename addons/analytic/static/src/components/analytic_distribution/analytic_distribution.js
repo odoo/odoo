@@ -245,8 +245,15 @@ export class AnalyticDistribution extends Component {
 
     async jsonToData(jsonFieldValue) {
         const analyticAccountIds = jsonFieldValue ? Object.keys(jsonFieldValue).filter((key) => key != '__update__' ).map((key) => key.split(',')).flat().map((id) => parseInt(id)) : [];
-        const analyticAccountDict = analyticAccountIds.length ? await this.fetchAnalyticAccounts([["id", "in", analyticAccountIds]]) : [];
+        const analyticAccountDict = analyticAccountIds.length
+            ? await this.fetchAnalyticAccounts([["id", "in", analyticAccountIds]], (accounts) =>
+                  this.refreshFormattedData(jsonFieldValue, accounts)
+              )
+            : [];
+        await this.accountsToData(jsonFieldValue, analyticAccountDict);
+    }
 
+    async accountsToData(jsonFieldValue, analyticAccountDict) {
         let distribution = [];
         let accountNotFound = false;
 
@@ -282,6 +289,19 @@ export class AnalyticDistribution extends Component {
         if (accountNotFound && this.editingRecord) {
             // Analytic accounts in the json were not found, save the json without them
             await this.save();
+        }
+    }
+
+    async refreshFormattedData(jsonFieldValue, accounts) {
+        const isCurrentValue =
+            JSON.stringify(jsonFieldValue) === JSON.stringify(this.props.record.data[this.props.name]);
+        if (this.state.showDropdown || !isCurrentValue) {
+            return; // the user is editing, or the record changed since the read
+        }
+        await this.accountsToData(jsonFieldValue, accounts);
+        if (this.props.multi_edit) {
+            this.initialFormattedData = this.state.formattedData;
+            this.state.formattedData = [];
         }
     }
 
@@ -399,18 +419,29 @@ export class AnalyticDistribution extends Component {
         }
     }
 
-    async fetchAnalyticAccounts(domain) {
+    async fetchAnalyticAccounts(domain, onRefresh) {
         const args = {
             domain: domain,
             fields: ["id", "display_name", "root_plan_id", "color"],
             context: [],
         }
-        // batched call
-        const records = await this.batchedOrm.read("account.analytic.account", domain[0][2], args.fields, {});
-        return Object.assign({}, ...records.map((r) => {
+        const toDict = (records) => Object.assign({}, ...records.map((r) => {
             const {id, ...rest} = r;
             return {[id]: rest};
         }));
+        // batched call
+        const records = await this.batchedOrm
+            .cache({
+                type: "disk",
+                update: "always",
+                callback: (freshRecords, hasChanged) => {
+                    if (hasChanged) {
+                        onRefresh?.(toDict(freshRecords));
+                    }
+                },
+            })
+            .read("account.analytic.account", domain[0][2], args.fields, {});
+        return toDict(records);
     }
 
     // Editing Distributions

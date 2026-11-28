@@ -7,6 +7,7 @@ import { CalendarModel } from "@web/views/calendar/calendar_model";
 import { getBadgeColorClass } from "@web/views/calendar/utils";
 import { askRecurrenceUpdatePolicy } from "@calendar/views/ask_recurrence_update_policy_hook";
 import { unique } from "@web/core/utils/arrays";
+import { browser } from "@web/core/browser/browser";
 
 export class AttendeeCalendarModel extends CalendarModel {
     static services = [...CalendarModel.services, "dialog", "orm"];
@@ -109,11 +110,10 @@ export class AttendeeCalendarModel extends CalendarModel {
      */
     makeContextDefaults(rawRecord) {
         const context = super.makeContextDefaults(rawRecord);
-        const partnerIds = this.getActivePartnerIds(this.data)
-        context.default_partner_ids = [...new Set([
-            ...(context.default_partner_ids || []),
-            ...partnerIds,
-        ])];
+        const partnerIds = this.getActivePartnerIds(this.data);
+        context.default_partner_ids = [
+            ...new Set([...(context.default_partner_ids || []), ...partnerIds]),
+        ];
         return context;
     }
 
@@ -125,8 +125,8 @@ export class AttendeeCalendarModel extends CalendarModel {
     async loadFilterSection(fieldName, filterInfo, previousSection) {
         const result = await super.loadFilterSection(fieldName, filterInfo, previousSection);
         if (result?.fieldName === "calendar_id") {
-            result.label = _t("My Calendars");  // Override the string from the field definition ("Calendar").
-            result?.filters?.forEach(f => {
+            result.label = _t("My Calendars"); // Override the string from the field definition ("Calendar").
+            result?.filters?.forEach((f) => {
                 if (f.isPrimary) {
                     // reuse existing canRemove field on parent component
                     f.canRemove = false;
@@ -139,8 +139,12 @@ export class AttendeeCalendarModel extends CalendarModel {
                     all: result?.filters?.find((f) => f.type === "all")?.active ?? false,
                     user: result?.filters?.find((f) => f.type === "user")?.active ?? false,
                 };
+                browser.sessionStorage.setItem(
+                    "calendar_filters",
+                    JSON.stringify(this.selectedFilters)
+                );
             }
-            result.filters = result?.filters?.filter(f => f.type !== "user");
+            result.filters = result?.filters?.filter((f) => f.type !== "user");
         }
         return result;
     }
@@ -152,17 +156,28 @@ export class AttendeeCalendarModel extends CalendarModel {
      * so we need to OR the domains instead
      */
     computeFiltersDomain(data) {
-        const filteredData = {...data, filterSections: Object.fromEntries(
-            Object.entries(data.filterSections ?? {}).filter(([key]) => key !== "partner_ids" && key !== "calendar_id")
-        )};
+        const filteredData = {
+            ...data,
+            filterSections: Object.fromEntries(
+                Object.entries(data.filterSections ?? {}).filter(
+                    ([key]) => key !== "partner_ids" && key !== "calendar_id"
+                )
+            ),
+        };
         const domain = super.computeFiltersDomain(filteredData);
-        const partnerFilters = data.filterSections['partner_ids']?.filters || [];
-        const activePartnerIds = partnerFilters.filter(f => f.active).map(f => f.value);
-        const calendarFilters = data.filterSections['calendar_id']?.filters || [];
-        const activeCalendarIds = calendarFilters.filter(f => f.active).map(f => f.value);
-        const primaryCalendarFilter = calendarFilters.find(f => f.isPrimary);
+        const partnerFilters = data.filterSections["partner_ids"]?.filters || [];
+        const activePartnerIds = partnerFilters.filter((f) => f.active).map((f) => f.value);
+        const calendarFilters = data.filterSections["calendar_id"]?.filters || [];
+        const activeCalendarIds = calendarFilters.filter((f) => f.active).map((f) => f.value);
+        const primaryCalendarFilter = calendarFilters.find((f) => f.isPrimary);
         const includesPrimaryCalendar = primaryCalendarFilter?.active ?? false;
-        const filterDomains = [['|', ["calendar_id", "in", activeCalendarIds], ["partner_ids", "in", activePartnerIds]]];
+        const filterDomains = [
+            [
+                "|",
+                ["calendar_id", "in", activeCalendarIds],
+                ["partner_ids", "in", activePartnerIds],
+            ],
+        ];
 
         if (!calendarFilters.length && !partnerFilters.length) {
             return domain;
@@ -172,7 +187,7 @@ export class AttendeeCalendarModel extends CalendarModel {
         // is attending which are not in any of their calendars.
         if (includesPrimaryCalendar) {
             filterDomains.push([
-            "&",
+                "&",
                 ["partner_ids", "in", [user.partnerId]],
                 ["calendar_id", "not in", this.calendarIds ?? []],
             ]);
@@ -185,8 +200,8 @@ export class AttendeeCalendarModel extends CalendarModel {
      */
     async updateData(data) {
         if (!this._loaded) {
-            const userData = await this.orm.read("res.users", [user.userId], ["calendar_ids"])
-            this.calendarIds = userData[0]?.calendar_ids
+            const userData = await this.orm.read("res.users", [user.userId], ["calendar_ids"]);
+            this.calendarIds = userData[0]?.calendar_ids;
         }
         await super.updateData(...arguments);
         await this.updateAttendeeData(data);
@@ -200,9 +215,11 @@ export class AttendeeCalendarModel extends CalendarModel {
     getActivePartnerIds(data) {
         const attendeeFilters = (data.filterSections.partner_ids?.filters || [])
             .filter((filter) => filter.value && filter.active)
-            .map((filter) => filter.value)
+            .map((filter) => filter.value);
 
-        const primaryCalendarFilter = data.filterSections.calendar_id?.filters?.find(c => c.isPrimary);
+        const primaryCalendarFilter = data.filterSections.calendar_id?.filters?.find(
+            (c) => c.isPrimary
+        );
         if (primaryCalendarFilter?.active && !attendeeFilters.includes(user.partnerId)) {
             return [user.partnerId, ...attendeeFilters];
         } else {
@@ -227,8 +244,11 @@ export class AttendeeCalendarModel extends CalendarModel {
         }
         // If we show events based on calendar filters, we want to get the current
         // user's attendee data even if they are not selected in attendee filters
-        if (calendarFilters && calendarFilters.filters.some((filter) => filter.active)
-            && !attendeeIds.includes(currentPartnerId)) {
+        if (
+            calendarFilters &&
+            calendarFilters.filters.some((filter) => filter.active) &&
+            !attendeeIds.includes(currentPartnerId)
+        ) {
             attendeeIds.push(currentPartnerId);
         }
         data.attendees = await this.orm.call("res.partner", "get_attendee_detail", [
@@ -288,7 +308,7 @@ export class AttendeeCalendarModel extends CalendarModel {
                 // of calendar filters, we may display events that the user is not attending if they are in
                 // their calendar. These also have to be included in the final data.records.
                 if (duplicatedRecords === 0) {
-                    newRecords[event.id] = event
+                    newRecords[event.id] = event;
                 }
             }
             data.records = newRecords;
@@ -312,8 +332,8 @@ export class AttendeeCalendarModel extends CalendarModel {
         if (rawRecord.effective_privacy === "private") {
             normalizedRecord.titleIcon = "lock";
         }
-        if (rawRecord['calendar_color']) {
-            normalizedRecord.colorIndex = rawRecord['calendar_color'];
+        if (rawRecord["calendar_color"]) {
+            normalizedRecord.colorIndex = rawRecord["calendar_color"];
         }
         if (rawRecord.is_draft) {
             normalizedRecord.title = _t("[Draft] %s", normalizedRecord.title);
@@ -330,10 +350,10 @@ export class AttendeeCalendarModel extends CalendarModel {
      * @override
      */
     makeFilterRecord(filterInfo, previousFilter, rawRecord) {
-        let filterRecord = super.makeFilterRecord(...arguments);
+        const filterRecord = super.makeFilterRecord(...arguments);
         // update the filter color
         const { colorFieldName } = filterInfo;
-        const colorValue = rawRecord[colorFieldName]
+        const colorValue = rawRecord[colorFieldName];
         if (colorValue) {
             filterRecord.colorIndex = colorValue;
             filterRecord.badgeColorClass = this.hasBadgeColors
@@ -345,11 +365,11 @@ export class AttendeeCalendarModel extends CalendarModel {
             filterRecord.badgeColorClass = "";
         }
         // Add flags to calendar filters
-        if (rawRecord['access_role']) {
-            filterRecord['accessRole'] = rawRecord['access_role'];
+        if (rawRecord["access_role"]) {
+            filterRecord["accessRole"] = rawRecord["access_role"];
         }
-        if (rawRecord['is_primary']) {
-            filterRecord['isPrimary'] = rawRecord['is_primary'];
+        if (rawRecord["is_primary"]) {
+            filterRecord["isPrimary"] = rawRecord["is_primary"];
         }
         return filterRecord;
     }
@@ -358,12 +378,16 @@ export class AttendeeCalendarModel extends CalendarModel {
      * @override
      */
     fetchFilters(resModel, fieldNames) {
-        if (resModel !== 'calendar.user') {
+        if (resModel !== "calendar.user") {
             return super.fetchFilters(...arguments);
         }
-        return this.orm.searchRead(resModel,
-            [["user_id", "=", user.userId], ["is_filter_active", "=", true]],
-            [...fieldNames, 'is_primary', 'access_role', 'filter_color']
+        return this.orm.searchRead(
+            resModel,
+            [
+                ["user_id", "=", user.userId],
+                ["is_filter_active", "=", true],
+            ],
+            [...fieldNames, "is_primary", "access_role", "filter_color"]
         );
     }
 
@@ -371,7 +395,7 @@ export class AttendeeCalendarModel extends CalendarModel {
      * @override
      */
     async unlinkFilter(fieldName, recordId) {
-        if (fieldName !== 'calendar_id') {
+        if (fieldName !== "calendar_id") {
             return super.unlinkFilter(...arguments);
         }
         const info = this.meta.filtersInfo[fieldName];
@@ -384,7 +408,7 @@ export class AttendeeCalendarModel extends CalendarModel {
         if (info && info.writeResModel) {
             // The model holding the filter values also holds other information about user access.
             // Instead of unlinking the model, we just deactivate the filter.
-            await this.orm.write(info.writeResModel, [recordId], {"is_filter_active": false});
+            await this.orm.write(info.writeResModel, [recordId], { is_filter_active: false });
             await this.debouncedLoad();
         }
     }
