@@ -36,6 +36,7 @@ const MENTION_CLASSNAMES = new Set([
     "o_channel_redirect",
     "o-discuss-mention",
 ]);
+export const PARTNER_MENTION_SELECTOR = "a.o_mail_redirect, .o-discuss-readonly-mention";
 const JS_HANDLED_LINK_ATTRIBUTES = new Set(["oeId", "oeModel", "oeType"]);
 const INLINE_FORMAT_TAGS = new Set(["B", "CODE", "EM", "I", "S", "STRONG", "U"]);
 

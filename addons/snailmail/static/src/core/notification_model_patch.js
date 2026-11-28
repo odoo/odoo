@@ -4,6 +4,13 @@ import { _t } from "@web/core/l10n/translation";
 
 /** @type {import("models").Notification} */
 const notificationPatch = {
+    deliveryMessage() {
+        if (this.notification_type === "snail") {
+            return _t("Sent by post");
+        }
+        return super.deliveryMessage();
+    },
+
     get icon() {
         if (this.notification_type === "snail") {
             return "send";

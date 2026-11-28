@@ -832,6 +832,7 @@ class MailMail(models.Model):
         mails_with_unfollow_link = self.filtered(lambda m: m.body_html and '/mail/unfollow' in m.body_html)
         doc_to_followers = self.env['mail.followers']._get_mail_doc_to_followers(mails_with_unfollow_link.ids)
 
+        sent_mention_message_ids = tools.OrderedSet()
         for mail_id in self.ids:
             success_pids = []
             success_emails = []
@@ -970,6 +971,8 @@ class MailMail(models.Model):
                         mail_vals['failure_type'] = failure_type
                     if mail_vals:
                         mail.write(mail_vals)
+                if not failure_type and mail.is_notification and 'o_mail_redirect' in (mail.body_html or ''):
+                    sent_mention_message_ids.add(mail.mail_message_id.id)
                 mail._postprocess_sent_message(success_pids=success_pids, success_emails=success_emails, failure_type=failure_type, failure_reason=failure_reason)
             except MemoryError:
                 # prevent catching transient MemoryErrors, bubble up to notify user or abort cron job
@@ -1034,6 +1037,10 @@ class MailMail(models.Model):
                 if post_send_callback:
                     post_send_callback([mail_id])
                 self.env.cr.commit()
+        # the delivery is only shown on partner mentions
+        self.env['mail.message'].browse(sent_mention_message_ids).filtered(
+            lambda m: m._is_thread_message(),
+        )._notify_message_notification_update()
         if post_send_callback:
             post_send_callback(self.ids)
         return True

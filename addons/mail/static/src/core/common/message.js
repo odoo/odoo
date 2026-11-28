@@ -9,6 +9,7 @@ import { MessageLinkPreviewList } from "@mail/core/common/message_link_preview_l
 import { MessageNotificationPopover } from "@mail/core/common/message_notification_popover";
 import { MessageReactionMenu } from "@mail/core/common/message_reaction_menu";
 import { MessageReactions } from "@mail/core/common/message_reactions";
+import { unrenderPartnerMentions } from "@mail/core/common/plugin/partner_mention_plugin";
 import { Poll } from "@mail/core/common/poll";
 import { PollResult } from "@mail/core/common/poll_result";
 import { RECORD_LINK_SELECTOR, RecordLinkPlugin } from "@mail/core/common/record_link_plugin";
@@ -279,6 +280,12 @@ export class Message extends Component {
         onMounted(prepareRenderedBody);
         onPatched(prepareRenderedBody);
         onWillUnmount(destroyBodyRoots);
+        // e.g. a notification fails once the message is shown
+        useOnChange(
+            () => this.message.notification_ids.map((n) => n.notification_status),
+            () => !this.isEditing && this.renderPartnerMentionStates(this.messageBody()),
+            { initialRun: false }
+        );
     }
 
     /** @type {import("@mail/core/common/action_list").GetActionComponent} */
@@ -572,7 +579,7 @@ export class Message extends Component {
      * @param {MouseEvent} ev
      */
     async onClick(ev) {
-        if (this.store.handleClickOnLink(ev, this.props.thread)) {
+        if (this.store.handleClickOnLink(ev, this.props.thread, this.message)) {
             return;
         }
         if (
@@ -625,7 +632,73 @@ export class Message extends Component {
         const channelLinks = bodyEl.querySelectorAll("a.o_channel_redirect");
         this.store.handleValidChannelMention(Array.from(channelLinks));
         this.recordLink.renderRecordLinks(bodyEl.querySelectorAll(RECORD_LINK_SELECTOR));
+        this.renderPartnerMentions(bodyEl);
         return this.renderEmbeddedCodeBlocks(bodyEl);
+    }
+
+    /** @param {HTMLElement} [bodyEl] */
+    renderPartnerMentions(bodyEl) {
+        // the email-like body is in a shadow root, without the style of the mentions
+        if (!bodyEl || this.message.hasEmailLikeBody) {
+            return;
+        }
+        this.store.renderPartnerMentions(bodyEl);
+        this.renderPartnerMentionStates(bodyEl);
+    }
+
+    /**
+     * Colors the rendered partner mentions with the state of their notification.
+     *
+     * @param {HTMLElement} [bodyEl]
+     */
+    renderPartnerMentionStates(bodyEl) {
+        for (const mentionEl of bodyEl?.querySelectorAll(".o-mail-partnerMention") ?? []) {
+            const notification = this.message.getPartnerNotification(
+                Number(mentionEl.dataset.oeId)
+            );
+            const isFailure = Boolean(notification?.isFailure);
+            mentionEl.classList.toggle("o-mail-partnerMention-failed", isFailure);
+            mentionEl.classList.toggle("o-mail-partnerMention-sent", Boolean(notification?.isSent));
+            // the color alone doesn't tell a failure to color-blind users
+            let failureIconEl = mentionEl.querySelector(
+                ":scope > .o-mail-partnerMention-failureIcon"
+            );
+            if (isFailure && !failureIconEl) {
+                failureIconEl = document.createElement("i");
+                failureIconEl.className = "o-mail-partnerMention-failureIcon oi ms-1";
+                failureIconEl.dataset.icon = "error";
+                failureIconEl.setAttribute("role", "img");
+                failureIconEl.setAttribute("aria-hidden", "true");
+                mentionEl.append(failureIconEl);
+            } else if (!isFailure) {
+                failureIconEl?.remove();
+            }
+        }
+    }
+
+    /**
+     * Copies the selected text without the avatars of the partner mentions.
+     *
+     * @param {ClipboardEvent} ev
+     */
+    onCopyBody(ev) {
+        const selection = document.getSelection();
+        if (ev.defaultPrevented || !selection.rangeCount) {
+            return;
+        }
+        const fragment = selection.getRangeAt(0).cloneContents();
+        if (!fragment.querySelector(".o-mail-partnerMention")) {
+            return;
+        }
+        const containerEl = document.createElement("div");
+        containerEl.append(unrenderPartnerMentions(fragment));
+        ev.clipboardData.setData("text/html", containerEl.innerHTML);
+        // the mentions are not selectable, so the selected text would leave them out
+        const mentionEls = ev.currentTarget.querySelectorAll(".o-mail-partnerMention");
+        mentionEls.forEach((mentionEl) => (mentionEl.style.userSelect = "text"));
+        ev.clipboardData.setData("text/plain", selection.toString());
+        mentionEls.forEach((mentionEl) => mentionEl.style.removeProperty("user-select"));
+        ev.preventDefault();
     }
 
     /** @param {HTMLElement} bodyEl */

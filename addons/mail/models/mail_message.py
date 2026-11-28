@@ -1540,7 +1540,7 @@ class MailMessage(models.Model):
             if message.author_id and not any(user._is_public() for user in message.author_id.with_context(active_test=False).user_ids):
                 messages_per_partner[message.author_id] |= message
         for partner, messages in messages_per_partner.items():
-            if user := partner.main_user_id:
+            if (user := partner.main_user_id) and user._is_internal():
                 store = Store(bus_channel=user)
                 user_messages = messages.with_user(user)._filtered_access('read')
                 store.add(user_messages, "_store_notification_fields")
