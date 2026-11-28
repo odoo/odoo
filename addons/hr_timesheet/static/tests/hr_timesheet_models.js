@@ -81,14 +81,7 @@ export class ProjectTask extends projectModels.ProjectTask {
     ];
 }
 
-export class ProjectProject extends projectModels.ProjectProject {
-    get_create_edit_project_ids() {
-        return [];
-    }
-}
-
 projectModels.ProjectTask = ProjectTask;
-projectModels.ProjectProject = ProjectProject;
 
 export const hrTimesheetModels = { HRTimesheet };
 

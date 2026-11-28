@@ -221,18 +221,6 @@ class ProjectProject(models.Model):
             }
         }
 
-    def action_billable_time_button(self):
-        self.ensure_one()
-        action = self.env["ir.actions.actions"]._for_xml_id("sale_timesheet.timesheet_action_from_sales_order_item")
-        action.update({
-            'context': {
-                'search_default_groupby_billable_type': True,
-                'default_project_id': self.id,
-            },
-            'domain': [('project_id', '=', self.id)],
-        })
-        return action
-
     def action_project_timesheets(self):
         action = super().action_project_timesheets()
         if not self.allow_billable:

@@ -27,10 +27,6 @@ class ProjectTags(models.Model):
         'A tag with the same name already exists.',
     )
 
-    def _get_project_tags_domain(self, domain, project_id):
-        # TODO: Remove in master
-        return domain
-
     @api.model
     def formatted_read_group(self, domain, groupby=(), aggregates=(), having=(), offset=0, limit=None, order=None) -> list[dict]:
         if 'project_id' in self.env.context:

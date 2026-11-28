@@ -1,12 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import ast
 from collections import defaultdict
 
 from odoo import api, fields, models, _
 from odoo.fields import Command, Domain
 from odoo.exceptions import UserError
-from odoo.addons.project.models.project_task import CLOSED_STATES
 
 
 class SaleOrder(models.Model):
@@ -30,8 +28,6 @@ class SaleOrder(models.Model):
     is_product_milestone = fields.Boolean(compute='_compute_is_product_milestone', export_string_translation=False)
     show_create_project_button = fields.Boolean(compute='_compute_show_project_and_task_button', groups='project.group_project_user', export_string_translation=False)
     show_project_button = fields.Boolean(compute='_compute_show_project_and_task_button', groups='project.group_project_user', export_string_translation=False)
-    closed_task_count = fields.Integer(compute='_compute_tasks_ids', groups="project.group_project_user", export_string_translation=False)
-    completed_task_percentage = fields.Float(compute="_compute_completed_task_percentage", groups="project.group_project_user", export_string_translation=False)
     project_id = fields.Many2one('project.project', domain=[('allow_billable', '=', True), ('is_template', '=', False)], copy=False, index='btree_not_null',
                                  help="A task will be created for the project upon sales order confirmation. The analytic distribution of this project will also serve as a reference for newly created sales order items.")
     project_account_id = fields.Many2one('account.analytic.account', related='project_id.account_id')
@@ -101,7 +97,6 @@ class SaleOrder(models.Model):
             if order:
                 order.tasks_ids += tasks_ids
                 order.tasks_count += tasks_count
-                order.closed_task_count += state in CLOSED_STATES and tasks_count
                 so_with_tasks += order
             else:
                 # tasks that have no sale_order_id need to be associated with the SO from their sale_line_id
@@ -109,13 +104,11 @@ class SaleOrder(models.Model):
                     task_so = task.sale_line_id.order_id
                     task_so.tasks_ids = [Command.link(task.id)]
                     task_so.tasks_count += 1
-                    task_so.closed_task_count += state in CLOSED_STATES
                     so_with_tasks += task_so
         remaining_orders = self - so_with_tasks
         if remaining_orders:
             remaining_orders.tasks_ids = [Command.clear()]
             remaining_orders.tasks_count = 0
-            remaining_orders.closed_task_count = 0
 
     @api.depends('order_line.product_id.service_tracking')
     def _compute_visible_project(self):
@@ -305,10 +298,6 @@ class SaleOrder(models.Model):
             # Remove sale line field reference from all projects
             self.env['project.project'].sudo().search([('sale_line_id.order_id', 'in', self.ids)]).sale_line_id = False
         return res
-
-    def _compute_completed_task_percentage(self):
-        for so in self:
-            so.completed_task_percentage = so.tasks_count and so.closed_task_count / so.tasks_count
 
     def action_confirm(self):
         if len(self) == 1 and self.env.context.get('create_for_project_id') and self.state == 'sale':

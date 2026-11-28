@@ -17,13 +17,6 @@ class SaleOrderLine(models.Model):
         index=True, copy=False, export_string_translation=False)
     reached_milestones_ids = fields.One2many('project.milestone', 'sale_line_id', string='Reached Milestones', domain=[('is_reached', '=', True)], export_string_translation=False)
 
-    def _get_product_from_sol_name_domain(self, product_name):
-        return [
-            ('name', 'ilike', product_name),
-            ('type', '=', 'service'),
-            ('company_id', 'in', [False, self.env.company.id]),
-        ]
-
     @api.model
     def default_get(self, fields):
         res = super().default_get(fields)
