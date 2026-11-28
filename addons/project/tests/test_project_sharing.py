@@ -128,6 +128,41 @@ class TestProjectSharing(TestProjectSharingCommon):
             'access_mode': 'edit',
         })
 
+    def test_project_user_can_open_share_wizard_on_task_of_restricted_project(self):
+        """ A project user without the access rights group can share a task of a project
+            that is not open to the portal: the wizard opens with the access warning.
+        """
+        restricted_project = self.env['project.project'].create({
+            'name': 'Restricted project',
+            'privacy_visibility': 'followers',
+        })
+        restricted_task = self.env['project.task'].create({
+            'name': 'Restricted task',
+            'project_id': restricted_project.id,
+            'user_ids': self.user_projectuser,
+        })
+        # The share wizard is created only by the Contact Creation group. This user is created
+        # with explicit groups, so it does not inherit that group from the default user.
+        # The project is readable only to its followers.
+        self.user_projectuser.write({'groups_id': [Command.link(self.env.ref('base.group_partner_manager').id)]})
+        restricted_project.message_subscribe(partner_ids=self.user_projectuser.partner_id.ids)
+        self.assertTrue(
+            restricted_task.with_user(self.user_projectuser).access_warning,
+            'A task of a project that is not open to the portal should carry an access warning.',
+        )
+        self.assertFalse(
+            self.task_portal.with_user(self.user_projectuser).access_warning,
+            'A task of a project open to the portal should carry no access warning.',
+        )
+        share_wizard = self.env['portal.share'].with_user(self.user_projectuser).create({
+            'res_model': 'project.task',
+            'res_id': restricted_task.id,
+        })
+        self.assertTrue(
+            share_wizard.access_warning,
+            'The share wizard should show the access warning of the task.',
+        )
+
     def test_project_share_wizard_add_collaborator_with_limited_access(self):
         ProjectShare = self.env['project.share.wizard'].with_context(active_model="project.project", active_id=self.project_portal.id)
         self.project_portal.write({

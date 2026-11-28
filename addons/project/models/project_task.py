@@ -622,13 +622,16 @@ class Task(models.Model):
 
     def _compute_access_warning(self):
         super(Task, self)._compute_access_warning()
-        for task in self.filtered(lambda x: x.project_id.privacy_visibility != 'portal'):
-            visibility_field = self.env['ir.model.fields'].search([('model', '=', 'project.project'), ('name', '=', 'privacy_visibility')], limit=1)
-            visibility_public = self.env['ir.model.fields.selection'].search([('field_id', '=', visibility_field.id), ('value', '=', 'portal')])
-            task.access_warning = _(
-                "The task cannot be shared with the recipient(s) because the privacy of the project is too restricted. Set the privacy of the project to '%(visibility)s' in order to make it accessible by the recipient(s).",
-                visibility=visibility_public.name,
-            )
+        restricted_tasks = self.filtered(lambda x: x.project_id.privacy_visibility != 'portal')
+        if not restricted_tasks:
+            return
+        # Labels come from the field definition, so the check needs no access to field metadata.
+        visibility_labels = dict(
+            self.env['project.project']._fields['privacy_visibility']._description_selection(self.env))
+        restricted_tasks.access_warning = _(
+            "The task cannot be shared with the recipient(s) because the privacy of the project is too restricted. Set the privacy of the project to '%(visibility)s' in order to make it accessible by the recipient(s).",
+            visibility=visibility_labels['portal'],
+        )
 
     @api.depends('child_ids.allocated_hours')
     def _compute_subtask_allocated_hours(self):
