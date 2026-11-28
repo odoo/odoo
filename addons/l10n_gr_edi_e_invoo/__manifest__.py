@@ -3,7 +3,6 @@
 {
     'name': 'Greece - myDATA E-invoicing through e-invoo',
     'author': 'Odoo',
-    'countries': ['gr'],
     'category': 'Accounting/Localizations/EDI',
     'depends': [
         'account_edi_proxy_client',

@@ -12,7 +12,7 @@ E_INVOO_API_URL = 'https://e-invoo.com/aade/api'
 E_INVOO_TEST_API_URL = 'https://test.e-invoo.com/aade/api'
 E_INVOO_TIMEOUT = (5, 30)
 
-E_INVOO_TOKEN_NOT_SET = _lt("The Methodoos API token is not configured.")
+E_INVOO_TOKEN_NOT_SET = _lt("The YPAHES Provider API token is not configured.")
 
 
 class AccountMove(models.Model):
@@ -50,7 +50,7 @@ class AccountMove(models.Model):
         return result
 
     def _l10n_gr_edi_post_e_invoo(self, api_token, endpoint, test_env, json=None, files=None):
-        base_url = E_INVOO_TEST_API_URL if test_env else E_INVOO_API_URL
+        base_url = self._l10n_gr_edi_get_api_url(test_env)
         try:
             response = requests.post(
                 f'{base_url}/{endpoint}',
@@ -135,3 +135,8 @@ class AccountMove(models.Model):
 
                 if self._can_commit():
                     self.env.cr.commit()
+
+    def _l10n_gr_edi_get_api_url(self, test_env):
+        if test_env:
+            return self.env['ir.config_parameter'].sudo().get_param('l10n_gr_edi_ypahes_bridge.e_invoicing_test_api_url', E_INVOO_TEST_API_URL)
+        return self.env['ir.config_parameter'].sudo().get_param('l10n_gr_edi_ypahes_bridge.e_invoicing_api_url', E_INVOO_API_URL)

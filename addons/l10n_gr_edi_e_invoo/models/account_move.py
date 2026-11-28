@@ -3,8 +3,7 @@ import base64
 from lxml import etree
 
 from odoo import api, fields, models
-from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
-from odoo.exceptions import UserError
+from odoo.exceptions import RedirectWarning, UserError
 from odoo.tools import cleanup_xml_node, float_repr
 from odoo.tools.image import image_data_uri
 
@@ -284,45 +283,23 @@ class AccountMove(models.Model):
 
         return values
 
+    # TODO: remove in master
     def _l10n_gr_edi_send_invoices(self):
-        # EXTENDS 'l10n_gr_edi'
-        """Send customer invoices individually through the IAP proxy."""
-        for company, invoices in self.grouped('company_id').items():
-            proxy_user = company._l10n_gr_edi_get_proxy_user()
-
-            for invoice in invoices:
-                submission = invoice._l10n_gr_edi_prepare_invoice_submission()
-                if not submission:
-                    continue
-
-                document, request_values = submission
-                try:
-                    result = proxy_user._l10n_gr_edi_proxy_request('send_invoice', request_values)
-                except AccountEdiProxyError as error:
-                    unknown_result_message = self.env._(
-                        "The electronic invoice submission result could not be confirmed. "
-                        "Retry the submission to retrieve the existing result."
-                    )
-                    if error.code == 'invalid_request':
-                        document.write({
-                            'state': 'invoice_error',
-                            'message': error.message or self.env._(
-                                "The electronic invoice request could not be processed. "
-                                "Please contact Odoo support if the problem persists."
-                            ),
-                        })
-                    elif error.code == 'e_invoo_request_failed':
-                        document.message = error.message or unknown_result_message
-                    else:
-                        document.message = unknown_result_message
-                else:
-                    invoice._l10n_gr_edi_handle_invoice_proxy_result(document, result)
-
-                if self._can_commit():
-                    self.env.cr.commit()
+        return super()._l10n_gr_edi_send_invoices()
 
     def l10n_gr_edi_try_send_invoices(self):
         # EXTENDS 'l10n_gr_edi'
+        bridge_module = self.env['ir.module.module']._get('l10n_gr_edi_e_invoo_bridge')
+        if bridge_module.state != 'installed':
+            raise RedirectWarning(
+                message=self.env._(
+                    "Please also activate the '%(module_name)s' module to be able to send invoices to myDATA.",
+                    module_name=bridge_module.display_name,
+                ),
+                action=bridge_module._get_records_action(),
+                button_text=self.env._("Go to module"),
+            )
+
         valid_move_ids = []
         for move in self.filtered('l10n_gr_edi_enable_send_invoices'):
             if error := move._l10n_gr_edi_get_pre_error_string():

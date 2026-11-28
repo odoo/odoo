@@ -10,4 +10,4 @@ class EInvooRequestError(Exception):
 
 class EInvooAuthenticationError(EInvooRequestError):
     def __init__(self):
-        super().__init__(_lt("The Methodoos API token is invalid."))
+        super().__init__(_lt("The YPAHES Provider API token is invalid."))
