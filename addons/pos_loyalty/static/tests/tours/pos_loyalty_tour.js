@@ -369,13 +369,14 @@ registry.category("web_tour.tours").add("PosLoyaltyTour11.2", {
             Chrome.clickOrders(),
             TicketScreen.selectFilter("Paid"),
             Chrome.waitRequest(),
-            Chrome.waitRequest(),
+            Chrome.isSynced(),
             {
-                trigger: "body",
+                content: "Wait for paid order row to appear, then verify new_coupon_info is set",
+                trigger: ".ticket-screen .order-row",
                 run: () => {
                     const order = posmodel.data.models["pos.order"]
                         .getAll()
-                        .filter((o) => o.state === "paid")[0];
+                        .find((o) => o.finalized);
                     if (!order.new_coupon_info && !order.raw.new_coupon_info) {
                         throw Error("Next order coupon is missing");
                     }
