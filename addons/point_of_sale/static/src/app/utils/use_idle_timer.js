@@ -7,6 +7,10 @@ export function useIdleTimer(steps, onAlive) {
         timeout: new Set(steps.map((s) => s.timeout)),
         idle: false,
         time: 0,
+        reset: () => {
+            state.idle = false;
+            state.time = 0;
+        },
     };
 
     const checkSteps = () => {

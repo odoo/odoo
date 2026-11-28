@@ -5,6 +5,8 @@ import { setupAndMountPosApp, createTestProduct } from "@point_of_sale/../tests/
 import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
 import * as Utils from "@point_of_sale/../tests/unit/ui_utils";
 import { PosNumberBufferPlugin } from "@point_of_sale/app/plugins/pos_number_buffer_plugin";
+import { LoginScreen } from "@point_of_sale/app/screens/login_screen/login_screen";
+import { patch } from "@web/core/utils/patch";
 
 definePosModels();
 
@@ -343,4 +345,25 @@ test("customer_display_shows_qr_popup: customer display QR code popup", async ()
         await animationFrame();
         await waitFor(".modal img, .modal canvas, .modal svg");
     }
+});
+
+test("idle timer: a login ending on the saver screen keeps the cashier", async () => {
+    let loginScreen;
+    patch(LoginScreen.prototype, {
+        setup() {
+            super.setup(...arguments);
+            loginScreen = this;
+        },
+    });
+    const store = await setupAndMountPosApp({}, { openRegister: false });
+    await advanceTime(120000);
+    await animationFrame();
+    expect(store.router.currentScreen()).toBe("SaverScreen");
+
+    loginScreen.selectOneCashier(store.user);
+    await animationFrame();
+    await Utils.clickDisplayedProduct("TEST");
+    expect(store.router.currentScreen()).toBe("ProductScreen");
+    expect(store.accessRight.cashier).toBe(store.user);
+    expect(store.getOrder().lines).toHaveLength(1);
 });
