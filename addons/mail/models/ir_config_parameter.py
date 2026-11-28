@@ -24,7 +24,10 @@ class IrConfig_Parameter(models.Model):
     #   - MailComposer._action_send_mail_mass_mail(): mail composer in mass mail mode
     #   to force the cron queue usage and avoid sending too much emails in a given
     #   transaction. When 0 is set flows based on it are always using the email
-    #   queue, no direct send is performed. Default value is 100;
+    #   queue, no direct send is performed;
+    #   - DiscussChannel.invite_by_email(): invitations are always sent right
+    #   away, so batches reaching VALUE are refused instead of queued. When 0
+    #   is set there is no limit. Default value is 100;
     # * 'mail.batch_size': used in
     #   - MailComposer._action_send_mail_mass_mail(): mails generation based on records
     #   - MailThread._notify_thread_by_email(): mails generation for notification emails

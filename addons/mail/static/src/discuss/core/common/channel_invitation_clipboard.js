@@ -1,0 +1,74 @@
+/**
+ * Splits on commas and semicolons, except inside quotes where they belong to a name,
+ * e.g. "Doe, John" <john@x.com>.
+ * @param {string} text
+ */
+export function splitEntries(text) {
+    return (text.match(/(?:"[^"]*"|[^,;])+/g) ?? []).map((entry) => entry.trim()).filter(Boolean);
+}
+
+export function parseClipboard(clipboardData) {
+    if (clipboardData.types.includes("text/html")) {
+        const htmlData = parseHtmlClipboard(clipboardData.getData("text/html"));
+        if (htmlData !== null) {
+            return htmlData;
+        }
+    }
+    if (clipboardData.types.includes("text/plain")) {
+        const textData = clipboardData.getData("text/plain");
+        return parseTextClipboard(textData);
+    }
+    return null;
+}
+
+/**
+ * Parses the text content of the clipboard rows and returns a comma-separated string of non-empty values.
+ * @param {string} clipboardDataHtml - The raw HTML content from the clipboard.
+ */
+export function parseHtmlClipboard(clipboardDataHtml) {
+    const tableDiv = window.DOMPurify.sanitize(clipboardDataHtml, {
+        ALLOWED_TAGS: ["table", "tr", "td", "th"],
+        RETURN_DOM: true,
+    });
+    if (!tableDiv) {
+        return null;
+    }
+    const tables = tableDiv.querySelectorAll("table");
+    if (tables.length !== 1) {
+        return null;
+    }
+    if (tableDiv.textContent.trim() !== tables[0].textContent.trim()) {
+        return null;
+    }
+    let rows = Array.from(tables[0].querySelectorAll("tr"));
+    if (rows.length) {
+        const firstRowWithHeader = rows[0].querySelectorAll("th").length > 0;
+        if (firstRowWithHeader && rows.length < 2) {
+            return "";
+        }
+        rows = rows.slice(firstRowWithHeader ? 1 : 0);
+    }
+    return rows
+        .reduce((acc, row) => {
+            const cells = Array.from(row.querySelectorAll("td"));
+            const cellTexts = cells
+                .map((cell) => cell.textContent.trim())
+                .filter((text) => text.length > 0);
+            return acc.concat(cellTexts);
+        }, [])
+        .join(",");
+}
+
+/**
+ * Parses the text content of the clipboard and returns a comma-separated string of non-empty
+ * values, splitting only on line breaks so a multi-word value on a single line (e.g. a full name)
+ * is kept as one term.
+ * @param {string} clipboardText - The raw text content from the clipboard.
+ */
+export function parseTextClipboard(clipboardText) {
+    return clipboardText
+        .split(/\r?\n/)
+        .map((s) => s.trim())
+        .filter((s) => s.length)
+        .join(",");
+}
