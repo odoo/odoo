@@ -1481,7 +1481,15 @@ class SaleOrder(models.Model):
                                 or line.product_uom_qty <= 0
                             ):
                                 continue
+<<<<<<< f5c07525c5ccf8d6ccb37bb5f118acc16d8e9465
                             line_price_total = self._get_order_line_price(line, "price_total")
+||||||| 33b9aa4435a6dce38b9743dfb1fdbe821c2cc47c
+                            line_price_total = self._get_order_line_price(line, 'price_total')
+=======
+                            line_price_total = self.currency_id._convert(
+                                self._get_order_line_price(line, 'price_total'), program.currency_id, self.company_id,
+                            )
+>>>>>>> 3c88a6b91edb47f9e7b76dd55ba091660c11a1d5
                             points_per_unit = float_round(
                                 (
                                     rule.reward_point_amount
@@ -1513,6 +1521,7 @@ class SaleOrder(models.Model):
                         line_price_total = self._get_order_line_price(line, "price_total")
                         amount_paid += line_price_total if line.product_id in rule_products else 0.0
 
+<<<<<<< f5c07525c5ccf8d6ccb37bb5f118acc16d8e9465
                     points += float_round(
                         rule.reward_point_amount * amount_paid,
                         precision_digits=2,
@@ -1523,6 +1532,21 @@ class SaleOrder(models.Model):
             # NOTE: for programs that are nominative we always allow the program to be 'applied' on
             # the order with 0 points so that `_get_claimable_rewards` returns the rewards
             # associated with those programs.
+||||||| 33b9aa4435a6dce38b9743dfb1fdbe821c2cc47c
+                        points += float_round(rule.reward_point_amount * amount_paid, precision_digits=2, rounding_method='DOWN')
+                    elif rule.reward_point_mode == 'unit':
+                        points += rule.reward_point_amount * ordered_rule_products_qty
+            # NOTE: for programs that are nominative we always allow the program to be 'applied' on the order
+            #  with 0 points so that `_get_claimable_rewards` returns the rewards associated with those programs
+=======
+                        # Points are given per amount spent in the currency of the program
+                        amount_paid = self.currency_id._convert(amount_paid, program.currency_id, self.company_id)
+                        points += float_round(rule.reward_point_amount * amount_paid, precision_digits=2, rounding_method='DOWN')
+                    elif rule.reward_point_mode == 'unit':
+                        points += rule.reward_point_amount * ordered_rule_products_qty
+            # NOTE: for programs that are nominative we always allow the program to be 'applied' on the order
+            #  with 0 points so that `_get_claimable_rewards` returns the rewards associated with those programs
+>>>>>>> 3c88a6b91edb47f9e7b76dd55ba091660c11a1d5
             if not program.is_nominative:
                 if not code_matched:
                     program_result["error"] = _("This program requires a code to be applied.")
