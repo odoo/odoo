@@ -17,6 +17,7 @@
                             class="preset_btn fs-2 fw-medium g-col-12 g-col-sm-6 d-flex flex-row-inverse flex-sm-column align-items-center border border-light shadow-sm overflow-hidden bg-white rounded cursor-pointer rounded-4 position-relative"
                             t-att-class="{
                                 'justify-content-center': !preset.has_image,
+                                'py-4': !preset.has_image and this.showAverageTime(preset),
                                 'g-col-md-6': this.presets.length === 2,
                                 'g-col-md-4': this.presets.length &gt; 2,
                                 'g-start-sm-4': this.presets.length === 1,
@@ -26,12 +27,12 @@
                                     <div class="ratio ratio-1x1">
                                         <img class="object-fit-cover" t-attf-src="/web/image/pos.preset/#{preset.id}/image_512?unique=#{preset.write_date} "/>
                                     </div>
-                                    <span t-if="this.ui.size gt this.SIZES.XS and preset.use_timing" class="badge text-bg-secondary rounded-pill p-2 m-2 bg-opacity-75 position-absolute bottom-0 end-0">
+                                    <span t-if="this.showAverageTime(preset)" class="badge text-bg-secondary rounded-pill p-2 m-2 bg-opacity-75 position-absolute bottom-0 end-0">
                                         Average time: <t t-out="preset.interval_time"/> minutes
                                     </span>
                                 </div>
                             </t>
-                            <t t-elif="this.ui.size gt this.SIZES.XS and preset.use_timing">
+                            <t t-elif="this.showAverageTime(preset)">
                                 <span class="badge text-bg-secondary rounded-pill p-2 m-2 bg-opacity-75 position-absolute bottom-0 end-0">
                                     Average time: <t t-out="preset.interval_time"/> minutes
                                 </span>
