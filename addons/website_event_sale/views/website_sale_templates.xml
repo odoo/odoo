@@ -45,7 +45,7 @@
                             </a>
                         </div>
                         <h6 t-if="not event.is_multi_slots" class="mx-2 mb-0">
-                            <span t-out="event.date_begin" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'medium'}"/>
+                            <span t-out="min(attendees.mapped('event_begin_date')) if attendees else event.date_begin" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'medium'}"/>
                             <span t-if="website_visitor_timezone != event.date_tz" class="d-block mt-1 smaller opacity-75">(<t t-out="event.date_tz"/>)</span>
                         </h6>
                         <div t-if="attendees and not event.is_multi_slots" class="ms-2 my-3">

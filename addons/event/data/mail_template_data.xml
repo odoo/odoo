@@ -71,13 +71,13 @@
                                 <strong>Add this event to your calendar</strong>
                             </td>
                             <td>
-                                <a t-attf-href="/event/{{ slug(object.event_id) }}/ics?slot_id={{ object.event_slot_id.id }}{{ '&amp;lang=%s' % ctx['lang'] if ctx.get('lang') else '' }}"
+                                <a t-attf-href="/event/{{ slug(object.event_id) }}/ics?slot_id={{ object.event_slot_id.id }}&amp;ticket_id={{ object.event_ticket_id.id }}{{ '&amp;lang=%s' % ctx['lang'] if ctx.get('lang') else '' }}"
                                     style="padding-top: 10px; padding-right:8px; padding-bottom:2px; padding-left:8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;">
                                     <img src="/event/static/src/img/apple-calendar-128.png" alt="iCal" title="iCal" style="height: 20px; vertical-align: baseline;"/>
                                 </a>
                             </td>
                             <td>
-                                <a t-attf-href="/event/{{ slug(object.event_id) }}/ics?slot_id={{ object.event_slot_id.id }}{{ '&amp;lang=%s' % ctx['lang'] if ctx.get('lang') else '' }}"
+                                <a t-attf-href="/event/{{ slug(object.event_id) }}/ics?slot_id={{ object.event_slot_id.id }}&amp;ticket_id={{ object.event_ticket_id.id }}{{ '&amp;lang=%s' % ctx['lang'] if ctx.get('lang') else '' }}"
                                     style="padding-top: 10px; padding-right:8px; padding-bottom:2px; padding-left:8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;">
                                     <img src="/event/static/src/img/outlook-calendar-128.png" alt="Outlook" title="Outlook" style="height: 20px; vertical-align: baseline;"/>
                                 </a>
@@ -121,7 +121,7 @@
                                 <img src="/mail/font_to_img/61555/rgb(81,81,102)/34" style="padding:4px;max-width:inherit;" height="34" alt=""/>
                             </td>
                             <td style="padding: 0px 10px 0px 10px;width:50%;line-height:20px;vertical-align:top;">
-                                <div t-if="object.event_id.is_one_day">
+                                <div t-if="object.is_one_day">
                                     <t t-out="object.event_begin_date" t-options='{"widget": "datetime", "date_only": True, "tz_name": object.event_id.date_tz, "format": "long"}'>May 4, 2021</t>
                                     <t t-out="object.event_begin_date" t-options='{"widget": "datetime", "time_only": True, "tz_name": object.event_id.date_tz, "hide_seconds": True, "format": "short"}'>7:00 AM</t>
                                      - <t t-out="object.event_end_date" t-options='{"widget": "datetime", "time_only": True, "tz_name": object.event_id.date_tz, "hide_seconds": True, "format": "short"}'>5:00 PM</t>
@@ -359,13 +359,13 @@
                                 <strong>Add this event to your calendar</strong>
                             </td>
                             <td>
-                                <a t-attf-href="/event/{{ slug(object.event_id) }}/ics?slot_id={{ object.event_slot_id.id }}{{ '&amp;lang=%s' % ctx['lang'] if ctx.get('lang') else '' }}"
+                                <a t-attf-href="/event/{{ slug(object.event_id) }}/ics?slot_id={{ object.event_slot_id.id }}&amp;ticket_id={{ object.event_ticket_id.id }}{{ '&amp;lang=%s' % ctx['lang'] if ctx.get('lang') else '' }}"
                                     style="padding-top: 10px; padding-right:8px; padding-bottom:2px; padding-left:8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;">
                                     <img src="/event/static/src/img/apple-calendar-128.png" alt="iCal" title="iCal" style="height: 20px; vertical-align: baseline;"/>
                                 </a>
                             </td>
                             <td>
-                                <a t-attf-href="/event/{{ slug(object.event_id) }}/ics?slot_id={{ object.event_slot_id.id }}{{ '&amp;lang=%s' % ctx['lang'] if ctx.get('lang') else '' }}"
+                                <a t-attf-href="/event/{{ slug(object.event_id) }}/ics?slot_id={{ object.event_slot_id.id }}&amp;ticket_id={{ object.event_ticket_id.id }}{{ '&amp;lang=%s' % ctx['lang'] if ctx.get('lang') else '' }}"
                                     style="padding-top: 10px; padding-right:8px; padding-bottom:2px; padding-left:8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;">
                                     <img src="/event/static/src/img/outlook-calendar-128.png" alt="Outlook" title="Outlook" style="height: 20px; vertical-align: baseline;"/>
                                 </a>
@@ -409,7 +409,7 @@
                                 <img src="/mail/font_to_img/61555/rgb(81,81,102)/34" style="padding:4px;max-width:inherit;" height="34" alt=""/>
                             </td>
                             <td style="padding: 0px 10px 0px 10px;width:50%;line-height:20px;vertical-align:top;">
-                                <div t-if="object.event_id.is_one_day">
+                                <div t-if="object.is_one_day">
                                     <t t-out="object.event_begin_date" t-options='{"widget": "datetime", "date_only": True, "tz_name": object.event_id.date_tz, "format": "long"}'>May 4, 2021</t>
                                     <t t-out="object.event_begin_date" t-options='{"widget": "datetime", "time_only": True, "tz_name": object.event_id.date_tz, "hide_seconds": True, "format": "short"}'>7:00 AM</t>
                                      - <t t-out="object.event_end_date" t-options='{"widget": "datetime", "time_only": True, "tz_name": object.event_id.date_tz, "hide_seconds": True, "format": "short"}'>5:00 PM</t>
@@ -634,13 +634,13 @@
                                 <strong>Add this event to your calendar</strong>
                             </td>
                             <td>
-                                <a t-attf-href="/event/{{ slug(object.event_id) }}/ics?slot_id={{ object.event_slot_id.id }}{{ '&amp;lang=%s' % ctx['lang'] if ctx.get('lang') else '' }}"
+                                <a t-attf-href="/event/{{ slug(object.event_id) }}/ics?slot_id={{ object.event_slot_id.id }}&amp;ticket_id={{ object.event_ticket_id.id }}{{ '&amp;lang=%s' % ctx['lang'] if ctx.get('lang') else '' }}"
                                     style="padding-top: 10px; padding-right:8px; padding-bottom:2px; padding-left:8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;">
                                     <img src="/event/static/src/img/apple-calendar-128.png" alt="iCal" title="iCal" style="height: 20px; vertical-align: baseline;"/>
                                 </a>
                             </td>
                             <td>
-                                <a t-attf-href="/event/{{ slug(object.event_id) }}/ics?slot_id={{ object.event_slot_id.id }}{{ '&amp;lang=%s' % ctx['lang'] if ctx.get('lang') else '' }}"
+                                <a t-attf-href="/event/{{ slug(object.event_id) }}/ics?slot_id={{ object.event_slot_id.id }}&amp;ticket_id={{ object.event_ticket_id.id }}{{ '&amp;lang=%s' % ctx['lang'] if ctx.get('lang') else '' }}"
                                     style="padding-top: 10px; padding-right:8px; padding-bottom:2px; padding-left:8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;">
                                     <img src="/event/static/src/img/outlook-calendar-128.png" alt="Outlook" title="Outlook" style="height: 20px; vertical-align: baseline;"/>
                                 </a>
@@ -684,7 +684,7 @@
                                 <img src="/mail/font_to_img/61555/rgb(81,81,102)/34" style="padding:4px;max-width:inherit;" height="34" alt=""/>
                             </td>
                             <td style="padding: 0px 10px 0px 10px;width:50%;line-height:20px;vertical-align:top;">
-                                <div t-if="object.event_id.is_one_day">
+                                <div t-if="object.is_one_day">
                                     <t t-out="object.event_begin_date" t-options='{"widget": "datetime", "date_only": True, "tz_name": object.event_id.date_tz, "format": "long"}'>May 4, 2021</t>
                                     <t t-out="object.event_begin_date" t-options='{"widget": "datetime", "time_only": True, "tz_name": object.event_id.date_tz, "hide_seconds": True, "format": "short"}'>7:00 AM</t>
                                      - <t t-out="object.event_end_date" t-options='{"widget": "datetime", "time_only": True, "tz_name": object.event_id.date_tz, "hide_seconds": True, "format": "short"}'>5:00 PM</t>

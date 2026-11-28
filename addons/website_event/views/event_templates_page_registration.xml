@@ -410,7 +410,7 @@
                                         <b>Start</b>
                                     </div>
                                     <div class="col-12 col-md-auto ps-md-0">
-                                        <span t-out="slot.start_datetime if event.is_multi_slots else event.date_begin"
+                                        <span t-out="attendees_date_begin or (slot.start_datetime if event.is_multi_slots else event.date_begin)"
                                             t-options='{"widget": "datetime", "show_seconds": False, "tz_name": event.date_tz, "format": "medium"}'/>
                                     </div>
                                 </div>
@@ -419,7 +419,7 @@
                                         <b>End</b>
                                     </div>
                                     <div class="col-12 col-md-auto ps-md-0">
-                                        <span t-out="slot.end_datetime if event.is_multi_slots else event.date_end"
+                                        <span t-out="attendees_date_end or (slot.end_datetime if event.is_multi_slots else event.date_end)"
                                             t-options='{"widget": "datetime", "show_seconds": False, "tz_name": event.date_tz, "format": "medium"}'/>
                                     </div>
                                 </div>
@@ -453,6 +453,21 @@
             </div>
         </div>
         <input t-if='website.plausible_shared_key' type='hidden' class='js_plausible_push' data-event-name='Lead Generation' t-attf-data-event-params='{"CTA": "Event Registration"}' />
+    </t>
+</template>
+
+<!-- Dates of a ticket valid on its own dates (not for multi-slot events: the slot gives the dates) -->
+<template id="registration_ticket_validity" name="Registration Ticket Validity">
+    <t t-if="not event.is_multi_slots and (ticket.date_begin or ticket.date_end)">
+        <t t-set="ticket_date_begin" t-value="ticket.date_begin or event.date_begin"/>
+        <t t-set="ticket_date_end" t-value="ticket.date_end or event.date_end"/>
+        <small class="o_wevent_ticket_validity d-block text-muted">
+            <i class="oi oi-fw me-1" data-icon="calendar_today" role="img" aria-hidden="true"/>
+            <span t-out="ticket_date_begin" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'short'}"/>
+            <i class="oi mx-1" data-icon="arrow_forward" role="img" aria-label="to"/>
+            <span t-out="ticket_date_end" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'short'}"/>
+            <span t-if="website_visitor_timezone != event.date_tz">(<t t-out="event.date_tz"/>)</span>
+        </small>
     </t>
 </template>
 
@@ -497,6 +512,10 @@
                         </p>
                     </div>
                     <t t-set="tickets" t-value="event.event_ticket_ids.filtered(lambda ticket: not ticket.is_expired)"/>
+                    <!-- Multi-ticket events only offer the tickets valid for the selected slot -->
+                    <t t-if="event_slot and len(event.event_ticket_ids) &gt; 1"
+                       t-set="tickets"
+                       t-value="tickets.filtered(lambda ticket: ticket._is_valid_for_slot(event_slot))"/>
                     <!-- If some tickets expired and there is only one type left, we keep the same layout -->
                     <t t-if="len(event.event_ticket_ids) &gt; 1">
                         <span t-if="not event.event_registrations_open" class="text-danger">
@@ -512,6 +531,7 @@
                                         <small t-field="ticket.description" class="text-muted py-2"/>
                                         <br/>
                                     </t>
+                                    <t t-call="website_event.registration_ticket_validity"/>
                                     <small t-if="ticket.end_sale_datetime and ticket.sale_available and not ticket.is_expired"
                                         class="text-muted me-3">Sales end on
                                         <span t-out="ticket.end_sale_datetime"
@@ -595,6 +615,7 @@
                                     <small t-field="tickets.description" class="text-muted py-2"/>
                                     <br/>
                                 </t>
+                                <t t-if="tickets" t-call="website_event.registration_ticket_validity" ticket="tickets"/>
                                 <small t-if="tickets.end_sale_datetime and tickets.sale_available and not tickets.is_expired"
                                     class="text-muted">
                                     Sales end on

@@ -488,14 +488,22 @@ class EventEvent(models.Model):
             return self.env.ref('website_event.mt_event_unpublished', raise_if_not_found=False) or super()._track_log_get_default_subtype(track_init_values)
         return super()._track_log_get_default_subtype(track_init_values)
 
-    def _get_event_resource_urls(self, slot=False):
+    def _get_event_resource_urls(self, slot=False, ticket=False):
         """ Prepare the Google and iCal urls for the event.
         :param slot: If a slot is given, prepare the urls for the given slot.
+        :param ticket: If a ticket is given (and no slot), prepare the urls for
+          the ticket validity dates.
         Returns:
             The google and iCal url in a dictionnary
         """
-        start = slot.start_datetime if slot else self.date_begin
-        end = slot.end_datetime if slot else self.date_end
+        if ticket and not (ticket.date_begin or ticket.date_end):
+            ticket = False  # keep the plain event urls for tickets without own dates
+        if slot:
+            start, end = slot.start_datetime, slot.end_datetime
+        elif ticket:
+            start, end = ticket._get_validity_dates()
+        else:
+            start, end = self.date_begin, self.date_end
         url_date_start = start.astimezone(ZoneInfo(self.date_tz)).strftime('%Y%m%dT%H%M%S')
         url_date_stop = end.astimezone(ZoneInfo(self.date_tz)).strftime('%Y%m%dT%H%M%S')
         params = {
@@ -512,6 +520,8 @@ class EventEvent(models.Model):
         iCal_url = f'/event/{self.id:d}/ics'
         if slot:
             iCal_url += '?' + werkzeug.urls.url_encode({'slot_id': slot.id})
+        elif ticket:
+            iCal_url += '?' + werkzeug.urls.url_encode({'ticket_id': ticket.id})
         return {'google_url': google_url, 'iCal_url': iCal_url}
 
     def _get_ics_description(self):

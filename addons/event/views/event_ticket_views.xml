@@ -73,6 +73,13 @@
             <list string="Tickets" editable="bottom">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
+                <field name="event_slot_ids" widget="many2many_tags"
+                       placeholder="All slots" options="{'no_create': True}"
+                       column_invisible="not context.get('is_event_multi_slots')"/>
+                <field name="date_begin" optional="show" placeholder="Event start"
+                       column_invisible="context.get('is_event_multi_slots')"/>
+                <field name="date_end" optional="show" placeholder="Event end"
+                       column_invisible="context.get('is_event_multi_slots')"/>
                 <field name="description" optional="hide"/>
                 <field name="entry_limit" optional="hide"/>
                 <field name="start_sale_datetime" optional="show"/>
@@ -97,6 +104,13 @@
                     <group>
                         <group>
                             <field name="name"/>
+                            <field name="event_slot_ids" widget="many2many_tags"
+                                   placeholder="All slots" options="{'no_create': True}"
+                                   invisible="not context.get('is_event_multi_slots')"/>
+                            <field name="date_begin" placeholder="Event start"
+                                   invisible="context.get('is_event_multi_slots')"/>
+                            <field name="date_end" placeholder="Event end"
+                                   invisible="context.get('is_event_multi_slots')"/>
                             <field name="description"/>
                             <field name="start_sale_datetime"/>
                             <field name="end_sale_datetime"/>

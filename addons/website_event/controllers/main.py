@@ -530,9 +530,13 @@ class WebsiteEventController(http.Controller):
 
     def _get_registration_confirm_values(self, event, attendees_sudo):
         slot = attendees_sudo.event_slot_id
-        urls = event._get_event_resource_urls(slot)
+        # calendar links follow the ticket dates only when all attendees share it
+        ticket = attendees_sudo.event_ticket_id if len(attendees_sudo.event_ticket_id) == 1 else False
+        urls = event._get_event_resource_urls(slot, ticket=ticket)
         return {
             'attendees': attendees_sudo,
+            'attendees_date_begin': min(attendees_sudo.mapped('event_begin_date'), default=False),
+            'attendees_date_end': max(attendees_sudo.mapped('event_end_date'), default=False),
             'event': event,
             'google_url': urls.get('google_url'),
             'iCal_url': urls.get('iCal_url'),

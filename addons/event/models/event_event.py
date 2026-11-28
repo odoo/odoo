@@ -710,7 +710,8 @@ class EventEvent(models.Model):
 
     def _get_seats_availability(self, slot_tickets):
         """ Get availabilities for given combinations of slot / ticket. Returns
-        a list following input order. None denotes no limit. """
+        a list following input order. None denotes no limit. A ticket restricted
+        to some slots has no seat on the other ones. """
         self.ensure_one()
         if not (all(len(item) == 2 for item in slot_tickets)):
             raise ValueError('Input should be a list of tuples containing slot, ticket')
@@ -728,6 +729,9 @@ class EventEvent(models.Model):
 
         availabilities = []
         for slot, ticket in slot_tickets:
+            if slot and ticket and not ticket._is_valid_for_slot(slot):
+                availabilities.append(0)
+                continue
             available = None
             # event is constrained: max stands for either each slot, either global (no slots)
             if self.seats_limited and self.seats_max:
@@ -863,9 +867,11 @@ class EventEvent(models.Model):
         """Get a url-encoded version of the description for mail templates."""
         return urllib.parse.quote_plus(self._get_ics_description())
 
-    def _get_ics_file(self, slot=False):
+    def _get_ics_file(self, slot=False, ticket=False):
         """ Returns iCalendar file for the event invitation.
             :param slot: If a slot is given, schedule with the given slot datetimes
+            :param ticket: If a ticket is given (and no slot), schedule with the
+              ticket validity datetimes
             :returns a dict of .ics file content for each event
         """
         result = {}
@@ -875,8 +881,12 @@ class EventEvent(models.Model):
         for event in self:
             cal = vobject.iCalendar()
             cal_event = cal.add('vevent')
-            start = slot.start_datetime if slot else event.date_begin
-            end = slot.end_datetime if slot else event.date_end
+            if slot:
+                start, end = slot.start_datetime, slot.end_datetime
+            elif ticket and ticket.event_id == event:
+                start, end = ticket._get_validity_dates()
+            else:
+                start, end = event.date_begin, event.date_end
 
             # vobject does *not* like datetime.UTC (this was fixed by
             # py-vobject/vobject#88 which isn't even in 0.9.9, current release
