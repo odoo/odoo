@@ -590,6 +590,12 @@ class Meeting(models.Model):
                 meeting_activity_type = self.env['mail.activity.type']
                 if existing_type and existing_type.res_model in {False, res_model.model}:
                     meeting_activity_type = existing_type
+                if not meeting_activity_type and values.get('recurrence_id'):
+                    # occurrence of a recurrence: keep the activity type of the base event
+                    recurrence = self.env['calendar.recurrence'].browse(values['recurrence_id'])
+                    meeting_activity_type = recurrence.base_event_id.activity_ids.activity_type_id.filtered(
+                        lambda act: act.res_model in {False, res_model.model}
+                    )[:1]
                 if not meeting_activity_type:
                     meeting_activity_type = meeting_activity_types.filtered(
                         lambda act: act.res_model in {False, res_model.model}
