@@ -136,8 +136,7 @@ class ProjectTask(models.Model):
         sql = SQL("""(
             SELECT id
               FROM %s
-             WHERE remaining_hours > 0
-               AND allocated_hours > 0
+             WHERE allocated_hours > 0
                AND remaining_hours / allocated_hours %s %s
         )""", SQL.identifier(self._table), SQL(operator), value)
         return [('id', 'in', sql)]

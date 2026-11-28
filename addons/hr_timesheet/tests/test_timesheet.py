@@ -1087,6 +1087,7 @@ class TestTimesheet(TestCommonTimesheet):
             self.project,
             self.env['project.project'].search([('is_project_overtime', '=', True)])
         )
+<<<<<<< c6aae6a08450e5702d8e063157ed81b59b1cdb02
 
     def test_task_reset_on_project_change(self):
         """ Changing the project_id of a timesheet should reset its task_id
@@ -1096,3 +1097,20 @@ class TestTimesheet(TestCommonTimesheet):
         self.timesheet.write({'project_id': self.project_customer.id})
         self.assertFalse(self.timesheet.task_id)
         self.assertEqual(self.timesheet.project_id, self.project_customer)
+||||||| 1ca39d22b685b71e969a19e471ec6f32bd56020c
+=======
+
+    def test_search_remaining_hours_percentage_task(self):
+        """A task with overtime compared to the allocated. It has a negative hours percentage.
+        If we try to find the task, we must find it."""
+        self.task1.allocated_hours = 10
+        self.env['account.analytic.line'].create({
+            'name': 'Extra hours',
+            'task_id': self.task1.id,
+            'unit_amount': 15,
+            'employee_id': self.empl_employee.id,
+        })
+        self.env.flush_all()
+        tasks = self.env['project.task'].search([('remaining_hours_percentage', '<', 0)])
+        self.assertIn(self.task1, tasks)
+>>>>>>> 5d3b6cfed64c045533043bea0969520c46073591
