@@ -66,6 +66,15 @@ def check_postgres_user():
         )
 
 
+def check_server_secret():
+    """ Exit if the server secret can't be read nor created. Read before the
+    workers fork: they all share it. """
+    try:
+        config.server_secret  # noqa: B018
+    except RuntimeError as e:
+        sys.exit(str(e))
+
+
 def report_configuration():
     """ Log the server version and some configuration values.
 
@@ -117,6 +126,7 @@ def main(args):
     check_root_user()
     config.parse_config(args, setup_logging=True)
     check_postgres_user()
+    check_server_secret()
     report_configuration()
 
     for db_name in config['db_name']:

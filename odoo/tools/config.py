@@ -8,6 +8,7 @@ import glob
 import logging
 import optparse
 import os
+import secrets
 import sys
 import tempfile
 import warnings
@@ -27,6 +28,12 @@ crypt_context = CryptContext(schemes=['pbkdf2_sha512', 'plaintext'],
 _dangerous_logger = logging.getLogger(__name__)  # use config._log() instead
 
 optparse._ = str  # disable gettext  # ty:ignore[unresolved-attribute]
+
+XDG_CONFIG_DIR = (
+    appdirs.user_config_dir(release.product_name, release.author)
+    if os.path.isdir(os.path.expanduser('~')) else
+    appdirs.site_config_dir(release.product_name, release.author)
+)
 
 ALL_DEV_MODE = ['access', 'qweb', 'reload', 'xml']
 DEFAULT_SERVER_WIDE_MODULES = ['base', 'rpc', 'web']
@@ -554,13 +561,7 @@ class configmanager:
             f'/var/lib/{release.product_name}'
         )
 
-        default_config_dir = (
-            appdirs.user_config_dir(release.product_name, release.author)
-            if os.path.isdir(os.path.expanduser('~')) else
-            appdirs.site_config_dir(release.product_name, release.author)
-        )
-        default_config_file = os.path.join(default_config_dir, 'odoo.conf')
-
+        default_config_file = os.path.join(XDG_CONFIG_DIR, 'odoo.conf')
         if os.path.isfile(default_config_file):
             rcfilepath = default_config_file
         elif os.name == 'nt':
@@ -748,6 +749,10 @@ class configmanager:
 
     def _postprocess_options(self):
         self._runtime_options.clear()
+        try:
+            del self.server_secret  # clear the cache
+        except AttributeError:
+            pass
 
         # check for mutualy exclusive / dependant options
         if self.options['syslog'] and self.options['logfile']:
@@ -1136,6 +1141,10 @@ class configmanager:
     def filestore(self, dbname):
         return os.path.join(self['data_dir'], 'filestore', dbname)
 
+    def cache_dir(self, dbname):
+        """ Directory of the values of ``ir.cache``, next to the filestore. """
+        return os.path.join(self['data_dir'], 'cache', dbname)
+
     def set_admin_password(self, new_password):
         self.options['admin_passwd'] = crypt_context.hash(new_password)
 
@@ -1191,6 +1200,68 @@ class configmanager:
             'configuration file': self._file_options.get(name, EMPTY),
             'hardcoded default': self._default_options.get(name, EMPTY),
         }
+
+    @functools.cached_property
+    def server_secret(self) -> bytes:
+        """
+        Get the security token stored in ``<data_dir>/server-secret``.
+
+        In case the file doesn't exist or is corrupt: a new token is
+        generated and saved.
+
+        :raises RuntimeError: When the token can't be saved (e.g. readonly
+            filesystem): there is no fallback, all the processes and servers
+            must share the same persistent secret.
+        """
+        server_secret_path = os.path.join(self['data_dir'], 'server-secret')
+        try:
+            with open(server_secret_path, encoding='ascii') as file:
+                if len(secret := bytes.fromhex(file.read())) >= secrets.DEFAULT_ENTROPY:
+                    return secret
+        except (OSError, ValueError):
+            pass
+
+        self._log(logging.INFO, "Rotating server secret at %s: file was missing, empty or corrupted.", server_secret_path)
+        try:
+            return self.rotate_server_secret()
+        except OSError as exc:
+            # No fallback: a secret that is not persistent, or not shared by
+            # all the processes (each worker would generate its own), breaks
+            # what relies on it (e.g. the signatures of ir.cache).
+            e = (
+                f"Can't save the server secret at {server_secret_path}: {exc}\n"
+                "Odoo needs a persistent secret, shared by all its processes and servers. Either:\n"
+                f"- make the data directory {self['data_dir']} writable by the user running Odoo, "
+                "the secret is generated at the next start;\n"
+                "- or create the file beforehand, readable only by the user running Odoo, "
+                "containing at least 32 random bytes in hexadecimal, e.g.:\n"
+                f"    python3 -c 'import secrets; print(secrets.token_hex(32))' > {server_secret_path}\n"
+                f"    chmod 600 {server_secret_path}\n"
+                "Several servers sharing the same databases must use the same file."
+            )
+            raise RuntimeError(e) from exc
+
+    def rotate_server_secret(self) -> bytes:
+        """
+        Generate a new security token in ``<data_dir>/server-secret``.
+
+        :raises OSError: When writing the file failed.
+        :returns: The generated token.
+        """
+        os.makedirs(self['data_dir'], exist_ok=True)
+        server_secret_path = os.path.join(self['data_dir'], 'server-secret')
+        secret = secrets.token_bytes()  # 256 bits
+        # readable by the user running Odoo only, whatever the umask
+        fd = os.open(server_secret_path, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+        with open(fd, 'w', encoding='ascii') as file:
+            file.write(secret.hex())
+            file.write('\n')  # bytes.fromhex ignores this newline
+
+        try:
+            del self.server_secret  # clear the cache
+        except AttributeError:
+            pass
+        return secret
 
 
 config = configmanager()

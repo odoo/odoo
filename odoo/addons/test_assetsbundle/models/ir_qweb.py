@@ -14,3 +14,4 @@ class IrQweb(models.AbstractModel):
         registry = self.env.registry
         if init and registry.updated_modules and not registry.ready:
             self._pregenerate_assets_bundles()
+            self._pregenerate_view_caches()

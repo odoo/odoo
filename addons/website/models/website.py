@@ -377,7 +377,17 @@ class Website(models.CachedModel):
         if 'sequence' in values:
             self._ensure_default_website_consistency()
 
+        self._clear_qweb_cache()
         return result
+
+    def unlink(self):
+        self._clear_qweb_cache()
+        return super().unlink()
+
+    def _clear_qweb_cache(self):
+        """ Delete from `ir.cache` the compiled code of the templates of the
+        websites, see `ir.qweb._get_cache_key`. """
+        self.env['ir.cache']._clear('qweb', [f"({website_id!r}, " for website_id in self.ids])
 
     def _ensure_logo_media_attachment(self):
         """ Clone the bound logo as a media-library attachment so it shows up

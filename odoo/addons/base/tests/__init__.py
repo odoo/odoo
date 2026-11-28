@@ -9,6 +9,7 @@ from . import test_ir_actions
 from . import test_ir_actions_report
 from . import test_ir_asset
 from . import test_ir_attachment
+from . import test_ir_cache
 from . import test_ir_config_parameter
 from . import test_ir_cron
 from . import test_ir_default

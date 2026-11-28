@@ -161,6 +161,33 @@ class SurveyCase(common.TransactionCase):
     # UTILS / CONTROLLER ENDPOINTS FLOWS
     # ------------------------------------------------------------
 
+    def _warm_ir_cache(self):
+        """ Fill ir.cache with the templates rendered by the survey flows,
+        then clear all the caches to simulate a new worker: the query counts
+        do not depend on the templates compiled by the previous tests.
+        """
+        views = self.env['ir.ui.view'].search([
+            ('type', '=', 'qweb'),
+            ('mode', '=', 'primary'),
+            '|', ('key', '=like', 'survey.%'), ('key', 'in', [
+                'mail.mail_notification_light',
+                'mail.notification_preview',
+                'web.brand_promotion_message',
+                'web.conditional_assets_tests',
+                'web.html_container',
+                'web.report_layout',
+                'website.font_links',
+            ]),
+        ])
+        website = self.env['website'].search([], limit=1) if 'website' in self.env else None
+        for cookies_allowed in (False, True):
+            IrQweb = self.env['ir.qweb'].with_context(lang='en_US', website_id=website and website.id, cookies_allowed=cookies_allowed)
+            for view in views:
+                IrQweb._compile(view.key)
+        self.env.transaction.invalidate_ormcache('templates')
+        self.env.transaction.invalidate_ormcache('stable')
+        self.env.invalidate_all()
+
     def _access_start(self, survey):
         return self.url_open('/survey/start/%s' % survey.access_token)
 

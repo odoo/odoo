@@ -836,3 +836,55 @@ class TestConfigManager(TransactionCase):
         else:
             e = "bin_path should had been re-exported:\n"
             self.fail(e + textwrap.indent(config, '    '))
+
+    def test_16_server_secret(self):
+        with (file_open_temporary_directory(self.env) as temp_dir,
+              patch.dict(self.config._runtime_options, {'data_dir': temp_dir})):
+            self.config.__dict__.pop('server_secret', None)  # clear @cached_property cache, if any
+            server_secret_path = os.path.join(temp_dir, 'server-secret')
+            log_rotate = "INFO:odoo.tools.config:Rotating server secret at %s: file was missing, empty or corrupted." % server_secret_path
+
+            # The server-secret file is generated on the fly when missing
+            with self.assertLogs('odoo.tools.config', 'INFO') as capture:
+                server_secret1 = self.config.server_secret
+            self.assertEqual(len(server_secret1), 32)
+            self.assertEqual(capture.output, [log_rotate])
+            with open(server_secret_path, encoding='ascii') as file:
+                self.assertEqual(file.read(), server_secret1.hex() + '\n')
+            self.assertEqual(os.stat(server_secret_path).st_mode & 0o777, 0o600, "readable by the owner only")
+
+            # fine loading it from cache or from disk
+            with self.assertNoLogs('odoo.tools.config'):
+                server_secret2 = self.config.server_secret  # from cached property
+                del self.config.server_secret
+                server_secret3 = self.config.server_secret  # from disk
+            self.assertEqual(server_secret2, server_secret1)
+            self.assertEqual(server_secret3, server_secret1)
+
+            # corrupt the file, assert it is re-generated
+            del self.config.server_secret
+            open(server_secret_path, 'wb').close()  # exists but empty
+            with self.assertLogs('odoo.tools.config', 'INFO') as capture:
+                server_secret4 = self.config.server_secret
+            self.assertEqual(len(server_secret4), 32)
+            self.assertNotEqual(server_secret4, server_secret1)
+            self.assertEqual(capture.output, [log_rotate])
+
+            # Bad flow: a read-only filesystem without the secret file, no
+            # fallback (each process would have its own secret)
+            os.remove(server_secret_path)
+            os.chmod(temp_dir, 0o555)
+            del self.config.server_secret
+            with self.assertLogs('odoo.tools.config', 'INFO') as capture, \
+                    self.assertRaisesRegex(RuntimeError, "Can't save the server secret") as error:
+                self.config.server_secret  # noqa: B018
+            self.assertEqual(capture.output, [log_rotate])
+            self.assertIn(server_secret_path, str(error.exception))
+            self.assertIn("token_hex(32)", str(error.exception))
+
+            # created beforehand, as the error explains
+            os.chmod(temp_dir, 0o755)
+            with open(server_secret_path, 'w', encoding='ascii') as file:
+                file.write(server_secret4.hex() + '\n')
+            with self.assertNoLogs('odoo.tools.config'):
+                self.assertEqual(self.config.server_secret, server_secret4)

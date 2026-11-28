@@ -50,6 +50,12 @@ class IrQweb(models.AbstractModel):
         """ Return the list of context keys to use for caching ``_compile``. """
         return super()._get_template_cache_keys() + ['website_id', 'cookies_allowed']
 
+    def _get_cache_website_ids(self, view):
+        # a website-specific view is only combined in the templates of its website
+        if view.website_id:
+            return [view.website_id.id]
+        return super()._get_cache_website_ids(view)
+
     def _pre_processing_att(self, attrib):
         self._copy_translate_attributes(attrib)
         super()._pre_processing_att(attrib)
@@ -131,3 +137,8 @@ class IrQweb(models.AbstractModel):
         except AccessError:
             return False
         return True
+
+    def _pregenerate_view_caches(self):
+        super(IrQweb, self.with_context(website_id=None))._pregenerate_view_caches()
+        for website in self.env['website'].get_all():
+            super(IrQweb, self.with_context(website_id=website.id))._pregenerate_view_caches()

@@ -129,6 +129,11 @@ class TestKarmaGain(common.SlidesCase):
         channel_partners = self.env['slide.channel.partner'].sudo().search([('partner_id', 'in', users.partner_id.ids)])
         self.assertEqual(len(channel_partners), 4)
 
+        # compile the layouts of the "new rank" email: the query count does
+        # not depend on the templates compiled by the previous tests
+        for template in ('mail.mail_notification_light', 'mail.notification_preview'):
+            self.env['ir.qweb'].with_context(lang='en_US')._compile(template)
+
         # Set courses as completed and update karma
         with self.assertQueryCount(58):  # com 58
             channel_partners._post_completion_update_hook()
