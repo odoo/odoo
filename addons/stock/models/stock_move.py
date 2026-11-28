@@ -5,6 +5,8 @@ from datetime import timedelta
 from operator import itemgetter
 from re import findall as regex_findall
 
+from markupsafe import Markup
+
 from odoo import _, api, Command, fields, models, SUPERUSER_ID
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
@@ -2442,6 +2444,34 @@ Please change the quantity done or the rounding precision in your settings.""",
 
     def _action_synch_order(self):
         return True
+
+    def action_remove_demand(self, create_backorder):
+        if create_backorder:
+            remove_message = self.env._(
+                "The following demand has been removed from this transfer by %(user_name)s.",
+                user_name=self.env.user.display_name,
+            )
+        else:
+            remove_message = self.env._(
+                "The following demand has been removed from this transfer by %(user_name)s and no backorder has been created.",
+                user_name=self.env.user.display_name,
+            )
+        open_moves = self.filtered(lambda m: m.state not in ("done", "cancel") and m.picking_id)
+        for move in open_moves:
+            message = Markup("<strong>%(remove_message)s</strong><br/><ul><li>%(product_label)s: %(product_name)s</li><li>%(quantity_label)s: %(quantity)s %(uom)s</li></ul>") % {
+                "remove_message": remove_message,
+                "product_label": self.env._("Product"),
+                "product_name": move.product_id.display_name,
+                "quantity_label": self.env._("Quantity"),
+                "quantity": move.product_uom_qty,
+                "uom": move.uom_id.name,
+            }
+            move.picking_id.message_post(body=message)
+
+        if create_backorder:
+            open_moves.picking_id._create_backorder(backorder_moves=open_moves)
+        else:
+            open_moves.unlink()
 
     def _create_backorder(self):
         # Split moves where necessary and move quants

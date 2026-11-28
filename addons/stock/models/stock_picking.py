@@ -1472,6 +1472,10 @@ class StockPicking(models.Model):
         self.ensure_one()
         return self.move_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
 
+    def _get_open_backorder(self):
+        self.ensure_one()
+        return self.env['stock.picking'].search([('backorder_id', '=', self.id), ('state', 'not in', ('done', 'cancel'))], order='id', limit=1)
+
     def _create_backorder_picking(self):
         self.ensure_one()
         return self.copy({
@@ -1499,16 +1503,18 @@ class StockPicking(models.Model):
                 moves_to_backorder = picking._get_moves_to_backorder()
             moves_to_backorder._recompute_state()
             if moves_to_backorder:
-                backorder_picking = picking._create_backorder_picking()
+                backorder_picking = picking._get_open_backorder()
+                if not backorder_picking:
+                    backorder_picking = picking._create_backorder_picking()
+                    backorder_picking.user_id = False
+                    picking.message_post(
+                        body=self.env._('The backorder %(backorder_picking_link)s has been created.',
+                        backorder_picking_link=backorder_picking._get_html_link()),
+                        subtype_xmlid='stock.mt_picking_state',
+                    )
                 moves_to_backorder.write({'picking_id': backorder_picking.id, 'picked': False})
                 moves_to_backorder.mapped('move_line_ids').write({'picking_id': backorder_picking.id})
                 backorders |= backorder_picking
-                backorder_picking.user_id = False
-                picking.message_post(
-                    body=self.env._('The backorder %(backorder_picking_link)s has been created.',
-                    backorder_picking_link=backorder_picking._get_html_link()),
-                    subtype_xmlid='stock.mt_picking_state',
-                )
                 if backorder_picking.picking_type_id.reservation_method == 'at_confirm':
                     bo_to_assign |= backorder_picking
                 elif from_manual_backorder:
