@@ -158,7 +158,7 @@ class HrLeaveAccrualPlan(models.Model):
     def _prevent_used_plan_unlink(self):
         domain = [
             ('accrual_plan_id', 'in', self.ids),
-            ('state', 'not in', ('cancel', 'refuse')),
+            ('state', '!=', 'refuse'),
         ]
         if self.env['hr.leave.allocation'].search_count(domain):
             raise ValidationError(_(

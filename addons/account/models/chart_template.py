@@ -807,11 +807,11 @@ class AccountChartTemplate(models.AbstractModel):
         if not company.account_sale_tax_id:
             company.account_sale_tax_id = self.env['account.tax'].search([
                 *self.env['account.tax']._check_company_domain(company),
-                ('type_tax_use', 'in', ('sale', 'all'))], limit=1).id
+                ('type_tax_use', '=', 'sale')], limit=1).id
         if not company.account_purchase_tax_id:
             company.account_purchase_tax_id = self.env['account.tax'].search([
                 *self.env['account.tax']._check_company_domain(company),
-                ('type_tax_use', 'in', ('purchase', 'all'))], limit=1).id
+                ('type_tax_use', '=', 'purchase')], limit=1).id
         # Set default taxes on products (only on products having already a tax set in another company, as some flows require no tax at all (e.g TIPS in PoS))
         # We need to browse the product in sudo to check for the taxes_id and supplier_taxes_id fields regardless of the companies record rules
         # that would, otherwise, just look empty all the time for the current user/company

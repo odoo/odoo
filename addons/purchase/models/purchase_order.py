@@ -1116,11 +1116,11 @@ class PurchaseOrder(models.Model):
         rfq_late_group = self.env['purchase.order']._read_group(rfq_late_domain, groupby, aggregate)
         _update('late', result, rfq_late_group)
 
-        rfq_not_acknowledge = [('state', 'in', ['purchase', 'done']), ('acknowledged', '=', False)]
+        rfq_not_acknowledge = [('state', '=', 'purchase'), ('acknowledged', '=', False)]
         rfq_not_acknowledge_group = self.env['purchase.order']._read_group(rfq_not_acknowledge, groupby, aggregate)
         _update('not_acknowledged', result, rfq_not_acknowledge_group)
 
-        rfq_late_receipt = [('state', 'in', ['purchase', 'done']), ('is_late', '=', True)]
+        rfq_late_receipt = [('state', '=', 'purchase'), ('is_late', '=', True)]
         rfq_late_receipt_group = self.env['purchase.order']._read_group(rfq_late_receipt, groupby, aggregate)
         _update('late_receipt', result, rfq_late_receipt_group)
 
