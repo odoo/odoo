@@ -10,6 +10,7 @@ patch(PosOrder.prototype, {
         this.uiState = {
             ...this.uiState,
             lineChanges: this.uiState.lineChanges || {},
+            lastGeneralCustomerNote: this.uiState.lastGeneralCustomerNote || "",
             receiptReady: false,
         };
     },
@@ -34,11 +35,15 @@ patch(PosOrder.prototype, {
             return acc;
         }, {});
     },
+    get hasGeneralNoteChange() {
+        return this.general_customer_note !== this.uiState.lastGeneralCustomerNote;
+    },
     get isTakeaway() {
         return this.preset_id?.service_at !== "table" && this.config.use_presets;
     },
     recomputeChanges() {
         const lines = this.lines;
+        this.uiState.lastGeneralCustomerNote = this.general_customer_note;
         for (const line of lines) {
             if (!line.isSynced) {
                 continue;
