@@ -1,7 +1,11 @@
 import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
 import { getVisibleElements } from "@web/core/utils/ui";
 import { Macro } from "@web/core/macro";
+import { Plugin, useListener, usePlugin } from "@odoo/owl";
+import { UIPlugin } from "@web/core/ui/ui_plugin";
+import { BarcodePlugin } from "./barcode_plugin";
+import { NotificationPlugin } from "@web/core/notifications/notification_plugin";
+import { services } from "@web/core/services";
 
 const ACTION_HELPERS = {
     click(el) {
@@ -73,18 +77,20 @@ export const COMMANDS = {
     "OCDPAGERLAST": () => updatePager("last"),
 };
 
-export const barcodeGenericHandlers = {
-    dependencies: ["ui", "barcode", "notification"],
-    start(env, { ui, barcode, notification }) {
+export class BarcodeGenericHandlersPlugin extends Plugin {
+    setup() {
+        const barcode = usePlugin(BarcodePlugin);
+        const notification = usePlugin(NotificationPlugin);
+        const ui = usePlugin(UIPlugin);
 
-        barcode.bus.addEventListener("barcode_scanned", (ev) => {
+        useListener(barcode.bus, "barcode_scanned", (ev) => {
             const barcode = ev.detail.barcode;
             if (barcode.startsWith("OBT")) {
                 let targets = [];
                 try {
                     // the scanned barcode could be anything, and could crash the queryselectorall
                     // function
-                    targets = getVisibleElements(ui.activeElement, `[barcode_trigger=${barcode.slice(3)}]`);
+                    targets = getVisibleElements(ui.activeElement(), `[barcode_trigger=${barcode.slice(3)}]`);
                 } catch {
                     console.warn(`Barcode '${barcode}' is not valid`);
                 }
@@ -99,12 +105,12 @@ export const barcodeGenericHandlers = {
                 } else {
                     notification.add(_t("Barcode: %(barcode)s", { barcode }), {
                         title: _t("Unknown barcode command"),
-                        type: "danger"
+                        type: "danger",
                     });
                 }
             }
         });
     }
-};
+}
 
-registry.category("services").add("barcode_handlers", barcodeGenericHandlers);
+services.add(BarcodeGenericHandlersPlugin);
