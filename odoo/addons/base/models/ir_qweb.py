@@ -406,7 +406,8 @@ from odoo.http import request
 from odoo.tools.profiler import QwebTracker
 from odoo.exceptions import UserError
 
-from odoo.addons.base.models.assetsbundle import AssetsBundle
+from odoo.addons.base.models.assetsbundle import AssetsBundle, attachments_cache
+from odoo.addons.base.models.ir_asset import glob_cache
 from odoo.addons.base.models.ir_ui_view import MOVABLE_BRANDING
 from odoo.tools.constants import SCRIPT_EXTENSIONS, STYLE_EXTENSIONS, TEMPLATE_EXTENSIONS, FONT_EXTENSIONS
 
@@ -3056,6 +3057,8 @@ class IrQweb(models.AbstractModel):
         asset_nodes = self._get_asset_nodes(bundle, js=False, debug=debug)
         return [node[1]['href'] for node in asset_nodes if node[0] == 'link']
 
+    @glob_cache()
+    @attachments_cache()
     def _pregenerate_assets_bundles(self):
         """
         Pregenerates all assets that may be used in web pages to speedup first loading.
@@ -3125,8 +3128,8 @@ class IrQweb(models.AbstractModel):
             for fname in glob.iglob('**/src/**/*.js', root_dir=manifest.static_path, recursive=True):
                 with file_open(opj(manifest.static_path, fname)) as f:
                     fcontent = f.read()
-                    if match := lazy_bundle_regex.search(fcontent):
-                        bundles.add(match[2])
+                if 'loadBundle' in fcontent:
+                    bundles.update(match[2] for match in lazy_bundle_regex.finditer(fcontent))
         return bundles
 
     def _can_user_modify(self, record):

@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import os
+from contextlib import contextmanager
+from contextvars import ContextVar
 from glob import glob
 from logging import getLogger
 from werkzeug import urls
@@ -8,6 +10,8 @@ from odoo import api, fields, models, tools
 from odoo.modules import Manifest
 from odoo.tools import misc
 from odoo.tools.constants import ASSET_EXTENSIONS, EXTERNAL_ASSET, BINARY_EXTENSIONS
+
+from odoo.addons.base.models.assetsbundle import file_content_hash
 
 _logger = getLogger(__name__)
 
@@ -43,9 +47,27 @@ def is_wildcard_glob(path):
     return '*' in path or '[' in path or ']' in path or '?' in path
 
 
+_glob_cache = ContextVar('glob_cache', default=None)
+
+
+@contextmanager
+def glob_cache():
+    token = _glob_cache.set({})
+    try:
+        yield
+    finally:
+        _glob_cache.reset(token)
+
+
 def _glob_static_file(pattern):
+    cache = _glob_cache.get()
+    if cache is not None and pattern in cache:
+        return cache[pattern]
     files = glob(pattern, recursive=True)
-    return sorted((file, os.path.getmtime(file)) for file in files if file.rsplit('.', 1)[-1] in ASSET_EXTENSIONS)
+    result = sorted((file, file_content_hash(file)) for file in files if file.rsplit('.', 1)[-1] in ASSET_EXTENSIONS)
+    if cache is not None:
+        cache[pattern] = result
+    return result
 
 
 class IrAsset(models.Model):
@@ -172,16 +194,23 @@ class IrAsset(models.Model):
         # of the CURRENT bundle.
         bundle_start_index = len(asset_paths.list)
 
-        assets = self._get_related_assets([('bundle', '=', bundle)], **assets_params).filtered('active')
+        # POC: the same bundles are included many times during pregenerate
+        cache = _glob_cache.get()
+        cache_key = ('related_assets', bundle, tuple(sorted(assets_params.items())))
+        if cache is not None and cache_key in cache:
+            assets = cache[cache_key]
+        else:
+            assets = self._get_related_assets([('bundle', '=', bundle)], **assets_params).filtered('active')
+            if cache is not None:
+                cache[cache_key] = assets
         # 1. Process the first sequence of 'ir.asset' records
         for asset in assets.filtered(lambda a: a.sequence < DEFAULT_SEQUENCE):
             self._process_path(bundle, asset.directive, asset.target, asset.path, asset_paths, seen, addons, installed, bundle_start_index, **assets_params)
 
         # 2. Process all addons' manifests.
-        for addon in addons:
-            for command in Manifest.for_addon(addon)._Manifest__manifest_cached['assets'].get(bundle, ()):
-                directive, target, path_def = self._process_command(command)
-                self._process_path(bundle, directive, target, path_def, asset_paths, seen, addons, installed, bundle_start_index, **assets_params)
+        for command in asset_paths.get_manifest_commands(bundle, addons):
+            directive, target, path_def = self._process_command(command)
+            self._process_path(bundle, directive, target, path_def, asset_paths, seen, addons, installed, bundle_start_index, **assets_params)
 
         # 3. Process the rest of 'ir.asset' records
         for asset in assets.filtered(lambda a: a.sequence >= DEFAULT_SEQUENCE):
@@ -406,6 +435,17 @@ class AssetPaths:
     def __init__(self):
         self.list = []
         self.memo = set()
+        self.manifest_assets = None
+
+    def get_manifest_commands(self, bundle, addons):
+        """Returns the commands of the addons' manifests for the given bundle, in addons order."""
+        if self.manifest_assets is None or self.manifest_assets[0] != addons:
+            commands_by_bundle = {}
+            for addon in addons:
+                for name, commands in Manifest.for_addon(addon)._Manifest__manifest_cached['assets'].items():
+                    commands_by_bundle.setdefault(name, []).extend(commands)
+            self.manifest_assets = (list(addons), commands_by_bundle)
+        return self.manifest_assets[1].get(bundle, ())
 
     def index(self, path, bundle):
         """Returns the index of the given path in the current assets list."""

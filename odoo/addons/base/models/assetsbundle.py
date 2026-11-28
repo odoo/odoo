@@ -7,6 +7,8 @@ import re
 import textwrap
 import uuid
 from collections import OrderedDict, defaultdict
+from contextlib import contextmanager
+from contextvars import ContextVar
 from subprocess import Popen, PIPE
 
 from lxml import etree
@@ -21,6 +23,42 @@ from odoo.tools.json import scriptsafe as json
 from odoo.tools.misc import file_open, file_path
 
 _logger = logging.getLogger(__name__)
+
+_attachments_cache = ContextVar('attachments_cache', default=None)
+
+
+@contextmanager
+def attachments_cache():
+    token = _attachments_cache.set({})
+    try:
+        yield
+    finally:
+        _attachments_cache.reset(token)
+
+
+def _invalidate_attachments_cache():
+    if (cache := _attachments_cache.get()) is not None:
+        cache.clear()
+
+
+def _like_to_regex(pattern):
+    return re.compile(''.join('.*' if c == '%' else '.' if c == '_' else re.escape(c) for c in pattern), re.DOTALL)
+
+
+_content_hash_cache = {}
+
+
+def file_content_hash(path):
+    st = os.stat(path)
+    key = (st.st_mtime_ns, st.st_size, st.st_ino)
+    cached = _content_hash_cache.get(path)
+    if cached and cached[0] == key:
+        return cached[1]
+    with open(path, 'rb') as f:
+        digest = hashlib.sha1(f.read()).hexdigest()
+    _content_hash_cache[path] = (key, digest)
+    return digest
+
 
 ANY_UNIQUE = '_' * 7
 EXTENSIONS = (".js", ".css", ".scss", ".sass", ".xml")
@@ -186,6 +224,7 @@ class AssetsBundle(object):
         could unload fields loaded with a sudo(), and expected to be readable by the view.
         Such a view would be website.layout when main_object is an ir.ui.view.
         """
+        _invalidate_attachments_cache()
         to_delete = OrderedSet(attach.store_fname for attach in attachments if attach.store_fname)
         self.env.cr.execute(SQL("""
             DELETE FROM %(table)s WHERE id IN (
@@ -259,17 +298,14 @@ class AssetsBundle(object):
            GROUP BY name
            ORDER BY name
         """
-        self.env.cr.execute(query, [SUPERUSER_ID, url_pattern])
-
-        attachment_id = [r[0] for r in self.env.cr.fetchall()]
+        attachment_id = self._search_attachment_ids(query, url_pattern)
         if not attachment_id and not ignore_version:
             fallback_url_pattern = self.get_asset_url(
                 unique=unique,
                 extension=extension,
                 ignore_params=True,
             )
-            self.env.cr.execute(query, [SUPERUSER_ID, fallback_url_pattern])
-            similar_attachment_ids = [r[0] for r in self.env.cr.fetchall()]
+            similar_attachment_ids = self._search_attachment_ids(query, fallback_url_pattern)
             if similar_attachment_ids:
                 similar = self.env['ir.attachment'].sudo().browse(similar_attachment_ids)
                 _logger.info('Found a similar attachment for %s, copying from %s', url_pattern, similar.url)
@@ -285,10 +321,35 @@ class AssetsBundle(object):
                     'url': url,
                 }
                 attachment = self.env['ir.attachment'].with_user(SUPERUSER_ID).create(values)
+                _invalidate_attachments_cache()
                 attachment_id = attachment.id
                 self._clean_attachments(extension, url)
 
         return self.env['ir.attachment'].sudo().browse(attachment_id)
+
+    def _search_attachment_ids(self, query, url_pattern):
+        cache = _attachments_cache.get()
+        if cache is None:
+            self.env.cr.execute(query, [SUPERUSER_ID, url_pattern])
+            return [r[0] for r in self.env.cr.fetchall()]
+        # POC: load all asset attachments once, then emulate the query in python
+        if 'rows' not in cache:
+            self.env.cr.execute("""
+                SELECT url, name, id
+                  FROM ir_attachment
+                 WHERE create_uid = %s
+                   AND url like '/web/assets/%%'
+                   AND res_model = 'ir.ui.view'
+                   AND res_id = 0
+                   AND public = true
+            """, [SUPERUSER_ID])
+            cache['rows'] = self.env.cr.fetchall()
+        regex = _like_to_regex(url_pattern)
+        ids = {}
+        for url, name, id_ in cache['rows']:
+            if regex.fullmatch(url):
+                ids[name] = max(ids.get(name, 0), id_)
+        return [ids[name] for name in sorted(ids)]
 
     def save_attachment(self, extension, content):
         """Record the given bundle in an ir.attachment and delete
@@ -334,6 +395,7 @@ class AssetsBundle(object):
             'url': url,
         }
         attachment = ira.with_user(SUPERUSER_ID).create(values)
+        _invalidate_attachments_cache()
 
         _logger.info('Generating a new asset bundle attachment %s (id:%s)', attachment.url, attachment.id)
 
@@ -811,7 +873,7 @@ class WebAsset(object):
             except Exception:  # most likely nor a file or an attachment, skip it
                 pass
             if self._filename and self.bundle.is_debug_assets:  # usually _last_modified should be set exept in debug=assets
-                self._last_modified = os.path.getmtime(self._filename)
+                self._last_modified = file_content_hash(self._filename)
             elif self._ir_attach:
                 self._last_modified = self._ir_attach.write_date.timestamp()
             if not self._last_modified:
