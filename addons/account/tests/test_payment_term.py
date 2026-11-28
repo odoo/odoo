@@ -162,6 +162,34 @@ class TestAccountPaymentTerms(AccountTestInvoicingCommon):
                 }),
             ],
         })
+        # example of 30/60/90 gg d.f. f.m. (30/60/90 giorni data fattura fine mese),
+        # not exact to the date but a best approximation with month offset
+        cls.pay_term_30_60_90_ggdffm = cls.env['account.payment.term'].create({
+            'name': '30_60_90_ggdffm',
+            'line_ids': [
+                (0, 0, {
+                    'value_amount': 33.33,
+                    'value': 'percent',
+                    'nb_days': 1,  # +30 days
+                    'delay_type': 'months_after_on_the',
+                    'days_next_month': 31,
+                }),
+                (0, 0, {
+                    'value_amount': 33.33,
+                    'value': 'percent',
+                    'nb_days': 2,  # +60 days
+                    'delay_type': 'months_after_on_the',
+                    'days_next_month': 31,
+                }),
+                (0, 0, {
+                    'value_amount': 33.34,
+                    'value': 'percent',
+                    'nb_days': 3,  # +90 days
+                    'delay_type': 'months_after_on_the',
+                    'days_next_month': 31,
+                }),
+            ],
+        })
 
     def assertPaymentTerm(self, pay_term, invoice_date, dates):
         with Form(self.invoice) as move_form:
@@ -186,6 +214,9 @@ class TestAccountPaymentTerms(AccountTestInvoicingCommon):
         self.assertPaymentTerm(self.pay_term_60_days, '2022-01-01', ['2022-01-16', '2022-02-15'])
         self.assertPaymentTerm(self.pay_term_60_days, '2022-01-15', ['2022-01-30', '2022-03-01'])
         self.assertPaymentTerm(self.pay_term_60_days, '2022-01-31', ['2022-02-15', '2022-03-17'])
+
+        self.assertPaymentTerm(self.pay_term_30_60_90_ggdffm, '2026-05-12', ['2026-06-30', '2026-07-31', '2026-08-31'])
+        self.assertPaymentTerm(self.pay_term_30_60_90_ggdffm, '2028-01-01', ['2028-02-29', '2028-03-31', '2028-04-30'])
 
     def test_wrong_payment_term(self):
         with self.assertRaises(ValidationError):
@@ -692,21 +723,23 @@ class TestAccountPaymentTerms(AccountTestInvoicingCommon):
         })
         self.assertFalse(invoice.invoice_payment_term_id)
 
-    def test_payment_term_rejects_negative_day_of_next_month(self):
-        payment_term = self.env['account.payment.term'].new({
-            'name': 'Invalid next-month day',
-            'line_ids': [Command.create({
-                'value': 'percent',
-                'value_amount': 100,
-                'nb_days': 0,
-                'delay_type': 'days_end_of_month_on_the',
-                'days_next_month': -1,
-            })],
-        })
+    def test_payment_term_rejects_day_of_next_month_outside_range(self):
+        for invalid_value in (-9, -1, 32, 99):
+            with self.subTest(days_next_month=invalid_value):
+                payment_term = self.env['account.payment.term'].new({
+                    'name': 'Invalid next-month day ' + str(invalid_value),
+                    'line_ids': [Command.create({
+                        'value': 'percent',
+                        'value_amount': 100,
+                        'nb_days': 0,
+                        'delay_type': 'days_end_of_month_on_the',
+                        'days_next_month': -1,
+                    })],
+                })
 
-        # Accessing the computed field triggers the due-date computation.
-        payment_term.example_preview
+                # Accessing the computed field triggers the due-date computation.
+                payment_term.example_preview
 
-        vals = payment_term._convert_to_write(payment_term._cache)
-        with self.assertRaisesRegex(ValidationError, 'The days added must be between 0 and 31.'):
-            self.env['account.payment.term'].create(vals)
+                vals = payment_term._convert_to_write(payment_term._cache)
+                with self.assertRaisesRegex(ValidationError, 'The days added must be between 0 and 31.'):
+                    self.env['account.payment.term'].create(vals)

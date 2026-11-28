@@ -148,8 +148,9 @@ class AccountTestInvoicingCommon(ProductCommon):
                 (0, 0, {
                     'value': 'percent',
                     'value_amount': 70.0,
-                    'delay_type': 'days_after_end_of_next_month',
-                    'nb_days': 0,
+                    'delay_type': 'months_after_on_the',
+                    'nb_days': 1,
+                    'days_next_month': 31
                 }),
             ],
         })

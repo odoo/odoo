@@ -50,6 +50,7 @@ from . import test_tax_report
 from . import test_transfer_wizard
 from . import test_account_incoming_supplier_invoice
 from . import test_payment_term
+from . import test_payment_term_line
 from . import test_account_payment_items
 from . import test_account_payment_register
 from . import test_payment_receipt
