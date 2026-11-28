@@ -1400,6 +1400,51 @@ class TestExpenses(TestExpenseCommon):
         (bank_line_to_reconcile + payment_line_to_reconcile).reconcile()
         self.assertEqual(expense.state, 'paid')
 
+    def test_expense_paid_by_employee_with_linked_bill_reimbursement_partner(self):
+        """
+        The reimbursement of an expense paid by the employee with a bill sent separately
+        must go to the employee's work contact and bank account, as for any other expense
+        paid by the employee, even when the employee has no user.
+        """
+        vendor = self.env['res.partner'].create({'name': 'test vendor'})
+        employee = self.env['hr.employee'].sudo().create({
+            'name': 'Employee without user',
+            'expense_manager_id': self.expense_user_manager.id,
+        })
+        bank_account = self.env['res.partner.bank'].sudo().create({
+            'account_number': 'BE15001559627230',
+            'partner_id': employee.work_contact_id.id,
+            'allow_out_payment': True,
+        })
+        employee.bank_account_ids = [Command.link(bank_account.id)]
+        self.assertFalse(employee.user_id)
+
+        expense = self.create_expenses({
+            'name': 'Expense with a bill sent separately',
+            'employee_id': employee.id,
+            'payment_mode': 'own_account',
+            'total_amount_currency': 100.0,
+            'has_existing_bill': True,
+            'vendor_id': vendor.id,
+        })
+        expense.action_submit()
+        expense.action_approve()
+        self.post_expenses(expense)
+
+        payment_entry = expense.account_move_id
+        payment = payment_entry.origin_payment_id
+        self.assertRecordValues(payment, [{
+            'partner_id': employee.work_contact_id.id,
+            'partner_bank_id': bank_account.id,
+        }])
+        payable_line = payment_entry.line_ids.filtered(lambda l: l.account_type == 'liability_payable')
+        self.assertTrue(payable_line.reconciled, "The payment entry should be reconciled with the debt transfer entry")
+        debt_transfer_move = payable_line.reconciled_lines_excluding_exchange_diff_ids.move_id
+        self.assertRecordValues(debt_transfer_move.line_ids.sorted('balance'), [
+            {'partner_id': employee.work_contact_id.id, 'balance': -100.0},
+            {'partner_id': vendor.id, 'balance': 100.0},
+        ])
+
     def test_expense_team_approver_refuse_mixed_selection(self):
         """
         - Set up a team approver and a subordinate, creating one submitted expense for each.

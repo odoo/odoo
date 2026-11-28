@@ -2076,7 +2076,7 @@ class HrExpense(models.Model):
             # reconcile payment move with debt transfer entry move
             payment_move_payable_lines = payment_move_sudo.line_ids.filtered(lambda l: l.account_type == 'liability_payable')
             transfer_move_payable_lines = debt_transfer_move_sudo.line_ids.filtered(
-                lambda l: l.account_type == 'liability_payable' and l.partner_id == expense.employee_id.user_id.partner_id
+                lambda l: l.account_type == 'liability_payable' and l.partner_id == expense.employee_id.work_contact_id
             )
             if payment_move_payable_lines and transfer_move_payable_lines:
                 (payment_move_payable_lines + transfer_move_payable_lines).reconcile()
@@ -2097,7 +2097,7 @@ class HrExpense(models.Model):
         - 1 move for the debt transfer -> MISC (Debt transfer entry)
         """
         self.ensure_one()
-        employee_partner = self.employee_id.user_id.partner_id
+        employee_partner = self.employee_id.work_contact_id
 
         # DEBT TRANSFER ENTRY LINES
         move_lines = [
