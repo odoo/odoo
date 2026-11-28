@@ -79,7 +79,10 @@ export class ChatWindow extends Component {
         this.parentChannelHover = useHover(this.parentChannelRef);
         this.isMobileOS = isMobileOS();
         this.channelDisplayName = computed(() => this.props.chatWindow.channel?.displayName);
-        useBackButton(() => this.close());
+        useBackButton(
+            () => this.close(),
+            () => this.props.chatWindow.isOpen
+        );
     }
 
     /** @type {import("@mail/core/common/action_list").GetActionComponent} */
