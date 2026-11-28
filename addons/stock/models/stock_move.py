@@ -1285,6 +1285,14 @@ Please change the quantity done or the rounding precision in your settings.""",
 
         StockRule = self.env['stock.rule']
         StockMove = self.env['stock.move']
+        if not self:
+            return StockMove
+        dest_locations = self.move_line_ids.location_dest_id | self.location_dest_id
+        if not dest_locations or not StockRule.sudo().search_count([
+            ('action', 'in', ('push', 'pull_push')),
+            ('location_src_id', 'parent_of', dest_locations.ids),
+        ], limit=1):
+            return StockMove
 
         for move in self:
             warehouse_id = move.warehouse_id or move.picking_id.picking_type_id.warehouse_id
@@ -2162,6 +2170,23 @@ Please change the quantity done or the rounding precision in your settings.""",
                 lambda m: not m.picked and m.state in ['confirmed', 'waiting', 'partially_available']
             )
 
+        products_with_available_quants = None
+        if len(moves_to_assign) > 1:
+            non_bypass_moves = moves_to_assign.filtered(
+                lambda m: not m._should_bypass_reservation() and not m.move_orig_ids and m.procure_method != 'make_to_order'
+            )
+            if len(non_bypass_moves) > 1:
+                products_with_available_quants = {
+                    product.id for (product,) in self.env['stock.quant'].sudo()._read_group(
+                        [
+                            ('product_id', 'in', non_bypass_moves.product_id.ids),
+                            ('location_id', 'child_of', non_bypass_moves.location_id.ids),
+                            '|', ('quantity', '>', 0), ('reserved_quantity', '<', 0),
+                        ],
+                        ['product_id'],
+                    )
+                }
+
         for move in moves_to_assign:
             move = move.with_company(move.company_id)
             if not force_qty:
@@ -2221,6 +2246,8 @@ Please change the quantity done or the rounding precision in your settings.""",
                     need = missing_reserved_quantity
                     if move.product_id.uom_id.is_zero(need):
                         assigned_moves_ids.add(move.id)
+                        continue
+                    if products_with_available_quants is not None and move.product_id.id not in products_with_available_quants:
                         continue
                     # Reserve new quants and create move lines accordingly.
                     taken_quantity = move._update_reserved_quantity(need, move.location_id, strict=False)
@@ -2742,16 +2769,30 @@ Please change the quantity done or the rounding precision in your settings.""",
         if not self or self.env['ir.config_parameter'].sudo().get_bool('stock.no_auto_scheduler'):
             return
 
+        orderpoints = self.env['stock.warehouse.orderpoint'].search([
+            ('product_id', 'in', self.product_id.ids),
+            ('trigger', '=', 'auto'),
+            ('company_id', 'in', self.company_id.ids),
+            ('location_id', 'parent_of', self.location_id.ids),
+        ])
+        if not orderpoints:
+            return
+
+        orderpoints_by_key = defaultdict(list)
+        for op in orderpoints:
+            orderpoints_by_key[(op.product_id.id, op.company_id.id)].append((op, op.location_id.parent_path))
+
         orderpoints_by_company = defaultdict(lambda: self.env['stock.warehouse.orderpoint'])
         orderpoints_context_by_company = defaultdict(dict)
         for move in self:
-            orderpoint = self.env['stock.warehouse.orderpoint'].search([
-                ('product_id', '=', move.product_id.id),
-                ('trigger', '=', 'auto'),
-                ('location_id', 'parent_of', move.location_id.id),
-                ('company_id', '=', move.company_id.id),
-                '!', ('location_id', 'parent_of', move.location_dest_id.id),
-            ], limit=1)
+            src_path = move.location_id.parent_path
+            if not src_path:
+                continue
+            dest_path = move.location_dest_id.parent_path or ''
+            orderpoint = next((
+                op for op, op_path in orderpoints_by_key.get((move.product_id.id, move.company_id.id), ())
+                if src_path.startswith(op_path) and not dest_path.startswith(op_path)
+            ), None)
             if orderpoint:
                 orderpoints_by_company[orderpoint.company_id] |= orderpoint
             if orderpoint and move.product_qty > orderpoint.product_min_qty and move.reference_ids:

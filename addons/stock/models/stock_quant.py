@@ -5,8 +5,9 @@ from collections import namedtuple
 
 from ast import literal_eval
 from collections import defaultdict
+from contextlib import contextmanager
 from markupsafe import escape
-from psycopg2 import Error
+from psycopg2 import Error, errors as pgerrors
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
@@ -365,11 +366,15 @@ class StockQuant(models.Model):
                     vals['inventory_quantity_set'] = vals.get('inventory_quantity_set', False)
                 quants_to_create.append(vals)
         if quants_to_create:
-            for quant in super().create(quants_to_create):
-                _add_to_cache(quant)
-                quants |= quant
-                if self._is_inventory_mode() and quant.company_id:
-                    quant._check_company()
+            created_quants = super().create(quants_to_create)
+            self.env.cr.precommit.data.setdefault('stock.own_quant_ids', set()).update(created_quants.ids)
+            if 'quants_cache' in self.env.context:
+                quants_cache = self.env.context['quants_cache']
+                for quant in created_quants:
+                    quants_cache[quant.product_id.id, quant.location_id.id, quant.lot_id.id, quant.package_id.id, quant.owner_id.id] |= quant
+            if is_inventory_mode:
+                created_quants.filtered('company_id')._check_company()
+            quants |= created_quants
         if quants_to_apply:
             quants_to_apply.filtered(lambda q: not q.is_outdated).action_apply_inventory()
         return quants
@@ -977,6 +982,8 @@ class StockQuant(models.Model):
         self = self.sudo()
 
         quants = self._gather(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict, qty=quantity)
+        if not quants and product_id.uom_id.compare(quantity, 0) >= 0:
+            return []
 
         # avoid quants with negative qty to not lower available_qty
         available_quantity = quants._get_available_quantity(product_id, location_id, lot_id, package_id, owner_id, strict)
@@ -1208,11 +1215,23 @@ class StockQuant(models.Model):
         else:
             in_date = fields.Datetime.now()
 
+        batch_state = self.env.cr.precommit.data.get('stock.quant_batch_state')
         quant = None
         if quants:
             # quants are already ordered in _gather
             # lock the first available
-            quant = quants.try_lock_for_update(allow_referencing=True, limit=1)
+            if batch_state is not None:
+                locked_quant_ids = batch_state['locked_quant_ids']
+                attempted_lock_quant_ids = batch_state['attempted_lock_quant_ids']
+                for candidate in quants:
+                    if candidate.id in locked_quant_ids:
+                        quant = candidate
+                        break
+                    if candidate.id not in attempted_lock_quant_ids:
+                        quant = quants._try_lock_for_update_quants(allow_referencing=True, limit=1)
+                        break
+            else:
+                quant = quants._try_lock_for_update_quants(allow_referencing=True, limit=1)
 
         if quant:
             vals = {'in_date': in_date}
@@ -1234,8 +1253,115 @@ class StockQuant(models.Model):
                 vals['quantity'] = quantity
             if reserved_quantity:
                 vals['reserved_quantity'] = reserved_quantity
+            if batch_state is not None:
+                deferred_creates = batch_state['deferred_creates']
+                key = (
+                    product_id.id,
+                    location_id.id,
+                    lot_id.id if lot_id else False,
+                    package_id.id if package_id else False,
+                    owner_id.id if owner_id else False,
+                )
+                existing_vals = deferred_creates.get(key)
+                if existing_vals is not None:
+                    existing_vals['in_date'] = min(existing_vals['in_date'], in_date)
+                    if quantity:
+                        existing_vals['quantity'] = existing_vals.get('quantity', 0.0) + quantity
+                    if reserved_quantity:
+                        existing_vals['reserved_quantity'] = max(0.0, existing_vals.get('reserved_quantity', 0.0) + reserved_quantity)
+                else:
+                    deferred_creates[key] = vals
+                avail_qty = self._get_available_quantity(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True, allow_negative=True)
+                pending = deferred_creates[key]
+                return avail_qty + pending.get('quantity', 0.0) - pending.get('reserved_quantity', 0.0), in_date
             self.create(vals)
         return self._get_available_quantity(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True, allow_negative=True), in_date
+
+    @contextmanager
+    def _batch_quant_updates(self, quants_cache):
+        """Batch-lock cached quants once and defer missing quant creations to a
+        single `create()` on exit. Kept on cursor precommit data instead of
+        `env.context` so `Environment` caching never aliases mutable dicts across
+        sequential or nested batches.
+        """
+        attempted_lock_quant_ids = {q.id for quants in quants_cache.values() for q in quants}
+        locked_quant_ids = set(
+            self.sudo().browse(sorted(attempted_lock_quant_ids))
+            ._try_lock_for_update_quants(allow_referencing=True).ids
+        ) if attempted_lock_quant_ids else set()
+        state = {
+            'quants_cache': quants_cache,
+            'locked_quant_ids': locked_quant_ids,
+            'attempted_lock_quant_ids': attempted_lock_quant_ids,
+            'deferred_creates': {},
+        }
+        data = self.env.cr.precommit.data
+        prev_state = data.get('stock.quant_batch_state')
+        data['stock.quant_batch_state'] = state
+        try:
+            yield state
+            self._flush_deferred_quant_creates(state)
+        finally:
+            if prev_state is None:
+                data.pop('stock.quant_batch_state', None)
+            else:
+                data['stock.quant_batch_state'] = prev_state
+
+    def _flush_deferred_quant_creates(self, state=None):
+        data = self.env.cr.precommit.data
+        if state is None:
+            state = data.get('stock.quant_batch_state')
+        if not state or not state['deferred_creates']:
+            return
+        vals_list = list(state['deferred_creates'].values())
+        state['deferred_creates'].clear()
+        prev_state = data.pop('stock.quant_batch_state', None)
+        try:
+            created_quants = self.sudo().with_context(quants_cache=state['quants_cache']).create(vals_list)
+            state['locked_quant_ids'].update(created_quants.ids)
+            state['attempted_lock_quant_ids'].update(created_quants.ids)
+        finally:
+            if prev_state is not None:
+                data['stock.quant_batch_state'] = prev_state
+
+    def _try_lock_for_update_quants(self, allow_referencing=True, limit=None):
+        """Lock quants while avoiding transaction rollbacks on concurrent
+        REPEATABLE READ updates for non-serial quants. Skipped quants cause
+        `_update_available_quantity` to insert a delta quant row, deduplicated
+        later by `_merge_quants()`.
+        """
+        if not self:
+            return self
+        data = self.env.cr.precommit.data
+        own_quant_ids = data.get('stock.own_quant_ids')
+        if own_quant_ids:
+            own = self.filtered(lambda q: q.id in own_quant_ids)
+            others = self - own
+            if limit == 1 and own:
+                return own[:1]
+        else:
+            own = self.browse()
+            others = self
+        failed_lock_quant_ids = data.get('stock.failed_lock_quant_ids')
+        if failed_lock_quant_ids:
+            others = others.filtered(lambda q: q.id not in failed_lock_quant_ids)
+        if not others:
+            return own
+        serial = others.filtered(lambda q: q.product_id.tracking == 'serial')
+        non_serial = others - serial
+        locked = own
+        if serial:
+            locked |= serial.try_lock_for_update(allow_referencing=allow_referencing, limit=limit)
+            if limit == 1 and locked:
+                return locked[:1]
+        if non_serial:
+            try:
+                with self.env.cr.savepoint(flush=False):
+                    locked |= non_serial.try_lock_for_update(allow_referencing=allow_referencing, limit=limit)
+            except pgerrors.SerializationFailure:
+                if len(non_serial) == 1:
+                    data.setdefault('stock.failed_lock_quant_ids', set()).add(non_serial.id)
+        return locked[:limit] if limit else locked
 
     @api.model
     def _update_reserved_quantity(self, product_id, location_id, quantity, lot_id=None, package_id=None, owner_id=None, strict=True):

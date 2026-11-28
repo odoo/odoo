@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import Counter, defaultdict
+from contextlib import nullcontext
 from ast import literal_eval
 from operator import itemgetter
 
@@ -399,22 +400,34 @@ class StockMoveLine(models.Model):
                 create_move(move_line)
 
         move_to_recompute_state = set()
-        for move_line in mls:
-            if move_line.state == 'done':
-                continue
-            location = move_line.location_id
-            product = move_line.product_id
-            move = move_line.move_id
-            if move:
-                reservation = not move._should_bypass_reservation()
-            else:
-                reservation = product.is_storable and not location.should_bypass_reservation()
-            if move_line.quantity_product_uom and reservation:
-                self.env.context.get('reserved_quant', self.env['stock.quant'])._update_reserved_quantity(
-                    product, location, move_line.quantity_product_uom, lot_id=move_line.lot_id, package_id=move_line.package_id, owner_id=move_line.owner_id)
-
+        mls_to_reserve = mls.filtered(lambda ml: ml.state != 'done' and ml.quantity_product_uom)
+        reserved_quant = self.env.context.get('reserved_quant')
+        if len(mls_to_reserve) > 1 and reserved_quant is None:
+            quants_cache = self.env.context.get('quants_cache')
+            if quants_cache is None:
+                quants_cache = self.env['stock.quant']._get_quants_by_products_locations(
+                    mls_to_reserve.product_id,
+                    mls_to_reserve.location_id,
+                )
+            Quant = self.env['stock.quant'].with_context(quants_cache=quants_cache)
+            batch_ctx = Quant._batch_quant_updates(quants_cache)
+        else:
+            Quant = reserved_quant if reserved_quant is not None else self.env['stock.quant']
+            batch_ctx = nullcontext()
+        with batch_ctx:
+            for move_line in mls_to_reserve:
+                location = move_line.location_id
+                product = move_line.product_id
+                move = move_line.move_id
                 if move:
-                    move_to_recompute_state.add(move.id)
+                    reservation = not move._should_bypass_reservation()
+                else:
+                    reservation = product.is_storable and not location.should_bypass_reservation()
+                if reservation:
+                    Quant._update_reserved_quantity(
+                        product, location, move_line.quantity_product_uom, lot_id=move_line.lot_id, package_id=move_line.package_id, owner_id=move_line.owner_id)
+                    if move:
+                        move_to_recompute_state.add(move.id)
         self.env['stock.move'].browse(move_to_recompute_state)._recompute_state()
         self.env['stock.move'].browse(created_moves)._post_process_created_moves()
 
@@ -709,23 +722,46 @@ class StockMoveLine(models.Model):
                 self.env['stock.package.history'].create(package_history_vals)
 
         moves_to_check_pack = set()
-        for ml in mls_todo.with_context(quants_cache=quants_cache):
-            # if this move line is force assigned, unreserve elsewhere if needed
-            ml._synchronize_quant(-ml.quantity_product_uom, ml.location_id, action="reserved")
-            available_qty, in_date = ml._synchronize_quant(-ml.quantity_product_uom, ml.location_id)
-            ml._synchronize_quant(ml.quantity_product_uom, ml.location_dest_id, package=ml.result_package_id, in_date=in_date)
-            if available_qty < 0:
-                moves_to_check = ml.with_context(quants_cache=None, bypass_entire_pack=True)._free_reservation(
-                    ml.product_id, ml.location_id,
-                    abs(available_qty), lot_id=ml.lot_id, package_id=ml.package_id,
-                    owner_id=ml.owner_id, ml_ids_to_ignore=ml_ids_to_ignore).ids
-                if moves_to_check:
-                    moves_to_check_pack.update(moves_to_check)
-            ml_ids_to_ignore.add(ml.id)
+        open_reserved_pairs = None
+        with self.env['stock.quant']._batch_quant_updates(quants_cache) as batch_state:
+            for ml in mls_todo.with_context(quants_cache=quants_cache):
+                # if this move line is force assigned, unreserve elsewhere if needed
+                available_qty, in_date = ml._synchronize_quant(-ml.quantity_product_uom, ml.location_id, action="both")
+                ml._synchronize_quant(ml.quantity_product_uom, ml.location_dest_id, package=ml.result_package_id, in_date=in_date)
+                if available_qty < 0:
+                    if open_reserved_pairs is None and len(mls_todo) > 1:
+                        open_reserved_pairs = {
+                            (product.id, location.id)
+                            for product, location in self.env['stock.move.line']._read_group(
+                                [
+                                    ('state', 'not in', ['done', 'cancel']),
+                                    ('product_id', 'in', mls_todo.product_id.ids),
+                                    ('location_id', 'in', mls_todo.location_id.ids),
+                                    ('quantity_product_uom', '>', 0.0),
+                                    ('picked', '=', False),
+                                ],
+                                ['product_id', 'location_id'],
+                            )
+                        }
+                    if open_reserved_pairs is None or (ml.product_id.id, ml.location_id.id) in open_reserved_pairs:
+                        self.env['stock.quant']._flush_deferred_quant_creates(batch_state)
+                        data = self.env.cr.precommit.data
+                        prev_state = data.pop('stock.quant_batch_state', None)
+                        try:
+                            moves_to_check = ml.with_context(quants_cache=None, bypass_entire_pack=True)._free_reservation(
+                                ml.product_id, ml.location_id,
+                                abs(available_qty), lot_id=ml.lot_id, package_id=ml.package_id,
+                                owner_id=ml.owner_id, ml_ids_to_ignore=ml_ids_to_ignore).ids
+                        finally:
+                            if prev_state is not None:
+                                data['stock.quant_batch_state'] = prev_state
+                        if moves_to_check:
+                            moves_to_check_pack.update(moves_to_check)
+                ml_ids_to_ignore.add(ml.id)
 
-            if ml.lot_id and ml.move_id.picking_id.picking_type_id.code == 'outgoing':
-                if partner := ml._get_lot_partner():
-                    ml.lot_id.partner_ids |= partner
+                if ml.lot_id and ml.move_id.picking_id.picking_type_id.code == 'outgoing':
+                    if partner := ml._get_lot_partner():
+                        ml.lot_id.partner_ids |= partner
 
         if not self.env.context.get('ignore_dest_packages'):
             mls_todo.result_package_id._apply_dest_to_package()
@@ -775,6 +811,29 @@ class StockMoveLine(models.Model):
             available_qty, in_date = self.env['stock.quant']._update_available_quantity(self.product_id, location, quantity, lot_id=lot, package_id=package, owner_id=owner, in_date=in_date)
         elif action == "reserved" and not self.move_id._should_bypass_reservation(location):
             self.env['stock.quant']._update_reserved_quantity(self.product_id, location, quantity, lot_id=lot, package_id=package, owner_id=owner)
+        elif action == "both":
+            Quant = self.env['stock.quant']
+            if self.move_id._should_bypass_reservation(location):
+                available_qty, in_date = Quant._update_available_quantity(
+                    self.product_id, location, quantity, lot_id=lot, package_id=package, owner_id=owner, in_date=in_date,
+                )
+            else:
+                quants = Quant.sudo()._gather(self.product_id, location, lot_id=lot, package_id=package, owner_id=owner, strict=True)
+                if not quants:
+                    available_qty, in_date = Quant._update_available_quantity(
+                        self.product_id, location, quantity, lot_id=lot, package_id=package, owner_id=owner, in_date=in_date,
+                    )
+                elif len(quants) == 1:
+                    reserved_qty = quantity if self.product_id.uom_id.compare(quants.reserved_quantity, 0) > 0 else False
+                    available_qty, in_date = Quant._update_available_quantity(
+                        self.product_id, location, quantity=quantity, reserved_quantity=reserved_qty,
+                        lot_id=lot, package_id=package, owner_id=owner, in_date=in_date,
+                    )
+                else:
+                    Quant._update_reserved_quantity(self.product_id, location, quantity, lot_id=lot, package_id=package, owner_id=owner)
+                    available_qty, in_date = Quant._update_available_quantity(
+                        self.product_id, location, quantity, lot_id=lot, package_id=package, owner_id=owner, in_date=in_date,
+                    )
         if available_qty < 0 and lot:
             # see if we can compensate the negative quants with some untracked quants
             untracked_qty = self.env['stock.quant']._get_available_quantity(self.product_id, location, lot_id=False, package_id=package, owner_id=owner, strict=True)
