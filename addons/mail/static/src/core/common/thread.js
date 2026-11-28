@@ -523,7 +523,7 @@ export class Thread extends Component {
         this.props.thread.isFocusedByThread = true;
         const thread = toRaw(this.props.thread);
         if (thread?.scrollTop === "bottom" && !thread.scrollUnread && !thread.markedAsUnread) {
-            thread?.markAsRead();
+            thread?.markAsRead({ onlyDisplayed: true });
         }
     }
 
@@ -636,7 +636,7 @@ export class Thread extends Component {
             thread.isFocused &&
             !thread.markingAsRead
         ) {
-            thread.markAsRead();
+            thread.markAsRead({ onlyDisplayed: true });
         }
         this.saveScroll();
     }
