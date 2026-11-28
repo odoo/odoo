@@ -17,6 +17,13 @@ patch(PosOrder.prototype, {
         return FBR_STATES[this.l10n_pk_edi_pos_state] || "";
     },
 
+    _isItemCountExcludedLine(line) {
+        return (
+            super._isItemCountExcludedLine(line) ||
+            (this.config.l10n_pk_edi_pos_enabled && line.isFbrServiceFeeLine())
+        );
+    },
+
     getOrderlines() {
         const lines = super.getOrderlines(...arguments);
         if (!this.config.l10n_pk_edi_pos_enabled) {

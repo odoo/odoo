@@ -1,4 +1,5 @@
 from . import account_move
+from . import account_tax
 from . import product_template
 from . import pos_config
 from . import pos_order
