@@ -71,10 +71,12 @@ class TestL10nEgEdiPosPayloadBuilders(TestL10nEgEdiPosCommon):
     def test_foreign_partner_buyer_type_f_with_id_and_name(self):
         """Non-EG partner → ``buyer.type == 'F'`` and id+name are always
         populated regardless of order total."""
+        self.foreign_customer.vat = False
+        self.foreign_customer._set_additional_identifier('EG_FID', 'L898902C')
         order = self._create_unpaid_order(partner=self.foreign_customer)
         payload = order._l10n_eg_edi_pos_build_receipt()
         self.assertEqual(payload['buyer']['type'], 'F')
-        self.assertEqual(payload['buyer']['id'], self.foreign_customer.vat)
+        self.assertEqual(payload['buyer']['id'], 'L898902C')
         self.assertEqual(payload['buyer']['name'], self.foreign_customer.name)
 
     def test_domestic_person_above_threshold_includes_vat_and_name(self):
