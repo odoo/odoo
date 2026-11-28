@@ -802,6 +802,67 @@ test("should remove backgroundColor from selected cells using removeFormat (2)",
     });
 });
 
+test("should not remove the background color of a cell from a selection inside it", async () => {
+    // The background color of a cell applies to its whole content: it can only
+    // be removed through a table selection (@see applyTableColor).
+    const cell = '<td style="background-color: rgb(255, 0, 0);"><p>a[bc]d</p></td>';
+    await testEditor({
+        contentBefore: unformat(`
+            <table class="table table-bordered o_table"><tbody>
+                <tr>${cell}</tr>
+            </tbody></table>
+        `),
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfter: unformat(`
+            <table class="table table-bordered o_table"><tbody>
+                <tr>${cell}</tr>
+            </tbody></table>
+        `),
+    });
+});
+
+test("should not remove the text color copied on a cell from a selection inside it", async () => {
+    // Applying a background color on a cell also copies its computed text
+    // color on it (@see applyTableColor): it is not a color to remove.
+    const content = unformat(`
+        <ul><li>
+            <table class="table table-bordered o_table"><tbody>
+                <tr><td style="background-color: rgb(255, 0, 0); color: rgb(1, 10, 100);">
+                    <p>a[bc]d</p>
+                </td></tr>
+            </tbody></table>
+        </li></ul>
+    `);
+    await testEditor({
+        contentBefore: content,
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfter: content,
+    });
+});
+
+test("should remove the color of a list item on a selection inside a table it contains", async () => {
+    const cellStyle = "background-color: rgb(0, 0, 255); color: rgb(255, 0, 0);";
+    await testEditor({
+        contentBefore: unformat(`
+            <ul><li style="color: rgb(255, 0, 0);">
+                <table class="table table-bordered o_table"><tbody>
+                    <tr><td style="${cellStyle}"><p>a[bc]d</p></td></tr>
+                </tbody></table>
+            </li></ul>
+        `),
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfter: unformat(`
+            <ul><li style="color: rgb(255, 0, 0);">
+                <table class="table table-bordered o_table"><tbody>
+                    <tr><td style="${cellStyle}">
+                        <p>a<font class="o_default_color">[bc]</font>d</p>
+                    </td></tr>
+                </tbody></table>
+            </li></ul>
+        `),
+    });
+});
+
 test("should remove color from entire heading when fully selected", async () => {
     await testEditor({
         contentBefore: '<div><h1 style="color: rgb(255, 0, 0);">[abcd]</h1></div>',
@@ -905,6 +966,36 @@ test("Remove format not remove text color if applied on .btn element", async () 
 });
 
 describe("Toolbar", () => {
+    test("should disable remove format on a selection inside a cell with a background color", async () => {
+        // The background color of a cell can only be removed through a table
+        // selection (@see applyTableColor).
+        await setupEditor(
+            unformat(`
+                <table class="table table-bordered o_table"><tbody>
+                    <tr><td style="background-color: rgb(255, 0, 0);"><p>a[bc]d</p></td></tr>
+                </tbody></table>
+            `)
+        );
+        await expandToolbar();
+        await expectElementCount(".o-we-toolbar", 1);
+        expect(".btn[name='remove_format']").toHaveClass("disabled");
+    });
+
+    test("should disable remove format on a cell whose text color is already reset", async () => {
+        await setupEditor(
+            unformat(`
+                <ul><li style="color: rgb(0, 255, 0);">
+                    <table class="table table-bordered o_table"><tbody>
+                        <tr><td><p><font class="o_default_color">[abc]</font></p></td></tr>
+                    </tbody></table>
+                </li></ul>
+            `)
+        );
+        await expandToolbar();
+        await expectElementCount(".o-we-toolbar", 1);
+        expect(".btn[name='remove_format']").toHaveClass("disabled");
+    });
+
     async function removeFormatClick() {
         await expandToolbar();
         await expectElementCount(".o-we-toolbar", 1);
@@ -1271,5 +1362,55 @@ test("should not remove format around unsplittable if partially selected", async
         contentBefore: '<p>ab<u>c<a href="a.com">d[e</a>f</u>g]h</p>',
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter: '<p>ab<u>c<a href="a.com">d[e</a></u>fg]h</p>',
+    });
+});
+
+test("should not remove the color of a list item from a link inside it", async () => {
+    // A link has its own color: the color of the list item does not apply to it.
+    const content = '<ol><li style="color: rgb(255, 0, 0);">test <a href="#">[link]</a></li></ol>';
+    await testEditor({
+        contentBefore: content,
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfter: content,
+    });
+});
+
+test("should not remove the color of a list item from an inline code inside it", async () => {
+    // Inline code is never formatted (@see is_formattable_node_predicates).
+    const content =
+        '<ul><li style="color: rgb(255, 0, 0);">a <code class="o_inline_code">[x]</code> b</li></ul>';
+    await testEditor({
+        contentBefore: content,
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfter: content,
+    });
+});
+
+test("should remove the color applied around a non-editable element", async () => {
+    await testEditor({
+        contentBefore:
+            '<p><font style="color: rgb(255, 0, 0);">[<span contenteditable="false">ab</span>]</font></p>',
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfter: '<p>[<span contenteditable="false">ab</span>]</p>',
+    });
+});
+
+test("should not remove the color of a non-editable element itself", async () => {
+    const content =
+        '<p>[x <span contenteditable="false" style="color: rgb(255, 0, 0);">ab</span> y]</p>';
+    await testEditor({
+        contentBefore: content,
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfter: content,
+    });
+});
+
+test("should remove the color of a list item around a non-editable element", async () => {
+    await testEditor({
+        contentBefore:
+            '<ol><li style="color: rgb(255, 0, 0);">x[ <span contenteditable="false">ab</span> ]y</li></ol>',
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfter:
+            '<ol><li style="color: rgb(255, 0, 0);">x<font class="o_default_color">[ <span contenteditable="false">ab</span> ]</font>y</li></ol>',
     });
 });
