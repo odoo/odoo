@@ -137,6 +137,7 @@ export class SelectMenu extends Component {
         }, DEBOUNCED_DELAY);
         this.dropdownState = useDropdownState();
 
+<<<<<<< c25a8e8786c13b2a7aee58645e37cb27d32a51c5
         this._seenChoices = new Map();
         this._prevChoices = this.props.choices;
         this._prevGroups = this.props.groups;
@@ -155,6 +156,21 @@ export class SelectMenu extends Component {
                 this._prevGroups = this.props.groups;
                 refilter();
             }
+||||||| b5fb5025ac08a70a72614769d1034347e0fc918c
+        this.selectedChoice = this.getSelectedChoice(this.props);
+        onWillUpdateProps((nextProps) => {
+            const choicesChanged = this.state.choices !== nextProps.choices;
+            if (choicesChanged) {
+                this.state.choices = nextProps.choices;
+            }
+            if (choicesChanged || this.props.value !== nextProps.value) {
+                this.selectedChoice = this.getSelectedChoice(nextProps);
+            }
+=======
+        this.selectedChoice = this.getSelectedChoice(this.props);
+        onWillUpdateProps((nextProps) => {
+            this.selectedChoice = this.getSelectedChoice(nextProps);
+>>>>>>> 5b34ac61ce995407b6b592ba0b0139ea3088a753
         });
 
         // updateInputValue is idempotent (pendingValue short-circuits), so sync every patch.
@@ -386,8 +402,9 @@ export class SelectMenu extends Component {
             }
         } else if (!this.selectedChoice() || this.selectedChoice().value !== value) {
             this.props.onSelect(value);
-            if (this.state.choices && this.state.choices.length) {
-                this.updateInputValue(this.state.choices.find((c) => c.value === value).label);
+            const choice = this.getSelectedChoice({ ...this.props, value });
+            if (choice) {
+                this.updateInputValue(choice.label);
             }
         }
         this.clearInputValue();
