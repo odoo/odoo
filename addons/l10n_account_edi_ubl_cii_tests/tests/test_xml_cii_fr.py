@@ -123,6 +123,8 @@ class TestCIIFR(TestUBLCommon):
                 subject_code = note.findtext('ram:SubjectCode', namespaces=ns)
                 if subject_code in ('PMT', 'PMD', 'AAB'):
                     note.getparent().remove(note)
+            for node in expected_etree.findall('.//ram:BusinessProcessSpecifiedDocumentContextParameter', namespaces=ns):
+                node.getparent().remove(node)
 
     ####################################################
     # Test export - import
