@@ -100,6 +100,28 @@ export const useVivaApp = (validateCallback) => {
     };
 
     /**
+     * Viva.com order code of the payment being refunded, false when the refunded
+     * order was not paid with Viva.com or the code can't be retrieved.
+     *
+     * @param {Number} amount - The amount to refund.
+     */
+    const getRefundedOrderCode = async (amount) => {
+        const refundedOrder = order.lines[0]?.refunded_orderline_id?.order_id;
+        const refundedPayment = refundedOrder?.payment_ids.find(
+            (payment) =>
+                payment.payment_method_id.use_payment_terminal === "viva_com" &&
+                payment.transaction_id &&
+                payment.amount >= amount
+        );
+        if (!refundedPayment) {
+            return false;
+        }
+        return await pos.data.silentCall("pos.payment", "viva_com_get_order_code", [
+            [refundedPayment.id],
+        ]);
+    };
+
+    /**
      * This function is used to open the Viva Wallet app
      * and start the payment process. It will open the app with the
      * necessary parameters to process the payment.
@@ -128,7 +150,14 @@ export const useVivaApp = (validateCallback) => {
                 `&callback=${callbackLink}`;
 
             if (isRefund) {
-                url += `&action=unreferenced_refund`;
+                const orderCode = await getRefundedOrderCode(Math.abs(line.amount));
+                if (orderCode) {
+                    url += "&action=cancel";
+                    url += `&orderCode=${orderCode}`;
+                    url += `&clientTransactionId=${line.viva_com_session_id}`;
+                } else {
+                    url += `&action=unreferenced_refund`;
+                }
             } else {
                 url += `&action=sale`;
                 url += `&clientTransactionId=${line.viva_com_session_id}`;
