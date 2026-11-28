@@ -229,6 +229,11 @@ class Base(models.AbstractModel):
             })
         if next_id:
             record = record.browse(next_id)
+        # the read access cache isn't invalidated by write(): drop it so that
+        # record rules are evaluated against the saved values
+        self.env.transaction.invalidate_access_cache(record._name)
+        if not record._filtered_access('read'):
+            return []
         return record.web_read(specification)
 
     def web_save_offline(
