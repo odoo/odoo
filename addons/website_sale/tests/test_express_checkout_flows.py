@@ -2,6 +2,7 @@
 
 from unittest.mock import Mock, patch
 
+from odoo.fields import Command
 from odoo.http import root
 from odoo.tests import HttpCase, tagged
 from odoo.tools import urls
@@ -141,6 +142,89 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
         self.assertPartnerShippingValues(
             new_partner,
             self.express_checkout_billing_values,
+        )
+
+    def test_express_checkout_public_user_aborts_on_fpos_change(self):
+        """ Test that finalizing an anonymous cart via express checkout aborts the
+            payment when the billing address resolves to a different fiscal position.
+
+            Express checkout assigns ``partner_id`` directly (bypassing the address
+            update), so the fiscal position recomputes via its stored compute but
+            the line ``tax_ids`` would otherwise be stranded with the previous
+            geoip-derived mapping. The customer already approved a total in the
+            native payment sheet, so instead of silently charging a different
+            amount, the endpoint recomputes the taxes and returns ``False`` so the
+            JS reloads the page and shows a warning.
+        """
+        company = self.env.company
+        tax_group = self.env['account.tax.group'].create({'name': 'Test Express Checkout'})
+
+        domestic_tax = self.env['account.tax'].create({
+            'name': 'Test Domestic Sale 21%',
+            'amount': 21.0,
+            'type_tax_use': 'sale',
+            'tax_group_id': tax_group.id,
+            'company_id': company.id,
+        })
+        ec_tax = self.env['account.tax'].create({
+            'name': 'Test EC Sale 0%',
+            'amount': 0.0,
+            'type_tax_use': 'sale',
+            'tax_group_id': tax_group.id,
+            'company_id': company.id,
+        })
+        # Fiscal position that maps the domestic tax to the 0% EC tax, as a
+        # geoip-derived "Extra-Community" position would.
+        fpos_geoip = self.env['account.fiscal.position'].create({
+            'name': 'Test Extra-Community',
+            'company_id': company.id,
+        })
+        ec_tax.fiscal_position_ids = fpos_geoip.ids
+        ec_tax.original_tax_ids = domestic_tax
+
+        self.sale_order.order_line.product_id.taxes_id = [Command.set(domestic_tax.ids)]
+        self.sale_order.fiscal_position_id = fpos_geoip.id
+        self.sale_order.order_line._compute_tax_ids()
+
+        line = self.sale_order.order_line
+        self.assertEqual(
+            line.tax_ids, ec_tax,
+            "Setup: the cart line should carry the EC tax via the geoip fpos mapping.",
+        )
+
+        session = self.authenticate(None, None)
+        session['sale_order_id'] = self.sale_order.id
+        root.session_store.save(session)
+
+        result = self.make_jsonrpc_request(
+            WebsiteSale._express_checkout_route,
+            params={'billing_address': dict(self.express_checkout_billing_values)},
+        )
+
+        self.assertFalse(
+            result,
+            "The endpoint must return a falsy value to signal the JS to abort the "
+            "payment and reload the page.",
+        )
+
+        self.sale_order.invalidate_recordset()
+        self.assertNotEqual(
+            self.sale_order.fiscal_position_id, fpos_geoip,
+            "The billing address should resolve to a different fiscal position.",
+        )
+        expected_tax = self.sale_order.fiscal_position_id.map_tax(domestic_tax)
+        self.assertEqual(
+            line.tax_ids, expected_tax,
+            "The line tax must be recomputed to stay consistent with the order's "
+            "fiscal position; a stale EC tax here is the bug.",
+        )
+        self.assertTrue(
+            self.sale_order.shop_warning,
+            "A warning must be set to explain the payment was not charged.",
+        )
+        self.assertNotIn(
+            'sale_last_order_id', root.session_store.get(session.sid),
+            "The order must not be finalized: the payment is aborted.",
         )
 
     def test_express_checkout_registered_user(self):
