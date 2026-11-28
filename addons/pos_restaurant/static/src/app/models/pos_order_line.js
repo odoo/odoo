@@ -35,4 +35,12 @@ patch(PosOrderline.prototype, {
         }
         return { index: this.course_id.index, name: this.course_id.name };
     },
+
+    get isSplitPaymentLine() {
+        return this.product_id.id === this.config.split_payment_product_id?.id;
+    },
+
+    isServiceFeeApplicable() {
+        return super.isServiceFeeApplicable(...arguments) && !this.isSplitPaymentLine;
+    },
 });

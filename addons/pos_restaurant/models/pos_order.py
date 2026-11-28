@@ -10,6 +10,14 @@ class PosOrder(models.Model):
     customer_count = fields.Integer(string='Guests', help='The amount of customers that have been served by this order.', readonly=True)
     course_ids = fields.One2many('restaurant.order.course', 'order_id', string="Courses")
     duration = fields.Char(string='Duration', compute='_compute_duration', help="Shows how long the table has been occupied.")
+    split_origin_order_id = fields.Many2one(
+        'pos.order',
+        string='Split Payment Origin',
+        help="Original order associated with this split payment.",
+        index='btree_not_null',
+        readonly=True,
+        copy=False,
+    )
 
     def _compute_duration(self):
         current_time = fields.Datetime.now()

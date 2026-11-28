@@ -9,6 +9,9 @@ import { SelectionPopup } from "@point_of_sale/app/components/popups/selection_p
 import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
 import { isSamePosDevice } from "@point_of_sale/app/utils/devices_synchronisation";
+import { taxKey } from "@point_of_sale/app/models/utils/currency";
+import { accountTaxHelpers } from "@account/helpers/account_tax";
+import { pick } from "@web/core/utils/objects";
 
 patch(PosStore.prototype, {
     /**
@@ -1070,6 +1073,68 @@ patch(PosStore.prototype, {
 
     get showSaveOrderButton() {
         return !this.getOrder().table_id && super.showSaveOrderButton;
+    },
+
+    async addSplitPaymentLine(order, baseLine, extraTaxData) {
+        const product = order.splitPaymentProduct;
+        return await this.addLineToOrder(
+            {
+                product_id: product,
+                product_tmpl_id: product.product_tmpl_id,
+                qty: baseLine.quantity,
+                price_unit: baseLine.price_unit,
+                tax_ids: [["link", ...baseLine.tax_ids]],
+                extra_tax_data: extraTaxData,
+            },
+            order,
+            { force: true },
+            false
+        );
+    },
+
+    /**
+     * Mirror the shares paid on floatingOrder on the origin order, merged into a single line per tax group.
+     */
+    async applySplitPaymentShares(order, floatingOrder) {
+        const sum = (a, b) =>
+            typeof b === "object"
+                ? Object.fromEntries(Object.entries(b).map(([k, v]) => [k, sum(a?.[k], v)]))
+                : (a || 0) + b;
+
+        for (const share of floatingOrder.splitPaymentLines) {
+            const reversed =
+                accountTaxHelpers.reverse_quantity_base_line_extra_tax_data(share.extra_tax_data) ||
+                {};
+            const existingLine = order.splitPaymentLines.find(
+                (line) => taxKey(line.tax_ids) === taxKey(share.tax_ids)
+            );
+            if (existingLine) {
+                const amounts = pick(
+                    reversed,
+                    "price_unit",
+                    "manual_total_excluded",
+                    "manual_total_excluded_currency",
+                    "manual_tax_amounts"
+                );
+                existingLine.extra_tax_data = {
+                    ...reversed,
+                    ...sum(existingLine.extra_tax_data, amounts),
+                };
+                existingLine.price_unit =
+                    existingLine.extra_tax_data.price_unit ??
+                    existingLine.price_unit + share.price_unit;
+                existingLine.setFullProductName();
+            } else {
+                const { qty, price_unit, tax_ids } = share;
+                await this.addSplitPaymentLine(
+                    order,
+                    { quantity: -qty, price_unit, tax_ids },
+                    reversed
+                );
+            }
+        }
+        this.addPendingOrder([order.id]);
+        await this.syncAllOrders({ orders: [order] });
     },
 
     async onFloorPlanUpdate(payload) {

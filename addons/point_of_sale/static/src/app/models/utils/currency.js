@@ -7,3 +7,9 @@ export const formatCurrency = (value, currency, hasSymbol = true) =>
     });
 
 export const roundCurrency = (value, currency) => currency.round(value);
+
+export const taxKey = (taxIds) =>
+    taxIds
+        .map((tax) => tax.id)
+        .sort((a, b) => a - b)
+        .join("_");

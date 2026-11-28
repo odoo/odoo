@@ -7,6 +7,6 @@ patch(OrderPaymentValidation.prototype, {
             this.order.employee_id = this.pos.accessRight.loggedCashier;
         }
 
-        await super.validateOrder(...arguments);
+        return await super.validateOrder(...arguments);
     },
 });

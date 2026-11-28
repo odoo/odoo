@@ -5,6 +5,8 @@ patch(FeedbackScreen.prototype, {
     goNext() {
         if (this.isContinueSplitting()) {
             this.continueSplitting();
+        } else if (this.isContinueSplitPayment()) {
+            this.continueSplitPayment();
         } else {
             super.goNext();
         }
@@ -30,5 +32,14 @@ patch(FeedbackScreen.prototype, {
         } else {
             return false;
         }
+    },
+    continueSplitPayment() {
+        const originOrder = this.currentOrder.split_origin_order_id;
+        this.currentOrder.setScreenData({ name: "" });
+        this.pos.navigate("PaymentScreen", { orderUuid: originOrder.uuid });
+    },
+    isContinueSplitPayment() {
+        const originOrder = this.currentOrder.split_origin_order_id;
+        return Boolean(originOrder) && !originOrder.finalized;
     },
 });

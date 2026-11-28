@@ -18,6 +18,9 @@ This module correct some behaviors when both module are installed.
         'web.assets_tests': [
             'pos_restaurant_loyalty/static/tests/tours/**/*',
         ],
+        'web.assets_unit_tests': [
+            'pos_restaurant_loyalty/static/tests/unit/**/*',
+        ],
     },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
