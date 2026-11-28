@@ -15,12 +15,8 @@ export class AskRecurrenceUpdatePolicyDialog extends Component {
 
     setup() {
         this.possibleValues = {
-            self_only: {
-                checked: true,
-                label: _t("This event"),
-            },
             future_events: {
-                checked: false,
+                checked: true,
                 label: _t("This and following events"),
             },
             all_events: {

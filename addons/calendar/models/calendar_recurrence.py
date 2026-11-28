@@ -50,8 +50,8 @@ RRULE_TYPE_SELECTION = [
 ]
 
 END_TYPE_SELECTION = [
-    ('count', 'Number of repetitions'),
-    ('end_date', 'End date'),
+    ('count', 'Repeating'),
+    ('end_date', 'Until'),
     ('forever', 'Forever'),
 ]
 
@@ -105,9 +105,9 @@ class CalendarRecurrence(models.Model):
     rrule = fields.Char(compute='_compute_rrule', inverse='_inverse_rrule', store=True)
     dtstart = fields.Datetime(compute='_compute_dtstart')
     rrule_type = fields.Selection(RRULE_TYPE_SELECTION, default='weekly')
-    end_type = fields.Selection(END_TYPE_SELECTION, default='forever')
+    end_type = fields.Selection(END_TYPE_SELECTION, default='count')
     interval = fields.Integer(default=1)
-    count = fields.Integer(default=1)
+    count = fields.Integer(default=10)
     mon = fields.Boolean()
     tue = fields.Boolean()
     wed = fields.Boolean()
@@ -239,6 +239,18 @@ class CalendarRecurrence(models.Model):
         """
         for recurrence in self:
             recurrence.base_event_id = recurrence._get_first_event()
+
+    def _move_base_event_to_first_occurrence(self):
+        """Move the base event onto the first occurrence of the rule when its own dates
+        don't match it, so that applying the recurrence doesn't detach (and archive) it."""
+        for recurrence in self.filtered('base_event_id'):
+            event = recurrence.base_event_id
+            ranges = recurrence._range_calculation(event, event.stop - event.start)
+            if not ranges or event._range() in ranges:
+                continue
+            start, stop = min(ranges)
+            # follow_recurrence must be explicit: write() marks a date change as an exception otherwise
+            event.write({'start': start, 'stop': stop, 'follow_recurrence': True})
 
     def _apply_recurrence(self, specific_values_creation=None, no_send_edit=False, generic_values_creation=None):
         """Create missing events in the recurrence and detach events which no longer
@@ -601,7 +613,7 @@ class CalendarRecurrence(models.Model):
             rrule_params['wkst'] = self._get_lang_week_start()
 
         # Limit the number of years to avoid creating recurrent events for up to hundreds of years
-        limit_years = self.env['ir.config_parameter'].sudo().get_int('calendar.max_recurrence_years', 15)
+        limit_years = self.env['ir.config_parameter'].sudo().get_int('calendar.max_recurrence_years', 5)
         if self.end_type == 'count':  # e.g. stop after X occurence
             rrule_params['count'] = min(self.count, MAX_RECURRENT_EVENT)
         elif self.end_type == 'forever':
