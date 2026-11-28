@@ -211,7 +211,7 @@ class UserInputSession(http.Controller):
             next_question = survey.session_question_id
             values['survey_last_triggering_answers'] = [
                 answer.id for answer in triggered_questions_by_answer
-                if answer in next_question.suggested_answer_ids and any(q.sequence > next_question.sequence for q in triggered_questions_by_answer[answer])
+                if answer in next_question.suggested_answer_ids and any((q.sequence, q.id) > (next_question.sequence, next_question.id) for q in triggered_questions_by_answer[answer])
             ]
 
         values.update(self._prepare_question_results_values(survey, request.env['survey.user_input.line']))
