@@ -46,6 +46,7 @@ class TestDiscussAttachmentController(MailControllerAttachmentCommon):
             token=False,
             allowed=False,
             thread=channel,
+            exp_error="werkzeug.exceptions.NotFound",
         )
 
     def test_attachment_delete_linked_to_private_channel(self):
@@ -61,6 +62,7 @@ class TestDiscussAttachmentController(MailControllerAttachmentCommon):
             token=False,
             allowed=False,
             thread=channel,
+            exp_error="werkzeug.exceptions.NotFound",
         )
 
     def test_attachment_edit_and_delete_from_other_tab(self):
