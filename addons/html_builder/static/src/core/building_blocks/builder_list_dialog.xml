@@ -12,15 +12,15 @@
                             <i class="oi me-1" data-icon="add" role="img" aria-hidden="true"/>Include all</button>
                     </div>
                     <div class="o_list_panel overflow-auto border mt-2">
-                        <h3 t-if="this.searchExcluded().length === 0" class="text-center text-muted my-2">No record.</h3>
+                        <p t-if="this.searchExcluded().length === 0" class="h3-fs fw-bold text-center text-muted my-2">No record.</p>
                         <t t-foreach="this.searchExcluded()" t-as="record" t-key="record.id">
-                            <div class="o_list_item cursor-pointer position-relative ps-4"
+                            <button type="button" class="o_list_item o_btn_reset cursor-pointer position-relative text-start w-100 ps-4"
                                 t-on-click="() => this.include(record)">
                                 <div class="d-flex align-items-center">
                                     <span class="overflow-hidden w-100" t-out="record.display_name" />
                                     <span title="Include record" class="oi float-end m-1 pe-2" data-icon="add" role="img" aria-label="Include record"/>
                                 </div>
-                            </div>
+                            </button>
                         </t>
                     </div>
                 </div>
@@ -31,15 +31,15 @@
                             <i class="oi me-1" data-icon="remove" role="img" aria-hidden="true"/>Exclude all</button>
                     </div>
                     <div class="o_list_panel overflow-auto border mt-2">
-                        <h3 t-if="this.searchIncluded().length === 0" class="text-center text-muted my-2">No record.</h3>
+                        <p t-if="this.searchIncluded().length === 0" class="h3-fs fw-bold text-center text-muted my-2">No record.</p>
                         <t t-foreach="this.searchIncluded()" t-as="record" t-key="record.id">
-                            <div class="o_list_item cursor-pointer position-relative ps-4"
+                            <button class="o_list_item o_btn_reset cursor-pointer position-relative text-start w-100 ps-4"
                                 t-on-click="() => this.exclude(record)">
                                 <div class="d-flex align-items-center">
                                     <span class="overflow-hidden w-100" t-out="record.display_name" />
                                     <span class="oi m-1 pe-2 float-end" data-icon="remove" title="Exclude record" role="img" aria-label="Exclude record"/>
                                 </div>
-                            </div>
+                            </button>
                         </t>
                     </div>
                 </div>

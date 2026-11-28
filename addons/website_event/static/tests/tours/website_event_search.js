@@ -3,7 +3,7 @@ import { registry } from "@web/core/registry";
 registry.category("web_tour.tours").add("test_website_event_search", {
     steps: () => [
         {
-            trigger: '.btn[title="Filter by category"]:contains(Test Category)',
+            trigger: '.btn[id^="navToggleTagGroup"]:contains(Test Category)',
             run: 'click'
         },
         {

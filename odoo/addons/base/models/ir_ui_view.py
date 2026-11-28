@@ -2298,13 +2298,6 @@ actual arch.
         if node_info['validate'] and not any(node.get(alt) for alt in att_names('alt')):
             self._log_view_warning('<img> tag must contain an alt attribute', node)
 
-    def _validate_tag_a(self, node, name_manager, node_info):
-        # ('calendar', 'form', 'graph', 'kanban', 'pivot', 'search', 'list', 'activity')
-        if node_info['validate'] and any('btn' in node.get(cl, '') for cl in att_names('class')):
-            if node.get('role') != 'button':
-                msg = '"<a>" tag with "btn" class must have "button" role'
-                self._log_view_warning(msg, node)
-
     def _validate_tag_ul(self, node, name_manager, node_info):
         if node_info['validate']:
             # was applied to all nodes, but in practice only used on div and ul

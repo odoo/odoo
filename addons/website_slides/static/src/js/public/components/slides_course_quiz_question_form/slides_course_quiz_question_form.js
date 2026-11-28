@@ -61,11 +61,12 @@ export class WebsiteSlidesCourseQuizQuestionForm extends Component {
         this.question.sequence = parseInt(this.sequenceRef().textContent);
     }
 
-    onIsCorrectClick(answer, isCorrect) {
+    onIsCorrectClick(answer, ev) {
+        const wasCorrect = ev.currentTarget.querySelector("input").checked;
         for (const answer of this.state.answerLines) {
             answer.isCorrect = false;
         }
-        answer.isCorrect = isCorrect;
+        answer.isCorrect = !wasCorrect;
     }
 
     /**

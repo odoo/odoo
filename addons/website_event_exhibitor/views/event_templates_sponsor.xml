@@ -15,13 +15,13 @@
                                 <i class="oi me-2" data-icon="public" role="img" aria-hidden="true"/><a t-att-href="sponsor.url" t-field="sponsor.url" class="text-truncate"/>
                             </div>
                         </t>
-                        <a class="o_wevent_sponsor o_wevent_sponsor_card h-100 rounded text-decoration-none position-relative" tabindex="0" role="button"
+                        <button class="o_wevent_sponsor o_wevent_sponsor_card o_btn_reset h-100 rounded text-decoration-none position-relative" type="button"
                             t-att-data-publish="'on' if sponsor.website_published else 'off'"
                             t-att-data-bs-content="popover_content"
                             data-bs-html="true" data-bs-trigger="focus" data-bs-toggle="popover" data-bs-placement="bottom">
                             <t t-if="not sponsor.website_published" t-call="website.unpublished_badge" is_minimal_badge="True"/>
                             <t t-call="website_event_exhibitor.event_sponsor_thumb_details"/>
-                        </a>
+                        </button>
                     </t>
                 </div>
             </div>

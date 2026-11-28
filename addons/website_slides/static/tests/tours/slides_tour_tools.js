@@ -52,7 +52,7 @@ const clickOnAddTagDropdown = (prefix) => [
     },
     {
         content: "eLearning: click on Add Tag",
-        trigger: `${prefix} a.o_wslides_js_channel_tag_add`,
+        trigger: `${prefix} button.o_wslides_js_channel_tag_add`,
         run: "click",
     },
     {

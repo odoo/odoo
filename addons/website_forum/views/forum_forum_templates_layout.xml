@@ -45,7 +45,7 @@
                                 <t t-out="question.closed_reason_id.name.capitalize()"/>
                             </t>
                         </span>
-                        <a t-elif="uid" type="button" aria-label="Favorite"
+                        <button t-elif="uid" type="button" aria-label="Favorite"
                             t-attf-data-href="/forum/#{slug(question.forum_id)}/question/#{slug(question)}/toggle_favourite"
                             t-attf-class="o_wforum_favourite_toggle btn btn-lg #{ 'opacity-50' if not question.user_favourite else '' } opacity-hover-100 p-0">
                             <i t-attf-class="position-relative oi #{'o_wforum_gold oi-filled' if question.user_favourite else ''}"
@@ -55,7 +55,7 @@
                                 data-bs-toggle="tooltip"
                                 data-bs-placement="top"
                                 title="Favorite"/>
-                        </a>
+                        </button>
                         <t t-if="question.state == 'active'" t-call="website_forum.follow_button"
                             object="question" btn_classes.f="opacity-50 opacity-100-hover"/>
                     </div>
@@ -107,7 +107,7 @@
                 </span>
                 <div t-if="question_count or tags" class="dropdown ms-lg-auto">
                     <t t-if="_page_name == 'tags'" t-set="tag_filter" t-value="keep_query('filters').split('=')[1] if keep_query('filters') else ''"/>
-                    <a href="#" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown">
+                    <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown">
                         <!-- Foreach tag_filter/ Foreach filters -->
                         <t t-if="filters == 'all' or tag_filter == 'all' or not tag_filter and not filters">All</t>
                         <t t-if="_page_name == 'tags'">
@@ -120,37 +120,43 @@
                             <t t-elif="filters == 'unsolved'">Unsolved</t>
                             <t t-elif="filters == 'unanswered'">Unanswered</t>
                         </t>
-                    </a>
+                    </button>
                     <div class="dropdown-menu" role="menu">
-                        <a t-attf-href="?#{ keep_query('search', 'sorting', 'create_uid', filters='all') }"
+                        <a role="button" t-attf-href="?#{ keep_query('search', 'sorting', 'create_uid', filters='all') }"
                             class="dropdown-item">
                             All
                         </a>
                         <div class="dropdown-divider"/>
                         <t t-if="_page_name == 'tags'">
                             <a t-if="not env.user._is_public()"
+                                role="button"
                                 t-attf-href="?#{ keep_query('search', 'sorting', 'my', filters='followed') }"
                                 class="dropdown-item">Followed Tags
                             </a>
                             <t t-if="forum and forum.can_moderate">
                                 <a t-attf-href="?#{ keep_query('search', 'sorting', 'my', filters='unused') }"
+                                    role="button"
                                     class="dropdown-item">Unused Tags
                                 </a>
                             </t>
                             <a t-attf-href="?#{ keep_query('search', 'sorting', 'my', filters='most_used') }"
+                                role="button"
                                 class="dropdown-item">Most Used Tags
                             </a>
                         </t>
                         <t t-else="">
                             <t t-if="not forum or (forum and forum.mode == 'questions')">
                                 <a t-attf-href="?#{ keep_query('search', 'sorting', 'my', filters='solved') }"
+                                    role="button"
                                     class="dropdown-item">Solved
                                 </a>
                                 <a t-attf-href="?#{ keep_query('search', 'sorting', 'my', filters='unsolved') }"
+                                    role="button"
                                     class="dropdown-item">Unsolved
                                 </a>
                             </t>
                             <a t-attf-href="?#{ keep_query('search', 'sorting', 'my', filters='unanswered') }"
+                                role="button"
                                 class="dropdown-item">Unanswered
                             </a>
                         </t>
@@ -172,9 +178,9 @@
                         data-bs-toggle="popover"
                         t-att-data-bs-title="popover_title"
                         t-att-data-bs-content="popover_content">
-                        <a class="o_wforum_ask_btn disabled btn btn-primary w-100 w-md-auto mb-3 mb-md-0" t-attf-href="/forum/#{ slug(forum) }/ask">New Post</a>
+                        <a class="o_wforum_ask_btn disabled btn btn-primary w-100 w-md-auto mb-3 mb-md-0">New Post</a>
                     </div>
-                    <a t-elif="uid and forum" role="button" type="button" t-attf-class="o_wforum_ask_btn btn btn-primary w-100 w-md-auto #{ 'karma_required' if user.karma &lt; forum.karma_ask else '' }"
+                    <a t-elif="uid and forum" t-attf-class="o_wforum_ask_btn btn btn-primary w-100 w-md-auto #{ 'karma_required' if user.karma &lt; forum.karma_ask else '' }"
                         t-att-data-karma="forum.karma_ask" t-attf-href="/forum/#{slug(forum)}/ask">New Post</a>
                 </t>
                 <button t-if="website_forum_action and not queue_type == 'close' and posts_ids" type="button" class="o_wforum_btn_filter_tool btn btn-secondary"
@@ -269,7 +275,7 @@
         <a t-attf-href="/profile/user/#{ uid }?forum_id=#{ forum.id if forum else '' }"
             class="btn w-100 py-1 text-start d-flex align-items-center" data-bs-toggle="tooltip" data-trigger="hover"
             title="My profile">
-            <img class="o_wforum_avatar rounded-circle object-fit-cover" t-att-src="website.image_url(user, 'avatar_128', '60x60')" alt="Avatar"/>
+            <img class="o_wforum_avatar rounded-circle object-fit-cover" t-att-src="website.image_url(user, 'avatar_128', '60x60')" alt=""/>
             <div class="d-flex flex-column justify-content-center ms-2">
                 <span class="mt-0 mb-1 h6-fs fw-bold" t-out="user_id.name"/>
                 <span class="fs-6 text-reset opacity-50"><t t-out="user_id.karma"/> XP</span>
@@ -410,8 +416,8 @@
             </div>
             <span t-elif="forum and forum.total_posts == 0">Because there are no posts in this forum yet.</span>
             <div class="mt-3">
-                <a t-if="uid and forum and forum.total_posts == 0" role="button" type="button" class="o_forum_ask_btn btn btn-primary ms-2" t-attf-href="/forum/#{_forum_slug}/ask">Start by creating a post</a>
-                <a t-else="" role="button" type="button" class="btn btn-primary mt-2" t-att-href="go_back_url">Go back to the list of <t t-out="record_name_plural"/></a>
+                <a t-if="uid and forum and forum.total_posts == 0" class="o_forum_ask_btn btn btn-primary ms-2" t-attf-href="/forum/#{_forum_slug}/ask">Start by creating a post</a>
+                <a t-else="" class="btn btn-primary mt-2" t-att-href="go_back_url">Go back to the list of <t t-out="record_name_plural"/></a>
             </div>
         </div>
     </div>

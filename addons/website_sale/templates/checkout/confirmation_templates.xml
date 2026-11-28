@@ -28,12 +28,9 @@
                 <h3>Thank you for your order.</h3>
                 <div t-if="not order.invoice_count">
                     <a
-                        title="Download"
-                        role="button"
                         class="d-none d-md-inline-block btn btn-light ms-auto"
                         href="/shop/print"
                         target="_blank"
-                        aria-label="Download"
                     >
                         <i class="oi me-2" data-icon="download" role="img" aria-hidden="true"/>Download
                     </a>
@@ -46,7 +43,6 @@
                             id="downloadDropdown"
                             data-bs-toggle="dropdown"
                             aria-expanded="false"
-                            aria-label="Download"
                         >
                             <i class="oi me-2" data-icon="download" role="img" aria-hidden="true"/>Download
                         </button>
@@ -85,7 +81,7 @@
             </div>
             <t t-if="signup_url">
                 <p class="alert alert-info mt-3" role="status">
-                    <a role="button" t-att-href="signup_url" class="btn btn-primary o_translate_inline">Sign Up</a>
+                    <a t-att-href="signup_url" class="btn btn-primary o_translate_inline">Sign Up</a>
                     <span class="align-middle">or</span>
                     <a href="/web/login?redirect=/shop/confirmation/link_order" class="align-middle o_translate_inline">Sign In</a>
                     <span class="align-middle">to follow your order.</span>

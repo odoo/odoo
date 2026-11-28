@@ -6,7 +6,7 @@ registry.category("web_tour.tours").add("email_reminder_tour", {
         let steps = [
             {
                 content: "Click on favorite button",
-                trigger: "i[title='Set Favorite']",
+                trigger: "button:contains('Add to favorite')",
                 run: "click",
             },
         ];
@@ -24,7 +24,7 @@ registry.category("web_tour.tours").add("email_reminder_tour", {
         }
         steps = steps.concat([{
             content: `Check Favorite is now on`,
-            trigger: "div.o_wetrack_js_reminder span.o_wetrack_js_reminder_on",
+            trigger: "div.o_wetrack_js_reminder button.o_wetrack_js_reminder_on",
         }]);
         return steps;
     })()

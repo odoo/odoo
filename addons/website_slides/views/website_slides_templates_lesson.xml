@@ -110,13 +110,15 @@
 <!-- Slide: sidebar training mode -->
 <template id="slide_aside_training" name="Slide: Sidebar in Training">
     <div class="o_wslides_lesson_aside_list position-relative bg-white border-bottom mt-4">
-        <div class="bg-100 text-1000 h6 my-0 text-decoration-none border-bottom d-flex align-items-center justify-content-between">
+        <button type="button" data-bs-target="#collapse_slide_aside" data-bs-toggle="collapse"
+                class="o_btn_reset collapsed w-100 bg-100 text-1000 h6 my-0 border-bottom d-flex align-items-center justify-content-between"
+                t-attf-aria-label="Show / Hide course content"
+                aria-controls="collapse_slide_aside" aria-expanded="false">
             <span class="p-2">Course content</span>
-            <a href="#collapse_slide_aside" data-bs-toggle="collapse" class="d-lg-none p-2 text-decoration-none o_wslides_lesson_aside_collapse"
-                t-attf-aria-label="Show / Hide course content">
+            <div class="d-lg-none p-2 o_wslides_lesson_aside_collapse">
                 <i class="oi d-lg-none" data-icon="keyboard_arrow_down" role="img" aria-hidden="true"/>
-            </a>
-        </div>
+            </div>
+        </button>
         <ul id="collapse_slide_aside" class="list-unstyled my-0 pb-3 collapse d-lg-block">
             <t t-set="i" t-value="0"/>
             <t t-if="category.get('slides')" t-foreach="category_data" t-as="category">
@@ -131,9 +133,9 @@
     <t t-set="category_collapsed" t-value="category and category.get('is_collapsed')"/>
     <t t-if="category" t-set="category" t-value="category.get('category')"/>
     <li class="o_wslides_fs_sidebar_section mt-2">
-        <a t-attf-href="#collapse-#{category.id if category else 0}" t-attf-id="category-collapse-#{category.id if category else 0}"
-            data-bs-toggle="collapse" role="button" t-att-aria-expanded="'true' if category_collapsed else 'false'"
-            class="o_wslides_lesson_aside_list_link ps-2 text-600 text-uppercase text-decoration-none p-1 small d-flex"
+        <button t-attf-data-bs-target="#collapse-#{category.id if category else 0}" t-attf-id="category-collapse-#{category.id if category else 0}"
+            data-bs-toggle="collapse" type="button" t-att-aria-expanded="'true' if category_collapsed else 'false'"
+            class="o_wslides_lesson_aside_list_link o_btn_reset w-100 ps-2 text-600 text-uppercase text-decoration-none p-1 small d-flex"
             t-att-aria-controls="('collapse-%s') % (category.id if category else 0)">
             <t t-if="category">
                 <b t-field="category.name"/>
@@ -144,7 +146,7 @@
             <div class="flex-grow-1"/>
             <i class="oi oi-fw" data-icon="arrow_left" role="img" aria-hidden="true"/>
             <i class="oi oi-fw" data-icon="arrow_drop_down" role="img" aria-hidden="true"/>
-        </a>
+        </button>
         <ul t-attf-class="collapse #{'show' if category_collapsed else ''} p-0 m-0 list-unstyled" t-att-id="('collapse-%s') % (category.id if category else 0)" >
             <t t-set="is_member" t-value="slide.channel_id.is_member"/>
             <t t-set="can_access_channel" t-value="is_member or slide.channel_id.can_publish"/>
@@ -236,8 +238,8 @@
             </span>
             <div class="btn-group flex-grow-1 flex-sm-0 my-1" role="group" aria-label="Lesson Nav">
                 <a t-attf-class="o_wslides_nav_button btn btn-light border my-auto #{'disabled' if not previous_slide else ''} me-2"
-                    role="button" t-att-aria-disabled="'true' if not previous_slide else None" aria-label="Previous"
-                    t-att-href="'/slides/slide/%s' % (slug(previous_slide)) if previous_slide else '#'">
+                    aria-label="Previous slide"
+                    t-att-href="'/slides/slide/%s' % (slug(previous_slide)) if previous_slide else None">
                     <i class="oi me-2" data-icon="chevron_backward" role="img" aria-hidden="true"></i> <span class="d-none d-sm-inline-block">Prev</span>
                 </a>
                 <t t-if="slide.channel_id.channel_type == 'documentation' and slide.channel_id.is_member">
@@ -247,14 +249,14 @@
                         t-attf-href="/slides/slide/#{slide.id}/set_uncompleted">
                         Mark To Do
                     </a>
-                    <a t-elif="not slide_completed and is_quiz" role="button"
+                    <a t-elif="not slide_completed and is_quiz"
                         class="o_wslides_done_button btn btn-primary border text-white me-2"
                         href="#quiz_container">
                         Take Quiz
                     </a>
                     <a t-else="not slide_completed and slide.can_self_mark_completed" role="button"
                         class="o_wslides_done_button btn btn-primary border text-white me-2"
-                        t-attf-href="/slides/slide/#{slide.id}/set_completed?next_slide_id=#{next_slide.id if next_slide else ''}">
+                        t-att-href="'/slides/slide/#{slide.id}/set_completed?next_slide_id=%s' % next_slide.id if next_slide else None">
                         Mark Done
                     </a>
                 </t>
@@ -262,23 +264,23 @@
                     <t t-call="website_slides.course_join" channel="slide.channel_id"/>
                 </div>
                 <a t-attf-class="o_wslides_nav_button btn btn-light border my-auto #{'disabled' if not next_slide else ''}"
-                    role="button" t-att-aria-disabled="'true' if not next_slide else None" aria-label="Next"
-                    t-att-href="'/slides/slide/%s' % (slug(next_slide)) if next_slide else '#'">
+                    aria-label="Next slide"
+                    t-att-href="'/slides/slide/%s' % (slug(next_slide)) if next_slide else None">
                     <span class="d-none d-sm-inline-block">Next</span> <i class="oi ms-2" data-icon="chevron_forward" role="img" aria-hidden="true"></i>
                 </a>
             </div>
-            <a class="btn btn-light border ms-2 my-1" role="button" t-att-href="'/slides/slide/%s?fullscreen=1' % (slug(slide))" aria-label="Fullscreen">
+            <a class="btn btn-light border ms-2 my-1" t-att-href="'/slides/slide/%s?fullscreen=1' % (slug(slide))" aria-label="Fullscreen">
                 <i class="oi me-xl-2 my-1" data-icon="desktop_windows" role="img" aria-hidden="true"/>
                 <span class="d-none d-xl-inline-block">Fullscreen</span>
             </a>
-            <a class="o_wslides_share btn btn-light border ms-2 my-1" role="button" t-att-data-name="slide.name"
+            <button type="button" class="o_wslides_share btn btn-light border ms-2 my-1" t-att-data-name="slide.name"
                t-att-data-id="slide.id" t-att-data-url="slide.website_share_url" t-att-data-category="slide.slide_category"
                t-att-data-email-sharing="bool(slide.channel_id.share_slide_template_id)"
                t-att-data-embed-code="slide.embed_code_external if slide.slide_category in ['video', 'document'] else False"
                aria-label="Share">
                 <i class="oi me-xl-2 my-1" data-icon="family_history" role="img" aria-hidden="true"/>
                 <span class="d-none d-xl-inline-block">Share</span>
-            </a>
+            </button>
         </div>
     </div>
     <div t-if="slide.tag_ids" class="pb-2">
@@ -489,15 +491,15 @@
         <div class="row d-flex mb-2 mx-0">
             <div class="h4">
                 <small class="text-muted">
-                    <i class="o_wslides_js_quiz_icon o_wslides_js_quiz_sequence_handler oi me-1 text-muted" data-icon="menu" t-if="slide.channel_id.can_upload and not slide_completed" role="button" aria-label="Reorder question"/>
+                    <button type="button" class="o_wslides_js_quiz_icon o_wslides_js_quiz_sequence_handler btn oi me-1 text-muted" data-icon="menu" t-if="slide.channel_id.can_upload and not slide_completed" aria-label="Reorder question"/>
                     <t t-if="question_index != NoneType"><span class="o_wslides_quiz_question_sequence" t-out="question_index+1"/>.</t>
                     <t t-else=""><span class="o_wslides_quiz_question_sequence" t-out="question['sequence']"/>.</t>
                 </small>
                 <span t-out="question['question']"/>
             </div>
             <div class="ms-auto o_wslides_js_quiz_edit_del" t-if="slide.channel_id.can_upload and not slide_completed" >
-                <i class="o_wslides_js_quiz_icon o_wslides_js_quiz_edit_question oi p-1 text-muted" data-icon="pencil_square" role="button" aria-label="Edit question"></i>
-                <i class="o_wslides_js_quiz_icon o_wslides_js_quiz_delete_question oi oi-filled p-1 text-muted" data-icon="delete" role="button" aria-label="Delete question"></i>
+                <button type="button" class="o_wslides_js_quiz_icon o_wslides_js_quiz_edit_question btn oi p-1 text-muted" data-icon="edit_square" aria-label="Edit question"></button>
+                <button type="button" class="o_wslides_js_quiz_icon o_wslides_js_quiz_delete_question btn oi oi-filled p-1 text-muted" data-icon="delete" aria-label="Delete question"></button>
             </div>
         </div>
         <div class="list-group">
@@ -531,14 +533,14 @@
 
 <template id="lesson_content_quiz_add_buttons" name="Lesson: Quiz Add Buttons template">
     <div class="o_wslides_js_lesson_quiz_new_question mt-3">
-        <a t-attf-class="o_wslides_js_quiz_add o_wslides_js_quiz_add_quiz btn btn-light border #{'d-none ' if slide.question_ids else ''}" role="button">
+        <button type="button" t-attf-class="o_wslides_js_quiz_add o_wslides_js_quiz_add_quiz btn btn-light border #{'d-none ' if slide.question_ids else ''}">
             <i class="oi me-2" data-icon="add" role="img" aria-hidden="true"/>
             <span>Add Quiz</span>
-        </a>
-        <a t-attf-class="o_wslides_js_quiz_add o_wslides_js_quiz_add_question btn btn-light border ms-3 #{'' if slide.question_ids else 'd-none '}" role="button">
+        </button>
+        <button type="button" t-attf-class="o_wslides_js_quiz_add o_wslides_js_quiz_add_question btn btn-light border ms-3 #{'' if slide.question_ids else 'd-none '}">
             <i class="oi me-2" data-icon="add" role="img" aria-hidden="true"/>
             <span>Add Question</span>
-        </a>
+        </button>
     </div>
 </template>
 

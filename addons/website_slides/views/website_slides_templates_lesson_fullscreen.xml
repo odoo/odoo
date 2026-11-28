@@ -15,10 +15,10 @@
 
             <div class="o_wslides_slide_fs_header d-flex flex-shrink-0 text-white">
                 <div class="d-flex">
-                    <a class="o_wslides_fs_toggle_sidebar d-flex align-items-center px-3" href="#" title="Lessons">
+                    <button type="button" class="o_wslides_fs_header_button o_wslides_fs_toggle_sidebar o_btn_reset d-flex align-items-center px-3" title="Lessons">
                         <i class="oi" data-icon="menu" role="img" aria-hidden="true"/><span class="d-none d-md-inline-block ms-1">Lessons</span>
-                    </a>
-                    <a class="o_wslides_fs_review d-flex align-items-center" title="Reviews" t-if="slide.channel_id.allow_comment">
+                    </button>
+                    <div class="o_wslides_fs_header_button o_wslides_fs_review d-flex align-items-center" title="Reviews" t-if="slide.channel_id.allow_comment">
                         <t t-call="portal_rating.rating_stars_static_popup_composer"
                             rating_avg="rating_avg"
                             rating_total="rating_count"
@@ -38,17 +38,17 @@
                             _text_classes.f="d-none d-md-inline-block"
                             hide_rating_avg="True"
                             is_fullscreen="True"/>
-                    </a>
+                    </div>
                 </div>
                 <div class="d-flex ms-auto">
-                    <a class="o_wslides_share d-flex align-items-center px-3" href="#" title="Share">
+                    <button type="button" class="o_wslides_fs_header_button o_wslides_share o_btn_reset d-flex align-items-center px-3" title="Share">
                         <i class="oi" data-icon="family_history" role="img" aria-hidden="true"/>
                         <span class="d-none d-md-inline-block ms-2">Share</span>
-                    </a>
-                    <a class="d-flex align-items-center px-3 o_wslides_fs_exit_fullscreen" t-attf-href="/slides/slide/#{slug(slide)}" title="Exit Fullscreen">
+                    </button>
+                    <a class="o_wslides_fs_header_button d-flex align-items-center px-3 o_wslides_fs_exit_fullscreen" t-attf-href="/slides/slide/#{slug(slide)}" title="Exit Fullscreen">
                         <i class="oi" data-icon="logout" role="img" aria-hidden="true"/><span class="d-none d-md-inline-block ms-1">Exit Fullscreen</span>
                     </a>
-                    <a class="d-flex align-items-center px-3" t-attf-href="/slides/#{slug(slide.channel_id)}" title="Back to course">
+                    <a class="o_wslides_fs_header_button d-flex align-items-center px-3" t-attf-href="/slides/#{slug(slide.channel_id)}" title="Back to course">
                         <i class="oi" data-icon="home" role="img" aria-hidden="true"/><span class="d-none d-md-inline-block ms-1">Back to course</span>
                     </a>
                 </div>
@@ -87,7 +87,7 @@
                             </t>
                         </ul>
                     </div>
-                    <a href="#" class="o_wslides_fs_toggle_sidebar d-md-none bg-black-50"/>
+                    <button type="button" class="o_wslides_fs_toggle_sidebar d-md-none bg-black-50" aria-label="Close sidebar"/>
                 </div>
             </div>
         </div>
@@ -99,14 +99,14 @@
     <t t-set="category_collapsed" t-value="category and category.get('is_collapsed')"/>
     <t t-if="category" t-set="category" t-value="category.get('category')"/>
     <li class="o_wslides_fs_sidebar_section py-2 px-3">
-        <a t-if="category" class="text-uppercase text-500 py-1 small d-flex" t-attf-id="category-collapse-#{category.id if category else 0}"
-            data-bs-toggle="collapse" role="button" t-att-aria-expanded="'true' if category_collapsed else 'false'"
-            t-attf-href="#collapse-#{category.id if category else 0}" t-attf-aria-controls="collapse-#{category.id if category else 0}">
+        <button t-if="category" class="o_btn_reset w-100 text-uppercase text-500 py-1 small d-flex" t-attf-id="category-collapse-#{category.id if category else 0}"
+            data-bs-toggle="collapse" type="button" t-att-aria-expanded="'true' if category_collapsed else 'false'"
+            t-attf-data-bs-target="#collapse-#{category.id if category else 0}" t-attf-aria-controls="collapse-#{category.id if category else 0}">
             <b t-field="category.name"/>
             <div class="flex-grow-1"/>
             <i class="oi oi-fw" data-icon="arrow_left" role="img" aria-hidden="true"/>
             <i class="oi oi-fw" data-icon="arrow_drop_down" role="img" aria-hidden="true"/>
-        </a>
+        </button>
         <ul t-attf-class="o_wslides_fs_sidebar_section_slides position-relative px-0 pb-1 my-0 mx-n3 collapse #{'show' if category_collapsed else ''}"
             t-attf-id="collapse-#{category.id if category else 0}">
             <t t-set="is_member" t-value="current_slide.channel_id.is_member"/>
@@ -135,14 +135,14 @@
                     t-att-data-website-share-url="slide.website_share_url"
                     t-att-data-email-sharing="bool(slide.channel_id.share_slide_template_id)">
                     <div class="ms-2 o_wslides_sidebar_content overflow-hidden">
-                        <a t-if="can_access" class="d-block" href="#">
+                        <div t-if="can_access" class="d-block">
                             <div class="d-flex">
                                 <t t-if="is_member" t-call="website_slides.slide_sidebar_done_button"/>
                                 <i t-else="" class="oi me-2" t-attf-data-icon="#{slide.slide_icon_class}" role="img" aria-hidden="true"/>
-                                <div class="o_wslides_fs_slide_name text-truncate" t-out="slide.name"/>
+                                <button class="o_wslides_fs_slide_name o_btn_reset w-100 text-truncate" t-out="slide.name"/>
                             </div>
-                        </a>
-                        <span t-else="" class="d-block" href="#">
+                        </div>
+                        <span t-else="" class="d-block">
                             <div class="d-flex">
                                 <t t-if="is_member" t-call="website_slides.slide_sidebar_done_button"/>
                                 <i t-else="" class="oi me-2 text-600" t-attf-data-icon="#{slide.slide_icon_class}" role="img" aria-hidden="true"/>
@@ -183,9 +183,9 @@
                                 t-att-data-is-member-or-invited="is_member_or_invited"
                                 t-att-data-session-answers="session_answers"
                                 t-att-data-website-share-url="slide.website_share_url">
-                                <a t-if="can_access" class="o_wslides_fs_slide_quiz o_wslides_fs_slide_name" href="#" t-att-index="i">
+                                <button type="button" t-if="can_access" class="o_wslides_fs_slide_quiz o_wslides_fs_slide_name o_btn_reset" t-att-index="i">
                                     <i class="oi text-warning" data-icon="sports_score" role="img" aria-hidden="true"/>Quiz
-                                </a>
+                                </button>
                                 <span t-else="" class="text-600">
                                     <i class="oi text-warning" data-icon="sports_score" role="img" aria-hidden="true"/>Quiz
                                 </span>

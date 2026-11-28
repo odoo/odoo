@@ -542,11 +542,14 @@
                 t-value="isSortingBy and isSortingBy[0][0] or website.shop_default_sort"
             />
             <t t-set="_sort_label">Sort By</t>
-            <a
-                role="button"
-                href="#"
+            <button
+                type="button"
+                id="o_wsale_sortby"
                 t-attf-class="dropdown-toggle btn px-2"
                 data-bs-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+                aria-controls="o_wsale_sortby_menu"
             >
                 <span class="d-md-none"><t t-out="_sort_label"/></span>
                 <small class="d-none d-md-inline opacity-75"><t t-out="_sort_label"/>:</small>
@@ -556,8 +559,8 @@
                     <span t-else="" t-out="dict(website_sale_sortable)[website.shop_default_sort]"/>
                 </span>
                 <i t-if="_icon_classes" t-attf-class="oi {{_icon_classes}}" data-icon="swap_vert" role="img" aria-hidden="true"/>
-            </a>
-            <div class="dropdown-menu dropdown-menu-end" role="menu">
+            </button>
+            <div id="o_wsale_sortby_menu" class="dropdown-menu dropdown-menu-end" role="menu" aria-labelledby="o_wsale_sortby">
                 <t t-foreach="website_sale_sortable" t-as="sortby">
                     <t t-set="_is_active" t-value="_current_sort == sortby[0]"/>
                     <a

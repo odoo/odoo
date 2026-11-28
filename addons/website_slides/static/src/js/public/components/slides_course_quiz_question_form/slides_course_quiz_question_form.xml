@@ -39,30 +39,34 @@
                         <div class="input-group">
                             <input type="text" class="o_wslides_js_quiz_answer_value form-control" t-attf-placeholder='e.g. "{{answer.placeholder || "another animal"}}"' t-model.proxy="answer.text"/>
                             <div class="input-group-text">
-                                <a class="o_wslides_js_quiz_is_correct" title="This is the correct answer">
-                                    <label class="my-0">
-                                        <input class="d-none" type="radio" name="radio" t-att-checked="answer.isCorrect" t-on-change="(event) => this.onIsCorrectClick(answer, event.currentTarget.checked)" />
+                                <label class="my-0">
+                                    <button type="button" class="o_wslides_js_quiz_is_correct btn p-0"
+                                            t-att-title="answer.isCorrect ? 'This is the correct answer' : 'This answer is wrong'"
+                                            aria-label="Mark as the correct answer"
+                                            t-att-aria-pressed="answer.isCorrect ? 'true' : 'false'"
+                                            t-on-click="(event) => this.onIsCorrectClick(answer, event)">
+                                        <input class="d-none" type="radio" name="radio" t-att-checked="answer.isCorrect" />
                                         <i class="o_wslides_js_quiz_icon oi oi-lg text-muted" data-icon="check_circle" role="img" aria-hidden="true"/>
-                                    </label>
-                                </a>
+                                    </button>
+                                </label>
                             </div>
                         </div>
                     </div>
-                    <i
-                        t-attf-class="o_wslides_js_quiz_icon o_wslides_js_quiz_comment_answer oi oi-lg col-auto p-md-2 py-2 ps-2 pe-1 #{answer.comment.trim() !== '' ? 'text-primary' : 'text-muted'}" data-icon="info"
-                        role="button" aria-label="Add comment on this answer"
+                    <button
+                        t-attf-class="o_wslides_js_quiz_icon o_wslides_js_quiz_comment_answer btn oi oi-lg col-auto p-md-2 py-2 ps-2 pe-1 #{answer.comment.trim() !== '' ? 'text-primary' : 'text-muted'}" data-icon="info"
+                        type="button" aria-label="Add comment on this answer"
                         t-on-click="this.onToggleAnswerLineCommentClick" title="Add comment on this answer" />
-                    <i
-                        class="o_wslides_js_quiz_icon o_wslides_js_quiz_add_answer oi oi-lg col-auto p-md-2 py-2 px-1 text-muted"
+                    <button
+                        class="o_wslides_js_quiz_icon o_wslides_js_quiz_add_answer btn oi oi-lg col-auto p-md-2 py-2 px-1 text-muted"
                         data-icon="add_circle"
-                        role="button"
+                        type="button"
                         aria-label="Add an answer below this one"
                         title="Add an answer below this one"
                         t-on-click="() => this.onAddAnswerLineClick(answer)"/>
-                    <i
-                        class="o_wslides_js_quiz_icon o_wslides_js_quiz_remove_answer oi oi-lg col-auto p-md-2 py-2 px-1 text-muted"
+                    <button
+                        class="o_wslides_js_quiz_icon o_wslides_js_quiz_remove_answer btn oi oi-lg col-auto p-md-2 py-2 px-1 text-muted"
                         data-icon="delete"
-                        role="button"
+                        type="button"
                         aria-label="Remove this answer"
                         title="Remove this answer"
                         t-on-click="() => this.onRemoveAnswerLineClick(answer)"/>
@@ -71,10 +75,10 @@
                     <div class="col-8 offset-1 p-0">
                         <input t-model.proxy="answer.comment" type="text" class="form-control mt-1" placeholder="This is the correct answer, congratulations"/>
                     </div>
-                    <i
-                        class="o_wslides_js_quiz_icon o_wslides_js_quiz_remove_answer_comment oi oi-lg p-2 text-muted col-auto"
+                    <button
+                        class="o_wslides_js_quiz_icon o_wslides_js_quiz_remove_answer_comment btn oi oi-lg p-2 text-muted col-auto"
                         data-icon="delete"
-                        role="button"
+                        type="button"
                         aria-label="Remove the answer comment"
                         title="Remove the answer comment"
                         t-on-click="(event) => this.onRemoveAnswerLineCommentClick(event, answer)"/>
@@ -84,19 +88,21 @@
     </t>
 
     <t t-name="slide.quiz.buttons">
-        <a
+        <button
+            type="button"
+            data-hotkey="s"
             t-on-click="this.onValidateQuestionClick"
-            class="o_wslides_js_quiz_validate_question btn btn-primary text-white border me-1"
-            role="button">
+            class="o_wslides_js_quiz_validate_question btn btn-primary text-white border me-1">
             <span t-if="this.props.update">Update</span>
             <span t-else="">Save</span>
-        </a>
-        <a
+        </button>
+        <button
+            type="button"
+            data-hotkey="x"
             t-on-click="this.onCancelValidationClick"
-            class="o_wslides_js_quiz_cancel_question btn btn-light border"
-            role="button">
+            class="o_wslides_js_quiz_cancel_question btn btn-light border">
             <span>Cancel</span>
-        </a>
+        </button>
     </t>
 
 </templates>

@@ -9,18 +9,18 @@ const reminderToggleSteps = function (talkName, reminderOn, toggleReminder) {
     if (reminderOn) {
         steps = steps.concat([{
             content: `Check Favorite for ${talkName} was already on`,
-            trigger: "div.o_wetrack_js_reminder span.o_wetrack_js_reminder_on",
+            trigger: "div.o_wetrack_js_reminder button.o_wetrack_js_reminder_on",
         }]);
     }
     else {
         steps = steps.concat([{
             content: `Check Favorite for ${talkName} was off`,
-            trigger: "div.o_wetrack_js_reminder span.o_wetrack_js_reminder_off",
+            trigger: "div.o_wetrack_js_reminder button.o_wetrack_js_reminder_off",
         }]);
         if (toggleReminder) {
             steps = steps.concat([{
                 content: "Set Favorite",
-                trigger: "i[title='Set Favorite']",
+                trigger: "button:contains('Add to favorite')",
                 run: "click",
             }]);
             if (session.is_public){
@@ -37,7 +37,7 @@ const reminderToggleSteps = function (talkName, reminderOn, toggleReminder) {
             }
             steps = steps.concat([{
                 content: `Check Favorite for ${talkName} is now on`,
-                trigger: "div.o_wetrack_js_reminder span.o_wetrack_js_reminder_on",
+                trigger: "div.o_wetrack_js_reminder button.o_wetrack_js_reminder_on",
             }]);
         }
     }
