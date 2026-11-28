@@ -468,6 +468,18 @@ class TestPdpMessage(TestL10nFrPdpCommon, TestAccountMoveSendCommon):
         self.assertNotIn('PA Status:', body)
         self.assertIn('PPF Invoice:', body)
         self.assertIn('The detailed PPF error message', body)
+        self.assertRecordValues(move, [{
+            'peppol_move_state': 'error',
+            'pdp_ppf_move_state': 'error',
+            'show_reset_to_draft_button': False,
+        }])
+        wizard = self.create_send_and_print(move)
+        wizard.action_send_and_print()
+        self.assertRecordValues(move, [{
+            'peppol_move_state': 'error',
+            'pdp_ppf_move_state': 'error',
+            'show_reset_to_draft_button': False,
+        }])
 
     def test_pdp_einvoicing_ppf_lifecycle_error(self):
         move = self._create_french_invoice()

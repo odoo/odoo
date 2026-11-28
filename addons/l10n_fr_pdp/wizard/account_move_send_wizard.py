@@ -32,7 +32,7 @@ class AccountMoveSendWizard(models.TransientModel):
             reason = self.env._("No Siren/Siret")
         elif not partner_is_valid:
             reason = verification_display_state_map[pdp_partner.pdp_verification_display_state]
-        elif self.move_id.peppol_is_sent:
+        elif self.move_id.peppol_is_sent or self.move_id.pdp_ppf_move_state == 'error':
             reason = self.env._("Previously sent")
         if reason:
             return f" ({reason})"
