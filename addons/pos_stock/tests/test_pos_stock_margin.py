@@ -38,7 +38,6 @@ class TestPosStockMargin(TestPosMargin, TestPosStockCommon):
             'product_id': product1.id,
             'uom_id': self.uom_unit.id,
             'product_uom_qty': 2,
-            'price_unit': 3,
             'value_manual': 6,
         }).sudo()
         move1._action_confirm()
@@ -53,7 +52,6 @@ class TestPosStockMargin(TestPosMargin, TestPosStockCommon):
             'product_id': product1.id,
             'uom_id': self.uom_unit.id,
             'product_uom_qty': 1,
-            'price_unit': 7,
             'value_manual': 7,
         }).sudo()
         move2._action_confirm()
@@ -99,7 +97,6 @@ class TestPosStockMargin(TestPosMargin, TestPosStockCommon):
             'product_id': product1.id,
             'uom_id': self.uom_unit.id,
             'product_uom_qty': 2,
-            'price_unit': 3,
             'value_manual': 6,
         }).sudo()
         move1._action_confirm()
@@ -114,7 +111,6 @@ class TestPosStockMargin(TestPosMargin, TestPosStockCommon):
             'product_id': product1.id,
             'uom_id': self.uom_unit.id,
             'product_uom_qty': 1,
-            'price_unit': 6,
             'value_manual': 6,
         }).sudo()
         move2._action_confirm()

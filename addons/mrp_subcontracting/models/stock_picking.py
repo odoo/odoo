@@ -171,10 +171,8 @@ class StockPicking(models.Model):
                     move.move_orig_ids = False
                     _, new_mo = production_to_split.with_context(allow_more=True)._split_productions({production_to_split: [original_qty, move.product_qty]})
                     new_mo.move_finished_ids.move_dest_ids = move
-                    continue
-                else:
-                    # do not create extra production for move that have their quantity updated
-                    return
+                # do not create extra production for move that have their quantity updated
+                continue
             quantity = move.product_qty or move.quantity
             if move.uom_id.compare(quantity, 0) <= 0:
                 # If a subcontracted amount is decreased, don't create a MO that would be for a negative value.
