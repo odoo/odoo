@@ -8,15 +8,10 @@ patch(PaymentPage.prototype, {
             (p) => p.id === this.state.paymentMethodId
         );
         if (paymentMethod.use_payment_terminal === "qfpay") {
-            const order = this.selfOrder.currentOrder;
-            const response = await this.selfOrder.qfpay.makeQFPayRequest("trade", {
-                func_type: 1001,
-                amt: order.amount_total,
-                channel: paymentMethod.qfpay_payment_type,
-                out_trade_no: `${order.uuid}--${order.session_id.id}--${paymentMethod.id}`,
-                wait_card_timeout: 30,
-                camera_id: 1,
-            });
+            const response = await this.selfOrder.qfpay.makeQFPayRequest(
+                "trade",
+                this.selfOrder.currentOrder
+            );
             if (!response) {
                 this.selfOrder.paymentError = true;
             }

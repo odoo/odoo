@@ -16,22 +16,8 @@ export class QFPay {
 
     async makeQFPayRequest(endpoint, payload) {
         try {
-            const signedPayload = await this.orm.call("pos.payment.method", "qfpay_sign_request", [
-                this.paymentMethod.id,
-                payload,
-            ]);
-            const result = await fetch(
-                `https://${this.paymentMethod.qfpay_terminal_ip_address}:9001/api/pos/${endpoint}`,
-                {
-                    method: "POST",
-                    headers: {
-                        Accept: "application/json",
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(signedPayload),
-                }
-            );
-            const response = await result.json();
+            const signedPayload = await this.signRequest(payload);
+            const response = await this.sendRequest(endpoint, signedPayload);
 
             if (response.respcd !== "6000") {
                 // Don't show error message when a request is canceled from the terminal
@@ -60,5 +46,27 @@ export class QFPay {
                 this.errorCallback(error);
             }
         }
+    }
+
+    signRequest(payload) {
+        return this.orm.call("pos.payment.method", "qfpay_sign_request", [
+            this.paymentMethod.id,
+            payload,
+        ]);
+    }
+
+    async sendRequest(endpoint, signedPayload) {
+        const result = await fetch(
+            `https://${this.paymentMethod.qfpay_terminal_ip_address}:9001/api/pos/${endpoint}`,
+            {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(signedPayload),
+            }
+        );
+        return result.json();
     }
 }
