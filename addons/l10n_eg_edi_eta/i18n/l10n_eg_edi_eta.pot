@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 20.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-18 18:19+0000\n"
-"PO-Revision-Date: 2026-09-18 18:19+0000\n"
+"POT-Creation-Date: 2026-11-27 18:55+0000\n"
+"PO-Revision-Date: 2026-11-27 18:55+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -43,6 +43,14 @@ msgid ""
 "Egypt Tax Authority Invoice Integration\n"
 "==============================================================================\n"
 "Integrates with the ETA portal to automatically send and sign the Invoices to the Tax Authority.\n"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#. odoo-python
+#: code:addons/l10n_eg_edi_eta/models/account_move.py:0
+msgid ""
+" Make sure to enable the use of Units of Measure in the accounting settings "
+"in order to display the weight on products."
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -139,6 +147,15 @@ msgstr ""
 msgid ""
 "Address of the subdivision of the company.  You can just put the company "
 "partner if this is used for the main branch."
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#. odoo-python
+#: code:addons/l10n_eg_edi_eta/models/account_move.py:0
+msgid ""
+"All product weights must be greater than 0 for export invoices, as required "
+"by the Egyptian Tax Authority (ETA). Please update the weight on the product"
+" form to proceed."
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -673,12 +690,6 @@ msgstr ""
 
 #. module: l10n_eg_edi_eta
 #. odoo-python
-#: code:addons/l10n_eg_edi_eta/models/account_move.py:0
-msgid "Error occured while fetching access token: [%(code)s] %(message)s"
-msgstr ""
-
-#. module: l10n_eg_edi_eta
-#. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/eta_submission.py:0
 msgid "Error occured while trying to retry sending invoice: %s"
 msgstr ""
@@ -701,14 +712,6 @@ msgstr ""
 msgid ""
 "Error: Invoice could not be signed.\n"
 "Cannot connect to the middleware"
-msgstr ""
-
-#. module: l10n_eg_edi_eta
-#. odoo-python
-#: code:addons/l10n_eg_edi_eta/models/account_move.py:0
-msgid ""
-"Failed to authenticate with the ETA server. Please verify your ETA "
-"credentials!"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -856,6 +859,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/account_move.py:0
 msgid "Invoice needs to be signed before ETA submission."
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_l10n_eg_edi_eta_submission__is_latest
+msgid "Is Latest"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -1196,14 +1204,6 @@ msgid "Ohm ( Ohm )"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
-#. odoo-python
-#: code:addons/l10n_eg_edi_eta/models/account_move.py:0
-msgid ""
-"Only invoices from one company can be signed at a time.\n"
-"                        Please select invoices from a single company to sign and send to ETA."
-msgstr ""
-
-#. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.uom.code,name:l10n_eg_edi_eta.l10n_eg_edi_uom_code_ONZ
 msgid "Ounce ( oz )"
 msgstr ""
@@ -1269,13 +1269,21 @@ msgstr ""
 #. module: l10n_eg_edi_eta
 #. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/account_move.py:0
-msgid "Please configure Client ID and Secret Key for the company %s."
+msgid "Please configure Client ID and Secret Key for the Company(s)."
 msgstr ""
 
 #. module: l10n_eg_edi_eta
 #. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/account_move.py:0
 msgid "Please configure Egyptian ETA Settings on the Journal(s)."
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#. odoo-python
+#: code:addons/l10n_eg_edi_eta/models/account_move.py:0
+msgid ""
+"Please create this export credit/debit note from the original export "
+"invoice."
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -1322,6 +1330,18 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/account_move.py:0
 msgid "Please only sign invoices from one company at a time."
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#. odoo-python
+#: code:addons/l10n_eg_edi_eta/models/account_move.py:0
+msgid "Please send the original export invoices to the ETA first."
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#. odoo-python
+#: code:addons/l10n_eg_edi_eta/models/account_move.py:0
+msgid "Please set the delivery date."
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -1741,6 +1761,12 @@ msgstr ""
 #. module: l10n_eg_edi_eta
 #. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/account_move.py:0
+msgid "View Company(s)"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#. odoo-python
+#: code:addons/l10n_eg_edi_eta/models/account_move.py:0
 msgid "View Invoices"
 msgstr ""
 
@@ -1760,6 +1786,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/account_move.py:0
 msgid "View Products"
+msgstr ""
+
+#. module: l10n_eg_edi_eta
+#. odoo-python
+#: code:addons/l10n_eg_edi_eta/models/account_move.py:0
+msgid "View branches"
 msgstr ""
 
 #. module: l10n_eg_edi_eta
@@ -1838,10 +1870,4 @@ msgstr ""
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.uom.code,name:l10n_eg_edi_eta.l10n_eg_edi_uom_code_LB
 msgid "pounds"
-msgstr ""
-
-#. module: l10n_eg_edi_eta
-#. odoo-python
-#: code:addons/l10n_eg_edi_eta/models/account_move.py:0
-msgid "view branches"
 msgstr ""
