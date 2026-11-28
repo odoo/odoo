@@ -36,6 +36,11 @@ declare module "models" {
     import { Thread as ThreadClass } from "@mail/core/common/thread_model";
     import { Volume as VolumeClass } from "@mail/core/common/volume_model";
 
+    import { messagePatch1 } from "@mail/core/web/message_model_patch";
+    type MessagePatch1 = typeof messagePatch1;
+
+    export interface Message2 extends MessageClass, MessagePatch1 {}
+
     export interface Activity extends ActivityClass {}
     export interface Attachment extends AttachmentClass {}
     export interface CannedResponse extends CannedResponseClass {}
@@ -133,7 +138,7 @@ declare module "models" {
         "mail.followers": Follower;
         "mail.guest": MailGuest;
         "mail.link.preview": LinkPreview;
-        "mail.message": Message;
+        "mail.message": Message2;
         "mail.message.link.preview": MessageLinkPreview;
         "mail.message.subtype": MailMessageSubtype;
         "mail.notification": Notification;
