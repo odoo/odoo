@@ -21,10 +21,11 @@ class ProductCombo(models.Model):
     currency_id = fields.Many2one(comodel_name='res.currency', compute='_compute_currency_id')
     base_price = fields.Float(
         string="Combo Price",
-        help="The minimum price among the products in this combo. This value will be used to"
-             " prorate the price of this combo with respect to the other combos in a combo product."
-             " This heuristic ensures that whatever product the user chooses in a combo, it will"
-             " always be the same price.",
+        help="The minimum price among the products in this combo choice. This value will be used to"
+             " prorate the price of this combo choice with respect to the other combo choices in a"
+             " combo product. This heuristic ensures that whatever product the user chooses in a"
+             " combo choice, it will always be the same price (except when the product has an extra"
+             " price).",
         min_display_digits='Product Price',
         compute='_compute_base_price',
     )
@@ -58,6 +59,7 @@ class ProductCombo(models.Model):
                     to_currency=combo.currency_id,
                     company=combo.company_id or self.env.company,
                     date=self.env.cr.now(),
+                    round=False,
                 )
             )) if combo.combo_item_ids else 0
 
