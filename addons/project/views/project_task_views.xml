@@ -377,6 +377,7 @@
                     <field name="is_template" invisible="1"/> <!-- drives invisible of personal_stage_type_id, the web_ribbon widget and 6 more and required of project_id -->
                     <field name="is_rotting" invisible="1"/> <!-- read by the rotting_statusbar_duration widget of stage_id -->
                     <field name="rotting_days" invisible="1"/> <!-- read by the rotting_statusbar_duration widget of stage_id -->
+                    <field name="task_template_id" invisible="1"/>
                     <header>
                         <field name="stage_id" widget="rotting_statusbar_duration" options="{'clickable': '1', 'fold_field': 'fold'}" invisible="not project_id and not stage_id"/>
                         <field name="state" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}" invisible="1"/> <!-- drives invisible of date_deadline -->
@@ -518,6 +519,7 @@
                                     <field name="sequence" widget="handle"/>
                                     <field name="id" optional="hide" options="{'enable_formatting': False}"/>
                                     <field name="parent_id" column_invisible="True"/> <!-- drives invisible of the action_open_parent_task button, recurring_task and required of project_id -->
+                                    <field name="task_template_id" column_invisible="True"/>
                                     <field name="state" widget="project_task_state_selection" nolabel="1" width="20px"/>
                                     <field name="name" widget="name_with_subtask_count"/>
                                     <field name="subtask_count" column_invisible="True"/> <!-- drives invisible of the action_open_subtasks button -->

@@ -5,6 +5,7 @@ import { _t } from "@web/core/l10n/translation";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { user } from "@web/core/user";
 import { useOwnedDialogs, useService } from "@web/core/utils/hooks";
+import { pick } from "@web/core/utils/objects";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 import { ProjectTemplateButtons, templateButtonsNavigationOptions } from "./project_template_buttons";
 
@@ -25,6 +26,7 @@ export class ProjectTaskTemplateDropdown extends Component {
         projectId: t.or([t.number(), t.boolean()]).optional(false),
         context: t.object(),
         getAdditionalContext: t.function().optional(),
+        record: t.object().optional(),
     });
 
     setup() {
@@ -100,21 +102,39 @@ export class ProjectTaskTemplateDropdown extends Component {
             .call("project.project", "get_template_tasks", [this.props.projectId]);
     }
 
-    async createTaskFromTemplate(templateId) {
-        const context = { ...this.props.context };
-        if (this.props.getAdditionalContext) {
-            Object.assign(context, this.props.getAdditionalContext());
+    createTask() {
+        if (this.props.record?.model.config.context.default_task_template_id) {
+            return this.loadNewRecord({ default_task_template_id: false });
         }
-        this.action.switchView("form", {
-            resId: await this.orm.call(
-                "project.task",
-                "action_create_from_template",
-                [templateId],
-                {
-                    context: context,
-                }
-            ),
-            focusTitle: true,
+        return this.props.onCreate();
+    }
+
+    createTaskFromTemplate(templateId) {
+        const additionalContext = {
+            ...this.props.getAdditionalContext?.(),
+            default_task_template_id: templateId,
+        };
+        if (this.props.record) {
+            return this.loadNewRecord(additionalContext);
+        }
+        return this.action.doAction(this.action.currentAction, {
+            viewType: "form",
+            additionalContext: {
+                ...pick(this.props.context, "active_id", "active_ids", "active_model"),
+                ...additionalContext,
+            },
+        });
+    }
+
+    async loadNewRecord(additionalContext) {
+        const record = this.props.record;
+        if ((await record.isDirty()) && !(await record.save())) {
+            return;
+        }
+        await record.model.load({
+            resId: false,
+            mode: "edit",
+            context: { ...this.props.context, ...additionalContext },
         });
     }
 

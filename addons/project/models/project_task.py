@@ -336,6 +336,12 @@ class ProjectTask(models.Model):
         'CHECK (NOT (project_id IS NULL AND parent_id IS NOT NULL) OR is_template IS TRUE)',
         'A private (non-template) task cannot have a parent.',
     )
+    # WARNING: Using this field as a dependency for other compute methods may cause a cyclic dependancy.
+    task_template_id = fields.Many2one(
+        'project.task',
+        string="Task Template Used",
+        copy=False,
+    )
 
     _is_template_idx = models.Index('(is_template) WHERE is_template IS TRUE')
 
@@ -1056,6 +1062,10 @@ class ProjectTask(models.Model):
         if 'repeat_until' in fields:
             vals['repeat_until'] = Date.context_today(self) + timedelta(days=7)
 
+        if 'task_template_id' in fields and (template := self.browse(self.env.context.get('default_task_template_id')).exists()):
+            template_vals = self._get_task_template_values(template, self.env['project.project'].browse(vals.get('project_id')))
+            vals.update((fname, template_vals[fname]) for fname in fields if fname in template_vals)
+
         if 'partner_id' in vals and not vals['partner_id']:
             # if the default_partner_id=False or no default_partner_id then we search the partner based on the project and parent
             project_id = vals.get('project_id')
@@ -1178,6 +1188,17 @@ class ProjectTask(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        for vals in vals_list:
+            if template := self.browse(vals.get('task_template_id')):
+                vals.update({
+                    **self._get_task_template_values(
+                        template,
+                        self.env['project.project'].browse(vals.get('project_id') or self.env.context.get('default_project_id')),
+                        {fname: vals[fname] for fname in ('child_ids', 'recurrence_id') if fname in vals},
+                    ),
+                    **vals,
+                })
+
         # Some values are determined by this override and must be written as
         # sudo for portal users, because they do not have access to these
         # fields. Other values must not be written as sudo.
@@ -2133,6 +2154,33 @@ class ProjectTask(models.Model):
         if project_id and not self.env['project.project'].browse(project_id).allow_recurring_tasks:
             fields.extend(self._get_recurrence_fields() + ["recurrence_id", "recurring_task"])
         return fields
+
+    @api.model
+    def _get_task_template_values(self, template, project, default=None):
+        default = default or {}
+        template_vals = template.with_context(copy_from_template=True).copy_data({
+            **({'project_id': project.id} if project else {}),
+            **dict.fromkeys(self.with_context(default_project_id=project.id)._get_template_field_blacklist(), False),
+            **default,
+        })[0]
+        if 'child_ids' in default:
+            template_vals.pop('child_ids', None)
+        if template_vals.get('recurring_task'):
+            template_vals.update({fname: template[fname] for fname in self._get_recurrence_fields()})
+        self._prepare_task_template_values(template_vals, template, project.allow_task_dependencies)
+        return template_vals
+
+    @api.model
+    def _prepare_task_template_values(self, vals, template, allow_dependencies):
+        vals.update(task_template_id=template.id, is_template=False, state='01_in_progress')
+        if template.date_deadline:
+            vals['date_deadline'] = template.date_deadline
+        if allow_dependencies and template.depend_on_ids:
+            vals['depend_on_ids'] = [Command.link(task_id) for task_id in template.depend_on_ids.ids]
+            if template.is_blocked_by_dependences():
+                vals['state'] = '04_waiting_normal'
+        for child_template, (_command, _id, child_vals) in zip(template.child_ids.filtered('active'), vals.get('child_ids', ())):
+            self._prepare_task_template_values(child_vals, child_template, allow_dependencies)
 
     def action_create_from_template(self, values=None):
         self.ensure_one()
