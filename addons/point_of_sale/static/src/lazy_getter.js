@@ -1,8 +1,13 @@
 import { computed } from "@odoo/owl";
 
 const mapObjectToKeyToDerived = new Map();
+let classGetters = new WeakMap();
+
+export function clearGettersCache() {
+    classGetters = new WeakMap();
+}
+
 /**
- /**
  * Creates a lazy getter for an object instance, ensuring the value is (re)computed only when needed.
  * @param {Object} object - The object on which to define the lazy getter.
  * @param {string} name - The name of the getter
@@ -32,44 +37,56 @@ export class WithLazyGetterTrap {
         if (Class.enableLazyGetters === false) {
             return;
         }
-        return new Proxy(this, { get: defineLazyGetterTrap(this), ...traps });
+        return new Proxy(this, { get: defineLazyGetterTrap(Class), ...traps });
     }
 }
-function defineLazyGetterTrap(object) {
-    const getters = getAllDeriveds(object);
+
+function defineLazyGetterTrap(Class) {
+    const getterNames = getGetterNames(Class);
+    let deriveds = null;
 
     return function get(target, prop, receiver) {
-        if (!getters.has(prop)) {
+        if (!getterNames.has(prop)) {
             return Reflect.get(target, prop, receiver);
         }
         // For a getter, we should get the value from the receiver.
         // Because the receiver is linked to the reactivity.
         // We want to read the getter from it to make sure that the getter
         // is part of the reactivity as well.
-        // To avoid infinite recursion, we disable this proxy trap
-        // during the time the lazy getter is accessed.
-        return getters.get(prop)(receiver);
+        if (!deriveds) {
+            deriveds = new Map();
+        }
+        let entry = deriveds.get(prop);
+        if (!entry) {
+            entry = {
+                receiver,
+                derived: computed(() => Reflect.get(target, prop, entry.receiver), {
+                    name: `lazyGetter(${prop})`,
+                }),
+            };
+            deriveds.set(prop, entry);
+        } else {
+            entry.receiver = receiver;
+        }
+        return entry.derived();
     };
 }
-function getAllDeriveds(obj) {
-    const deriveds = new Map();
-    while (obj !== null) {
-        const descriptors = Object.getOwnPropertyDescriptors(obj);
-        for (const [name, descriptor] of Object.entries(descriptors)) {
-            if (
-                !descriptor.get ||
-                deriveds.has(name) ||
-                (name.startsWith("__") && name.endsWith("__"))
-            ) {
-                continue;
+
+function getGetterNames(Class) {
+    let getterNames = classGetters.get(Class);
+    if (!getterNames) {
+        getterNames = new Set();
+        let proto = Class.prototype;
+        while (proto !== null) {
+            const descriptors = Object.getOwnPropertyDescriptors(proto);
+            for (const [name, descriptor] of Object.entries(descriptors)) {
+                if (descriptor.get && !(name.startsWith("__") && name.endsWith("__"))) {
+                    getterNames.add(name);
+                }
             }
-            const d = computed(() => descriptor.get.call(obj), { name: `lazyGetter(${name})` });
-            deriveds.set(name, (currentObj) => {
-                obj = currentObj;
-                return d();
-            });
+            proto = Object.getPrototypeOf(proto);
         }
-        obj = Object.getPrototypeOf(obj);
+        classGetters.set(Class, getterNames);
     }
-    return deriveds;
+    return getterNames;
 }

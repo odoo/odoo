@@ -921,10 +921,12 @@ export class PosStore extends WithLazyGetterTrap {
             "product.template": limit,
         };
         const result = await this.data.loadRecordsFromPos(
-            ["product.template"],
+            this.data.getModelsLoadedWith("product.template"),
             modelDomain,
             modelOffset,
-            modelLimit
+            modelLimit,
+            {},
+            false
         );
         this.productAttributesExclusion = this.computeProductAttributesExclusion(
             result["product.template.attribute.value"]

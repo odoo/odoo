@@ -1,4 +1,5 @@
-from odoo import models, api
+from odoo import api, models
+from odoo.fields import Domain
 
 
 class AccountFiscalPosition(models.Model):
@@ -7,8 +8,10 @@ class AccountFiscalPosition(models.Model):
 
     @api.model
     def _load_pos_data_domain(self, data):
-        partner_fp_ids = data['res.partner'].fiscal_position_id.ids if data['res.partner'] else []
-        return [('id', 'in', data['pos.config'].fiscal_position_ids.ids + data['pos.preset'].fiscal_position_id.ids + partner_fp_ids)]
+        domain = Domain('id', 'in', data['pos.config'].fiscal_position_ids.ids + data['pos.preset'].fiscal_position_id.ids)
+        if data['res.partner']:
+            domain |= Domain(self._check_company_domain(data['pos.config'].company_id))
+        return list(domain)
 
     @api.model
     def _load_pos_data_dependencies(self):

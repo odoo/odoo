@@ -1,9 +1,12 @@
 import { expect, test } from "@odoo/hoot";
 import { animationFrame, waitFor } from "@odoo/hoot-dom";
-import { patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { getService, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { session } from "@web/session";
+import { ConnectionLostError } from "@web/core/network/rpc";
+import { barcodeReaderService } from "@point_of_sale/app/services/barcode_reader_service";
 import {
     setupAndMountPosApp,
+    setupPosEnv,
     createAttribute,
     createAttributeValue,
     createAttributeLine,
@@ -223,4 +226,49 @@ test("test_one_attribute_value_scan_barcode: scan barcode adds variant with attr
             quantity: "1",
         })
     ).toBe(true);
+});
+
+test("barcode reader started offline reads barcodes with the last nomenclature", async () => {
+    patchWithCleanup(session, { nomenclature_id: 1 });
+    const store = await setupPosEnv();
+
+    const offline = () => Promise.reject(new ConnectionLostError("/web/dataset/call_kw"));
+    const barcodeReader = await barcodeReaderService.start(null, {
+        dialog: getService("dialog"),
+        notification: getService("notification"),
+        action: getService("action"),
+        barcode: { bus: new EventTarget() },
+        orm: { read: offline, searchRead: offline },
+    });
+
+    expect(barcodeReader.parser.nomenclature).toEqual(store.barcodeReader.parser.nomenclature);
+    expect(barcodeReader.parser.parse_barcode("2305000123451").type).toBe("price");
+});
+
+test("barcode reader started offline ignores the nomenclature of another database", async () => {
+    patchWithCleanup(session, { nomenclature_id: 1, db: "db_a" });
+    await setupPosEnv();
+    patchWithCleanup(session, { db: "db_b" });
+
+    const offline = () => Promise.reject(new ConnectionLostError("/web/dataset/call_kw"));
+    const barcodeReader = await barcodeReaderService.start(null, {
+        dialog: getService("dialog"),
+        notification: getService("notification"),
+        action: getService("action"),
+        barcode: { bus: new EventTarget() },
+        orm: { read: offline, searchRead: offline },
+    });
+
+    expect(barcodeReader).toBe(null);
+
+    // Corrupted cached nomenclature falls back cleanly instead of throwing a SyntaxError
+    localStorage.setItem("pos_barcode_nomenclature_db_b_1", "{invalid json");
+    const corruptedReader = await barcodeReaderService.start(null, {
+        dialog: getService("dialog"),
+        notification: getService("notification"),
+        action: getService("action"),
+        barcode: { bus: new EventTarget() },
+        orm: { read: offline, searchRead: offline },
+    });
+    expect(corruptedReader).toBe(null);
 });

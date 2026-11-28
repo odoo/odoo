@@ -22,6 +22,7 @@ import { Base, createRelatedModels } from "@point_of_sale/app/models/related_mod
 import { registry } from "@web/core/registry";
 import { services } from "@web/core/services";
 import { DebugModePlugin } from "@web/core/debug_mode_plugin";
+import { NotificationPlugin } from "@web/core/notifications/notification_plugin";
 
 const { DateTime } = luxon;
 const CONSOLE_COLOR = "#28ffeb";
@@ -31,6 +32,24 @@ const HEARTBEAT_INTERVAL = 10000;
 const HEARTBEAT_RETRY_INTERVAL = 3000;
 const HEARTBEAT_TIMEOUT = 10000;
 const HEARTBEAT_MAX_FAILED_ATTEMPTS = 3;
+const SQL_DATETIME_RE = /^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})(?:\.(\d{1,3})\d*)?$/;
+
+export function parseWriteDateTimestamp(writeDate) {
+    if (!writeDate) {
+        return Date.now() / 1000;
+    }
+    if (typeof writeDate === "string") {
+        const match = SQL_DATETIME_RE.exec(writeDate);
+        if (match) {
+            const ms = match[7] ? Number(match[7].padEnd(3, "0")) : 0;
+            return (
+                Date.UTC(+match[1], +match[2] - 1, +match[3], +match[4], +match[5], +match[6], ms) /
+                1000
+            );
+        }
+    }
+    return deserializeDateTime(writeDate).toMillis() / 1000 || 0;
+}
 
 export class PosDataPlugin extends Plugin {
     // Must stay above LocalizationPlugin (10) since loading records needs translations.
@@ -39,6 +58,7 @@ export class PosDataPlugin extends Plugin {
     debugMode = usePlugin(DebugModePlugin);
     bus = usePlugin(BusPlugin);
     orm = usePlugin(ORM);
+    notification = usePlugin(NotificationPlugin);
     syncInProgress = signal(false);
     dataLoadedFromCache = signal(false);
     localUnsyncedPaidOrderUuids = signal.Set(new Set()); // UUIDs of paid orders written to IndexedDB but not yet confirmed synced to the server.
@@ -442,21 +462,26 @@ export class PosDataPlugin extends Plugin {
         return results;
     }
 
-    async getCachedServerIdsFromIndexedDB(models = []) {
-        const allModels = this.indexedDB.dbStores.map((store) => store[1]);
-        const modelsToIgnore = allModels.filter((model) => !models.includes(model));
-        const data = await this.indexedDB.readAllExceptStores(modelsToIgnore);
+    async getCachedServerIdsFromIndexedDB(models = [], cachedData = null) {
+        let data = cachedData;
+        if (!data) {
+            if (models.length) {
+                const allModels = this.indexedDB.dbStores.map((store) => store[1]);
+                const modelsToIgnore = allModels.filter((model) => !models.includes(model));
+                data = await this.indexedDB.readAllExceptStores(modelsToIgnore);
+            } else {
+                data = await this.indexedDB.readAll();
+            }
+        }
         const results = {};
 
         for (const name in data) {
+            if (models.length > 0 && !models.includes(name)) {
+                continue;
+            }
             results[name] = data[name].reduce((acc, item) => {
                 if (typeof item.id === "number") {
-                    // deserializeDateTime(item.write_date) is precise to the second,
-                    // we can divide by 1000 without losing precision.
-                    // Timestamp in Python is giving timestamp in seconds,
-                    // we will thus compare both in seconds.
-                    const date = deserializeDateTime(item.write_date).ts / 1000 || 0; // seconds since epoch
-                    acc[item.id] = date;
+                    acc[item.id] = parseWriteDateTimestamp(item.write_date);
                 }
                 return acc;
             }, {});
@@ -519,7 +544,10 @@ export class PosDataPlugin extends Plugin {
         try {
             if (!this.network.offline) {
                 if (this.indexedDB) {
-                    recordsWriteDate = await this.getCachedServerIdsFromIndexedDB();
+                    recordsWriteDate = await this.getCachedServerIdsFromIndexedDB(
+                        [],
+                        params ? localData : null
+                    );
                 }
 
                 const testLocalData = {
@@ -532,7 +560,25 @@ export class PosDataPlugin extends Plugin {
                     testLocalData,
                 ]);
                 params = this.getFieldsAndRelations(data);
-                localStorage.setItem(key, JSON.stringify(params));
+                try {
+                    localStorage.setItem(key, JSON.stringify(params));
+                } catch (error) {
+                    logPosMessage(
+                        "DataService",
+                        "loadInitialData",
+                        "Unable to store the data parameters in the local storage",
+                        CONSOLE_COLOR,
+                        [error]
+                    );
+                    if (error?.name === "QuotaExceededError") {
+                        this.notification.add(
+                            _t(
+                                "The browser storage is full: new orders may not be created. Ask your administrator to free some space in this browser."
+                            ),
+                            { type: "warning", sticky: true }
+                        );
+                    }
+                }
                 await this.initIndexedDB(params);
                 this.dataLoadedFromCache.set(true);
             }
@@ -557,7 +603,15 @@ export class PosDataPlugin extends Plugin {
 
     async syncInitialData(data, localData) {
         await this.cleanLocalData(data, localData);
-        this.synchronizeServerDataInIndexedDB(localData);
+        const updatedRecords = {};
+        for (const [model, values] of Object.entries(data)) {
+            if (values.records?.length) {
+                updatedRecords[model] = values.records;
+            }
+        }
+        if (Object.keys(updatedRecords).length) {
+            this.synchronizeServerDataInIndexedDB(updatedRecords);
+        }
     }
 
     async cleanOldModels(localData, data) {
@@ -1026,9 +1080,14 @@ export class PosDataPlugin extends Plugin {
             }
         }
         data.models = [...new Set(data.models)];
-        data.records = await this.getCachedServerIdsFromIndexedDB(data.models);
 
         if (data.models.length > 0) {
+            const modelsWithoutDomain = data.models.filter(
+                (model) => !data.search_params[model]?.domain?.length
+            );
+            data.records = modelsWithoutDomain.length
+                ? await this.getCachedServerIdsFromIndexedDB(modelsWithoutDomain)
+                : {};
             await this.callRelated(
                 "pos.session",
                 "load_data",
@@ -1057,7 +1116,10 @@ export class PosDataPlugin extends Plugin {
             }
             models = [...models];
         }
-        const localData = await this.getCachedServerIdsFromIndexedDB(models);
+        const modelsWithoutDomain = models.filter((model) => !domain[model]?.length);
+        const localData = modelsWithoutDomain.length
+            ? await this.getCachedServerIdsFromIndexedDB(modelsWithoutDomain)
+            : {};
         const search_params = {};
         for (const model of models) {
             search_params[model] = {
@@ -1315,6 +1377,31 @@ export class PosDataPlugin extends Plugin {
         }
 
         return Array.from(visited);
+    }
+
+    getModelsLoadedWith(model) {
+        const graph = this.dependencies;
+        const models = new Set([model]);
+        let added = true;
+        while (added) {
+            added = false;
+            for (const [dependent, dependencies] of Object.entries(graph)) {
+                if (!models.has(dependent) && dependencies.some((dep) => models.has(dep))) {
+                    models.add(dependent);
+                    added = true;
+                }
+            }
+        }
+        const stack = [...models];
+        while (stack.length) {
+            for (const dependency of graph[stack.pop()] || []) {
+                if (!models.has(dependency)) {
+                    models.add(dependency);
+                    stack.push(dependency);
+                }
+            }
+        }
+        return Array.from(models);
     }
 }
 
