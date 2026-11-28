@@ -130,6 +130,49 @@ class Base(models.AbstractModel):
             for record in self
         }
 
+    def _mail_get_responsible_field(self):
+        """ Field holding the internal responsible of the record,
+        Override when it is not named ``user_id``. """
+        field = self._fields.get('user_id')
+        if field and field.type == 'many2one' and field.comodel_name == 'res.users':
+            return 'user_id'
+        return False
+
+    def _mail_get_default_author(self):
+        """ Author to use when sending an email from a template
+        that does not define any sender ('Send From').
+
+        When no real user is involved (superuser e.g. OdooBot in crons),
+        use the record responsible, then its company,
+        so that customers do not receive emails from OdooBot.
+        Otherwise the current user is the author.
+
+        :return: for each record ID in self, a <res.partner> singleton
+        """
+        user = self.env.user
+        if not (user._is_superuser() or user._is_public()):
+            return dict.fromkeys(self.ids, user.partner_id)
+        responsible_fname = self._mail_get_responsible_field()
+        companies = self._mail_get_companies(default=self.env.company)
+        result = {}
+        for record in self.sudo():  # sudo: responsible / company may not be readable by cron user
+            author = record[responsible_fname].partner_id if responsible_fname else self.env['res.partner']
+            if not author.email:
+                author = companies[record.id].partner_id
+            if not author.email:
+                author = user.partner_id
+            result[record.id] = author.sudo(False)
+        return result
+
+    def _mail_get_default_signature(self):
+        """ Signature of the default author,
+        to be used in template bodies so that the signature matches the sender
+        when the template does not define any sender ('Send From'). Empty when
+        the default author is not a user. """
+        self.ensure_one()
+        author = self._mail_get_default_author()[self.id]
+        return author.sudo().main_user_id.signature or ''
+
     def _mail_get_customer(self, introspect_fields=False):
         """ Return the 'main partner' (customer business wise) of the record.
         Mainly a helper for future changes e.g. main customer in templates. """
