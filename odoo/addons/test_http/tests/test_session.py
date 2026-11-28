@@ -18,11 +18,12 @@ from odoo.http.session import (
     SESSION_ROTATION_INTERVAL,
     SESSION_ROTATION_INTERVAL_HEADER_SKIP,
     STORED_SESSION_BYTES,
+    SessionStore,
     _session_identifier_re,
     get_session_max_inactivity,
     session_store,
 )
-from odoo.tests import Like, get_db_name, tagged
+from odoo.tests import BaseCase, Like, get_db_name, tagged
 from odoo.tools import config, mute_logger, reset_cached_properties
 
 from .test_common import TestHttpBase
@@ -435,6 +436,41 @@ class TestSessionStore(HttpCaseWithUserDemo):
             self.env['ir.http']._gc_sessions()
             session_from_store = session_store().get(session)
             self.assertNotEqual(session, session_from_store.sid, "the old session as been removed")
+
+
+class TestSessionStoreGetLatest(BaseCase):
+    def setUp(self):
+        super().setUp()
+        tmpdir = TemporaryDirectory()
+        self.addCleanup(tmpdir.cleanup)
+        self.store = SessionStore(path=tmpdir.name)
+        session = self.store.new()
+        session['uid'] = 1
+        self.store.save(session)
+        self.session = self.store.get(session.sid)
+
+    def test_get_latest_unchanged(self):
+        self.assertIsNotNone(self.session.version)
+        # Unchanged on disk: not reloaded, the same object is returned.
+        self.assertIs(self.store.get_latest(self.session), self.session)
+        self.store.save(self.session)
+        self.assertIsNot(self.store.get_latest(self.session), self.session)
+
+    def test_get_latest_reloads_every_stale_copy(self):
+        session_a = self.store.get(self.session.sid)
+        session_b = self.store.get(self.session.sid)
+        self.session['deletion_time'] = 0
+        self.store.save(self.session)
+        self.assertIsNone(self.store.get_latest(session_a))
+        self.assertIsNone(self.store.get_latest(session_b))
+
+    def test_get_latest_mtime_collision(self):
+        self.session['deletion_time'] = 0
+        self.store.save(self.session)
+        # Same mtime as the loaded version, only the inode differs.
+        session_path = self.store.get_session_path(self.session.sid)
+        os.utime(session_path, ns=(self.session.version[0], self.session.version[0]))
+        self.assertIsNone(self.store.get_latest(self.session))
 
 
 # HttpCase because session rotation needs to be tested on the file store instead of memory store

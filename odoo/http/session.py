@@ -99,6 +99,7 @@ class Session(MutableMapping):
         'is_new',
         'should_rotate',
         'sid',
+        'version',
     )
 
     def __init__(self, data, sid, /, new: bool = False):
@@ -109,6 +110,7 @@ class Session(MutableMapping):
         self.is_new = new
         self.should_rotate: bool = False
         self.sid = sid
+        self.version: tuple[int, int] | None = None
 
     def __getitem__(self, item):
         return self.__data[item]
@@ -541,7 +543,10 @@ class SessionStore:
             with open(self.get_session_path(sid), encoding='utf-8') as f:
                 try:
                     data = json.load(f)
-                    return self.session_cls(data, sid, new=False)
+                    session = self.session_cls(data, sid, new=False)
+                    st = os.fstat(f.fileno())
+                    session.version = (st.st_mtime_ns, st.st_ino)
+                    return session
                 except ValueError:
                     _logger.debug("Could not load session data. Use empty session.", exc_info=True)
                     # The session file exists on the filesystem (the sid must be retained)
@@ -652,6 +657,40 @@ class SessionStore:
                 self.delete_from_identifiers([session.sid[:STORED_SESSION_BYTES]])
                 del session['gc_previous_sessions']
                 self.save(session)
+
+    def get_latest(self, session: Session) -> Session | None:
+        """
+        Get the updated version of ``session`` (possibly with a new sid)
+        or ``None`` if that session no longer exists.
+
+        The session is only loaded from disk when its file changed since
+        ``session`` was loaded, else ``session`` itself is returned.
+        """
+        try:
+            # open+fstat instead of stat: close to open consistency.
+            # NFS clients cache file attributes (acregmin/acregmax)
+            # which could hide a delete from another node sharing
+            # `session_dir`. Opening forces a revalidation.
+            with open(self.get_session_path(session.sid), 'rb', buffering=0) as file:
+                st = os.fstat(file.fileno())
+                # ``save`` always writes a new file (mkstemp+os.replace),
+                # the inode tiebreaks two writes on the same mtime.
+                if session.version != (st.st_mtime_ns, st.st_ino):
+                    session = self.get(session.sid)
+                    if session.is_new:
+                        return None  # session has just been deleted from disk
+        except (OSError, ValueError):
+            return None  # session no longer exists
+
+        while next_sid := session.get('next_sid'):
+            session = self.get(next_sid)
+            if session.is_new:
+                return None  # rotated session no longer exists
+
+        self.delete_old_sessions(session)
+        if session.get('deletion_time', float('inf')) <= time.time():
+            return None  # session is stale
+        return session
 
 
 @functools.cache
