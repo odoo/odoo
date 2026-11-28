@@ -1540,3 +1540,57 @@ class TestPurchase(AccountTestInvoicingCommon):
         po.button_confirm()
         with self.assertRaises(UserError):
             client.unlink()
+
+    def test_is_late_service_ordered_quantities(self):
+        product = self.env['product.product'].create({
+            'name': 'Test Service',
+            'type': 'service',
+            'purchase_method': 'purchase',
+        })
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': product.id,
+                'product_qty': 1,
+                'price_unit': 100,
+                'date_planned': fields.Datetime.now() - timedelta(days=1),
+            })],
+        })
+        po.button_confirm()
+        late_orders = self.env['purchase.order'].search([
+            ('is_late', '=', True),
+        ])
+        self.assertIn(po, late_orders)
+        po.action_create_invoice()
+        self.assertEqual(po.order_line.qty_invoiced, 1)
+        late_orders = self.env['purchase.order'].search([
+            ('is_late', '=', True),
+        ])
+        self.assertNotIn(po, late_orders)
+
+    def test_is_late_service_received_quantities(self):
+        product = self.env['product.product'].create({
+            'name': 'Test Service',
+            'type': 'service',
+            'purchase_method': 'receive',
+        })
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': product.id,
+                'product_qty': 1,
+                'price_unit': 100,
+                'date_planned': fields.Datetime.now() - timedelta(days=1),
+            })],
+        })
+        po.button_confirm()
+        late_orders = self.env['purchase.order'].search([
+            ('is_late', '=', True),
+        ])
+        self.assertIn(po, late_orders)
+        # Manually register the received service quantity.
+        po.order_line.qty_received = 1
+        late_orders = self.env['purchase.order'].search([
+            ('is_late', '=', True),
+        ])
+        self.assertNotIn(po, late_orders)
