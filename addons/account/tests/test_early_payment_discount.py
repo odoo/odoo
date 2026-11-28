@@ -859,6 +859,37 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
         discount = term_vals['balance'] - term_vals['discount_balance']
         self.assertAlmostEqual(discount, 0.19)
 
+    def test_mixed_epd_foreign_currency_multiple_taxes(self):
+        """ The early payment discount lines must stay balanced in company currency when the invoice is in a foreign
+        currency and has several taxes, even if converting each line separately leads to rounding differences.
+        """
+        foreign_currency = self.setup_other_currency('CHF', rates=[('2016-01-01', 1.3)])
+        tax_21 = self.percent_tax(21.0)
+        tax_6 = self.percent_tax(6.0)
+        self.early_pay_10_percents_10_days.write({
+            'early_pay_discount_computation': 'mixed',
+            'discount_percentage': 2,
+        })
+
+        invoice = self._create_invoice(
+            invoice_date='2019-01-01',
+            currency_id=foreign_currency.id,
+            invoice_payment_term_id=self.early_pay_10_percents_10_days.id,
+            invoice_line_ids=[
+                self._prepare_invoice_line(price_unit=31.52, tax_ids=tax_21),
+                self._prepare_invoice_line(price_unit=90.0, tax_ids=tax_6),
+            ],
+            post=True,
+        )
+
+        epd_lines = invoice.line_ids.filtered(lambda line: line.display_type == 'epd')
+        self.assertRecordValues(epd_lines.sorted('amount_currency'), [
+            {'amount_currency': -2.43, 'balance': -1.87},
+            {'amount_currency': 0.63, 'balance': 0.49},
+            {'amount_currency': 1.8, 'balance': 1.38},
+        ])
+        self.assertEqual(invoice.state, 'posted')
+
     def test_bulk_rewrite_cleans_stale_epd_lines(self):
         """Changing to a non-EPD term during bulk rewrite must remove EPD lines."""
         self.early_pay_10_percents_10_days.write({'early_pay_discount_computation': 'mixed'})
