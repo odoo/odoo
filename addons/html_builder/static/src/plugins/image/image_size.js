@@ -11,31 +11,43 @@ export class ImageSize extends BaseOptionComponent {
     setup() {
         super.setup();
         this.imagePostProcess = this.env.editor.shared.imagePostProcess;
-        this.state = useDomState(async (el) => ({
-            size: await this.getImageSize(el),
-        }));
+        this.state = useDomState((el) => ({ size: this.getImageSize(el) }));
     }
-    async getImageSize(el) {
+    getImageSize(el) {
         const src = getImageSrc(el);
         if (!src) {
             return;
         }
-        let size;
         if (isBase64ImageSrc(src)) {
-            size = getDataURLBinarySize(src);
-        } else {
-            if (imageCacheSize.has(src)) {
-                size = imageCacheSize.get(src);
-            } else {
-                if (await isImageCorsProtected(el)) {
-                    return;
-                }
-                size = await this.imagePostProcess.getProcessedImageSize(el);
-                imageCacheSize.set(src, size);
-            }
+            return formatSize(getDataURLBinarySize(src));
         }
-        return `${(size / 1024).toFixed(1)} kB`;
+        if (imageCacheSize.has(src)) {
+            return formatSize(imageCacheSize.get(src));
+        }
+        // Not awaited. Computing the size loads and processes the image, and
+        // the options must not wait for that.
+        this.computeImageSize(el, src);
     }
+    async computeImageSize(el, src) {
+        try {
+            if (await isImageCorsProtected(el)) {
+                return;
+            }
+            const size = await this.imagePostProcess.getProcessedImageSize(el);
+            imageCacheSize.set(src, size);
+            if (this.env.getEditingElement() === el && getImageSrc(el) === src) {
+                this.state.size = formatSize(size);
+            }
+        } catch (e) {
+            if (!el.isConnected || this.env.editor.isDestroyed) {
+                return;
+            }
+            throw e;
+        }
+    }
+}
+function formatSize(size) {
+    return `${(size / 1024).toFixed(1)} kB`;
 }
 function isBase64ImageSrc(src) {
     // Check if it's a data URL with base64 encoding

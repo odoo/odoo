@@ -92,25 +92,6 @@ export class BackgroundShapeOptionPlugin extends Plugin {
         "getShapeStylePosition",
     ]);
     setup() {
-        // TODO: update shapeStyles if a stylesheet value changes.
-        this.shapeStyles = {};
-        const keywordMap = { top: 0, left: 0, center: 50, bottom: 100, right: 100 };
-        for (const styleSheet of this.document.styleSheets) {
-            if (styleSheet.href && new URL(styleSheet.href).host !== location.host) {
-                // In some browsers, if a stylesheet is loaded from a different
-                // domain accessing cssRules results in a SecurityError.
-                continue;
-            }
-            for (const rule of [...styleSheet.cssRules]) {
-                if (rule.selectorText && rule.selectorText.startsWith(".o_we_shape.")) {
-                    const bgPositions = rule.style.backgroundPosition.split(" ");
-                    this.shapeStyles[rule.selectorText] = {
-                        bgImage: rule.style.backgroundImage,
-                        bgPosition: bgPositions.map((bgPosition) => keywordMap[bgPosition]),
-                    };
-                }
-            }
-        }
         // Flip classes should no longer be used but are still present in some
         // theme snippets.
         const flipEls = [...this.editable.querySelectorAll(".o_we_flip_x, .o_we_flip_y")];
@@ -125,6 +106,32 @@ export class BackgroundShapeOptionPlugin extends Plugin {
                 this.markShape(bgShapeEl, { selectedColor: true });
             }
         }
+    }
+    get shapeStyles() {
+        if (this.cachedShapeStyles) {
+            return this.cachedShapeStyles;
+        }
+        // TODO: update shapeStyles if a stylesheet value changes.
+        const shapeStyles = {};
+        const keywordMap = { top: 0, left: 0, center: 50, bottom: 100, right: 100 };
+        for (const styleSheet of this.document.styleSheets) {
+            if (styleSheet.href && new URL(styleSheet.href).host !== location.host) {
+                // In some browsers, if a stylesheet is loaded from a different
+                // domain accessing cssRules results in a SecurityError.
+                continue;
+            }
+            for (const rule of styleSheet.cssRules) {
+                if (rule.selectorText && rule.selectorText.startsWith(".o_we_shape.")) {
+                    const bgPositions = rule.style.backgroundPosition.split(" ");
+                    shapeStyles[rule.selectorText] = {
+                        bgImage: rule.style.backgroundImage,
+                        bgPosition: bgPositions.map((bgPosition) => keywordMap[bgPosition]),
+                    };
+                }
+            }
+        }
+        this.cachedShapeStyles = shapeStyles;
+        return shapeStyles;
     }
     /**
      * Updates the background color shape when a snippet is moved/removed. The
