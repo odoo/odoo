@@ -2467,6 +2467,65 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(mo.workorder_ids[0].duration_expected, 65)
         self.assertEqual(mo.workorder_ids[0].date_finished, date_start + timedelta(minutes=65))
 
+    def _create_planned_workorder(self, workcenter, duration):
+        mo = self.env['mrp.production'].create({
+            'product_id': self.product_1.id,
+            'workorder_ids': [Command.create({
+                'name': 'Operation',
+                'workcenter_id': workcenter.id,
+                'product_uom_id': self.product_1.uom_id.id,
+                'duration_expected': duration,
+            })],
+        })
+        mo.action_confirm()
+        mo.button_plan()
+        return mo.workorder_ids
+
+    @freeze_time('2024-01-08 08:00')
+    def test_change_workcenter_with_leave_keeps_duration_expected(self):
+        """ Moving a planned workorder to a workcenter with a time off should skip
+        the time off without counting it in the expected duration. """
+        self.env['resource.calendar.leaves'].create({
+            'resource_id': self.workcenter_3.resource_id.id,
+            'date_from': datetime(2024, 1, 9),
+            'date_to': datetime(2024, 1, 10),
+        })
+        workorder = self._create_planned_workorder(self.workcenter_2, 600)
+
+        with Form(workorder) as wo_form:
+            wo_form.workcenter_id = self.workcenter_3
+        self.assertEqual(workorder.duration_expected, 600)
+
+    @freeze_time('2024-01-08 08:00')
+    def test_workorder_dates_use_calendar_timezone(self):
+        """ The end date and the expected duration of a workorder are computed in
+        the timezone of its workcenter's calendar, like its planning, even when the
+        timezone of the workcenter itself is another one. """
+        self.workcenter_2.resource_calendar_id.tz = 'UTC'
+        self.workcenter_2.tz = 'Asia/Tokyo'
+        workorder = self._create_planned_workorder(self.workcenter_2, 60)
+
+        with Form(workorder) as wo_form:
+            wo_form.duration_expected = 90
+        self.assertEqual(workorder.duration_expected, 90)
+        self.assertEqual(workorder.date_finished, datetime(2024, 1, 8, 9, 30))
+
+    @freeze_time('2024-01-08 08:00')
+    def test_duration_expected_flexible_calendar_with_leave(self):
+        """ A time off splitting a day of a flexible hours calendar should be removed
+        from the expected duration, without counting the day once per part. """
+        calendar = self.workcenter_2.resource_calendar_id
+        calendar.flexible_hours = True
+        self.env['resource.calendar.leaves'].create({
+            'calendar_id': calendar.id,
+            'date_from': datetime(2024, 1, 8, 13),
+            'date_to': datetime(2024, 1, 8, 14),
+        })
+        workorder = self._create_planned_workorder(self.workcenter_2, 60)
+
+        workorder.date_finished = datetime(2024, 1, 8, 16)
+        self.assertEqual(workorder.duration_expected, 420)
+
     def test_backorder_with_overconsumption(self):
         """ Check that the components of the backorder have the correct quantities
         when there is overconsumption in the initial MO

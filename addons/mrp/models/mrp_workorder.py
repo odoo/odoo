@@ -4,9 +4,10 @@ from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from collections import defaultdict
 import json
+from pytz import timezone
 
 from odoo import api, fields, models, _
-from odoo.addons.resource.models.utils import Intervals, sum_intervals
+from odoo.addons.resource.models.utils import Intervals, make_aware, sum_intervals
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_compare, format_datetime, float_is_zero, float_round
 
@@ -438,7 +439,8 @@ class MrpWorkorder(models.Model):
         if not workcenter.resource_calendar_id:
             duration_in_seconds = self.duration_expected * 60
             return (date_start or self.date_start) + timedelta(seconds=duration_in_seconds)
-        return workcenter.resource_calendar_id.plan_hours(
+        calendar = workcenter.resource_calendar_id
+        return calendar.with_context(employee_timezone=timezone(calendar.tz)).plan_hours(
             self.duration_expected / 60.0, date_start or self.date_start,
             compute_leaves=True, resource=workcenter.resource_id,
         )
@@ -452,13 +454,16 @@ class MrpWorkorder(models.Model):
                               "You should unplan the Manufacturing Order instead in order to unplan all the linked operations."))
 
     def _calculate_duration_expected(self, date_start=False, date_finished=False):
-        if not self.workcenter_id.resource_calendar_id:
+        workcenter = self.env.context.get('new_workcenter_id') or self.workcenter_id
+        if not workcenter.resource_calendar_id:
             return ((date_finished or self.date_finished) - (date_start or self.date_start)).total_seconds() / 60
-        interval = self.workcenter_id.resource_calendar_id.get_work_duration_data(
-            date_start or self.date_start, date_finished or self.date_finished,
-            domain=[('time_type', 'in', ['leave', 'other'])]
-        )
-        return interval['hours'] * 60
+        calendar = workcenter.resource_calendar_id
+        resource = workcenter.resource_id
+        intervals = calendar._work_intervals_batch(
+            make_aware(date_start or self.date_start)[0], make_aware(date_finished or self.date_finished)[0],
+            resources=resource, tz=timezone(calendar.tz),
+        )[resource.id]
+        return sum_intervals(intervals) * 60
 
     @api.onchange('finished_lot_id')
     def _onchange_finished_lot_id(self):
@@ -491,7 +496,7 @@ class MrpWorkorder(models.Model):
                         computed_finished_time = workorder.with_context(new_workcenter_id=new_workcenter)._calculate_date_finished(date_start=date_start)
                         values['date_finished'] = computed_finished_time
                     elif date_start and date_finished:
-                        computed_duration = workorder._calculate_duration_expected(date_start=date_start, date_finished=date_finished)
+                        computed_duration = workorder.with_context(new_workcenter_id=new_workcenter)._calculate_duration_expected(date_start=date_start, date_finished=date_finished)
                         values['duration_expected'] = computed_duration
                 # Update MO dates if the start date of the first WO or the
                 # finished date of the last WO is update.
