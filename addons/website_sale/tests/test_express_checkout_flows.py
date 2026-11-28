@@ -533,3 +533,17 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
         with MockRequest(self.env, website=self.website, sale_order_id=self.sale_order.id):
             minor_amount = websiteSaleDeliveryController.express_checkout_shipping_address_compute_taxes()
             self.assertEqual(minor_amount, expected_amount * 100)
+
+            delivery_product.taxes_id = self.env['account.tax'].create({
+                'name': 'Express delivery 10%',
+                'amount': 10,
+                'amount_type': 'percent',
+                'type_tax_use': 'sale',
+            })
+            self.sale_order.set_delivery_line(delivery, 10)
+            self.assertEqual(
+                websiteSaleDeliveryController.express_checkout_shipping_address_compute_taxes(
+                    include_delivery=True,
+                ),
+                {'amount_without_delivery': expected_amount * 100, 'delivery_amount': 11 * 100},
+            )
