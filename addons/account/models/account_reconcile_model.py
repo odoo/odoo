@@ -180,6 +180,7 @@ class AccountReconcileModel(models.Model):
     _inherit = ['mail.thread']
     _order = 'sequence, id'
     _check_company_auto = True
+    _check_company_domain = models.check_company_domain_parent_of
 
     _sql_constraints = [('name_unique', 'unique(name, company_id)', 'A reconciliation model already bears this name.')]
 
