@@ -18,6 +18,7 @@ export class GradientPicker extends Component {
     knobRef = signal.ref();
     props = useProps({
         onGradientChange: t.function().optional(),
+        close: t.function().optional(),
         onGradientPreview: t.function().optional(),
         setOnCloseCallback: t.function().optional(),
         setOperationCallbacks: t.function().optional(),

@@ -1,0 +1,8 @@
+<templates xml:space="preserve">
+    <!-- Prevent bottom sheets from closing toolbar -->
+    <t t-name="html_editor.BottomSheet" t-inherit="web.BottomSheet" t-inherit-mode="extension">
+        <xpath expr="//div" position="attributes">
+            <attribute name="data-prevent-closing-overlay">true</attribute>
+        </xpath>
+    </t>
+</templates>

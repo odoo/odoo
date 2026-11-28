@@ -5,6 +5,7 @@ import { useProps, signal, t, onMounted } from "@odoo/owl";
 import { patch } from "@web/core/utils/patch";
 import wUtils from "@website/js/utils";
 import { location } from "@web/core/browser/browser";
+import { hasTouch } from "@web/core/browser/feature_detection";
 import { session } from "@web/session";
 
 /**
@@ -67,6 +68,14 @@ patch(LinkPopover.prototype, {
                 el.focus();
             }
         });
+    },
+
+    /**
+     * The URL autocomplete is not usable in the mobile bottom sheet (same
+     * condition as the link plugin): use the plain URL input there.
+     */
+    get useUrlAutoComplete() {
+        return !(this.ui.isSmall && hasTouch());
     },
 
     get sources() {

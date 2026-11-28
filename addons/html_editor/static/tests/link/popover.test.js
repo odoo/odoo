@@ -1,6 +1,6 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { click, fill, press, queryFirst, queryOne, waitFor, waitForNone } from "@odoo/hoot-dom";
-import { animationFrame, tick } from "@odoo/hoot-mock";
+import { animationFrame, mockUserAgent, tick } from "@odoo/hoot-mock";
 import { markup } from "@odoo/owl";
 import { contains, dataURItoBlob, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { setupEditor } from "../_helpers/editor";
@@ -126,6 +126,55 @@ describe("should open a popover", () => {
         await click(".o-we-linkpopover label[for='o_we_label_link']");
         expect(".o_we_label_link").toBeFocused();
     });
+    test.tags("mobile");
+    test("should open the popover again in the same link after closing the bottom sheet (mobile)", async () => {
+        mockUserAgent("android");
+        await setupEditor('<p>this is a <a href="http://test.test/">li[]nk</a></p>');
+        await waitFor(".o_bottom_sheet .o-we-linkpopover");
+        // Close the bottom sheet without Overlay.close()
+        await click(".o_bottom_sheet_backdrop");
+        await waitForNone(".o-we-linkpopover", { timeout: 1000 }); // slide out transition
+        // Tap again in the same link
+        setSelection({ anchorNode: queryOne("a").firstChild, anchorOffset: 1 });
+        await waitFor(".o_bottom_sheet .o-we-linkpopover");
+        expect(".o-we-linkpopover").toHaveCount(1);
+    });
+    test.tags("mobile");
+    test("discard in the bottom sheet restores the link and shows its preview (mobile)", async () => {
+        mockUserAgent("android");
+        const { el } = await setupEditor('<p>this is a <a href="http://test.test/">li[]nk</a></p>');
+        await waitFor(".o_bottom_sheet .o-we-linkpopover");
+        await click(".o-we-linkpopover .o_we_edit_link");
+        await animationFrame();
+        await click(".o-we-linkpopover input.o_we_href_input_link");
+        await fill("/changed");
+        await animationFrame();
+        expect(cleanLinkArtifacts(getContent(el))).toBe(
+            '<p>this is a <a href="http://test.test//changed">link</a></p>'
+        );
+        await click(".o-we-linkpopover .o_we_discard_link");
+        await animationFrame();
+        expect(cleanLinkArtifacts(getContent(el))).toBe(
+            '<p>this is a <a href="http://test.test/">li[]nk</a></p>'
+        );
+        expect(".o_bottom_sheet .o-we-linkpopover").toHaveCount(1);
+        expect(".o-we-linkpopover input.o_we_href_input_link").toHaveCount(0);
+    });
+    test.tags("mobile");
+    test("edit scrolls the bottom sheet to show the editing part (mobile)", async () => {
+        mockUserAgent("android");
+        await setupEditor('<p>this is a <a href="http://test.test/">li[]nk</a></p>');
+        await waitFor(".o_bottom_sheet .o-we-linkpopover");
+        patchWithCleanup(Element.prototype, {
+            scrollTo() {
+                expect.step(`scrollTo ${this.className}`);
+                return super.scrollTo(...arguments);
+            },
+        });
+        await click(".o-we-linkpopover .o_we_edit_link");
+        await animationFrame();
+        expect.verifySteps(["scrollTo o_bottom_sheet_rail"]);
+    });
 });
 
 describe("popover should not reposition when editing", () => {
@@ -152,6 +201,7 @@ describe("popover should not reposition when editing", () => {
             '<p>H<a href="https://test.com">ell[]</a>o</p>'
         );
     });
+    test.tags("desktop");
     test("In iframe, when editing the link url, the popover should not reposition", async () => {
         const { el } = await setupEditor("<p>H[ell]o</p>", { props: { iframe: true } });
         await waitFor(".o-we-toolbar");
@@ -951,6 +1001,7 @@ describe("popover for file uploads", () => {
 });
 
 describe("popover with empty URL", () => {
+    test.tags("desktop");
     test("should not close the popover when pressing Enter with an empty URL", async () => {
         const { editor } = await setupEditor("<p>ab[]</p>");
         await insertText(editor, "/link");

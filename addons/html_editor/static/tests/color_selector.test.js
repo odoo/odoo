@@ -14,8 +14,10 @@ import {
     setInputRange,
     test,
     waitFor,
+    waitForNone,
     waitUntil,
 } from "@odoo/hoot";
+import { mockUserAgent } from "@odoo/hoot-mock";
 import { contains } from "@web/../tests/web_test_helpers";
 import { setupEditor } from "./_helpers/editor";
 import { getContent, setSelection } from "./_helpers/selection";
@@ -535,6 +537,7 @@ test("applied custom color should be shown in colorpicker after switching tab", 
     expect(hexInputEl).toHaveValue(newColor);
 });
 
+test.tags("desktop");
 test("select hex color and apply it", async () => {
     const { el } = await setupEditor(`<p>[test]</p>`);
     await expandToolbar();
@@ -561,11 +564,92 @@ test("select hex color and apply it", async () => {
     expect(getContent(el)).toBe(`<p><font style="color: rgb(1, 126, 132);">[test]</font></p>`);
 
     await click(".odoo-editor-editable");
-    await animationFrame();
-    expect(".o_font_color_selector").toHaveCount(0);
+    await waitForNone(".o_font_color_selector", { timeout: 500 }); // slide out transition
     expect(getContent(el)).toBe(`<p><font style="color: rgb(1, 126, 132);">[test]</font></p>`);
 });
 
+test.tags("mobile");
+test("select hex color and apply it (mobile)", async () => {
+    mockUserAgent("android");
+    const { el } = await setupEditor(`<p>[test]</p>`);
+    await expandToolbar();
+    expect(".o_font_color_selector").toHaveCount(0);
+
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
+    expect(".o_font_color_selector").toHaveCount(1);
+
+    await click(".o_font_color_selector .dropdown-toggle");
+    await waitFor(".o_bottom_sheet_body .o-dropdown-item");
+    await click(".o-dropdown-item:contains('Custom')");
+    await animationFrame();
+    const hexInputEl = await getIframeInput(
+        ".o_font_color_selector .o_color_picker_inputs iframe.o_hex_iframe",
+        "input[name='hex_input']"
+    );
+    await click(hexInputEl);
+    await waitFor(".o_font_color_selector");
+
+    await edit("#017E84"); // === rgb(1, 126, 132)
+    await animationFrame();
+    expect("button[data-color='#017E84']").toHaveCount(1);
+    expect("button[data-color='#017E84']").toHaveStyle({ backgroundColor: "rgb(1, 126, 132)" });
+    expect(getContent(el)).toBe(`<p><font style="color: rgb(1, 126, 132);">[test]</font></p>`);
+
+    await click("[data-color='#017E84']");
+    await waitForNone(".o_font_color_selector", { timeout: 500 }); // slide out transition
+    expect(getContent(el)).toBe(`<p><font style="color: rgb(1, 126, 132);">[test]</font></p>`);
+});
+
+test.tags("mobile");
+test("apply button of the custom tab applies the color and closes the picker (mobile)", async () => {
+    mockUserAgent("android");
+    const { editor, el } = await setupEditor(`<p>[test]</p>`);
+    await expandToolbar();
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
+    await click(".o_font_color_selector .dropdown-toggle");
+    await waitFor(".o_bottom_sheet_body .o-dropdown-item");
+    await click(".o-dropdown-item:contains('Custom')");
+    await animationFrame();
+    const hexInputEl = await getIframeInput(
+        ".o_font_color_selector .o_color_picker_inputs iframe.o_hex_iframe",
+        "input[name='hex_input']"
+    );
+    await click(hexInputEl);
+    await waitFor(".o_font_color_selector");
+    await edit("#017E84"); // === rgb(1, 126, 132)
+    await animationFrame();
+
+    await click(".o_font_color_selector .o_color_mobile_apply");
+    await waitForNone(".o_font_color_selector", { timeout: 500 }); // slide out transition
+    expect(getContent(el)).toBe(`<p><font style="color: rgb(1, 126, 132);">[test]</font></p>`);
+    // A single undo reverts the color applied with the "Apply" button
+    execCommand(editor, "historyUndo");
+    expect(getContent(el)).toBe(`<p>[test]</p>`);
+});
+
+test.tags("mobile");
+test("apply button of the custom gradient closes the picker (mobile)", async () => {
+    mockUserAgent("android");
+    await setupEditor(
+        `<p><font style="background-image: linear-gradient(2deg, rgb(255, 204, 51) 10%, rgb(226, 51, 255) 90%);" class="text-gradient">[test]</font></p>`
+    );
+    await expandToolbar();
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
+    await click("button[title='Define a custom gradient']");
+    await animationFrame();
+    expect(".o_font_color_selector .o_color_mobile_apply").toHaveCount(1);
+
+    await click(".o_font_color_selector .o_color_mobile_apply");
+    await waitForNone(".o_font_color_selector", { timeout: 500 }); // slide out transition
+    expect("font.text-gradient").toHaveStyle({
+        backgroundImage: "linear-gradient(2deg, rgb(255, 204, 51) 10%, rgb(226, 51, 255) 90%)",
+    });
+});
+
+test.tags("desktop");
 test("should be able to apply hex color with opacity component", async () => {
     const { el } = await setupEditor(`<p>[test]</p>`);
     await expandToolbar();
@@ -596,8 +680,46 @@ test("should be able to apply hex color with opacity component", async () => {
     );
 
     await click(".odoo-editor-editable");
-    await animationFrame();
+    await waitForNone(".o_font_color_selector", { timeout: 500 }); // slide out transition
+    expect(getContent(el)).toBe(
+        `<p><font style="color: rgba(1, 126, 132, 0.5);">[test]</font></p>`
+    );
+});
+
+test.tags("mobile");
+test("should be able to apply hex color with opacity component (mobile)", async () => {
+    mockUserAgent("android");
+    const { el } = await setupEditor(`<p>[test]</p>`);
+    await expandToolbar();
     expect(".o_font_color_selector").toHaveCount(0);
+
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
+    expect(".o_font_color_selector").toHaveCount(1);
+
+    await click(".o_font_color_selector .dropdown-toggle");
+    await waitFor(".o_bottom_sheet_body .o-dropdown-item");
+    await click(".o-dropdown-item:contains('Custom')");
+    await animationFrame();
+    const hexInputEl = await getIframeInput(
+        ".o_font_color_selector .o_color_picker_inputs iframe.o_hex_iframe",
+        "input[name='hex_input']"
+    );
+    await click(hexInputEl);
+    await waitFor(".o_font_color_selector");
+
+    await edit("#017E8480"); // === rgba(1, 126, 132, 0.5)
+    await animationFrame();
+    expect("button[data-color='#017E8480']").toHaveCount(1);
+    expect("button[data-color='#017E8480']").toHaveStyle({
+        backgroundColor: "rgba(1, 126, 132, 0.5)",
+    });
+    expect(getContent(el)).toBe(
+        `<p><font style="color: rgba(1, 126, 132, 0.5);">[test]</font></p>`
+    );
+
+    await click("[data-color='#017E8480']");
+    await waitForNone(".o_font_color_selector", { timeout: 500 }); // slide out transition
     expect(getContent(el)).toBe(
         `<p><font style="color: rgba(1, 126, 132, 0.5);">[test]</font></p>`
     );
@@ -1164,6 +1286,7 @@ test("should be able to show preview when hovering radial type button", async ()
     expect("button[title='Extend to the farthest side']").toHaveClass("active");
 });
 
+test.tags("desktop");
 test("solid tab color navigation using keys", async () => {
     const { el } = await setupEditor("<p>[test]</p>");
     await expandToolbar();
@@ -1187,6 +1310,7 @@ test("solid tab color navigation using keys", async () => {
     expect(getContent(el)).toBe(`<p><font style="color: rgb(0, 0, 0);">[test]</font></p>`);
 });
 
+test.tags("desktop");
 test("custom tab color navigation using keys", async () => {
     const { el } = await setupEditor("<p>[test]</p>");
     await expandToolbar();

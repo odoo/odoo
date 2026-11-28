@@ -248,12 +248,7 @@ export class ToolbarPlugin extends Plugin {
             this.onSelectionChangeActive = true;
         }, DELAY_TOOLBAR_OPEN);
 
-        if (this.isMobileToolbar) {
-            this.addDomListener(this.editable, "pointerup", () => {
-                // Collapse toolbar to compact mode when tapping outside of it
-                this.isToolbarExpanded = false;
-            });
-        } else {
+        if (!this.isMobileToolbar) {
             // Mouse interaction behavior:
             // Close toolbar on mousedown and prevent it from opening until mouseup.
             this.addDomListener(this.editable, "mousedown", (ev) => {
@@ -464,7 +459,11 @@ export class ToolbarPlugin extends Plugin {
             return;
         }
 
-        if (this.expandableNamespaces.includes(currentNamespace) && this.isToolbarExpanded) {
+        // The mobile toolbar is always expanded
+        if (
+            this.expandableNamespaces.includes(currentNamespace) &&
+            (this.isToolbarExpanded || this.isMobileToolbar)
+        ) {
             currentNamespace = "expanded";
         }
 

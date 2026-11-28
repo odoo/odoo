@@ -12,6 +12,7 @@ import {
     onWillUnmount,
 } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
+import { scrollTo } from "@web/core/utils/scrolling";
 import { cleanZWChars, deduceLinkUrl, normalizeLinkUrlInput } from "./utils";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { isAbsoluteURLInCurrentDomain } from "@html_editor/utils/url";
@@ -36,6 +37,7 @@ export const linkPopoverProps = {
     canEdit: t.boolean().optional(true),
     canRemove: t.boolean().optional(true),
     canUpload: t.boolean().optional(),
+    close: t.function().optional(),
     containerElement: t.customValidator(t.object(), (el) => el.nodeType === Node.ELEMENT_NODE),
     document: t.customValidator(t.object(), (p) => p.nodeType === Node.DOCUMENT_NODE),
     getAttachmentMetadata: t.function(),
@@ -144,6 +146,13 @@ export class LinkPopover extends Component {
         useEffect(() => {
             this.inputRef()?.focus();
         });
+        useEffect(() => {
+            // Once rendered in a bottom sheet, make the editing part fully visible
+            const editingWrapperEl = this.editingWrapper();
+            if (editingWrapperEl?.closest(".o_bottom_sheet")) {
+                scrollTo(editingWrapperEl);
+            }
+        });
         if (!this.state.editing) {
             this.loadAsyncLinkPreview();
         }
@@ -228,6 +237,7 @@ export class LinkPopover extends Component {
     discard() {
         this.props.onDiscard();
         this.cancelUpload?.();
+        this.props.close?.();
     }
 
     onChange() {
@@ -241,6 +251,7 @@ export class LinkPopover extends Component {
         this.applyDeducedUrl();
         const params = this.prepareLinkParams();
         this.props.onApply(params);
+        this.props.close?.();
     }
     applyDeducedUrl() {
         if (this.state.label === "") {
@@ -331,6 +342,18 @@ export class LinkPopover extends Component {
     onSelectedLinkType(type) {
         this.state.type = type;
         this.onChange();
+    }
+
+    /**
+     * Called when the preview image is loaded.
+     *
+     * @param {Event} ev
+     */
+    onImageLoaded(ev) {
+        // On mobile, we want to scroll the bottom sheet up to display the whole preview.
+        if (ev.target.closest(".o_bottom_sheet")) {
+            scrollTo(ev.target, { behavior: "smooth" });
+        }
     }
 
     /**
