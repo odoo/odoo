@@ -5362,4 +5362,289 @@ describe("paste table cells into an existing table", () => {
             `)
         );
     });
+
+    test("should keep the colspan of a pasted cell over the target cells", async () => {
+        const { editor, el } = await setupEditor(
+            unformat(`
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr><td><p>a1</p></td><td><p>a2</p></td><td><p>a3</p></td></tr>
+                        <tr><td><p>[]b1</p></td><td><p>b2</p></td><td><p>b3</p></td></tr>
+                    </tbody>
+                </table>
+            `)
+        );
+        pasteOdooEditorHtml(
+            editor,
+            unformat(`
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr><td colspan="2"><p>x1</p></td><td><p>x2</p></td></tr>
+                    </tbody>
+                </table>
+            `)
+        );
+        await animationFrame();
+        expect(getContent(el)).toBe(
+            unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <table class="table table-bordered o_table o_selected_table">
+                    <tbody>
+                        <tr>
+                            <td><p>a1</p></td>
+                            <td><p>a2</p></td>
+                            <td><p>a3</p></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" class="o_selected_td"><p>[x1</p></td>
+                            <td class="o_selected_td"><p>x2]</p></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+            `)
+        );
+    });
+
+    test("should keep the rowspan of a pasted cell over the target cells", async () => {
+        const { editor, el } = await setupEditor(
+            unformat(`
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr><td><p>[]a1</p></td><td><p>a2</p></td></tr>
+                        <tr><td><p>b1</p></td><td><p>b2</p></td></tr>
+                        <tr><td><p>c1</p></td><td><p>c2</p></td></tr>
+                    </tbody>
+                </table>
+            `)
+        );
+        pasteOdooEditorHtml(
+            editor,
+            unformat(`
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr><td rowspan="2"><p>x1</p></td><td><p>x2</p></td></tr>
+                        <tr><td><p>y2</p></td></tr>
+                    </tbody>
+                </table>
+            `)
+        );
+        await animationFrame();
+        expect(getContent(el)).toBe(
+            unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <table class="table table-bordered o_table o_selected_table">
+                    <tbody>
+                        <tr>
+                            <td rowspan="2" class="o_selected_td"><p>[x1</p></td>
+                            <td class="o_selected_td"><p>x2</p></td>
+                        </tr>
+                        <tr>
+                            <td class="o_selected_td"><p>y2]</p></td>
+                        </tr>
+                        <tr>
+                            <td><p>c1</p></td>
+                            <td><p>c2</p></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+            `)
+        );
+    });
+
+    test("should split a merged target cell covered by the pasted table", async () => {
+        const { editor, el } = await setupEditor(
+            unformat(`
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr><td rowspan="2"><p>[]a1</p></td><td><p>a2</p></td><td><p>a3</p></td></tr>
+                        <tr><td><p>b2</p></td><td><p>b3</p></td></tr>
+                        <tr><td><p>c1</p></td><td><p>c2</p></td><td><p>c3</p></td></tr>
+                    </tbody>
+                </table>
+            `)
+        );
+        pasteOdooEditorHtml(
+            editor,
+            unformat(`
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr><td><p>x1</p></td><td><p>x2</p></td></tr>
+                        <tr><td><p>y1</p></td><td><p>y2</p></td></tr>
+                    </tbody>
+                </table>
+            `)
+        );
+        await animationFrame();
+        expect(getContent(el)).toBe(
+            unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <table class="table table-bordered o_table o_selected_table">
+                    <tbody>
+                        <tr>
+                            <td class="o_selected_td"><p>[x1</p></td>
+                            <td class="o_selected_td"><p>x2</p></td>
+                            <td><p>a3</p></td>
+                        </tr>
+                        <tr>
+                            <td class="o_selected_td"><p>y1</p></td>
+                            <td class="o_selected_td"><p>y2]</p></td>
+                            <td><p>b3</p></td>
+                        </tr>
+                        <tr>
+                            <td><p>c1</p></td>
+                            <td><p>c2</p></td>
+                            <td><p>c3</p></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+            `)
+        );
+    });
+
+    test("should replace the target cells with the pasted cells and their style", async () => {
+        const { editor, el } = await setupEditor(
+            unformat(`
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr>
+                            <td style="background-color: rgb(0, 255, 0);"><p>[]a1</p></td>
+                            <td style="color: rgb(0, 0, 255);"><p>a2</p></td>
+                        </tr>
+                    </tbody>
+                </table>
+            `)
+        );
+        pasteOdooEditorHtml(
+            editor,
+            unformat(`
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr>
+                            <td style="color: rgb(255, 0, 0); background-color: rgb(0, 0, 255);"><p>x1</p></td>
+                            <td><p>x2</p></td>
+                        </tr>
+                    </tbody>
+                </table>
+            `)
+        );
+        await animationFrame();
+        expect(getContent(el)).toBe(
+            unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <table class="table table-bordered o_table o_selected_table">
+                    <tbody>
+                        <tr>
+                            <td style="color: rgb(255, 0, 0); background-color: rgb(0, 0, 255);" class="o_selected_td"><p>[x1</p></td>
+                            <td class="o_selected_td"><p>x2]</p></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+            `)
+        );
+    });
+
+    test("should paste cells as header cells in the header row", async () => {
+        const { editor, el } = await setupEditor(
+            unformat(`
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr>
+                            <th class="o_table_header"><p>[]h1</p></th>
+                            <th class="o_table_header"><p>h2</p></th>
+                        </tr>
+                        <tr><td><p>a1</p></td><td><p>a2</p></td></tr>
+                    </tbody>
+                </table>
+            `)
+        );
+        pasteOdooEditorHtml(
+            editor,
+            unformat(`
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr><td><p>x1</p></td><td><p>x2</p></td></tr>
+                        <tr><td><p>y1</p></td><td><p>y2</p></td></tr>
+                    </tbody>
+                </table>
+            `)
+        );
+        await animationFrame();
+        expect(getContent(el)).toBe(
+            unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <table class="table table-bordered o_table o_selected_table">
+                    <tbody>
+                        <tr>
+                            <th class="o_table_header o_selected_td"><p>[x1</p></th>
+                            <th class="o_table_header o_selected_td"><p>x2</p></th>
+                        </tr>
+                        <tr>
+                            <td class="o_selected_td"><p>y1</p></td>
+                            <td class="o_selected_td"><p>y2]</p></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+            `)
+        );
+    });
+
+    test("should paste header cells as normal cells outside of the header row", async () => {
+        const { editor, el } = await setupEditor(
+            unformat(`
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr>
+                            <th class="o_table_header"><p>1</p></th>
+                            <th class="o_table_header" rowspan="3"><p>2</p></th>
+                        </tr>
+                        <tr><td><p>[]3</p></td></tr>
+                        <tr><td><p>4</p></td></tr>
+                    </tbody>
+                </table>
+            `)
+        );
+        pasteOdooEditorHtml(
+            editor,
+            unformat(`
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr>
+                            <th class="o_table_header"><p>x1</p></th>
+                            <th class="o_table_header"><p>x2</p></th>
+                        </tr>
+                    </tbody>
+                </table>
+            `)
+        );
+        await animationFrame();
+        // The merged header cell is split, and the cells pasted in the body
+        // are normal cells.
+        expect(getContent(el)).toBe(
+            unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <table class="table table-bordered o_table o_selected_table">
+                    <tbody>
+                        <tr>
+                            <th class="o_table_header"><p>1</p></th>
+                            <th class="o_table_header"><p>2</p></th>
+                        </tr>
+                        <tr>
+                            <td class="o_selected_td"><p>[x1</p></td>
+                            <td class="o_selected_td"><p>x2]</p></td>
+                        </tr>
+                        <tr>
+                            <td><p>4</p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+            `)
+        );
+    });
 });
