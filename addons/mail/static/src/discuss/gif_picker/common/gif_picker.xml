@@ -5,7 +5,7 @@
             <div t-if="!this.store.hasGifPickerFeature and this.store.self_user?.is_admin" class="d-flex flex-column align-items-center justify-content-center m-3 h-100">
                 <span class="o-discuss-GifPicker-bigEmoji">🧑‍🍳🌶️</span>
                 <span class="fs-5 text-muted text-center">Want to spice up your conversations with GIFs? Turn on this feature in settings.</span>
-                <button class="btn btn-primary mt-3" t-on-click="this.onClickOpenDiscussSetting">Enable GIFs</button>
+                <button t-if="this.env.services.action" class="btn btn-primary mt-3" t-on-click="this.onClickOpenDiscussSetting">Enable GIFs</button>
             </div>
             <t t-else="">
                 <div class="o-EmojiPicker-search d-flex align-items-center m-2 rounded">
