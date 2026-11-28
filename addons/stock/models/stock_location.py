@@ -401,10 +401,7 @@ class StockLocation(models.Model):
                 package_products=package_products, excluded_sml_ids=excluded_sml_ids,
             )
 
-        if not putaway_location:
-            putaway_location = locations[0] if locations and self.usage == 'view' else self
-
-        return putaway_location
+        return putaway_location or self
 
     def _get_next_inventory_date(self):
         """ Used to get the next inventory date for a quant located in this location. It is

@@ -636,7 +636,7 @@
                                     <field name="location_src_id" groups="stock.group_stock_multi_locations" options="{'no_create': True}" readonly="state != 'draft'"/>
                                     <field name="location_src_id" groups="!stock.group_stock_multi_locations" invisible="1"/> <!-- passed as default_location_id in the context of move_raw_ids for users without stock.group_stock_multi_locations -->
                                     <field name="warehouse_id" invisible="1"/> <!-- passed as default_warehouse_id in the context of the move lists -->
-                                    <field name="location_dest_id" groups="stock.group_stock_multi_locations" options="{'no_create': True}" readonly="state != 'draft'"/>
+                                    <field name="location_dest_id" groups="stock.group_stock_multi_locations" options="{'no_create': True}" readonly="state not in ['cancel', 'done']"/>
                                     <field name="location_dest_id" groups="!stock.group_stock_multi_locations" invisible="1"/> <!-- passed as default_location_dest_id in the context of move_byproduct_ids for users without stock.group_stock_multi_locations -->
                                 </group>
                                 <group>
