@@ -347,6 +347,34 @@ class TestSurveyInternals(common.TestSurveyCommon, MailCase):
         self.assertEqual(user_input.scoring_percentage, 100)
         self.assertTrue(user_input.scoring_success)
 
+    def test_scoring_certification_with_inactive_conditional_question(self):
+        """ Check that a conditional question that was not triggered is ignored when
+        deciding if the certification is passed at completion (certification email). """
+        certification = self.env['survey.survey'].create({
+            'title': 'Certification with a conditional question',
+            'scoring_type': 'scoring_with_answers',
+            'scoring_success_min': 80.0,
+            'certification': True,
+            'certification_mail_template_id': self.env.ref('survey.mail_template_certification').id,
+        })
+        q_01 = self._add_question(
+            None, 'Q1', 'simple_choice', sequence=1, survey_id=certification.id,
+            labels=[{'value': 'Right', 'is_correct': True, 'answer_score': 1.0}, {'value': 'Wrong'}])
+        self._add_question(
+            None, 'Q2 (only if Q1 is wrong)', 'simple_choice', sequence=2, survey_id=certification.id,
+            triggering_answer_ids=q_01.suggested_answer_ids[1].ids,
+            labels=[{'value': 'Right', 'is_correct': True, 'answer_score': 1.0}, {'value': 'Wrong'}])
+
+        user_input = self._add_answer(certification, self.customer)
+        user_input._save_lines(q_01, q_01.suggested_answer_ids[0].id)
+        with self.mock_mail_gateway():
+            user_input._mark_done()
+
+        self.assertEqual(user_input.scoring_percentage, 100)
+        self.assertTrue(user_input.scoring_success)
+        self.assertEqual(len(self._new_mails), 1, 'The certification email should be sent')
+        self.assertEqual(self._new_mails.email_to, self.customer.email_formatted)
+
     def test_session_code_generation(self):
         surveys = self.env['survey.survey'].create([{
             'title': f'Survey {i}'
