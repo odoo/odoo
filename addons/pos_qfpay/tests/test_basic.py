@@ -9,9 +9,15 @@ class TestQFPayPoS(TestPointOfSaleHttpCommon):
     _test_user_groups = None  # FIXME list needed groups
 
     @classmethod
+    def setup_independent_company(cls):
+        return super().setup_independent_company(
+            company_xmlid="base.test_company_template",
+            currency_id=cls.env.ref("base.HKD").id,
+        )
+
+    @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.env.company.currency_id = cls.env.ref("base.HKD")
         cls.main_pos_config.use_pricelist = False
         cls.main_pos_config.write({
             "payment_method_ids": [
