@@ -18,7 +18,7 @@ class MailGroupOptionPlugin extends Plugin {
         builder_options: [MailGroupOption],
         dropzone_selector: {
             selector: ".s_group",
-            dropNear: "p, h1, h2, h3, blockquote, .card",
+            dropNear: "p, h1, h2, h3, h4, h5, h6, blockquote, .card",
             dropIn: ".row.o_grid_mode",
         },
         builder_actions: {

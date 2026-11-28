@@ -24,7 +24,7 @@ class NewsletterSubscribeCommonOptionPlugin extends Plugin {
         dropzone_selector: [
             {
                 selector: ".js_subscribe",
-                dropNear: "p, h1, h2, h3, blockquote, .card",
+                dropNear: "p, h1, h2, h3, h4, h5, h6, blockquote, .card",
                 dropIn: ".row.o_grid_mode",
             },
         ],

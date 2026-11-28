@@ -42,7 +42,7 @@ export class DropZoneSelectorPlugin extends Plugin {
                 exclude: `${special_cards_selector}`,
                 dropIn: "nav, .row.o_grid_mode",
                 get dropNear() {
-                    return `p, h1, h2, h3, ul, ol, div:not(.o_grid_item_image) > img, div:not(.o_grid_item_image) > a, .btn, ${this.plugin
+                    return `p, h1, h2, h3, h4, h5, h6, ul, ol, div:not(.o_grid_item_image) > img, div:not(.o_grid_item_image) > a, .btn, ${this.plugin
                         .getResource("so_content_addition_selector")
                         .join(", ")}, .s_card:not(${special_cards_selector})`;
                 },

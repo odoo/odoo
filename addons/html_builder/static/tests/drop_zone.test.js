@@ -61,3 +61,17 @@ test("snippets cannot be dropped next to elements inside excluded parent", async
     // Should have no dropzones in second-div (excluded by excludeNearParent)
     expect(":iframe .second-div .oe_drop_zone").toHaveCount(0);
 });
+
+test("inner content can be dropped next to h4, h5 and h6", async () => {
+    const snippetContent = [
+        `<div name="Quote" data-snippet="s_blockquote">
+            <blockquote data-snippet="s_blockquote">Quote</blockquote>
+        </div>`,
+    ];
+    await setupHTMLBuilder(`<div><h4>Title 4</h4><h5>Title 5</h5><h6>Title 6</h6></div>`, {
+        snippetContent,
+    });
+
+    await contains(".o-snippets-menu .o_snippet_thumbnail[data-snippet='s_blockquote']").drag();
+    expect(":iframe .oe_drop_zone").toHaveCount(4);
+});

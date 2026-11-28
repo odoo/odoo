@@ -10,7 +10,7 @@ class SeparatorOptionPlugin extends Plugin {
         builder_options: [SeparatorOption],
         dropzone_selector: {
             selector: ".s_hr",
-            dropNear: "p, h1, h2, h3, blockquote, .s_hr",
+            dropNear: "p, h1, h2, h3, h4, h5, h6, blockquote, .s_hr",
         },
         so_content_addition_selector: [".s_hr"],
         is_movable_selector: { selector: ".s_hr", direction: "vertical" },
