@@ -19,7 +19,7 @@
                 </t>
             </span>
             <span name="standard-unit-price" position="attributes">
-                <attribute name="t-if">not conditions['basic_receipt'] and (not order['l10n_fr_hash'] or line['price_type'] != 'original')</attribute>
+                <attribute name="t-if">not conditions['basic_receipt'] and (not order['l10n_fr_hash'] or line['price_type'] != 'original') and line['show_unit_price']</attribute>
             </span>
         </template>
     </data>

@@ -124,6 +124,24 @@ class PosOrderLine(models.Model):
         tip_product = self.order_id.config_id.tip_product_id
         return bool(self.order_id.config_id.iface_tipproduct) and bool(tip_product) and self.product_id == tip_product
 
+    def _get_attribute_value_names(self):
+        self.ensure_one()
+        attribute_values = []
+        for value in self.attribute_value_ids:
+            if value.is_custom:
+                if custom_value := self.custom_attribute_value_ids.filtered(
+                    lambda cus: cus.custom_product_template_attribute_value_id == value
+                ):
+                    attribute_values.append(custom_value.name)
+            else:
+                attribute_values.append(value.name)
+
+        if not attribute_values:
+            attribute_values = self.product_id.product_template_variant_value_ids.mapped('name')
+
+        # Also replace commas within custom values.
+        return " - ".join(attribute_values).replace(", ", " - ")
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:

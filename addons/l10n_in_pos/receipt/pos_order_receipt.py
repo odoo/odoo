@@ -17,6 +17,11 @@ class PosOrderReceipt(models.AbstractModel):
             data['extra_data']['l10n_in_hsn_summary'] = l10n_in_hsn_summary
             data['conditions']['code_in'] = self.company_id.country_id.code == 'IN'
 
+            for line_data in data['lines']:
+                if line_data['combo_line_ids']:
+                    combo_line = self.lines.browse(line_data['id'])
+                    line_data['child_combo_lines'] = combo_line._l10n_in_get_receipt_combo_child_lines()
+
             for summary in data['extra_data']['l10n_in_hsn_summary'].get('items'):
                 if summary.get('tax_amount_igst') is not None:
                     summary['tax_amount_igst'] = self._order_receipt_format_currency(summary['tax_amount_igst'])
