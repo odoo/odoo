@@ -190,6 +190,32 @@ export class DiscussChannel extends mailModels.DiscussChannel {
         return "Visitor left the conversation.";
     }
 
+    request_browsing_history() {
+        const kwargs = getKwArgs(arguments, "ids", "request_id");
+        const [channel] = this.browse(kwargs.ids[0]); // simulate ensure_one
+        const members = this.env["discuss.channel.member"].browse(channel.channel_member_ids);
+        const selfMember = this._find_or_create_member_for_self(channel.id);
+        if (
+            channel.channel_type !== "livechat" ||
+            channel.livechat_end_dt ||
+            selfMember?.livechat_member_type !== "agent"
+        ) {
+            return;
+        }
+        const visitor = members.find((member) => member.livechat_member_type === "visitor");
+        if (!visitor) {
+            return;
+        }
+        const [persona] = visitor.partner_id
+            ? this.env["res.partner"].browse(visitor.partner_id)
+            : this.env["mail.guest"].browse(visitor.guest_id);
+        this.env["bus.bus"]._sendone(persona, "im_livechat.history/request", {
+            id: channel.id,
+            partner_id: this.env.user.partner_id,
+            request_id: kwargs.request_id,
+        });
+    }
+
     _email_livechat_transcript(channel_id, email) {
         const [channel] = this.browse(channel_id);
         this.message_post(

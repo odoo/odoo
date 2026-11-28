@@ -1,16 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="website_livechat.LivechatChannelInfoList" t-inherit="im_livechat.LivechatChannelInfoList" t-inherit-mode="extension">
-        <xpath expr="//t[@t-name='extra_infos']" position="inside">
+        <xpath expr="//LivechatBrowsingHistory" position="replace">
             <t t-set="visitor" t-value="this.props.thread.livechat_visitor_id"/>
-            <div t-if="visitor?.pageVisitHistoryText" class="d-flex flex-column bg-inherit gap-1">
-                <h6 class="pt-3">Recent page views</h6>
-                <div t-if="visitor.website_id">
-                    <i class="me-1 oi" data-icon="public" role="img" aria-label="Website"/>
-                    <span t-out="visitor.website_id.name"/>
+            <t t-if="!visitor">$0</t>
+            <div t-elif="this.visitorPageViews().length" class="o-livechat-WebsiteHistory d-flex flex-column bg-inherit gap-2">
+                <div class="d-flex align-items-center gap-1 pt-3">
+                    <h6 class="mb-0">Recent page views</h6>
+                    <span t-if="visitor.track_count > visitor.last_track_ids.length" t-out="visitor.track_count" class="badge rounded-pill bg-secondary bg-opacity-25"/>
+                    <button t-if="visitor.track_count > visitor.last_track_ids.length" t-on-click="this.openVisitorPageViews" class="btn btn-sm p-0 border-0 opacity-50 opacity-100-hover ms-auto" type="button" aria-label="View all page views (opens in a new tab)">
+                        View all
+                        <i class="oi" data-icon="chevron_right" aria-hidden="true"/>
+                    </button>
                 </div>
-                <span t-out="visitor.pageVisitHistoryText"/>
+                <div t-if="this.store.has_multi_website and visitor.website_id" class="o-livechat-WebsiteName mt-n1">
+                    <i class="me-1 oi" data-icon="public" role="img" aria-label="Website"/>
+                    <t t-out="visitor.website_id.name"/>
+                </div>
+                <t t-call="im_livechat.PageViewsList" templateParams="{ pageViews: this.visitorPageViews() }"/>
             </div>
+        </xpath>
+        <xpath expr="//t[@t-name='extra_infos']" position="inside">
             <div t-if="!this.props.thread.channel.livechat_end_dt and this.recentConversations.length" class="d-flex flex-column bg-inherit gap-1">
                 <h6 class="pt-3">Recent conversations</h6>
                 <div class="btn btn-group o-rounded-bubble d-flex flex-column w-100 p-0 m-0" style="gap: 1px;">

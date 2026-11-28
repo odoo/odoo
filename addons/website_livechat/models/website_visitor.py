@@ -142,15 +142,17 @@ class WebsiteVisitor(models.Model):
         self.env.cr.execute(
             """
                 SELECT website_visitor.id AS visitor_id,
-                       ARRAY_AGG(website_track.id ORDER BY website_track.visit_datetime DESC, website_track.id DESC) AS track_ids
+                       ARRAY_AGG(website_track.id ORDER BY website_track.visit_datetime DESC, website_track.id DESC) AS track_ids,
+                       MAX(website_track.track_count) AS track_count
                   FROM website_visitor
           JOIN LATERAL
                   (
                       SELECT website_track.id,
-                             website_track.visit_datetime
+                             website_track.visit_datetime,
+                             COUNT(*) OVER () AS track_count
                         FROM website_track
                        WHERE website_track.visitor_id = website_visitor.id
-                         AND website_track.page_id IS NOT NULL
+                         AND website_track.url IS NOT NULL
                     ORDER BY website_track.visit_datetime DESC, website_track.id DESC
                        LIMIT 3
                   ) AS website_track ON TRUE
@@ -159,19 +161,26 @@ class WebsiteVisitor(models.Model):
             """,
             [tuple(self.ids)],
         )
-        results = dict(self.env.cr.fetchall())
-        all_track_ids = [track_id for track_list in results.values() for track_id in track_list]
+        results = self.env.cr.fetchall()
+        all_track_ids = [track_id for _, track_ids, _ in results for track_id in track_ids]
         tracks_by_visitor = defaultdict(self.env["website.track"].browse)
-        for visitor_id, track_ids in results.items():
-            tracks_by_visitor[self.browse(visitor_id)] = (
-                self.env["website.track"].browse(track_ids).with_prefetch(all_track_ids)
-            )
+        track_counts_by_visitor = defaultdict(int)
+        for visitor_id, track_ids, track_count in results:
+            visitor = self.browse(visitor_id)
+            tracks_by_visitor[visitor] = self.env["website.track"].browse(track_ids).with_prefetch(all_track_ids)
+            track_counts_by_visitor[visitor] = track_count
         # sudo: website.track - reading the history of accessible visitor is acceptable
         res.many(
             "last_track_ids",
             lambda res: (
                 res.one("page_id", ["name"]),
+                res.attr("url"),
                 res.attr("visit_datetime"),
             ),
             value=lambda v: tracks_by_visitor[v].sudo(),
+        )
+        res.attr(
+            "track_count",
+            lambda visitor: track_counts_by_visitor[visitor],
+            version=False,
         )

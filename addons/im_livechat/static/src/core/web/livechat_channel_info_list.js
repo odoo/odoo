@@ -1,5 +1,6 @@
 import { TranscriptSender } from "@im_livechat/core/common/transcript_sender";
 import { ExpertiseTagsAutocomplete } from "@im_livechat/core/web/expertise_tags_autocomplete";
+import { LivechatBrowsingHistory } from "@im_livechat/core/web/livechat_browsing_history";
 
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { prettifyMessageContent } from "@mail/utils/common/format";
@@ -13,12 +14,13 @@ import { useService } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
 
 export class LivechatChannelInfoList extends Component {
-    static components = { ActionPanel, ExpertiseTagsAutocomplete, TranscriptSender };
+    static components = {
+        ActionPanel,
+        ExpertiseTagsAutocomplete,
+        LivechatBrowsingHistory,
+        TranscriptSender,
+    };
     static template = "im_livechat.LivechatChannelInfoList";
-    props = useProps({
-        close: t.function().optional(),
-        thread: t.object(),
-    });
 
     setup() {
         super.setup();
@@ -26,6 +28,10 @@ export class LivechatChannelInfoList extends Component {
         this.actionService = useService("action");
         this.store = useService("mail.store");
         this.ui = useService("ui");
+        this.props = useProps({
+            close: t.function().optional(),
+            thread: t.instanceOf(this.store["mail.thread"]),
+        });
         useEffect(() => {
             if (this.props.thread.hasFetchedLivechatSessionData) {
                 return;

@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime
 from urllib.parse import urlsplit
 
 from werkzeug.exceptions import NotFound
@@ -203,10 +204,33 @@ class LivechatController(http.Controller):
 
     @http.route("/im_livechat/history", type="jsonrpc", auth="public")
     @add_guest_to_context
-    def history_pages(self, pid, channel_id, page_history=None):
-        if channel := request.env["discuss.channel"].search([("id", "=", channel_id)]):
-            if pid in channel.sudo().channel_member_ids.partner_id.ids:
-                request.env["res.partner"].browse(pid)._bus_send_history_message(channel, page_history)
+    def history_pages(self, pid, channel_id, page_history, request_id):
+        channel = self.env["discuss.channel"].search([("id", "=", channel_id)])
+        if not channel:
+            return
+        # sudo: res.partner - the visitor may send their history to an agent of their channel
+        agent = channel.sudo().livechat_agent_partner_ids.filtered(lambda p: p.id == pid)
+        if not agent:
+            return
+        valid_pages = []
+        for page in page_history if isinstance(page_history, list) else []:
+            if (
+                not isinstance(page, dict)
+                or not all(isinstance(page.get(key), str) for key in ("title", "url", "visit_datetime"))
+                or not page["url"].lower().startswith(("http://", "https://"))
+            ):
+                continue
+            try:
+                datetime.fromisoformat(page["visit_datetime"])
+            except ValueError:
+                continue
+            valid_pages.append(page)
+            if len(valid_pages) >= 3:
+                break
+        agent._bus_send(
+            "im_livechat.history/response",
+            {"channel_id": channel.id, "page_history": valid_pages, "request_id": request_id},
+        )
 
     @http.route("/im_livechat/email_livechat_transcript", type="jsonrpc", auth="user")
     @add_guest_to_context

@@ -1,4 +1,5 @@
 import { defineLivechatModels } from "@im_livechat/../tests/livechat_test_helpers";
+import { BrowsingHistoryPlugin } from "@im_livechat/core/web/browsing_history_plugin";
 import {
     actionPanel,
     click,
@@ -9,10 +10,12 @@ import {
     startServer,
     MENU_ACTIVE_IDS,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, press, test } from "@odoo/hoot";
+import { withGuest } from "@mail/../tests/mock_server/mail_mock_server";
+import { advanceTime, describe, expect, mockDate, press, test } from "@odoo/hoot";
 import { queryOne, waitFor, waitForNone } from "@odoo/hoot-dom";
-import { Command, serverState } from "@web/../tests/web_test_helpers";
+import { Command, onRpc, serverState } from "@web/../tests/web_test_helpers";
 import { serializeDate, today } from "@web/core/l10n/dates";
+import { rpc } from "@web/core/network/rpc";
 import { getOrigin } from "@web/core/utils/urls";
 
 describe.current.tags("desktop");
@@ -295,6 +298,9 @@ test("Can download transcript from channel info panel", async () => {
     await waitFor(
         `a[href='${getOrigin()}/im_livechat/download_transcript/${channelId}']:text(Download):count(1)`
     );
+    await waitFor(
+        ".o-livechat-BrowsingHistory div:text('Recent page views are unavailable after the conversation has ended.')"
+    );
 });
 
 test("Disable actions for non-livechat users", async () => {
@@ -313,6 +319,7 @@ test("Disable actions for non-livechat users", async () => {
     await waitFor(".o-livechat-LivechatStatusSelection button:text(Looking for help):disabled");
     await waitFor("textarea[placeholder='Add your notes here...']:disabled");
     await waitFor(".o-livechat-ExpertiseTagsAutocomplete.o-disabled");
+    await waitForNone(".o-livechat-BrowsingHistory");
 });
 
 test("info panel toggle state persists across chats", async () => {
@@ -408,4 +415,79 @@ test("auto-open of livechat info & members panels should combine", async () => {
     await click(".o-mail-NotificationItem:has(:text('General'))");
     await waitFor(`${actionPanel("Members")}:count(1)`);
     await waitForNone(actionPanel("Information"));
+});
+
+test("shows the visitor's browsing history in the conversation info panel", async () => {
+    mockDate("2026-06-07 12:00:00", 0);
+    const pyEnv = await startServer();
+    const guestId = pyEnv["mail.guest"].create({ name: "Visitor" });
+    const partnerId = serverState.partnerId;
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "livechat",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId, livechat_member_type: "agent" }),
+            Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
+        ],
+    });
+    let requestId;
+    onRpc("discuss.channel", "request_browsing_history", ({ args }) => {
+        expect(args[0]).toEqual([channelId]);
+        requestId = args[1];
+        expect.step("history requested");
+    });
+    await start();
+    await openDiscuss(channelId);
+    await expect.waitForSteps(["history requested"]);
+    await waitFor(".o-livechat-BrowsingHistory div:text('Loading recent page views...')");
+    await waitFor(".o-livechat-BrowsingHistory button:text('Refresh'):disabled");
+    await withGuest(guestId, () =>
+        rpc("/im_livechat/history", {
+            channel_id: channelId,
+            request_id: requestId,
+            pid: partnerId,
+            page_history: [
+                {
+                    url: "https://example.com/contact",
+                    title: "Contact",
+                    visit_datetime: "2026-06-07T06:07:00.000Z",
+                },
+            ],
+        })
+    );
+    await waitFor(".o-livechat-BrowsingHistory a:count(1)");
+    await waitFor(
+        ".o-livechat-BrowsingHistory a:has(.fw-bold:text('Contact')) .small:text('Jun 7, 6:07 AM')"
+    );
+    const previousRequestId = requestId;
+    await click(".o-livechat-BrowsingHistory button:text('Refresh')");
+    await expect.waitForSteps(["history requested"]);
+    expect(requestId).not.toBe(previousRequestId);
+    await waitFor(".o-livechat-BrowsingHistory button:text('Refresh'):disabled");
+    await waitFor(".o-livechat-BrowsingHistory div:text('Loading recent page views...')");
+    await withGuest(guestId, () =>
+        rpc("/im_livechat/history", {
+            channel_id: channelId,
+            request_id: previousRequestId,
+            pid: partnerId,
+            page_history: [],
+        })
+    );
+    await waitFor(".o-livechat-BrowsingHistory button:text('Refresh'):disabled");
+    await waitFor(".o-livechat-BrowsingHistory div:text('Loading recent page views...')");
+    await advanceTime(BrowsingHistoryPlugin.HISTORY_REQUEST_TIMEOUT);
+    await waitFor(
+        `.o-livechat-BrowsingHistory div:text("Couldn't load recent page views. The visitor may be offline.")`
+    );
+    await click(".o-livechat-BrowsingHistory button:text('Refresh')");
+    await expect.waitForSteps(["history requested"]);
+    await withGuest(guestId, () =>
+        rpc("/im_livechat/history", {
+            channel_id: channelId,
+            request_id: requestId,
+            pid: partnerId,
+            page_history: [],
+        })
+    );
+    await waitFor(".o-livechat-BrowsingHistory div:text('No recent page views available.')");
+    await waitForNone(".o-livechat-BrowsingHistory a");
 });

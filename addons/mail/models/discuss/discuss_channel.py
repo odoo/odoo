@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
 from collections import defaultdict
 from datetime import datetime, time, timedelta, UTC
 from hashlib import sha512
@@ -12,7 +13,8 @@ from odoo import Command, SUPERUSER_ID, _, api, fields, models, tools
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.modules.registry import Registry
-from odoo.tools import BinaryBytes, email_normalize, format_list, html_escape
+from odoo.tools import BinaryBytes, email_normalize, format_list, html2plaintext, html_escape
+from odoo.tools.mimetypes import get_extension
 from odoo.tools.misc import OrderedSet, hash_sign, limited_field_access_token
 from odoo.tools.sql import SQL
 
@@ -2248,6 +2250,74 @@ class DiscussChannel(models.Model):
             channel_id=channel_id,
             model=self._name,
         )
+
+    def _attachment_to_html(self, attachment):
+        if attachment.mimetype.startswith("image/"):
+            return Markup(
+                "<img src='%s?access_token=%s' alt='%s' style='max-width: 75%%; height: auto; padding: 5px;'>",
+            ) % (
+                attachment.image_src,
+                attachment.generate_access_token()[0],
+                attachment.name,
+            )
+        file_extension = get_extension(attachment.display_name or '')
+        attachment_data = {
+            "id": attachment.id,
+            "access_token": attachment.generate_access_token()[0],
+            "checksum": attachment.checksum,
+            "extension": file_extension.lstrip("."),
+            "mimetype": attachment.mimetype,
+            "filename": attachment.display_name or _('File'),
+            "url": attachment.url,
+        }
+        return Markup(
+            "<div data-embedded='file' data-oe-protected='true' contenteditable='false' data-embedded-props='%s'/>",
+        ) % json.dumps({"fileData": attachment_data})
+
+    def _get_channel_history(self):
+        """
+        Converting message body back to plaintext for correct data formatting in HTML field.
+        """
+        self.ensure_one()
+        previous_message_author = None
+        message_domain = self._get_channel_history_message_domain()
+        # sudo - mail.message: getting empty/notification messages to exclude them is allowed.
+        filtered_messages = (
+            self.message_ids.sudo() - self.message_ids.sudo()._filter_empty()
+        ).filtered_domain(message_domain)
+        parts = []
+        for message in filtered_messages.sorted("id"):
+            # sudo - res.partner: reading the author's name to build the channel history is allowed.
+            message_author = message.author_id.sudo() or message.author_guest_id
+            if previous_message_author != message_author and parts:
+                parts.append(Markup(""))
+
+            parts.extend(self._get_channel_history_format_message(message, message.body, message_author, previous_message_author))
+            if not tools.is_html_empty(message.body) or message.attachment_ids:
+                previous_message_author = message_author
+
+        return Markup("<br/>").join(parts)
+
+    def _get_channel_history_message_domain(self):
+        return Domain("message_type", "!=", "notification")
+
+    def _get_channel_history_format_message(self, message, message_body, message_author, previous_message_author):
+        parts = []
+        if previous_message_author != message_author:
+            parts.append(
+                Markup("<strong>%s:</strong>")
+                % self._get_channel_history_format_author(message_author),
+            )
+        if not tools.is_html_empty(message_body):
+            parts.append(html2plaintext(message_body))
+
+        for attachment in message.attachment_ids:
+            # sudo - ir.attachment: public user can read attachment metadata
+            parts.append(self._attachment_to_html(attachment.sudo()))
+        return parts
+
+    def _get_channel_history_format_author(self, message_author):
+        return message_author.name
 
     def _get_last_messages(self):
         """ Return the last message for each of the given channels."""

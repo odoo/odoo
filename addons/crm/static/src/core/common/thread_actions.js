@@ -1,22 +1,21 @@
-import { LivechatCommandDialog } from "@im_livechat/core/common/livechat_command_dialog";
-
 import { registerThreadAction } from "@mail/core/common/thread_actions";
-import "@mail/discuss/call/common/thread_actions";
+import { ChannelCommandDialog } from "@mail/discuss/core/common/channel_command_dialog";
 
 import { _t } from "@web/core/l10n/translation";
 
 registerThreadAction("create-lead", {
-    condition: false, // managed by ThreadAction patch
+    condition: ({ channel, owner }) =>
+        channel?.allowCreateLead && !owner.isDiscussSidebarChannelActions,
     icon: "handshake",
     name: _t("Create Lead"),
     panel: {
-        component: LivechatCommandDialog,
-        props: ({ thread }) => ({
+        component: ChannelCommandDialog,
+        props: ({ channel }) => ({
+            channel,
             commandName: "lead",
-            placeholderText: _t("e.g. Product pricing"),
-            thread,
-            title: _t("Create Lead"),
             icon: "handshake",
+            placeholderText: _t("e.g. Product pricing"),
+            title: _t("Create Lead"),
         }),
     },
     sequence: 10,
