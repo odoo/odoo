@@ -13,6 +13,7 @@
         'l10n_account_withholding_tax',
     ],
     'data': [
+        'data/account.account.tag.csv',
         'data/form_t7001.xml',
         'data/form_wt003.xml',
         'views/res_bank_views.xml',
