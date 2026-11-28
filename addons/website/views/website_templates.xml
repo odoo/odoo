@@ -2682,7 +2682,8 @@
 <template id="lang_flag" name="Language Flag">
     <img t-attf-class="o_lang_flag #{_flag_class}"
          t-attf-src="#{flag_image_url}?height=25"
-         t-att-alt="flag_lang_alt or ''"/>
+         t-att-alt="flag_lang_alt or ''"
+         aria-hidden="true"/>
 </template>
 
 <template id="language_selector" inherit_id="portal.language_selector">
@@ -2697,14 +2698,14 @@
         <i t-if="show_icon" class="oi me-1" data-icon="translate" role="img" aria-hidden="true"/>
         <!-- Add the 'flags' possibility -->
         <t t-if="flags">
-            <t t-if="no_text and not codes" t-set="flag_lang_alt" t-value="active_lang.name.split('/').pop()"/>
+            <t t-if="no_text and not codes" t-set="flag_lang_alt" t-value="active_lang_name"/>
             <t t-call="website.lang_flag"
                 flag_image_url="active_lang.flag_image_url"/>
         </t>
     </xpath>
     <xpath expr="//*[contains(@t-attf-class, 'js_change_lang')]/span" position="before">
         <t t-if="flags">
-            <t t-if="no_text and not codes" t-set="flag_lang_alt" t-value="lg.name.split('/').pop()"/>
+            <t t-if="no_text and not codes" t-set="flag_lang_alt" t-value="lg_name"/>
             <t t-call="website.lang_flag"
                 flag_image_url="lg.flag_image_url"/>
         </t>
