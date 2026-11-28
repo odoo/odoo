@@ -128,7 +128,7 @@ class TestLatePaymentPenalties(AccountTestInvoicingCommon):
         with (
             patch('odoo.fields.Date.today', return_value=date(2026, 7, 15)),
             patch(
-                'odoo.addons.l10n_fr_pdp_penalty_rate.models.late_payment_penalty_rate.iap_tools.iap_jsonrpc',
+                'odoo.addons.l10n_fr_pdp.models.late_payment_penalty_rate.iap_tools.iap_jsonrpc',
                 return_value=response,
             ) as mocked_iap,
         ):
@@ -170,7 +170,7 @@ class TestLatePaymentPenalties(AccountTestInvoicingCommon):
         with (
             patch('odoo.fields.Date.today', return_value=date(2026, 7, 15)),
             patch(
-                'odoo.addons.l10n_fr_pdp_penalty_rate.models.late_payment_penalty_rate.iap_tools.iap_jsonrpc',
+                'odoo.addons.l10n_fr_pdp.models.late_payment_penalty_rate.iap_tools.iap_jsonrpc',
                 return_value=[
                     {
                         'period_start': '2026-01-01',
@@ -218,7 +218,7 @@ class TestLatePaymentPenalties(AccountTestInvoicingCommon):
         with (
             patch('odoo.fields.Date.today', return_value=date(2026, 7, 15)),
             patch(
-                'odoo.addons.l10n_fr_pdp_penalty_rate.models.late_payment_penalty_rate.iap_tools.iap_jsonrpc',
+                'odoo.addons.l10n_fr_pdp.models.late_payment_penalty_rate.iap_tools.iap_jsonrpc',
                 return_value=response,
             ) as mocked_iap,
         ):
@@ -248,7 +248,7 @@ class TestLatePaymentPenalties(AccountTestInvoicingCommon):
         with (
             patch('odoo.fields.Date.today', return_value=date(2026, 7, 15)),
             patch(
-                'odoo.addons.l10n_fr_pdp_penalty_rate.models.late_payment_penalty_rate.iap_tools.iap_jsonrpc',
+                'odoo.addons.l10n_fr_pdp.models.late_payment_penalty_rate.iap_tools.iap_jsonrpc',
                 return_value=[{
                     'period_start': '2026-01-01',
                     'late_payment_penalty_rate': 12.15,
@@ -276,10 +276,10 @@ class TestLatePaymentPenalties(AccountTestInvoicingCommon):
         with (
             patch('odoo.fields.Date.today', return_value=date(2026, 7, 15)),
             mute_logger(
-                'odoo.addons.l10n_fr_pdp_penalty_rate.models.late_payment_penalty_rate'
+                'odoo.addons.l10n_fr_pdp.models.late_payment_penalty_rate'
             ),
             patch(
-                'odoo.addons.l10n_fr_pdp_penalty_rate.models.late_payment_penalty_rate.iap_tools.iap_jsonrpc',
+                'odoo.addons.l10n_fr_pdp.models.late_payment_penalty_rate.iap_tools.iap_jsonrpc',
                 side_effect=IAPServerError("IAP unavailable"),
             ),
         ):
@@ -302,7 +302,7 @@ class TestLatePaymentPenalties(AccountTestInvoicingCommon):
         with (
             patch('odoo.fields.Date.today', return_value=date(2026, 7, 16)),
             patch(
-                'odoo.addons.l10n_fr_pdp_penalty_rate.models.late_payment_penalty_rate.iap_tools.iap_jsonrpc',
+                'odoo.addons.l10n_fr_pdp.models.late_payment_penalty_rate.iap_tools.iap_jsonrpc',
                 return_value=[{
                     'period_start': '2026-07-01',
                     'late_payment_penalty_rate': 12.4,
@@ -320,10 +320,10 @@ class TestLatePaymentPenalties(AccountTestInvoicingCommon):
     def test_invalid_iap_response_is_ignored(self):
         with (
             mute_logger(
-                'odoo.addons.l10n_fr_pdp_penalty_rate.models.late_payment_penalty_rate'
+                'odoo.addons.l10n_fr_pdp.models.late_payment_penalty_rate'
             ),
             patch(
-                'odoo.addons.l10n_fr_pdp_penalty_rate.models.late_payment_penalty_rate.iap_tools.iap_jsonrpc',
+                'odoo.addons.l10n_fr_pdp.models.late_payment_penalty_rate.iap_tools.iap_jsonrpc',
                 return_value=[],
             ),
         ):
@@ -340,7 +340,7 @@ class TestLatePaymentPenalties(AccountTestInvoicingCommon):
         second_invoice = self._create_invoice(invoice_date=date(2025, 3, 15))
 
         with patch(
-            'odoo.addons.l10n_fr_pdp_penalty_rate.models.late_payment_penalty_rate.iap_tools.iap_jsonrpc',
+            'odoo.addons.l10n_fr_pdp.models.late_payment_penalty_rate.iap_tools.iap_jsonrpc',
             return_value=[{
                 'period_start': '2025-01-01',
                 'late_payment_penalty_rate': 13.15,
@@ -363,7 +363,7 @@ class TestLatePaymentPenalties(AccountTestInvoicingCommon):
         invoice = self._create_invoice(invoice_date=date(2025, 12, 31))
 
         with patch(
-            'odoo.addons.l10n_fr_pdp_penalty_rate.models.late_payment_penalty_rate.iap_tools.iap_jsonrpc',
+            'odoo.addons.l10n_fr_pdp.models.late_payment_penalty_rate.iap_tools.iap_jsonrpc',
         ) as mocked_iap:
             invoice.action_post()
 
@@ -423,7 +423,7 @@ class TestLatePaymentPenalties(AccountTestInvoicingCommon):
         )
 
         with patch(
-            'odoo.addons.l10n_fr_pdp_penalty_rate.models.late_payment_penalty_rate.iap_tools.iap_jsonrpc',
+            'odoo.addons.l10n_fr_pdp.models.late_payment_penalty_rate.iap_tools.iap_jsonrpc',
         ) as mocked_iap:
             moves.action_post()
 
