@@ -21,6 +21,7 @@ from urllib.parse import urlsplit
 from werkzeug import urls
 
 from odoo import api, fields, models, modules, tools, release
+from odoo.addons.web.icons import ICONS
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website.tools import (
     adapt_dark_palette_content,
@@ -198,6 +199,16 @@ class Website(models.CachedModel):
         string="Header Search Suggestions",
         help="Number of autocomplete suggestions of the header search bar, 0 to disable them.",
         default=30,
+    )
+    header_search_icon = fields.Char(
+        help="Icon of the header search bar.",
+        default='search',
+        required=True,
+    )
+    header_language_icon = fields.Char(
+        help="Icon of the header language selector.",
+        default='translate',
+        required=True,
     )
 
     def _default_favicon(self):
@@ -2372,6 +2383,35 @@ class Website(models.CachedModel):
         scopes = self._get_search_scopes()
         search_type = self.header_search_type if self.header_search_type in scopes else 'all'
         return {'search_type': search_type, 'url': scopes[search_type]['url']}
+
+    def _get_header_icon_fields(self):
+        """
+        Returns the field storing each replaceable header icon, by its
+        `data-header-icon`. A field holds the icon name, followed by `:filled`
+        for the filled variant.
+        """
+        return {'search': 'header_search_icon', 'language': 'header_language_icon'}
+
+    def _get_header_icon(self, name):
+        icon, _sep, variant = self[self._get_header_icon_fields()[name]].partition(':')
+        return {'icon': icon, 'filled': variant == 'filled'}
+
+    def set_header_icons(self, icons):
+        """
+        Stores the header icons chosen in the builder. Unknown names and icons
+        are skipped.
+
+        :param dict icons: `{"icon": str, "filled": bool}`, by `data-header-icon`
+        """
+        self.ensure_one()
+        icon_fields = self._get_header_icon_fields()
+        values = {}
+        for name, value in icons.items():
+            field = icon_fields.get(name)
+            icon = value.get('icon')
+            if field and icon in ICONS:
+                values[field] = f'{icon}:filled' if value.get('filled') and ICONS[icon]['has_fill'] else icon
+        self.write(values)
 
     def _search_get_details(self, search_type, order, options):
         """

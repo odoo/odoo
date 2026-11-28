@@ -16,6 +16,7 @@ declare module "plugins" {
     import { footer_templates_providers, FooterOptionPlugin } from "@website/builder/plugins/options/footer_option_plugin";
     import { gallery_items_providers, reorder_items_processors } from "@website/builder/plugins/options/gallery_element_option_plugin";
     import { GoogleMapsOptionPlugin } from "@website/builder/plugins/options/google_maps_option/google_maps_option_plugin";
+    import { header_icon_labels, HeaderIconsPlugin } from "@website/builder/plugins/options/header/header_icons_plugin";
     import { header_templates_providers, HeaderOptionPlugin } from "@website/builder/plugins/options/header/header_option_plugin";
     import { ImageGalleryOptionPlugin } from "@website/builder/plugins/options/image_gallery_option_plugin";
     import { InstagramOptionPlugin } from "@website/builder/plugins/options/instagram_option_plugin";
@@ -50,6 +51,7 @@ declare module "plugins" {
         floatingSnippets: SharedOf<typeof FloatingSnippetsPlugin>;
         footerOption: SharedOf<typeof FooterOptionPlugin>;
         googleMapsOption: SharedOf<typeof GoogleMapsOptionPlugin>;
+        headerIcons: SharedOf<typeof HeaderIconsPlugin>;
         headerOption: SharedOf<typeof HeaderOptionPlugin>;
         imageGalleryOption: SharedOf<typeof ImageGalleryOptionPlugin>;
         imageHover: SharedOf<typeof ImageHoverPlugin>;
@@ -97,6 +99,7 @@ declare module "plugins" {
         floating_snippet_scope_providers: floating_snippet_scope_providers;
         footer_templates_providers: footer_templates_providers;
         gallery_items_providers: gallery_items_providers;
+        header_icon_labels: header_icon_labels;
         header_templates_providers: header_templates_providers;
 
         // Data

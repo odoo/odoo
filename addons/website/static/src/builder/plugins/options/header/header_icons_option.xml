@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.HeaderIconsOption">
+    <BuilderRow t-foreach="this.state.icons" t-as="icon" t-key="icon.name" label="icon.label">
+        <BuilderButton
+            action="'replaceHeaderIcon'"
+            actionParam="icon.name"
+            className="'flex-grow-1'"
+            type="'success'"
+            label.translate="Replace"/>
+    </BuilderRow>
+</t>
+
+</templates>

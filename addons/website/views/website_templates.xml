@@ -2685,6 +2685,18 @@
          t-att-alt="flag_lang_alt or ''"/>
 </template>
 
+<!-- An icon stored on the website model in the header (`_header_icon_name`), the default icon elsewhere. -->
+<template id="header_icon" name="Header Icon">
+    <t t-set="_header_icon" t-value="website._get_header_icon(_header_icon_name) if _header_icon_name else {'icon': _default_icon, 'filled': False}"/>
+    <!-- o_not_editable keeps the stored icon out of the view save. -->
+    <i
+        t-attf-class="oi #{_header_icon_class or ''} #{'o_not_editable' if _header_icon_name else ''} #{'oi-filled' if _header_icon['filled'] else ''}"
+        t-att-data-icon="_header_icon['icon']"
+        t-att-data-header-icon="_header_icon_name"
+        role="img"
+        aria-hidden="true"/>
+</template>
+
 <template id="language_selector" inherit_id="portal.language_selector">
     <xpath expr="//t[@t-set='active_lang']" position="before">
         <t t-if="lang not in frontend_languages">
@@ -2694,7 +2706,7 @@
 
     <xpath expr="//button[contains(@t-attf-class, 'dropdown-toggle')]/span" position="before">
         <!-- Add the 'icon' possibility -->
-        <i t-if="show_icon" class="oi me-1" data-icon="translate" role="img" aria-hidden="true"/>
+        <t t-if="show_icon" t-call="website.header_icon" _default_icon="'translate'" _header_icon_class="'me-1'"/>
         <!-- Add the 'flags' possibility -->
         <t t-if="flags">
             <t t-if="no_text and not codes" t-set="flag_lang_alt" t-value="active_lang.name.split('/').pop()"/>
@@ -2730,7 +2742,7 @@
         </t>
     </xpath>
     <xpath expr="//t[@t-foreach='frontend_languages.values()']" position="before">
-        <i t-if="show_icon" class="oi list-inline-item" data-icon="translate" role="img" aria-hidden="true"/>
+        <t t-if="show_icon" t-call="website.header_icon" _default_icon="'translate'" _header_icon_class="'list-inline-item'"/>
     </xpath>
 </template>
 
@@ -2741,7 +2753,8 @@
         <li t-if="len(frontend_languages) > 1" data-name="Language Selector" t-attf-class="o_header_language_selector #{_item_class}">
             <t id="header_language_selector_call"
                 t-call="portal.language_selector"
-                _div_classes="(_div_classes or '') + ' dropdown'"/>
+                _div_classes="(_div_classes or '') + ' dropdown'"
+                _header_icon_name="'language'"/>
         </li>
     </xpath>
 </template>
@@ -3265,7 +3278,7 @@ Disallow: /*/my/*
             <small t-attf-class="o_search_found_results {{'d-none' if not search else ''}}">
                 <span class="o_search_count" t-out="search_count"/> result(s)
             </small>
-            <i t-attf-class="{{'d-none' if search else ''}} oi" data-icon="search" role="img" aria-hidden="true"/>
+            <t t-call="website.header_icon" _default_icon="'search'" _header_icon_class="'d-none' if search else ''"/>
         </button>
     </div>
 </template>
@@ -3430,7 +3443,7 @@ Disallow: /*/my/*
         <t t-set="order_by" t-value="order_by or 'name asc'"/>
         <form t-attf-class="o_searchbar_form s_searchbar_input #{_form_classes}" t-att-action="action" method="get" t-attf-data-snippet="s_searchbar_input">
             <a t-if="_simple_button_layout" t-attf-class="o_search_btn {{_simple_button_classes or 'p-1 bg-o-color-3 lh-1'}} btn o_not_editable" role="button" aria-label="Search" title="Search" href="#">
-                <i class="oi-stack lh-lg oi" data-icon="search" role="img" aria-hidden="true"/>
+                <t t-call="website.header_icon" _default_icon="'search'" _header_icon_class="'oi-stack lh-lg'"/>
             </a>
             <t>$0</t>
             <input name="order" type="hidden" class="o_search_order_by oe_unremovable" t-att-value="order_by"/>
@@ -3537,6 +3550,7 @@ Disallow: /*/my/*
                 action="_search_scope['url']"
                 order_by="website.header_search_order_by"
                 limit="website.header_search_limit"
+                _header_icon_name="'search'"
             />
         </li>
     </xpath>

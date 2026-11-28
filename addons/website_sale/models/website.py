@@ -341,6 +341,16 @@ class Website(models.Model):
         selection=[("tax_excluded", "Tax Excluded"), ("tax_included", "Tax Included")],
         compute="_compute_tax_display",
     )
+    header_cart_icon = fields.Char(
+        help="Icon of the header cart link.",
+        default="shopping_cart",
+        required=True,
+    )
+    header_wishlist_icon = fields.Char(
+        help="Icon of the header wishlist link.",
+        default="favorite:filled",
+        required=True,
+    )
 
     # === COMPUTE METHODS ===#
 
@@ -1227,6 +1237,12 @@ class Website(models.Model):
     def has_ecommerce_access(self):
         """Return whether the current user is allowed to access eCommerce-related content."""
         return not (self.env.user._is_public() and self.ecommerce_access == "logged_in")
+
+    def _get_header_icon_fields(self):
+        return super()._get_header_icon_fields() | {
+            "cart": "header_cart_icon",
+            "wishlist": "header_wishlist_icon",
+        }
 
     def _get_snippet_defaults(self, snippet):
         return super()._get_snippet_defaults(snippet) | const.SNIPPET_DEFAULTS.get(snippet, {})
