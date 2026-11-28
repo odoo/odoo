@@ -230,12 +230,12 @@ class TestAccountPayment(AccountPaymentCommon):
         )
 
     def test_prevent_unlink_apml_with_active_provider(self):
-        """ Deleting an account.payment.method.line that is related to a provider in 'test' or 'enabled' state
-        should raise an error.
         """
-        self.assertFalse(self.dummy_provider.is_live)
-        self.dummy_provider.module_state = "installed"
-        with self.assertRaises(UserError):
+        Deleting an account.payment.method.line that has pending transactions should raise errors.
+        """
+        self.provider.support_manual_capture = 'partial'
+        self._create_transaction(flow='direct', state='authorized')
+        with self.assertRaisesRegex(UserError, "You can't delete a payment method having pending transactions."):
             self.dummy_provider.journal_id.inbound_payment_method_line_ids.unlink()
 
     def test_provider_journal_assignation(self):

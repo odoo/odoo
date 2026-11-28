@@ -60,17 +60,16 @@ class AccountPaymentMethodLine(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_installed_payment_provider(self):
-        """Ensure we don't remove an account.payment.method.line that is linked to an installed
-        provider.
         """
-        if active_providers := self.payment_provider_id.filtered(
-            lambda p: p.module_state != "to remove"
-        ):
-            raise UserError(_(
-                "You can't delete a payment method that is linked to an installed provider."
-                "\nLinked providers(s): %s",
-                ', '.join(a.display_name for a in active_providers),
-            ))
+        Ensure we don't remove an account.payment.method.line linked to a provider with pending
+        transactions.
+        """
+        blocking_provider = self.env["payment.transaction"].sudo()._read_group(
+            [('state', 'in', ['pending', 'authorized']), ('provider_id', 'in', self.payment_provider_id.ids)],
+            ['provider_id'],
+        )
+        if self.filtered(lambda l: l.payment_provider_id in [p for p, in blocking_provider]):
+            raise UserError(_("You can't delete a payment method having pending transactions."))
 
     def action_open_provider_form(self):
         self.ensure_one()
