@@ -435,6 +435,10 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                     moves += uuid_move.get('move', self.env['account.move'])
             except Exception as e:  # noqa: BLE001
                 _logger.error('Error while processing the Peppol document with uuid %s: %s', uuid, e)
+            if uuid not in processed_uuids and not attachment.res_id:
+                # The document is not acknowledged and will be received again:
+                # don't leave an orphan attachment behind on each run.
+                attachment.unlink()
         return processed_uuids, moves
 
     def _peppol_post_process_new_messages(self, moves):

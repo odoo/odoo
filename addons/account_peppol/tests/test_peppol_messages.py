@@ -396,6 +396,18 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
                 'move_type': 'in_invoice',
             }])
 
+    def test_receive_without_journal_no_orphan_attachment(self):
+        # without a peppol journal, the document is not imported nor acknowledged:
+        # it is received again on each run and must not leave an attachment behind
+        self.env.company.peppol_purchase_journal_id = False
+        attachment_domain = [('name', '=', 'test_incoming.xml'), ('res_model', '=', False)]
+        attachments_before = self.env['ir.attachment'].search_count(attachment_domain)
+        for _run in range(2):
+            self.env['account_edi_proxy_client.user']._cron_peppol_get_new_documents()
+
+        self.assertFalse(self.env['account.move'].search([('peppol_message_uuid', '=', FAKE_UUID[1])]))
+        self.assertEqual(self.env['ir.attachment'].search_count(attachment_domain), attachments_before)
+
     def test_received_bill_notification(self):
         peppol_purchase_journal = self.env.company.peppol_purchase_journal_id
         peppol_purchase_journal.incoming_einvoice_notification_email = 'oops_another_bill@example.com'
