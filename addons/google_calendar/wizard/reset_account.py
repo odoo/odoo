@@ -36,7 +36,11 @@ class ResetGoogleAccount(models.TransientModel):
 
         if self.delete_policy in ('delete_google', 'delete_both'):
             with google_calendar_token(self.user_id) as token:
-                for event in events:
+                # Deleting the recurring event removes all its instances on Google: one request
+                # per recurrence instead of one per occurrence, which hits the API rate limits.
+                for recurrence in recurrences:
+                    google.delete(recurrence.google_id, token=token)
+                for event in events.filtered(lambda e: e.recurrence_id not in recurrences):
                     google.delete(event.google_id, token=token)
 
         # Delete events according to the selected policy. If the deletion is only in

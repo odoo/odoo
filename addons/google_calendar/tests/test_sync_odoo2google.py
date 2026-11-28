@@ -13,7 +13,7 @@ from odoo.addons.google_calendar.tests.test_sync_common import TestSyncGoogle, p
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.tests.common import users, warmup
 from odoo.tests import tagged
-from odoo import tools
+from odoo import Command, tools
 
 from .test_token_access import TestTokenAccess
 
@@ -602,6 +602,42 @@ class TestSyncOdoo2Google(TestSyncGoogle):
             'reminders': {'overrides': [], 'useDefault': False},
             'transparency': 'opaque',
         }, timeout=3)
+
+    @patch_api
+    @patch.object(GoogleCalendarService, 'delete')
+    def test_reset_account_deletes_recurrence_once_on_google(self, mock_delete):
+        self.env['calendar.event'].create({
+            'name': "Single",
+            'start': datetime(2023, 6, 1, 10, 0),
+            'stop': datetime(2023, 6, 1, 11, 0),
+            'user_id': self.organizer_user.id,
+            'google_id': 'single_event',
+            'need_sync': False,
+        })
+        occurrences = self.env['calendar.event'].create([{
+            'name': "Yearly",
+            'start': datetime(year, 6, 15, 10, 0),
+            'stop': datetime(year, 6, 15, 11, 0),
+            'user_id': self.organizer_user.id,
+            'google_id': f'yearly_master_{year}0615T080000Z',
+            'need_sync': False,
+        } for year in range(2023, 2028)])
+        self.env['calendar.recurrence'].create({
+            'google_id': 'yearly_master',
+            'rrule': 'FREQ=YEARLY;COUNT=5',
+            'base_event_id': occurrences[0].id,
+            'calendar_event_ids': [Command.set(occurrences.ids)],
+            'need_sync': False,
+        })
+
+        self.env['google.calendar.account.reset'].create({
+            'user_id': self.organizer_user.id,
+            'delete_policy': 'delete_google',
+            'sync_policy': 'new',
+        }).reset_account()
+
+        deleted_google_ids = sorted(call.args[0] for call in mock_delete.call_args_list)
+        self.assertEqual(deleted_google_ids, ['single_event', 'yearly_master'])
 
     @patch_api
     def test_recurrence_delete_single_events(self):
