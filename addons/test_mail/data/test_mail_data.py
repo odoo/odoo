@@ -1449,3 +1449,407 @@ JVBERi0xLjEKJcKlwrHDqwoKMSAwIG9iagogIDw8IC9UeXBlIC9DYXRhbG9nCiAgICAgL1BhZ2VzIDIg
 
 ------=_Part_4200734_24778174.1344608186754--
 """
+
+_GIF_1PX = 'R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'
+_PNG_1PX = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=='
+
+# multipart/mixed
+# ├── text/plain
+# └── multipart/related (attachment)
+#     ├── text/html
+#     └── image/gif
+MAIL_MULTIPART_ATTACHED_CONTAINER = """\
+From: {email_from}
+To: {to}
+Subject: {subject}
+MIME-Version: 1.0
+Message-ID: <attached-container@test.example.com>
+Content-Type: multipart/mixed; boundary="mx"
+
+--mx
+Content-Type: text/plain; charset="UTF-8"
+
+Outer body.
+--mx
+Content-Type: multipart/related; boundary="rl"; type="text/html"
+Content-Disposition: attachment; filename="archive.mht"
+
+--rl
+Content-Type: text/html
+
+<p>Archived page content.</p>
+--rl
+Content-Type: image/gif; name="inner.gif"
+Content-Transfer-Encoding: base64
+
+R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
+--rl--
+--mx--"""
+
+# multipart/encrypted (PGP protocol)
+# ├── application/pgp-encrypted
+# └── application/octet-stream
+MAIL_MULTIPART_ENCRYPTED = """\
+From: {email_from}
+To: {to}
+Subject: {subject}
+MIME-Version: 1.0
+Message-ID: <encrypted@test.example.com>
+Content-Type: multipart/encrypted; protocol="application/pgp-encrypted";
+ boundary="enc-boundary"
+
+--enc-boundary
+Content-Type: application/pgp-encrypted
+Content-Description: PGP/MIME version identification
+
+Version: 1
+
+--enc-boundary
+Content-Type: application/octet-stream; name="encrypted.asc"
+Content-Description: OpenPGP encrypted message
+Content-Disposition: inline; filename="encrypted.asc"
+
+-----BEGIN PGP MESSAGE-----
+
+hQEMA0RcS3JnotReallyEncryptedPayload==
+-----END PGP MESSAGE-----
+--enc-boundary--"""
+
+# multipart/encrypted (PGP protocol)
+# ├── application/pgp-encrypted
+# └── multipart/mixed
+#     ├── text/plain
+#     └── application/octet-stream (attachment)
+MAIL_MULTIPART_ENCRYPTED_INVALID = """\
+From: {email_from}
+To: {to}
+Subject: {subject}
+MIME-Version: 1.0
+Message-ID: <encrypted-invalid@test.example.com>
+Content-Type: multipart/encrypted; protocol="application/pgp-encrypted";
+ boundary="ienc-boundary"
+
+--ienc-boundary
+Content-Type: application/pgp-encrypted
+
+Version: 1
+
+--ienc-boundary
+Content-Type: multipart/mixed; boundary="ienc-inner"
+
+--ienc-inner
+Content-Type: text/plain; charset="UTF-8"
+
+Not an encrypted payload.
+--ienc-inner
+Content-Type: application/octet-stream; name="blob.bin"
+Content-Disposition: attachment; filename="blob.bin"
+
+QUJD
+--ienc-inner--
+--ienc-boundary--"""
+
+# multipart/alternative
+# ├── text/html
+# └── text/plain
+MAIL_MULTIPART_ALTERNATIVE_HTML_PLAIN = """\
+From: {email_from}
+To: {to}
+Subject: {subject}
+MIME-Version: 1.0
+Content-Type: multipart/alternative; boundary="alt"
+
+--alt
+Content-Type: text/html; charset="utf-8"
+
+<p>First HTML variant.</p>
+--alt
+Content-Type: text/plain; charset="utf-8"
+
+Second plain variant.
+--alt--"""
+
+# multipart/related (start: the second part)
+# ├── image/png (Content-ID, filename)
+# └── text/html (attachment)
+MAIL_MULTIPART_RELATED_ATTACHED_ROOT = """\
+From: {email_from}
+To: {to}
+Subject: {subject}
+MIME-Version: 1.0
+Content-Type: multipart/related; boundary="rel"; start="<body@x>"; type="text/html"
+
+--rel
+Content-Type: image/png; name="image.png"
+Content-ID: <image@x>
+Content-Transfer-Encoding: base64
+
+__PNG__
+--rel
+Content-Type: text/html; name="body.html"
+Content-ID: <body@x>
+Content-Disposition: attachment; filename="body.html"
+
+<p>Attached root is the body.</p>
+--rel--""".replace('__PNG__', _PNG_1PX)
+
+MAIL_TOP_LEVEL_TEXT_WITH_FILENAME = """\
+From: {email_from}
+To: {to}
+Subject: {subject}
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: {disposition}; filename="note.txt"
+
+Root body text."""
+
+# multipart/mixed (attachment)
+# ├── text/plain
+# └── application/pdf (attachment)
+MAIL_TOP_LEVEL_MULTIPART_ATTACHMENT_DISPOSITION = """\
+From: {email_from}
+To: {to}
+Subject: {subject}
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="root"
+Content-Disposition: attachment; filename="message.mime"
+
+--root
+Content-Type: text/plain; charset="utf-8"
+
+Visible root message body.
+--root
+Content-Type: application/pdf; name="invoice.pdf"
+Content-Disposition: attachment; filename="invoice.pdf"
+Content-Transfer-Encoding: base64
+
+JVBERi0xLjEK
+--root--"""
+
+# multipart/alternative
+# ├── multipart/related
+# │   ├── text/html
+# │   ├── image/png (filename)
+# │   └── application/pdf (attachment)
+# └── text/html
+MAIL_MULTIPART_ALTERNATIVE_RELATED_CLASSIFICATION = """\
+From: {email_from}
+To: {to}
+Subject: {subject}
+MIME-Version: 1.0
+Content-Type: multipart/alternative; boundary="alternative"
+
+--alternative
+Content-Type: multipart/related; boundary="related"
+
+--related
+Content-Type: text/html
+
+<p>Discarded body.</p>
+--related
+Content-Type: image/png; name="discarded.png"
+Content-Transfer-Encoding: base64
+
+__PNG__
+--related
+Content-Type: application/pdf; name="invoice.pdf"
+Content-Disposition: attachment; filename="invoice.pdf"
+Content-Transfer-Encoding: base64
+
+JVBERi0xLjEK
+--related--
+--alternative
+Content-Type: text/html
+
+<p>Selected body.</p>
+--alternative--""".replace('__PNG__', _PNG_1PX)
+
+# multipart/mixed
+# ├── text/plain
+# └── (no Content-Type)
+MAIL_MULTIPART_PART_WITHOUT_CONTENT_TYPE = """\
+From: {email_from}
+To: {to}
+Subject: {subject}
+MIME-Version: 1.0
+Message-ID: {msg_id}
+Content-Type: multipart/mixed; boundary="mx"
+
+--mx
+Content-Type: text/plain; charset="UTF-8"
+
+Typed body.
+--mx
+Content-Transfer-Encoding: base64
+
+/9j/AA==
+--mx--"""
+
+# multipart/mixed
+# ├── text/plain
+# └── message/rfc822 (attachment)
+#     └── multipart/mixed
+#         ├── text/plain
+#         └── application/pdf (attachment)
+MAIL_EMBEDDED_EMAIL_WITH_ATTACHMENT = """\
+From: {email_from}
+To: {to}
+Subject: {subject}
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="out"
+
+--out
+Content-Type: text/plain; charset="UTF-8"
+
+Outer body.
+--out
+Content-Type: message/rfc822
+Content-Disposition: attachment; filename="forwarded.eml"
+
+From: vendor@test.example.com
+Subject: Your invoice
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="in"
+
+--in
+Content-Type: text/plain; charset="UTF-8"
+
+Inner body.
+--in
+Content-Type: application/pdf; name="invoice.pdf"
+Content-Disposition: attachment; filename="invoice.pdf"
+Content-Transfer-Encoding: base64
+
+JVBERi0xLjEK
+--in--
+--out--"""
+
+# multipart/mixed
+# ├── text/plain
+# ├── text/plain (attachment)
+# └── message/rfc822
+#     └── text/plain
+MAIL_BOUNCE_WITH_TRAILING_PARTS = """\
+From: MAILER-DAEMON@example.com
+To: {to}
+Subject: {subject}
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="bounce"
+
+--bounce
+Content-Type: text/plain
+
+Delivery failed for the requested recipient.
+--bounce
+Content-Type: text/plain; name="diagnostic.txt"
+Content-Disposition: attachment; filename="diagnostic.txt"
+
+Diagnostic details.
+--bounce
+Content-Type: message/rfc822
+
+From: sender@example.com
+To: recipient@example.com
+Subject: Original message
+Content-Type: text/plain
+
+Original message body.
+--bounce--"""
+
+# multipart/digest
+# ├── message (no Content-Type)
+# └── message (no Content-Type)
+MAIL_MULTIPART_DIGEST = """\
+From: {email_from}
+To: {to}
+Subject: {subject}
+MIME-Version: 1.0
+Message-ID: <digest@test.example.com>
+Content-Type: multipart/digest; boundary="dg"
+
+--dg
+
+Message-ID: <inner1@test.example.com>
+From: alice@test.example.com
+Subject: First bundled
+
+First inner digest body.
+--dg
+
+Message-ID: <inner2@test.example.com>
+From: bob@test.example.com
+Subject: Second bundled
+
+Second inner digest body.
+--dg--"""
+
+# multipart/mixed
+# ├── multipart/alternative
+# │   ├── text/plain
+# │   └── multipart/related
+# │       ├── text/html
+# │       └── image/gif (Content-ID, filename)
+# ├── message/rfc822 (attachment)
+# │   └── text/plain
+# └── multipart/signed
+#     ├── application/pdf (attachment)
+#     └── application/pgp-signature (attachment)
+MAIL_MULTIPART_DEEP_NEST = """\
+From: {email_from}
+To: {to}
+Subject: {subject}
+MIME-Version: 1.0
+Message-ID: <deepnest@test.example.com>
+Content-Type: multipart/mixed; boundary="out"
+
+--out
+Content-Type: multipart/alternative; boundary="alt"
+
+--alt
+Content-Type: text/plain; charset="UTF-8"
+
+Plain fallback text that must not appear in the body.
+--alt
+Content-Type: multipart/related; boundary="rel"; type="text/html"
+
+--rel
+Content-Type: text/html; charset="UTF-8"
+
+<p>Rich related html <img src="cid:logo@nest"> body.</p>
+--rel
+Content-Type: image/gif; name="logo.gif"
+Content-Transfer-Encoding: base64
+Content-ID: <logo@nest>
+Content-Disposition: inline; filename="logo.gif"
+
+__GIF__
+--rel--
+--alt--
+--out
+Content-Type: message/rfc822; name="attached.eml"
+Content-Disposition: attachment; filename="attached.eml"
+
+Subject: Inner mail
+From: inner@test.example.com
+Content-Type: text/plain
+
+Inner encapsulated body that must not leak into the outer body.
+--out
+Content-Type: multipart/signed; protocol="application/pgp-signature";
+ micalg="pgp-sha256"; boundary="sig"
+
+--sig
+Content-Type: application/pdf; name="contract.pdf"
+Content-Disposition: attachment; filename="contract.pdf"
+Content-Transfer-Encoding: base64
+
+JVBERi0xLjEK
+--sig
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+notArealSignature
+-----END PGP SIGNATURE-----
+--sig--
+--out--""".replace('__GIF__', _GIF_1PX)
