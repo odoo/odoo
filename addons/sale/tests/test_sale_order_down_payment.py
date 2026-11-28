@@ -1188,3 +1188,40 @@ class TestSaleOrderDownPayment(TestSaleCommon):
         final_invoice = self.env["account.move"].browse(action["res_id"])
 
         self.assertEqual(final_invoice.amount_total, 50.0)
+
+    def test_downpayment_invoiced_qty_changes_despite_exchange_rate_change(self):
+        """Tests if the invoiced qty field of the down payment SOL changes properly
+        when enough time has passed between the down payment invoice and final invoice
+        to have a different currency exchange rate at those two points in time
+        """
+
+        # create the differences in exchange rate
+        self.env["res.currency.rate"].create([
+            {
+                "name": "2026-01-01",
+                "rate": 0.5,
+                "currency_id": self.other_currency.id,
+            }, {
+                "name": "2026-11-01",
+                "rate": 0.9,
+                "currency_id": self.other_currency.id,
+            }
+        ])
+        self.sale_order.currency_id = self.other_currency.id
+
+        self.make_downpayment()
+        so_dp_line = self.sale_order.order_line.filtered(lambda l: l.is_downpayment and not l.display_type)
+
+        dp_invoice = self.sale_order.invoice_ids[0]
+        dp_invoice.invoice_date = "2026-05-05"
+        dp_invoice.action_post()
+        dp_invoice_dp_line = dp_invoice.invoice_line_ids
+        self.assertEqual(dp_invoice_dp_line.currency_rate, 0.5)
+
+        final_invoice = self.sale_order._create_invoices(final=True)
+        final_invoice.invoice_date = "2026-11-02"
+        final_invoice.action_post()
+        final_invoice_dp_line = final_invoice.invoice_line_ids.filtered(lambda l: l.is_downpayment and not l.display_type)
+
+        self.assertNotEqual(dp_invoice_dp_line.currency_rate, final_invoice_dp_line.currency_rate)
+        self.assertFalse(so_dp_line.qty_invoiced)
