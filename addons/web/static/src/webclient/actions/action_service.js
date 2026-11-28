@@ -254,7 +254,9 @@ export function makeActionManager(env, router = _router) {
             if (action.id === "menu" || (action.type === "ir.actions.client" && !displayName)) {
                 continue;
             }
-            const actionInfo = pick(state, "action", "model", "resId");
+            // the same action can be stacked with several active_id values (e.g. a hierarchy
+            // browsed level by level): each level needs its own cache entry
+            const actionInfo = pick(state, "action", "model", "resId", "active_id");
             const key = JSON.stringify(actionInfo);
             keys.push(key);
             if (displayName) {

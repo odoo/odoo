@@ -1574,6 +1574,39 @@ describe(`new urls`, () => {
             "Update the state without updating URL, nextState: actionStack,action",
         ]);
     });
+
+    test(`back keeps apart the names of an action stacked with several active_id values`, async () => {
+        await mountWebClient();
+        await getService("action").doAction(1);
+        await animationFrame();
+        for (const activeId of [1, 2, 3, 4]) {
+            await getService("action").doAction({
+                id: 4,
+                type: "ir.actions.act_window",
+                res_model: "partner",
+                views: [[1, "kanban"]],
+                context: { active_id: activeId },
+                display_name: `Folder ${activeId}`,
+            });
+            await animationFrame();
+        }
+        expect(queryAllTexts`.breadcrumb-item, .o_breadcrumb .active`).toEqual([
+            "",
+            "Folder 2",
+            "Folder 3",
+            "Folder 4",
+        ]);
+
+        browser.history.back(); // Click on back button
+        await animationFrame();
+        // the current level is reloaded from its action, so it shows the action's name
+        expect(queryAllTexts`.breadcrumb-item, .o_breadcrumb .active`).toEqual([
+            "",
+            "Folder 1",
+            "Folder 2",
+            "Partners Action 4",
+        ]);
+    });
 });
 
 describe(`legacy urls`, () => {
