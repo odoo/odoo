@@ -14,7 +14,7 @@ PDP_identifier_re = re.compile(r'^([0-9]{9})(_[0-9]{14})?(_.+)?$')
 _logger = logging.getLogger(__name__)
 
 ENDPOINT = 'https://pdp.odoo.com'
-TEST_ENDPOINT = 'https://pdp.test.odoo.com'
+TEST_ENDPOINT = 'http://localhost:8081'
 
 
 class ResCompany(models.Model):
