@@ -10,18 +10,7 @@ patch(ControlButtons.prototype, {
             context["search_default_partner_id"] = this.partner.id;
         }
 
-        let domain = [
-            ["state", "!=", "cancel"],
-            ["invoice_status", "!=", "invoiced"],
-            ["currency_id", "=", this.pos.currency.id],
-            // A down payment still has to be deducted when settling the order, and
-            // amount_unpaid is floored at 0 so zero/negative orders must be kept too
-            "|",
-            "|",
-            ["amount_unpaid", ">", 0],
-            ["amount_total", "<=", 0],
-            ["order_line.is_downpayment", "=", true],
-        ];
+        let domain = [...this.pos.config._sale_order_payable_domain];
 
         const saleOrderIds = this.pos
             .getOrder()

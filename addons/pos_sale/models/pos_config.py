@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, Command
+from odoo import api, fields, models, Command
 
 
 class PosConfig(models.Model):
@@ -30,6 +30,15 @@ class PosConfig(models.Model):
         default=_get_default_sol_product,
         help="This product will be used as default product on productless SOLs."
     )
+
+    @api.model
+    def _load_pos_data_read(self, records, config):
+        read_records = super()._load_pos_data_read(records, config)
+        if read_records:
+            read_records[0]['_sale_order_payable_domain'] = list(
+                self.env['sale.order']._get_pos_payable_domain(config)
+            )
+        return read_records
 
     def _get_special_products(self):
         res = super()._get_special_products()

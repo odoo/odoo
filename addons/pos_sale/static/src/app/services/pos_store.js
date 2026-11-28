@@ -1,3 +1,4 @@
+import { effect, untrack } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { parseFloat } from "@web/views/fields/parsers";
 import { SelectionPopup } from "@point_of_sale/app/components/popups/selection_popup/selection_popup";
@@ -8,13 +9,81 @@ import { enhancedButtons, DECIMAL } from "@point_of_sale/app/components/numpad/n
 import { patch } from "@web/core/utils/patch";
 import { PosStore } from "@point_of_sale/app/services/pos_store";
 import { accountTaxHelpers } from "@account/helpers/account_tax";
+import { location } from "@web/core/browser/browser";
 
 patch(PosStore.prototype, {
+    async setup() {
+        const url = new URL(location.href);
+        const soId = parseInt(url.searchParams.get("pay_sale_order")) || false;
+        if (soId) {
+            url.searchParams.delete("pay_sale_order");
+            window.history.replaceState(window.history.state, "", url);
+        }
+        await super.setup(...arguments);
+        if (soId) {
+            this.payWhenLoggedIn(soId);
+        }
+    },
+    payWhenLoggedIn(soId) {
+        let done = false;
+        let dispose = null;
+        // The login screens set the cashier before they navigate away: wait for both.
+        dispose = effect(() => {
+            const screen = this.router.currentScreen();
+            if (
+                done ||
+                !this.accessRight.cashier ||
+                ["LoginScreen", "SaverScreen"].includes(screen)
+            ) {
+                return;
+            }
+            done = true;
+            dispose?.();
+            untrack(() => this.payPendingSaleOrder(soId));
+        });
+        if (done) {
+            dispose();
+        }
+    },
+    async payPendingSaleOrder(soId) {
+        // resume a draft order that already settles this sale order instead of settling it twice
+        const existingOrder = this.getOpenOrders().find((order) =>
+            order.lines.some(
+                (line) => line.sale_order_origin_id?.id === soId && line.sale_order_line_id
+            )
+        );
+        if (existingOrder) {
+            this.setOrder(existingOrder);
+        } else {
+            let saleOrder;
+            this.ui.block();
+            try {
+                saleOrder = await this._getSaleOrder(soId);
+            } catch (error) {
+                console.error(error);
+                this.notification.add(_t("Could not load the sale order for payment."), {
+                    type: "danger",
+                });
+                return;
+            } finally {
+                this.ui.unblock();
+            }
+            // don't mix the sale order into a restored draft order
+            if (!this.getOrder() || this.getOrder().lines.length) {
+                this.addNewOrder();
+            }
+            // not blocked: settleSO may ask the cashier (pos_sale_stock's SN/Lots dialog)
+            await this._processSaleOrder(saleOrder, { settle: true });
+        }
+        if (this.getOrder().lines.length) {
+            await this.pay();
+        }
+    },
     async onClickSaleOrder(clickedOrderId) {
         const sale_order = await this._getSaleOrder(clickedOrderId);
         await this._processSaleOrder(sale_order);
     },
-    async _processSaleOrder(sale_order) {
+    async _processSaleOrder(sale_order, { settle = false } = {}) {
         const currentSaleOrigin = this.getOrder()
             .getOrderlines()
             .find((line) => line.sale_order_origin_id)?.sale_order_origin_id;
@@ -43,22 +112,24 @@ patch(PosStore.prototype, {
             fiscal_position_id: orderFiscalPos,
         });
 
-        const selectedOption = await makeAwaitable(this.dialog, SelectionPopup, {
-            title: _t("What do you want to do?"),
-            list: [
-                { id: "0", label: _t("Settle the order"), item: "settle" },
-                {
-                    id: "1",
-                    label: _t("Apply a down payment (percentage)"),
-                    item: "dpPercentage",
-                },
-                {
-                    id: "2",
-                    label: _t("Apply a down payment (fixed amount)"),
-                    item: "dpAmount",
-                },
-            ],
-        });
+        const selectedOption = settle
+            ? "settle"
+            : await makeAwaitable(this.dialog, SelectionPopup, {
+                  title: _t("What do you want to do?"),
+                  list: [
+                      { id: "0", label: _t("Settle the order"), item: "settle" },
+                      {
+                          id: "1",
+                          label: _t("Apply a down payment (percentage)"),
+                          item: "dpPercentage",
+                      },
+                      {
+                          id: "2",
+                          label: _t("Apply a down payment (fixed amount)"),
+                          item: "dpAmount",
+                      },
+                  ],
+              });
         if (!selectedOption) {
             return;
         }

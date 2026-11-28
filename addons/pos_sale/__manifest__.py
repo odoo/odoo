@@ -26,6 +26,10 @@ This module adds a custom Sales Team for the Point of Sale. This enables you to 
     'assets': {
         'point_of_sale._assets_pos': [
             'pos_sale/static/src/**/*',
+            ('remove', 'pos_sale/static/src/backend/**/*'),
+        ],
+        'web.assets_backend': [
+            'pos_sale/static/src/backend/**/*',
         ],
         'web.assets_tests': [
             'pos_sale/static/tests/tours/**/*',
