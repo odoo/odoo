@@ -1,6 +1,7 @@
 import odoo
 
 from odoo import fields, tools
+from odoo.fields import Command
 from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 
 
@@ -81,6 +82,34 @@ class TestPoSOtherCurrencyConfig(TestPoSCommon):
                 debit += line.debit
                 credit += line.credit
             self.assertEqual(tools.float_compare(debit, credit, precision_rounding=self.other_currency_config.currency_id.rounding), 0)  # debit and credit should be equal
+
+    def test_customer_account_payment_converted(self):
+        """ A customer account payment of a PoS in another currency is moved to
+            the customer receivable at its value in the company currency.
+        """
+        pay_later_pm = self.env['pos.payment.method'].create({'name': 'Customer Account Other', 'type': 'pay_later'})
+        self.config.payment_method_ids = [Command.link(pay_later_pm.id)]
+        session = self.open_new_session()
+        order_data = self.create_ui_order_data(
+            [(self.product3, 1)],
+            customer=self.customer,
+            payments=[(pay_later_pm, 15.0)],
+        )
+        self.env['pos.order'].sync_from_ui([order_data])
+        session.close_session_from_ui({self.cash_pm2.id: 0})
+        self.assertEqual(session.state, 'closed')
+
+        customer_line = self.env['account.move.line'].search([
+            ('account_id', '=', self.c1_receivable.id),
+            ('partner_id', '=', self.customer.id),
+        ])
+        self.assertRecordValues(customer_line, [{
+            'balance': 30.0,
+            'amount_currency': 15.0,
+            'currency_id': self.other_currency.id,
+        }])
+        closing_receivable_lines = session.move_ids.line_ids.filtered(lambda line: line.display_type == 'payment_term')
+        self.assertTrue(all(closing_receivable_lines.mapped('reconciled')))
 
     def test_with_session_check_product_cost(self):
         def find_by(list_of_dicts, key, value):
