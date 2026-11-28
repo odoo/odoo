@@ -46,9 +46,8 @@ export class ProductTemplateAccounting extends Base {
 
     // Port of _get_product_price on product.pricelist.
     //
-    // Anything related to UOM can be ignored, the POS will always use
-    // the default UOM set on the product and the user cannot change
-    // it.
+    // The PoS always sells in the product UoM, so only rules without
+    // a UoM or with that UoM apply.
     //
     // Pricelist items do not have to be sorted. All
     // product.pricelist.item records are loaded with a search_read
@@ -87,18 +86,20 @@ export class ProductTemplateAccounting extends Base {
             return price;
         }
 
+        const uom = productTmpl.uom_id;
+
         let rule = null;
 
         // 1. Variant Rules
         if (product) {
             const productRules = pricelist.getRulesByProductId(product.id);
-            rule = pricelist.findBestRule(productRules, quantity);
+            rule = pricelist.findBestRule(productRules, quantity, uom);
         }
 
         // 2. Template Rules
         if (!rule) {
             const tmplRules = pricelist.getRulesByTmplId(productTmpl.id);
-            rule = pricelist.findBestRule(tmplRules, quantity);
+            rule = pricelist.findBestRule(tmplRules, quantity, uom);
         }
 
         // 3. Category Rules
@@ -107,7 +108,7 @@ export class ProductTemplateAccounting extends Base {
             if (categoryRulesIds.length > 0) {
                 const categoryRules =
                     this.models["product.pricelist.item"].readMany(categoryRulesIds);
-                rule = pricelist.findBestRule(categoryRules, quantity);
+                rule = pricelist.findBestRule(categoryRules, quantity, uom);
             }
         }
 
@@ -116,7 +117,7 @@ export class ProductTemplateAccounting extends Base {
             const globalRulesIds = pricelist.getGlobalRulesIds();
             if (globalRulesIds.length > 0) {
                 const globalRules = this.models["product.pricelist.item"].readMany(globalRulesIds);
-                rule = pricelist.findBestRule(globalRules, quantity);
+                rule = pricelist.findBestRule(globalRules, quantity, uom);
             }
         }
 

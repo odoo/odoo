@@ -90,10 +90,13 @@ export class ProductPricelist extends Base {
         }
     }
 
-    findBestRule(rules, quantity) {
+    findBestRule(rules, quantity, uom = false) {
         const now = DateTime.now();
         let bestRule = null;
         for (const rule of rules) {
+            if (rule.uom_id && rule.uom_id.id !== uom?.id) {
+                continue;
+            }
             if (rule.date_start && rule.date_start > now) {
                 continue;
             }
