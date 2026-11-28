@@ -384,6 +384,12 @@ class BaseString(Field[str | typing.Literal[False]]):
                                 translation_dictionary[closest_term] = {k: adapter(v) for k, v in translation_dictionary.pop(old_term).items()}
                             else:
                                 translation_dictionary[closest_term] = translation_dictionary.pop(old_term)
+                            if records.env.context.get('install_mode') and lang == 'en_US':
+                                # Let the module's catalog replace translations carried to a new term.
+                                carried = records.env.cr.cache.setdefault('fuzzy_translations', {})
+                                carried.setdefault((self.model_name, self.name, record.id), {})[closest_term] = (
+                                    dict(translation_dictionary[closest_term])
+                                )
             # pylint: disable=not-callable
             new_translations = {
                 l: self.translate(lambda term: translation_dictionary.get(term, {l: None})[l], cache_value)
