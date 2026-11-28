@@ -78,7 +78,7 @@
     <template id="report_deca">
         <t t-call="web.html_container" t-translation="off">
             <!-- pickings_data, kg_uom_id and m3_uom_id come from report.l10n_es_stock.report_deca -->
-            <!-- One DeCA per entry of pickings_data, i.e. per group of pickings sharing the same destination -->
+            <!-- One DeCA per entry of pickings_data, i.e. per group of pickings sharing the same destination and scheduled date -->
             <t t-foreach="pickings_data" t-as="picking_data">
                 <t t-set="should_compress_goods_rows" t-value="picking_data['should_compress_goods_rows']"/>
                 <t t-set="consignee_id" t-value="picking_data['consignee_id']"/>
@@ -118,6 +118,7 @@
                                         <span class="d-block fw-bold">Documento de Control Administrativo (DeCA)</span>
                                         <span class="d-block mt-1">Este transporte se rige por la Ley 15/2009, de 11 de noviembre, del contrato de transporte terrestre de mercancías, y por cualquier otra legislación española aplicable.</span>
                                         <span class="d-block mt-2 fw-bold">N.º de referencia <t t-out="picking_data['reference']"/></span>
+                                        <span class="d-block mt-1 fw-bold">Fecha de realización <t t-out="picking_data['scheduled_date'].strftime('%d/%m/%Y')"/></span>
                                     </td>
                                 </tr>
                                 <tr>
