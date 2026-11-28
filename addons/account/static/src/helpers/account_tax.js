@@ -2548,11 +2548,38 @@ export const accountTaxHelpers = {
             );
         }
 
-        return this.dispatch_taxes_into_new_base_lines(
+        const new_base_lines = this.dispatch_taxes_into_new_base_lines(
             base_lines,
             company,
             dispatch_exclude_function.bind(this)
         );
+        this.remove_price_included_removed_taxes_from_price_unit(new_base_lines);
+        return new_base_lines;
+    },
+
+    /**
+     * [!] Mirror of the same method in account_tax.py.
+     * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
+     */
+    remove_price_included_removed_taxes_from_price_unit(base_lines) {
+        for (const base_line of base_lines) {
+            let removed_included_amount = 0.0;
+            for (const removed_base_line of base_line.removed_taxes_data_base_lines) {
+                const removed_tax_data = removed_base_line._removed_tax_data;
+                if (removed_tax_data.tax.price_include) {
+                    removed_included_amount += removed_tax_data.raw_tax_amount_currency;
+                }
+                for (const tax_data of removed_base_line.tax_details.taxes_data) {
+                    if (tax_data.tax.price_include) {
+                        removed_included_amount += tax_data.raw_tax_amount_currency;
+                    }
+                }
+            }
+            const quantity_after_discount = base_line.quantity * (1 - base_line.discount / 100.0);
+            if (removed_included_amount && quantity_after_discount) {
+                base_line.price_unit -= removed_included_amount / quantity_after_discount;
+            }
+        }
     },
 
     // -------------------------------------------------------------------------
@@ -2597,11 +2624,13 @@ export const accountTaxHelpers = {
                 (exclude_function && exclude_function(base_line, tax_data))
             );
         }
-        return this.dispatch_taxes_into_new_base_lines(
+        const new_base_lines = this.dispatch_taxes_into_new_base_lines(
             base_lines,
             company,
             dispatch_exclude_function.bind(this)
         );
+        this.remove_price_included_removed_taxes_from_price_unit(new_base_lines);
+        return new_base_lines;
     },
 
     /**

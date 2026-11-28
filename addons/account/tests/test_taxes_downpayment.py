@@ -2036,6 +2036,65 @@ class TestTaxesDownPayment(TestTaxCommon):
                 self.assert_down_payment(document, amount_type, amount, {'tax_totals': expected_values})
         self._run_js_tests()
 
+    def test_taxes_price_included_fixed_tax_affecting_vat_multiple_lines_generic_helpers(self):
+        """ The price-included fixed tax affects the base of the price-included VAT. The part of the VAT computed
+        on the fixed tax must also be removed from the price of the line.
+
+        132 = 100 untaxed + 10 fixed tax + 22 VAT (20 on the untaxed amount, 2 on the fixed tax).
+        """
+        tax1 = self.fixed_tax(10, price_include_override='tax_included', include_base_amount=True, sequence=1)
+        tax2 = self.percent_tax(20, price_include_override='tax_included', sequence=2)
+        document_params = self.init_document(lines=[
+            {'price_unit': 132.0, 'tax_ids': tax1 + tax2},
+            {'price_unit': -20.0},
+        ])
+        document = self.populate_document(document_params)
+        self.assert_down_payment(document, 'percent', 50.0, {
+            'tax_totals': {'total_amount_currency': 50.0},
+            'base_lines_tax_details': [
+                {
+                    'total_excluded': 50.0,
+                    'total_excluded_currency': 50.0,
+                    'total_included': 60.0,
+                    'total_included_currency': 60.0,
+                    'delta_total_excluded': 0.0,
+                    'delta_total_excluded_currency': 0.0,
+                    'manual_total_excluded': 50.0,
+                    'manual_total_excluded_currency': 50.0,
+                    'manual_tax_amounts': {
+                        str(tax2.id): {
+                            'tax_amount': 10.0,
+                            'tax_amount_currency': 10.0,
+                            'base_amount': 50.0,
+                            'base_amount_currency': 50.0,
+                        },
+                    },
+                    'taxes_data': [
+                        {
+                            'tax_id': tax2.id,
+                            'tax_amount': 10.0,
+                            'tax_amount_currency': 10.0,
+                            'base_amount': 50.0,
+                            'base_amount_currency': 50.0,
+                        },
+                    ],
+                },
+                {
+                    'total_excluded': -10.0,
+                    'total_excluded_currency': -10.0,
+                    'total_included': -10.0,
+                    'total_included_currency': -10.0,
+                    'delta_total_excluded': 0.0,
+                    'delta_total_excluded_currency': 0.0,
+                    'manual_total_excluded': None,
+                    'manual_total_excluded_currency': None,
+                    'manual_tax_amounts': None,
+                    'taxes_data': [],
+                },
+            ],
+        }, soft_checking=True)
+        self._run_js_tests()
+
     def _test_no_taxes(self):
         document_params = self.init_document(lines=[
             {'price_unit': 35.0},

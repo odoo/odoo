@@ -3971,7 +3971,31 @@ class AccountTax(models.Model):
         def dispatch_exclude_function(base_line, tax_data):
             return not tax_data['tax']._can_be_discounted() or (exclude_function and exclude_function(base_line, tax_data))
 
-        return self._dispatch_taxes_into_new_base_lines(base_lines, company, dispatch_exclude_function)
+        new_base_lines = self._dispatch_taxes_into_new_base_lines(base_lines, company, dispatch_exclude_function)
+        self._remove_price_included_removed_taxes_from_price_unit(new_base_lines)
+        return new_base_lines
+
+    @api.model
+    def _remove_price_included_removed_taxes_from_price_unit(self, base_lines):
+        """ '_dispatch_taxes_into_new_base_lines' keeps the original 'price_unit' on the base lines. When some
+        price-included taxes have been removed (e.g. a price-included fixed tax), the 'price_unit' still contains
+        them. Since the global discount / down payment lines are computed from the 'price_unit', remove them from it.
+
+        [!] Mirror of the same method in account_tax.js.
+        PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
+        """
+        for base_line in base_lines:
+            removed_included_amount = 0.0
+            for removed_base_line in base_line['removed_taxes_data_base_lines']:
+                removed_tax_data = removed_base_line['_removed_tax_data']
+                if removed_tax_data['tax'].price_include:
+                    removed_included_amount += removed_tax_data['raw_tax_amount_currency']
+                for tax_data in removed_base_line['tax_details']['taxes_data']:
+                    if tax_data['tax'].price_include:
+                        removed_included_amount += tax_data['raw_tax_amount_currency']
+            quantity_after_discount = base_line['quantity'] * (1 - base_line['discount'] / 100.0)
+            if removed_included_amount and quantity_after_discount:
+                base_line['price_unit'] -= removed_included_amount / quantity_after_discount
 
     # -------------------------------------------------------------------------
     # GLOBAL DISCOUNT
@@ -4040,7 +4064,9 @@ class AccountTax(models.Model):
         def dispatch_exclude_function(base_line, tax_data):
             return not tax_data['tax']._can_be_discounted() or (exclude_function and exclude_function(base_line, tax_data))
 
-        return self._dispatch_taxes_into_new_base_lines(base_lines, company, dispatch_exclude_function)
+        new_base_lines = self._dispatch_taxes_into_new_base_lines(base_lines, company, dispatch_exclude_function)
+        self._remove_price_included_removed_taxes_from_price_unit(new_base_lines)
+        return new_base_lines
 
     @api.model
     def _prepare_down_payment_lines(
