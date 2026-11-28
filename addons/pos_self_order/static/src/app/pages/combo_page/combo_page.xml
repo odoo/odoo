@@ -3,7 +3,7 @@
     <t t-name="pos_self_order.ComboPage">
         <ProductInterface class="'o_self_combo_page'" productTemplate="this.props.productTemplate" goBack.bind="this.goBack">
             <t t-set-slot="content">
-                <div class="container o_self_container" t-att-class="{'o_self_combo_page_body': this.props.productTemplate.showProductImageInSelf, 'confirmation_container': this.state.showResume}">
+                <div class="container o_self_container o_self_combo_page_body" t-att-class="{'confirmation_container': this.state.showResume}">
                     <!-- Stepper -->
                     <div t-if="!this.state.showResume" class="stepper_container w-100 mt-2 mt-md-3 mb-4 mb-kiosk-p-5"  id="k-combo-scroll-target" >
                         <Stepper steps="this.comboChoices" selectedStep="this.selectedChoice" onStepClicked="(c)=>this.onChoiceClicked(c)" />
