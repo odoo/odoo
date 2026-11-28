@@ -93,6 +93,45 @@ class StockMoveLine(models.Model):
     quant_id = fields.Many2one('stock.quant', "Pick From", store=False)  # Dummy field for the detailed operation view
     picking_location_id = fields.Many2one(related='picking_id.location_id')
     picking_location_dest_id = fields.Many2one(related='picking_id.location_dest_id')
+    lot_note = fields.Html(
+        string="Description", compute="_compute_lot_note", inverse="_inverse_lot_note",
+        readonly=False, store=True)
+
+    @api.depends('lot_id', 'lot_name', 'product_id')
+    def _compute_lot_note(self):
+        lot_by_line = self._get_lot_by_line()
+        for line in self:
+            lot = lot_by_line[line]
+            line.lot_note = lot.note if lot else False
+
+    def _inverse_lot_note(self):
+        lot_by_line = self._get_lot_by_line()
+        for line in self:
+            lot = lot_by_line[line]
+            if lot and lot.note != line.lot_note:
+                lot.note = line.lot_note
+
+    def _get_lot_by_line(self):
+        lot_by_line = {line: line.lot_id for line in self}
+        lines_to_match = self.filtered(lambda ml: not ml.lot_id and ml.lot_name and ml.product_id)
+        if not lines_to_match:
+            return lot_by_line
+        lots = self.env['stock.lot'].search([
+            ('name', 'in', lines_to_match.mapped('lot_name')),
+            ('product_id', 'in', lines_to_match.product_id.ids),
+            ('company_id', 'in', lines_to_match.company_id.ids + [False]),
+        ])
+        lot_by_key = {}
+        for lot in lots:
+            lot_by_key.setdefault((lot.name, lot.product_id, lot.company_id), lot)
+        no_company = self.env['res.company']
+        for line in lines_to_match:
+            lot_by_line[line] = (
+                lot_by_key.get((line.lot_name, line.product_id, line.company_id))
+                or lot_by_key.get((line.lot_name, line.product_id, no_company))
+                or self.env['stock.lot']
+            )
+        return lot_by_line
 
     _free_reservation_index = models.Index("""(id, company_id, product_id, lot_id, location_id, owner_id, package_id)
         WHERE (state IS NULL OR state NOT IN ('cancel', 'done')) AND quantity_product_uom > 0 AND picked IS NOT TRUE""")
@@ -807,6 +846,8 @@ class StockMoveLine(models.Model):
             'name': self.lot_name,
             'product_id': self.product_id.id,
         }
+        if self.lot_note:
+            vals['note'] = self.lot_note
         if self.product_id.company_id and self.company_id in (self.product_id.company_id.all_child_ids | self.product_id.company_id):
             vals['company_id'] = self.company_id.id
         return vals
