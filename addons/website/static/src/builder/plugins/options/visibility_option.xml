@@ -83,6 +83,12 @@
 		            <BuilderSelectItem dataAttributeActionValue="''">Visible for Everyone</BuilderSelectItem>
 		        </BuilderSelect>
 		    </BuilderRow>
+		    <BuilderRow label.translate="Visible From" level="1" t-if="this.isActiveItem('visibility_conditional')" preview="false">
+		        <BuilderDateTimePicker type="'datetime'" dataAttributeAction="'visibilityFrom'"/>
+		    </BuilderRow>
+		    <BuilderRow label.translate="Visible Until" level="1" t-if="this.isActiveItem('visibility_conditional')" preview="false">
+		        <BuilderDateTimePicker type="'datetime'" dataAttributeAction="'visibilityUntil'"/>
+		    </BuilderRow>
 	    </t>
     </BuilderRow>
 </t>

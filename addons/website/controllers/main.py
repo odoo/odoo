@@ -1547,9 +1547,16 @@ class Website(Home):
             }
             if group_el.attrib['id'] == 'custom':
                 for page in self.env.website._get_website_pages(domain=[('is_new_page_template', '=', True)]):
-                    html_tree = html.fromstring(self.env.website.with_context(inherit_branding=False, lang=website_lang)._render_template(
-                        page.key,
-                    ))
+                    # _render_template would by default drop elements set to
+                    # be invisible at the current date and time. Setting the
+                    # flag `keep_visibility_datetime_range` prevents it, such
+                    # that the user can create templates with elements that are
+                    # currently invisible but will appear later.
+                    html_tree = html.fromstring(self.env.website.with_context(
+                        inherit_branding=False,
+                        keep_visibility_datetime_range=True,
+                        lang=website_lang,
+                    )._render_template(page.key))
                     wrap_el = html_tree.xpath('//div[@id="wrap"]')[0]
                     group['templates'].append({
                         'key': page.key,
