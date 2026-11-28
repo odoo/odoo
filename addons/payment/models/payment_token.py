@@ -2,6 +2,7 @@
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools.misc import format_date
 
 
 class PaymentToken(models.Model):
@@ -169,7 +170,7 @@ class PaymentToken(models.Model):
 
         padding_length = max_length - len(self.payment_details or '')
         if not self.payment_details:
-            create_date_str = self.create_date.strftime('%Y/%m/%d')
+            create_date_str = format_date(self.env, self.create_date)
             display_name = _("Payment details saved on %(date)s", date=create_date_str)
         elif padding_length >= 2:  # Enough room for padding.
             padding = '•' * min(padding_length - 1, 4) + ' ' if should_pad else ''
