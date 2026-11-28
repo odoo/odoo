@@ -3,7 +3,7 @@ from lxml import html
 from itertools import product
 
 from odoo.addons.mail.tests.common import MailCommon
-from odoo.exceptions import UserError
+from odoo.exceptions import AccessError, UserError
 from odoo.tests import HttpCase, new_test_user, users
 from odoo.tools.misc import hash_sign
 
@@ -210,3 +210,20 @@ class TestDiscussChannelInvite(HttpCase, MailCommon):
         self.assertEqual(response.status_code, 404)
         response = self.url_open(new_url)
         self.assertEqual(response.status_code, 200)
+
+    def test_08_reset_invite_link_as_channel_owner_or_admin(self):
+        owner, admin, member = (
+            new_test_user(self.env, login, groups="base.group_user")
+            for login in ("owner_user", "admin_user", "member_user")
+        )
+        channel = self.env["discuss.channel"].create({"name": "Reset link", "group_public_id": False})
+        channel._add_members(users=owner | admin | member)
+        member_by_partner = channel.channel_member_ids.grouped("partner_id")
+        member_by_partner[owner.partner_id].channel_role = "owner"
+        member_by_partner[admin.partner_id].channel_role = "admin"
+        for user in owner | admin:
+            old_uuid = channel.uuid
+            channel.with_user(user).action_reset_invitation_uuid()
+            self.assertNotEqual(channel.uuid, old_uuid)
+        with self.assertRaisesRegex(AccessError, "Only channel owners or administrators"):
+            channel.with_user(member).action_reset_invitation_uuid()
