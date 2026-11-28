@@ -1,4 +1,5 @@
-import { Component } from "@odoo/owl";
+import { Component, useExternalListener, useRef } from "@odoo/owl";
+import { isIOS, isIosApp, isMacOS } from "@web/core/browser/feature_detection";
 
 export class CustomGroupByItem extends Component {
     static template = "web.CustomGroupByItem";
@@ -7,15 +8,42 @@ export class CustomGroupByItem extends Component {
         onAddCustomGroup: Function,
     };
 
+    setup() {
+        this.selectRef = useRef("selectElement");
+        this.isIOSOrMacOS = isIosApp() || isIOS() || isMacOS();
+        if (!this.isIOSOrMacOS) {
+            useExternalListener(window, "click", (ev) => {
+                const select = this.selectRef.el;
+                if (select && !select.contains(ev.target)) {
+                    select.value = "";
+                }
+            });
+        }
+    }
+
     get choices() {
         return this.props.fields.map((f) => ({ label: f.string, value: f.name }));
     }
 
-    onSelected(ev) {
-        if (ev.target.value) {
-            this.props.onAddCustomGroup(ev.target.value);
+    onChange(ev) {
+        if (!this.isIOSOrMacOS) {
+            return;
+        }
+        this.addCustomGroup(ev.target);
+    }
+
+    onClick(ev) {
+        if (this.isIOSOrMacOS) {
+            return;
+        }
+        this.addCustomGroup(ev.target);
+    }
+
+    addCustomGroup(select) {
+        if (select.value) {
+            this.props.onAddCustomGroup(select.value);
             // reset the placeholder
-            ev.target.value = "";
+            select.value = "";
         }
     }
 }
