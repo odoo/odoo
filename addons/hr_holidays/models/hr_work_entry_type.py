@@ -578,7 +578,7 @@ been taken for this time type. Changing it now would affect existing employee ba
             ``leaves_requested``, ``leaves_approved``, ``accrual_bonus``,
             ``closest_allocation_expire`` (formatted date), ``closest_allocation_remaining``,
             ``closest_allocation_duration``, ``holds_changes``, ``total_virtual_excess``,
-            ``virtual_excess_data``, ``exceeding_duration`` and type information
+            ``virtual_excess_data``, ``exceeding_duration``, ``approved_leave_ids`` and type information
             (``request_unit``, ``unit_of_measure``, ``allows_negative``,
             ``max_allowed_negative``, ``color``, ...)
         :rtype: dict
@@ -615,6 +615,7 @@ been taken for this time type. Changing it now would affect existing employee ba
                         'total_virtual_excess': 0,
                         'virtual_excess_data': {},
                         'exceeding_duration': extra_data[employee][work_entry_type]['exceeding_duration'],
+                        'approved_leave_ids': extra_data[employee][work_entry_type]['approved_leaves'].ids,
                         'request_unit': work_entry_type.request_unit,
                         'unit_of_measure': work_entry_type.unit_of_measure,
                         'allows_negative': work_entry_type.allows_negative,
