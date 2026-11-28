@@ -119,6 +119,7 @@
             'point_of_sale/static/src/backend/print_receipt/*',
             'point_of_sale/static/src/app/utils/printer/base_printer.js',
             'point_of_sale/static/src/app/utils/printer/epson_printer.js',
+            'point_of_sale/static/src/backend/pos_product_field/*',
         ],
         'web.assets_backend_lazy': [
             'point_of_sale/static/src/backend/views/pivot/*',
