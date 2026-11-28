@@ -10,9 +10,11 @@ class VendorDelayReport(models.Model):
     _description = "Vendor Delay Report"
     _auto = False
     _depends = {
-        'stock.move': ['purchase_line_id', 'product_id', 'date', 'state'],
+        'stock.location': ['usage'],
+        'stock.move': ['purchase_line_id', 'product_id', 'date', 'state', 'location_dest_id', 'origin_returned_move_id'],
         'stock.move.line': ['move_id', 'quantity', 'uom_id'],
-        'purchase.order.line': ['product_id', 'partner_id', 'product_uom_qty', 'date_promised'],
+        'purchase.order': ['state'],
+        'purchase.order.line': ['product_id', 'partner_id', 'product_uom_qty', 'date_promised', 'qty_received', 'order_id'],
         'product.product': ['product_tmpl_id'],
         'product.template': ['uom_id', 'categ_id'],
         'uom.uom': ['factor'],
@@ -37,21 +39,33 @@ SELECT pol.id                   AS id,
        Min(pc.id)               AS category_id,
        pol.partner_id           AS partner_id,
        pol.product_uom_qty      AS qty_total,
-       Sum(CASE
-             WHEN (m.state = 'done' and pol.date_promised::date >= m.date::date) THEN ((ml.quantity * ml_uom.factor) / pt_uom.factor)
+       Least(Sum(CASE
+             WHEN (m.state = 'done'
+                   and dest.usage != 'supplier'
+                   and m.origin_returned_move_id IS NULL
+                   and pol.date_promised::date >= m.date::date)
+             THEN ((ml.quantity * ml_uom.factor) / pt_uom.factor)
              ELSE 0
-           END)                 AS qty_on_time,
+           END), pol.product_uom_qty) AS qty_on_time,
        CASE
          WHEN pol.product_uom_qty != 0 THEN
-           Sum(CASE
-                 WHEN (m.state = 'done' and pol.date_promised::date >= m.date::date) THEN ((ml.quantity * ml_uom.factor) / pt_uom.factor)
+           Least(Sum(CASE
+                 WHEN (m.state = 'done'
+                       and dest.usage != 'supplier'
+                       and m.origin_returned_move_id IS NULL
+                       and pol.date_promised::date >= m.date::date)
+                 THEN ((ml.quantity * ml_uom.factor) / pt_uom.factor)
                  ELSE 0
-               END) / pol.product_uom_qty * 100
+               END), pol.product_uom_qty) / pol.product_uom_qty * 100
          ELSE 100
        END                      AS on_time_rate
 FROM   stock_move m
        JOIN purchase_order_line pol
          ON pol.id = m.purchase_line_id
+       JOIN purchase_order po
+         ON po.id = pol.order_id
+       JOIN stock_location dest
+         ON dest.id = m.location_dest_id
        JOIN product_product p
          ON p.id = m.product_id
        JOIN product_template pt
@@ -64,6 +78,9 @@ FROM   stock_move m
          ON ml.move_id = m.id
        LEFT JOIN uom_uom ml_uom
          ON ml_uom.id = ml.uom_id
+WHERE  po.state = 'purchase'
+       AND pol.qty_received != 0
+       AND pol.date_promised IS NOT NULL
 GROUP  BY pol.id
 )""")
 

@@ -275,9 +275,13 @@ class PurchaseOrder(models.Model):
         result = super().retrieve_dashboard()
         three_months_ago = fields.Datetime.to_string(fields.Datetime.now() - relativedelta(months=3))
 
-        purchases = self.env['purchase.order'].search_fetch(
-            [('state', '=', 'purchase'), ('date_promised', '>=', three_months_ago)],
-            ['date_promised', 'effective_date', 'user_id'])
+        purchases = self.env['purchase.order'].search_fetch([
+            ('state', '=', 'purchase'),
+            ('date_promised', '>=', three_months_ago),
+            ('order_line.product_id.type', '=', 'consu'),
+            # Not received and not due = not late yet
+            '|', ('effective_date', '!=', False), ('date_promised', '<', fields.Datetime.today()),
+        ], ['date_promised', 'effective_date', 'user_id'])
 
         otd_purchase_count = 0
         my_purchase_count = 0
