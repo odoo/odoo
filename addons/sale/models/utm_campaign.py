@@ -45,39 +45,23 @@ class UtmCampaign(models.Model):
 
     def _compute_sale_invoiced_amount(self):
         if self.ids:
-            self.env["account.move.line"].flush_model([
-                "balance",
-                "move_id",
-                "account_id",
-                "display_type",
+            self.env["account.move"].flush_model([
+                "amount_total_signed",
+                "campaign_id",
+                "move_type",
+                "state",
             ])
-            self.env["account.move"].flush_model(["state", "campaign_id", "move_type"])
             query_res = self.env.execute_query_dict(
                 SQL(
                     """
-                    SELECT move.campaign_id, SUM(line.price_total / COALESCE(currency_rate.rate, 1)) as price_total_converted_sum
-                      FROM account_move_line line
-                INNER JOIN account_move move ON line.move_id = move.id
-                      /* To use the exchange rate effective at the creation of the invoice. */
-                      LEFT JOIN LATERAL (
-                          SELECT rate
-                            FROM res_currency_rate
-                           WHERE company_id = line.company_id
-                             AND currency_id = %(currency_id)s
-                             AND name < line.date
-                           ORDER BY name DESC
-                           LIMIT 1
-                      ) currency_rate
-                        ON TRUE
+                    SELECT move.campaign_id, SUM(move.amount_total_signed) as price_total_converted_sum
+                      FROM account_move move
                      WHERE move.state not in ('draft', 'cancel')
                        AND move.campaign_id IN %(campaign_ids)s
                        AND move.move_type IN ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')
-                       AND line.account_id IS NOT NULL
-                       AND line.display_type = 'product'
                   GROUP BY move.campaign_id
                     """,  # noqa: E501
                     campaign_ids=tuple(self.ids),
-                    currency_id=self.env.company.currency_id.id,
                 )
             )
         else:
