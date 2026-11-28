@@ -993,6 +993,30 @@ class TestRepair(TestRepairCommon):
         repair_order.under_warranty = True
         self.assertEqual(invoice.invoice_line_ids[0].price_unit, 30.0)
 
+    def test_warranty_only_updates_repair_lines_of_invoice(self):
+        """ Toggling "Under Warranty" must only update the invoice lines of the repair, not the
+        other lines of the invoice (e.g. of another sale order invoiced together).
+        """
+        repair_order = self._create_repair_order_with_moves_and_services()
+        repair_order.action_create_sale_order()
+        other_sale_order = self.env['sale.order'].create({
+            'partner_id': self.res_partner_12.id,
+            'order_line': [Command.create({'product_id': self.product_product_3.id, 'price_unit': 100.0})],
+        })
+        (repair_order.sale_order_id | other_sale_order).action_confirm()
+        repair_order.action_validate()
+        invoice = (repair_order.sale_order_id | other_sale_order)._create_invoices()
+        self.assertEqual(len(invoice), 1)
+        part_line = invoice.invoice_line_ids.filtered(lambda line: line.product_id == self.product_product_11)
+        other_line = invoice.invoice_line_ids.filtered(lambda line: line.product_id == self.product_product_3)
+
+        repair_order.under_warranty = True
+        self.assertEqual(part_line.price_unit, 0.0)
+        self.assertEqual(other_line.price_unit, 100.0)
+        repair_order.under_warranty = False
+        self.assertEqual(part_line.price_unit, 30.0)
+        self.assertEqual(other_line.price_unit, 100.0)
+
     def test_delete_repair_resets_outgoing_stock_moves(self):
         """
         Test that deleting draft repair order clears its outgoing stock quantities and
