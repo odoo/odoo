@@ -245,6 +245,71 @@ class TestStockMoveLine(TestStockCommon):
         self.assertEqual(move_line1.result_package_id.id, self.pack.id)
         self.assertEqual(move_line2.result_package_id.id, False)
 
+    def test_put_in_pack_with_split_reserved_move(self):
+        """
+        Splitting a reserved move line only shares its quantity between the
+        resulting lines, so the reservation of the quants must stay the same
+        without being updated for each chunk.
+        """
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 12)
+        move1 = self.env['stock.move'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.productA.id,
+            'uom_id': self.uom_unit.id,
+            'product_uom_qty': 12.0,
+        })
+        move1._action_confirm()
+        move1._action_assign()
+        quant = self.env['stock.quant']._gather(self.productA, self.stock_location)
+        self.assertEqual(quant.reserved_quantity, 12.0)
+
+        Quant = self.env.registry['stock.quant']
+        original = Quant._update_reserved_quantity
+        reservation_updates = []
+
+        def spy(quants, *args, **kwargs):
+            reservation_updates.append(args)
+            return original(quants, *args, **kwargs)
+
+        self.patch(Quant, '_update_reserved_quantity', spy)
+        move1.move_line_ids.action_put_in_pack(package_type_id=self.package_type.id, package_capacity=5)
+
+        self.assertEqual(move1.move_line_ids.mapped('quantity'), [5.0, 5.0, 2.0])
+        self.assertEqual(len(move1.move_line_ids.result_package_id), 3)
+        self.assertFalse(reservation_updates)
+        self.assertEqual(quant.reserved_quantity, 12.0)
+        self.assertEqual(move1.state, 'assigned')
+
+        # The split lines keep updating the quants as any other move line
+        move1.move_line_ids[2].quantity = 1.0
+        self.assertEqual(len(reservation_updates), 2)
+        self.assertEqual(quant.reserved_quantity, 11.0)
+
+    def test_put_in_pack_with_split_reserved_move_other_uom(self):
+        """
+        When the parts of a split line round to another total in the product
+        UoM, the quants follow the reservation of the resulting lines.
+        """
+        uom_kg = self.env.ref('uom.product_uom_kgm')
+        uom_lb = self.env.ref('uom.product_uom_lb')
+        product = self.env['product.product'].create({'name': 'Product kg', 'is_storable': True, 'uom_id': uom_kg.id})
+        self.env['stock.quant']._update_available_quantity(product, self.stock_location, 20)
+        move1 = self.env['stock.move'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': product.id,
+            'uom_id': uom_lb.id,
+            'product_uom_qty': 10.0,
+        })
+        move1._action_confirm()
+        move1._action_assign()
+
+        move1.move_line_ids.action_put_in_pack(package_type_id=self.package_type.id, package_capacity=1.01)
+
+        quant = self.env['stock.quant']._gather(product, self.stock_location)
+        self.assertAlmostEqual(quant.reserved_quantity, sum(move1.move_line_ids.mapped('quantity_product_uom')))
+
     def test_multi_edit_quant_and_lot(self):
         """
         Ensure that the quant_id and lot_id cannot be updated in multi-edit mode when the move lines use different products.
