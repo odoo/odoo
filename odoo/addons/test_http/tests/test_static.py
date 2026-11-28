@@ -756,3 +756,24 @@ class TestHttpStaticUpload(TestHttpStaticCommon):
             )
         self.assertFalse(capture.records, "No attachment should have been created")
         self.assertEqual(res.status_code, HTTPStatus.REQUEST_ENTITY_TOO_LARGE)
+
+    def test_upload_limit_applied_before_reading_call_kw_body(self):
+        new_test_user(self.env, 'jackoneill')
+        self.authenticate('jackoneill', 'jackoneill')
+        self.env['ir.config_parameter'].sudo().set_param('web.max_file_upload_size', 4096)
+
+        limits = []
+        get_json_data = odoo.http.Request.get_json_data
+
+        def spy_get_json_data(request):
+            limits.append(request.httprequest.max_content_length)
+            return get_json_data(request)
+
+        with patch.object(odoo.http.Request, 'get_json_data', spy_get_json_data):
+            self.make_jsonrpc_request('/web/dataset/call_kw/res.partner/search_count', {
+                'model': 'res.partner',
+                'method': 'search_count',
+                'args': [[]],
+                'kwargs': {},
+            })
+        self.assertEqual(limits[0], 4096)
