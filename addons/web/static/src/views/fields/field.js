@@ -436,7 +436,8 @@ export class Field extends Component {
                 if (fieldInfo.options.placeholder_field) {
                     const placeholderField = fieldInfo.options.placeholder_field;
                     const formatter = formatterRegistry.get(record.fields[placeholderField].type);
-                    fieldInfo.placeholder = formatter(record.data[placeholderField]);
+                    const value = record.data[placeholderField];
+                    fieldInfo.placeholder = value ? formatter(value) : fieldInfo.attrs.placeholder;
                 } else if (fieldInfo.attrs.placeholder) {
                     fieldInfo.placeholder = fieldInfo.attrs.placeholder;
                 }
