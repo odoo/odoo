@@ -961,3 +961,32 @@ class TestEdiJson(TestEGEdiCommon):
             self.assertTrue(generated_files)
             json_file = json.loads(generated_files[0])
             self.assertEqual(json_file['request']['documentType'], 'd')
+
+    def test_11_discount_rate_rounded(self):
+        """ The line discount is stored unrounded, the ETA only accepts 5 decimals. """
+        invoice = self.create_invoice(
+            partner_id=self.partner_a.id,
+            invoice_line_ids=[
+                {
+                    'product_id': self.product_a.id,
+                    'price_unit': 498.51,
+                    'discount': 29.999398206655837,
+                    'tax_ids': [Command.set(self.env.ref(f'account.{self.env.company.id}_eg_standard_sale_14').ids)],
+                },
+                {
+                    'product_id': self.product_a.id,
+                    'price_unit': 100.0,
+                    'discount': 10.0,
+                    'tax_ids': [Command.set(self.env.ref(f'account.{self.env.company.id}_eg_standard_sale_14').ids)],
+                },
+            ],
+        )
+        invoice.action_post()
+        eta_invoice = self.env['account.edi.format']._l10n_eg_eta_prepare_eta_invoice(invoice)
+        self.assertEqual(
+            [(line['discount'], line['salesTotal'], line['netTotal']) for line in eta_invoice['invoiceLines']],
+            [
+                ({'rate': 29.9994, 'amount': 149.55}, 498.51, 348.96),
+                ({'rate': 10.0, 'amount': 10.0}, 100.0, 90.0),
+            ],
+        )

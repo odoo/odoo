@@ -319,7 +319,7 @@ class AccountEdiFormat(models.Model):
                     'amountEGP': price_unit,
                 },
                 'discount': {
-                    'rate': line.discount,
+                    'rate': self._l10n_eg_edi_round(line.discount),
                     'amount': discount_amount,
                 },
                 'taxableItems': [
