@@ -196,6 +196,14 @@ export function orderCountSyncedInTableIs(table, count) {
         },
     ];
 }
+export function coursesToFireInTableIs(table, count) {
+    return [
+        {
+            content: `table ${table} has ${count} course(s) to fire`,
+            trigger: `.floor-map .table:has(.label:contains("${table}")):has(.order-count.text-bg-info:contains("${count}"))`,
+        },
+    ];
+}
 export function isShown() {
     return [
         {
