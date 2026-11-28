@@ -3,6 +3,18 @@ import { registry } from "@web/core/registry";
 
 import { _t } from "@web/core/l10n/translation";
 
+/**
+ * Returns the default accessible name of the Instagram account.
+ *
+ * @param {HTMLElement} el
+ * @returns {string}
+ */
+function getDefaultName(el) {
+    return el.dataset.instagramPage
+        ? _t("Instagram account @%(handle)s", { handle: el.dataset.instagramPage })
+        : _t("Instagram account");
+}
+
 // Note that Instagram can automatically detect the language of the user and
 // translate the embed.
 
@@ -22,7 +34,7 @@ export class InstagramPage extends Interaction {
     setup() {
         this.iframeEl = document.createElement("iframe");
         this.iframeEl.setAttribute("scrolling", "no");
-        this.iframeEl.setAttribute("aria-label", _t("Instagram"));
+        this.iframeEl.title = this.el.dataset.accessibleName || getDefaultName(this.el);
         this.iframeEl.classList.add("w-100");
         this.insert(this.iframeEl, this.el.querySelector(".o_instagram_container"));
 
@@ -70,3 +82,7 @@ export class InstagramPage extends Interaction {
 }
 
 registry.category("public.interactions").add("website.instagram_page", InstagramPage);
+registry.category("website.accessible_names").add("website.instagram_page", {
+    selector: InstagramPage.selector,
+    getDefaultName,
+});

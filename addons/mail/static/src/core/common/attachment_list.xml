@@ -72,7 +72,7 @@
                                         data-icon="play_circle" />
                                 </t>
                                 <div t-elif="attachment.isText" class="position-absolute top-0 start-0 w-100 h-100 overflow-hidden pe-none rounded-top-3">
-                                    <iframe scrolling="no" class="w-100 h-100 border-0" t-att-src="attachment.textThumbnailUrl" sandbox=""/>
+                                    <iframe scrolling="no" class="w-100 h-100 border-0" t-att-src="attachment.textThumbnailUrl" t-att-title="attachment.name" sandbox=""/>
                                 </div>
                                 <div t-elif="!attachment.voice" class="o_image" role="menuitem" aria-label="Preview"
                                     t-att-tabindex="-1" t-att-aria-disabled="false"

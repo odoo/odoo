@@ -1,6 +1,16 @@
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
+import { _t } from "@web/core/l10n/translation";
 import { LocationSelectorComponent } from "@website/components/location_selector/location_selector_component/location_selector_component";
+
+/**
+ * Returns the default accessible name of the store locator's map.
+ *
+ * @returns {string}
+ */
+function getDefaultName() {
+    return _t("Map of locations");
+}
 
 export class StoreLocator extends Interaction {
     static selector = ".s_store_locator";
@@ -8,6 +18,7 @@ export class StoreLocator extends Interaction {
     setup() {
         this.dataset = this.el.dataset;
         this.props = {
+            accessibleName: this.dataset.accessibleName || getDefaultName(),
             mapZoom: this.dataset.mapZoom,
             hideOffscreenLocations: this.dataset.mapHideOffscreenLocations === "true",
             locationsList: this.dataset.locationsList,
@@ -44,6 +55,10 @@ export class StoreLocator extends Interaction {
 }
 
 registry.category("public.interactions").add("website.store_locator", StoreLocator);
+registry.category("website.accessible_names").add("website.store_locator", {
+    selector: StoreLocator.selector,
+    getDefaultName,
+});
 
 registry.category("public.interactions.preview").add("website.store_locator_preview", {
     Interaction: StoreLocator,

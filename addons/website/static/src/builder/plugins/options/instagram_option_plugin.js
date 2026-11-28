@@ -99,6 +99,7 @@ export class InstagramPageAction extends BuilderAction {
     }
     apply({ editingElement, value }) {
         delete editingElement.dataset.instagramPageIsDefault;
+        delete editingElement.dataset.accessibleName;
         if (value.includes(this.instagramUrlStr)) {
             value = this.dependencies.instagramOption.instagramPageNameFromUrl(value) || "";
         }

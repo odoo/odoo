@@ -9,6 +9,7 @@ export class MapOptionPlugin extends Plugin {
     resources = {
         so_content_addition_selectors: [".s_map"],
         builder_actions: {
+            MapAddressAction,
             MapUpdateSrcAction,
         },
     };
@@ -60,6 +61,22 @@ export class MapUpdateSrcAction extends BuilderAction {
         editingElement
             .querySelector(".missing_option_warning")
             .classList.toggle("d-none", !!editingElement.dataset.mapAddress);
+    }
+}
+
+export class MapAddressAction extends MapUpdateSrcAction {
+    static id = "mapAddress";
+    getValue({ editingElement }) {
+        return editingElement.dataset.mapAddress;
+    }
+    apply({ editingElement, value }) {
+        if (value) {
+            editingElement.dataset.mapAddress = value;
+        } else {
+            delete editingElement.dataset.mapAddress;
+        }
+        delete editingElement.dataset.accessibleName;
+        super.apply({ editingElement });
     }
 }
 

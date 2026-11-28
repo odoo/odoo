@@ -62,6 +62,10 @@ registerWebsitePreviewTour(
                 ":iframe #wrap section.o_background_video > .o_bg_video_container[contenteditable=false]",
         },
         {
+            content: "Check that the video is hidden from assistive technologies.",
+            trigger: ":iframe #wrap section.o_background_video > .o_bg_video_container[inert]",
+        },
+        {
             trigger: "body",
             run: () => unpatchThumbnailUrl(),
         },

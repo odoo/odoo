@@ -13,6 +13,7 @@ const OSM_MAX_ZOOM = 19;
 export class Map extends Component {
     static template = "website.locationSelector.map";
     props = useProps({
+        accessibleName: t.string().optional(_t("Map of locations")),
         locations: LOCATION_LIST,
         selectedLocationId: t.or([t.string(), t.literal(false)]),
         setSelectedLocation: t.function(),
@@ -178,6 +179,14 @@ export class Map extends Component {
                 }
             }
 
+            if (!this.props.showLocationNameOnMarkerHover) {
+                // The marker's title is its number: make screen readers
+                // announce the location instead. The marker element only exists
+                // once Leaflet has actually added the marker to the map.
+                marker.addEventListener("add", () =>
+                    marker.getElement().setAttribute("aria-label", loc.name)
+                );
+            }
             marker.addTo(this.leafletMap);
             marker.addEventListener("click", () => {
                 this.props.setSelectedLocation(loc.id);

@@ -2,9 +2,9 @@
 <templates xml:space="preserve">
 
 <t t-name="website.mapOption">
-    <BuilderRow label.translate="Address" tooltip.translate="Write down your address or a GPS position" action="'mapUpdateSrc'" preview="false">
+    <BuilderRow label.translate="Address" tooltip.translate="Write down your address or a GPS position" preview="false">
         <BuilderTextInput
-            dataAttributeAction="'mapAddress'"
+            action="'mapAddress'"
             placeholder.translate="e.g. Grand Place, Brussels"
         />
     </BuilderRow>
