@@ -1409,6 +1409,16 @@ class ChromeBrowser:
                     loglevel=self.chrome_log_level,
                     directory='chrome_logs',
                 )
+            for dump in pathlib.Path(self.user_data_dir, "crash_dumps").rglob("*.dmp"):
+                save_test_file(
+                    self.test_case._testMethodName,
+                    dump.read_bytes(),
+                    prefix="chrome_crash_",
+                    extension="dmp",
+                    document_type="Chrome crash dump",
+                    logger=self._logger,
+                    directory="chrome_logs",
+                )
             self._logger.info('Removing chrome user profile "%s"', self.user_data_dir)
             shutil.rmtree(self.user_data_dir, ignore_errors=True)
 
@@ -1430,7 +1440,11 @@ class ChromeBrowser:
             cmd,
             stderr=subprocess.DEVNULL,
             preexec_fn=_preexec,
-            env={**os.environ, 'TMPDIR': self.user_data_dir},
+            env={
+                **os.environ,
+                "BREAKPAD_DUMP_LOCATION": os.path.join(self.user_data_dir, "crash_dumps"),
+                "TMPDIR": self.user_data_dir,
+            },
         )  # noqa: PLW1509
 
         port_file = pathlib.Path(self.user_data_dir, 'DevToolsActivePort')
