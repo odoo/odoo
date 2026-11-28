@@ -122,6 +122,25 @@ class TestVatNumbers(TransactionCase):
         test_partner_1 = self.env['res.partner'].create({'name': 'Roman', 'country_id': gr_country, 'vat': 'EL123456783'})
         self.assertEqual(test_partner_1.vat, 'EL123456783')
 
+    def test_vat_me(self):
+        """ A Montenegrin VAT number is the 8-digit PIB, alone or prefixed with ME. """
+        me_country = self.env.ref('base.me')
+        partner = self.env['res.partner'].create({'name': 'ME partner', 'country_id': me_country.id})
+
+        for vat in ('ME02655284', '02655284', 'me02655284', 'ME 0265 5284'):
+            with self.subTest(vat=vat):
+                partner.vat = vat
+                self.assertTrue(partner.vat)
+
+        partner.vat = 'ME02655284'
+        self.assertEqual(partner.vat, 'ME02655284', "The ME prefix is kept as entered.")
+        partner.vat = '02655284'
+        self.assertEqual(partner.vat, '02655284', "The PIB alone is accepted and not prefixed.")
+
+        for vat in ('ME02655283', '02655283', 'ME0265528', 'ME026552840', 'MEME02655284', 'RS02655284'):
+            with self.subTest(vat=vat), self.assertRaises(ValidationError):
+                partner.vat = vat
+
     def test_weird_roro_input(self):
         be_country = self.env.ref('base.be').id
         with self.assertRaises(ValidationError):
