@@ -758,12 +758,13 @@ class Picking(models.Model):
         # Force to prefetch more than 1000 by 1000
         all_moves._fields['forecast_availability'].compute_value(all_moves)
         for picking in pickings:
+            pending_moves = picking.move_ids.filtered(lambda x: x.state != "cancel")
             # In case of draft the behavior of forecast_availability is different : if forecast_availability < 0 then there is a issue else not.
-            if any(float_compare(move.forecast_availability, 0 if move.state == 'draft' else move.product_qty, precision_rounding=move.product_id.uom_id.rounding) == -1 for move in picking.move_ids):
+            if any(float_compare(move.forecast_availability, 0 if move.state == 'draft' else move.product_qty, precision_rounding=move.product_id.uom_id.rounding) == -1 for move in pending_moves):
                 picking.products_availability = _('Not Available')
                 picking.products_availability_state = 'late'
             else:
-                forecast_date = max(picking.move_ids.filtered('forecast_expected_date').mapped('forecast_expected_date'), default=False)
+                forecast_date = max(pending_moves.filtered('forecast_expected_date').mapped('forecast_expected_date'), default=False)
                 if forecast_date:
                     picking.products_availability = _('Exp %s', format_date(self.env, forecast_date))
                     picking.products_availability_state = 'late' if picking.scheduled_date and picking.scheduled_date < forecast_date else 'expected'
