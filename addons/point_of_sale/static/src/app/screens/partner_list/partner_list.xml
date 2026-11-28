@@ -33,7 +33,7 @@
                                 isSelected="this.props.partner?.id === partner.id"
                                 isBalanceDisplayed="this.isBalanceDisplayed"
                                 onClickEdit.bind="(p) => this.editPartner(p)"
-                                onClickUnselect.bind="() => this.clickPartner()"
+                                onClickUnselect.bind="() => this.clickPartner(null)"
                                 onClickOrders.bind="(p) => this.goToOrders(p)"
                                 onClickPartner.bind="this.clickPartner"/>
                         </t>
@@ -44,7 +44,7 @@
                                 isSelected="this.props.partner?.id === partner.id"
                                 isBalanceDisplayed="this.isBalanceDisplayed"
                                 onClickEdit.bind="(p) => this.editPartner(p)"
-                                onClickUnselect.bind="() => this.clickPartner()"
+                                onClickUnselect.bind="() => this.clickPartner(null)"
                                 onClickOrders.bind="(p) => this.goToOrders(p)"
                                 onClickPartner.bind="this.clickPartner"/>
                         </t>
