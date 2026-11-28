@@ -160,6 +160,8 @@ class ProjectProject(models.Model):
 
     @api.onchange('sale_line_id')
     def _onchange_sale_line_id(self):
+        if not self.env.user.has_group('sales_team.group_sale_salesman'):
+            return
         if not self.reinvoiced_sale_order_id and self.sale_line_id:
             self.reinvoiced_sale_order_id = self.sale_line_id.order_id
 
