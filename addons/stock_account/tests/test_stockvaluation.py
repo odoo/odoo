@@ -894,11 +894,11 @@ class TestStockValuation(TestStockValuationCommon):
         with freeze_time(today - timedelta(days=2)):
             move_2 = self._make_in_move(product, 1, 10, create_picking=True, owner=self.env.company.partner_id)
 
-        closing_move = self.env['account.move'].browse(move.company_id.action_close_stock_valuation(at_date=Date.to_date(today - timedelta(days=3)))['res_id'])
+        closing_move = self.env['account.move'].sudo().browse(move.company_id.action_close_stock_valuation(at_date=Date.to_date(today - timedelta(days=3)))['res_id'])
         self.env.cr.flush()
         closing_move._post()
         self.env.cr.flush()
-        closing_move_2 = self.env['account.move'].browse(move_2.company_id.action_close_stock_valuation(at_date=Date.to_date(today - timedelta(days=1)))['res_id'])
+        closing_move_2 = self.env['account.move'].sudo().browse(move_2.company_id.action_close_stock_valuation(at_date=Date.to_date(today - timedelta(days=1)))['res_id'])
         closing_move_2._post()
 
         self.assertEqual(move.value, 10)
@@ -4066,7 +4066,7 @@ class TestStockValuation(TestStockValuationCommon):
         journal = self.env['account.journal'].search([('type', '=', 'general'), ('company_id', '=', self.env.company.id)], limit=1)
         counterpart_account = self.env.company.account_journal_suspense_account_id or account_a
 
-        self.env['account.move'].create({
+        self.env['account.move'].sudo().create({
             'journal_id': journal.id,
             'line_ids': [
                 (0, 0, {

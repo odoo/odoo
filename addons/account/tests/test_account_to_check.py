@@ -157,7 +157,7 @@ class TestCheckAccountMoves(AccountTestInvoicingCommon):
         }])
         bank_line_1._try_auto_reconcile_statement_lines()
         self.assertEqual(bank_line_1.move_id.review_state, 'no_review')
-        with self.assertRaisesRegex(AccessError, "You don't have the access rights to perform this action."):
+        with self.assertRaisesRegex(AccessError, r"doesn't have 'read' access to:\n- Bank Transaction"):
             bank_line_1.with_user(self.simple_accountman).delete_reconciled_line(payment.move_id.line_ids[0].id)
 
     def test_auto_post_invoicing_only(self):

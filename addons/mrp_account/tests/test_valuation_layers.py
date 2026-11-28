@@ -23,7 +23,7 @@ class TestMrpValuationStandard(TestBomPriceCommon):
     _test_user_name = 'Test User'
 
     def _get_production_cost_move_lines(self):
-        return self.env['account.move.line'].search([
+        return self.env['account.move.line'].sudo().search([
             ('account_id', '=', self.account_production.id),
         ], order='date, id')
 
@@ -98,12 +98,12 @@ class TestMrpValuationStandard(TestBomPriceCommon):
         self._assert_incoming_component_value_update_revalues_finished_product(self.category_avco_auto)
         mo = self.env['mrp.production'].search([('bom_id', '=', self.bom_1.id), ('state', '=', 'done')], limit=1)
         component_move = mo.move_raw_ids.filtered(lambda move: move.product_id == self.glass)
-        self.assertRecordValues(component_move.account_move_id.line_ids, [
+        self.assertRecordValues(component_move.sudo().account_move_id.line_ids, [
             {'account_id': self.category_avco_auto.property_stock_valuation_account_id.id, 'debit': 0.0, 'credit': 100.0},
             {'account_id': self.account_production.id, 'debit': 100.0, 'credit': 0.0},
         ])
         finished_move = mo.move_finished_ids.filtered(lambda move: move.product_id == self.dining_table)
-        self.assertRecordValues(finished_move.account_move_id.line_ids, [
+        self.assertRecordValues(finished_move.sudo().account_move_id.line_ids, [
             {'account_id': self.account_production.id, 'debit': 0.0, 'credit': PRICE + 100},
             {'account_id': self.category_avco_auto.property_stock_valuation_account_id.id, 'debit': PRICE + 100, 'credit': 0.0},
         ])
@@ -544,7 +544,7 @@ class TestMrpValuationStandard(TestBomPriceCommon):
             'type': 'phantom',
             'bom_line_ids': [Command.create({'product_id': component.id, 'product_qty': 1})],
         })
-        closing_move = self.env['account.move'].browse(self.env.company.action_close_stock_valuation()['res_id'])
+        closing_move = self.env['account.move'].sudo().browse(self.env.company.action_close_stock_valuation()['res_id'])
         closing_move._post()
         self.assertEqual(self.env['account.stock.valuation.report'].get_report_values()['data']['stock_variation']['value'], 0)
 
@@ -645,5 +645,5 @@ class TestMrpValuationStandard(TestBomPriceCommon):
         # workcenter occupied 10:00 -> 11:30 = 1.5h * 60 = 90 (not 2 * 1h * 60 = 120)
         report = self.env['report.mrp.report_mo_overview'].get_report_values(mo.id)
         self.assertEqual(report['data']['operations']['summary']['mo_cost'], 90)
-        labour_je = self.env['account.move'].search([('ref', '=', '%s - Labour' % mo.name)])
+        labour_je = self.env['account.move'].sudo().search([('ref', '=', '%s - Labour' % mo.name)])
         self.assertEqual(sum(labour_je.line_ids.filtered('debit').mapped('debit')), 90)

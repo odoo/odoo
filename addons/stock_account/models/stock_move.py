@@ -361,7 +361,7 @@ class StockMove(models.Model):
             if move_ids_to_create:
                 moves_to_create = self.env['stock.move'].browse(move_ids_to_create)
                 moves_to_create._create_account_move()
-            moves_with_cogs = done_moves.filtered('cogs_aml_ids')
+            moves_with_cogs = done_moves.sudo().filtered('cogs_aml_ids')
             moves_without_cogs = (done_moves - moves_with_cogs)
             correction_line_vals += moves_with_cogs.cogs_aml_ids._set_cogs()
             if moves_without_cogs:
@@ -383,7 +383,7 @@ class StockMove(models.Model):
 
             if not correction_line_vals:
                 return
-            correction_move = self.env['account.move'].with_context(clean_context(self.env.context)).with_company(company).create({
+            correction_move = self.env['account.move'].sudo().with_context(clean_context(self.env.context)).with_company(company).create({
                 'journal_id': company.account_stock_journal_id.id,
                 'date': fields.Date.context_today(self),
                 'ref': justification,

@@ -131,13 +131,13 @@ class TestMrpAccount(TestBomPriceCommon, TestMrpCommon):
         production.button_mark_done()
 
         # finished product move
-        productA_debit_line = self.env['account.move.line'].search([('product_id', '=', self.dining_table.id), ('credit', '=', 0)])
-        productA_credit_line = self.env['account.move.line'].search([('product_id', '=', self.dining_table.id), ('debit', '=', 0)])
+        productA_debit_line = self.env['account.move.line'].sudo().search([('product_id', '=', self.dining_table.id), ('credit', '=', 0)])
+        productA_credit_line = self.env['account.move.line'].sudo().search([('product_id', '=', self.dining_table.id), ('debit', '=', 0)])
         self.assertEqual(productA_debit_line.account_id, self.account_stock_valuation)
         self.assertEqual(productA_credit_line.account_id, self.account_production)
         # one of component move
-        productB_debit_line = self.env['account.move.line'].search([('product_id', '=', self.glass.id), ('credit', '=', 0)])
-        productB_credit_line = self.env['account.move.line'].search([('product_id', '=', self.glass.id), ('debit', '=', 0)])
+        productB_debit_line = self.env['account.move.line'].sudo().search([('product_id', '=', self.glass.id), ('credit', '=', 0)])
+        productB_credit_line = self.env['account.move.line'].sudo().search([('product_id', '=', self.glass.id), ('debit', '=', 0)])
         self.assertEqual(productB_debit_line.account_id, self.account_production)
         self.assertEqual(productB_credit_line.account_id, self.account_stock_valuation)
 
@@ -145,12 +145,12 @@ class TestMrpAccount(TestBomPriceCommon, TestMrpCommon):
         Form.from_action(self.env, production.button_unbuild()).save().action_validate()
 
         # finished product move
-        productA_debit_line = self.env['account.move.line'].search([
+        productA_debit_line = self.env['account.move.line'].sudo().search([
             ('product_id', '=', self.dining_table.id),
             ('credit', '=', 0),
             ('name', 'ilike', 'UB'),
         ])
-        productA_credit_line = self.env['account.move.line'].search([
+        productA_credit_line = self.env['account.move.line'].sudo().search([
             ('product_id', '=', self.dining_table.id),
             ('debit', '=', 0),
             ('name', 'ilike', 'UB'),
@@ -158,12 +158,12 @@ class TestMrpAccount(TestBomPriceCommon, TestMrpCommon):
         self.assertEqual(productA_debit_line.account_id, self.account_production)
         self.assertEqual(productA_credit_line.account_id, self.account_stock_valuation)
         # component move
-        productB_debit_line = self.env['account.move.line'].search([
+        productB_debit_line = self.env['account.move.line'].sudo().search([
             ('product_id', '=', self.glass.id),
             ('credit', '=', 0),
             ('name', 'ilike', 'UB'),
         ])
-        productB_credit_line = self.env['account.move.line'].search([
+        productB_credit_line = self.env['account.move.line'].sudo().search([
             ('product_id', '=', self.glass.id),
             ('debit', '=', 0),
             ('name', 'ilike', 'UB'),
@@ -270,8 +270,8 @@ class TestMrpAccount(TestBomPriceCommon, TestMrpCommon):
         delivery.button_validate()
         self.assertEqual(delivery.move_ids.product_id, self.bom_1.bom_line_ids.product_id)
         self.assertEqual(delivery.state, 'done')
-        product_aml = self.env['account.move.line'].search([('product_id', '=', self.dining_table.id)])
-        comp_aml = self.env['account.move.line'].search([('product_id', '=', self.screw.id)], order='debit')
+        product_aml = self.env['account.move.line'].sudo().search([('product_id', '=', self.dining_table.id)])
+        comp_aml = self.env['account.move.line'].sudo().search([('product_id', '=', self.screw.id)], order='debit')
         self.assertEqual(len(product_aml), 0)
         self.assertRecordValues(comp_aml, [
             {'debit':  0.0, 'credit':  50.0},

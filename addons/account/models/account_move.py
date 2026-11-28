@@ -1588,10 +1588,7 @@ class AccountMove(models.Model):
             'ref': reconciliation_ref,
             # these are necessary for the views to change depending on the values
             'is_exchange': partial_info['is_exchange'],
-            # the invoicing users only manage the invoices and the payments, the other entries are part of the accounting
-            'can_open_move': self.env.user.has_group('account.group_account_readonly')
-                or bool(counterpart_line.move_id.origin_payment_id)
-                or counterpart_line.move_id.is_invoice(include_receipts=True),
+            'can_open_move': counterpart_line.move_id.with_env(self.env).has_access('read'),
             'amount_company_currency': formatLang(
                 self.env,
                 abs(counterpart_line.balance),
@@ -1640,6 +1637,9 @@ class AccountMove(models.Model):
                     exchange_label = _('Exchange Loss')
 
                 payments_widget_vals['exchange_info']['label'] = exchange_label
+                payments_widget_vals['exchange_info']['can_open'] = self.env['account.move.line'].browse(
+                    payments_widget_vals['exchange_info']['line_ids'],
+                ).has_access('read')
                 payments_widget_vals['exchange_info']['exchange_amount_formatted'] = formatLang(
                     self.env, abs(payments_widget_vals['exchange_info']['exchange_amount']),
                     currency_obj=move.company_currency_id,

@@ -36,7 +36,7 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon, TestStockValua
         (self.comp1 | self.comp2 | self.finished).sudo().categ_id = self.category_fifo_auto
         self._make_in_move(self.comp1, 10, unit_cost=10, location_dest_id=self.env.company.subcontracting_location_id.id)
         self._make_in_move(self.comp2, 10, unit_cost=20, location_dest_id=self.env.company.subcontracting_location_id.id)
-        all_amls_ids = self.env['account.move.line'].search([]).ids
+        all_amls_ids = self.env['account.move.line'].sudo().search([]).ids
 
         move = self._make_in_move(
             self.finished,
@@ -59,7 +59,7 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon, TestStockValua
         self.assertEqual(picking_receipt.move_ids.value, 0)
         self.assertEqual(picking_receipt.move_ids.product_id.total_value, 60)
 
-        amls = self.env['account.move.line'].search([('id', 'not in', all_amls_ids)])
+        amls = self.env['account.move.line'].sudo().search([('id', 'not in', all_amls_ids)])
         all_amls_ids += amls.ids
         self.assertRecordValues(amls.sorted('product_id'), [
             # Delivery com1 to subcontractor
@@ -261,13 +261,13 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon, TestStockValua
         self.comp2.sudo().standard_price = 20
         self.finished.sudo().standard_price = 40
 
-        all_amls_ids = self.env['account.move.line'].search([]).ids
+        all_amls_ids = self.env['account.move.line'].sudo().search([]).ids
 
         self._make_in_move(self.finished, 1, unit_cost=15,
                            create_picking=True,
                            partner_id=self.subcontractor_partner1.id)
 
-        amls = self.env['account.move.line'].search([('id', 'not in', all_amls_ids)])
+        amls = self.env['account.move.line'].sudo().search([('id', 'not in', all_amls_ids)])
         self.assertRecordValues(amls.sorted("account_id, product_id"), [
             # Receipt from subcontractor
             {'account_id': self.account_production.id,    'product_id': self.comp1.id,       'debit': 10.0,  'credit': 0.0},
@@ -285,11 +285,11 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon, TestStockValua
         (self.comp1 | self.comp2 | self.finished).sudo().categ_id = self.category_fifo_auto
         self.comp1.sudo().standard_price = 1.0
         self.prod_location.sudo().valuation_account_id = False
-        all_amls_ids = self.env['account.move.line'].search([]).ids
+        all_amls_ids = self.env['account.move.line'].sudo().search([]).ids
         self._make_in_move(self.finished, 1, create_picking=True,
                                              partner_id=self.subcontractor_partner1.id).picking_id
 
-        amls = self.env['account.move.line'].search([('id', 'not in', all_amls_ids)])
+        amls = self.env['account.move.line'].sudo().search([('id', 'not in', all_amls_ids)])
         # Check that no account move line are created if there is no production account
         self.assertFalse(amls)
 

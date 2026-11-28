@@ -28,11 +28,15 @@ account_bank_statement_line_rule_invoice_user,account.bank.statement.line.invoic
 account_bank_statement_line_rule_basic_user,account.bank.statement.line.basic.user,account.bank.statement.line,account.group_account_basic,crud,
 account_bank_statement_line_comp_rule,Account bank statement line company rule,account.bank.statement.line,,crud,"[('company_id', 'in', company_ids)]"
 account_move_line_rule_group_readonly,Readonly Move Line,account.move.line,account.group_account_readonly,r,
-account_move_line_see_all,All Journal Items,account.move.line,account.group_account_invoice,crud,
+account_move_line_rule_group_invoice,Invoicing Move Line,account.move.line,account.group_account_invoice,crud,"[('move_id', 'access', 'read')]"
+account_move_line_rule_group_basic,Basic Move Line,account.move.line,account.group_account_basic,crud,
+account_move_line_rule_group_manager,Administrator Move Line,account.move.line,account.group_account_manager,crud,
 account_invoice_line_rule_everyone,Read Invoice Lines,account.move.line,base.group_everyone,r,"[('move_id', 'access', 'read')]"
 account_move_line_comp_rule,Entry lines,account.move.line,,crud,"[('company_id', 'in', company_ids)]"
 account_move_rule_group_readonly,Readonly Move,account.move,account.group_account_readonly,r,
-account_move_see_all,All Journal Entries,account.move,account.group_account_invoice,crud,
+account_move_rule_group_invoice,Invoicing Move,account.move,account.group_account_invoice,crud,"['|', ('journal_id.type', 'in', ('sale', 'purchase')), ('origin_payment_id', '!=', False)]"
+account_move_rule_group_basic,Basic Move,account.move,account.group_account_basic,crud,
+account_move_rule_group_manager,Administrator Move,account.move,account.group_account_manager,crud,
 account_invoice_rule_portal,Portal Personal Account Invoices,account.move,base.group_portal,r,"[('state', 'not in', ('cancel', 'draft')), ('move_type', 'in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund')), ('partner_id','child_of',[user.commercial_partner_id.id])]"
 account_move_comp_rule,Account Entry,account.move,,crud,"[('company_id', 'in', company_ids)]"
 account_analytic_line_rule_readonly_user,account.analytic.line.readonly.user,account.analytic.line,account.group_account_readonly,r,

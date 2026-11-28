@@ -459,8 +459,10 @@ class TestAccountMovePaymentsWidget(AccountTestInvoicingCommon):
         invoice.js_remove_outstanding_partial(partials.filtered(lambda p: p.debit_move_id == receivable_line).id)
         self.assertFalse(partials.exists())
 
-    def test_payments_widget_open_entries(self):
-        """ The invoicing users can't open the entries that aren't invoices or payments. """
+    def test_invoicing_user_entries_access(self):
+        """ The invoicing users can only access the entries of the sales and purchase journals and the payments,
+        so the payments widget doesn't let them open the other entries.
+        """
         invoice = self.init_invoice('out_invoice', amounts=[3000.0], post=True)
         receivable_line = invoice.line_ids.filtered(lambda line: line.account_id == self.receivable_account)
         payment = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
@@ -487,6 +489,46 @@ class TestAccountMovePaymentsWidget(AccountTestInvoicingCommon):
             with self.subTest(user=user.login):
                 widget_vals = invoice.with_user(user).invoice_payments_widget
                 self.assertEqual({vals['move_id']: vals['can_open_move'] for vals in widget_vals['content']}, expected)
+                moves = (payment.move_id + bank_entry + misc_entry).with_user(user)
+                self.assertEqual({move.id: move.has_access('read') for move in moves}, expected)
+                self.assertEqual(
+                    {line.move_id.id for line in moves.sudo().line_ids.with_user(user)._filtered_access('read')},
+                    {move_id for move_id, readable in expected.items() if readable},
+                )
+
+    def test_invoicing_user_exchange_difference(self):
+        """ The invoicing users can pay and unreconcile an invoice in foreign currency, although they can't
+        access the exchange difference entry it creates, which the payments widget doesn't let them open.
+        """
+        invoicing_user = new_test_user(self.env, login='invoicing_user', groups='base.group_user,account.group_account_invoice')
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'date': '2016-01-01',
+            'invoice_date': '2016-01-01',
+            'partner_id': self.partner_a.id,
+            'currency_id': self.curr_2.id,
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'price_unit': 300,
+                'tax_ids': [],
+            })],
+        })
+        invoice.action_post()
+
+        self.env['account.payment.register'].with_user(invoicing_user)\
+            .with_context(active_model='account.move', active_ids=invoice.ids)\
+            .create({'payment_date': '2017-01-01'})\
+            ._create_payments()
+        partial = invoice.line_ids.matched_credit_ids
+        exchange_move = partial.exchange_move_id
+        self.assertTrue(exchange_move)
+        self.assertFalse(exchange_move.with_user(invoicing_user).has_access('read'))
+        self.assertFalse(invoice.with_user(invoicing_user).invoice_payments_widget['exchange_info']['can_open'])
+        self.assertTrue(invoice.invoice_payments_widget['exchange_info']['can_open'])
+
+        invoice.with_user(invoicing_user).js_remove_outstanding_partial(partial.id)
+        self.assertEqual(invoice.payment_state, 'not_paid')
+        self.assertTrue(exchange_move.reversal_move_ids)
 
     def test_outstanding_payments_draft_partner_change(self):
         ''' Test the outstanding widget follows the partner of a draft invoice. '''

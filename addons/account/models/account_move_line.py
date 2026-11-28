@@ -3194,6 +3194,25 @@ class AccountMoveLine(models.Model):
 
         :param reconciliation_plan: A list of reconciliation to perform.
         """
+        if not self.env.su:
+            # The reconciliation creates and reconciles entries the user may not have access to (exchange difference,
+            # cash basis), so it is done in sudo as long as the user has access to the reconciled amls.
+            plan_amls = []
+
+            def sudo_plan(plan):
+                sudo_items = []
+                for item in plan:
+                    if isinstance(item, models.BaseModel):
+                        plan_amls.append(item)
+                        sudo_items.append(item.sudo())
+                    else:
+                        sudo_items.append(sudo_plan(item))
+                return sudo_items
+
+            sudo_reconciliation_plan = sudo_plan(reconciliation_plan)
+            self.browse().union(plan_amls).check_access('write')
+            return self.sudo()._reconcile_plan(sudo_reconciliation_plan)
+
         # ==== Prepare the reconciliation ====
         # Batch the amls all together to know what should be reconciled and when.
         plan_list, all_amls = self._optimize_reconciliation_plan(reconciliation_plan)

@@ -287,7 +287,7 @@ class TestAccountMoveDateAlgorithm(AccountTestInvoicingCommon):
                     .filtered(lambda x: x.account_id.account_type == 'asset_receivable')\
                     .reconcile()
 
-                caba_move = self.env['account.move'].search([('tax_cash_basis_origin_move_id', '=', invoice.id)])
+                caba_move = self.env['account.move'].sudo().search([('tax_cash_basis_origin_move_id', '=', invoice.id)])
 
                 # The sale lock date does not matter for the caba move, since it is not in a sale journal
                 self.assertEqual(caba_move.journal_id.type, 'general')

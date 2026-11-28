@@ -639,7 +639,7 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
         self.assertEqual(cron_trigger_result_dict['at'], datetime.datetime(2024, 12, 5, 0, 1, 0))
 
     def test_verifactu_document_reading_access_right(self):
-        move = self.env['account.move'].create({})
+        move = self.env['account.move'].create({'move_type': 'out_invoice'})
         self.user.group_ids = self.env.ref('base.group_user')
         with self.assertRaises(AccessError):
             move.with_user(self.user).fetch(['l10n_es_edi_verifactu_document_ids'])
