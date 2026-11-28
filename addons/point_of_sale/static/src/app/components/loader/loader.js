@@ -1,5 +1,5 @@
 import { Component, onWillDestroy, signal, useApp, useEffect, useProps, t } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
+import { _t, translationIsReady } from "@web/core/l10n/translation";
 import { CriticalPOSError } from "./critical_pos_error/critical_pos_error";
 
 export class Loader extends Component {
@@ -11,7 +11,10 @@ export class Loader extends Component {
         const app = useApp();
         this.message = signal("");
         const timeout = setTimeout(
-            () => this.message.set(_t("Still loading, thank you for your patience…")),
+            () =>
+                translationIsReady.then(() =>
+                    this.message.set(_t("Still loading, thank you for your patience…"))
+                ),
             8000
         );
         onWillDestroy(() => clearTimeout(timeout));
