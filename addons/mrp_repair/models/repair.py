@@ -6,6 +6,11 @@ from odoo import api, fields, models, _
 class RepairOrder(models.Model):
     _inherit = 'repair.order'
 
+    @api.model
+    def _product_id_domain(self):
+        # override domain to exclude kit products
+        return f"[('is_kits', '=', False)] + {super()._product_id_domain()}"
+
     production_count = fields.Integer(
         'Count of MOs generated',
         compute='_compute_production_count',

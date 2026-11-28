@@ -79,9 +79,14 @@ class RepairOrder(models.Model):
     move_id = fields.Many2one(  # Generated in 'action_repair_done', needed for traceability
         'stock.move', 'Inventory Move',
         copy=False, readonly=True, check_company=True)
+
+    @api.model
+    def _product_id_domain(self):
+        return "[('type', '=', 'consu'), '|', ('company_id', '=', company_id), ('company_id', '=', False), '|', ('id', 'in', picking_product_ids), ('id', '=?', picking_product_id)]"
+
     product_id = fields.Many2one(
         'product.product', string='Product to Repair',
-        ui_domain="[('type', '=', 'consu'), '|', ('company_id', '=', company_id), ('company_id', '=', False), '|', ('id', 'in', picking_product_ids), ('id', '=?', picking_product_id)]",
+        ui_domain=lambda self: self._product_id_domain(),
         check_company=True, index='btree_not_null')
     product_qty = fields.Float(
         'Product Quantity', compute='_compute_product_qty', readonly=False, store=True,
