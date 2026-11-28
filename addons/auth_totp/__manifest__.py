@@ -14,11 +14,12 @@ Note: logically, two-factor prevents password-based RPC access for users
 where it is enabled. In order to be able to execute RPC scripts, the user
 can setup API keys to replace their main password.
     """,
-    'depends': ['web'],
+    'depends': ['base_setup', 'web'],
     'category': 'Extra Tools',
     'auto_install': True,
     'data': [
         'data/ir_action_data.xml',
+        'views/res_config_settings_views.xml',
         'views/res_users_views.xml',
         'views/templates.xml',
         'wizard/auth_totp_wizard_views.xml',

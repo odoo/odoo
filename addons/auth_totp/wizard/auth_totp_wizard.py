@@ -60,15 +60,14 @@ class Auth_TotpWizard(models.TransientModel):
             c = int(compress(self.env.context.get('code', '')))
         except ValueError:
             raise UserError(_("The verification code should only contain numbers"))
-        if self.user_id._totp_try_setting(self.secret, c):
-            self.secret = '' # empty it, because why keep it until GC?
-            return {
-                'type': 'ir.actions.client',
-                'tag': 'display_notification',
-                'params': {
-                    'type': 'success',
-                    'message': _("2-Factor authentication is now enabled."),
-                    'next': {'type': 'ir.actions.act_window_close'},
-                }
+        self.user_id._totp_enable(self.secret, c)
+        self.secret = '' # empty it, because why keep it until GC?
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'type': 'success',
+                'message': _("2-Factor authentication is now enabled."),
+                'next': {'type': 'ir.actions.act_window_close'},
             }
-        raise UserError(_('Verification failed, please double-check the 6-digit code'))
+        }

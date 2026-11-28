@@ -12,6 +12,7 @@ from odoo.tools import mute_logger
 
 from odoo.addons.auth_totp.models.totp import TOTP as auth_TOTP
 
+from ..controllers import home
 from ..controllers.home import Home
 
 _logger = logging.getLogger(__name__)
@@ -156,6 +157,42 @@ class TestTOTP(TestTOTPMixin, HttpCase):
         response = self.url_open("/web/session/authenticate", data=json.dumps(payload), headers=headers)
         data = response.json()
         self.assertEqual(data['result']['uid'], None)
+
+
+@tagged('post_install', '-at_install')
+class TestTOTPRequired(TestTOTPMixin, HttpCase):
+
+    def setUp(self):
+        super().setUp()
+        self.env['ir.config_parameter'].set_str('auth_totp.policy', 'employee_required')
+        # no email, so no code by email (auth_totp_mail) if installed
+        self.user_test.partner_id.email = False
+        secrets = iter(['JBSWY3DPEHPK3PXP', 'KRSXG5CTMVRXEZLU'])
+        self.patch(home, 'generate_secret', lambda: next(secrets))
+        self.authenticate(None, None)
+
+    def password_step(self, login):
+        return self.url_open('/web/login', allow_redirects=False, data={
+            'login': login,
+            'password': login,
+            'csrf_token': self.csrf_token(),
+        })
+
+    def post_code(self, code):
+        return self.url_open('/web/login/totp', data={'totp_token': code, 'csrf_token': self.csrf_token()})
+
+    def test_totp_setup_at_login(self):
+        self.assertTrue(self.user_test._rpc_api_keys_only())
+        self.assertURLEqual(self.password_step('test_user').headers['Location'], '/web/login/totp')
+        self.assertURLEqual(self.post_code(TOTP('JBSWY3DPEHPK3PXP').generate().token).url, '/odoo')
+        self.assertTrue(self.user_test.totp_enabled)
+
+    def test_totp_setup_secret_per_user(self):
+        new_test_user(self.env, 'test_user2', password='test_user2', email=False)
+        self.password_step('test_user')
+        self.url_open('/web/login/totp')
+        self.password_step('test_user2')
+        self.assertURLEqual(self.post_code(TOTP('KRSXG5CTMVRXEZLU').generate().token).url, '/odoo')
 
 
 @tagged('post_install', '-at_install')
