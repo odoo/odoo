@@ -40,4 +40,41 @@
         </field>
     </record>
 
+
+    <record id="view_event_registration_form_ticket_option" model="ir.ui.view">
+        <field name="name">event.registration.form.inherit.ticket.option</field>
+        <field name="model">event.registration</field>
+        <field name="inherit_id" ref="event.view_event_registration_form"/>
+        <field name="arch" type="xml">
+            <field name="event_ticket_id" position="after">
+                <field name="ticket_optional_product_ids" invisible="1"/>
+                <field name="ticket_option_product_ids" widget="many2many_checkboxes"
+                    domain="[('id', 'in', ticket_optional_product_ids)]"
+                    invisible="not ticket_optional_product_ids and not ticket_option_product_ids"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_event_registration_tree_ticket_option" model="ir.ui.view">
+        <field name="name">event.registration.list.inherit.ticket.option</field>
+        <field name="model">event.registration</field>
+        <field name="inherit_id" ref="event.view_event_registration_tree"/>
+        <field name="arch" type="xml">
+            <field name="event_ticket_id" position="after">
+                <field name="ticket_option_product_ids" widget="many2many_tags" optional="show"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_registration_search_ticket_option" model="ir.ui.view">
+        <field name="name">event.registration.search.inherit.ticket.option</field>
+        <field name="model">event.registration</field>
+        <field name="inherit_id" ref="event.view_registration_search"/>
+        <field name="arch" type="xml">
+            <field name="event_ticket_id" position="after">
+                <field name="ticket_option_product_ids"/>
+            </field>
+        </field>
+    </record>
+
 </data></odoo>

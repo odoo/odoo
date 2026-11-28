@@ -30,10 +30,14 @@ class TestUi(HttpCase):
             'date_end': Datetime.now() + timedelta(days=5),
         })
 
+        lunch = self.env['product.product'].create({
+            'name': 'Lunch', 'type': 'service', 'list_price': 20,
+        })
         self.env['event.event.ticket'].create([{
             'name': 'Standard',
             'event_id': event.id,
             'product_id': self.product_event.id,
+            'optional_product_ids': [(6, 0, lunch.ids)],
         }, {
             'name': 'VIP',
             'event_id': event.id,

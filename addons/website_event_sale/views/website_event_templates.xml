@@ -99,4 +99,30 @@
     </xpath>
 </template>
 
+<!-- Attendee form: one block of option checkboxes per attendee -->
+<template id="registration_attendee_details_options" inherit_id="website_event.registration_attendee_details">
+    <xpath expr="//t[@name='attendee_loop']" position="inside">
+        <t t-set="ticket_options" t-value="ticket['ticket'] and ticket['ticket'].sudo().optional_product_ids"/>
+        <div t-if="ticket_options" class="modal-body pt-0 o_wevent_ticket_options">
+            <h6 class="mt-1 mb-2">
+                Optional Products
+                <small class="text-muted">- Ticket #<span t-out="counter"/> - <span t-out="ticket['name']"/></small>
+            </h6>
+            <div t-foreach="ticket_options" t-as="option" class="form-check mb-1">
+                <t t-set="option_info" t-value="option._get_combination_info_variant()"/>
+                <input type="checkbox" class="form-check-input" value="1"
+                       t-attf-id="ticket_option_#{counter}_#{option.id}"
+                       t-attf-name="ticket_option_#{counter}_#{option.id}"/>
+                <label class="form-check-label d-flex justify-content-between" t-attf-for="ticket_option_#{counter}_#{option.id}">
+                    <span t-out="option.display_name"/>
+                    <span class="text-muted ms-3 text-nowrap">
+                        + <span t-out="option_info['price']"
+                                t-options="{'widget': 'monetary', 'display_currency': option_info['currency']}"/>
+                    </span>
+                </label>
+            </div>
+        </div>
+    </xpath>
+</template>
+
 </odoo>

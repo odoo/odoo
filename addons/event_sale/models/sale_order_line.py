@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, Command, fields, models, _
 from odoo.exceptions import ValidationError
 
 
@@ -21,6 +21,9 @@ class SaleOrderLine(models.Model):
         help="Choose an event ticket and it will automatically create a registration for this event ticket.")
     is_multi_slots = fields.Boolean(related="event_id.is_multi_slots")
     registration_ids = fields.One2many('event.registration', 'sale_order_line_id', string="Registrations")
+    is_event_ticket_option = fields.Boolean(
+        'Event Ticket Option', copy=False,
+        help="Line created for options chosen by attendees of the linked ticket line.")
 
     @api.constrains('event_id', 'event_slot_id', 'event_ticket_id', 'product_id')
     def _check_event_registration_ticket(self):
@@ -50,12 +53,26 @@ class SaleOrderLine(models.Model):
             if so_line.service_tracking != 'event':
                 continue
 
-            for _count in range(
-                int(so_line.product_uom_qty) - len(so_line.registration_ids.filtered(lambda reg: reg.state != 'cancel')),
-            ):
+            existing = so_line.registration_ids.filtered(lambda reg: reg.state != 'cancel')
+            new_count = int(so_line.product_uom_qty) - len(existing)
+            # New attendees start with the options ticked on the order: each option line gives
+            # its option to as many attendees as its quantity, existing attendees counting first.
+            options_per_attendee = [[] for _count in range(max(new_count, 0))]
+            ticket_options = so_line.event_ticket_id.optional_product_ids
+            for option_line in so_line.linked_line_ids.filtered('is_event_ticket_option'):
+                product = option_line.product_id
+                if product not in ticket_options:
+                    continue
+                remaining = int(option_line.product_uom_qty) - len(
+                    existing.filtered(lambda reg: product in reg.ticket_option_product_ids))
+                for options in options_per_attendee[:max(remaining, 0)]:
+                    options.append(product.id)
+
+            for options in options_per_attendee:
                 values = {
                     'sale_order_line_id': so_line.id,
                     'sale_order_id': so_line.order_id.id,
+                    'ticket_option_product_ids': [Command.set(options)],
                 }
                 # When confirming in backend a single order, keep paid registrations in draft
                 # so attendee details can be filled before confirmation; free ones stay open for seat checks.

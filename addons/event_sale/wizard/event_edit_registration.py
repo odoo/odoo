@@ -2,7 +2,7 @@
 
 from collections import Counter, defaultdict
 
-from odoo import models, fields, api
+from odoo import Command, models, fields, api
 from odoo.exceptions import ValidationError
 
 
@@ -41,6 +41,7 @@ class RegistrationEditor(models.TransientModel):
                 'email': reg.email,
                 'phone': reg.phone,
                 'sale_order_line_id': so_line.id,
+                'ticket_option_product_ids': [Command.set(reg.ticket_option_product_ids.ids)],
             }] for reg in registrations]
             # Add new registrations
             attendee_list += [[0, 0, {
@@ -87,6 +88,11 @@ class RegistrationEditorLine(models.TransientModel):
     email = fields.Char(string='Email')
     phone = fields.Char(string='Phone')
     name = fields.Char(string='Name')
+    ticket_optional_product_ids = fields.Many2many(
+        related='event_ticket_id.optional_product_ids', string='Available Optional Products')
+    ticket_option_product_ids = fields.Many2many(
+        'product.product', 'registration_editor_line_ticket_option_rel', 'line_id', 'product_id',
+        string='Optional Products')
 
     def _prepare_registration_data(self, include_event_values=False):
         self.ensure_one()
@@ -96,6 +102,9 @@ class RegistrationEditorLine(models.TransientModel):
             'phone': self.phone or self.editor_id.sale_order_id.partner_id.phone,
             'email': self.email or self.editor_id.sale_order_id.partner_id.email,
         }
+        options = self.ticket_option_product_ids
+        if include_event_values or options != self.registration_id.ticket_option_product_ids:
+            registration_data['ticket_option_product_ids'] = [Command.set(options.ids)]
         if include_event_values:
             registration_data.update({
                 'event_id': self.event_id.id,

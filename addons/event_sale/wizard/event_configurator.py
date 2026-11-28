@@ -16,6 +16,11 @@ class EventEventConfigurator(models.TransientModel):
     event_ticket_id = fields.Many2one('event.event.ticket', string="Ticket Type", ui_domain="[('event_id', '=', event_id)]",
         compute="_compute_event_ticket_id", readonly=False, store=True)
     additional_product_ids = fields.Many2many(related='event_ticket_id.additional_product_ids')
+    optional_product_ids = fields.Many2many(
+        related='event_ticket_id.optional_product_ids', string='Available Optional Products')
+    ticket_option_product_ids = fields.Many2many(
+        'product.product', 'event_configurator_ticket_option_rel', 'configurator_id', 'product_id',
+        string="Optional Products")
     is_multi_slots = fields.Boolean(related="event_id.is_multi_slots")
     has_available_tickets = fields.Boolean("Has Available Tickets", compute="_compute_has_available_tickets")
 
@@ -31,6 +36,12 @@ class EventEventConfigurator(models.TransientModel):
                     _('Invalid slot choice "%(slot_name)s" for event "%(event_name)s".'))
         if error_messages:
             raise ValidationError('\n'.join(error_messages))
+
+    @api.onchange('event_ticket_id')
+    def _onchange_event_ticket_id(self):
+        """ Drop the options the new ticket does not offer: the checkboxes only hide them. """
+        for configurator in self:
+            configurator.ticket_option_product_ids &= configurator.optional_product_ids
 
     @api.depends('product_id')
     def _compute_has_available_tickets(self):

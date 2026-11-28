@@ -16,9 +16,14 @@
                                 <field name="event_slot_id" domain="[('event_id', '=', event_id)]" readonly='1' force_save="1"/>
                                 <field name="event_ticket_id" domain="[('event_id', '=', event_id)]" readonly='1' force_save="1"/>
                                 <field name="name"/>
+                                <field name="ticket_option_product_ids" widget="many2many_tags"
+                                    domain="[('id', 'in', ticket_optional_product_ids)]"
+                                    options="{'no_create': True}"
+                                    optional="show"/>
                                 <field name="email"/>
                                 <field name="phone" class="o_force_ltr"/>
                                 <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+                                <field name="ticket_optional_product_ids" column_invisible="True"/> <!-- domain of the options -->
                                 <field name="sale_order_line_id" column_invisible="True"/> <!-- source record(s) the wizard works on, filled from the context -->
                             </list>
                         </field>
