@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_move_form_inherit_l10n_th_edi_inet" model="ir.ui.view">
+        <field name="name">account.move.form.inherit.l10n_th_edi_inet</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="l10n_th.view_move_form_th_inherit"/>
+        <field name="arch" type="xml">
+            <header position="inside">
+                <button name="action_l10n_th_edi_send"
+                        type="object"
+                        string="Send to INET"
+                        groups="account.group_account_invoice"
+                        invisible="state != 'posted' or l10n_th_edi_state not in ('ready_to_send', 'error', 'processing', 'unknown')"/>
+                <button name="action_l10n_th_edi_inet_update_rd_state"
+                        type="object"
+                        string="Update RD Status"
+                        groups="account.group_account_invoice"
+                        invisible="l10n_th_edi_rd_state not in ('waiting', 'sending', 'in_review') or not l10n_th_edi_inet_transaction_code"/>
+            </header>
+            <xpath expr="//page[@id='other_tab']" position="after">
+                <page id="l10n_th_edi_tab"
+                      string="e-Tax"
+                      name="l10n_th_edi"
+                      invisible="country_code != 'TH' or not l10n_th_is_vat_registered or move_type != 'out_refund' and not debit_origin_id">
+                    <field name="l10n_th_edi_available_reasons" invisible="1"/> <!-- options of the reason fields -->
+                    <group>
+                        <group>
+                            <field name="l10n_th_edi_credit_note_reason"
+                                   widget="filterable_selection"
+                                   options="{'whitelist_fname': 'l10n_th_edi_available_reasons'}"
+                                   invisible="move_type != 'out_refund'"
+                                   readonly="l10n_th_edi_state in ('processing', 'signed', 'unknown')"/>
+                            <field name="l10n_th_edi_debit_note_reason"
+                                   widget="filterable_selection"
+                                   options="{'whitelist_fname': 'l10n_th_edi_available_reasons'}"
+                                   invisible="not debit_origin_id"
+                                   readonly="l10n_th_edi_state in ('processing', 'signed', 'unknown')"/>
+                            <field name="l10n_th_edi_other_reason"
+                                   invisible="l10n_th_edi_credit_note_reason not in ('CDNG99', 'CDNS99') and l10n_th_edi_debit_note_reason not in ('DBNG99', 'DBNS99')"
+                                   required="l10n_th_edi_credit_note_reason in ('CDNG99', 'CDNS99') or l10n_th_edi_debit_note_reason in ('DBNG99', 'DBNS99')"
+                                   readonly="l10n_th_edi_state in ('processing', 'signed', 'unknown')"/>
+                        </group>
+                        <group>
+                            <field name="l10n_th_edi_state"/>
+                            <field name="l10n_th_edi_rd_state" invisible="not l10n_th_edi_rd_state"/>
+                            <field name="l10n_th_edi_error" invisible="not l10n_th_edi_error"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+            <xpath expr="//field[@name='l10n_th_tax_invoice_ids']/list/field[@name='state']" position="after">
+                <field name="l10n_th_edi_state"
+                       widget="badge"
+                       decoration-success="l10n_th_edi_state == 'signed'"
+                       decoration-warning="l10n_th_edi_state in ('processing', 'unknown')"
+                       decoration-danger="l10n_th_edi_state == 'error'"/>
+                <field name="l10n_th_edi_rd_state"
+                       widget="badge"
+                       optional="show"
+                       decoration-success="l10n_th_edi_rd_state == 'accepted'"
+                       decoration-info="l10n_th_edi_rd_state in ('waiting', 'sending', 'in_review')"
+                       decoration-danger="l10n_th_edi_rd_state == 'failed'"/>
+                <field name="l10n_th_edi_error" optional="show"/>
+            </xpath>
+            <xpath expr="//field[@name='l10n_th_tax_invoice_ids']/list/button[@name='action_print_tax_invoice_pdf']" position="after">
+                <button name="action_l10n_th_edi_send"
+                        type="object"
+                        string="Send to INET"
+                        class="btn-link"
+                        groups="account.group_account_invoice"
+                        invisible="state != 'posted' or l10n_th_edi_state not in ('ready_to_send', 'error', 'processing', 'unknown')"/>
+                <button name="action_l10n_th_edi_inet_update_rd_state"
+                        type="object"
+                        string="Update RD Status"
+                        class="btn-link"
+                        groups="account.group_account_invoice"
+                        invisible="l10n_th_edi_rd_state not in ('waiting', 'sending', 'in_review') or not l10n_th_edi_inet_transaction_code"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
