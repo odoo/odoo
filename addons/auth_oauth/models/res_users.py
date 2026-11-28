@@ -165,6 +165,3 @@ class ResUsers(models.Model):
                         'mfa': 'default',
                     }
             raise
-
-    def _get_session_token_fields(self):
-        return super()._get_session_token_fields() | {'oauth_access_token'}
