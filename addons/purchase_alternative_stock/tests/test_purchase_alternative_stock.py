@@ -8,6 +8,42 @@ from odoo import Command
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestPurchaseAlternativeStock(TestPurchaseAlternativeCommon):
 
+    def test_forecast_quantity_with_alternative_rfqs(self):
+        """Check that both the forecast report and reordering rule use the highest
+        incoming quantity among alternative RFQs when calculating their forecast quantities.
+        """
+        product = self.product_09
+        original_rfq = self.env['purchase.order'].create({
+            'partner_id': self.res_partner_1.id,
+            'order_line': [Command.create({
+                'product_id': product.id,
+                'product_qty': 5,
+            })],
+        })
+        action = original_rfq.action_create_alternative()
+        alt_po_wiz = Form(self.env['purchase.alternative.create'].with_context(**action['context']))
+        alt_po_wiz.partner_ids = self.res_partner_1
+        alt_po_wiz.save().action_create_alternative()
+        alternative_rfq = original_rfq.alternative_po_ids - original_rfq
+        alternative_rfq.order_line.product_qty = 8
+
+        # Check for reordering rule.
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'product_id': product.id,
+            'product_min_qty': 10,
+            'product_max_qty': 10,
+        })
+        self.assertEqual(orderpoint.qty_forecast, 8)
+        self.assertEqual(orderpoint.qty_to_order, 2)
+
+        # Check for replenishment report.
+        report_values = self.env['stock.forecasted_product_product'].get_report_values(docids=product.ids)
+        self.assertEqual(report_values['docs']['product'][product.id]['draft_purchase_qty']['in'], 8)
+        self.assertEqual(
+            [order['name'] for order in report_values['docs']['product'][product.id]['draft_purchase_orders']],
+            [original_rfq.name, alternative_rfq.name],
+        )
+
     def test_04_purchase_alternative_stock(self):
         """Check that alt PO correctly copies the original PO values"""
         # create original PO

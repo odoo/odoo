@@ -14,8 +14,9 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
         if warehouse_id:
             domain += [('order_id.picking_type_id.warehouse_id', '=', warehouse_id)]
         po_lines = self.env['purchase.order.line'].search(domain, order='date_planned, id')
+        po_line_groups = [(line.order_id, line.product_id, line, line.product_uom_qty) for line in po_lines]
 
-        for po_line in po_lines:
+        for _order, _product, po_line, _qty in po_lines._get_countable_rfq_groups(po_line_groups):
             line_qty = po_line.product_qty
             # Need to fetch every move connected to a manufacturing order from this PO line. This can happen when:
             # - Multiple MOs are linked to a single PO line (e.g. Same MTO component for multiple MO).

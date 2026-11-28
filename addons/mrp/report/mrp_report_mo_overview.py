@@ -690,8 +690,9 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
             location_ids = self._get_location_ids(production, replenish_data)
             forecast_lines = self.env['stock.forecasted_product_product']._get_report_lines(False, unknown_products.ids, location_ids, production.location_src_id, read=False)
             forecast_lines = self._add_origins_to_forecast(forecast_lines)
+            report = self.with_context(warehouse_id=production.warehouse_id.id)
             for product in unknown_products:
-                extra_docs = self._get_extra_replenishments(product)
+                extra_docs = report._get_extra_replenishments(product)
                 # Sorting the extra documents so that the ones flagged with an explicit production_id are on top of the list.
                 extra_docs.sort(key=lambda ex: ex.get('production_id', False), reverse=True)
                 product_forecast_lines = list(filter(lambda line: line.get('product', {}).get('id') == product.id, forecast_lines))
