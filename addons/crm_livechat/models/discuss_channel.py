@@ -43,7 +43,16 @@ class DiscussChannel(models.Model):
             msg = Markup(
                 '<div class="o_mail_notification" data-oe-type="create-lead">%s</div>',
             ) % self.env._("created a new lead: %s", lead._get_html_link_with_href())
+<<<<<<< 67611077d3eee3553491e6e6a8afe5d538dbeb7b
             self.message_post(body=msg, message_type='notification')
+||||||| 041d8165ba5cf322c773cd4e39f8cf1170252af8
+            self.message_post(body=msg, subtype_xmlid="mail.mt_comment")
+=======
+            self.message_post(body=msg, subtype_xmlid="mail.mt_comment")
+            Store(bus_channel=self.env.user).add(
+                self, "_store_livechat_extra_fields",
+            )
+>>>>>>> 0e68769c01db3d345b2cc84014b32385b9319066
 
     def _convert_visitor_to_lead(self, partner, key):
         """ Create a lead from channel /lead command
@@ -69,8 +78,15 @@ class DiscussChannel(models.Model):
         super()._store_livechat_extra_fields(res)
         if not self.env["crm.lead"].has_access("read"):
             return
+        leads = self.env["crm.lead"].search_fetch(
+            [("partner_id", "in", self.livechat_customer_partner_ids.ids)], ["name", "partner_id"],
+        )
         res.many(
             "livechat_customer_partner_ids",
-            lambda res: res.many("opportunity_ids", ["name"]),
+            lambda res: res.many(
+                "opportunity_ids",
+                ["name"],
+                value=lambda partner: leads.filtered(lambda lead: lead.partner_id == partner),
+            ),
             only_data=True,
         )

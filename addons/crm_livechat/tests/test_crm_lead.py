@@ -3,8 +3,10 @@
 from markupsafe import Markup
 
 from odoo import Command
+from odoo.addons.bus.tests.common import BusResult
 from odoo.addons.crm.tests.common import TestCrmCommon
 from odoo.addons.mail.tests.common import mail_new_test_user
+from odoo.addons.mail.tools.discuss import Store
 from odoo.tests.common import HttpCase, users
 
 
@@ -24,6 +26,13 @@ class TestLivechatLead(HttpCase, TestCrmCommon):
             company_id=cls.company_main.id,
             notification_type='email',
             groups='base.group_portal',
+        )
+        cls.user_visitor = mail_new_test_user(
+            cls.env, login="user_visitor",
+            name="Visitor Internal", email="user_visitor@test.example.com",
+            company_id=cls.company_main.id,
+            notification_type="email",
+            groups="base.group_user",
         )
 
     @users('user_sales_leads')
@@ -159,3 +168,28 @@ class TestLivechatLead(HttpCase, TestCrmCommon):
             channel.whatsapp_partner_id,
             "The lead's Contact should be from the whatsapp chat",
         )
+
+    @users("user_sales_leads")
+    def test_crm_lead_creation_internal_user(self):
+        self.authenticate("user_visitor", "user_visitor")
+        data = self.make_jsonrpc_request("/im_livechat/get_session", {
+            "channel_id": self.livechat_channel.id,
+            "persisted": True,
+        })
+        channel = self.env["discuss.channel"].browse(data["channel_id"])
+
+        def notifications():
+            payload = Store(bus_channel=self.env.user).add(
+                channel, "_store_livechat_extra_fields",
+            )._build_result()
+            payload["crm.lead"] = [{"id": channel.lead_ids.id, "name": "TestLead command"}]
+            return [
+                BusResult(self.env.user, "mail.record/insert"),
+                BusResult(channel, "discuss.channel/new_message"),
+                BusResult(self.env.user, "mail.record/insert", payload),
+            ]
+
+        with self.assertBus(notifications):
+            channel.execute_command_lead(body="/lead TestLead command")
+        self.assertEqual(channel.lead_ids.type, "lead")
+        self.assertEqual(channel.lead_ids.partner_id, self.user_visitor.partner_id)
