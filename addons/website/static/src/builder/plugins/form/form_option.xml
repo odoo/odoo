@@ -189,7 +189,7 @@
             dataAttributeAction="'maxFilesNumber'"
             action="'setMultipleFiles'"
             default="1"
-            applyTo="`input[type='file']`"
+            applyTo="`input[type='file']:not(.s_website_form_signature_input)`"
             step="1"
             min="1"
         />
@@ -198,7 +198,7 @@
         tooltip.translate="Note that your server has its own upload limit (typically 64 MB on Odoo SaaS), which will take precedence over this value">
         <BuilderNumberInput
             dataAttributeAction="'maxFileSize'"
-            applyTo="`input[type='file']`"
+            applyTo="`input[type='file']:not(.s_website_form_signature_input)`"
             unit="'MB'"
             applyWithUnit="false"
         />
@@ -271,7 +271,7 @@
         <BuilderCheckbox
             id="'restrict_file_types_opt'"
             action="'toggleRestrictFileTypes'"
-            applyTo="`input[type='file']`"
+            applyTo="`input[type='file']:not(.s_website_form_signature_input)`"
         />
     </BuilderRow>
     <t t-if="this.isActiveItem('restrict_file_types_opt')">

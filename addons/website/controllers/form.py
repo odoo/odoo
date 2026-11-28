@@ -18,6 +18,9 @@ from odoo.tools.translate import _, LazyTranslate
 
 _lt = LazyTranslate(__name__)
 
+# The signature dialog redraws any image onto its pad: its PNG stays below this.
+SIGNATURE_MAX_SIZE = 1_000_000  # bytes
+
 
 class WebsiteForm(http.Controller):
 
@@ -115,6 +118,14 @@ class WebsiteForm(http.Controller):
     def binary(self, field_label, field_input):
         return base64.b64encode(field_input.read())
 
+    def signature(self, field_label, field_input):
+        data = field_input.read(SIGNATURE_MAX_SIZE + 1)
+        field_input.stream.seek(0)  # do not consume value forever
+        if len(data) > SIGNATURE_MAX_SIZE:
+            raise ValueError("The signature image is too large")
+        # Properties are JSON: store base64 text.
+        return base64.b64encode(data).decode()
+
     def one2many(self, field_label, field_input):
         return [int(i) for i in field_input.split(',')]
 
@@ -145,6 +156,7 @@ class WebsiteForm(http.Controller):
         'monetary': floating,
         # Properties
         'tags': tags,
+        'signature': signature,
     }
 
     # Extract all data sent by the form and sort its on several properties
@@ -173,6 +185,8 @@ class WebsiteForm(http.Controller):
                 # Undo file upload field name indexing
                 field_name = field_name.split('[', 1)[0]
 
+            # Signature uploads must go through property grouping below.
+            if hasattr(field_value, 'filename') and authorized_fields.get(field_name, {}).get('type') != 'signature':
                 # If it's an actual binary field, convert the input file
                 # If it's not, we'll use attachments instead
                 if field_name in authorized_fields and authorized_fields[field_name]['type'] == 'binary':

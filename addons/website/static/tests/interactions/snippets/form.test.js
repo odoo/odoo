@@ -1,6 +1,6 @@
 import { setupInteractionWhiteList, startInteractions } from "@web/../tests/public/helpers";
 
-import { describe, expect, test } from "@odoo/hoot";
+import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import {
     animationFrame,
     clear,
@@ -13,7 +13,7 @@ import {
 } from "@odoo/hoot-dom";
 import { advanceTime, mockDate, runAllTimers } from "@odoo/hoot-mock";
 
-import { contains, onRpc } from "@web/../tests/web_test_helpers";
+import { contains, mockService, onRpc } from "@web/../tests/web_test_helpers";
 import { startInteractionsWithSnippet } from "../helpers";
 
 setupInteractionWhiteList(["website.form", "website.post_link", "website.form.add_other_option"]);
@@ -986,4 +986,80 @@ test("add aria-invalid to invalid checkbox fields", async () => {
     await click("a.s_website_form_send");
     expect(checkboxEl.getAttribute("aria-invalid")).toBeEmpty();
     expect(checkboxEl.getAttribute("aria-errormessage")).toBeEmpty();
+});
+
+describe("signature field", () => {
+    const signatureFormTemplate = /* html */ `
+        <section class="s_website_form">
+            <form action="/website/form/" data-model_name="mail.mail">
+                <div data-name="Field" class="s_website_form_field s_website_form_required" data-type="signature">
+                    <label class="s_website_form_label" for="o_sign_sign">
+                        <span class="s_website_form_label_content">Signature</span>
+                    </label>
+                    <div class="col-sm">
+                        <input type="file" class="s_website_form_input s_website_form_signature_input visually-hidden" name="signature" id="o_sign" tabindex="-1" aria-hidden="true" required="">
+                        <button type="button" class="s_website_form_signature_sign form-control" id="o_sign_sign">
+                            <img class="s_website_form_signature_preview d-none" alt="Your signature">
+                            <span class="s_website_form_signature_label">Click to Sign</span>
+                        </button>
+                        <button type="button" class="s_website_form_signature_clear d-none">Clear signature</button>
+                    </div>
+                </div>
+                <div class="s_website_form_submit">
+                    <span id="s_website_form_result"></span>
+                    <a href="#" role="button" class="btn btn-primary s_website_form_send">Submit</a>
+                </div>
+            </form>
+        </section>
+    `;
+
+    beforeEach(() => {
+        // Sign as soon as the signature dialog opens.
+        mockService("dialog", {
+            add: (_, { uploadSignature }) => {
+                uploadSignature({
+                    signatureImage:
+                        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=",
+                });
+                return () => {};
+            },
+        });
+    });
+
+    test("is required, can be signed and cleared", async () => {
+        await startInteractions(signatureFormTemplate);
+        await click("a.s_website_form_send");
+        // The file input is hidden: the error is reported on the button.
+        expect(".s_website_form_signature_sign").toBeFocused();
+        expect(".s_website_form_signature_sign").toHaveClass("is-invalid");
+        const errorMessageId = queryOne(".s_website_form_signature_sign").getAttribute(
+            "aria-errormessage"
+        );
+        expect(`#${errorMessageId}`).not.toHaveText("");
+
+        await click(".s_website_form_signature_sign");
+        expect(".s_website_form_signature_preview").not.toHaveClass("d-none");
+        expect(".s_website_form_signature_label").toHaveText("Click to replace signature");
+        expect(".s_website_form_signature_clear").not.toHaveClass("d-none");
+
+        await click(".s_website_form_signature_clear");
+        expect(".s_website_form_signature_preview").toHaveClass("d-none");
+        expect(".s_website_form_signature_label").toHaveText("Click to Sign");
+        expect(".s_website_form_signature_clear").toHaveClass("d-none");
+        expect(".s_website_form_signature_sign").toBeFocused();
+    });
+
+    test("is submitted as a PNG", async () => {
+        onRpc("/website/form/mail.mail", async (request) => {
+            const signature = (await request.formData()).get("signature[0][0]");
+            expect(signature.name).toBe("signature.png");
+            expect(signature.type).toBe("image/png");
+            expect.step("submitted");
+            return {};
+        });
+        await startInteractions(signatureFormTemplate);
+        await click(".s_website_form_signature_sign");
+        await click("a.s_website_form_send");
+        expect.verifySteps(["submitted"]);
+    });
 });

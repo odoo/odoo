@@ -12,6 +12,7 @@ import { post } from "@web/core/network/http_service";
 import { user } from "@web/core/user";
 import { delay } from "@web/core/utils/concurrency";
 import { session } from "@web/session";
+import { SignatureDialog } from "@web/core/signature/signature_dialog";
 import {
     clampDate,
     formatDate,
@@ -47,7 +48,9 @@ export class Form extends Interaction {
                 "d-none": !this.isHidden,
             }),
         },
-        "input[type=file]": { "t-on-change": this.changeFile },
+        "input[type=file]:not(.s_website_form_signature_input)": {
+            "t-on-change": this.changeFile,
+        },
         "input.o_add_files_button": { "t-on-click": this.clickAddFilesButton },
         ".o_file_delete": { "t-on-click": this.clickFileDelete },
         ".s_website_form_field": {
@@ -67,6 +70,27 @@ export class Form extends Interaction {
 
                 this.disabledInputEls.delete(el);
             },
+        },
+        ".s_website_form_signature_sign": {
+            "t-on-click": this.openSignatureDialog,
+        },
+        ".s_website_form_signature_preview": {
+            "t-att-src": (el) => this.getSignatureInput(el).signatureImage,
+            "t-att-class": (el) => ({
+                "d-none": !this.getSignatureInput(el).signatureImage,
+            }),
+        },
+        ".s_website_form_signature_label": {
+            "t-out": (el) =>
+                this.getSignatureInput(el).signatureImage
+                    ? _t("Click to replace signature")
+                    : _t("Click to Sign"),
+        },
+        ".s_website_form_signature_clear": {
+            "t-on-click": this.clearSignature,
+            "t-att-class": (el) => ({
+                "d-none": !this.getSignatureInput(el).signatureImage,
+            }),
         },
         ".s_website_form_datetime, .o_website_form_datetime, .s_website_form_date, .o_website_form_date":
             {
@@ -154,11 +178,13 @@ export class Form extends Interaction {
         }
 
         // Add the files zones where the file blocks will be displayed.
-        this.el.querySelectorAll("input[type=file]").forEach((inputEl) => {
-            const filesZoneEl = document.createElement("DIV");
-            filesZoneEl.classList.add("o_files_zone", "row", "gx-1");
-            inputEl.parentNode.insertBefore(filesZoneEl, inputEl);
-        });
+        this.el
+            .querySelectorAll("input[type=file]:not(.s_website_form_signature_input)")
+            .forEach((inputEl) => {
+                const filesZoneEl = document.createElement("DIV");
+                filesZoneEl.classList.add("o_files_zone", "row", "gx-1");
+                inputEl.parentNode.insertBefore(filesZoneEl, inputEl);
+            });
     }
 
     destroy() {
@@ -599,7 +625,44 @@ export class Form extends Interaction {
             fieldEl.querySelectorAll(".o_add_files_button").forEach((el) => el.remove());
             inputEl.classList.remove("d-none");
             delete inputEl.fileList;
+            delete inputEl.signatureImage;
         });
+    }
+
+    getSignatureInput(el) {
+        return el.closest(".s_website_form_field").querySelector(".s_website_form_signature_input");
+    }
+
+    openSignatureDialog(ev) {
+        const inputEl = this.getSignatureInput(ev.currentTarget);
+        const close = this.services.dialog.add(SignatureDialog, {
+            nameAndSignatureProps: { noInputName: true, fontColor: "black" },
+            uploadSignature: ({ signatureImage }) => this.setSignature(inputEl, signatureImage),
+        });
+        this.registerCleanup(close);
+    }
+
+    clearSignature(ev) {
+        const fieldEl = ev.currentTarget.closest(".s_website_form_field");
+        this.setSignature(this.getSignatureInput(fieldEl));
+        // The clear button gets hidden: keep the focus on the field.
+        fieldEl.querySelector(".s_website_form_signature_sign").focus();
+    }
+
+    setSignature(inputEl, signatureImage = "") {
+        // Use the regular file transport to reuse the file input validation.
+        const dataTransfer = new DataTransfer();
+        if (signatureImage) {
+            const bytes = Uint8Array.from(atob(signatureImage.split(",")[1]), (char) =>
+                char.charCodeAt(0)
+            );
+            dataTransfer.items.add(new File([bytes], `${inputEl.name}.png`, { type: "image/png" }));
+        }
+        inputEl.files = dataTransfer.files;
+        inputEl.signatureImage = signatureImage;
+        this.onFieldInput();
+        // The dialog callback runs outside this interaction's event handlers.
+        this.updateContent();
     }
 
     checkErrorFields(errorFields) {
@@ -619,7 +682,11 @@ export class Form extends Interaction {
                     ".s_website_form_input:not(#editable_select), .o_website_form_input:not(#editable_select)"
                 ),
             ]; // !compatibility
-            inputEls.forEach((el) => el.removeAttribute("aria-errormessage"));
+            // Controls that are not inputs (e.g. the signature button) also
+            // reference their error message.
+            fieldEl
+                .querySelectorAll("[aria-errormessage]")
+                .forEach((el) => el.removeAttribute("aria-errormessage"));
             const invalidInputs = inputEls.filter((inputEl) => {
                 // Special check for multiple required checkbox for same
                 // field as it seems checkValidity forces every required
@@ -712,7 +779,11 @@ export class Form extends Interaction {
                     controlEl.classList.add("is-invalid");
                     controlEl.setAttribute("aria-invalid", "true");
                     if (!controlEl.hasAttribute("aria-errormessage")) {
-                        this.updateStatusInline(controlEl.validationMessage, controlEl, true);
+                        // The signature button reports the error of its file input.
+                        const validatedEl = controlEl.matches(".s_website_form_signature_sign")
+                            ? this.getSignatureInput(controlEl)
+                            : controlEl;
+                        this.updateStatusInline(validatedEl.validationMessage, controlEl, true);
                     }
                 }
                 if (typeof errorFields[fieldName] === "string") {
@@ -728,6 +799,10 @@ export class Form extends Interaction {
                 }
                 if (!firstInvalidInput) {
                     firstInvalidInput = invalidInputs[0] || controlEls[0];
+                    // The signature file input is hidden: focus its button.
+                    if (firstInvalidInput?.matches(".s_website_form_signature_input")) {
+                        firstInvalidInput = fieldEl.querySelector(".s_website_form_signature_sign");
+                    }
                 }
                 formValid = false;
             }
@@ -1122,7 +1197,13 @@ export class Form extends Interaction {
         if (inputEl.matches(".o_other_input.d-none")) {
             return false;
         }
-        return this.isFieldVisible(inputEl.closest(".s_website_form_field"));
+        const fieldEl = inputEl.closest(".s_website_form_field");
+        // A file input cannot hold a default value: in an always hidden field,
+        // the visitor can never fill it, so it must not block the submission.
+        if (inputEl.type === "file" && fieldEl.matches(".s_website_form_field_hidden")) {
+            return false;
+        }
+        return this.isFieldVisible(fieldEl);
     }
 
     /**
