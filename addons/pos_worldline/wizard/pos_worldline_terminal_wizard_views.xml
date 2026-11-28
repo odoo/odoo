@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_worldline_terminal_wizard_view_form" model="ir.ui.view">
+        <field name="name">pos.worldline.terminal.wizard.form</field>
+        <field name="model">pos.worldline.terminal.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <p>Please select the terminal id you want to use with this payment method.</p>
+                <field name="terminal_line_id" widget="radio" required="1" nolabel="1"/>
+                <footer>
+                    <button name="action_confirm" type="object" string="Confirm" class="btn-primary"/>
+                    <button special="cancel" string="Cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
