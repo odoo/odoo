@@ -114,7 +114,7 @@ async function testSocialSnippetOptions(snippetName, containerTitle, iconName) {
     expect(`${snippetSelector} > a > i`).toHaveStyle("--oi-icon-size: 4.375rem");
 
     await click(
-        `[data-container-title='${containerTitle}'] [data-label='Size'] input[type='number']`
+        `[data-container-title='${containerTitle}'] [data-label='Size'] input[type='text']`
     );
     await edit("100");
     await animationFrame();

@@ -1,4 +1,5 @@
 import { t, useProps } from "@odoo/owl";
+import { normalizeDecimalSeparator, toDecimalDisplay } from "../utils";
 import { BuilderInputBase, textInputBaseProps } from "./builder_input_base";
 
 export class BuilderNumberInputBase extends BuilderInputBase {
@@ -24,11 +25,13 @@ export class BuilderNumberInputBase extends BuilderInputBase {
                 return;
             }
             const step = this.props.step || 1;
-            const values = e.target.value.split(" ").map((number) => parseFloat(number) || 0);
+            const values = e.target.value
+                .split(" ")
+                .map((number) => parseFloat(normalizeDecimalSeparator(number)) || 0);
             values.forEach((value, i) => {
                 values[i] = this.props.clampValue(value + (e.key === "ArrowUp" ? step : -step));
             });
-            const value = values.join(" ");
+            const value = toDecimalDisplay(values.join(" "));
             e.target.value = value;
             this.props.preview(value);
             this.props.onKeydownArrow?.(e);

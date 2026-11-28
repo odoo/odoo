@@ -203,7 +203,7 @@ test("should syncronize previews", async () => {
     // Change the value using the number input.
     // Fill without pressing Enter will trigger a preview.
     await contains(":iframe .test-options-target").click();
-    await contains(".o_hb_options_container input[type='number']").click();
+    await contains(".o_hb_options_container input[type='text']").click();
     await edit("9");
     await animationFrame();
     expect.verifySteps(["customAction isPreviewing: true", "customAction isPreviewing: true"]);
@@ -226,13 +226,13 @@ test("should syncronize previews", async () => {
 
     // Verify that the number input value is updated during preview
     await animationFrame();
-    await expect(".o_hb_options_container input[type='number']").toHaveProperty("value", 10);
+    await expect(".o_hb_options_container input[type='text']").toHaveProperty("value", 10);
     expect.verifySteps([]);
 
     // Slider changes are committed automatically after a short delay
     await advanceTime(1200);
     await expect.verifySteps(["customAction isPreviewing: false"]);
-    await expect(".o_hb_options_container input[type='number']").toHaveProperty("value", 10);
+    await expect(".o_hb_options_container input[type='text']").toHaveProperty("value", 10);
 });
 
 test("number input arrow changes should be committed after debounce", async () => {
@@ -258,7 +258,7 @@ test("number input arrow changes should be committed after debounce", async () =
     `);
 
     await contains(":iframe .test-options-target").click();
-    await contains(".o_hb_options_container input[type='number']").keyDown("ArrowUp");
+    await contains(".o_hb_options_container input[type='text']").keyDown("ArrowUp");
     expect.verifySteps(["customAction isPreviewing: true"]);
     expect(":iframe .test-options-target").toHaveInnerHTML("11");
 
@@ -289,26 +289,26 @@ test("number input should have the same min, max and step as the range input", a
     `);
 
     await contains(":iframe .test-options-target").click();
-    await contains(".o_hb_options_container input[type='number']").keyDown("ArrowUp");
+    await contains(".o_hb_options_container input[type='text']").keyDown("ArrowUp");
 
     // Check that step=2
-    expect(".o_hb_options_container input[type='number']").toHaveProperty("value", 4);
+    expect(".o_hb_options_container input[type='text']").toHaveProperty("value", 4);
     expect(":iframe .test-options-target").toHaveInnerHTML("4");
     expect.verifySteps(["customAction 4"]);
 
-    await contains(".o_hb_options_container input[type='number']").keyDown("ArrowUp");
+    await contains(".o_hb_options_container input[type='text']").keyDown("ArrowUp");
 
     // Check that max=5
-    expect(".o_hb_options_container input[type='number']").toHaveProperty("value", 5);
+    expect(".o_hb_options_container input[type='text']").toHaveProperty("value", 5);
     expect(":iframe .test-options-target").toHaveInnerHTML("5");
     expect.verifySteps(["customAction 5"]);
 
-    await contains(".o_hb_options_container input[type='number']").keyDown("ArrowDown");
-    await contains(".o_hb_options_container input[type='number']").keyDown("ArrowDown");
-    await contains(".o_hb_options_container input[type='number']").keyDown("ArrowDown");
+    await contains(".o_hb_options_container input[type='text']").keyDown("ArrowDown");
+    await contains(".o_hb_options_container input[type='text']").keyDown("ArrowDown");
+    await contains(".o_hb_options_container input[type='text']").keyDown("ArrowDown");
 
     // Check that min=0
-    expect(".o_hb_options_container input[type='number']").toHaveProperty("value", 0);
+    expect(".o_hb_options_container input[type='text']").toHaveProperty("value", 0);
     expect(":iframe .test-options-target").toHaveInnerHTML("0");
     expect.verifySteps(["customAction 3", "customAction 1", "customAction 0"]);
 });
@@ -472,7 +472,7 @@ test("should map range from 0 to 100 scale when empty convertorRatio object is p
     });
     await setupHTMLBuilder(`<div class="test-ratio-target">-2</div>`);
     await contains(":iframe .test-ratio-target").click();
-    expect(".o_hb_options_container input[type='number']").toHaveProperty("value", 1);
+    expect(".o_hb_options_container input[type='text']").toHaveProperty("value", 1);
     // Arrow down at min (-2) stays at -2 (boundary check)
     await contains(".o_hb_options_container input[type='range']").focus();
     await press("ArrowDown");
@@ -483,11 +483,11 @@ test("should map range from 0 to 100 scale when empty convertorRatio object is p
     await press("ArrowUp");
     await advanceTime(750);
     expect.verifySteps(["applied -1.9", "applied -1.9"]);
-    expect(".o_hb_options_container input[type='number']").toHaveProperty("value", 3);
+    expect(".o_hb_options_container input[type='text']").toHaveProperty("value", 3);
     // Arrow up on input: moves from 2.5 -> 5 (ratio), applies -1.8
-    await contains(".o_hb_options_container input[type='number']").focus();
+    await contains(".o_hb_options_container input[type='text']").focus();
     await press("ArrowUp");
     await advanceTime(750);
     expect.verifySteps(["applied -1.84", "applied -1.84"]);
-    expect(".o_hb_options_container input[type='number']").toHaveProperty("value", 5);
+    expect(".o_hb_options_container input[type='text']").toHaveProperty("value", 5);
 });

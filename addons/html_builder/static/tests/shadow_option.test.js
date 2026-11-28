@@ -36,7 +36,12 @@ test("edit box-shadow with ShadowOption", async () => {
         "Blur",
         "Spread",
     ]);
-    expect(queryAllValues('[data-action-id="setShadowStyle"] input')).toEqual([8, 0, 16, 0]);
+    expect(queryAllValues('[data-action-id="setShadowStyle"] input')).toEqual([
+        "8",
+        "0",
+        "16",
+        "0",
+    ]);
     expect(":iframe .test-options-target").toHaveOuterHTML(
         '<div class="test-options-target o-shadow-custom" style="box-shadow: rgba(0, 0, 0, 0.15) 0px 8px 16px 0px !important;">b</div>'
     );
@@ -67,7 +72,12 @@ test("edit box-shadow with ShadowOption", async () => {
         "Blur",
         "Spread",
     ]);
-    expect(queryAllValues('[data-action-id="setShadowStyle"] input')).toEqual([82, 10, 10.5, 0.4]);
+    expect(queryAllValues('[data-action-id="setShadowStyle"] input')).toEqual([
+        "82",
+        "10",
+        "10.5",
+        "0.4",
+    ]);
     expect(":iframe .test-options-target").toHaveOuterHTML(
         '<div class="test-options-target o-shadow-custom" style="box-shadow: rgba(0, 0, 0, 0.15) 10px 82px 10.5px 0.4px inset !important;">b</div>'
     );

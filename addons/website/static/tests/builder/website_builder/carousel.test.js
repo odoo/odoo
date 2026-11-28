@@ -79,7 +79,7 @@ test("Test Carousel Option (s_carousel)", async () => {
     expect(carouselEl).not.toHaveStyle("--transition-duration", { inline: true });
     expect(carouselEl).toHaveStyle({ "--transition-duration": "600ms" });
 
-    await contains(".o_hb_row[data-label='Duration'] input[type='number']").edit("2");
+    await contains(".o_hb_row[data-label='Duration'] input[type='text']").edit("2");
     expect(carouselEl).toHaveAttribute("data-bs-ride", "true");
     expect(carouselEl).toHaveAttribute("data-bs-interval", "3000");
     expect(carouselEl).toHaveStyle({ "--transition-duration": "2000ms" });
@@ -154,7 +154,7 @@ test("Test Carousel Option (s_image_gallery)", async () => {
     expect(carouselEl).not.toHaveStyle("--transition-duration", { inline: true });
     expect(carouselEl).toHaveStyle({ "--transition-duration": "600ms" });
 
-    await contains(".o_hb_row[data-label='Duration'] input[type='number']").edit("2");
+    await contains(".o_hb_row[data-label='Duration'] input[type='text']").edit("2");
     expect(carouselEl).toHaveAttribute("data-bs-ride", "true");
     expect(carouselEl).toHaveAttribute("data-bs-interval", "3000");
     expect(carouselEl).toHaveStyle({ "--transition-duration": "2000ms" });
