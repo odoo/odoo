@@ -48,6 +48,8 @@ class StockQuant(models.Model):
     def _compute_value(self):
         self.fetch(['company_id', 'location_id', 'owner_id', 'product_id', 'quantity', 'lot_id'])
         self.value = 0
+        quant_companies = self.company_id
+        valuation_contexts = self.env['product.product']._get_valuation_contexts(quant_companies)
         for quant in self:
             if not quant.location_id or not quant.product_id or\
                     not quant.location_id._should_be_valued() or\
@@ -58,7 +60,12 @@ class StockQuant(models.Model):
                 quantity = quant.lot_id.with_company(quant.company_id).with_context(owners=[False, self.env.company.partner_id.id]).product_qty
                 value = quant.lot_id.with_company(quant.company_id).total_value
             else:
-                quantity = quant.product_id.with_company(quant.company_id)._with_valuation_context().qty_available
+                quantity = (
+                    quant.product_id
+                    .with_company(quant.company_id)
+                    .with_context(**valuation_contexts[quant.company_id])
+                    .qty_available
+                )
                 value = quant.product_id.with_company(quant.company_id).total_value
             if quant.product_id.uom_id.is_zero(quantity):
                 continue
