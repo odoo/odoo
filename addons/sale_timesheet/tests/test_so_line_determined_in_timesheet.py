@@ -378,4 +378,4 @@ class TestSoLineDeterminedInTimesheet(TestCommonSaleTimesheet):
             'auto_account_id': self.analytic_account_sale.id,
             'project_id': so_lines[0].project_id.id,
         })
-        self.assertEqual(timesheet.so_line.id, so_lines[1].id)
+        self.assertEqual(timesheet.so_line.id, so_lines[2].id, "The SOL should come from the mapping of the timesheet's employee")
