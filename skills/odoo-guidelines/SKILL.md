@@ -49,6 +49,7 @@ touching instead of loading whole files.
 | [Check a JSON-RPC call by its result, never by its status](guidelines/tests.md#check-a-json-rpc-call-by-its-result-never-by-its-status) | a test that calls a route with `url_open` or `make_jsonrpc_request` |
 | [Run the postcommit hooks a test depends on](guidelines/tests.md#run-the-postcommit-hooks-a-test-depends-on) | a test of a webhook, a sync, or anything else queued on `cr.postcommit` |
 | [Clear the cache before acting as a restricted user](guidelines/tests.md#clear-the-cache-before-acting-as-a-restricted-user) | a test that calls code with `with_user`, `with_company` or `@users` |
+| [Assert only on the records the test created](guidelines/tests.md#assert-only-on-the-records-the-test-created) | a test that asserts on a search, a count or a name lookup |
 | [Plain ASCII punctuation in comments and messages](guidelines/comments.md#plain-ascii-punctuation-in-comments-and-messages) | writing a comment, a docstring, a user-facing string, or a commit message |
 | [Comment a deviation the requirements force](guidelines/comments.md#comment-a-deviation-the-requirements-force) | a requirement (spec, ticket, caller) makes the code break one of these guidelines |
 | [No comment unless the code cannot show why](guidelines/comments.md#no-comment-unless-the-code-cannot-show-why) | adding or editing a comment in code |
