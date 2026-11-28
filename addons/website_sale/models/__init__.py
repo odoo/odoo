@@ -12,6 +12,7 @@ from . import (
     payment_transaction,
     product_attribute,
     product_attribute_category,
+    product_attribute_value,
     product_combo,
     product_document,
     product_feed,
@@ -29,6 +30,7 @@ from . import (
     product_wishlist,
     res_company,
     res_config_settings,
+    res_groups,
     res_partner,
     res_users,
     sale_order,
@@ -44,5 +46,3 @@ from . import (
     website_visitor,
     withdrawal_request,
 )
-
-from . import res_groups

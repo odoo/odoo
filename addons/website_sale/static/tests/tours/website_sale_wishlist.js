@@ -1,5 +1,6 @@
 import { registry } from "@web/core/registry";
 import * as tourUtils from "@website_sale/js/tours/wishlist_tour_utils";
+import { assertPills, pickPills } from "@website_sale/js/tours/tour_utils";
 
 registry.category("web_tour.tours").add('website_sale.wishlist_updates', {
     steps: () => [
@@ -48,14 +49,8 @@ registry.category("web_tour.tours").add('website_sale.wishlist_updates', {
             content: "check the first variant is already in wishlist",
             trigger: '#product_detail .o_add_wishlist_dyn:disabled',
         },
-        {
-            trigger: "#product_detail label:contains(Aluminium) input",
-        },
-        {
-            content: "change variant",
-            trigger: 'label:contains(Aluminium) input',
-            run: "click",
-        },
+        assertPills("Aluminium"),
+        pickPills("Aluminium"),
         {
             trigger: "#product_detail .o_add_wishlist_dyn:not(:disabled)",
         },

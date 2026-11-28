@@ -7,22 +7,12 @@ registry.category("web_tour.tours").add("website_sale.update_cart", {
         {
             trigger: "#product_detail",
         },
-        {
-            content: "select Conference Chair Aluminium",
-            trigger: "label:contains(Aluminium) input",
-            run: "click",
-        },
+        tourUtils.pickPills("Aluminium"),
         {
             trigger: "#product_detail",
         },
-        {
-            content: "select Conference Chair Steel",
-            trigger: "label:contains(Steel) input",
-            run: "click",
-        },
-        {
-            trigger: "label:contains(Steel) input:checked",
-        },
+        tourUtils.pickPills("Steel"),
+        tourUtils.assertPills("Steel", { active: true }),
         ...tourUtils.addToCartFromProductPage(),
         {
             content: "click in modal on 'Proceed to checkout' button",

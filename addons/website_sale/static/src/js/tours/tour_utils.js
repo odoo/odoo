@@ -41,6 +41,40 @@ export function assertProductPageStrikeThroughPrice(price) {
     }
 }
 
+export function pickPills(valueName) {
+    return {
+        content: `Pick pills attribute value ${valueName}`,
+        trigger: `li.o_variant_pills label:contains("${valueName}")`,
+        run: "click",
+    };
+}
+
+/**
+ * @param {boolean} [states.active] - Whether the pill should be selected.
+ * @param {boolean} [states.available] - Whether the pill should be available (not
+ *     `css_not_available`); an unavailable pill must remain clickable.
+ */
+export function assertPills(valueName, { active, available } = {}) {
+    let pillsSelector = "li.o_variant_pills";
+    const contentStates = [];
+    if (active !== undefined) {
+        pillsSelector += active ? ".active:has(input:checked)" : ":not(.active)";
+        contentStates.push(active ? "active" : "not active");
+    }
+    if (available !== undefined) {
+        pillsSelector += available
+            ? ":not(.css_not_available)"
+            : ".css_not_available:has(input:not([disabled]))";
+        contentStates.push(available ? "available" : "not available");
+    }
+    return {
+        content: `Check that pills attribute value ${valueName} is ${
+            contentStates.join(" and ") || "displayed"
+        }`,
+        trigger: `${pillsSelector}:has(label:contains("${valueName}"))`,
+    };
+}
+
 export function addToCartFromProductPage({ productHasVariants = false } = {}) {
     const steps = [
         {

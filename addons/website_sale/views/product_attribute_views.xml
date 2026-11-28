@@ -35,6 +35,27 @@
                     </group>
                 </page>
             </page>
+            <xpath
+                expr="//page[@name='attribute_values']//list//field[@name='name']"
+                position="after"
+            >
+                <field
+                    name="parent_id"
+                    column_invisible="parent.display_type == 'range'"
+                    context="{'show_attribute': False}"
+                    options="{'no_create': True}"
+                    readonly="child_ids"
+                    optional="hide"
+                />
+            </xpath>
+            <xpath
+                expr="//page[@name='attribute_values']//list//field[@name='name']"
+                position="attributes"
+            >
+                <attribute name="decoration-muted">
+                    parent_id and parent.display_type != 'range'
+                </attribute>
+            </xpath>
         </field>
     </record>
 
@@ -44,7 +65,7 @@
         <field name="inherit_id" ref="product.attribute_tree_view"/>
         <field name="arch" type="xml">
             <field name="create_variant" position="after">
-                <field name="visibility" string="eCommerce Filter Visibility"/>
+                <field name="visibility" string="eCommerce Filter Visibility" optional="hide"/>
             </field>
             <field name="name" position="after">
                <field name="category_id"/>

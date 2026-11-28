@@ -46,11 +46,9 @@ registry.category("web_tour.tours").add("event_sale_with_product_configurator_to
             trigger: 'td[name="price_subtotal"]:contains("16.50")', // wait for the optional product line
         },
         ...tourUtils.addProduct("Registration Event (TEST variants)", 3),
-        {
-            trigger:
-                'tr:has(div[name="o_sale_product_configurator_name"]:contains("Registration Event (TEST variants)")) .form-check:has(label:contains("Adult")) input',
-            run: "click",
-        },
+        configuratorTourUtils.selectAttribute(
+            "Registration Event (TEST variants)", "Age", "Adult", "pills"
+        ),
         {
             content: "Wait that adult option is set",
             trigger:

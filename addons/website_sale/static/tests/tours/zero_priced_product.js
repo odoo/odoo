@@ -1,4 +1,5 @@
 import { registry } from '@web/core/registry';
+import { pickPills } from '@website_sale/js/tours/tour_utils';
 
 registry.category('web_tour.tours').add('website_sale.contact_us_button', {
     steps: () => [
@@ -18,11 +19,7 @@ registry.category('web_tour.tours').add('website_sale.contact_us_button', {
             content: '"Contact Us" button should be hidden',
             trigger: '#contact_us_wrapper:not(:visible)',
         },
-        {
-            content: "Select attribute with price zero value",
-            trigger: '.js_attribute_value:contains(blue) input',
-            run: 'click',
-        },
+        pickPills("blue"),
         {
             content: "Price should be hidden",
             trigger: '.product_price:not(:visible)',

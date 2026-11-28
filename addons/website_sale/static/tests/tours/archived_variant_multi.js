@@ -1,4 +1,5 @@
 import { registry } from "@web/core/registry";
+import { assertPills, pickPills } from "@website_sale/js/tours/tour_utils";
 
 function fail(errorMessage) {
     const tour = registry.get("tourManager");
@@ -13,30 +14,12 @@ function assert(current, expected, info) {
 
 registry.category("web_tour.tours").add('website_sale.archived_variant_multi', {
     steps: () => [
-        {
-            content: 'click on the first variant',
-            trigger: 'input[data-attribute-name="Size"][data-value-name="Small"]',
-            run: "click",
-        },
-        {
-            content: "click on the second variant",
-            trigger: 'input[data-attribute-name="Color"][data-value-name="Black"]',
-            run: "click",
-        },
-        {
-            content: "check that brand b is not available (but clickable)",
-            trigger: '.css_not_available input.css_not_available:not([disabled])',
-        },
-        {
-            content: "change second variant to make brand b available",
-            trigger: 'input[data-attribute-name="Color"][data-value-name="White"]',
-            run: "click",
-        },
-        {
-            content: "check if brand b is available again",
-            trigger: 'input[data-value-name="Brand B"]:not(:has(.css_not_available))',
-            run: "click",
-        },
+        pickPills("Small"),
+        pickPills("Black"),
+        assertPills("Brand B", { available: false }),
+        pickPills("White"),
+        assertPills("Brand B", { available: true }),
+        pickPills("Brand B"),
     ]
 });
 

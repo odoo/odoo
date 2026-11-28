@@ -1,4 +1,5 @@
 import { registry } from "@web/core/registry";
+import { pickPills } from "@website_sale/js/tours/tour_utils";
 
 // This tour relies on a data created from the python test.
 registry.category("web_tour.tours").add("website_sale.deleted_archived_variants", {
@@ -19,26 +20,14 @@ registry.category("web_tour.tours").add("website_sale.deleted_archived_variants"
             trigger: '.oe_currency_value:contains("31.00")',
             run: "click",
         },
-        {
-            content: "click on the second variant",
-            trigger: 'input[data-attribute-name="My Attribute"][data-value-name="My Value 2"]',
-            run: "click",
-        },
-        {
-            content: "click on the 3rd variant to reset the warning",
-            trigger: 'input[data-attribute-name="My Attribute"][data-value-name="My Value 3"]',
-            run: "click",
-        },
+        pickPills("My Value 2"),
+        pickPills("My Value 3"),
         {
             content: "check price (3rd variant)",
             trigger: '.oe_currency_value:contains("31.00")',
             run: "click",
         },
-        {
-            content: "click on the first variant",
-            trigger: 'input[data-attribute-name="My Attribute"][data-value-name="My Value 1"]',
-            run: "click",
-        },
+        pickPills("My Value 1"),
         {
             content: "check add to cart not possible",
             trigger: '.js_product button[name="add_to_cart"]:disabled',
