@@ -506,5 +506,20 @@
             <field name="condition_work_entry_type_ids" eval="[(4, ref('hr_work_entry.za_work_entry_type_attendance'))]"/>
             <field name="work_entry_type_id" ref="hr_work_entry.za_work_entry_type_overtime_public_holidays"/>
         </record>
+
+        <!-- ================================================================
+             UK - United Kingdom
+             Hours worked beyond the employee schedule of the day
+             ================================================================ -->
+        <record id="hr_time_rule_l10n_uk_employee_schedule" model="hr.time.rule">
+            <field name="name">Employee Schedule Rule</field>
+            <field name="sequence">10</field>
+            <field name="country_id" ref="base.uk"/>
+            <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'GB')]</field>
+            <field name="calendar_source">employee</field>
+            <field name="quantity_period">day</field>
+            <field name="condition_work_entry_type_ids" eval="[(4, ref('hr_work_entry.uk_work_entry_type_attendance'))]"/>
+            <field name="work_entry_type_id" ref="hr_work_entry.uk_work_entry_type_overtime"/>
+        </record>
     </data>
 </odoo>
