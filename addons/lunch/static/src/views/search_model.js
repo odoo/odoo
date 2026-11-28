@@ -1,7 +1,7 @@
 import { Domain } from '@web/core/domain';
 import { rpc } from "@web/core/network/rpc";
 import { SearchModel } from '@web/search/search_model';
-import { onWillStart, proxy } from "@odoo/owl";
+import { proxy } from "@odoo/owl";
 const { DateTime } = luxon;
 
 export class LunchSearchModel extends SearchModel {
@@ -13,11 +13,13 @@ export class LunchSearchModel extends SearchModel {
             userId: false,
             date: DateTime.now(),
         });
+    }
 
-        onWillStart(async () => {
-            const locationId = await rpc('/lunch/user_location_get', {});
-            this.updateLocationId(locationId);
-        });
+    async load(config) {
+        if (!config.state?.locationId) {
+            this.lunchState.locationId = await rpc("/lunch/user_location_get", {});
+        }
+        await super.load(...arguments);
     }
 
     exportState() {

@@ -46,12 +46,13 @@ class Product extends models.Model {
 
     name = fields.Char();
     is_available_at = fields.Integer({ string: "Available" });
+    location_id = fields.Many2one({ relation: "lunch.location" });
     price = fields.Float();
 
     _records = [
-        { id: 1, name: "Big Plate", is_available_at: 1, price: 4.95 },
-        { id: 2, name: "Small Plate", is_available_at: 2, price: 6.99 },
-        { id: 3, name: "Just One Plate", is_available_at: 2, price: 5.87 },
+        { id: 1, name: "Big Plate", is_available_at: 1, location_id: 1, price: 4.95 },
+        { id: 2, name: "Small Plate", is_available_at: 2, location_id: 2, price: 6.99 },
+        { id: 3, name: "Just One Plate", is_available_at: 2, location_id: 2, price: 5.87 },
     ];
 }
 
@@ -165,6 +166,31 @@ test("Location change", async () => {
     ).click();
 
     expect("article.o_kanban_record").toHaveCount(2);
+});
+
+test("Products are filtered on the user location with a search panel", async () => {
+    onRpc("web_search_read", ({ kwargs }) => expect.step(kwargs.domain));
+    await mountView({
+        type: "kanban",
+        resModel: "lunch.product",
+        searchViewArch: `
+            <search>
+                <searchpanel>
+                    <field name="location_id" select="multi" enable_counters="1"/>
+                </searchpanel>
+            </search>`,
+        arch: `
+            <kanban js_class="lunch_kanban">
+                <templates>
+                    <t t-name="card">
+                        <field name="name"/>
+                    </t>
+                </templates>
+            </kanban>`,
+    });
+
+    expect.verifySteps([[["is_available_at", "=", 1]]]);
+    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(1);
 });
 
 test("Manager: user change", async () => {

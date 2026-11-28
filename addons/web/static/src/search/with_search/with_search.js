@@ -1,5 +1,5 @@
-import { render, useSubEnv } from "@web/owl2/utils";
-import { Component, onWillStart, onWillUpdateProps, t, toRaw, useProps } from "@odoo/owl";
+import { useSubEnv } from "@web/owl2/utils";
+import { Component, onWillStart, onWillUpdateProps, signal, t, toRaw, useProps } from "@odoo/owl";
 import { CallbackRecorder, useSetupAction } from "@web/search/action_hook";
 import { SearchModel } from "@web/search/search_model";
 import { useBus, useService } from "@web/core/utils/hooks";
@@ -44,6 +44,7 @@ export const withSearchProps = {
 export class WithSearch extends Component {
     static template = "web.WithSearch";
     props = useProps(withSearchProps);
+    searchParams = signal(null);
 
     setup() {
         if (!this.env.__getContext__) {
@@ -72,7 +73,7 @@ export class WithSearch extends Component {
             : null;
         useSubEnv({ searchModel: this.searchModel, searchPanelState });
 
-        useBus(this.searchModel, "update", () => render(this));
+        useBus(this.searchModel, "update", () => this.updateSearchParams());
         useSetupAction({
             getGlobalState: () => ({
                 searchModel: JSON.stringify(this.searchModel.exportState()),
@@ -95,6 +96,7 @@ export class WithSearch extends Component {
                 delete config.globalState;
             }
             await this.searchModel.load(config);
+            this.updateSearchParams();
         });
 
         onWillUpdateProps(async (nextProps) => {
@@ -105,6 +107,16 @@ export class WithSearch extends Component {
                 }
             }
             await this.searchModel.reload(config);
+            this.updateSearchParams();
         });
+    }
+
+    /**
+     * Snapshot the search params only once the search model is consistent, so
+     * that the view reloads exactly once per search change.
+     */
+    updateSearchParams() {
+        const { context, domain, groupBy, orderBy, display } = this.searchModel;
+        this.searchParams.set({ context, domain, groupBy, orderBy, display });
     }
 }
