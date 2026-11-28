@@ -18,6 +18,7 @@ export class BuilderNumberSelect extends Component {
         ...builderNumberInputProps,
         inputAction: t.string().optional(),
         inputActionParam: t.any().optional(),
+        allowIncrement: t.boolean().optional(false),
     });
 
     setup() {
