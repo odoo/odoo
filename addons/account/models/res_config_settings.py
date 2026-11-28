@@ -309,3 +309,13 @@ class ResConfigSettings(models.TransientModel):
             if l10n_eu_oss_module.state != 'installed':
                 l10n_eu_oss_module.button_immediate_install()
             self.env.companies._map_eu_taxes()
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'type': 'success',
+                    'message': self.env._("EU OSS tax mapping has been successfully activated and updated."),
+                    # Reload the settings as when the button returns nothing, else the next save fails on required fields.
+                    'next': {'type': 'ir.actions.act_window_close'},
+                },
+            }
