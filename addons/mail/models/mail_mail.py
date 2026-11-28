@@ -515,6 +515,7 @@ class MailMail(models.Model):
                              for a in attachments.sudo().read(['name', 'raw', 'mimetype'])
                              if a['raw'] is not False]
 
+        bypass_body_alternative_generation = self.env['ir.config_parameter'].sudo().get_param('mail.bypass_body_alternative_generation', False)
         # Build final list of email values with personalized body for recipient
         results = []
         for email_values in email_list:
@@ -523,7 +524,7 @@ class MailMail(models.Model):
             results.append({
                 'attachments': email_attachments,
                 'body': body_personalized,
-                'body_alternative': tools.html2plaintext(body_personalized),
+                'body_alternative': tools.html2plaintext(body_personalized) if not bypass_body_alternative_generation else "",
                 'email_cc': email_values['email_cc'],
                 'email_from': self.email_from,
                 'email_to': email_values['email_to'],
