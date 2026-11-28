@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="paperformat_attendance_grid" model="report.paperformat">
+        <field name="name">Attendance Grid (Landscape)</field>
+        <field name="default" eval="True"/>
+        <field name="format">A4</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top" eval="15"/>
+        <field name="margin_bottom" eval="15"/>
+        <field name="margin_left" eval="10"/>
+        <field name="margin_right" eval="10"/>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing" eval="10"/>
+    </record>
+
+    <record id="action_report_attendance_grid" model="ir.actions.report">
+        <field name="name">Attendance Grid Print</field>
+        <field name="model">university.attendance.print.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">school_management.attendance_grid_report_view</field>
+        <field name="paperformat_id" ref="paperformat_attendance_grid"/>
+    </record>
+
+    <template id="attendance_grid_report_view">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="wizard">
+                <t t-set="grid" t-value="wizard.get_grid_data()"/>
+                <t t-if="grid.get('sections')">
+                    <t t-foreach="grid['sections']" t-as="section">
+                        <div class="page">
+                            <div class="row mb-3">
+                                <div class="col-5">
+                                    <div class="text-primary font-weight-bold" style="font-size: 16px;">
+                                        Attendance Grid
+                                    </div>
+                                    <div t-esc="section['display_name']"/>
+                                    <div>
+                                        <t t-if="wizard.month"><span t-esc="wizard.month"/>/</t>
+                                        <span t-esc="wizard.year"/>
+                                        <span t-if="section['department']">
+                                            - <span t-esc="section['department']"/>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-7 text-right">
+                                    <div t-if="wizard.create_date">
+                                        Generated on
+                                        <span t-field="wizard.create_date" t-options="{'widget': 'datetime'}"/>
+                                    </div>
+                                    <div class="text-muted">Legend: P=Present, A=Absent, L=Late, E=Excused, *=Holiday</div>
+                                </div>
+                            </div>
+                            <table class="table table-bordered table-sm table-condensed" t-att-style="'font-size: 8pt;'">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Student</th>
+                                        <th t-foreach="grid['calendar']['days']" t-as="day"
+                                            t-att-class="'text-center'"
+                                            t-att-style="day['weekend'] and 'background-color:#F1F1F1;' or ''">
+                                            <t t-if="day['holiday']" t-esc="day['day'] + '*'"/>
+                                            <t t-else="" t-esc="day['day']"/>
+                                        </th>
+                                        <th class="text-center">Absent</th>
+                                        <th class="text-center">Present</th>
+                                        <th class="text-center">Late</th>
+                                        <th class="text-center">Excused</th>
+                                        <th class="text-center">Rate %</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="section['students']" t-as="student">
+                                        <tr>
+                                            <td><span t-esc="student_index"/></td>
+                                            <td t-esc="student['name']"/>
+                                            <td t-foreach="student['cells']" t-as="cell"
+                                                t-att-class="'text-center'"
+                                                t-att-title="cell.get('remark') or ''">
+                                                <t t-if="cell['code']" t-esc="cell['code']"/>
+                                                <t t-else="" t-esc="''"/>
+                                            </td>
+                                            <td class="text-center" t-esc="student['counts']['absent']"/>
+                                            <td class="text-center" t-esc="student['counts']['present']"/>
+                                            <td class="text-center" t-esc="student['counts']['late']"/>
+                                            <td class="text-center" t-esc="student['counts']['excused']"/>
+                                            <td class="text-center" t-esc="student['rate']"/>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                            <p t-if="section.get('can_edit') or True" class="mt-2">
+                                <strong>Summary:</strong>
+                                <span t-esc="len(section['students'])"/> student(s) on this grid.
+                            </p>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

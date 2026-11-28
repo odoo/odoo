@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_wizard_reschedule_session_form" model="ir.ui.view">
+        <field name="name">wizard.reschedule.session.form</field>
+        <field name="model">wizard.reschedule.session</field>
+        <field name="arch" type="xml">
+            <form string="Reschedule Session">
+                <sheet>
+                    <div class="alert alert-info" role="alert">
+                        Select a new date, time, and classroom for this class session.
+                        The system will verify teacher availability, classroom availability, and ensure the date is not a holiday.
+                    </div>
+                    <group>
+                        <group string="Current Session Details">
+                            <field name="slot_id" readonly="1"/>
+                            <field name="section_id"/>
+                            <field name="teacher_id"/>
+                            <field name="current_start_time"/>
+                            <field name="current_end_time"/>
+                            <field name="current_classroom_id"/>
+                        </group>
+                        <group string="New Schedule Details">
+                            <field name="new_start_time"/>
+                            <field name="new_end_time"/>
+                            <field name="new_classroom_id"/>
+                            <field name="reschedule_reason"/>
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_reschedule" type="object" string="Confirm Reschedule" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_wizard_reschedule_session" model="ir.actions.act_window">
+        <field name="name">Reschedule Session</field>
+        <field name="res_model">wizard.reschedule.session</field>
+        <field name="view_mode">form</field>
+        <field name="limit">10</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_school_holiday_import_log_list" model="ir.ui.view">
+        <field name="name">school.holiday.import.log.list</field>
+        <field name="model">school.holiday.import.log</field>
+        <field name="arch" type="xml">
+            <list limit="10" string="Holiday Import Logs" create="false" edit="false">
+                <field name="import_date"/>
+                <field name="name"/>
+                <field name="user_id"/>
+                <field name="duplicate_policy"/>
+                <field name="total_records"/>
+                <field name="records_created"/>
+                <field name="records_updated"/>
+                <field name="records_skipped"/>
+                <field name="records_failed"/>
+                <field name="holiday_count" string="Imported Items"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_school_holiday_import_log_form" model="ir.ui.view">
+        <field name="name">school.holiday.import.log.form</field>
+        <field name="model">school.holiday.import.log</field>
+        <field name="arch" type="xml">
+            <form string="Import History Log" create="false" edit="false">
+                <header>
+                    <button name="action_view_holidays" type="object" string="View Imported Holidays" class="btn-primary" icon="fa-list"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group string="Import Details">
+                            <field name="user_id"/>
+                            <field name="import_date"/>
+                            <field name="duplicate_policy"/>
+                        </group>
+                        <group string="Statistics">
+                            <field name="total_records"/>
+                            <field name="records_created"/>
+                            <field name="records_updated"/>
+                            <field name="records_skipped"/>
+                            <field name="records_failed"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Errors &amp; Notes" name="errors_page">
+                            <field name="error_log" widget="ace" readonly="1"/>
+                        </page>
+                        <page string="Imported Holidays" name="holidays_page">
+                            <field name="holiday_ids" readonly="1">
+                                <list limit="10">
+                                    <field name="name"/>
+                                    <field name="date_from"/>
+                                    <field name="date_to"/>
+                                    <field name="holiday_type"/>
+                                    <field name="work_pay_multiplier"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_school_holiday_import_log" model="ir.actions.act_window">
+        <field name="name">Holiday Import History</field>
+        <field name="res_model">school.holiday.import.log</field>
+        <field name="view_mode">list,form</field>
+        <field name="limit">10</field>
+    </record>
+</odoo>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="school_management.AttendanceStatusField">
+        <div class="d-flex gap-1 o_attendance_status_field" role="radiogroup">
+            <t t-foreach="choices" t-as="choice" t-key="choice.value">
+                <button
+                    type="button"
+                    t-att-class="getChoiceClass(choice)"
+                    t-att-title="choice.title"
+                    t-att-aria-label="choice.title"
+                    t-att-aria-pressed="value === choice.value ? 'true' : 'false'"
+                    t-att-disabled="props.readonly"
+                    t-on-click.stop="() => selectStatus(choice.value)">
+                    <i t-att-class="`fa ${choice.icon}`" aria-hidden="true"/>
+                    <span t-esc="choice.label"/>
+                </button>
+            </t>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_university_attendance_kanban" model="ir.ui.view">
+        <field name="name">university.attendance.kanban</field>
+        <field name="model">university.attendance</field>
+        <field name="arch" type="xml">
+            <kanban limit="10" default_group_by="status" sample="1" quick_create="false" class="o_attendance_history_kanban" js_class="university_attendance_kanban">
+                <field name="date"/>
+                <field name="student_id"/>
+                <field name="section_id"/>
+                <field name="teacher_id"/>
+                <field name="status"/>
+                <field name="remark"/>
+                <templates>
+                    <!-- Card layout mirrors Scheduled Sessions agenda cards -->
+                    <t t-name="card">
+                        <main t-attf-class="p-3 o_att_history_card o_att_history_card--{{record.status.raw_value}}">
+                            <div class="d-flex justify-content-between align-items-start mb-2 gap-2">
+                                <div class="d-flex align-items-center gap-2 min-w-0">
+                                    <img t-att-src="'/web/image/university.student/' + record.student_id.raw_value + '/avatar_128'"
+                                         class="rounded-circle object-fit-cover border flex-shrink-0"
+                                         style="width: 36px; height: 36px;"
+                                         alt="Student avatar"
+                                         onerror="this.src='/web/static/img/placeholder.png'"/>
+                                    <strong class="text-truncate fs-6 text-dark" t-att-title="record.student_id.value">
+                                        <field name="student_id"/>
+                                    </strong>
+                                </div>
+                                <field name="status" widget="badge"
+                                       decoration-success="status == 'present'"
+                                       decoration-danger="status == 'absent'"
+                                       decoration-warning="status == 'late'"
+                                       decoration-muted="status == 'excused'"/>
+                            </div>
+                            <div class="d-flex align-items-center gap-1 text-muted small mb-2 text-truncate">
+                                <span t-if="record.section_id.value" class="fw-semibold text-dark text-truncate">
+                                    <i class="fa fa-users text-secondary me-1" title="Class Section"/>
+                                    <field name="section_id" options="{'no_open': True}"/>
+                                </span>
+                                <span t-if="record.section_id.value and record.teacher_id.value">·</span>
+                                <span t-if="record.teacher_id.value" class="text-truncate">
+                                    <i class="fa fa-user-circle-o text-muted me-1" title="Teacher"/>
+                                    <field name="teacher_id" options="{'no_open': True}"/>
+                                </span>
+                            </div>
+                            <div class="d-flex align-items-center gap-2 text-primary small fw-semibold mb-1">
+                                <i class="fa fa-calendar text-primary" title="Date"/>
+                                <field name="date"/>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-between pt-2 mt-2 border-top text-muted small" t-if="record.remark.value">
+                                <span class="text-truncate" t-att-title="record.remark.value">
+                                    <i class="fa fa-commenting me-1" title="Remark" aria-hidden="true"/>
+                                    <field name="remark"/>
+                                </span>
+                            </div>
+                        </main>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_university_attendance_list" model="ir.ui.view">
+        <field name="name">university.attendance.list</field>
+        <field name="model">university.attendance</field>
+        <field name="arch" type="xml">
+            <list limit="10" string="Attendance" sample="1" js_class="university_attendance_list">
+                <header>
+                    <button name="action_set_present" string="Mark Present" type="object" class="btn-success text-white" icon="fa-check"
+                            groups="school_management.group_school_teacher,school_management.group_school_admin,base.group_system"/>
+                    <button name="action_set_absent" string="Mark Absent" type="object" class="btn-outline-danger" icon="fa-times"
+                            groups="school_management.group_school_teacher,school_management.group_school_admin,base.group_system"/>
+                    <button name="action_set_late" string="Mark Late" type="object" class="btn-outline-warning text-dark" icon="fa-clock-o"
+                            groups="school_management.group_school_teacher,school_management.group_school_admin,base.group_system"/>
+                </header>
+                <field name="date"/>
+                <field name="student_id" string="Student"/>
+                <field name="section_id" string="Class Section"/>
+                <field name="teacher_id" string="Instructor" optional="show"/>
+                <field name="status" widget="badge"
+                       decoration-success="status == 'present'"
+                       decoration-danger="status == 'absent'"
+                       decoration-warning="status == 'late'"
+                       decoration-muted="status == 'excused'"/>
+                <field name="remark" optional="show" string="Note"/>
+                <button name="action_set_present" type="object" string="Present" icon="fa-check"
+                        title="Mark Present" aria-label="Mark Present" class="text-success"
+                        invisible="status == 'present'"
+                        groups="school_management.group_school_teacher,school_management.group_school_admin,base.group_system"/>
+                <button name="action_set_absent" type="object" string="Absent" icon="fa-times"
+                        title="Mark Absent" aria-label="Mark Absent" class="text-danger"
+                        invisible="status == 'absent'"
+                        groups="school_management.group_school_teacher,school_management.group_school_admin,base.group_system"/>
+                <button name="action_set_late" type="object" string="Late" icon="fa-clock-o"
+                        title="Mark Late" aria-label="Mark Late" class="text-warning"
+                        invisible="status == 'late'"
+                        groups="school_management.group_school_teacher,school_management.group_school_admin,base.group_system"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_university_attendance_form" model="ir.ui.view">
+        <field name="name">university.attendance.form</field>
+        <field name="model">university.attendance</field>
+        <field name="arch" type="xml">
+            <form string="Attendance" js_class="university_attendance_form">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="date"/>
+                            <field name="student_id"/>
+                            <field name="status"
+                                   widget="badge"
+                                   decoration-success="status == 'present'"
+                                   decoration-danger="status == 'absent'"
+                                   decoration-warning="status == 'late'"
+                                   decoration-muted="status == 'excused'"/>
+                            <field name="remark"/>
+                        </group>
+                        <group>
+                            <field name="section_id"/>
+                            <field name="teacher_id" readonly="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_university_attendance_search" model="ir.ui.view">
+        <field name="name">university.attendance.search</field>
+        <field name="model">university.attendance</field>
+        <field name="arch" type="xml">
+            <search string="Search Attendance">
+                <field name="student_id"/>
+                <field name="section_id"/>
+                <field name="teacher_id"/>
+                <filter string="Present" name="filter_present" domain="[('status', '=', 'present')]"/>
+                <filter string="Absent" name="filter_absent" domain="[('status', '=', 'absent')]"/>
+                <filter string="Late" name="filter_late" domain="[('status', '=', 'late')]"/>
+                <filter string="At-Risk Students" name="at_risk" domain="[('student_id.attendance_rate', '&lt;', 75)]"/>
+                <group>
+                    <filter string="Date" name="group_by_date" context="{'group_by': 'date'}"/>
+                    <filter string="Section" name="group_by_section" context="{'group_by': 'section_id'}"/>
+                    <filter string="Status" name="group_by_status" context="{'group_by': 'status'}"/>
+                </group>
+                <searchpanel>
+                    <field name="section_id" icon="fa-users" enable_counters="1"/>
+                    <field name="status" icon="fa-filter" enable_counters="1" select="multi"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_university_attendance" model="ir.actions.act_window">
+        <field name="name">Attendance</field>
+        <field name="res_model">university.attendance</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="limit">10</field>
+        <field name="search_view_id" ref="view_university_attendance_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No attendance records found.</p>
+            <p>Record attendance for students in their class sections.</p>
+        </field>
+    </record>
+
+    <record id="action_university_attendance_student" model="ir.actions.act_window">
+        <field name="name">My Attendance</field>
+        <field name="res_model">university.attendance</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="limit">10</field>
+        <field name="domain">[('student_id.user_id', '=', uid)]</field>
+        <field name="context">{'create': False, 'edit': False, 'delete': False}</field>
+        <field name="search_view_id" ref="view_university_attendance_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No attendance records found.</p>
+            <p>Your class attendance history will appear here once recorded by your instructors.</p>
+        </field>
+    </record>
+</odoo>

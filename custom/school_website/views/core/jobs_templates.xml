@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- University Jobs / Careers (/jobs) -->
+    <template id="jobs_page_template" name="Careers &amp; Opportunities">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure oe_empty">
+                <!-- Header Hero Banner with Campus Backdrop (Matching Contact Us) -->
+                <section class="harvard-about-hero" style="background-image: url('/school_website/static/src/img/harvard_campus_hero.jpg');">
+                    <div class="harvard-about-hero-overlay"></div>
+                    <div class="container harvard-about-hero-content text-center py-4">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb justify-content-center mb-2 small">
+                                <li class="breadcrumb-item"><a href="/" class="text-white-50 text-decoration-none">Home</a></li>
+                                <li class="breadcrumb-item active text-white" aria-current="page">Careers</li>
+                            </ol>
+                        </nav>
+                        <span class="badge bg-danger text-uppercase px-3 py-2 fw-semibold mb-3 shadow-sm">
+                            Join Our Faculty &amp; Staff
+                        </span>
+                        <h1 class="display-3 fw-bold mb-3 text-white">Careers at Harvard University</h1>
+                        <p class="lead text-white-50 mx-auto mb-4" style="max-width: 760px; line-height: 1.8;">
+                            Discover teaching, research, and administrative opportunities across our academic departments.
+                        </p>
+                        <div class="d-flex justify-content-center align-items-center gap-3 flex-wrap text-white-50 small">
+                            <span class="bg-white bg-opacity-10 px-3 py-2 rounded-pill border border-white border-opacity-25">
+                                <i class="fa fa-map-marker text-danger me-1"/> Cambridge, Massachusetts
+                            </span>
+                            <span class="bg-white bg-opacity-10 px-3 py-2 rounded-pill border border-white border-opacity-25">
+                                <i class="fa fa-briefcase text-danger me-1"/> Academic &amp; Research Positions
+                            </span>
+                            <span class="bg-white bg-opacity-10 px-3 py-2 rounded-pill border border-white border-opacity-25">
+                                <i class="fa fa-heart text-danger me-1"/> Comprehensive Benefits
+                            </span>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="py-5 bg-light">
+                    <div class="container">
+                        <div class="row g-4">
+                            <div class="col-lg-8">
+                                <h3 class="h4 fw-bold mb-4">Open Academic &amp; Research Positions</h3>
+                                <t t-if="departments">
+                                    <t t-foreach="departments" t-as="dept">
+                                        <div class="bg-white p-4 rounded shadow-sm border mb-3">
+                                            <div class="d-flex justify-content-between align-items-start">
+                                                <div>
+                                                    <span class="badge bg-danger mb-2">Faculty Position</span>
+                                                    <h4 class="h5 fw-bold mb-1">Lecturer / Associate Professor</h4>
+                                                    <p class="text-muted small mb-0"><i class="fa fa-building-o me-1"/> Department of <t t-esc="dept.name"/></p>
+                                                </div>
+                                                <a href="/contactus?subject=Faculty Application" class="btn btn-outline-danger btn-sm">Apply Now</a>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </t>
+                                <t t-if="not departments">
+                                    <p class="text-muted">There are currently no active listings. Please check back soon or contact human resources.</p>
+                                </t>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="bg-white p-4 rounded shadow-sm border">
+                                    <h4 class="h5 fw-bold mb-3">Working at Harvard</h4>
+                                    <p class="small text-muted mb-3">We offer competitive compensation, comprehensive benefits, and an environment dedicated to intellectual growth and diversity.</p>
+                                    <a href="/contactus" class="btn btn-dark w-100">Contact HR Department</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+</odoo>

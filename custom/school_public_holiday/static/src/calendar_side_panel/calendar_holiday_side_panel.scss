@@ -1,0 +1,43 @@
+.o_calendar_holiday_panel {
+    max-width: 280px;
+
+    .o_calendar_holiday_card {
+        cursor: pointer;
+        transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+
+        &:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+            border-color: #dc3545 !important;
+        }
+
+        &.is_selected {
+            background-color: #fff5f5 !important;
+            border-color: #dc3545 !important;
+        }
+
+        &.is_today {
+            border-left-color: #dc3545 !important;
+            border-left-width: 4px !important;
+        }
+    }
+
+    .pulse-badge {
+        animation: pulseHoliday 2s infinite ease-in-out;
+    }
+}
+
+@keyframes pulseHoliday {
+    0% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.75;
+        transform: scale(1.04);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}

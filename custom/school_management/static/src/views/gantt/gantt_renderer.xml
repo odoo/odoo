@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="school_management.GanttRenderer">
+        <div class="o_gantt_wrapper d-flex flex-column flex-grow-1 overflow-auto bg-white position-relative">
+            <!-- Loading indicator -->
+            <div t-if="props.model.loading" class="o_gantt_loading_overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center bg-white bg-opacity-75 z-index-20">
+                <div class="spinner-border text-purple" role="status">
+                    <span class="visually-hidden">Loading schedule...</span>
+                </div>
+            </div>
+
+            <div class="o_gantt_table_container">
+                <table class="o_gantt_table w-100 border-collapse">
+                    <!-- HEADER ROW: Sticky Top -->
+                    <thead>
+                        <tr class="o_gantt_header_row">
+                            <th class="o_gantt_header_cell o_gantt_col_resource sticky-col-header text-start px-3 py-2 border-bottom border-end">
+                                <span class="fw-semibold text-muted small text-uppercase">Resource</span>
+                            </th>
+                            <t t-foreach="this.getDays()" t-as="day" t-key="day.dateStr">
+                                <th t-att-class="'o_gantt_header_cell text-center py-2 px-1 border-bottom border-end user-select-none ' + (day.isToday ? 'o_gantt_today' : '')">
+                                    <div class="o_gantt_day_title fw-bold fs-7 text-dark">
+                                        <t t-esc="day.dayName"/> <span class="fw-normal text-muted ms-1"><t t-esc="day.dayNumber"/></span>
+                                    </div>
+                                </th>
+                            </t>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <!-- ROW 1: OPEN SHIFTS (Shown first, unassigned records) -->
+                        <tr class="o_gantt_row o_gantt_open_shifts_row">
+                            <td class="o_gantt_resource_cell sticky-col px-3 py-2 border-bottom border-end bg-light">
+                                <div class="d-flex align-items-center justify-content-between mb-1">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span class="o_gantt_open_icon rounded bg-secondary-subtle text-secondary px-1 py-0 small fw-bold">
+                                            <i class="fa fa-user-o"/>
+                                        </span>
+                                        <span class="fw-bold text-dark fs-7">Open Shifts</span>
+                                    </div>
+                                    <span t-if="this.getOpenShifts().hours_label" class="badge bg-light text-muted border very-small fw-bold">
+                                        <t t-esc="this.getOpenShifts().hours_label"/>
+                                    </span>
+                                </div>
+                                <div class="o_gantt_progress_bar_bg w-100 bg-secondary-subtle rounded-pill">
+                                    <div class="o_gantt_progress_bar_fill rounded-pill bg-secondary" style="width: 100%; height: 3px;"/>
+                                </div>
+                            </td>
+
+                            <!-- Day cells for Open Shifts -->
+                            <t t-foreach="this.getDays()" t-as="day" t-key="day.dateStr">
+                                <td t-att-class="'o_gantt_cell p-1 border-bottom border-end position-relative align-top ' + (day.isToday ? 'o_gantt_today' : '')"
+                                    t-on-click="(ev) => this.onCellClick(false, day.dateStr, ev)">
+                                    <div class="o_gantt_cell_content d-flex flex-column gap-1 min-h-36">
+                                        <t t-set="openSlots" t-value="this.getSlotsForCell(false, day.dateStr)"/>
+                                        <t t-foreach="openSlots" t-as="slot" t-key="slot.id">
+                                            <div t-att-class="'o_gantt_pill position-relative rounded px-2 py-1 user-select-none shadow-2xs ' + this.getSlotColorClass(slot.color)"
+                                                 t-att-title="slot.display_name || slot.name"
+                                                 t-on-click="(ev) => this.onPillClick(slot, ev)">
+                                                <!-- Red corner marker for conflict or unpublished/draft -->
+                                                <span t-if="slot.has_conflict or !slot.is_published" class="o_gantt_corner_marker" title="Unpublished / Conflict"/>
+                                                <div class="o_gantt_pill_text text-truncate fw-semibold">
+                                                    <t t-esc="slot.pill_text"/>
+                                                </div>
+                                            </div>
+                                        </t>
+                                        <div class="o_gantt_cell_hover_btn position-absolute top-0 end-0 m-1 opacity-0 text-muted">
+                                            <i class="fa fa-plus-circle text-primary fs-7"/>
+                                        </div>
+                                    </div>
+                                </td>
+                            </t>
+                        </tr>
+
+                        <!-- RESOURCE ROWS (Grouped by resource_id) -->
+                        <t t-foreach="this.getResources()" t-as="res" t-key="res.id">
+                            <tr class="o_gantt_row">
+                                <!-- Row Header (Sticky Left) -->
+                                <td class="o_gantt_resource_cell sticky-col px-3 py-2 border-bottom border-end bg-white">
+                                    <div class="d-flex align-items-center justify-content-between mb-1">
+                                        <div class="d-flex align-items-center gap-2 overflow-hidden">
+                                            <!-- Avatar -->
+                                            <div class="o_gantt_avatar flex-shrink-0">
+                                                <img t-if="res.avatar_url" t-att-src="res.avatar_url" class="rounded-circle object-fit-cover w-100 h-100" alt="Avatar"/>
+                                                <div t-else="" class="o_gantt_avatar_placeholder rounded-circle bg-purple-subtle text-purple d-flex align-items-center justify-content-center fw-bold fs-7">
+                                                    <t t-esc="res.name ? res.name.substring(0, 2).toUpperCase() : 'RE'"/>
+                                                </div>
+                                            </div>
+                                            <!-- Name and (Role) -->
+                                            <div class="o_gantt_resource_info text-truncate">
+                                                <span class="fw-bold text-dark fs-7 text-truncate d-inline-block mw-100">
+                                                    <t t-esc="res.name"/>
+                                                </span>
+                                                <span t-if="res.role" class="text-muted very-small ms-1">
+                                                    <t t-esc="res.role.startsWith('(') ? res.role : '(' + res.role + ')'"/>
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Total Hours on Right (e.g. 8h, 33h, -21h) -->
+                                        <div class="o_gantt_hours_badge flex-shrink-0 ms-2">
+                                            <span t-if="res.hours_label" t-att-class="'fw-bold fs-7 ' + (res.is_overloaded ? 'text-danger' : 'text-dark')">
+                                                <t t-esc="res.hours_label"/>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Thin Progress Bar (green normal, red when overloaded) -->
+                                    <div class="o_gantt_progress_bar_bg w-100 bg-secondary-subtle rounded-pill">
+                                        <div t-att-class="'o_gantt_progress_bar_fill rounded-pill ' + (res.is_overloaded ? 'bg-danger' : 'bg-success')"
+                                             t-attf-style="width: #{res.progress_percentage}%; height: 3px;"/>
+                                    </div>
+                                </td>
+
+                                <!-- Day Cells for this Resource -->
+                                <t t-foreach="this.getDays()" t-as="day" t-key="day.dateStr">
+                                    <td t-att-class="'o_gantt_cell p-1 border-bottom border-end position-relative align-top ' + (day.isToday ? 'o_gantt_today' : (day.isWeekend ? 'o_gantt_weekend' : ''))"
+                                        t-on-click="(ev) => this.onCellClick(res.id, day.dateStr, ev)">
+                                        <div class="o_gantt_cell_content d-flex flex-column gap-1 min-h-36">
+                                            <t t-set="slots" t-value="this.getSlotsForCell(res.id, day.dateStr)"/>
+                                            <t t-foreach="slots" t-as="slot" t-key="slot.id">
+                                                <div t-att-class="'o_gantt_pill position-relative rounded px-2 py-1 user-select-none shadow-2xs ' + this.getSlotColorClass(slot.color)"
+                                                     t-att-title="slot.display_name || slot.name"
+                                                     t-on-click="(ev) => this.onPillClick(slot, ev)">
+                                                    <!-- Red corner marker for conflict or unpublished/draft -->
+                                                    <span t-if="slot.has_conflict or !slot.is_published" class="o_gantt_corner_marker" title="Unpublished / Conflict"/>
+                                                    <div class="o_gantt_pill_text text-truncate fw-semibold">
+                                                        <t t-esc="slot.pill_text"/>
+                                                    </div>
+                                                </div>
+                                            </t>
+                                            <div class="o_gantt_cell_hover_btn position-absolute top-0 end-0 m-1 opacity-0 text-muted">
+                                                <i class="fa fa-plus-circle text-primary fs-7"/>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </t>
+                            </tr>
+                        </t>
+
+                        <!-- Empty state if no resources -->
+                        <tr t-if="!this.getResources().length">
+                            <td colspan="8" class="text-center py-5 text-muted">
+                                <i class="fa fa-calendar-times-o fa-3x mb-3 text-muted opacity-50"/>
+                                <p class="fw-semibold mb-0">No resources or schedules found for this period.</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </t>
+
+</templates>

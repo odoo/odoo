@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Academic Role Assignment Views
+
+    Reusable appointment records that assign administrative roles (Head of Faculty,
+    Vice Head of Faculty, Head of Department) to academic staff without duplicating
+    people and while preserving historical assignments.
+-->
+<odoo>
+
+    <!-- ==================== LIST VIEW ==================== -->
+    <record id="view_university_academic_assignment_list" model="ir.ui.view">
+        <field name="name">university.academic.assignment.list</field>
+        <field name="model">university.academic.assignment</field>
+        <field name="arch" type="xml">
+            <list limit="10" string="Role Assignments" sample="1">
+                <field name="staff_id" string="Academic Staff"/>
+                <field name="staff_code" optional="show"/>
+                <field name="role" widget="badge"
+                       decoration-info="role == 'dean'"
+                       decoration-primary="role == 'vice_dean'"
+                       decoration-success="role == 'department_head'"/>
+                <field name="faculty_id"/>
+                <field name="department_id"/>
+                <field name="start_date"/>
+                <field name="end_date" optional="hide"/>
+                <field name="staff_email" optional="hide"/>
+                <field name="staff_phone" optional="hide"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ==================== FORM VIEW ==================== -->
+    <record id="view_university_academic_assignment_form" model="ir.ui.view">
+        <field name="name">university.academic.assignment.form</field>
+        <field name="model">university.academic.assignment</field>
+        <field name="arch" type="xml">
+            <form string="Role Assignment">
+                <header>
+                    <field name="active" widget="boolean_toggle" string="Active"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="staff_id"
+                                   required="1"
+                                   domain="[('active', '=', True), '|', ('department_id', '=', department_id), ('faculty_id', '=', faculty_id)]"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Assignment">
+                            <field name="role" required="1"/>
+                            <field name="staff_code" readonly="1"/>
+                            <field name="staff_email" readonly="1"/>
+                            <field name="staff_phone" readonly="1"/>
+                        </group>
+                        <group string="Scope">
+                            <field name="faculty_id"
+                                   invisible="role == 'department_head'"
+                                   required="role != 'department_head'"/>
+                            <field name="department_id"
+                                   invisible="role in ('dean', 'vice_dean')"
+                                   required="role == 'department_head'"/>
+                        </group>
+                    </group>
+                    <group string="Appointment Period">
+                        <field name="start_date" required="1"/>
+                        <field name="end_date"/>
+                    </group>
+                    <group string="Notes">
+                        <field name="notes"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ==================== SEARCH VIEW ==================== -->
+    <record id="view_university_academic_assignment_search" model="ir.ui.view">
+        <field name="name">university.academic.assignment.search</field>
+        <field name="model">university.academic.assignment</field>
+        <field name="arch" type="xml">
+            <search string="Search Assignments">
+                <field name="staff_id"/>
+                <field name="faculty_id"/>
+                <field name="department_id"/>
+                <filter string="Head of Faculty" name="filter_dean" domain="[('role', '=', 'dean')]"/>
+                <filter string="Vice Head of Faculty" name="filter_vice_dean" domain="[('role', '=', 'vice_dean')]"/>
+                <filter string="Head of Department" name="filter_hod" domain="[('role', '=', 'department_head')]"/>
+                <separator/>
+                <filter string="Active" name="filter_active" domain="[('active', '=', True)]"/>
+                <filter string="Archived" name="filter_inactive" domain="[('active', '=', False)]"/>
+                <group>
+                    <filter string="Role" name="group_by_role" context="{'group_by': 'role'}"/>
+                    <filter string="Faculty" name="group_by_faculty" context="{'group_by': 'faculty_id'}"/>
+                    <filter string="Department" name="group_by_department" context="{'group_by': 'department_id'}"/>
+                </group>
+                <searchpanel>
+                    <field name="faculty_id" icon="fa-university" enable_counters="1"/>
+                    <field name="department_id" icon="fa-building" enable_counters="1"/>
+                    <field name="role" icon="fa-briefcase" enable_counters="1" select="multi"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <!-- ==================== KANBAN VIEW ==================== -->
+    <record id="view_university_academic_assignment_kanban" model="ir.ui.view">
+        <field name="name">university.academic.assignment.kanban</field>
+        <field name="model">university.academic.assignment</field>
+        <field name="arch" type="xml">
+            <kanban limit="10" sample="1" default_group_by="role" quick_create="false">
+                <field name="staff_id"/>
+                <field name="role"/>
+                <field name="faculty_id"/>
+                <field name="department_id"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="active"/>
+                <field name="staff_email"/>
+                <field name="staff_phone"/>
+                <field name="staff_code"/>
+                <templates>
+                    <t t-name="card">
+                        <main class="p-3 d-flex flex-column justify-content-between h-100">
+                            <!-- Top Row: Avatar + Staff Name + Role Badge -->
+                            <div class="d-flex align-items-start gap-3 mb-2">
+                                <div class="position-relative flex-shrink-0" style="width: 52px; height: 52px;">
+                                    <img t-att-src="'/web/image/university.teacher/' + record.staff_id.raw_value + '/avatar_128'"
+                                         class="rounded-circle object-fit-cover w-100 h-100 border border-2 shadow-sm"
+                                         t-att-class="record.role.raw_value == 'dean' ? 'border-primary' : (record.role.raw_value == 'vice_dean' ? 'border-info' : 'border-success')"
+                                         alt="Academic Staff Avatar"
+                                         onerror="this.src='/web/static/img/placeholder.png'"/>
+                                </div>
+                                <div class="flex-grow-1 min-w-0">
+                                    <div class="d-flex align-items-center justify-content-between gap-1 mb-1">
+                                        <strong class="fs-6 text-dark text-truncate mb-0">
+                                            <field name="staff_id"/>
+                                        </strong>
+                                        <field name="active" widget="boolean_toggle"/>
+                                    </div>
+                                    <div class="d-flex align-items-center gap-1 flex-wrap">
+                                        <span t-if="record.staff_code.value" class="badge bg-light text-muted border text-truncate">
+                                            <field name="staff_code"/>
+                                        </span>
+                                        <span t-if="record.role.raw_value == 'dean'" class="badge rounded-pill bg-primary-subtle text-primary border border-primary-subtle fw-bold">
+                                            <i class="fa fa-graduation-cap me-1"/>Head of Faculty
+                                        </span>
+                                        <span t-elif="record.role.raw_value == 'vice_dean'" class="badge rounded-pill bg-info-subtle text-info border border-info-subtle fw-bold">
+                                            <i class="fa fa-university me-1"/>Vice Head
+                                        </span>
+                                        <span t-else="" class="badge rounded-pill bg-success-subtle text-success border border-success-subtle fw-bold">
+                                            <i class="fa fa-sitemap me-1"/>Head of Dept
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Middle Section: Scope (Faculty & Department) -->
+                            <div class="bg-light p-2 rounded-2 border mb-2 small">
+                                <div t-if="record.faculty_id.value" class="text-truncate text-secondary mb-1">
+                                    <i class="fa fa-university text-primary me-2" title="Faculty"/>
+                                    <span class="fw-semibold text-dark"><field name="faculty_id"/></span>
+                                </div>
+                                <div t-if="record.department_id.value" class="text-truncate text-secondary">
+                                    <i class="fa fa-building text-success me-2" title="Department"/>
+                                    <span class="fw-semibold text-dark"><field name="department_id"/></span>
+                                </div>
+                            </div>
+
+                            <!-- Bottom Row: Dates + Contacts -->
+                            <div class="d-flex align-items-center justify-content-between pt-2 border-top text-muted small">
+                                <div class="text-truncate">
+                                    <i class="fa fa-calendar-check-o me-1 text-primary" title="Appointment Period"/>
+                                    <span>Since <field name="start_date"/></span>
+                                    <span t-if="record.end_date.value"> → <field name="end_date"/></span>
+                                </div>
+                                <div class="d-flex align-items-center gap-2">
+                                    <a t-if="record.staff_email.value" t-att-href="'mailto:' + record.staff_email.value"
+                                       role="button" class="btn btn-sm btn-outline-secondary p-1 rounded-circle d-flex align-items-center justify-content-center"
+                                       style="width: 26px; height: 26px;" title="Send Email">
+                                        <i class="fa fa-envelope small"/>
+                                    </a>
+                                    <a t-if="record.staff_phone.value" t-att-href="'tel:' + record.staff_phone.value"
+                                       role="button" class="btn btn-sm btn-outline-secondary p-1 rounded-circle d-flex align-items-center justify-content-center"
+                                       style="width: 26px; height: 26px;" title="Call Staff">
+                                        <i class="fa fa-phone small"/>
+                                    </a>
+                                </div>
+                            </div>
+                        </main>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- ==================== WINDOW ACTION ==================== -->
+    <record id="action_university_academic_assignment" model="ir.actions.act_window">
+        <field name="name">Role Assignments</field>
+        <field name="res_model">university.academic.assignment</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="limit">10</field>
+        <field name="search_view_id" ref="view_university_academic_assignment_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create your first role assignment</p>
+            <p>Assign administrative roles (Head of Faculty, Vice Head of Faculty, Head of Department) to academic staff members.</p>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,534 @@
+.o_att_toolbar {
+    margin-bottom: 20px;
+}
+
+.o_att_title {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0;
+    color: #23374d;
+}
+
+.o_att_grid_toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.o_att_grid_title {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0;
+    color: #23374d;
+}
+
+.o_att_grid_controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+}
+
+.o_att_grid_label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: #5b6770;
+}
+
+.o_att_grid_label select,
+.o_att_grid_label input {
+    border: 1px solid #d1d8e0;
+    border-radius: 4px;
+    padding: 3px 8px;
+    font-size: 13px;
+    max-width: 110px;
+}
+
+.o_att_legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 10px 12px;
+    background: #f8fafc;
+    border: 1px solid #e3e9ef;
+    border-radius: 6px;
+    margin-bottom: 16px;
+    align-items: center;
+    font-size: 13px;
+}
+
+.o_att_legend_item {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.o_att_legend_code {
+    font-weight: 700;
+    color: #2c6bd8;
+    min-width: 14px;
+}
+
+.o_att_grid_empty {
+    margin-bottom: 16px;
+}
+
+.o_att_grid_section {
+    margin-bottom: 24px;
+}
+
+.o_att_grid_section_head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.o_att_grid_section_title {
+    font-size: 17px;
+    font-weight: 600;
+    margin: 0;
+    color: #23374d;
+}
+
+.o_att_grid_badge {
+    background: #e8f1fd;
+    color: #1f5fae;
+    border-radius: 12px;
+    padding: 2px 10px;
+    font-size: 12px;
+}
+
+.o_att_grid_badge--muted {
+    background: #eef1f4;
+    color: #5b6770;
+}
+
+.o_att_grid_table {
+    font-size: 13px;
+}
+
+.o_att_grid_table th {
+    vertical-align: middle;
+    white-space: nowrap;
+    background: #f8fafc;
+    font-weight: 600;
+}
+
+.o_att_day {
+    min-width: 36px;
+}
+
+.o_att_day_off {
+    background: #f1f4f8 !important;
+    color: #94a3b8;
+}
+
+.o_att_student {
+    max-width: 260px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.o_att_grid_code {
+    font-size: 11px;
+    margin-left: 6px;
+}
+
+.o_att_risk_dot {
+    color: #e4572e;
+    font-weight: 700;
+}
+
+.o_att_cell_select {
+    border: 0;
+    background: transparent;
+    width: 100%;
+    text-align: center;
+    padding: 2px;
+    font-weight: 600;
+    color: #23374d;
+    cursor: pointer;
+
+    &:focus {
+        outline: 2px solid #3b82f6;
+        border-radius: 4px;
+    }
+}
+
+.o_att_cell_code {
+    font-weight: 600;
+}
+
+.o_att_cell_present {
+    color: #14803c;
+}
+
+.o_att_cell_absent {
+    color: #dc2626;
+}
+
+.o_att_cell_late {
+    color: #d97706;
+}
+
+.o_att_cell_excused {
+    color: #7c7c8a;
+}
+
+.o_att_grid_rate {
+    font-weight: 700;
+}
+
+.o_att_grid_rate--risk {
+    color: #e4572e;
+}
+
+.o_att_risk_bar {
+    display: inline-block;
+    width: 120px;
+    height: 10px;
+    background: #f1f4f8;
+    border-radius: 5px;
+    overflow: hidden;
+    vertical-align: middle;
+}
+
+.o_att_risk_bar_fill {
+    height: 100%;
+    background: #e4572e;
+    border-radius: 5px;
+}
+
+.o_att_risk_pct {
+    margin-left: 8px;
+    font-size: 12px;
+    color: #5b6770;
+}
+
+.o_att_bar {
+    display: inline-block;
+    width: 160px;
+    height: 10px;
+    background: #f1f4f8;
+    border-radius: 5px;
+    overflow: hidden;
+    vertical-align: middle;
+}
+
+.o_att_bar_fill {
+    height: 100%;
+    border-radius: 5px;
+}
+
+.o_att_bar--good {
+    background: #14803c;
+}
+
+.o_att_bar--warn {
+    background: #d97706;
+}
+
+.o_att_bar--bad {
+    background: #dc2626;
+}
+
+/* Base Client Action Container Scrolling */
+.o_att_at_risk,
+.o_att_grid {
+    background-color: #f8fafc;
+    height: 100%;
+    min-height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    box-sizing: border-box;
+}
+
+.o_att_toolbar,
+.o_att_grid_toolbar {
+    position: sticky;
+    top: -1.5rem;
+    z-index: 10;
+    background-color: #f8fafc;
+    padding-top: 1.5rem;
+    padding-bottom: 0.75rem;
+    margin-top: -1.5rem;
+}
+
+.o_att_student_card,
+.o_att_section_card {
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    border-color: #e2e8f0 !important;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08) !important;
+    }
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.o_att_student_mini_list {
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+}
+
+/* Odoo Kanban Header & Container Card Styles */
+.o_att_at_risk {
+    .att_container {
+        transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+        border-color: #e2e8f0;
+
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08) !important;
+        }
+
+        &.border-primary {
+            border-color: var(--bs-primary, #0d6efd) !important;
+        }
+
+        &.border-danger {
+            border-color: var(--bs-danger, #dc3545) !important;
+        }
+
+        &.border-warning {
+            border-color: var(--bs-warning, #ffc107) !important;
+        }
+    }
+
+    .o_kanban_header {
+        position: sticky;
+        top: 3.5rem;
+        z-index: 5;
+        backdrop-filter: blur(8px);
+        transition: box-shadow 0.15s ease;
+    }
+}
+
+/* ==========================================================================
+   Modern Dashboard Layout for Attendance Comparison (Matching Staff Attendance)
+   ========================================================================== */
+.o_att_comparison {
+    --att-primary: #714B67;
+    --att-primary-hover: #5d3d54;
+    --att-border: #e2e8f0;
+    --att-text: #0f172a;
+    --att-muted: #64748b;
+
+    background-color: #f8fafc;
+    height: 100%;
+    min-height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    box-sizing: border-box;
+
+    .transition-all {
+        transition: all 0.2s ease;
+    }
+
+    .o_att_breadcrumb {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+        min-height: 56px;
+        padding: 12px 24px;
+        border-bottom: 1px solid var(--att-border);
+        color: var(--att-muted);
+        background: #ffffff;
+    }
+
+    .o_att_breadcrumb_link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 0;
+        border: 0;
+        color: var(--att-primary);
+        background: transparent;
+        cursor: pointer;
+        font-weight: 500;
+        font-size: 14px;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+    .o_att_breadcrumb_record {
+        overflow-wrap: anywhere;
+        color: var(--att-text);
+        font-weight: 600;
+        font-size: 14px;
+    }
+
+    .o_att_comparison_container {
+        max-width: 100%;
+        margin: 0 auto;
+
+        .card {
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #e2e8f0 !important;
+        }
+
+        .o_att_matrix_greeting {
+            font-size: 1.25rem;
+            letter-spacing: -0.2px;
+            color: #0f172a;
+        }
+
+        .o_att_matrix_time {
+            font-size: 0.95rem;
+            color: #475569;
+        }
+
+        .o_att_matrix_print_btn {
+            border-color: #cbd5e1;
+            color: #334155;
+            background: #ffffff;
+            transition: all 0.15s ease;
+
+            &:hover {
+                background: #f1f5f9;
+                border-color: #94a3b8;
+                color: #0f172a;
+            }
+        }
+
+        .o_att_filter_group {
+            min-width: 130px;
+        }
+
+        .o_att_matrix_select {
+            border-color: #cbd5e1;
+            background-color: #ffffff;
+            color: #1e293b;
+            font-size: 0.85rem;
+            border-radius: 6px;
+            cursor: pointer;
+
+            &:focus {
+                border-color: #714B67;
+                box-shadow: 0 0 0 2px rgba(113, 75, 103, 0.15);
+            }
+        }
+
+        // Legend Badges Matching Staff Attendance
+        .o_att_legend_pill {
+            font-size: 0.78rem;
+            font-weight: 600;
+            padding: 0.38rem 0.85rem;
+            border-radius: 4px;
+            letter-spacing: 0.2px;
+            display: inline-flex;
+            align-items: center;
+            line-height: 1.2;
+            cursor: pointer;
+            transition: all 0.15s ease;
+
+            &:hover {
+                opacity: 0.9;
+                transform: translateY(-1px);
+            }
+        }
+
+        .o_att_legend--present {
+            background-color: #10b981 !important;
+            color: #ffffff !important;
+        }
+
+        .o_att_legend--absent {
+            background-color: #ef4444 !important;
+            color: #ffffff !important;
+        }
+
+        .o_att_legend--leave {
+            background-color: #f59e0b !important;
+            color: #ffffff !important;
+        }
+
+        .o_att_legend--weekend {
+            background-color: #64748b !important;
+            color: #ffffff !important;
+        }
+
+        .o_att_legend--holiday {
+            background-color: #8b5cf6 !important;
+            color: #ffffff !important;
+        }
+    }
+
+    .badge {
+        white-space: nowrap !important;
+        flex-shrink: 0 !important;
+    }
+
+    .o_att_faculty_card {
+        border-color: #e2e8f0;
+        transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08) !important;
+            border-color: #cbd5e1 !important;
+        }
+
+        &.border-primary {
+            border-color: var(--bs-primary, #0d6efd) !important;
+        }
+    }
+
+    .o_att_dept_banner {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-left: 4px solid var(--bs-primary, #0d6efd);
+        border-radius: 6px;
+        padding: 12px 18px;
+    }
+
+    .att_container {
+        transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+        border-color: #e2e8f0;
+
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08) !important;
+        }
+    }
+
+    @media print {
+        height: auto !important;
+        overflow: visible !important;
+        background: #ffffff !important;
+
+        .o_att_breadcrumb,
+        .o_att_matrix_print_btn,
+        .o_att_filter_group,
+        .btn-group {
+            display: none !important;
+        }
+
+        .o_att_comparison_container {
+            padding: 0 !important;
+
+            .card {
+                border: none !important;
+                box-shadow: none !important;
+            }
+        }
+    }
+}
+

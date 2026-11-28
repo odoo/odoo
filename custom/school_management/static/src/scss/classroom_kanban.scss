@@ -1,0 +1,95 @@
+// Classroom Kanban View Styles
+// Strictly scoped to .o_classroom_kanban to prevent any leakage into global kanban views
+
+.o_classroom_kanban,
+.o_university_classroom_kanban {
+    .o_classroom_thumb { width: 52px; height: 52px; }
+    .o_room_type_icon { padding: 14px; }
+    // 3-4 columns on desktop with natural card sizing
+    --KanbanRecord-width: 320px;
+
+    .o_kanban_record {
+        align-self: start !important;
+        height: auto !important;
+        margin-bottom: 0.5rem;
+    }
+
+    .o_classroom_kanban_card {
+        height: auto !important;
+        min-height: unset !important;
+        border-radius: var(--bs-border-radius-lg, 10px);
+        border: 1px solid var(--border-color, var(--bs-border-color, #e2e8f0));
+        background-color: var(--bs-card-bg, var(--surface-card, #ffffff));
+        color: var(--bs-body-color, #1e293b);
+        transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+
+        &:hover,
+        &:focus-within {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            border-color: var(--bs-border-color-translucent, #cbd5e1);
+        }
+
+        // Room Type Icon Tile (44x44px centered icon tile)
+        .o_room_type_icon {
+            width: 44px;
+            height: 44px;
+            min-width: 44px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.15rem;
+            border-radius: var(--bs-border-radius-md, 8px);
+        }
+
+        .o_room_type_classroom {
+            background-color: var(--bs-secondary-bg-subtle, #f1f5f9);
+            color: var(--bs-secondary-text-emphasis, #475569);
+            border: 1px solid var(--bs-secondary-border-subtle, #cbd5e1);
+        }
+
+        .o_room_type_lab {
+            background-color: var(--bs-info-bg-subtle, #e0f2fe);
+            color: var(--bs-info-text-emphasis, #0369a1);
+            border: 1px solid var(--bs-info-border-subtle, #bae6fd);
+        }
+
+        .o_room_type_lecture_hall {
+            background-color: var(--bs-primary-bg-subtle, #ede7f6);
+            color: var(--bs-primary-text-emphasis, #514474);
+            border: 1px solid var(--bs-primary-border-subtle, #d9d1ed);
+        }
+
+        .o_room_type_auditorium {
+            background-color: var(--bs-warning-bg-subtle, #fef3c7);
+            color: var(--bs-warning-text-emphasis, #b45309);
+            border: 1px solid var(--bs-warning-border-subtle, #fde68a);
+        }
+
+        .o_classroom_thumbnail {
+            width: 44px;
+            height: 44px;
+            min-width: 44px;
+            object-fit: cover;
+            border-radius: var(--bs-border-radius-md, 8px);
+            border: 1px solid var(--border-color, #e2e8f0);
+        }
+
+        // Facilities amenity tags
+        .o_facility_badge {
+            font-size: 0.72rem;
+            font-weight: 500;
+            padding: 2px 7px;
+            background-color: var(--bs-tertiary-bg, #f8fafc);
+            border: 1px solid var(--bs-border-color-translucent, #e2e8f0);
+            color: var(--bs-secondary-color, #64748b);
+            border-radius: 9999px;
+            display: inline-flex;
+            align-items: center;
+
+            i {
+                font-size: 0.7rem;
+            }
+        }
+    }
+}

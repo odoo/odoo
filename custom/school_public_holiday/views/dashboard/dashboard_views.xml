@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_school_dashboard_form_inherit_upcoming_holidays" model="ir.ui.view">
+        <field name="name">school.dashboard.form.inherit.upcoming.holidays</field>
+        <field name="model">school.dashboard</field>
+        <field name="inherit_id" ref="school_management.view_school_dashboard_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('dashboard-canvas')]" position="inside">
+                <div class="card panel mb-4">
+                    <div class="card-header bg-white py-3 panel-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0 fw-bold section-title">
+                            <i class="fa fa-sun-o me-2" title="Upcoming holidays" aria-hidden="true"/>Upcoming Holidays
+                        </h5>
+                        <button name="action_open_upcoming_holidays" type="object" class="btn btn-sm btn-link section-link">
+                            View All
+                        </button>
+                    </div>
+                    <div class="card-body p-3">
+                        <field name="upcoming_holidays_html" widget="html" nolabel="1" readonly="1"/>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="school_management.StaffAttendanceSheet">
+        <div class="o_att_sheet" t-ref="root">
+            <header class="o_att_header">
+                <div>
+                    <div class="o_att_title_line">
+                        <h1>Staff Attendance</h1>
+                        <span t-att-class="'o_att_state ' + (state.taken ? 'is-recorded' : 'is-draft')">
+                            <span class="o_att_dot"/><t t-esc="state.taken ? 'Recorded' : 'Draft'"/>
+                        </span>
+                    </div>
+                    <p class="o_att_subtitle">
+                        <span t-esc="currentDepartmentName || 'All Departments'"/><span> · </span>
+                        <input class="o_att_date_input" type="date" t-att-value="state.date"
+                               t-att-disabled="state.loading || state.saving" t-on-change="onDateChange"/>
+                        <span> · </span><span t-esc="expectedHoursLabel"/>
+                    </p>
+                </div>
+                <div class="o_att_header_actions">
+                    <select class="o_att_department" t-att-value="state.departmentId" t-on-change="onDepartmentChange"
+                            t-att-disabled="state.loading || state.saving" aria-label="Department">
+                        <option value="all">All Departments</option>
+                        <option t-foreach="state.departments" t-as="dept" t-key="dept.id"
+                                t-att-value="dept.id" t-esc="dept.display_name"/>
+                    </select>
+                    <button type="button" class="btn btn-outline-secondary" t-on-click="openAttendanceReport">
+                        <i class="fa fa-line-chart me-1"/> Report
+                    </button>
+                </div>
+            </header>
+
+            <div t-if="state.error" class="o_att_error" role="alert">
+                <i class="fa fa-exclamation-circle me-2"/><span t-esc="state.error"/>
+            </div>
+
+            <section class="o_att_stats" aria-label="Attendance summary">
+                <div class="o_att_stat o_att_stat--present"><span class="o_att_stat_dot"/><strong t-esc="counts.present"/><span>Present</span></div>
+                <div class="o_att_stat o_att_stat--absent"><span class="o_att_stat_dot"/><strong t-esc="counts.absent"/><span>Absent</span></div>
+                <div class="o_att_stat o_att_stat--late"><span class="o_att_stat_dot"/><strong t-esc="counts.late"/><span>Late</span></div>
+                <div class="o_att_stat o_att_stat--total"><span class="o_att_stat_dot"/><strong t-esc="counts.total"/><span>Total</span></div>
+            </section>
+
+            <section class="o_att_panel">
+                <div class="o_att_toolbar">
+                    <div class="o_att_search"><i class="fa fa-search"/><input type="search" placeholder="Search name or ID..."
+                        t-att-value="state.query" t-on-input="onSearchInput"/></div>
+                    <span class="text-muted small" t-if="state.loading">Loading...</span>
+                </div>
+                <div t-if="state.loading" class="o_att_empty"><i class="fa fa-spinner fa-spin"/> Loading staff...</div>
+                <div t-elif="!visibleLines.length" class="o_att_empty">No staff found.</div>
+                <div t-else="" class="o_att_rows">
+                    <article t-foreach="visibleLines" t-as="line" t-key="line.teacher_id"
+                             t-att-class="'o_att_row o_att_row--' + line.status">
+                        <div class="o_att_person">
+                            <t t-if="line.has_image"><img class="o_att_avatar" t-att-src="'/web/image/university.teacher/' + line.teacher_id + '/avatar_128'" alt=""/></t>
+                            <span t-else="" class="o_att_avatar o_att_avatar--fallback" t-esc="teacherInitial(line)"/>
+                            <div class="o_att_person_text"><strong t-esc="line.name"/><small t-esc="line.code || 'No staff code'"/></div>
+                        </div>
+                        <div class="o_att_statuses" role="group" aria-label="Attendance status">
+                            <button t-foreach="statusOptions" t-as="opt" t-key="opt.value" type="button"
+                                    t-att-class="'o_att_status_btn ' + (line.status === opt.value ? 'is-active' : '')"
+                                    t-att-title="opt.label" t-att-aria-label="opt.label"
+                                    t-att-disabled="!state.isAdmin || state.saving || state.locked"
+                                    t-on-click="() => this.setStatus(line, opt.value)"><t t-esc="opt.key"/></button>
+                        </div>
+                        <div class="o_att_time_group">
+                            <label>In <input type="time" t-att-value="line.check_in" t-on-change="(ev) => this.onCheckInChange(line, ev)"
+                                t-att-disabled="!state.isAdmin || state.saving || state.locked || line.status === 'absent' || line.status === 'leave'"/></label>
+                            <label>Out <input type="time" t-att-value="line.check_out" t-on-change="(ev) => this.onCheckOutChange(line, ev)"
+                                t-att-disabled="!state.isAdmin || state.saving || state.locked || line.status === 'absent' || line.status === 'leave'"/></label>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <footer class="o_att_footer">
+                <button type="button" class="btn btn-outline-secondary" t-on-click="markAllPresent"
+                        t-att-disabled="!state.isAdmin || state.saving || state.locked || !state.lines.length">Mark all present</button>
+                <button type="button" class="btn btn-primary" t-on-click="saveAttendance"
+                        t-att-disabled="!state.isAdmin || state.saving || state.locked || !state.lines.length">
+                    <i class="fa fa-save me-1"/><t t-esc="state.saving ? 'Saving...' : 'Save attendance'"/>
+                </button>
+            </footer>
+        </div>
+    </t>
+</templates>

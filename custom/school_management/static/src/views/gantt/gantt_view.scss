@@ -1,0 +1,255 @@
+/* Odoo Planning Gantt: Schedule by Resource Styles */
+
+.o_gantt_view {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    font-size: 12px;
+    color: #1e293b;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Ubuntu, sans-serif;
+
+    .o_gantt_layout {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+
+        .o_content {
+            flex: 1 1 auto;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+    }
+
+    .fs-7 {
+        font-size: 12px !important;
+    }
+
+    .fs-8 {
+        font-size: 11px !important;
+    }
+
+    .very-small {
+        font-size: 11px;
+    }
+
+    .min-h-36 {
+        min-height: 44px;
+    }
+
+    /* Buttons matching target UI */
+    .btn-purple {
+        background-color: #714B67;
+        color: #ffffff;
+        border: 1px solid #714B67;
+        &:hover {
+            background-color: #5e3b55;
+            color: #ffffff;
+            border-color: #5e3b55;
+        }
+    }
+
+    .btn-outline-purple {
+        background-color: transparent;
+        color: #714B67;
+        border: 1px solid #714B67;
+        &:hover {
+            background-color: #714B67;
+            color: #ffffff;
+        }
+    }
+
+    /* Sticky first column and header layout */
+    .o_gantt_table_container {
+        overflow-x: auto;
+        position: relative;
+    }
+
+    .o_gantt_table {
+        table-layout: fixed;
+        border-collapse: separate;
+        border-spacing: 0;
+        min-width: 1050px;
+
+        thead {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background-color: #ffffff;
+        }
+
+        th, td {
+            border-color: #e2e8f0 !important;
+        }
+
+        .o_gantt_col_resource {
+            width: 250px;
+            min-width: 250px;
+            max-width: 250px;
+        }
+
+        .sticky-col-header {
+            position: sticky;
+            left: 0;
+            top: 0;
+            z-index: 15;
+            background-color: #ffffff;
+        }
+
+        .sticky-col {
+            position: sticky;
+            left: 0;
+            z-index: 8;
+            box-shadow: 2px 0 4px -2px rgba(0, 0, 0, 0.06);
+        }
+    }
+
+    /* Column Headers */
+    .o_gantt_header_cell {
+        height: 38px;
+        background-color: #ffffff;
+    }
+
+    /* TODAY Column Highlight (Light Yellow Tint matching screenshot) */
+    .o_gantt_today {
+        background-color: #fffbeb !important; /* Soft warm yellow */
+    }
+
+    /* Weekend / Non-working Diagonal Stripe Pattern */
+    .o_gantt_weekend {
+        background: repeating-linear-gradient(
+            -45deg,
+            #ffffff,
+            #ffffff 8px,
+            #f8fafc 8px,
+            #f8fafc 16px
+        );
+    }
+
+    /* Avatars */
+    .o_gantt_avatar {
+        width: 34px;
+        height: 34px;
+
+        img {
+            border: 1px solid #e2e8f0;
+        }
+    }
+
+    .o_gantt_avatar_placeholder {
+        width: 34px;
+        height: 34px;
+        background-color: #ede9fe;
+        color: #7c3aed;
+    }
+
+    /* Progress bar */
+    .o_gantt_progress_bar_bg {
+        height: 3px;
+        background-color: #f1f5f9;
+        overflow: hidden;
+    }
+
+    /* Session Pills */
+    .o_gantt_cell {
+        vertical-align: top;
+        transition: background-color 0.15s ease;
+
+        &:hover .o_gantt_cell_hover_btn {
+            opacity: 0.8 !important;
+        }
+    }
+
+    .o_gantt_pill {
+        cursor: pointer;
+        padding: 4px 8px;
+        font-size: 11.5px;
+        line-height: 1.3;
+        border-radius: 4px;
+        transition: transform 0.1s ease, box-shadow 0.1s ease;
+        overflow: hidden;
+
+        &:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        }
+    }
+
+    /* Red Corner Marker for Unpublished / Conflict records (matching Odoo Planning screenshot) */
+    .o_gantt_corner_marker {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 0 7px 7px 0;
+        border-color: transparent #ef4444 transparent transparent;
+    }
+
+    /* Pastel Colors Palettes matching Odoo Planning UI */
+    .o_gantt_color_0 { /* Soft Blue */
+        background-color: #dbeafe;
+        color: #1e3a8a;
+        border: 1px solid #bfdbfe;
+    }
+    .o_gantt_color_1 { /* Peach / Coral */
+        background-color: #ffedd5;
+        color: #9a3412;
+        border: 1px solid #fed7aa;
+    }
+    .o_gantt_color_2 { /* Mint / Green */
+        background-color: #dcfce7;
+        color: #14532d;
+        border: 1px solid #bbf7d0;
+    }
+    .o_gantt_color_3 { /* Lilac / Purple */
+        background-color: #f3e8ff;
+        color: #581c87;
+        border: 1px solid #e9d5ff;
+    }
+    .o_gantt_color_4 { /* Soft Amber / Yellow */
+        background-color: #fef3c7;
+        color: #78350f;
+        border: 1px solid #fde68a;
+    }
+    .o_gantt_color_5 { /* Rose / Pink */
+        background-color: #fce7f3;
+        color: #831843;
+        border: 1px solid #fbcfe8;
+    }
+    .o_gantt_color_6 { /* Teal */
+        background-color: #ccfbf1;
+        color: #134e4a;
+        border: 1px solid #99f6e4;
+    }
+    .o_gantt_color_7 { /* Sky Blue */
+        background-color: #e0f2fe;
+        color: #0c4a6e;
+        border: 1px solid #bae6fd;
+    }
+    .o_gantt_color_8 { /* Indigo */
+        background-color: #e0e7ff;
+        color: #312e81;
+        border: 1px solid #c7d2fe;
+    }
+    .o_gantt_color_9 { /* Sage / Emerald */
+        background-color: #d1fae5;
+        color: #064e3b;
+        border: 1px solid #a7f3d0;
+    }
+    .o_gantt_color_10 { /* Lavender / Violet */
+        background-color: #ede9fe;
+        color: #4c1d95;
+        border: 1px solid #ddd6fe;
+    }
+    .o_gantt_color_11 { /* Fuchsia */
+        background-color: #fae8ff;
+        color: #701a75;
+        border: 1px solid #f5d0fe;
+    }
+}

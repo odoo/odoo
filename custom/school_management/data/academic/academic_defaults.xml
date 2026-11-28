@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Standard Grade Scale (GPA 4.0) -->
+    <record id="grade_scale_standard_4" model="university.grade.scale">
+        <field name="name">Standard 4.0 GPA</field>
+    </record>
+    <record id="grade_scale_standard_4_a" model="university.grade.scale.line">
+        <field name="scale_id" ref="grade_scale_standard_4"/>
+        <field name="name">A</field>
+        <field name="min_score">90</field>
+        <field name="max_score">100</field>
+        <field name="grade_point">4.0</field>
+        <field name="is_passing" eval="True"/>
+    </record>
+    <record id="grade_scale_standard_4_b" model="university.grade.scale.line">
+        <field name="scale_id" ref="grade_scale_standard_4"/>
+        <field name="name">B</field>
+        <field name="min_score">80</field>
+        <field name="max_score">89.99</field>
+        <field name="grade_point">3.0</field>
+        <field name="is_passing" eval="True"/>
+    </record>
+    <record id="grade_scale_standard_4_c" model="university.grade.scale.line">
+        <field name="scale_id" ref="grade_scale_standard_4"/>
+        <field name="name">C</field>
+        <field name="min_score">70</field>
+        <field name="max_score">79.99</field>
+        <field name="grade_point">2.0</field>
+        <field name="is_passing" eval="True"/>
+    </record>
+    <record id="grade_scale_standard_4_d" model="university.grade.scale.line">
+        <field name="scale_id" ref="grade_scale_standard_4"/>
+        <field name="name">D</field>
+        <field name="min_score">60</field>
+        <field name="max_score">69.99</field>
+        <field name="grade_point">1.0</field>
+        <field name="is_passing" eval="True"/>
+    </record>
+    <record id="grade_scale_standard_4_f" model="university.grade.scale.line">
+        <field name="scale_id" ref="grade_scale_standard_4"/>
+        <field name="name">F</field>
+        <field name="min_score">0</field>
+        <field name="max_score">59.99</field>
+        <field name="grade_point">0.0</field>
+        <field name="is_passing" eval="False"/>
+    </record>
+
+    <!-- Academic Assessment Categories -->
+    <record id="assessment_category_assignment" model="university.assessment.category">
+        <field name="sequence">10</field>
+        <field name="name">Assignments</field>
+        <field name="code">ASSIGNMENT</field>
+        <field name="weight">30</field>
+    </record>
+    <record id="assessment_category_quiz" model="university.assessment.category">
+        <field name="sequence">15</field>
+        <field name="name">Quizzes &amp; Tests</field>
+        <field name="code">QUIZ</field>
+        <field name="weight">20</field>
+    </record>
+    <record id="assessment_category_attendance" model="university.assessment.category">
+        <field name="sequence">20</field>
+        <field name="name">Attendance &amp; Participation</field>
+        <field name="code">ATTENDANCE</field>
+        <field name="weight">10</field>
+    </record>
+    <record id="assessment_category_midterm" model="university.assessment.category">
+        <field name="sequence">25</field>
+        <field name="name">Midterm Examination</field>
+        <field name="code">MIDTERM</field>
+        <field name="weight">20</field>
+    </record>
+    <record id="assessment_category_exam" model="university.assessment.category">
+        <field name="sequence">30</field>
+        <field name="name">Final Examination</field>
+        <field name="code">EXAM</field>
+        <field name="weight">20</field>
+    </record>
+
+    <!-- Standard Weekly Timeslots (Monday to Saturday) -->
+    <!-- Monday -->
+    <record id="timeslot_monday_0800" model="university.timeslot">
+        <field name="day_of_week">0</field>
+        <field name="start_hour">8.0</field>
+        <field name="end_hour">9.5</field>
+    </record>
+    <record id="timeslot_monday_0945" model="university.timeslot">
+        <field name="day_of_week">0</field>
+        <field name="start_hour">9.75</field>
+        <field name="end_hour">11.25</field>
+    </record>
+    <record id="timeslot_monday_1330" model="university.timeslot">
+        <field name="day_of_week">0</field>
+        <field name="start_hour">13.5</field>
+        <field name="end_hour">15.0</field>
+    </record>
+    <record id="timeslot_monday_1515" model="university.timeslot">
+        <field name="day_of_week">0</field>
+        <field name="start_hour">15.25</field>
+        <field name="end_hour">16.75</field>
+    </record>
+
+    <!-- Tuesday -->
+    <record id="timeslot_tuesday_0800" model="university.timeslot">
+        <field name="day_of_week">1</field>
+        <field name="start_hour">8.0</field>
+        <field name="end_hour">9.5</field>
+    </record>
+    <record id="timeslot_tuesday_0945" model="university.timeslot">
+        <field name="day_of_week">1</field>
+        <field name="start_hour">9.75</field>
+        <field name="end_hour">11.25</field>
+    </record>
+    <record id="timeslot_tuesday_1330" model="university.timeslot">
+        <field name="day_of_week">1</field>
+        <field name="start_hour">13.5</field>
+        <field name="end_hour">15.0</field>
+    </record>
+    <record id="timeslot_tuesday_1515" model="university.timeslot">
+        <field name="day_of_week">1</field>
+        <field name="start_hour">15.25</field>
+        <field name="end_hour">16.75</field>
+    </record>
+
+    <!-- Wednesday -->
+    <record id="timeslot_wednesday_0800" model="university.timeslot">
+        <field name="day_of_week">2</field>
+        <field name="start_hour">8.0</field>
+        <field name="end_hour">9.5</field>
+    </record>
+    <record id="timeslot_wednesday_0945" model="university.timeslot">
+        <field name="day_of_week">2</field>
+        <field name="start_hour">9.75</field>
+        <field name="end_hour">11.25</field>
+    </record>
+    <record id="timeslot_wednesday_1330" model="university.timeslot">
+        <field name="day_of_week">2</field>
+        <field name="start_hour">13.5</field>
+        <field name="end_hour">15.0</field>
+    </record>
+    <record id="timeslot_wednesday_1515" model="university.timeslot">
+        <field name="day_of_week">2</field>
+        <field name="start_hour">15.25</field>
+        <field name="end_hour">16.75</field>
+    </record>
+
+    <!-- Thursday -->
+    <record id="timeslot_thursday_0800" model="university.timeslot">
+        <field name="day_of_week">3</field>
+        <field name="start_hour">8.0</field>
+        <field name="end_hour">9.5</field>
+    </record>
+    <record id="timeslot_thursday_0945" model="university.timeslot">
+        <field name="day_of_week">3</field>
+        <field name="start_hour">9.75</field>
+        <field name="end_hour">11.25</field>
+    </record>
+    <record id="timeslot_thursday_1330" model="university.timeslot">
+        <field name="day_of_week">3</field>
+        <field name="start_hour">13.5</field>
+        <field name="end_hour">15.0</field>
+    </record>
+    <record id="timeslot_thursday_1515" model="university.timeslot">
+        <field name="day_of_week">3</field>
+        <field name="start_hour">15.25</field>
+        <field name="end_hour">16.75</field>
+    </record>
+
+    <!-- Friday -->
+    <record id="timeslot_friday_0800" model="university.timeslot">
+        <field name="day_of_week">4</field>
+        <field name="start_hour">8.0</field>
+        <field name="end_hour">9.5</field>
+    </record>
+    <record id="timeslot_friday_0945" model="university.timeslot">
+        <field name="day_of_week">4</field>
+        <field name="start_hour">9.75</field>
+        <field name="end_hour">11.25</field>
+    </record>
+    <record id="timeslot_friday_1330" model="university.timeslot">
+        <field name="day_of_week">4</field>
+        <field name="start_hour">13.5</field>
+        <field name="end_hour">15.0</field>
+    </record>
+    <record id="timeslot_friday_1515" model="university.timeslot">
+        <field name="day_of_week">4</field>
+        <field name="start_hour">15.25</field>
+        <field name="end_hour">16.75</field>
+    </record>
+
+    <!-- Saturday -->
+    <record id="timeslot_saturday_0800" model="university.timeslot">
+        <field name="day_of_week">5</field>
+        <field name="start_hour">8.0</field>
+        <field name="end_hour">9.5</field>
+    </record>
+    <record id="timeslot_saturday_0945" model="university.timeslot">
+        <field name="day_of_week">5</field>
+        <field name="start_hour">9.75</field>
+        <field name="end_hour">11.25</field>
+    </record>
+    <record id="timeslot_saturday_1330" model="university.timeslot">
+        <field name="day_of_week">5</field>
+        <field name="start_hour">13.5</field>
+        <field name="end_hour">15.0</field>
+    </record>
+    <record id="timeslot_saturday_1515" model="university.timeslot">
+        <field name="day_of_week">5</field>
+        <field name="start_hour">15.25</field>
+        <field name="end_hour">16.75</field>
+    </record>
+
+    <!-- General Academic Configurations -->
+    <record id="default_min_teaching_weeks" model="ir.config_parameter">
+        <field name="key">school_management.min_teaching_weeks</field>
+        <field name="value">14</field>
+    </record>
+
+</odoo>

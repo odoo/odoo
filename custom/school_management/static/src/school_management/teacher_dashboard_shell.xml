@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+  <!-- ========================================================= -->
+  <!-- TEACHER DASHBOARD - 100% VISUAL ALIGNMENT WITH ADMIN       -->
+  <!-- Matching Layout, Spacing, Fonts, Colors, Cards and Charts -->
+  <!-- ========================================================= -->
+  <t t-name="school_management.TeacherDashboardShell" owl="1">
+    <div class="o_exec_portal_root d-flex h-100 w-100 overflow-hidden bg-light">
+      <div class="o_executive_dashboard_container flex-grow-1 h-100 overflow-y-auto" aria-label="Teacher Portal Dashboard">
+        <div class="o_dashboard_canvas p-3 p-md-4 d-flex flex-column gap-3 gap-md-4">
+
+          <!-- 1. HEADER -->
+          <header class="o_exec_header_card p-3 p-md-4 bg-white border rounded-3" aria-label="Dashboard Header">
+            <div class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3">
+
+              <div class="o_exec_header_left min-w-0">
+                <h1 class="o_exec_title h4 fw-semibold text-dark text-truncate mb-1" t-esc="this.userGreeting">Good evening, Teacher</h1>
+                <p class="o_exec_subtitle text-muted small mb-0">Teacher Portal · Overview</p>
+              </div>
+
+              <div class="o_exec_filters d-flex align-items-center gap-2 flex-wrap">
+                <select class="form-select form-select-sm w-auto"
+                        t-att-value="state.filters.yearId || ''"
+                        t-on-change="(ev) => this.changeFilter('yearId', ev.target.value)">
+                  <t t-foreach="state.filterOptions.academicYears" t-as="year" t-key="year.id">
+                    <option t-att-value="year.id" t-esc="year.name"/>
+                  </t>
+                  <option t-if="!state.filterOptions.academicYears.length" value="" selected="1">2026 - 2027</option>
+                </select>
+
+                <select class="form-select form-select-sm w-auto"
+                        t-att-value="state.filters.semesterId || ''"
+                        t-on-change="(ev) => this.changeFilter('semesterId', ev.target.value)">
+                  <t t-foreach="state.filterOptions.semesters" t-as="sem" t-key="sem.id">
+                    <option t-att-value="sem.id" t-esc="sem.name"/>
+                  </t>
+                  <option t-if="!state.filterOptions.semesters.length" value="" selected="1">Sem 1</option>
+                </select>
+
+                <button class="btn btn-sm btn-outline-secondary o_btn_refresh"
+                        type="button"
+                        t-att-class="{ 'is-2222222': state.isRefreshing }"
+                        t-on-click="() => this.reload()"
+                        title="Refresh">
+                  <i class="fa fa-refresh" aria-hidden="true"></i>
+                </button>
+              </div>
+            </div>
+          </header>
+
+          <!-- ERROR ALERT BANNER -->
+          <div t-if="state.error" class="alert alert-danger d-flex align-items-center justify-content-between p-3 rounded-3" role="alert">
+            <div class="d-flex align-items-center gap-2">
+              <i class="fa fa-exclamation-triangle text-danger fs-5" aria-hidden="true"></i>
+              <span class="fw-semibold text-danger" t-esc="state.error"/>
+            </div>
+            <button type="button" class="btn btn-sm btn-outline-danger" t-on-click="() => this.reload()">
+              <i class="fa fa-refresh me-1" aria-hidden="true"></i> Retry
+            </button>
+          </div>
+
+          <!-- LOADING SKELETON -->
+          <div t-elif="state.isLoading" class="d-flex flex-column gap-3" aria-busy="true">
+            <div class="row g-3">
+              <t t-foreach="[1,2,3,4,5]" t-as="i" t-key="i">
+                <div class="col"><div class="o_skeleton_box" style="height: 110px; border-radius: 12px;"></div></div>
+              </t>
+            </div>
+            <div class="row g-3">
+              <div class="col-12 col-xl-8"><div class="o_skeleton_box" style="height: 320px; border-radius: 12px;"></div></div>
+              <div class="col-12 col-xl-4"><div class="o_skeleton_box" style="height: 320px; border-radius: 12px;"></div></div>
+            </div>
+          </div>
+
+          <!-- MAIN CONTENT -->
+          <div t-else="" class="d-flex flex-column gap-3 gap-md-4">
+
+            <!-- 5 KPI ROW -->
+            <section class="o_kpi_five_section" aria-label="Key Performance Indicators">
+              <div class="o_kpi_five_row">
+                <t t-foreach="this.kpiFive" t-as="card" t-key="card.id">
+                  <div class="o_kpi_metric_card bg-white border rounded-3 d-flex flex-column justify-content-between p-3"
+                       t-on-click="() => this.handleActionClick(card.action)"
+                       role="button" tabindex="0">
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                      <span class="o_kpi_metric_label small text-muted" t-esc="card.category"/>
+                      <i t-attf-class="fa #{card.icon} text-secondary" aria-hidden="true"></i>
+                    </div>
+                    <div class="o_kpi_metric_value fw-semibold text-dark mb-1" t-esc="card.value"/>
+                    <div class="small text-muted">
+                      <i t-if="card.growth_type == 'up'" class="fa fa-arrow-up me-1 text-success" aria-hidden="true"></i>
+                      <t t-esc="card.growth"/>
+                    </div>
+                  </div>
+                </t>
+              </div>
+            </section>
+
+            <!-- ROW 2: ATTENDANCE TREND (8 cols) + ATTENDANCE STATUS DONUT (4 cols) -->
+            <section class="o_analytics_grid_section" aria-label="Attendance Analytics">
+              <div class="row g-3 g-md-4">
+
+                <!-- Col 1: Attendance Trend Line Chart -->
+                <div class="col-12 col-xl-8">
+                  <div class="o_chart_card o_trend_chart_card p-4 bg-white border rounded-3 h-100 d-flex flex-column">
+                    <div class="d-flex align-items-start justify-content-between mb-3 gap-2">
+                      <div>
+                        <h3 class="o_card_title h6 fw-semibold text-dark mb-1">Attendance Trend</h3>
+                        <p class="o_card_subtitle small text-muted mb-0">Weekly average attendance</p>
+                      </div>
+                      <span class="small text-muted fw-semibold" t-esc="this.attendanceAverageBadge"/>
+                    </div>
+                    <div class="o_chart_canvas_wrap flex-grow-1" style="min-height: 270px; height: 270px;">
+                      <canvas t-ref="chart_attendance_trend"></canvas>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Col 2: Attendance Status Donut Chart -->
+                <div class="col-12 col-xl-4">
+                  <div class="o_chart_card o_status_chart_card p-4 bg-white border rounded-3 h-100 d-flex flex-column">
+                    <div class="mb-2">
+                      <h3 class="o_card_title h6 fw-semibold text-dark mb-1">Attendance Status</h3>
+                      <p class="o_card_subtitle small text-muted mb-0">Current term breakdown</p>
+                    </div>
+                    <div class="o_chart_canvas_wrap my-auto" style="height: 190px;">
+                      <canvas t-ref="chart_attendance_status"></canvas>
+                    </div>
+                    <ul class="o_status_legend_list list-unstyled mt-3 pt-3 mb-0 border-top">
+                      <t t-foreach="this.attendanceStatusBreakdown" t-as="item" t-key="item.name">
+                        <li class="d-flex align-items-center justify-content-between py-1 small">
+                          <span class="d-flex align-items-center gap-2 text-secondary min-w-0">
+                            <span class="o_status_dot flex-shrink-0" t-attf-style="background-color: #{item.color};"></span>
+                            <span class="text-truncate" t-esc="item.name"/>
+                          </span>
+                          <span class="text-dark">
+                            <span class="fw-semibold" t-esc="item.count"/>
+                            <span class="text-muted ms-1"><t t-esc="item.percentage"/>%</span>
+                          </span>
+                        </li>
+                      </t>
+                    </ul>
+                  </div>
+                </div>
+
+              </div>
+            </section>
+
+            <!-- ROW 3: TODAY'S SCHEDULE (4 cols), MY COURSES + AT RISK (4 cols), UPCOMING EXAMS + PENDING GRADES (4 cols) -->
+            <section class="o_bottom_grid_section" aria-label="Course and Schedule Operations">
+              <div class="row g-3 g-md-4">
+
+                <!-- Col 1: Today's Schedule -->
+                <div class="col-12 col-lg-4">
+                  <div class="o_detail_card o_recent_enrollments_card p-4 bg-white border rounded-3 h-100 d-flex flex-column">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                      <h3 class="o_card_title h6 fw-semibold text-dark mb-0">Today's Schedule</h3>
+                      <button type="button" class="btn btn-link btn-sm p-0 text-secondary text-decoration-none" t-on-click="() => this.openTimetable()">
+                        View full
+                      </button>
+                    </div>
+
+                    <div class="table-responsive flex-grow-1">
+                      <table class="table table-sm table-hover align-middle mb-0 o_enrollment_table">
+                        <thead>
+                          <tr class="text-muted small">
+                            <th class="fw-normal">Time</th>
+                            <th class="fw-normal">Course</th>
+                            <th class="fw-normal">Sec</th>
+                            <th class="fw-normal">Room</th>
+                            <th class="fw-normal text-end">Status</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <t t-foreach="this.todaySchedule" t-as="row" t-key="row.id">
+                            <tr role="button" t-on-click="() => this.openSlot(row.id)">
+                              <td class="small text-muted text-nowrap" t-esc="row.time"/>
+                              <td class="small text-dark fw-semibold text-truncate" style="max-width: 80px;" t-esc="row.course"/>
+                              <td class="small text-muted" t-esc="row.section"/>
+                              <td class="small text-muted text-truncate" style="max-width: 75px;" t-esc="row.room"/>
+                              <td class="text-end">
+                                <span t-att-class="'badge ' + this.getStatusBadgeClass(row.status, row.status_class)" t-esc="row.status"/>
+                              </td>
+                            </tr>
+                          </t>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Col 2: My Courses + Students At Risk Banner -->
+                <div class="col-12 col-lg-4">
+                  <div class="o_detail_card o_top_departments_card p-4 bg-white border rounded-3 h-100 d-flex flex-column">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                      <h3 class="o_card_title h6 fw-semibold text-dark mb-0">My Courses</h3>
+                      <button type="button" class="btn btn-link btn-sm p-0 text-secondary text-decoration-none" t-on-click="() => this.openMyClasses()">
+                        View all
+                      </button>
+                    </div>
+
+                    <div class="d-flex flex-column gap-3 mb-4">
+                      <t t-foreach="this.myCourses" t-as="crs" t-key="crs.id">
+                        <div class="o_dept_progress_item">
+                          <div class="d-flex justify-content-between small mb-1">
+                            <span class="text-secondary text-truncate" style="max-width: 220px;" t-esc="crs.name"/>
+                            <span class="text-dark fw-semibold"><t t-esc="crs.enrolled"/> / <t t-esc="crs.capacity"/></span>
+                          </div>
+                          <div class="progress" style="height: 4px; background-color: #e9ecef;">
+                            <div class="progress-bar bg-dark" t-attf-style="width: #{crs.percentage}%;"></div>
+                          </div>
+                        </div>
+                      </t>
+                    </div>
+
+                    <!-- Amber Students at Risk Banner -->
+                    <div class="o_low_gpa_banner mt-auto p-3 rounded-3 border bg-light d-flex align-items-center justify-content-between gap-3">
+                      <div class="min-w-0">
+                        <div class="small fw-semibold text-dark">
+                          <t t-esc="this.studentsAtRisk.title">Students at risk</t>
+                          <span class="text-muted fw-normal">· <t t-esc="this.studentsAtRisk.count"/></span>
+                        </div>
+                        <p class="small text-muted mb-0 text-truncate" t-esc="this.studentsAtRisk.description"/>
+                      </div>
+                      <button type="button" class="btn btn-sm btn-outline-dark text-nowrap" t-on-click="() => this.openReviewAtRisk()">
+                        Review
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Col 3: Upcoming Exams & Deadlines + Pending Grades Banner -->
+                <div class="col-12 col-lg-4">
+                  <div class="o_detail_card o_events_card p-4 bg-white border rounded-3 h-100 d-flex flex-column">
+                    <h3 class="o_card_title h6 fw-semibold text-dark mb-3">Upcoming Exams &amp; Deadlines</h3>
+
+                    <ul class="list-unstyled d-flex flex-column mb-4">
+                      <t t-foreach="this.upcomingExams" t-as="evt" t-key="evt.title">
+                        <li class="o_event_item d-flex align-items-center justify-content-between py-2 border-bottom">
+                          <div class="min-w-0">
+                            <div class="small fw-semibold text-dark text-truncate" style="max-width: 170px;" t-esc="evt.title"/>
+                            <div class="small text-muted text-truncate" style="max-width: 170px;" t-esc="evt.scope"/>
+                          </div>
+                          <span class="small text-muted text-nowrap ms-2" t-esc="evt.date"/>
+                        </li>
+                      </t>
+                    </ul>
+
+                    <!-- Blue Pending Grades Banner -->
+                    <div class="o_pending_reports_banner mt-auto p-3 rounded-3 border bg-light d-flex align-items-center justify-content-between gap-3">
+                      <div class="min-w-0">
+                        <div class="small fw-semibold text-dark">
+                          <t t-esc="this.pendingGrades.title">Pending Grades</t>
+                          <span class="text-muted fw-normal">· <t t-esc="this.pendingGrades.count"/></span>
+                        </div>
+                        <p class="small text-muted mb-0 text-truncate" t-esc="this.pendingGrades.description"/>
+                      </div>
+                      <button type="button" class="btn btn-sm btn-outline-dark text-nowrap" t-on-click="() => this.openPendingGrading()">
+                        Grade Now
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </t>
+</templates>

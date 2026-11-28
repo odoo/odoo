@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ==================== LIST VIEW ==================== -->
+    <record id="view_university_classroom_list" model="ir.ui.view">
+        <field name="name">university.classroom.list</field>
+        <field name="model">university.classroom</field>
+        <field name="arch" type="xml">
+            <list string="Classrooms" sample="1" multi_edit="1" limit="10" class="o_university_classroom_list"
+                  decoration-muted="status == 'inactive'"
+                  decoration-danger="status == 'maintenance'"
+                  decoration-warning="status == 'occupied'">
+                <field name="name" decoration-bf="1" string="Room / Hall"/>
+                <field name="building" widget="badge" string="Building"/>
+                <field name="floor" optional="show" string="Floor"/>
+                <field name="room_type" widget="badge"
+                       decoration-info="room_type == 'lab'"
+                       decoration-primary="room_type == 'lecture_hall'"
+                       decoration-warning="room_type == 'auditorium'"
+                       decoration-success="room_type == 'classroom'"/>
+                <field name="capacity" string="Capacity (Seats)"/>
+                <field name="slot_count" string="Total Sessions" decoration-bf="1"/>
+                <field name="today_slot_count" string="Today's Sessions"
+                       decoration-primary="today_slot_count &gt; 0"
+                       decoration-muted="today_slot_count == 0"
+                       optional="show"/>
+                <field name="status" widget="badge"
+                       decoration-success="status == 'available'"
+                       decoration-warning="status == 'occupied'"
+                       decoration-danger="status == 'maintenance'"
+                       decoration-muted="status == 'inactive'"/>
+                <field name="color" widget="color_picker" optional="show" string="Color"/>
+                <field name="has_projector" widget="boolean_toggle" optional="hide"/>
+                <field name="has_computers" widget="boolean_toggle" optional="hide"/>
+                <field name="has_wifi" widget="boolean_toggle" optional="hide"/>
+                <field name="has_air_conditioning" widget="boolean_toggle" optional="hide"/>
+                <field name="facilities" optional="hide"/>
+                <field name="active" widget="boolean_toggle" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ==================== KANBAN VIEW ==================== -->
+ <record id="view_university_classroom_kanban" model="ir.ui.view">
+        <field name="name">university.classroom.kanban</field>
+        <field name="model">university.classroom</field>
+        <field name="arch" type="xml">
+            <kanban limit="10" sample="1" class="o_university_classroom_kanban" highlight_color="color" records_draggable="0">
+                <!-- Only fields used via record.xxx need to be declared here.
+                     Fields rendered with <field/> inside templates load automatically. -->
+                <field name="id"/>
+                <field name="floor"/>
+                <field name="image_128"/>
+                <field name="today_slot_count"/>
+                <field name="has_projector"/>
+                <field name="has_computers"/>
+                <field name="has_wifi"/>
+                <field name="has_air_conditioning"/>
+                <field name="has_sound_system"/>
+
+                <templates>
+                    <!-- Odoo 18: three-dots menu lives in its own template -->
+                    <t t-name="menu">
+                        <a role="menuitem" type="open" class="dropdown-item">View Details</a>
+                        <a role="menuitem" type="edit" class="dropdown-item"
+                           groups="school_management.group_school_admin,base.group_system">Edit</a>
+                        <div role="separator" class="dropdown-divider"
+                             groups="school_management.group_school_admin,base.group_system"/>
+                        <a role="menuitem" type="object" name="action_set_available"
+                           groups="school_management.group_school_admin,base.group_system"
+                           invisible="status == 'available'"
+                           class="dropdown-item text-success">
+                            <i class="fa fa-check-circle me-1" title="Set Available"/>Set Available
+                        </a>
+                        <a role="menuitem" type="object" name="action_set_occupied"
+                           groups="school_management.group_school_admin,base.group_system"
+                           invisible="status == 'occupied'"
+                           class="dropdown-item text-warning">
+                            <i class="fa fa-clock-o me-1" title="Mark Occupied"/>Mark Occupied
+                        </a>
+                        <a role="menuitem" type="object" name="action_set_maintenance"
+                           groups="school_management.group_school_admin,base.group_system"
+                           invisible="status == 'maintenance'"
+                           class="dropdown-item text-danger">
+                            <i class="fa fa-wrench me-1" title="Mark Maintenance"/>Mark Maintenance
+                        </a>
+                        <div role="separator" class="dropdown-divider"
+                             groups="school_management.group_school_admin,base.group_system"/>
+                        <field name="color" widget="kanban_color_picker"
+                               groups="school_management.group_school_admin,base.group_system"/>
+                    </t>
+
+                    <t t-name="card" class="o_classroom_kanban_card p-3 d-flex flex-column justify-content-between h-100">
+                        <main class="d-flex flex-column gap-2">
+
+                            <!-- Top row: image/type icon + title/location + status badge -->
+                            <div class="d-flex align-items-start justify-content-between gap-2">
+                                <div class="d-flex align-items-center gap-2 min-w-0">
+                                    <t t-if="record.image_128.raw_value">
+                                        <img t-att-src="kanban_image('university.classroom', 'image_128', record.id.raw_value)"
+                                             alt="Room"
+                                             class="o_classroom_thumb rounded object-fit-cover shadow-sm flex-shrink-0"/>
+                                    </t>
+                                    <t t-else="">
+                                        <span t-if="record.room_type.raw_value == 'lab'"
+                                              class="o_room_type_icon badge rounded-3 bg-info-subtle text-info flex-shrink-0"
+                                              title="Laboratory">
+                                            <i class="fa fa-flask fa-fw fs-5" title="Laboratory"/>
+                                        </span>
+                                        <span t-elif="record.room_type.raw_value == 'lecture_hall'"
+                                              class="o_room_type_icon badge rounded-3 bg-primary-subtle text-primary flex-shrink-0"
+                                              title="Lecture Hall">
+                                            <i class="fa fa-university fa-fw fs-5" title="Lecture Hall"/>
+                                        </span>
+                                        <span t-elif="record.room_type.raw_value == 'auditorium'"
+                                              class="o_room_type_icon badge rounded-3 bg-warning-subtle text-warning flex-shrink-0"
+                                              title="Auditorium">
+                                            <i class="fa fa-users fa-fw fs-5" title="Auditorium"/>
+                                        </span>
+                                        <span t-else=""
+                                              class="o_room_type_icon badge rounded-3 bg-success-subtle text-success flex-shrink-0"
+                                              title="Standard Classroom">
+                                            <i class="fa fa-desktop fa-fw fs-5" title="Standard Classroom"/>
+                                        </span>
+                                    </t>
+                                    <div class="min-w-0">
+                                        <strong class="fs-5 o_kanban_record_title text-truncate text-body d-block"
+                                                t-att-title="record.name.value">
+                                            <field name="name"/>
+                                        </strong>
+                                        <div class="d-flex align-items-center gap-1 text-muted small">
+                                            <i class="fa fa-map-marker text-danger-subtle me-1" title="Location"/>
+                                            <span>Building <field name="building"/></span>
+                                            <t t-if="record.floor.value">
+                                                <span class="text-muted">&#183;</span>
+                                                <span><field name="floor"/></span>
+                                            </t>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex-shrink-0">
+                                    <field name="status" widget="badge"
+                                           decoration-success="status == 'available'"
+                                           decoration-warning="status == 'occupied'"
+                                           decoration-danger="status == 'maintenance'"
+                                           decoration-muted="status == 'inactive'"/>
+                                </div>
+                            </div>
+
+                            <!-- Meta: capacity + room type -->
+                            <div class="d-flex align-items-center justify-content-between mt-1 pt-2 border-top">
+                                <span class="badge border text-secondary bg-light-subtle px-2 py-1" title="Seating Capacity">
+                                    <i class="fa fa-users text-primary me-1" title="Capacity"/>
+                                    <strong><field name="capacity"/></strong> Seats
+                                </span>
+                                <field name="room_type" widget="badge"
+                                       decoration-info="room_type == 'lab'"
+                                       decoration-primary="room_type == 'lecture_hall'"
+                                       decoration-warning="room_type == 'auditorium'"
+                                       decoration-success="room_type == 'classroom'"/>
+                            </div>
+
+                            <!-- Facilities -->
+                            <div class="d-flex flex-wrap align-items-center gap-1 mt-1">
+                                <span t-if="record.has_projector.raw_value" class="o_facility_badge" title="Projector Available">
+                                    <i class="fa fa-video-camera text-info me-1" title="Projector Available"/>Projector
+                                </span>
+                                <span t-if="record.has_computers.raw_value" class="o_facility_badge" title="Computer Workstations">
+                                    <i class="fa fa-laptop text-primary me-1" title="Computer Workstations"/>Computers
+                                </span>
+                                <span t-if="record.has_wifi.raw_value" class="o_facility_badge" title="Wi-Fi Coverage">
+                                    <i class="fa fa-wifi text-success me-1" title="Wi-Fi Coverage"/>Wi-Fi
+                                </span>
+                                <span t-if="record.has_air_conditioning.raw_value" class="o_facility_badge" title="Air Conditioned">
+                                    <i class="fa fa-snowflake-o text-info me-1" title="Air Conditioned"/>AC
+                                </span>
+                                <span t-if="record.has_sound_system.raw_value" class="o_facility_badge" title="Audio / Mic System">
+                                    <i class="fa fa-volume-up text-warning me-1" title="Audio / Mic System"/>Audio
+                                </span>
+                            </div>
+                        </main>
+
+                        <!-- Footer: sessions button (staff only) + today badge -->
+                        <footer class="mt-3 pt-2 border-top d-flex justify-content-between align-items-center">
+                            <button name="action_view_sessions" type="object"
+                                    groups="school_management.group_school_teacher,school_management.group_school_hod,school_management.group_school_dean,school_management.group_school_admin,base.group_system"
+                                    class="btn btn-sm btn-outline-primary d-flex align-items-center gap-1 py-1 px-2"
+                                    title="Scheduled Sessions">
+                                <i class="fa fa-calendar me-1" title="Sessions"/>
+                                <span><field name="slot_count"/> Sessions</span>
+                            </button>
+                            <span t-if="record.today_slot_count.raw_value &gt; 0"
+                                  class="badge rounded-pill bg-primary-subtle text-primary border border-primary-subtle py-1 px-2 ms-auto"
+                                  title="Scheduled sessions today">
+                                <i class="fa fa-clock-o me-1" title="Today"/>
+                                <t t-out="record.today_slot_count.value"/> Today
+                            </span>
+                        </footer>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- ==================== FORM VIEW ==================== -->
+    <record id="view_university_classroom_form" model="ir.ui.view">
+        <field name="name">university.classroom.form</field>
+        <field name="model">university.classroom</field>
+        <field name="arch" type="xml">
+            <form string="Classroom" class="o_classroom_form">
+                <header>
+                    <button name="action_set_available"
+                            string="Set Available"
+                            type="object"
+                            class="btn-success text-white"
+                            icon="fa-check-circle"
+                            invisible="status == 'available'"/>
+                    <button name="action_set_occupied"
+                            string="Mark Occupied"
+                            type="object"
+                            class="btn-outline-warning text-dark"
+                            icon="fa-clock-o"
+                            invisible="status in ('occupied', 'maintenance')"/>
+                    <button name="action_set_maintenance"
+                            string="Mark Maintenance"
+                            type="object"
+                            class="btn-outline-danger"
+                            icon="fa-wrench"
+                            invisible="status == 'maintenance'"/>
+                    <button name="action_view_sessions"
+                            string="View Timetable"
+                            type="object"
+                            class="btn-outline-primary"
+                            icon="fa-calendar"/>
+                    <field name="status" widget="statusbar" statusbar_visible="available,occupied,maintenance"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_sessions"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-calendar">
+                            <field name="slot_count" widget="statinfo" string="Total Sessions"/>
+                        </button>
+                        <button name="action_view_today_sessions"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-clock-o">
+                            <field name="today_slot_count" widget="statinfo" string="Today's Sessions"/>
+                        </button>
+                    </div>
+
+                    <widget name="web_ribbon" title="Maintenance" bg_color="text-bg-danger" invisible="status != 'maintenance'"/>
+                    <widget name="web_ribbon" title="Occupied" bg_color="text-bg-warning" invisible="status != 'occupied'"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-secondary" invisible="active"/>
+                    <field name="active" invisible="1"/>
+
+                    <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_1920'}"/>
+
+                    <div class="oe_title mb-3">
+                        <span class="o_classroom_eyebrow">University Facility &amp; Classroom</span>
+                        <h1 class="d-flex align-items-center gap-2 mt-1">
+                            <field name="name" placeholder="e.g. Science Lab 101" required="1"/>
+                        </h1>
+                        <div class="d-flex flex-wrap align-items-center gap-2 mt-2">
+                            <span class="badge bg-light text-dark border px-2 py-1 d-inline-flex align-items-center">
+                                <i class="fa fa-building text-primary me-1" title="Building"/>
+                                <span>Building </span>
+                                <field name="building" readonly="1" nolabel="1" class="d-inline ms-1"/>
+                            </span>
+                            <span class="badge bg-light text-dark border px-2 py-1 d-inline-flex align-items-center" invisible="not floor">
+                                <i class="fa fa-level-up text-secondary me-1" title="Floor"/>
+                                <field name="floor" readonly="1" nolabel="1" class="d-inline ms-1"/>
+                            </span>
+                            <field name="room_type" widget="badge"
+                                   decoration-info="room_type == 'lab'"
+                                   decoration-primary="room_type == 'lecture_hall'"
+                                   decoration-warning="room_type == 'auditorium'"
+                                   decoration-success="room_type == 'classroom'"/>
+                        </div>
+                    </div>
+
+                    <group>
+                        <group string="Location &amp; Room Specifications">
+                            <field name="building" placeholder="e.g. Block A, West Wing"/>
+                            <field name="floor" placeholder="e.g. Ground Floor, 2nd Floor"/>
+                            <field name="room_type"/>
+                            <label for="capacity"/>
+                            <div class="d-flex align-items-center gap-2">
+                                <field name="capacity" class="oe_inline"/>
+                                <span class="text-muted">Seats</span>
+                            </div>
+                        </group>
+                        <group string="Operational Status &amp; Controls">
+                            <field name="status" widget="radio" options="{'horizontal': true}"/>
+                            <field name="color" widget="color_picker" string="Room Color"/>
+                            <field name="active" widget="boolean_toggle"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Facilities &amp; Amenities" name="facilities_tab">
+                            <group string="Available Equipment Checklist">
+                                <group>
+                                    <field name="has_projector" widget="boolean_toggle"/>
+                                    <field name="has_air_conditioning" widget="boolean_toggle"/>
+                                    <field name="has_wifi" widget="boolean_toggle"/>
+                                    <field name="has_whiteboard" widget="boolean_toggle"/>
+                                </group>
+                                <group>
+                                    <field name="has_computers" widget="boolean_toggle"/>
+                                    <field name="has_sound_system" widget="boolean_toggle"/>
+                                    <field name="has_video_conference" widget="boolean_toggle"/>
+                                </group>
+                            </group>
+                            <group string="Equipment Details &amp; Hardware Specs">
+                                <field name="facilities" nolabel="1" placeholder="e.g. 40 High-performance Dell Workstations (i7, 32GB RAM), Dual 4K Sony Projectors, Ceiling Shure Microphones, Polycom Video Bar..."/>
+                            </group>
+                        </page>
+                        <page string="Scheduled Sessions" name="sessions_tab">
+                            <field name="slot_ids" readonly="1">
+                                <list limit="10" default_order="start_time desc" decoration-danger="state == 'cancelled'" decoration-success="state in ('done', 'completed')">
+                                    <field name="date"/>
+                                    <field name="name" string="Session"/>
+                                    <field name="subject_id"/>
+                                    <field name="section_id" string="Class Section"/>
+                                    <field name="teacher_id"/>
+                                    <field name="start_time"/>
+                                    <field name="end_time"/>
+                                    <field name="state" widget="badge"
+                                           decoration-info="state in ('scheduled', 'published')"
+                                           decoration-success="state in ('done', 'completed')"
+                                           decoration-danger="state == 'cancelled'"
+                                           decoration-warning="state == 'rescheduled'"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Internal Notes &amp; Guidelines" name="notes_tab">
+                            <field name="notes" placeholder="Add room rules, emergency exits, access key management, or maintenance records..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- ==================== SEARCH VIEW ==================== -->
+    <record id="view_university_classroom_search" model="ir.ui.view">
+        <field name="name">university.classroom.search</field>
+        <field name="model">university.classroom</field>
+        <field name="arch" type="xml">
+            <search string="Search Classrooms">
+                <field name="name" string="Room / Hall" filter_domain="['|', ('name', 'ilike', self), ('building', 'ilike', self)]"/>
+                <field name="building"/>
+                <field name="floor"/>
+                <field name="facilities"/>
+                <separator/>
+                <filter string="Available" name="filter_available" domain="[('status', '=', 'available')]"/>
+                <filter string="Occupied" name="filter_occupied" domain="[('status', '=', 'occupied')]"/>
+                <filter string="Under Maintenance" name="filter_maintenance" domain="[('status', '=', 'maintenance')]"/>
+                <separator/>
+                <filter string="Lecture Halls" name="filter_lecture_hall" domain="[('room_type', '=', 'lecture_hall')]"/>
+                <filter string="Standard Classrooms" name="filter_standard_classroom" domain="[('room_type', '=', 'classroom')]"/>
+                <filter string="Laboratories" name="filter_lab" domain="[('room_type', '=', 'lab')]"/>
+                <filter string="Auditoriums" name="filter_auditorium" domain="[('room_type', '=', 'auditorium')]"/>
+                <separator/>
+                <filter string="Has Projector" name="filter_projector" domain="[('has_projector', '=', True)]"/>
+                <filter string="Has Computer Lab" name="filter_computers" domain="[('has_computers', '=', True)]"/>
+                <filter string="Air Conditioned" name="filter_ac" domain="[('has_air_conditioning', '=', True)]"/>
+                <separator/>
+                <filter string="Large Hall (&#8805; 50 seats)" name="filter_large_capacity" domain="[('capacity', '&gt;=', 50)]"/>
+                <separator/>
+                <filter string="Active" name="filter_active" domain="[('active', '=', True)]"/>
+                <filter string="Archived" name="filter_inactive" domain="[('active', '=', False)]"/>
+                <group>
+                    <filter string="Building" name="group_by_building" context="{'group_by': 'building'}"/>
+                    <filter string="Floor" name="group_by_floor" context="{'group_by': 'floor'}"/>
+                    <filter string="Room Type" name="group_by_type" context="{'group_by': 'room_type'}"/>
+                    <filter string="Status" name="group_by_status" context="{'group_by': 'status'}"/>
+                </group>
+                <searchpanel>
+                    <field name="room_type" icon="fa-building" enable_counters="1" select="multi"/>
+                    <field name="status" icon="fa-circle" enable_counters="1"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <!-- ==================== WINDOW ACTION ==================== -->
+    <record id="action_university_classroom" model="ir.actions.act_window">
+        <field name="name">Classrooms</field>
+        <field name="res_model">university.classroom</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="limit">10</field>
+        <field name="search_view_id" ref="view_university_classroom_search"/>
+        <field name="context">{'search_default_filter_active': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create your first classroom</p>
+            <p>Manage physical rooms, lecture halls, computer labs, and monitor room capacities and timetable schedules.</p>
+        </field>
+    </record>
+
+</odoo>

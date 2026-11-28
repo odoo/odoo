@@ -1,0 +1,141 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="rule_student_own_attendance" model="ir.rule">
+        <field name="name">Student: own attendance</field>
+        <field name="model_id" ref="model_university_attendance" />
+        <field name="groups" eval="[(4, ref('group_school_student'))]" />
+        <field name="domain_force">[('student_id.user_id', '=', user.id)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="False" />
+        <field name="perm_create" eval="False" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+    <record id="rule_teacher_own_attendance_records" model="ir.rule">
+        <field name="name">Teacher: attendance for own sections</field>
+        <field name="model_id" ref="model_university_attendance" />
+        <field name="groups" eval="[(4, ref('group_university_teacher'))]" />
+        <field name="domain_force">[('section_id.teacher_id.user_id', '=', user.id)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+    <record id="rule_teacher_attendance_sessions" model="ir.rule">
+        <field name="name">Teacher: attendance sessions for own sections</field>
+        <field name="model_id" ref="model_university_attendance_session" />
+        <field name="groups" eval="[(4, ref('group_university_teacher'))]" />
+        <field name="domain_force">[('section_id.teacher_id.user_id', '=', user.id)]</field>
+    </record>
+    <record id="rule_hod_attendance_sessions" model="ir.rule">
+        <field name="name">Head of Department: department attendance sessions</field>
+        <field name="model_id" ref="model_university_attendance_session" />
+        <field name="groups" eval="[(4, ref('group_school_hod'))]" />
+        <field name="domain_force">['|', '|', ('section_id.program_id.department_id.head_id.user_id', '=', user.id), ('section_id.subject_id.department_id.head_id.user_id', '=', user.id), ('section_id.teacher_id.user_id', '=', user.id)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="False" />
+        <field name="perm_create" eval="False" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+    <record id="rule_dean_attendance_sessions" model="ir.rule">
+        <field name="name">Head of Faculty: faculty attendance sessions</field>
+        <field name="model_id" ref="model_university_attendance_session" />
+        <field name="groups" eval="[(4, ref('group_school_dean'))]" />
+        <field name="domain_force">['|', '|', ('section_id.program_id.department_id.faculty_id.dean_id.user_id', '=', user.id), ('section_id.subject_id.department_id.faculty_id.dean_id.user_id', '=', user.id), ('section_id.teacher_id.user_id', '=', user.id)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="False" />
+        <field name="perm_create" eval="False" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+    <record id="rule_admin_attendance_sessions" model="ir.rule">
+        <field name="name">Admin: all attendance sessions</field>
+        <field name="model_id" ref="model_university_attendance_session" />
+        <field name="groups" eval="[(4, ref('group_school_admin'))]" />
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
+    <record id="rule_hod_attendance_records" model="ir.rule">
+        <field name="name">Head of Department: department attendance</field>
+        <field name="model_id" ref="model_university_attendance" />
+        <field name="groups" eval="[(4, ref('group_school_hod'))]" />
+        <field name="domain_force">['|', '|', ('department_id.head_id.user_id', '=', user.id), ('section_id.subject_id.department_id.head_id.user_id', '=', user.id), ('section_id.teacher_id.user_id', '=', user.id)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="False" />
+        <field name="perm_create" eval="False" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+    <record id="rule_dean_attendance_records" model="ir.rule">
+        <field name="name">Head of Faculty: faculty attendance</field>
+        <field name="model_id" ref="model_university_attendance" />
+        <field name="groups" eval="[(4, ref('group_school_dean'))]" />
+        <field name="domain_force">['|', '|', ('faculty_id.dean_id.user_id', '=', user.id), ('section_id.subject_id.department_id.faculty_id.dean_id.user_id', '=', user.id), ('section_id.teacher_id.user_id', '=', user.id)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="False" />
+        <field name="perm_create" eval="False" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+    <record id="rule_teacher_own_staff_attendance" model="ir.rule">
+        <field name="name">Teacher: own staff attendance</field>
+        <field name="model_id" ref="model_university_staff_attendance" />
+        <field name="groups" eval="[(4, ref('group_university_teacher'))]" />
+        <field name="domain_force">[('staff_id.user_id', '=', user.id)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+    <record id="rule_hod_staff_attendance" model="ir.rule">
+        <field name="name">Head of Department: department staff attendance</field>
+        <field name="model_id" ref="model_university_staff_attendance" />
+        <field name="groups" eval="[(4, ref('group_school_hod'))]" />
+        <field name="domain_force">[('staff_id.department_id.head_id.user_id', '=', user.id)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="False" />
+        <field name="perm_create" eval="False" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+    <record id="rule_dean_staff_attendance" model="ir.rule">
+        <field name="name">Head of Faculty: faculty staff attendance</field>
+        <field name="model_id" ref="model_university_staff_attendance" />
+        <field name="groups" eval="[(4, ref('group_school_dean'))]" />
+        <field name="domain_force">[('staff_id.faculty_id.dean_id.user_id', '=', user.id)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="False" />
+        <field name="perm_create" eval="False" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+    <record id="rule_admin_all_attendance_records" model="ir.rule">
+        <field name="name">Admin: all attendance records</field>
+        <field name="model_id" ref="model_university_attendance" />
+        <field name="groups" eval="[(4, ref('group_school_admin'))]" />
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_unlink" eval="True" />
+    </record>
+    <record id="rule_admin_all_staff_attendance" model="ir.rule">
+        <field name="name">Admin: all staff attendance</field>
+        <field name="model_id" ref="model_university_staff_attendance" />
+        <field name="groups" eval="[(4, ref('group_school_admin'))]" />
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_unlink" eval="True" />
+    </record>
+    <record id="rule_university_holiday_all" model="ir.rule">
+        <field name="name">University Holiday: all users</field>
+        <field name="model_id" ref="model_university_holiday" />
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]" />
+    </record>
+    <record id="rule_holiday_admin" model="ir.rule">
+        <field name="name">Administrator: all holidays</field>
+        <field name="model_id" ref="model_university_holiday" />
+        <field name="groups" eval="[(4, ref('group_school_admin'))]" />
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_unlink" eval="True" />
+    </record>
+</odoo>

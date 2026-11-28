@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Class Section: Inherit university.class.section to add eLearning button & tab -->
+    <record id="view_university_class_section_form_inherit_elearning" model="ir.ui.view">
+        <field name="name">university.class.section.form.inherit.elearning</field>
+        <field name="model">university.class.section</field>
+        <field name="inherit_id" ref="school_management.view_university_class_section_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_slide_channels"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-graduation-cap">
+                    <field name="slide_channel_count" widget="statinfo" string="eLearning"/>
+                </button>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="eLearning Courses"
+                      name="elearning_tab">
+                    <field name="slide_channel_ids" context="{'default_class_section_id': id, 'default_subject_id': subject_id, 'default_teacher_id': teacher_id}">
+                        <list string="eLearning Courses">
+                            <field name="name" string="Course Title"/>
+                            <field name="channel_type" string="Type"/>
+                            <field name="user_id" string="Responsible"/>
+                            <field name="teacher_id" string="Teacher"/>
+                            <field name="total_slides" string="Lessons"/>
+                            <field name="members_all_count" string="Attendees"/>
+                            <field name="is_published" widget="boolean_toggle"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

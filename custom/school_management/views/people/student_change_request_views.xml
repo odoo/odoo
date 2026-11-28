@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ==================== SEARCH VIEW ==================== -->
+    <record id="view_university_student_change_request_search" model="ir.ui.view">
+        <field name="name">university.student.change.request.search</field>
+        <field name="model">university.student.change.request</field>
+        <field name="arch" type="xml">
+            <search string="Search Info Change Requests">
+                <field name="name" string="Request #"/>
+                <field name="student_id" string="Student"/>
+                <field name="student_code" string="Student ID"/>
+                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Pending Approval" name="pending" domain="[('state', '=', 'pending')]"/>
+                <filter string="Approved" name="approved" domain="[('state', '=', 'approved')]"/>
+                <filter string="Rejected" name="rejected" domain="[('state', '=', 'rejected')]"/>
+                <group>
+                    <filter string="Status" name="group_by_state" context="{'group_by': 'state'}"/>
+                    <filter string="Student" name="group_by_student" context="{'group_by': 'student_id'}"/>
+                </group>
+                <searchpanel>
+                    <field name="state" icon="fa-filter" enable_counters="1" select="multi"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <!-- ==================== LIST VIEW ==================== -->
+    <record id="view_university_student_change_request_list" model="ir.ui.view">
+        <field name="name">university.student.change.request.list</field>
+        <field name="model">university.student.change.request</field>
+        <field name="arch" type="xml">
+            <list limit="10" string="Student Info Change Requests" sample="1">
+                <field name="name" string="Request Ref" decoration-bf="1"/>
+                <field name="student_id"/>
+                <field name="student_code"/>
+                <field name="request_date"/>
+                <field name="proposed_name" string="New Name" optional="show"/>
+                <field name="proposed_email" string="New Email" optional="show"/>
+                <field name="proposed_phone" string="New Phone" optional="show"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'approved'"
+                       decoration-warning="state == 'pending'"
+                       decoration-muted="state == 'draft'"
+                       decoration-danger="state == 'rejected'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ==================== FORM VIEW ==================== -->
+    <record id="view_university_student_change_request_form" model="ir.ui.view">
+        <field name="name">university.student.change.request.form</field>
+        <field name="model">university.student.change.request</field>
+        <field name="arch" type="xml">
+            <form string="Profile Information Update Request">
+                <header>
+                    <button name="action_submit"
+                            type="object"
+                            string="Submit Request"
+                            class="oe_highlight"
+                            icon="fa-paper-plane"
+                            invisible="state != 'draft'"/>
+                    <button name="action_approve"
+                            type="object"
+                            string="Approve &amp; Update Record"
+                            class="oe_highlight"
+                            icon="fa-check"
+                            invisible="state != 'pending'"
+                            groups="school_management.group_school_admin,base.group_system"/>
+                    <button name="action_reject"
+                            type="object"
+                            string="Reject Request"
+                            class="btn-danger"
+                            icon="fa-times"
+                            invisible="state != 'pending'"
+                            groups="school_management.group_school_admin,base.group_system"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,pending,approved"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Request Number"/>
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Current Student Details">
+                            <field name="student_id" readonly="state != 'draft'"/>
+                            <field name="student_code"/>
+                            <field name="program_id"/>
+                            <field name="request_date"/>
+                        </group>
+                        <group string="Staff Review Details">
+                            <field name="reviewed_by_id"/>
+                            <field name="reviewed_at"/>
+                            <field name="rejection_reason" invisible="state != 'rejected'"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Requested Information Changes" name="changes_page">
+                            <div class="alert alert-info" role="alert">
+                                <i class="fa fa-info-circle me-1" title="Notice"/>Fill in only the fields you wish to update. Leave unchanged fields blank.
+                            </div>
+                            <group>
+                                <group string="Identity &amp; Legal Names">
+                                    <field name="proposed_name" placeholder="Leave blank if unchanged" readonly="state != 'draft'"/>
+                                    <field name="proposed_name_khmer" placeholder="Leave blank if unchanged" readonly="state != 'draft'"/>
+                                </group>
+                                <group string="Contact Info">
+                                    <field name="proposed_email" placeholder="Leave blank if unchanged" readonly="state != 'draft'"/>
+                                    <field name="proposed_phone" placeholder="Leave blank if unchanged" readonly="state != 'draft'"/>
+                                </group>
+                            </group>
+                            <group string="Residential Address">
+                                <field name="proposed_address" placeholder="New residential address details..." readonly="state != 'draft'"/>
+                            </group>
+                            <group string="Emergency Contact">
+                                <group>
+                                    <field name="proposed_emergency_name" placeholder="New emergency contact name" readonly="state != 'draft'"/>
+                                </group>
+                                <group>
+                                    <field name="proposed_emergency_phone" placeholder="New emergency contact phone" readonly="state != 'draft'"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Justification &amp; Evidence" name="reason_page">
+                            <group>
+                                <field name="reason" placeholder="State reason for legal or contact info update..." readonly="state != 'draft'"/>
+                                <field name="supporting_document" filename="supporting_document_name" readonly="state != 'draft'"/>
+                                <field name="supporting_document_name" invisible="1"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- ==================== ACTIONS ==================== -->
+    <record id="action_university_student_change_request" model="ir.actions.act_window">
+        <field name="name">Profile Change Requests</field>
+        <field name="res_model">university.student.change.request</field>
+        <field name="view_mode">list,form</field>
+        <field name="limit">10</field>
+        <field name="search_view_id" ref="view_university_student_change_request_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No profile change requests received.</p>
+            <p>Student requests to amend personal records, contact information, or names appear here.</p>
+        </field>
+    </record>
+
+    <record id="action_university_student_change_request_student" model="ir.actions.act_window">
+        <field name="name">My Profile Change Requests</field>
+        <field name="res_model">university.student.change.request</field>
+        <field name="view_mode">list,form</field>
+        <field name="limit">10</field>
+        <field name="domain">[('student_id.user_id', '=', uid)]</field>
+        <field name="search_view_id" ref="view_university_student_change_request_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Need to update your official profile information?</p>
+            <p>Submit a change request to update your legal name, contact email, phone number, or emergency contact.</p>
+        </field>
+    </record>
+</odoo>

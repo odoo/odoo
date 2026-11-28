@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_university_attendance_take_wizard_form" model="ir.ui.view">
+        <field name="name">university.attendance.take.wizard.form</field>
+        <field name="model">university.attendance.take.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Take Attendance">
+                <header>
+                    <button name="action_mark_all_present" type="object" string="Mark All Present"
+                            class="btn-success text-white" icon="fa-check-circle"/>
+                    <button name="action_mark_all_late" type="object" string="Mark All Late"
+                            class="btn-warning text-dark" icon="fa-clock-o"/>
+                    <button name="action_mark_all_absent" type="object" string="Mark All Absent"
+                            class="btn-danger text-white" icon="fa-times-circle"/>
+                </header>
+                <sheet>
+                    <group col="2">
+                        <field name="section_id" string="Class Section"
+                               options="{'no_create': True}"/>
+                        <field name="date" string="Attendance Date"/>
+                    </group>
+
+                    <div class="d-flex align-items-center gap-3 mb-2">
+                        <span class="text-success fw-bold">Present <field name="present_count" nolabel="1" readonly="1"/></span>
+                        <span class="text-warning fw-bold">Late <field name="late_count" nolabel="1" readonly="1"/></span>
+                        <span class="text-danger fw-bold">Absent <field name="absent_count" nolabel="1" readonly="1"/></span>
+                    </div>
+
+                    <field name="line_ids" options="{'no_create': True, 'no_delete': True}">
+                            <list limit="10" string="Student Attendance"
+                              create="0"
+                              delete="0"
+                              decoration-success="status == 'present'"
+                              decoration-warning="status == 'late'"
+                              decoration-danger="status == 'absent'">
+                            <field name="student_id" widget="many2one_avatar" readonly="1"
+                                   force_save="1" options="{'no_create': True}"/>
+                            <field name="status" widget="attendance_status" string="Status"/>
+                            <field name="remark" string="Remarks" optional="show"
+                                   placeholder="Optional remark"/>
+                        </list>
+                    </field>
+
+                    <field name="notes" string="Session Notes" optional="show"
+                           placeholder="Optional session notes" class="mt-3"/>
+                </sheet>
+                <footer>
+                    <button name="action_save" type="object"
+                            string="Save &amp; Open Session"
+                            class="btn-primary" icon="fa-save"/>
+                    <button name="action_open_management" type="object"
+                            string="Open Management"
+                            class="btn-secondary" icon="fa-th-large"
+                            invisible="not section_id"/>
+                    <button string="Discard" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_university_attendance_take_wizard" model="ir.actions.act_window">
+        <field name="name">Take Attendance</field>
+        <field name="res_model">university.attendance.take.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="limit">10</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

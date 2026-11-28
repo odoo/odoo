@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_university_class_section_form_inherit_holiday" model="ir.ui.view">
+        <field name="name">university.class.section.form.inherit.holiday</field>
+        <field name="model">university.class.section</field>
+        <field name="inherit_id" ref="school_management.view_university_class_section_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_holiday_conflicts" type="object" class="oe_stat_button text-danger" icon="fa-calendar-times-o" invisible="holiday_conflict_count == 0">
+                    <field name="holiday_conflict_count" widget="statinfo" string="Holiday Conflicts"/>
+                </button>
+            </xpath>
+
+            <xpath expr="//div[hasclass('oe_title')]" position="before">
+                <field name="has_holiday_conflicts" invisible="1"/>
+                <div class="alert alert-danger d-flex align-items-center mb-3" role="alert" invisible="not has_holiday_conflicts">
+                    <i class="fa fa-exclamation-triangle fa-2x me-3" title="Warning"/>
+                    <div>
+                        <strong>Holiday Conflicts Warning:</strong> This class section has
+                        <strong><field name="holiday_conflict_count" readonly="1"/></strong> session(s) scheduled on university public holidays.
+                        Please review them using the <em>Holiday Conflicts</em> button above to cancel or reschedule.
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

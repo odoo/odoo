@@ -1,0 +1,245 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- LIST VIEW -->
+    <record id="view_university_subject_list" model="ir.ui.view">
+        <field name="name">university.subject.list</field>
+        <field name="model">university.subject</field>
+        <field name="arch" type="xml">
+            <list limit="10" string="Subjects" sample="1" default_order="department_id, code" class="o_university_subject_list">
+                <field name="code" decoration-bf="1"/>
+                <field name="name" decoration-bf="1"/>
+                <field name="department_id"/>
+                <field name="program_ids" widget="many2many_tags"/>
+                <field name="credits" decoration-info="1"/>
+                <field name="teacher_ids" widget="many2many_tags" optional="show"/>
+                <field name="teacher_count" string="Teachers" decoration-bf="1" optional="show"/>
+                <field name="section_count" string="Sections" decoration-bf="1" optional="show"/>
+                <field name="student_count" string="Students" decoration-success="1" optional="show"/>
+                <field name="active" widget="boolean_toggle" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- KANBAN VIEW -->
+    <record id="view_university_subject_kanban" model="ir.ui.view">
+        <field name="name">university.subject.kanban</field>
+        <field name="model">university.subject</field>
+        <field name="arch" type="xml">
+            <kanban limit="10" sample="1" class="o_university_subject_kanban">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="program_ids"/>
+                <field name="department_id"/>
+                <field name="credits"/>
+                <field name="teacher_count"/>
+                <field name="section_count"/>
+                <field name="student_count"/>
+                <templates>
+                    <t t-name="card">
+                        <main class="o_university_subject_card ms-1 p-3 shadow-sm rounded-3">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge rounded-pill text-bg-primary px-2 py-1 fw-bold fs-7">
+                                    <field name="code"/>
+                                </span>
+                                <span class="badge rounded-pill text-bg-light border px-2 py-1 text-muted">
+                                    <field name="credits"/> Credits
+                                </span>
+                            </div>
+                            <div class="mb-2">
+                                <strong class="fs-6 text-dark d-block text-truncate" title="Subject Title">
+                                    <field name="name"/>
+                                </strong>
+                            </div>
+                            <div class="o_subject_meta_line mb-1 text-muted small d-flex align-items-center">
+                                <i class="fa fa-building text-secondary me-2" title="Department"/>
+                                <span class="text-truncate"><field name="department_id"/></span>
+                            </div>
+                            <div class="o_subject_meta_line mb-2 text-muted small d-flex align-items-center">
+                                <i class="fa fa-graduation-cap text-secondary me-2" title="Program"/>
+                                <field name="program_ids" widget="many2many_tags"/>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center pt-2 border-top mt-2 small text-muted">
+                                <span title="Teachers Qualified">
+                                    <i class="fa fa-users text-primary me-1"/>
+                                    <field name="teacher_count"/> Teachers
+                                </span>
+                                <span title="Active Class Sections">
+                                    <i class="fa fa-th-list text-info me-1"/>
+                                    <field name="section_count"/> Sections
+                                </span>
+                                <span title="Enrolled Students">
+                                    <i class="fa fa-user-graduate text-success me-1"/>
+                                    <field name="student_count"/> Students
+                                </span>
+                            </div>
+                        </main>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- FORM VIEW -->
+    <record id="view_university_subject_form" model="ir.ui.view">
+        <field name="name">university.subject.form</field>
+        <field name="model">university.subject</field>
+        <field name="arch" type="xml">
+            <form string="Subject">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_sections" type="object" class="oe_stat_button" icon="fa-th-list">
+                            <field name="section_count" widget="statinfo" string="Sections"/>
+                        </button>
+                        <button name="action_view_teachers" type="object" class="oe_stat_button" icon="fa-users">
+                            <field name="teacher_count" widget="statinfo" string="Teachers"/>
+                        </button>
+                        <button name="action_view_sections" type="object" class="oe_stat_button" icon="fa-graduation-cap">
+                            <field name="student_count" widget="statinfo" string="Students"/>
+                        </button>
+                        <button name="action_view_books" type="object" class="oe_stat_button" icon="fa-book">
+                            <field name="book_count" widget="statinfo" string="Books"/>
+                        </button>
+                    </div>
+
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <field name="active" invisible="1"/>
+
+                    <div class="oe_title mb-3">
+                        <span class="badge text-bg-primary px-3 py-1 fs-6 mb-2 rounded-pill">
+                            <field name="code" placeholder="e.g. CS101" required="1"/>
+                        </span>
+                        <h1 class="mt-1">
+                            <field name="name" placeholder="e.g. Data Structures &amp; Algorithms" required="1"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group string="Academic Information">
+                            <field name="department_id" required="1" options="{'no_create': True}"/>
+                            <field name="program_ids" widget="many2many_tags"
+                                   domain="department_id and [('department_id', '=', department_id)] or []"
+                                   options="{'color_field': 'color', 'no_create': True}"/>
+                            <field name="credits"/>
+                        </group>
+                        <group string="Configuration &amp; Controls">
+                            <field name="auto_quiz_per_session" widget="boolean_toggle"/>
+                            <field name="active" widget="boolean_toggle"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Overview &amp; Syllabus" name="description_tab">
+                            <div class="mb-3">
+                                <h5 class="text-primary mb-2">
+                                    <i class="fa fa-book me-2"/>Course Overview &amp; Description
+                                </h5>
+                                <field name="description" placeholder="Comprehensive subject syllabus, learning objectives, and prerequisites..."/>
+                            </div>
+                            <div class="mt-4" invisible="not syllabus_html">
+                                <h5 class="text-primary mb-2">
+                                    <i class="fa fa-graduation-cap me-2"/>Detailed Syllabus &amp; Learning Outcomes
+                                </h5>
+                                <field name="syllabus_html" widget="html"/>
+                            </div>
+                        </page>
+
+                        <page string="Teachers &amp; Instructors" name="teachers_tab">
+                            <field name="teacher_ids" widget="many2many" domain="[('department_id', '=', department_id)]">
+                                <list limit="10">
+                                    <field name="teacher_id" string="ID / Code"/>
+                                    <field name="name" string="Instructor Name" decoration-bf="1"/>
+                                    <field name="department_id"/>
+                                    <field name="specialization"/>
+                                    <field name="email" widget="email"/>
+                                </list>
+                            </field>
+                        </page>
+
+                        <page string="Class Sections" name="sections_tab">
+                            <field name="section_ids">
+                                <list limit="10">
+                                    <field name="name" decoration-bf="1"/>
+                                    <field name="teacher_id"/>
+                                    <field name="semester_id"/>
+                                    <field name="classroom_id"/>
+                                    <field name="capacity"/>
+                                    <field name="enrolled_student_count" string="Enrolled"/>
+                                    <field name="available_seats" string="Available Seats"/>
+                                    <field name="capacity_used_percent" widget="progressbar" string="Capacity"/>
+                                </list>
+                            </field>
+                        </page>
+
+                        <page string="Semester Offerings" name="offerings_tab">
+                            <field name="semester_subject_ids">
+                                <list limit="10">
+                                    <field name="academic_year_id"/>
+                                    <field name="semester_id"/>
+                                    <field name="credits"/>
+                                    <field name="section_count" string="Active Sections"/>
+                                    <field name="enrollment_count" string="Enrolled Students"/>
+                                    <field name="active" widget="boolean_toggle"/>
+                                </list>
+                            </field>
+                        </page>
+
+                        <page string="Books" name="books_tab">
+                            <field name="book_link_ids">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="product_tmpl_id" options="{'no_create_edit': True}"/>
+                                    <field name="book_type"/>
+                                    <field name="note"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- SEARCH VIEW -->
+    <record id="view_university_subject_search" model="ir.ui.view">
+        <field name="name">university.subject.search</field>
+        <field name="model">university.subject</field>
+        <field name="arch" type="xml">
+            <search string="Search Subjects">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="program_ids"/>
+                <field name="department_id"/>
+                <separator/>
+                <filter string="Active" name="filter_active" domain="[('active', '=', True)]"/>
+                <filter string="Archived" name="filter_inactive" domain="[('active', '=', False)]"/>
+                <separator/>
+                <filter string="Missing Teachers" name="filter_no_teachers" domain="[('teacher_ids', '=', False)]"/>
+                <filter string="Has Teachers" name="filter_has_teachers" domain="[('teacher_ids', '!=', False)]"/>
+                <separator/>
+                <filter string="No Class Sections" name="filter_no_sections" domain="[('section_ids', '=', False)]"/>
+                <filter string="Has Active Sections" name="filter_has_sections" domain="[('section_ids', '!=', False)]"/>
+                <separator/>
+                <filter string="Missing Description" name="filter_no_desc" domain="['|', ('description', '=', False), ('description', '=', '')]"/>
+                <filter string="High Credit (4+)" name="filter_high_credits" domain="[('credits', '>=', 4)]"/>
+                <group>
+                    <filter string="Department" name="group_by_department" context="{'group_by': 'department_id'}"/>
+                    <filter string="Credits" name="group_by_credits" context="{'group_by': 'credits'}"/>
+                </group>
+                <searchpanel>
+                    <field name="department_id" icon="fa-building" enable_counters="1"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <!-- WINDOW ACTION -->
+    <record id="action_university_subject" model="ir.actions.act_window">
+        <field name="name">Subjects</field>
+        <field name="res_model">university.subject</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="limit">10</field>
+        <field name="search_view_id" ref="view_university_subject_search"/>
+    </record>
+
+</odoo>

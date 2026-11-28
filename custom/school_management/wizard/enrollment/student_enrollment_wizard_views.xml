@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_university_student_enrollment_wizard_form" model="ir.ui.view">
+        <field name="name">university.student.enrollment.wizard.form</field>
+        <field name="model">university.student.enrollment.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Enrollment Registration">
+                <sheet>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4 class="text-primary mb-3">1. Student Details</h4>
+                            <group>
+                                <field name="student_id"/>
+                            </group>
+                            
+                            <h4 class="text-primary mt-4 mb-3">2. Enrollment Academic Information</h4>
+                            <group>
+                                <field name="program_id" options="{'no_create': True}"/>
+                                <field name="academic_year_id" options="{'no_create': True}"/>
+                                <field name="semester_id" options="{'no_create': True}"/>
+                            </group>
+                            
+                            <h4 class="text-primary mt-4 mb-3">3. Enrollment Details</h4>
+                            <group>
+                                <field name="enrollment_date"/>
+                                <field name="status" widget="radio" options="{'horizontal': true}"/>
+                            </group>
+                        </div>
+                    </div>
+                    
+                    <h4 class="text-primary mt-4 mb-3">4. Optional Class Assignment</h4>
+                    <div class="alert alert-info mb-3" role="alert">
+                        Leave class sections empty to enroll the student in the major
+                        for this academic period. Select sections only when assigning
+                        a class or cohort now.
+                    </div>
+                    <field name="section_ids" nolabel="1" widget="many2many">
+                        <list limit="10">
+                            <field name="name"/>
+                            <field name="subject_id"/>
+                            <field name="teacher_id"/>
+                            <field name="semester_id"/>
+                            <field name="capacity"/>
+                            <field name="enrolled_student_count" string="Enrolled"/>
+                        </list>
+                    </field>
+                </sheet>
+                <footer>
+                    <button name="action_register_enrollments"
+                            string="Confirm Registration"
+                            type="object"
+                            class="btn-primary"
+                            icon="fa-check"/>
+                    <button string="Cancel" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

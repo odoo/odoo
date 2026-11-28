@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_university_bulk_enrollment_wizard_form" model="ir.ui.view">
+        <field name="name">university.bulk.enrollment.wizard.form</field>
+        <field name="model">university.bulk.enrollment.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Bulk Enrollment" class="o_bulk_enrollment_wizard">
+                <sheet>
+                    <field name="student_ids" invisible="1"/>
+                    <field name="eligible_student_ids" invisible="1"/>
+                    <field name="eligible_student_count" invisible="1"/>
+                    <field name="capacity_blocked" invisible="1"/>
+
+                    <group class="o_bulk_enrollment_filters">
+                        <group string="Academic Structure" class="o_bulk_enrollment_panel">
+                            <field name="faculty_id" options="{'no_create': True}"/>
+                            <field name="department_id" options="{'no_create': True}" invisible="not faculty_id"/>
+                            <field name="program_id" options="{'no_create': True}" invisible="not department_id"/>
+                            <field name="section_id" options="{'no_create': True}" invisible="not program_id"/>
+                        </group>
+                        <group string="Academic Information" class="o_bulk_enrollment_panel">
+                            <field name="academic_year_id" options="{'no_create': True}"/>
+                            <field name="semester_id" options="{'no_create': True}"/>
+                            <field name="enrollment_date"/>
+                            <field name="status"/>
+                        </group>
+                    </group>
+
+                    <group string="Students" class="o_bulk_enrollment_students_panel">
+                        <div class="alert alert-info o_bulk_enrollment_hint mb-2" role="alert" colspan="2">
+                            Load active students matching the selected filters, review the checklist,
+                            then enroll the selected students.
+                        </div>
+                        <div class="d-flex gap-2 o_bulk_enrollment_actions mb-2" colspan="2">
+                            <button name="action_load_eligible_students"
+                                    string="Load eligible students"
+                                    type="object"
+                                    class="btn-primary"
+                                    icon="fa-refresh"
+                                    invisible="not program_id or not academic_year_id or not semester_id"/>
+                            <button name="action_select_all_eligible_students"
+                                    string="Select all"
+                                    type="object"
+                                    class="btn-secondary"
+                                    icon="fa-users"
+                                    invisible="not line_ids"/>
+                            <button name="action_clear_students"
+                                    string="Clear Selection"
+                                    type="object"
+                                    class="btn-secondary"
+                                    icon="fa-times"
+                                    invisible="not line_ids"/>
+                        </div>
+                        <field name="line_ids" nolabel="1" colspan="2" class="o_bulk_enrollment_lines">
+                            <list limit="10" string="Eligible Students" editable="bottom" create="false" delete="false" decoration-muted="note != ''">
+                                <field name="selected" widget="boolean_toggle"/>
+                                <field name="student_code"/>
+                                <field name="student_id"/>
+                                <field name="program_id"/>
+                                <field name="note" decoration-danger="note == 'Already enrolled'"/>
+                            </list>
+                        </field>
+                        <group col="2" colspan="2" class="o_bulk_enrollment_summary">
+                            <div class="o_bulk_enrollment_stat">
+                                <span class="o_bulk_enrollment_stat_label">Selected students</span>
+                                <field name="selected_student_count" nolabel="1" readonly="1"/>
+                            </div>
+                            <div class="o_bulk_enrollment_stat" invisible="not section_id">
+                                <span class="o_bulk_enrollment_stat_label">Seats left</span>
+                                <field name="available_seats" nolabel="1" readonly="1"/>
+                            </div>
+                        </group>
+                    </group>
+                    <div invisible="not capacity_blocked"
+                         class="alert alert-danger o_bulk_enrollment_capacity mb-0"
+                         role="alert">
+                        <i class="fa fa-exclamation-triangle me-1"/>
+                        Selected students exceed the seats left in this class section.
+                    </div>
+                </sheet>
+                <footer>
+                    <button name="action_enroll_students"
+                            string="Enroll Students"
+                            type="object"
+                            class="btn-primary"
+                            icon="fa-check"
+                            invisible="selected_student_count == 0 or capacity_blocked"/>
+                    <button string="Cancel" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_university_bulk_enrollment_wizard" model="ir.actions.act_window">
+        <field name="name">Bulk Enrollment</field>
+        <field name="res_model">university.bulk.enrollment.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="limit">10</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="model_university_student"/>
+        <field name="binding_view_types">list</field>
+    </record>
+
+</odoo>

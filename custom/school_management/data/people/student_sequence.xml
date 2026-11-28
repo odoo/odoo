@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="seq_university_student" model="ir.sequence">
+        <field name="name">University Student ID</field>
+        <field name="code">university.student</field>
+        <field name="prefix">STD-%(year)s-</field>
+        <field name="padding" eval="4"/>
+        <field name="company_id" eval="False"/>
+    </record>
+</odoo>

@@ -1,0 +1,190 @@
+// Bulk enrollment uses the same violet / charcoal language as the school app
+// shell while keeping status colors semantic and easy to scan.
+.o_bulk_enrollment_wizard {
+    --bulk-accent: #6f5f9e;
+    --bulk-accent-hover: #5d4f88;
+    --bulk-accent-soft: #f4f1fb;
+    --bulk-accent-border: #d9d1ed;
+    --bulk-ink: #303036;
+    --bulk-muted: #6f6f79;
+    --bulk-border: #e2e1e8;
+    --bulk-surface: #ffffff;
+    --bulk-page: #f8f8fa;
+
+    .o_form_sheet_bg {
+        background: var(--bulk-page);
+    }
+
+    .o_form_sheet {
+        max-width: 1180px;
+        border-top: 3px solid var(--bulk-accent);
+        background: var(--bulk-surface);
+        box-shadow: 0 8px 24px rgba(48, 48, 54, 0.08);
+    }
+
+    .o_form_label,
+    .o_horizontal_separator {
+        color: var(--bulk-ink);
+    }
+
+    .o_horizontal_separator {
+        font-weight: 600;
+    }
+
+    .o_bulk_enrollment_filters {
+        column-gap: 1.25rem;
+        margin-bottom: 1rem;
+    }
+
+    .o_bulk_enrollment_panel {
+        padding: 0.8rem 1rem;
+        border: 1px solid var(--bulk-border);
+        border-radius: 6px;
+        background: #fcfcfd;
+
+        .o_horizontal_separator {
+            padding-bottom: 0.45rem;
+            border-bottom: 1px solid var(--bulk-border);
+            color: var(--bulk-accent-hover);
+            font-size: 0.78rem;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+    }
+
+    .o_bulk_enrollment_students_panel {
+        padding: 0.9rem 1rem 0.75rem;
+        border: 1px solid var(--bulk-border);
+        border-radius: 6px;
+        background: var(--bulk-surface);
+
+        > .o_horizontal_separator {
+            margin-bottom: 0.6rem;
+            color: var(--bulk-ink);
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+    }
+
+    .o_bulk_enrollment_hint {
+        border: 1px solid var(--bulk-accent-border);
+        border-left: 3px solid var(--bulk-accent);
+        background: var(--bulk-accent-soft);
+        color: #4c426b;
+    }
+
+    .o_bulk_enrollment_actions {
+        padding: 0.25rem 0;
+
+        .btn-primary,
+        .btn-secondary {
+            border-radius: 5px;
+            font-weight: 600;
+        }
+
+        .btn-primary,
+        .btn-primary:hover,
+        .btn-primary:focus {
+            background-color: var(--bulk-accent);
+            border-color: var(--bulk-accent);
+        }
+
+        .btn-primary:hover,
+        .btn-primary:focus {
+            background-color: var(--bulk-accent-hover);
+            border-color: var(--bulk-accent-hover);
+        }
+
+        .btn-secondary {
+            color: var(--bulk-ink);
+            background: #f1f1f4;
+            border-color: #d7d6de;
+        }
+
+        .btn-secondary:hover,
+        .btn-secondary:focus {
+            color: var(--bulk-ink);
+            background: #e7e6ec;
+            border-color: #c9c7d2;
+        }
+    }
+
+    .o_bulk_enrollment_lines {
+        .o_list_renderer {
+            border: 1px solid var(--bulk-border);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .o_list_table thead th {
+            background: #f3f1f7;
+            color: #4b4560;
+            border-bottom-color: var(--bulk-accent-border);
+            font-weight: 600;
+        }
+
+        .o_data_row:hover > td {
+            background: #fbfaff;
+        }
+
+        .o_field_boolean_toggle input {
+            accent-color: var(--bulk-accent);
+        }
+    }
+
+    .o_bulk_enrollment_summary {
+        display: flex;
+        gap: 0.75rem;
+        margin-top: 0.75rem;
+        padding-top: 0.75rem;
+        border-top: 1px solid var(--bulk-border);
+
+        .o_bulk_enrollment_stat {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            min-width: 170px;
+            padding: 0.55rem 0.75rem;
+            border: 1px solid var(--bulk-border);
+            border-radius: 5px;
+            background: #fafafd;
+        }
+
+        .o_bulk_enrollment_stat_label {
+            color: var(--bulk-muted);
+            font-size: 0.78rem;
+            font-weight: 600;
+        }
+
+        .o_field_widget {
+            color: var(--bulk-accent-hover);
+            font-size: 1.05rem;
+            font-weight: 700;
+        }
+    }
+
+    .o_bulk_enrollment_capacity {
+        border-color: #efc5c1;
+        background: #fff5f4;
+        color: #8f2d24;
+    }
+
+    footer .btn-primary,
+    footer .btn-secondary {
+        border-radius: 5px;
+        font-weight: 600;
+    }
+
+    footer .btn-primary,
+    footer .btn-primary:hover,
+    footer .btn-primary:focus {
+        background-color: var(--bulk-accent);
+        border-color: var(--bulk-accent);
+    }
+
+    footer .btn-primary:hover,
+    footer .btn-primary:focus {
+        background-color: var(--bulk-accent-hover);
+        border-color: var(--bulk-accent-hover);
+    }
+}

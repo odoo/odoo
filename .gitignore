@@ -4,6 +4,8 @@ _build/
 # dotfiles
 .*
 !.gitignore
+!.dockerignore
+!.python-version
 !.gitkeep
 !.github
 !.mailmap
@@ -24,6 +26,8 @@ odoo/filestore
 odoo/addons/base/maintenance
 # windows installation config file
 /odoo.conf
+/odoo_local.conf
+*.conf
 
 # generated for windows installer?
 install/win32/*.bat
@@ -51,3 +55,15 @@ package.json
 /man/
 /share/
 /src/
+/venv/
+.env
+*.env
+
+# Local Odoo data and dumps
+/data/
+*.dump
+*.sql
+
+# Generated screenshots and PNG files
+*.png
+!**/static/**/*.png

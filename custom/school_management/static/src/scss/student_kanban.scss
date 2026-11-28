@@ -1,0 +1,145 @@
+.o_kanban_renderer.o_university_student_kanban {
+    .o_kanban_card.o_student_kanban_card {
+        overflow: hidden;
+        padding: 0;
+        border: 1px solid var(--border-color, #d8dee8);
+        border-radius: 12px;
+        background: var(--bg-card, #ffffff);
+        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+        transition: box-shadow 0.18s ease, transform 0.18s ease, border-color 0.18s ease;
+
+        &:hover,
+        &:focus-within {
+            border-color: var(--brand-primary, #2563eb);
+            box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12);
+            transform: translateY(-1px);
+        }
+    }
+
+    .o_student_kanban_body {
+        padding: 16px;
+    }
+
+    .o_student_kanban_header {
+        display: flex;
+        gap: 12px;
+        min-width: 0;
+    }
+
+    .o_student_kanban_avatar {
+        flex: 0 0 64px;
+        width: 64px;
+        height: 64px;
+    }
+
+    .o_student_kanban_avatar_img,
+    .o_student_kanban_avatar_img .o_field_image,
+    .o_student_kanban_avatar_img .o_field_widget,
+    .o_student_kanban_avatar_img img,
+    .o_student_kanban_avatar_fallback {
+        width: 64px;
+        height: 64px;
+        min-width: 64px;
+        object-fit: cover;
+    }
+
+    .o_student_kanban_avatar_img,
+    .o_student_kanban_avatar_img img,
+    .o_student_kanban_avatar_fallback {
+        overflow: hidden;
+        border-radius: 50%;
+    }
+
+    .o_student_kanban_avatar_fallback {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--brand-primary, #2563eb);
+        background: var(--brand-primary-soft, #e8f0ff);
+        font-size: 1.4rem;
+    }
+
+    .o_student_kanban_content {
+        min-width: 0;
+        flex: 1 1 auto;
+    }
+
+    .o_student_kanban_title_row {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        min-width: 0;
+    }
+
+    .o_student_kanban_name {
+        min-width: 0;
+        flex: 1 1 auto;
+        color: var(--text-heading, #1f2937);
+        font-size: 0.98rem;
+        font-weight: 700;
+        line-height: 1.25;
+    }
+
+    .o_student_kanban_title_row .badge {
+        flex: 0 0 auto;
+        border-radius: 999px;
+        padding: 4px 10px;
+        font-weight: 600;
+        line-height: 1;
+    }
+
+    .o_student_kanban_line {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        min-width: 0;
+        margin-top: 6px;
+        color: var(--text-muted, #64748b);
+        font-size: 0.82rem;
+        line-height: 1.25;
+
+        .fa {
+            flex: 0 0 14px;
+            width: 14px;
+            color: var(--text-light, #94a3b8);
+            text-align: center;
+        }
+    }
+
+    .o_student_kanban_footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        min-width: 0;
+        padding: 10px 16px;
+        border-top: 1px solid var(--border-subtle, #edf2f7);
+        color: var(--text-muted, #64748b);
+        font-size: 0.8rem;
+    }
+
+    .o_student_kanban_faculty {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        min-width: 0;
+
+        .fa {
+            flex: 0 0 14px;
+            color: var(--text-light, #94a3b8);
+            text-align: center;
+        }
+    }
+
+    .o_student_kanban_open {
+        flex: 0 0 auto;
+        color: var(--brand-primary, #2563eb);
+        font-weight: 600;
+        white-space: nowrap;
+        text-decoration: none;
+
+        .fa {
+            margin-left: 4px;
+        }
+    }
+}

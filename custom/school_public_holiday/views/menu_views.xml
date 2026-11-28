@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Deactivate legacy single Holidays menu from school_management when extension is active -->
+    <record id="school_management.menu_university_holiday" model="ir.ui.menu">
+        <field name="active" eval="False"/>
+    </record>
+
+    <!-- Import Public Holidays action is now a button on list view header; deactivate menu item -->
+    <record id="menu_school_holiday_import" model="ir.ui.menu">
+        <field name="name">Import Public Holidays</field>
+        <field name="parent_id" ref="school_management.menu_university_administration"/>
+        <field name="action" ref="action_wizard_import_public_holiday"/>
+        <field name="active" eval="False"/>
+    </record>
+
+    <!-- Import History & Audit Log under Administration -->
+    <menuitem
+        id="menu_school_holiday_import_history"
+        name="Import History Log"
+        parent="school_management.menu_university_administration"
+        action="action_school_holiday_import_log"
+        sequence="30"
+        groups="school_management.group_school_admin,base.group_system"
+    />
+</odoo>

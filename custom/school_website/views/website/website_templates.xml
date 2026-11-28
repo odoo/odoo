@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Replace Homepage Content with Harvard University Landing Page -->
+    <template id="harvard_homepage_inherit" inherit_id="website.homepage" name="Harvard University Homepage">
+        <xpath expr="//div[@id='wrap']" position="replace">
+            <div id="wrap" class="oe_structure oe_empty">
+                <!-- Hero Section matching user mockup -->
+                <section class="harvard-hero-section" style="background-image: url('/school_website/static/src/img/harvard_campus_hero.jpg');">
+                    <div class="harvard-hero-overlay"></div>
+                    <div class="harvard-hero-content">
+                        <h1 class="harvard-hero-title">Your journey starts here</h1>
+                        <p class="harvard-hero-subtitle">
+                            Explore world-class academic degree programs, groundbreaking research opportunities, and vibrant campus life at Harvard University. Discover where your passion can lead.
+                        </p>
+                        <div class="d-flex justify-content-center gap-3 flex-wrap">
+                            <a href="/courses" class="harvard-btn-discover">Discover more</a>
+                            <a href="/contactus" class="harvard-btn-contact">Contact us</a>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Unveil Our Programs Section -->
+                <section class="py-5 bg-light" id="programs-showcase">
+                    <div class="container py-4">
+                        <div class="row align-items-end mb-5">
+                            <div class="col-lg-8">
+                                <span class="text-uppercase fw-bold text-danger small">Academic Excellence</span>
+                                <h2 class="display-6 fw-bold mt-1 text-dark">Unveil Our Academic Programs</h2>
+                                <p class="text-muted lead">Rigorous undergraduate, master, and doctoral degree programs designed for tomorrow's leaders.</p>
+                            </div>
+                            <div class="col-lg-4 text-lg-end">
+                                <a href="/courses" class="btn btn-outline-danger px-4 py-2">View All Programs <i class="fa fa-arrow-right ms-1"/></a>
+                            </div>
+                        </div>
+
+                        <t t-set="programs" t-value="website.get_featured_programs(limit=6)"/>
+                        <div class="row g-4" t-if="programs">
+                            <t t-foreach="programs" t-as="prog">
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="harvard-card h-100 p-4 d-flex flex-column justify-content-between shadow-sm">
+                                        <div>
+                                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                                <span class="harvard-badge-degree" t-esc="dict(prog._fields['degree_type'].selection).get(prog.degree_type, prog.degree_type)"/>
+                                                <span class="text-muted small fw-bold" t-esc="prog.code"/>
+                                            </div>
+                                            <h4 class="h5 fw-bold text-dark mb-2">
+                                                <a t-attf-href="/courses/#{prog.id}" class="text-decoration-none text-dark hover-danger" t-esc="prog.name"/>
+                                            </h4>
+                                            <p class="text-muted small mb-3" t-if="prog.department_id">
+                                                <i class="fa fa-building-o me-1 text-secondary"/> <span t-esc="prog.department_id.name"/>
+                                            </p>
+                                        </div>
+                                        <div class="pt-3 border-top d-flex justify-content-between align-items-center">
+                                            <span class="small text-muted">
+                                                <i class="fa fa-clock-o me-1"/> <t t-esc="prog.duration_years"/> Years (<t t-esc="prog.total_credits"/> Credits)
+                                            </span>
+                                            <a t-attf-href="/courses/#{prog.id}" class="btn btn-sm btn-link text-danger p-0 fw-bold">Explore <i class="fa fa-chevron-right small"/></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- University Impact & Numbers -->
+                <section class="py-5 text-white" style="background-color: #101c30;">
+                    <div class="container py-4">
+                        <t t-set="stats" t-value="website.get_university_stats()"/>
+                        <div class="row text-center g-4">
+                            <div class="col-6 col-md-3">
+                                <h2 class="display-5 fw-bold text-white mb-1"><t t-esc="stats['programs_count'] or 24"/>+</h2>
+                                <p class="text-white-50 mb-0">Degree Programs</p>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <h2 class="display-5 fw-bold text-white mb-1"><t t-esc="stats['departments_count'] or 8"/></h2>
+                                <p class="text-white-50 mb-0">Academic Departments</p>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <h2 class="display-5 fw-bold text-white mb-1"><t t-esc="stats['teachers_count'] or 50"/>+</h2>
+                                <p class="text-white-50 mb-0">Distinguished Faculty</p>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <h2 class="display-5 fw-bold text-white mb-1"><t t-esc="stats['students_count'] or 1200"/>+</h2>
+                                <p class="text-white-50 mb-0">Enrolled Students</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Campus Events & Announcements -->
+                <section class="py-5 bg-white">
+                    <div class="container py-4">
+                        <div class="row align-items-end mb-4">
+                            <div class="col-lg-8">
+                                <span class="text-uppercase fw-bold text-danger small">Happenings</span>
+                                <h2 class="display-6 fw-bold mt-1 text-dark">Events &amp; Campus Notices</h2>
+                                <p class="text-muted lead">Stay informed with the latest seminars, academic calendars, and conferences.</p>
+                            </div>
+                            <div class="col-lg-4 text-lg-end">
+                                <a href="/events" class="btn btn-outline-dark px-4 py-2">All Events <i class="fa fa-calendar ms-1"/></a>
+                            </div>
+                        </div>
+
+                        <t t-set="events" t-value="website.get_upcoming_campus_events(limit=4)"/>
+                        <div class="row g-4" t-if="events">
+                            <t t-foreach="events" t-as="evt">
+                                <div class="col-md-6">
+                                    <div class="p-4 rounded border h-100 d-flex flex-column justify-content-between hover-shadow">
+                                        <div>
+                                            <div class="d-flex align-items-center gap-2 mb-2">
+                                                <span class="badge bg-danger" t-if="evt.pinned">Pinned</span>
+                                                <span class="badge bg-secondary" t-esc="dict(evt._fields['notice_type'].selection).get(evt.notice_type, evt.notice_type)"/>
+                                                <span class="text-muted small ms-auto"><i class="fa fa-calendar-o me-1"/> <t t-esc="evt.date"/></span>
+                                            </div>
+                                            <h4 class="h5 fw-bold text-dark mt-2" t-esc="evt.name"/>
+                                            <p class="text-muted small" t-if="evt.content" t-esc="evt.content[:160] + '...' if len(evt.content) > 160 else evt.content"/>
+                                        </div>
+                                        <div class="mt-3">
+                                            <a href="/events" class="text-danger fw-bold small text-decoration-none">Read Announcement <i class="fa fa-arrow-right ms-1"/></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Upgraded Call to Action (CTA) Banner -->
+                <section class="harvard-cta-section py-5 text-center text-white position-relative overflow-hidden">
+                    <div class="harvard-cta-pattern position-absolute top-0 start-0 end-0 bottom-0"></div>
+                    <div class="container py-4 position-relative" style="z-index: 2;">
+                        <span class="badge bg-white text-danger px-3 py-2 rounded-pill fw-bold text-uppercase mb-3 shadow-sm">
+                            <i class="fa fa-graduation-cap me-1"/> Admissions Open for Academic Year 2026–2027
+                        </span>
+                        <h2 class="display-5 fw-bold mb-3 text-white">Begin Your Harvard Journey Today</h2>
+                        <p class="lead mb-4 mx-auto text-white-50" style="max-width: 680px;">
+                            Join a world-renowned community of scholars, researchers, and innovators. Applications for undergraduate, graduate, and doctoral programs are now open worldwide.
+                        </p>
+                        <div class="d-flex justify-content-center gap-3 flex-wrap mb-4">
+                            <a href="/admission/apply" class="btn btn-light btn-lg px-4 py-3 fw-bold text-danger shadow-sm harvard-btn-cta-primary">
+                                <i class="fa fa-pencil-square-o me-2"/> Apply for Admission
+                            </a>
+                            <a href="/my/student/dashboard" class="btn btn-outline-light btn-lg px-4 py-3 fw-bold harvard-btn-cta-secondary">
+                                <i class="fa fa-user-circle me-2"/> Student Portal
+                            </a>
+                            <a href="/courses" class="btn btn-outline-light btn-lg px-4 py-3 fw-bold harvard-btn-cta-secondary">
+                                <i class="fa fa-compass me-2"/> Explore Programs
+                            </a>
+                        </div>
+                        <div class="d-flex justify-content-center align-items-center gap-4 flex-wrap text-white-50 small">
+                            <span><i class="fa fa-check-circle text-warning me-1"/> 100% Online Application</span>
+                            <span><i class="fa fa-check-circle text-warning me-1"/> Need-Blind Financial Aid</span>
+                            <span><i class="fa fa-check-circle text-warning me-1"/> Global Degree Recognition</span>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </xpath>
+    </template>
+
+    <!-- Custom Harvard University Footer -->
+    <template id="harvard_footer_custom_inherit" inherit_id="website.footer_custom" name="Harvard University Footer">
+        <xpath expr="//div[@id='footer']" position="replace">
+            <div id="footer" class="oe_structure oe_structure_solo text-break harvard-footer" t-ignore="true" t-if="not no_footer">
+                <div class="harvard-footer-top-accent"></div>
+                <section class="py-5 text-white" style="background-color: #0d1726;">
+                    <div class="container py-3">
+                        <div class="row g-4 g-lg-5">
+                            <!-- Col 1: Brand & Mission -->
+                            <div class="col-lg-4">
+                                <div class="d-flex align-items-center gap-2 mb-3">
+                                    <span class="p-2 bg-white rounded-3 shadow-sm d-inline-flex align-items-center justify-content-center">
+                                        <i class="fa fa-graduation-cap fa-2x text-danger"/>
+                                    </span>
+                                    <div>
+                                        <h5 class="fw-bold text-white mb-0" style="letter-spacing: 1px;">HARVARD UNIVERSITY</h5>
+                                        <span class="small text-danger fw-bold" style="letter-spacing: 2px;">VERITAS</span>
+                                    </div>
+                                </div>
+                                <p class="text-white-50 small mb-4" style="line-height: 1.7;">
+                                    Harvard University is devoted to excellence in teaching, learning, and research, and to developing leaders in many disciplines who make a positive difference in the world.
+                                </p>
+                                <div class="d-flex flex-column gap-2 small text-white-50 mb-4">
+                                    <div><i class="fa fa-map-marker text-danger me-2 fa-fw"/> Massachusetts Hall, Cambridge, MA 02138 USA</div>
+                                    <div><i class="fa fa-phone text-danger me-2 fa-fw"/> Switchboard: <a href="tel:+16174951000" class="text-white text-decoration-none">+1 (617) 495-1000</a></div>
+                                    <div><i class="fa fa-envelope text-danger me-2 fa-fw"/> Admissions: <a href="mailto:admissions@harvard.edu" class="text-white text-decoration-none">admissions@harvard.edu</a></div>
+                                </div>
+                                <div class="d-flex gap-2">
+                                    <a href="https://facebook.com/harvard" target="_blank" class="harvard-social-icon" aria-label="Facebook"><i class="fa fa-facebook"/></a>
+                                    <a href="https://twitter.com/harvard" target="_blank" class="harvard-social-icon" aria-label="Twitter"><i class="fa fa-twitter"/></a>
+                                    <a href="https://linkedin.com/school/harvard-university" target="_blank" class="harvard-social-icon" aria-label="LinkedIn"><i class="fa fa-linkedin"/></a>
+                                    <a href="https://instagram.com/harvard" target="_blank" class="harvard-social-icon" aria-label="Instagram"><i class="fa fa-instagram"/></a>
+                                    <a href="https://youtube.com/harvard" target="_blank" class="harvard-social-icon" aria-label="YouTube"><i class="fa fa-youtube-play"/></a>
+                                </div>
+                            </div>
+
+                            <!-- Col 2: Academics & Admissions -->
+                            <div class="col-6 col-lg-3">
+                                <h5 class="fw-bold text-white mb-3 text-uppercase small" style="letter-spacing: 1px;">
+                                    <span class="text-danger">|</span> Academics &amp; Admissions
+                                </h5>
+                                <ul class="list-unstyled small d-flex flex-column gap-2 text-white-50 mb-0">
+                                    <li><a href="/courses" class="harvard-footer-link">Degree Programs &amp; Courses</a></li>
+                                    <li><a href="/courses" class="harvard-footer-link">Undergraduate Studies</a></li>
+                                    <li><a href="/courses" class="harvard-footer-link">Graduate &amp; Master's Degrees</a></li>
+                                    <li><a href="/courses" class="harvard-footer-link">Doctoral &amp; PhD Studies</a></li>
+                                    <li><a href="/admission/apply" class="harvard-footer-link">Apply Online for Admission</a></li>
+                                    <li><a href="/my/student/dashboard" class="harvard-footer-link">Student Portal Dashboard</a></li>
+                                    <li><a href="/events" class="harvard-footer-link">Campus Events &amp; Calendar</a></li>
+                                </ul>
+                            </div>
+
+                            <!-- Col 3: Campus & Resources -->
+                            <div class="col-6 col-lg-2">
+                                <h5 class="fw-bold text-white mb-3 text-uppercase small" style="letter-spacing: 1px;">
+                                    <span class="text-danger">|</span> Campus Life
+                                </h5>
+                                <ul class="list-unstyled small d-flex flex-column gap-2 text-white-50 mb-0">
+                                    <li><a href="/aboutus" class="harvard-footer-link">About Harvard</a></li>
+                                    <li><a href="/jobs" class="harvard-footer-link">Faculty &amp; Staff Careers</a></li>
+                                    <li><a href="/contactus" class="harvard-footer-link">Campus Directory</a></li>
+                                    <li><a href="/contactus" class="harvard-footer-link">Visitor Center &amp; Tours</a></li>
+                                    <li><a href="/contactus" class="harvard-footer-link">Financial Aid Support</a></li>
+                                    <li><a href="/aboutus" class="harvard-footer-link">Research &amp; Labs</a></li>
+                                </ul>
+                            </div>
+
+                            <!-- Col 4: Quick Contact & Emergency Hotline -->
+                            <div class="col-lg-3">
+                                <h5 class="fw-bold text-white mb-3 text-uppercase small" style="letter-spacing: 1px;">
+                                    <span class="text-danger">|</span> Inquiries &amp; Hotlines
+                                </h5>
+                                <div class="p-3 rounded-3 mb-3 border border-secondary border-opacity-25" style="background-color: rgba(255,255,255,0.04);">
+                                    <span class="text-muted small text-uppercase d-block fw-bold">Admissions Hotline</span>
+                                    <a href="tel:+16174951551" class="text-white fw-bold d-block text-decoration-none mt-1">+1 (617) 495-1551</a>
+                                    <span class="text-white-50 small">Mon – Fri: 9:00 AM – 5:00 PM EST</span>
+                                </div>
+
+                                <div class="p-3 rounded-3 border border-danger border-opacity-50 mb-3" style="background-color: rgba(165, 28, 48, 0.15);">
+                                    <div class="d-flex align-items-center gap-2 mb-1">
+                                        <i class="fa fa-shield text-danger"/>
+                                        <span class="text-danger fw-bold small text-uppercase">Campus Police (HUPD)</span>
+                                    </div>
+                                    <a href="tel:+16174951212" class="text-white fw-bold d-block text-decoration-none">+1 (617) 495-1212</a>
+                                    <span class="text-white-50 small">24/7 Dispatch &amp; Safety Hotline</span>
+                                </div>
+
+                                <div>
+                                    <a href="/contactus" class="btn btn-danger btn-sm w-100 fw-bold py-2 harvard-btn-crimson">
+                                        <i class="fa fa-envelope me-1"/> Contact University
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </xpath>
+    </template>
+
+    <!-- Custom Harvard University Copyright Bar -->
+    <template id="harvard_footer_copyright_inherit" inherit_id="website.layout" name="Harvard University Copyright Bar">
+        <xpath expr="//div[hasclass('o_footer_copyright')]" position="replace">
+            <div class="harvard-footer-bottom py-3" style="background-color: #080f1a; border-top: 1px solid rgba(255,255,255,0.08);">
+                <div class="container">
+                    <div class="row align-items-center gy-2">
+                        <div class="col-md-6 text-center text-md-start">
+                            <p class="mb-0 text-white-50 small">
+                                Copyright &amp;copy; 2026 Harvard University. All Rights Reserved. • Cambridge, Massachusetts
+                            </p>
+                        </div>
+                        <div class="col-md-6 text-center text-md-end">
+                            <ul class="list-inline mb-0 small text-white-50">
+                                <li class="list-inline-item"><a href="/aboutus" class="text-white-50 text-decoration-none hover-white">Privacy Policy</a></li>
+                                <li class="list-inline-item">•</li>
+                                <li class="list-inline-item"><a href="/aboutus" class="text-white-50 text-decoration-none hover-white">Terms of Use</a></li>
+                                <li class="list-inline-item">•</li>
+                                <li class="list-inline-item"><a href="/aboutus" class="text-white-50 text-decoration-none hover-white">Accessibility</a></li>
+                                <li class="list-inline-item">•</li>
+                                <li class="list-inline-item"><a href="/aboutus" class="text-white-50 text-decoration-none hover-white">Non-Discrimination</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </template>
+</odoo>

@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- LIST VIEW -->
+    <record id="view_university_enrollment_list" model="ir.ui.view">
+        <field name="name">university.enrollment.list</field>
+        <field name="model">university.enrollment</field>
+        <field name="active" eval="True"/>
+        <field name="arch" type="xml">
+            <list limit="10" string="Enrollments" sample="1">
+                <header>
+                    <button name="%(school_management.action_university_bulk_enrollment_wizard)d"
+                            string="Bulk Enrollment"
+                            type="action"
+                            class="btn-primary"/>
+                    <button name="%(school_management.action_print_curriculum_5plus)d"
+                            string="Print Curriculum (≥5 Students)"
+                            type="action"
+                            help="Print the semester curriculum for all majors with 5+ active students"/>
+                </header>
+                <field name="student_id" decoration-bf="1"/>
+                <field name="program_id" string="Major / Program"/>
+                <field name="subject_id"/>
+                <field name="class_section_id" string="Class Section"/>
+                <field name="semester_id"/>
+                <field name="status"
+                       widget="badge"
+                       decoration-success="status == 'enrolled'"
+                       decoration-info="status == 'draft'"
+                       decoration-warning="status == 'dropped'"
+                       decoration-muted="status == 'completed'"/>
+                <field name="enrollment_date" optional="show" width="120px"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- FORM VIEW -->
+    <record id="view_university_enrollment_form" model="ir.ui.view">
+        <field name="name">university.enrollment.form</field>
+        <field name="model">university.enrollment</field>
+        <field name="active" eval="True"/>
+        <field name="arch" type="xml">
+            <form string="Student Enrollment">
+                <header>
+                    <button name="action_confirm"
+                            string="Confirm Enrollment"
+                            type="object"
+                            class="oe_highlight"
+                            invisible="status != 'draft'"/>
+                    <button name="action_complete"
+                            string="Complete"
+                            type="object"
+                            class="oe_highlight"
+                            invisible="status != 'enrolled'"/>
+                    <button name="action_drop"
+                            string="Drop"
+                            type="object"
+                            class="btn-secondary"
+                            invisible="status not in ['draft', 'enrolled']"/>
+                    <button name="action_reset_draft"
+                            string="Reset to Draft"
+                            type="object"
+                            class="btn-secondary"
+                            invisible="status != 'dropped'"/>
+                    <field name="status"
+                           widget="statusbar"
+                           statusbar_visible="draft,enrolled,completed"/>
+                </header>
+                <sheet>
+                    <div class="alert alert-warning" role="alert" invisible="not possible_duplicate">
+                        <strong>Warning:</strong> A possible duplicate enrollment was detected for this student in the same subject and semester in another section.
+                    </div>
+                    <group>
+                        <group string="Student">
+                            <field name="student_id"
+                                   options="{'no_create': True}"
+                                   domain="[('active', '=', True), ('status', '=', 'active')]"/>
+                            <field name="program_id" readonly="1" force_save="1"/>
+                            <field name="department_id" readonly="1" force_save="1"/>
+                            <field name="faculty_id" readonly="1" force_save="1"/>
+                        </group>
+                        <group string="Class">
+                            <field name="class_section_id"
+                                   options="{'no_create': True}"
+                                   domain="[('active', '=', True)]"/>
+                            <field name="subject_id" readonly="1" force_save="1"/>
+                            <field name="instructor_id" readonly="1" force_save="1"/>
+                            <field name="semester_id" readonly="1" force_save="1"/>
+                            <field name="academic_year_id" readonly="1" force_save="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="enrollment_date"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- GRAPH VIEW -->
+    <record id="view_university_enrollment_graph" model="ir.ui.view">
+        <field name="name">university.enrollment.graph</field>
+        <field name="model">university.enrollment</field>
+        <field name="arch" type="xml">
+            <graph string="Enrollments Analysis" sample="1">
+                <field name="program_id"/>
+                <field name="department_id"/>
+                <field name="status"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- PIVOT VIEW -->
+    <record id="view_university_enrollment_pivot" model="ir.ui.view">
+        <field name="name">university.enrollment.pivot</field>
+        <field name="model">university.enrollment</field>
+        <field name="arch" type="xml">
+            <pivot string="Enrollments Analysis" sample="1">
+                <field name="program_id" type="row"/>
+                <field name="semester_id" type="col"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- SEARCH VIEW -->
+    <record id="view_university_enrollment_search" model="ir.ui.view">
+        <field name="name">university.enrollment.search</field>
+        <field name="model">university.enrollment</field>
+        <field name="active" eval="True"/>
+        <field name="arch" type="xml">
+            <search string="Search Enrollments">
+                <field name="student_id"/>
+                <field name="class_section_id"/>
+                <field name="subject_id"/>
+                <field name="program_id"/>
+                <field name="department_id"/>
+                <field name="faculty_id"/>
+                <field name="semester_id"/>
+                <field name="academic_year_id"/>
+                <separator/>
+                <filter string="Draft" name="filter_draft" domain="[('status', '=', 'draft')]"/>
+                <filter string="Enrolled" name="filter_enrolled" domain="[('status', '=', 'enrolled')]"/>
+                <filter string="Completed" name="filter_completed" domain="[('status', '=', 'completed')]"/>
+                <filter string="Dropped" name="filter_dropped" domain="[('status', '=', 'dropped')]"/>
+                <filter string="Possible duplicates"
+                        name="filter_possible_duplicates"
+                        domain="[('possible_duplicate', '=', True)]"/>
+                <group>
+                    <filter string="Semester" name="group_by_semester" context="{'group_by': 'semester_id'}"/>
+                    <filter string="Department" name="group_by_department" context="{'group_by': 'department_id'}"/>
+                    <filter string="Subject" name="group_by_subject" context="{'group_by': 'subject_id'}"/>
+                    <filter string="Student" name="group_by_student" context="{'group_by': 'student_id'}"/>
+                    <filter string="Status" name="group_by_status" context="{'group_by': 'status'}"/>
+                </group>
+                <searchpanel>
+                    <field name="academic_year_id" icon="fa-calendar" enable_counters="1" expand="1"/>
+                    <field name="semester_id" icon="fa-calendar" enable_counters="1" expand="1"/>
+                    <field name="status" icon="fa-filter" enable_counters="1" expand="1"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <!-- KANBAN VIEW -->
+    <record id="view_university_enrollment_kanban" model="ir.ui.view">
+        <field name="name">university.enrollment.kanban</field>
+        <field name="model">university.enrollment</field>
+        <field name="arch" type="xml">
+            <kanban limit="10" sample="1" default_group_by="program_id" quick_create="false">
+                <field name="student_id"/>
+                <field name="program_id"/>
+                <field name="semester_id"/>
+                <field name="status"/>
+                <field name="enrollment_date"/>
+                <templates>
+                    <t t-name="card">
+                        <main class="ms-2 p-3">
+                            <div class="o_kanban_record_top mb-2">
+                                <div class="o_kanban_record_headings">
+                                    <strong class="fs-6 o_kanban_record_title"><field name="student_id"/></strong>
+                                </div>
+                            </div>
+                            <div class="text-muted small mt-1">
+                                <i class="fa fa-graduation-cap me-1" title="Program"/>
+                                <field name="program_id"/>
+                            </div>
+                            <div class="text-muted small mt-1">
+                                <i class="fa fa-calendar me-1" title="Semester"/>
+                                <field name="semester_id"/>
+                            </div>
+                            <div class="text-muted small mt-1" t-if="record.enrollment_date.value">
+                                <i class="fa fa-clock-o me-1" title="Enrollment Date"/>
+                                <field name="enrollment_date"/>
+                            </div>
+                        </main>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- WINDOW ACTION -->
+    <record id="action_university_enrollment" model="ir.actions.act_window">
+        <field name="name">Enrollments</field>
+        <field name="res_model">university.enrollment</field>
+        <field name="view_mode">list,form,kanban,graph,pivot</field>
+        <field name="limit">10</field>
+        <field name="view_id" ref="view_university_enrollment_list"/>
+        <field name="search_view_id" ref="view_university_enrollment_search"/>
+    </record>
+
+    <record id="action_university_enrollment_student" model="ir.actions.act_window">
+        <field name="name">My Enrollments</field>
+        <field name="res_model">university.enrollment</field>
+        <field name="view_mode">list,form,kanban</field>
+        <field name="limit">10</field>
+        <field name="view_id" ref="view_university_enrollment_list"/>
+        <field name="domain">[('student_id.user_id', '=', uid)]</field>
+        <field name="context">{'create': False, 'edit': False, 'delete': False}</field>
+        <field name="search_view_id" ref="view_university_enrollment_search"/>
+    </record>
+
+</odoo>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!--
+        One-time data migration (runs on the first upgrade after this file is
+        added, then is marked done and skipped on later upgrades thanks to
+        noupdate="1"):
+
+        The seeded demo logins (dean / hod / teacher) had res.users.teacher_id
+        and university.teacher.user_id pointing at DIFFERENT teacher records
+        (forward/reverse links were not reciprocal), which made the HOD and
+        Dean record rules silently return empty result sets. This realigns all
+        three logins onto the teacher who actually holds the matching active
+        role assignment:
+
+            dean     <-> Prof. Charles Xavier  (active dean of a faculty)
+            hod      <-> Dr. Sarah Jenkins     (active dept head)
+            teacher  <-> Dr. Gregory Hous      (teaching staff)
+
+        The re-pointing is done in a dependency-safe order so the partial
+        unique indexes on res.users.teacher_id / university.teacher.user_id
+        are never violated. See res.users._fix_demo_staff_links().
+    -->
+    <data noupdate="1">
+        <function
+            model="res.users"
+            name="_fix_demo_staff_links"
+        />
+    </data>
+</odoo>

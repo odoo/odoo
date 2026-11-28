@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="user_teacher1" model="res.users">
+        <field name="name">Teacher One</field>
+        <field name="login">teacher1</field>
+        <field name="password">teacher1</field>
+        <field name="email">teacher1@example.com</field>
+        <field name="group_ids" eval="[(6, 0, [ref('group_university_teacher'), ref('group_school_teacher')])]"/>
+    </record>
+    <record id="teacher_profile_teacher1" model="university.teacher">
+        <field name="name">Teacher One</field>
+        <field name="user_id" ref="user_teacher1"/>
+        <field name="email">teacher1@example.com</field>
+    </record>
+    <record id="user_teacher1" model="res.users">
+        <field name="teacher_id" ref="teacher_profile_teacher1"/>
+    </record>
+</odoo>

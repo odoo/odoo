@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <!-- Brand Chatbot Script with Harvard University Identity -->
+        <record id="im_livechat.chatbot_script_welcome_bot" model="chatbot.script">
+            <field name="title">Harvard AI Assistant</field>
+            <field name="use_ai" eval="True"/>
+            <field name="image_1920" type="base64" file="school_website/static/src/img/university_logo.png"/>
+        </record>
+
+        <!-- Brand Initial Greeting Message -->
+        <record id="im_livechat.chatbot_script_welcome_step_welcome" model="chatbot.script.step">
+            <field name="message">&lt;p&gt;Welcome to Harvard University! 🎓👋&lt;/p&gt;</field>
+            <field name="sequence">1</field>
+            <field name="step_type">text</field>
+        </record>
+
+        <!-- Dispatch Question & Options -->
+        <record id="im_livechat.chatbot_script_welcome_step_dispatch" model="chatbot.script.step">
+            <field name="message">&lt;p&gt;How can we assist you today?&lt;/p&gt;</field>
+            <field name="sequence">2</field>
+            <field name="step_type">question_selection</field>
+        </record>
+
+        <record id="im_livechat.chatbot_script_welcome_step_dispatch_answer_pricing" model="chatbot.script.answer">
+            <field name="name">Chat with Harvard AI / Ask Questions</field>
+            <field name="sequence">1</field>
+        </record>
+
+        <record id="im_livechat.chatbot_script_welcome_step_dispatch_answer_documentation" model="chatbot.script.answer">
+            <field name="name">Explore Academic Programs</field>
+            <field name="redirect_link">/courses</field>
+            <field name="sequence">2</field>
+        </record>
+
+        <record id="im_livechat.chatbot_script_welcome_step_dispatch_answer_just_looking" model="chatbot.script.answer">
+            <field name="name">Apply for Admission</field>
+            <field name="redirect_link">/admission/apply</field>
+            <field name="sequence">3</field>
+        </record>
+
+        <!-- AI Conversational Step -->
+        <record id="im_livechat.chatbot_script_welcome_step_pricing" model="chatbot.script.step">
+            <field name="message">&lt;p&gt;Hello! I am your &lt;strong&gt;Harvard AI Assistant&lt;/strong&gt;. 🎓 Ask me anything about our academic programs, departments, credit requirements, admissions, or campus life!&lt;/p&gt;</field>
+            <field name="sequence">3</field>
+            <field name="step_type">ai_chat</field>
+            <field name="triggering_answer_ids" eval="[(6, 0, [ref('im_livechat.chatbot_script_welcome_step_dispatch_answer_pricing')])]"/>
+        </record>
+
+        <!-- Brand Default Live Chat Channel -->
+        <record id="im_livechat.im_livechat_channel_data" model="im_livechat.channel">
+            <field name="name">Harvard University Live Chat</field>
+            <field name="default_message">Hello! Welcome to Harvard University. How may I assist you today?</field>
+            <field name="image_128" type="base64" file="school_website/static/src/img/university_logo.png"/>
+        </record>
+
+        <!-- Brand OdooBot (Root Partner) to Harvard Bot -->
+        <record id="base.partner_root" model="res.partner">
+            <field name="name">Harvard Bot</field>
+            <field name="image_1920" type="base64" file="school_website/static/src/img/university_logo.png"/>
+        </record>
+    </data>
+</odoo>

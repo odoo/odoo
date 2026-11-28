@@ -1,0 +1,606 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ==================== LIST VIEW ==================== -->
+    <record id="view_university_student_list" model="ir.ui.view">
+        <field name="name">university.student.list</field>
+        <field name="model">university.student</field>
+        <field name="arch" type="xml">
+            <list limit="10" string="Students" sample="1">
+                <header>
+                    <button name="%(school_management.action_university_bulk_enrollment_wizard)d"
+                            string="Enroll Students"
+                            type="action"
+                            class="btn-primary"
+                            icon="fa-graduation-cap"/>
+                </header>
+                <field name="avatar_128" widget="image" options="{'size': [32, 32]}" string="Avatar"/>
+                <field name="student_id" decoration-bf="1" string="Student ID"/>
+                <field name="name" decoration-bf="1"/>
+                <field name="program_id"/>
+                <field name="department_id"/>
+                <field name="faculty_id"/>
+                <field name="advisor_id" optional="show"/>
+                <field name="gpa" optional="show"/>
+                <field name="risk_level"
+                       widget="badge"
+                       optional="show"
+                       decoration-success="risk_level == 'low'"
+                       decoration-warning="risk_level == 'medium'"
+                       decoration-danger="risk_level == 'high'"/>
+                <field name="enrollment_count" string="Classes" optional="show"/>
+                <field name="session_count" string="Sessions" optional="show"/>
+                <field name="status" widget="badge"
+                       decoration-success="status == 'active'"
+                       decoration-warning="status == 'suspended'"
+                       decoration-info="status == 'graduated'"
+                       decoration-danger="status == 'dropped'"/>
+                <field name="academic_year_id" optional="show"/>
+                <field name="fee_balance" widget="monetary" string="Balance" optional="show" groups="school_management.group_school_admin,base.group_system"/>
+                <field name="financial_status"
+                       widget="badge"
+                       optional="show"
+                       groups="school_management.group_school_admin,base.group_system"
+                       decoration-danger="financial_status == 'overdue'"
+                       decoration-warning="financial_status == 'pending'"
+                       decoration-success="financial_status == 'good_standing'"
+                       decoration-muted="financial_status == 'no_invoices'"/>
+                <field name="email" widget="email"/>
+                <field name="phone" widget="phone" optional="hide"/>
+                <field name="active" widget="boolean_toggle" optional="hide" string="Active"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ==================== KANBAN VIEW ==================== -->
+    <record id="view_university_student_kanban" model="ir.ui.view">
+        <field name="name">university.student.kanban</field>
+        <field name="model">university.student</field>
+        <field name="arch" type="xml">
+            <kanban limit="10" class="o_university_teacher_kanban" sample="1" records_draggable="0" highlight_color="color">
+                <field name="id"/>
+                <field name="name"/>
+                <field name="student_id"/>
+                <field name="avatar_128"/>
+                <field name="program_id"/>
+                <field name="department_id"/>
+                <field name="academic_year_id"/>
+                <field name="enrollment_count"/>
+                <field name="session_count"/>
+                <field name="email"/>
+                <field name="status"/>
+                <field name="risk_level"/>
+                <field name="color"/>
+                <field name="financial_status" groups="school_management.group_school_admin,base.group_system"/>
+                <field name="fee_balance" groups="school_management.group_school_admin,base.group_system"/>
+                <templates>
+                    <t t-name="card" class="o_teacher_kanban_card d-flex flex-column justify-content-between p-3">
+                        <main class="d-flex gap-3 align-items-start min-w-0">
+                            <!-- Left: round 64x64 avatar with initials fallback -->
+                            <div class="o_teacher_avatar flex-shrink-0" style="width: 64px; height: 64px;">
+                                <field name="avatar_128" widget="image"
+                                       class="rounded-circle object-fit-cover w-100 h-100"
+                                       options="{'preview_image': 'avatar_128', 'size': [64, 64]}"/>
+                            </div>
+                            <!-- Right content -->
+                            <div class="flex-grow-1 min-w-0">
+                                <!-- Top row: Name + Status badge -->
+                                <div class="d-flex align-items-center justify-content-between gap-1 mb-1">
+                                    <strong class="text-truncate fs-6 text-dark" t-att-title="record.name.value">
+                                        <field name="name"/>
+                                    </strong>
+                                    <div class="d-flex align-items-center gap-1">
+                                        <field name="risk_level"
+                                               widget="badge"
+                                               decoration-danger="risk_level == 'high'"
+                                               decoration-warning="risk_level == 'medium'"
+                                               invisible="risk_level == 'low' or not risk_level"/>
+                                        <field name="status"
+                                               widget="badge"
+                                               decoration-success="status == 'active'"
+                                               decoration-warning="status == 'suspended'"
+                                               decoration-info="status == 'graduated'"
+                                               decoration-danger="status == 'dropped'"/>
+                                        <t groups="school_management.group_school_admin,base.group_system">
+                                            <span t-if="record.financial_status and record.financial_status.raw_value == 'overdue'" class="badge text-bg-danger fw-bold" title="Payment Overdue">
+                                                <i class="fa fa-exclamation-triangle me-1"/>Overdue
+                                            </span>
+                                            <span t-elif="record.financial_status and record.financial_status.raw_value == 'pending'" class="badge text-bg-warning" title="Tuition Due">
+                                                Due
+                                            </span>
+                                        </t>
+                                    </div>
+                                </div>
+
+                                <!-- Student ID and Academic Year chip -->
+                                <div class="d-flex align-items-center gap-2 mb-1">
+                                    <span class="text-muted small text-truncate" t-if="record.student_id.value">
+                                        <field name="student_id"/>
+                                    </span>
+                                    <span class="badge text-bg-light border text-muted small text-truncate" t-if="record.academic_year_id.value">
+                                        <field name="academic_year_id" options="{'no_open': True}"/>
+                                    </span>
+                                </div>
+
+                                <!-- Program with graduation-cap icon, no open -->
+                                <div class="text-muted small text-truncate" t-if="record.program_id.value">
+                                    <i class="fa fa-graduation-cap me-1 text-muted" title="Program"/>
+                                    <span class="text-truncate">
+                                        <field name="program_id" options="{'no_open': True}"/>
+                                    </span>
+                                </div>
+
+                                <!-- Department with building icon, no open -->
+                                <div class="text-muted small text-truncate" t-if="record.department_id.value">
+                                    <i class="fa fa-building me-1 text-muted" title="Department"/>
+                                    <span class="text-truncate">
+                                        <field name="department_id" options="{'no_open': True}"/>
+                                    </span>
+                                </div>
+                            </div>
+                        </main>
+
+                        <!-- Footer: enrolled classes chip, sessions chip, and email widget -->
+                        <footer class="d-flex align-items-center justify-content-between pt-2 mt-2 border-top">
+                            <div class="d-flex align-items-center gap-1">
+                                <span class="badge text-bg-light border text-muted small" title="Enrolled Classes">
+                                    <i class="fa fa-book me-1"/>
+                                    <t t-out="record.enrollment_count.raw_value"/> Classes
+                                </span>
+                                <span class="badge text-bg-light border text-muted small" title="Total Sessions">
+                                    <i class="fa fa-calendar me-1"/>
+                                    <t t-out="record.session_count.raw_value"/> Sessions
+                                </span>
+                            </div>
+                            <div class="text-truncate small ms-2">
+                                <field name="email" widget="email"/>
+                            </div>
+                        </footer>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- ==================== FORM VIEW ==================== -->
+    <record id="view_university_student_form" model="ir.ui.view">
+        <field name="name">university.student.form</field>
+        <field name="model">university.student</field>
+        <field name="arch" type="xml">
+            <form string="Student">
+                <header>
+                    <button name="action_create_user"
+                            string="Create Login Account"
+                            type="object"
+                            class="oe_highlight"
+                            icon="fa-user-plus"
+                            groups="school_management.group_school_admin"
+                            invisible="user_id != False"/>
+                    <button name="action_reset_password"
+                            string="Reset Password"
+                            type="object"
+                            class="btn-secondary"
+                            icon="fa-key"
+                            groups="school_management.group_school_admin"
+                            invisible="user_id == False"/>
+                    <button name="action_open_enrollment_registration"
+                            string="Enroll in Classes"
+                            type="object"
+                            class="btn-primary"
+                            icon="fa-graduation-cap"
+                            groups="school_management.group_school_admin"/>
+                    <button name="action_continue_student"
+                            string="Continue Student"
+                            type="object"
+                            class="oe_highlight"
+                            icon="fa-play-circle"
+                            groups="school_management.group_school_admin"
+                            invisible="status != 'dropped' and active"/>
+                    <field name="status"
+                           widget="statusbar"
+                           statusbar_visible="active,suspended,graduated,dropped"
+                           groups="school_management.group_school_admin"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_enrollments" type="object" class="oe_stat_button" icon="fa-graduation-cap">
+                            <field name="enrollment_count" widget="statinfo" string="Enrollments"/>
+                        </button>
+                        <button name="action_view_sessions" type="object" class="oe_stat_button" icon="fa-calendar">
+                            <field name="session_count" widget="statinfo" string="Sessions"/>
+                        </button>
+                        <button name="action_view_exam_scores" type="object" class="oe_stat_button" icon="fa-pencil-square-o">
+                            <field name="exam_score_count" widget="statinfo" string="Exams &amp; Quizzes"/>
+                        </button>
+                        <button name="action_view_fees" type="object" class="oe_stat_button" icon="fa-money" groups="school_management.group_school_admin,base.group_system">
+                            <div class="o_stat_info">
+                                <span class="o_stat_value"><field name="fee_balance" widget="monetary"/></span>
+                                <span class="o_stat_text">Fee Balance</span>
+                            </div>
+                        </button>
+                        <button name="action_view_submissions" type="object" class="oe_stat_button" icon="fa-tasks">
+                            <field name="submission_count" widget="statinfo" string="Submissions"/>
+                        </button>
+                        <button name="action_view_report_cards" type="object" class="oe_stat_button" icon="fa-file-text-o">
+                            <field name="report_card_count" widget="statinfo" string="Report Cards"/>
+                        </button>
+                        <button name="action_view_advising_notes" type="object" class="oe_stat_button" icon="fa-comments" groups="school_management.group_school_teacher">
+                            <field name="advising_note_count" widget="statinfo" string="Advising Notes" groups="school_management.group_school_teacher,school_management.group_school_hod,school_management.group_school_admin"/>
+                        </button>
+                        <button name="action_view_followups" type="object" class="oe_stat_button" icon="fa-check-square-o">
+                            <field name="followup_count" widget="statinfo" string="Follow-ups"/>
+                        </button>
+                    </div>
+
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <field name="active" invisible="1"/>
+                    <field name="currency_id" invisible="1"/>
+                    <field name="financial_status" invisible="1" groups="school_management.group_school_admin,base.group_system"/>
+                    <field name="overdue_fee_count" invisible="1" groups="school_management.group_school_admin,base.group_system"/>
+
+                    <!-- CRITICAL OVERDUE TUITION ALERT BANNER -->
+                    <div class="alert alert-danger d-flex align-items-center mb-3 shadow-sm rounded-3" role="alert" invisible="financial_status != 'overdue'" groups="school_management.group_school_admin,base.group_system">
+                        <i class="fa fa-exclamation-triangle fa-2x me-3 text-danger" title="Critical Overdue Tuition Alert"/>
+                        <div class="flex-grow-1">
+                            <h5 class="alert-heading text-danger mb-1 font-weight-bold" role="status">
+                                <i class="fa fa-bell me-1" title="Alert"/>URGENT FINANCIAL ALERT — OVERDUE PAYMENT REQUIRED
+                            </h5>
+                            <div>
+                                This student has <strong><field name="overdue_fee_count" groups="school_management.group_school_admin,base.group_system"/> overdue invoice(s)</strong> totaling 
+                                <field name="fee_balance" widget="monetary" class="fw-bold text-danger" groups="school_management.group_school_admin,base.group_system"/>. 
+                                Immediate payment settlement is required to prevent academic hold or suspension of class enrollment.
+                            </div>
+                        </div>
+                        <button name="action_register_student_payment" type="object" string="Collect Payment Now" class="btn btn-danger btn-sm ms-3 shadow-sm" groups="school_management.group_school_admin,base.group_system"/>
+                        <button name="action_send_urgent_payment_reminder" type="object" string="Send Alert Notice" class="btn btn-outline-danger btn-sm ms-2" groups="school_management.group_school_admin,base.group_system"/>
+                    </div>
+
+                    <!-- PENDING TUITION PAYMENT BANNER -->
+                    <div class="alert alert-warning d-flex align-items-center mb-3 shadow-sm rounded-3" role="status" invisible="financial_status != 'pending'" groups="school_management.group_school_admin,base.group_system">
+                        <i class="fa fa-clock-o fa-2x me-3 text-warning" title="Tuition Payment Pending"/>
+                        <div class="flex-grow-1">
+                            <strong class="text-dark">⚠️ TUITION PAYMENT PENDING:</strong>
+                            <div>
+                                Outstanding fee balance: <field name="fee_balance" widget="monetary" class="fw-bold text-dark" groups="school_management.group_school_admin,base.group_system"/>. Please settle payment before the upcoming deadline.
+                            </div>
+                        </div>
+                        <button name="action_register_student_payment" type="object" string="Register Payment" class="btn btn-primary btn-sm ms-3 shadow-sm" groups="school_management.group_school_admin,base.group_system"/>
+                        <button name="action_send_urgent_payment_reminder" type="object" string="Send Payment Notice" class="btn btn-outline-secondary btn-sm ms-2" groups="school_management.group_school_admin,base.group_system"/>
+                    </div>
+
+                    <field name="image_1920"
+                           widget="image"
+                           class="oe_avatar"
+                           options="{'preview_image': 'image_1920'}"/>
+                    <div class="oe_title">
+                        <label for="name" string="Student Name"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Sothearith Kim" required="1"/>
+                        </h1>
+                        <div class="text-muted">
+                            <i class="fa fa-id-card me-1" title="Student ID"/>
+                            <field name="student_id" placeholder="e.g. STD-2026-0001"/>
+                        </div>
+                    </div>
+
+                    <notebook>
+                        <page string="Overview" name="overview_tab">
+                            <group>
+                                <group string="Academic Placement">
+                                    <field name="faculty_id" readonly="1"/>
+                                    <field name="department_id"/>
+                                    <field name="program_id"/>
+                                    <field name="curriculum_id"/>
+                                    <field name="year_level"/>
+                                    <field name="academic_year_id"/>
+                                    <field name="current_semester_id"/>
+                                    <field name="advisor_id"/>
+                                </group>
+                                <group string="Academic Standing">
+                                    <field name="risk_level"
+                                           readonly="1"
+                                           widget="badge"
+                                           decoration-success="risk_level == 'low'"
+                                           decoration-warning="risk_level == 'medium'"
+                                           decoration-danger="risk_level == 'high'"/>
+                                    <field name="gpa" readonly="1" widget="badge"/>
+                                    <field name="attendance_rate" readonly="1" widget="progressbar"/>
+                                    <field name="completed_credits" readonly="1"/>
+                                </group>
+                            </group>
+                            <group string="Personal Information">
+                                <group>
+                                    <field name="gender" widget="radio" options="{'horizontal': true}"/>
+                                    <field name="date_of_birth"/>
+                                </group>
+                                <group>
+                                    <field name="user_id" readonly="1" groups="school_management.group_school_admin"/>
+                                </group>
+                            </group>
+                            <group>
+                                <group string="Contact Details">
+                                    <field name="email" widget="email"/>
+                                    <field name="phone" widget="phone"/>
+                                </group>
+                                <group string="Emergency Contact">
+                                    <field name="emergency_contact_name" string="Name"/>
+                                    <field name="emergency_contact_phone" string="Phone" widget="phone"/>
+                                </group>
+                            </group>
+                            <group string="Address" invisible="not address">
+                                <field name="address" nolabel="1" placeholder="Street, city, province, and address details..."/>
+                            </group>
+                        </page>
+
+                        <page string="Enrollments" name="enrollments_tab">
+                            <field name="enrollment_ids">
+                                <list limit="10" editable="bottom">
+                                    <field name="class_section_id" options="{'no_create': True}"/>
+                                    <field name="subject_id"/>
+                                    <field name="instructor_id"/>
+                                    <field name="semester_id"/>
+                                    <field name="enrollment_date"/>
+                                    <field name="status"
+                                           widget="badge"
+                                           decoration-success="status == 'enrolled'"
+                                           decoration-info="status == 'draft'"
+                                           decoration-warning="status == 'dropped'"
+                                           decoration-muted="status == 'completed'"/>
+                                </list>
+                                <form string="Enrollment">
+                                    <sheet>
+                                        <group>
+                                            <field name="class_section_id" options="{'no_create': True}"/>
+                                            <field name="enrollment_date"/>
+                                            <field name="status"/>
+                                        </group>
+                                    </sheet>
+                                </form>
+                            </field>
+                        </page>
+
+                        <page string="Curriculum" name="my_curriculum_tab">
+                            <field name="curriculum_line_ids" readonly="1" context="{'active_student_id': id}">
+                                <list limit="10" default_order="year_level, semester_number, sequence, id"
+                                      decoration-bf="is_current_student_year"
+                                      decoration-info="is_current_student_year">
+                                    <field name="subject_id"/>
+                                    <field name="year_level"/>
+                                    <field name="semester_number"/>
+                                    <field name="credits" sum="Total Credits"/>
+                                    <field name="is_student_enrolled" column_invisible="1"/>
+                                    <field name="is_current_student_year" column_invisible="1"/>
+                                    <field name="enrollment_status" string="Status" widget="badge"
+                                           decoration-success="enrollment_status == 'Enrolled'"
+                                           decoration-info="enrollment_status == 'Completed'"
+                                           decoration-muted="enrollment_status == 'Planned'"/>
+                                </list>
+                            </field>
+                        </page>
+
+                        <page string="Fees &amp; Payments" name="fees_tab" groups="school_management.group_school_admin,base.group_system">
+                            <group>
+                                <group string="Fee Summary">
+                                    <field name="fee_total" widget="monetary" groups="school_management.group_school_admin,base.group_system"/>
+                                    <field name="fee_paid" widget="monetary" groups="school_management.group_school_admin,base.group_system"/>
+                                    <field name="fee_balance" widget="monetary" groups="school_management.group_school_admin,base.group_system"/>
+                                </group>
+                            </group>
+                            <separator string="Invoices"/>
+                            <field name="fee_ids" groups="school_management.group_school_admin,base.group_system">
+                                <list limit="10">
+                                    <field name="name"/>
+                                    <field name="date"/>
+                                    <field name="due_date"/>
+                                    <field name="academic_year_id"/>
+                                    <field name="semester_id"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                    <field name="total_amount" widget="monetary" sum="Total"/>
+                                    <field name="paid_amount" widget="monetary" sum="Paid"/>
+                                    <field name="balance" widget="monetary" sum="Balance"/>
+                                    <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state == 'paid'" decoration-warning="state == 'posted'" decoration-danger="state == 'canceled'"/>
+                                </list>
+                            </field>
+                            <separator string="Payments"/>
+                            <field name="payment_ids" groups="school_management.group_school_admin,base.group_system">
+                                <list limit="10">
+                                    <field name="name"/>
+                                    <field name="date"/>
+                                    <field name="fee_id"/>
+                                    <field name="payment_method"/>
+                                    <field name="amount" widget="monetary" sum="Total Payments"/>
+                                    <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state == 'posted'" decoration-danger="state == 'canceled'"/>
+                                </list>
+                            </field>
+                        </page>
+
+                        <page string="Academic Results" name="academic_results_tab" groups="school_management.group_school_admin,school_management.group_school_student">
+                            <div class="d-flex align-items-center justify-content-between mb-2">
+                                <h4 class="mb-0 fw-bold text-dark"><i class="fa fa-graduation-cap me-2 text-primary"/>Exams &amp; Quizzes Results</h4>
+                                <button name="action_view_exam_scores" string="Result of Exam and Quiz" type="object" class="btn btn-sm btn-outline-primary" icon="fa-external-link"/>
+                            </div>
+                            <field name="exam_score_ids" readonly="1">
+                                <list limit="10" default_order="exam_date desc, id desc">
+                                    <field name="exam_id" string="Exam / Quiz"/>
+                                    <field name="exam_type" widget="badge"
+                                           decoration-info="exam_type == 'quiz'"
+                                           decoration-warning="exam_type == 'midterm'"
+                                           decoration-danger="exam_type == 'final'"/>
+                                    <field name="subject_id"/>
+                                    <field name="exam_date"/>
+                                    <field name="score" string="Raw Score"/>
+                                    <field name="max_score" string="Max"/>
+                                    <field name="final_score" string="Final Score" decoration-bf="1"/>
+                                    <field name="percentage" string="%" decoration-bf="1"/>
+                                    <field name="is_passed" widget="boolean" string="Pass"/>
+                                    <field name="is_absent" string="Absent" widget="boolean"/>
+                                    <field name="state" widget="badge"
+                                           decoration-success="state == 'published'"
+                                           decoration-info="state == 'open'"
+                                           decoration-warning="state in ('scheduled', 'grading')"
+                                           decoration-muted="state in ('draft', 'closed')"/>
+                                    <field name="remark" optional="show"/>
+                                </list>
+                            </field>
+                            <separator string="Report Cards" class="mt-4"/>
+                            <field name="report_card_ids" readonly="1">
+                                <list limit="10">
+                                    <field name="name"/>
+                                    <field name="academic_year_id"/>
+                                    <field name="semester_id"/>
+                                    <field name="gpa"/>
+                                    <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state == 'approved'" decoration-warning="state == 'generated'"/>
+                                </list>
+                            </field>
+                            <separator string="Transcripts"/>
+                            <field name="transcript_ids" readonly="1">
+                                <list limit="10">
+                                    <field name="name"/>
+                                    <field name="total_credits"/>
+                                    <field name="cumulative_gpa"/>
+                                    <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state == 'approved'" decoration-warning="state == 'generated'"/>
+                                </list>
+                            </field>
+                        </page>
+
+                        <page string="Submissions" name="submissions_tab">
+                            <field name="submission_ids" readonly="1">
+                                <list limit="10">
+                                    <field name="assignment_id"/>
+                                    <field name="subject_id"/>
+                                    <field name="section_id"/>
+                                    <field name="submitted_on"/>
+                                    <field name="score"/>
+                                    <field name="state" widget="badge" decoration-info="state in ('submitted', 'reviewing')" decoration-success="state in ('approved', 'evaluated')" decoration-warning="state in ('rejected', 'returned')"/>
+                                </list>
+                            </field>
+                        </page>
+
+                        <page string="Advising &amp; Academic Progress" name="advising_tab" groups="school_management.group_school_teacher">
+                            <group string="Academic Standing &amp; Risk Indicators">
+                                <group>
+                                    <field name="risk_level" widget="badge"
+                                           decoration-success="risk_level == 'low'"
+                                           decoration-warning="risk_level == 'medium'"
+                                           decoration-danger="risk_level == 'high'"/>
+                                    <field name="risk_reason"/>
+                                    <field name="failed_subject_count"/>
+                                </group>
+                                <group>
+                                    <field name="gpa"/>
+                                    <field name="attendance_rate"/>
+                                    <field name="completed_credits"/>
+                                </group>
+                            </group>
+                            <group string="Advising Notes">
+                                <field name="advising_note_ids" nolabel="1" groups="school_management.group_school_teacher,school_management.group_school_hod,school_management.group_school_admin"  >
+                                    <list limit="10" editable="bottom">
+                                        <field name="date"/>
+                                        <field name="advisor_id"/>
+                                        <field name="category"/>
+                                        <field name="note"/>
+                                        <field name="is_private" widget="boolean_toggle"/>
+                                    </list>
+                                </field>
+                            </group>
+                            <group string="Follow-up Actions">
+                                <field name="followup_ids" nolabel="1">
+                                    <list limit="10" editable="bottom">
+                                        <field name="date_deadline"/>
+                                        <field name="title"/>
+                                        <field name="advisor_id"/>
+                                        <field name="action_type"/>
+                                        <field name="state" widget="badge"
+                                               decoration-warning="state == 'pending'"
+                                               decoration-info="state == 'in_progress'"
+                                               decoration-success="state == 'completed'"
+                                               decoration-muted="state == 'cancelled'"/>
+                                        <field name="visible_to_student" widget="boolean_toggle"/>
+                                    </list>
+                                </field>
+                            </group>
+                        </page>
+
+                        <page string="Notes &amp; Remarks" name="notes_tab">
+                            <field name="notes"
+                                   nolabel="1"
+                                   placeholder="Add administrative remarks or student background information..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- ==================== SEARCH VIEW ==================== -->
+    <record id="view_university_student_search" model="ir.ui.view">
+        <field name="name">university.student.search</field>
+        <field name="model">university.student</field>
+        <field name="arch" type="xml">
+            <search string="Search Students">
+                <field name="name"/>
+                <field name="student_id"/>
+                <field name="email"/>
+                <field name="program_id"/>
+                <field name="department_id"/>
+                <field name="faculty_id"/>
+                <field name="advisor_id"/>
+                <separator/>
+                <filter string="My Advisees" name="filter_my_advisees" domain="[('advisor_id.user_id', '=', uid)]"/>
+                <filter string="High Risk" name="filter_risk_high" domain="[('risk_level', '=', 'high')]"/>
+                <filter string="Watch List" name="filter_risk_watch" domain="[('risk_level', 'in', ('medium', 'high'))]"/>
+                <separator/>
+                <filter string="Active Students" name="filter_status_active" domain="[('status', '=', 'active')]"/>
+                <filter string="Suspended" name="filter_status_suspended" domain="[('status', '=', 'suspended')]"/>
+                <filter string="Graduated" name="filter_status_graduated" domain="[('status', '=', 'graduated')]"/>
+                <filter string="Dropped" name="filter_status_dropped" domain="[('status', '=', 'dropped')]"/>
+                <separator/>
+                <filter string="🚨 Payment Overdue" name="filter_financial_overdue" domain="[('financial_status', '=', 'overdue')]" groups="school_management.group_school_admin,base.group_system"/>
+                <filter string="⚠️ Tuition Pending" name="filter_financial_pending" domain="[('financial_status', '=', 'pending')]" groups="school_management.group_school_admin,base.group_system"/>
+                <filter string="✅ Fees Paid" name="filter_financial_paid" domain="[('financial_status', '=', 'good_standing')]" groups="school_management.group_school_admin,base.group_system"/>
+                <separator/>
+                <filter string="Active Records" name="filter_active" domain="[('active', '=', True)]"/>
+                <filter string="Archived Records" name="filter_inactive" domain="[('active', '=', False)]"/>
+                <group>
+                    <filter string="Academic Advisor" name="group_by_advisor" context="{'group_by': 'advisor_id'}"/>
+                    <filter string="Risk Level" name="group_by_risk" context="{'group_by': 'risk_level'}"/>
+                    <filter string="Program" name="group_by_program" context="{'group_by': 'program_id'}"/>
+                    <filter string="Department" name="group_by_department" context="{'group_by': 'department_id'}"/>
+                    <filter string="Faculty" name="group_by_faculty" context="{'group_by': 'faculty_id'}"/>
+                    <filter string="Status" name="group_by_status" context="{'group_by': 'status'}"/>
+                    <filter string="Academic Year" name="group_by_academic_year" context="{'group_by': 'academic_year_id'}"/>
+                    <filter string="Gender" name="group_by_gender" context="{'group_by': 'gender'}"/>
+                </group>
+                <searchpanel>
+                    <field name="faculty_id" icon="fa-university" enable_counters="1"/>
+                    <field name="department_id" icon="fa-building" enable_counters="1"/>
+                    <field name="status" icon="fa-filter" enable_counters="1" expand="1" select="multi"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <!-- ==================== WINDOW ACTION ==================== -->
+    <record id="action_university_student" model="ir.actions.act_window">
+        <field name="name">Students</field>
+        <field name="res_model">university.student</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="limit">10</field>
+        <field name="search_view_id" ref="view_university_student_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create your first student record</p>
+            <p>Add students and manage their academic and personal records.</p>
+        </field>
+    </record>
+
+    <record id="action_university_student_profile" model="ir.actions.act_window">
+        <field name="name">My Profile</field>
+        <field name="res_model">university.student</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="limit">10</field>
+        <field name="domain">[('user_id', '=', uid)]</field>
+        <field name="context">{'create': False, 'edit': False, 'delete': False}</field>
+        <field name="search_view_id" ref="view_university_student_search"/>
+    </record>
+</odoo>

@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ==================== SEARCH VIEW ==================== -->
+    <record id="view_university_course_evaluation_search" model="ir.ui.view">
+        <field name="name">university.course.evaluation.search</field>
+        <field name="model">university.course.evaluation</field>
+        <field name="arch" type="xml">
+            <search string="Search Course Evaluations">
+                <field name="student_id" string="Student"/>
+                <field name="section_id" string="Section"/>
+                <field name="subject_id" string="Course"/>
+                <field name="teacher_id" string="Instructor"/>
+                <field name="semester_id" string="Semester"/>
+                <filter string="Submitted" name="filter_submitted" domain="[('state', '=', 'submitted')]"/>
+                <filter string="Draft" name="filter_draft" domain="[('state', '=', 'draft')]"/>
+                <group>
+                    <filter string="Instructor" name="group_by_teacher" context="{'group_by': 'teacher_id'}"/>
+                    <filter string="Course" name="group_by_subject" context="{'group_by': 'subject_id'}"/>
+                    <filter string="Semester" name="group_by_semester" context="{'group_by': 'semester_id'}"/>
+                </group>
+                <searchpanel>
+                    <field name="subject_id" icon="fa-book" enable_counters="1"/>
+                    <field name="teacher_id" icon="fa-user" enable_counters="1" select="multi"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <!-- ==================== LIST VIEW ==================== -->
+    <record id="view_university_course_evaluation_list" model="ir.ui.view">
+        <field name="name">university.course.evaluation.list</field>
+        <field name="model">university.course.evaluation</field>
+        <field name="arch" type="xml">
+            <list limit="10" string="Course &amp; Lecturer Evaluations" sample="1">
+                <field name="subject_id" string="Course" decoration-bf="1"/>
+                <field name="teacher_id" string="Instructor"/>
+                <field name="section_id" string="Section"/>
+                <field name="semester_id" string="Semester"/>
+                <field name="evaluation_date" string="Date"/>
+                <field name="rating_teaching" string="Teaching Rating"/>
+                <field name="rating_content" string="Content Rating"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'submitted'"
+                       decoration-muted="state == 'draft'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ==================== FORM VIEW ==================== -->
+    <record id="view_university_course_evaluation_form" model="ir.ui.view">
+        <field name="name">university.course.evaluation.form</field>
+        <field name="model">university.course.evaluation</field>
+        <field name="arch" type="xml">
+            <form string="Course &amp; Lecturer Evaluation Survey">
+                <header>
+                    <button name="action_submit_evaluation"
+                            type="object"
+                            string="Submit Evaluation"
+                            class="oe_highlight"
+                            icon="fa-paper-plane"
+                            invisible="state != 'draft'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,submitted"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="subject_id" string="Course / Section"/>
+                        <h1>
+                            <field name="subject_id" readonly="1"/>
+                        </h1>
+                        <div class="text-muted">
+                            <i class="fa fa-user me-1" title="Instructor"/>Instructor: <field name="teacher_id" readonly="1"/>
+                        </div>
+                    </div>
+                    <group>
+                        <group string="Academic Information">
+                            <field name="student_id" readonly="state != 'draft'"/>
+                            <field name="section_id" readonly="state != 'draft'"/>
+                            <field name="semester_id" readonly="1"/>
+                            <field name="evaluation_date"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Survey Evaluation Ratings" name="ratings_page">
+                            <div class="alert alert-info" role="alert">
+                                <i class="fa fa-info-circle me-1" title="Evaluation instructions"/>
+                                Please evaluate the following academic performance aspects on a scale from 1 (Poor) to 5 (Excellent). Your feedback helps improve curriculum and teaching quality.
+                            </div>
+                            <group string="Core Evaluation Criteria">
+                                <field name="rating_content" widget="radio" options="{'horizontal': true}" readonly="state != 'draft'"/>
+                                <field name="rating_teaching" widget="radio" options="{'horizontal': true}" readonly="state != 'draft'"/>
+                                <field name="rating_punctuality" widget="radio" options="{'horizontal': true}" readonly="state != 'draft'"/>
+                                <field name="rating_grading" widget="radio" options="{'horizontal': true}" readonly="state != 'draft'"/>
+                                <field name="rating_facilities" widget="radio" options="{'horizontal': true}" readonly="state != 'draft'"/>
+                            </group>
+                        </page>
+                        <page string="Feedback &amp; Qualitative Comments" name="comments_page">
+                            <group>
+                                <field name="strengths" placeholder="What were the most effective strengths of this course and lecturer?" readonly="state != 'draft'"/>
+                                <field name="improvements" placeholder="What areas or topics could be improved for future cohorts?" readonly="state != 'draft'"/>
+                                <field name="additional_comments" placeholder="Any additional recommendations or feedback..." readonly="state != 'draft'"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- ==================== ACTIONS ==================== -->
+    <record id="action_university_course_evaluation" model="ir.actions.act_window">
+        <field name="name">Course &amp; Lecturer Evaluations</field>
+        <field name="res_model">university.course.evaluation</field>
+        <field name="view_mode">list,form</field>
+        <field name="limit">10</field>
+        <field name="search_view_id" ref="view_university_course_evaluation_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No course evaluations yet.</p>
+            <p>Student survey responses evaluating course content and instruction will appear here.</p>
+        </field>
+    </record>
+
+    <record id="action_university_course_evaluation_student" model="ir.actions.act_window">
+        <field name="name">Course &amp; Lecturer Evaluations</field>
+        <field name="res_model">university.course.evaluation</field>
+        <field name="view_mode">list,form</field>
+        <field name="limit">10</field>
+        <field name="domain">[('student_id.user_id', '=', uid)]</field>
+        <field name="search_view_id" ref="view_university_course_evaluation_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Complete Lecturer &amp; Course Evaluations!</p>
+            <p>Submit your evaluation surveys for current semester courses to unmask your official final grades.</p>
+        </field>
+    </record>
+
+    <record id="action_university_course_evaluation_student_open" model="ir.actions.server">
+        <field name="name">Open My Course Evaluations</field>
+        <field name="model_id" ref="model_university_course_evaluation"/>
+        <field name="state">code</field>
+        <field name="code">action = model.action_open_student_evaluations()</field>
+    </record>
+</odoo>

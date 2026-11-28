@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="dashboard_academic_management" model="spreadsheet.dashboard">
+        <field name="name">Academic &amp; Student Analytics</field>
+        <field name="spreadsheet_binary_data" type="base64" file="school_management/data/academic/files/academic_dashboard.json"/>
+        <field name="main_data_model_ids" eval="[(4, ref('school_management.model_university_student')), (4, ref('school_management.model_university_exam'))]"/>
+        <field name="dashboard_group_id" ref="spreadsheet_dashboard.spreadsheet_dashboard_group_education"/>
+        <field name="sequence">10</field>
+        <field name="is_published">True</field>
+        <field name="group_ids" eval="[(4, ref('base.group_user')), (4, ref('school_management.group_school_teacher')), (4, ref('school_management.group_university_teacher'))]"/>
+    </record>
+
+</odoo>

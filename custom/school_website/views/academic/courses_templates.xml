@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Courses Catalog Page (/courses) -->
+    <template id="courses_catalog_template" name="Academic Programs &amp; Courses">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure oe_empty">
+                <!-- Header Hero Banner with Campus Backdrop (Matching Contact Us) -->
+                <section class="harvard-about-hero" style="background-image: url('/school_website/static/src/img/harvard_campus_hero.jpg');">
+                    <div class="harvard-about-hero-overlay"></div>
+                    <div class="container harvard-about-hero-content text-center py-4">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb justify-content-center mb-2 small">
+                                <li class="breadcrumb-item"><a href="/" class="text-white-50 text-decoration-none">Home</a></li>
+                                <li class="breadcrumb-item active text-white" aria-current="page">Courses</li>
+                            </ol>
+                        </nav>
+                        <span class="badge bg-danger text-uppercase px-3 py-2 fw-semibold mb-3 shadow-sm">
+                            Academic Curriculum
+                        </span>
+                        <h1 class="display-3 fw-bold mb-3 text-white">Degree Programs &amp; Courses</h1>
+                        <p class="lead text-white-50 mx-auto mb-4" style="max-width: 760px; line-height: 1.8;">
+                            Browse Harvard University undergraduate, graduate, and doctoral offerings.
+                        </p>
+                        <div class="d-flex justify-content-center align-items-center gap-3 flex-wrap text-white-50 small">
+                            <span class="bg-white bg-opacity-10 px-3 py-2 rounded-pill border border-white border-opacity-25">
+                                <i class="fa fa-graduation-cap text-danger me-1"/> 24+ Degree Programs
+                            </span>
+                            <span class="bg-white bg-opacity-10 px-3 py-2 rounded-pill border border-white border-opacity-25">
+                                <i class="fa fa-book text-danger me-1"/> Accredited Curriculum
+                            </span>
+                            <span class="bg-white bg-opacity-10 px-3 py-2 rounded-pill border border-white border-opacity-25">
+                                <i class="fa fa-users text-danger me-1"/> World-Class Faculty
+                            </span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Search and Degree Filter Bar -->
+                <section class="py-4 bg-white border-bottom shadow-sm">
+                    <div class="container">
+                        <div class="row align-items-center g-3">
+                            <div class="col-md-7">
+                                <ul class="nav nav-pills gap-2">
+                                    <li class="nav-item">
+                                        <a t-attf-class="nav-link #{'active bg-danger text-white' if not current_degree else 'text-dark'}" href="/courses">All Programs</a>
+                                    </li>
+                                    <t t-foreach="degree_types" t-as="dt">
+                                        <li class="nav-item">
+                                            <a t-attf-class="nav-link #{'active bg-danger text-white' if current_degree == dt[0] else 'text-dark'}" t-attf-href="/courses/degree/#{dt[0]}" t-esc="dt[1]"/>
+                                        </li>
+                                    </t>
+                                </ul>
+                            </div>
+                            <div class="col-md-5">
+                                <form method="get" action="/courses" class="d-flex">
+                                    <input type="text" name="search" class="form-control me-2" placeholder="Search by program name..." t-att-value="search_term"/>
+                                    <button class="btn btn-danger" type="submit"><i class="fa fa-search"/></button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Programs Grid -->
+                <section class="py-5 bg-light">
+                    <div class="container">
+                        <div class="row g-4" t-if="programs">
+                            <t t-foreach="programs" t-as="prog">
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="harvard-card h-100 p-4 d-flex flex-column justify-content-between shadow-sm">
+                                        <div>
+                                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                                <span class="harvard-badge-degree" t-esc="dict(prog._fields['degree_type'].selection).get(prog.degree_type, prog.degree_type)"/>
+                                                <span class="badge bg-light text-dark border" t-esc="prog.code"/>
+                                            </div>
+                                            <h4 class="h5 fw-bold mb-2">
+                                                <a t-attf-href="/courses/#{prog.id}" class="text-decoration-none text-dark" t-esc="prog.name"/>
+                                            </h4>
+                                            <p class="text-muted small mb-2" t-if="prog.department_id">
+                                                <i class="fa fa-building-o me-1"/> <span t-esc="prog.department_id.name"/>
+                                            </p>
+                                        </div>
+                                        <div class="pt-3 border-top d-flex justify-content-between align-items-center">
+                                            <span class="small text-muted">
+                                                <i class="fa fa-graduation-cap me-1"/> <t t-esc="prog.total_credits"/> Credits (<t t-esc="prog.duration_years"/> Yrs)
+                                            </span>
+                                            <a t-attf-href="/courses/#{prog.id}" class="btn btn-sm btn-outline-danger">Details</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                        <div t-if="not programs" class="text-center py-5">
+                            <i class="fa fa-book fa-3x text-muted mb-3"/>
+                            <h3 class="h4 text-muted">No programs match your selection</h3>
+                            <a href="/courses" class="btn btn-outline-secondary mt-3">Reset Filters</a>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+
+    <!-- Program Detail View (/courses/<id>) -->
+    <template id="course_detail_template" name="Program Details">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure oe_empty bg-light">
+                <!-- Header Banner -->
+                <section class="py-5 text-white position-relative" style="background: linear-gradient(135deg, #101c30 0%, #1e293b 50%, #A51C30 100%);">
+                    <div class="container py-3">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb mb-2 small">
+                                <li class="breadcrumb-item"><a href="/" class="text-white-50 text-decoration-none">Home</a></li>
+                                <li class="breadcrumb-item"><a href="/courses" class="text-white-50 text-decoration-none">Degree Programs</a></li>
+                                <li class="breadcrumb-item active text-white" aria-current="page" t-esc="program.name"/>
+                            </ol>
+                        </nav>
+                        <div class="d-flex align-items-center gap-2 mb-2">
+                            <span class="badge bg-danger text-uppercase px-3 py-2 fw-semibold" t-esc="dict(program._fields['degree_type'].selection).get(program.degree_type, program.degree_type)"/>
+                            <span class="badge bg-white bg-opacity-25 text-white px-3 py-2 border border-white border-opacity-25" t-esc="program.code"/>
+                        </div>
+                        <h1 class="display-4 fw-bold mb-3 text-white" t-esc="program.name"/>
+                        <p class="lead text-white-50 mb-0" t-if="program.department_id">
+                            Offered by the <strong class="text-white" t-esc="program.department_id.name"/>
+                            <t t-if="program.faculty_id"> • <span t-esc="program.faculty_id.name"/></t>
+                        </p>
+                    </div>
+                </section>
+
+                <section class="py-5">
+                    <div class="container py-2">
+                        <div class="row g-4 g-lg-5">
+                            <!-- Left: Program Overview & Curriculum (8 Cols) -->
+                            <div class="col-lg-8">
+                                <!-- Program Metrics Cards -->
+                                <div class="row g-3 mb-4">
+                                    <div class="col-sm-4">
+                                        <div class="bg-white p-4 rounded-4 shadow-sm border text-center h-100">
+                                            <div class="d-inline-flex p-3 rounded-circle bg-danger-subtle text-danger mb-2">
+                                                <i class="fa fa-clock-o fa-2x"/>
+                                            </div>
+                                            <span class="text-muted small text-uppercase d-block fw-bold">Duration</span>
+                                            <span class="fs-4 fw-bold text-dark"><t t-esc="program.duration_years"/> Years</span>
+                                            <span class="text-muted small d-block">Full-Time Study</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="bg-white p-4 rounded-4 shadow-sm border text-center h-100">
+                                            <div class="d-inline-flex p-3 rounded-circle bg-danger-subtle text-danger mb-2">
+                                                <i class="fa fa-graduation-cap fa-2x"/>
+                                            </div>
+                                            <span class="text-muted small text-uppercase d-block fw-bold">Total Credits</span>
+                                            <span class="fs-4 fw-bold text-danger"><t t-esc="program.total_credits"/></span>
+                                            <span class="text-muted small d-block">Credits for Degree</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="bg-white p-4 rounded-4 shadow-sm border text-center h-100">
+                                            <div class="d-inline-flex p-3 rounded-circle bg-dark text-white mb-2">
+                                                <i class="fa fa-id-card-o fa-2x"/>
+                                            </div>
+                                            <span class="text-muted small text-uppercase d-block fw-bold">Program Code</span>
+                                            <span class="fs-4 fw-bold text-dark"><t t-esc="program.code"/></span>
+                                            <span class="text-muted small d-block">Academic Catalog</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Syllabus & Course Structure -->
+                                <div class="bg-white p-4 p-md-5 rounded-4 shadow-sm border">
+                                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-4 pb-2 border-bottom">
+                                        <div>
+                                            <span class="text-uppercase fw-bold text-danger small">Academic Curriculum</span>
+                                            <h3 class="h4 fw-bold text-dark mb-0">Core Subjects &amp; Syllabus</h3>
+                                        </div>
+                                        <span class="badge bg-light text-dark border px-3 py-2 fw-semibold" t-if="curricula">
+                                            <t t-esc="len(curricula)"/> Courses Listed
+                                        </span>
+                                    </div>
+
+                                    <!-- Table for Curriculum Lines -->
+                                    <div t-if="curricula" class="table-responsive">
+                                        <table class="table table-hover align-middle border mb-0">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th style="width: 15%;">Course Code</th>
+                                                    <th>Subject Title</th>
+                                                    <th style="width: 22%;">Year &amp; Term</th>
+                                                    <th style="width: 12%;">Credits</th>
+                                                    <th style="width: 15%;">Requirement</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <t t-foreach="curricula" t-as="cur">
+                                                    <tr>
+                                                        <td class="fw-bold text-danger" t-esc="cur.subject_id.code if cur.subject_id else '-'"/>
+                                                        <td>
+                                                            <strong class="text-dark d-block" t-esc="cur.subject_id.name if cur.subject_id else '-'"/>
+                                                        </td>
+                                                        <td>
+                                                            <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1">
+                                                                Year <t t-esc="cur.year_level or '1'"/> • Sem <t t-esc="cur.semester_number or '1'"/>
+                                                            </span>
+                                                        </td>
+                                                        <td>
+                                                            <span class="badge bg-light text-dark border fw-bold">
+                                                                <t t-esc="cur.credits or (cur.subject_id.credits if cur.subject_id else 3)"/> Cr
+                                                            </span>
+                                                        </td>
+                                                        <td>
+                                                            <span t-attf-class="badge #{'bg-danger text-white' if cur.required else 'bg-secondary text-white'}" t-esc="'Required' if cur.required else 'Elective'"/>
+                                                        </td>
+                                                    </tr>
+                                                </t>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <!-- Fallback: Subject IDs if no curriculum lines -->
+                                    <t t-if="not curricula and program.subject_ids">
+                                        <div class="table-responsive">
+                                            <table class="table table-hover align-middle border mb-0">
+                                                <thead class="table-light">
+                                                    <tr>
+                                                        <th style="width: 20%;">Subject Code</th>
+                                                        <th>Subject Name</th>
+                                                        <th style="width: 15%;">Credits</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <t t-foreach="program.subject_ids" t-as="sub">
+                                                        <tr>
+                                                            <td class="fw-bold text-danger" t-esc="sub.code or '-'"/>
+                                                            <td class="text-dark fw-semibold" t-esc="sub.name or '-'"/>
+                                                            <td>
+                                                                <span class="badge bg-light text-dark border fw-bold"><t t-esc="sub.credits or 3"/> Credits</span>
+                                                            </td>
+                                                        </tr>
+                                                    </t>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </t>
+
+                                    <!-- Empty state -->
+                                    <div t-if="not curricula and not program.subject_ids" class="p-5 text-center text-muted bg-light rounded-3">
+                                        <i class="fa fa-book fa-3x mb-3 text-secondary"/>
+                                        <h5 class="h6 fw-bold text-dark">Curriculum Under Review</h5>
+                                        <p class="small text-muted mb-0">The complete course catalog for this academic degree is currently being updated for the upcoming session.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Right: Sidebar Application & Information (4 Cols) -->
+                            <div class="col-lg-4">
+                                <div class="d-flex flex-column gap-4">
+                                    <!-- Apply Card -->
+                                    <div class="bg-white p-4 rounded-4 shadow-sm border position-relative overflow-hidden">
+                                        <div class="harvard-card-header-bar position-absolute top-0 start-0 end-0"></div>
+                                        <span class="badge bg-danger-subtle text-danger px-3 py-2 rounded-pill fw-bold text-uppercase mb-3">
+                                            Admissions Open
+                                        </span>
+                                        <h4 class="h5 fw-bold text-dark mb-2">Ready to Apply?</h4>
+                                        <p class="small text-muted mb-4" style="line-height: 1.7;">
+                                            Applications for this degree program are currently being accepted online. Start your application or submit an inquiry to our admissions advisors.
+                                        </p>
+                                        <a t-attf-href="/admission/apply?program_id=#{program.id}" class="btn btn-danger w-100 py-3 fw-bold mb-3 harvard-btn-crimson shadow-sm">
+                                            <i class="fa fa-pencil-square-o me-2"/> Apply for this Program
+                                        </a>
+                                        <a t-attf-href="/contactus?subject=Admissions Inquiry: #{program.name}" class="btn btn-outline-dark w-100 py-2 fw-semibold">
+                                            <i class="fa fa-envelope-o me-2"/> Inquire with Admissions
+                                        </a>
+                                    </div>
+
+                                    <!-- Department Details Card -->
+                                    <div class="bg-white p-4 rounded-4 shadow-sm border" t-if="program.department_id">
+                                        <h4 class="h6 fw-bold text-dark text-uppercase tracking-wider mb-3">
+                                            <i class="fa fa-building-o text-danger me-2"/> Academic Department
+                                        </h4>
+                                        <h5 class="h6 fw-bold text-dark mb-1" t-esc="program.department_id.name"/>
+                                        <p class="text-muted small mb-3" t-if="program.department_id.faculty_id">
+                                            <i class="fa fa-university me-1"/> <t t-esc="program.department_id.faculty_id.name"/>
+                                        </p>
+                                        <ul class="list-unstyled small text-muted mb-0">
+                                            <li class="d-flex justify-content-between py-2 border-bottom">
+                                                <span>Programs Offered:</span>
+                                                <strong class="text-dark"><t t-esc="program.department_id.program_count or 1"/></strong>
+                                            </li>
+                                            <li class="d-flex justify-content-between py-2 border-bottom">
+                                                <span>Faculty Members:</span>
+                                                <strong class="text-dark"><t t-esc="program.department_id.teacher_count or 5"/>+</strong>
+                                            </li>
+                                            <li class="d-flex justify-content-between py-2">
+                                                <span>Campus Location:</span>
+                                                <strong class="text-dark">Cambridge, MA</strong>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                    <!-- Degree Highlights Card -->
+                                    <div class="bg-white p-4 rounded-4 shadow-sm border">
+                                        <h4 class="h6 fw-bold text-dark text-uppercase tracking-wider mb-3">
+                                            <i class="fa fa-check-circle text-danger me-2"/> Degree Features
+                                        </h4>
+                                        <ul class="list-unstyled small text-muted d-flex flex-column gap-2 mb-0">
+                                            <li class="d-flex align-items-center gap-2">
+                                                <i class="fa fa-check text-success"/> Global accreditation &amp; Ivy League prestige
+                                            </li>
+                                            <li class="d-flex align-items-center gap-2">
+                                                <i class="fa fa-check text-success"/> Research laboratories &amp; library access
+                                            </li>
+                                            <li class="d-flex align-items-center gap-2">
+                                                <i class="fa fa-check text-success"/> 100% need-blind financial aid eligibility
+                                            </li>
+                                            <li class="d-flex align-items-center gap-2">
+                                                <i class="fa fa-check text-success"/> Career mentorship &amp; global alumni network
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+</odoo>

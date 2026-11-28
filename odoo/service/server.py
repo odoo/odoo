@@ -193,9 +193,10 @@ class CommonRequestHandler(werkzeug.serving.WSGIRequestHandler):
 
 class RequestHandler(CommonRequestHandler):
     def setup(self):
-        # timeout to avoid chrome headless preconnect during tests
-        if config['test_enable']:
-            self.timeout = 5
+        # timeout to avoid clients that connect but never send a request
+        # (browser preconnect, port scans, half-open connections) holding a
+        # worker thread forever
+        self.timeout = 5
         # flag the current thread as handling a http request
         super(RequestHandler, self).setup()
         me = threading.current_thread()
@@ -239,7 +240,8 @@ class RequestHandler(CommonRequestHandler):
             self.wfile = BytesIO()
 
     def log_error(self, format, *args):
-        if format == "Request timed out: %r" and config['test_enable']:
+        # idle connections that time out are expected, log them as info
+        if format == "Request timed out: %r":
             _logger.info(format, *args)
         else:
             super().log_error(format, *args)

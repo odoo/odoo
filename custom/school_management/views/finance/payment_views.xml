@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- LIST VIEW -->
+    <record id="view_university_payment_list" model="ir.ui.view">
+        <field name="name">university.payment.list</field>
+        <field name="model">university.payment</field>
+        <field name="arch" type="xml">
+            <list string="Payments" multi_edit="1" limit="10" default_order="date desc, id desc" class="o_university_payment_list">
+                <field name="name" decoration-bf="1"/>
+                <field name="student_id" decoration-bf="1"/>
+                <field name="fee_id" optional="show"/>
+                <field name="date" optional="show"/>
+                <field name="payment_method" widget="badge" decoration-info="payment_method == 'bank_transfer'" decoration-success="payment_method == 'cash'" decoration-primary="payment_method == 'credit_card'"/>
+                <field name="reference" optional="show"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="amount" sum="Total Amount" widget="monetary" decoration-bf="1" decoration-success="1"/>
+                <field name="state"
+                       widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-success="state == 'posted'"
+                       decoration-danger="state == 'canceled'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- FORM VIEW -->
+    <record id="view_university_payment_form" model="ir.ui.view">
+        <field name="name">university.payment.form</field>
+        <field name="model">university.payment</field>
+        <field name="arch" type="xml">
+            <form string="Payment">
+                <header>
+                    <button name="action_post" string="Confirm Payment" type="object" invisible="state != 'draft'" class="oe_highlight btn-success"/>
+                    <button name="action_print_receipt" string="Print Receipt" type="object" invisible="state != 'posted'" class="oe_highlight"/>
+                    <button name="action_cancel" string="Cancel" type="object" invisible="state == 'canceled'"/>
+                    <button name="action_draft" string="Reset to Draft" type="object" invisible="state != 'canceled'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,posted"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_fee" type="object" class="oe_stat_button" icon="fa-file-text-o" invisible="not fee_id">
+                            <span class="o_stat_text">Fee Invoice</span>
+                        </button>
+                        <button name="action_view_student" type="object" class="oe_stat_button" icon="fa-user">
+                            <span class="o_stat_text">Student Profile</span>
+                        </button>
+                    </div>
+
+                    <div class="oe_title mb-3">
+                        <span class="badge text-bg-success px-3 py-1 fs-6 mb-2 rounded-pill">
+                            <field name="name"/>
+                        </span>
+                        <h1 class="mt-1">
+                            <field name="student_id" placeholder="Select Student..." required="1" options="{'no_create': True}" readonly="state != 'draft'"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group string="Payment &amp; Invoice Reference">
+                            <field name="fee_id" readonly="state != 'draft'" options="{'no_create': True}"/>
+                            <field name="amount" widget="monetary" readonly="state != 'draft'"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group string="Transaction &amp; Method">
+                            <field name="date" readonly="state != 'draft'"/>
+                            <field name="payment_method" readonly="state != 'draft'"/>
+                            <field name="reference" placeholder="e.g. Wire Transfer Ref #, Cash Receipt #" readonly="state != 'draft'"/>
+                        </group>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- SEARCH VIEW -->
+    <record id="view_university_payment_search" model="ir.ui.view">
+        <field name="name">university.payment.search</field>
+        <field name="model">university.payment</field>
+        <field name="arch" type="xml">
+            <search string="Search Payments">
+                <field name="name"/>
+                <field name="student_id"/>
+                <field name="fee_id"/>
+                <field name="reference"/>
+                <separator/>
+                <filter string="Confirmed Payments" name="posted" domain="[('state', '=', 'posted')]"/>
+                <filter string="Draft Payments" name="draft" domain="[('state', '=', 'draft')]"/>
+                <separator/>
+                <filter string="Cash" name="cash" domain="[('payment_method', '=', 'cash')]"/>
+                <filter string="Bank Transfer" name="bank_transfer" domain="[('payment_method', '=', 'bank_transfer')]"/>
+                <filter string="Credit Card" name="credit_card" domain="[('payment_method', '=', 'credit_card')]"/>
+                <group>
+                    <filter string="Student" name="student" context="{'group_by': 'student_id'}"/>
+                    <filter string="Payment Method" name="method" context="{'group_by': 'payment_method'}"/>
+                    <filter string="Status" name="status" context="{'group_by': 'state'}"/>
+                    <filter string="Date" name="group_date" context="{'group_by': 'date'}"/>
+                </group>
+                <searchpanel>
+                    <field name="payment_method" icon="fa-credit-card" enable_counters="1" select="multi"/>
+                    <field name="state" icon="fa-filter" enable_counters="1" select="multi"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <!-- KANBAN VIEW -->
+    <record id="view_university_payment_kanban" model="ir.ui.view">
+        <field name="name">university.payment.kanban</field>
+        <field name="model">university.payment</field>
+        <field name="arch" type="xml">
+            <kanban sample="1" default_group_by="payment_method" quick_create="false" limit="10" class="o_university_payment_kanban">
+                <field name="name"/>
+                <field name="student_id"/>
+                <field name="amount"/>
+                <field name="payment_method"/>
+                <field name="date"/>
+                <field name="reference"/>
+                <field name="state"/>
+                <templates>
+                    <t t-name="card">
+                        <main class="ms-1 p-3 border rounded shadow-sm bg-white">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <strong class="fs-6 text-dark text-truncate"><field name="name"/></strong>
+                                <span class="badge text-bg-success fs-7 px-2 py-1">
+                                    <field name="amount" widget="monetary"/>
+                                </span>
+                            </div>
+                            <div class="text-muted small mb-1 text-truncate">
+                                <i class="fa fa-user me-1 text-secondary" title="Student"/>
+                                <span class="fw-bold text-dark"><field name="student_id"/></span>
+                            </div>
+                            <div class="text-muted small mb-1">
+                                <i class="fa fa-credit-card me-1 text-secondary" title="Payment Method"/>
+                                <field name="payment_method"/>
+                            </div>
+                            <div class="text-muted small mb-1" t-if="record.reference.value">
+                                <i class="fa fa-hashtag me-1 text-secondary" title="Ref"/>
+                                <span class="text-truncate"><field name="reference"/></span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center pt-2 border-top mt-2">
+                                <span t-if="record.date.value" class="small text-muted">
+                                    <i class="fa fa-calendar me-1" title="Payment Date"/> <field name="date"/>
+                                </span>
+                                <span t-if="record.state.raw_value == 'posted'" class="badge text-bg-success ms-auto">Posted</span>
+                                <span t-elif="record.state.raw_value == 'draft'" class="badge text-bg-info ms-auto">Draft</span>
+                                <span t-elif="record.state.raw_value == 'canceled'" class="badge text-bg-danger ms-auto">Canceled</span>
+                            </div>
+                        </main>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- ACTION -->
+    <record id="action_university_payment" model="ir.actions.act_window">
+        <field name="name">Payments</field>
+        <field name="res_model">university.payment</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="search_view_id" ref="view_university_payment_search"/>
+        <field name="limit">10</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Record your first student tuition payment receipt!
+            </p>
+        </field>
+    </record>
+
+    <record id="action_university_payment_student" model="ir.actions.act_window">
+        <field name="name">My Payments</field>
+        <field name="res_model">university.payment</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="domain">[('student_id.user_id', '=', uid)]</field>
+        <field name="limit">10</field>
+        <field name="context">{'create': False, 'edit': False, 'delete': False}</field>
+    </record>
+
+</odoo>

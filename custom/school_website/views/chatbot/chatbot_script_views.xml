@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="chatbot_script_view_form_inherit_ai" model="ir.ui.view">
+        <field name="name">chatbot.script.view.form.inherit.ai</field>
+        <field name="model">chatbot.script</field>
+        <field name="inherit_id" ref="im_livechat.chatbot_script_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_test_ai_connection" type="object" string="Test AI Connection" class="btn btn-outline-primary" icon="fa-bolt" invisible="not use_ai"/>
+            </xpath>
+            <xpath expr="//page[@name='page_script']" position="after">
+                <page string="AI Intelligence" name="page_ai_intelligence">
+                    <div class="alert alert-info" role="alert">
+                        <strong>AI Smart Assistant:</strong> When enabled, this chatbot uses LLM intelligence (OpenAI ChatGPT or Google Gemini) to understand questions and reply to prospective students and visitors conversationally.
+                    </div>
+                    <group>
+                        <group string="AI Activation">
+                            <field name="use_ai"/>
+                            <field name="ai_provider" invisible="not use_ai" required="use_ai"/>
+                            <field name="ai_api_key" password="True" invisible="not use_ai" placeholder="Paste your API key (sk-... or AIza...)"/>
+                            <field name="ai_fallback_on_no_operator" invisible="not use_ai"/>
+                        </group>
+                        <group string="Model Parameters" invisible="not use_ai">
+                            <field name="ai_model" placeholder="e.g. gpt-4o-mini or gemini-1.5-flash"/>
+                            <field name="ai_temperature"/>
+                        </group>
+                    </group>
+                    <group string="System Persona &amp; Knowledge Prompt" invisible="not use_ai">
+                        <field name="ai_system_prompt" nolabel="1" placeholder="Define the AI persona, knowledge guidelines, and constraints..."/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
