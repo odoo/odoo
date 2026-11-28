@@ -6,6 +6,7 @@ from . import test_inventory
 from . import test_move
 from . import test_move2
 from . import test_move_lines
+from . import test_move_lot_reservation
 from . import test_multicompany
 from . import test_old_rules
 from . import test_overview_graph

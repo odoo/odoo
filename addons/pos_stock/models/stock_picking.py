@@ -132,13 +132,26 @@ class StockPicking(models.Model):
         def get_grouping_key(line):
             return (line.product_id.id, tuple(sorted(line.attribute_value_ids.ids)))
 
-        move_vals = [
+        lines_groups = list(lines.grouped(get_grouping_key).values())
+        moves = self.env['stock.move'].create([
             self._prepare_stock_move_vals(order_lines[0], order_lines)
-            for order_lines in lines.grouped(get_grouping_key).values()
-        ]
-        moves = self.env['stock.move'].create(move_vals)
-        confirmed_moves = moves._action_confirm()
-        confirmed_moves._add_mls_related_to_order(lines, are_qties_done=True)
+            for order_lines in lines_groups
+        ])
+        lines_by_move = dict(zip(moves, lines_groups))
+        # Not merged, so that each move only takes the lots of the order lines it comes from.
+        confirmed_moves = moves._action_confirm(merge=False)
+        # A product no line sells directly (e.g. a kit component) has no lot entered: delivered as is.
+        lot_moves = confirmed_moves.filtered(lambda m: m._use_pos_lots() and m.product_id in lines.product_id)
+        (confirmed_moves - lot_moves)._check_pos_uom_conversion()
+        for move in confirmed_moves - lot_moves:
+            move.quantity = move.product_uom_qty
+
+        # The goods left the shop: the lots get their quantity, whatever the stock says.
+        lots_by_name = {(lot.product_id, lot.name): lot for lot in lot_moves._create_production_lots_for_pos_order(lines)}
+        lot_moves._do_unreserve()
+        for move in lot_moves:
+            # Moves created when confirming (e.g. kit components) take the lots of the lines of their product.
+            move._assign_pos_lots(lines_by_move.get(move, lines), lots_by_name, force=True)
         confirmed_moves.picked = True
         self._link_owner_on_return_picking(lines)
 
