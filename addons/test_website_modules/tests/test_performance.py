@@ -350,7 +350,7 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
 
         if self._has_demo_data():
             queries['account_tax'] += 1
-            queries['account_account_tag'] = 1
+            queries['account_account_tag'] = 2
             queries['res_users'] = 1
             queries['res_partner'] = 1
             queries['ir_attachment'] += -1
@@ -378,6 +378,7 @@ class TestWebsiteAllPerformanceShop(TestWebsiteAllPerformance):
         if self._has_demo_data():
             queries['ir_attachment'] += -1
             queries['product_template_attribute_value'] += 2
+            queries['product_ribbon'] += -1
 
         self._check_url_hot_query('/shop', sum(queries.values()), queries)
 
@@ -404,4 +405,6 @@ class TestWebsiteAllPerformanceShop(TestWebsiteAllPerformance):
 
         if self._has_demo_data():
             queries['product_template_attribute_value'] += 2
+            queries['ir_attachment'] += -1
+            queries['product_ribbon'] += -1
         self._check_url_hot_query('/shop', sum(queries.values()), queries)
