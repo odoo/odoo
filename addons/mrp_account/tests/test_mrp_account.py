@@ -825,6 +825,17 @@ class TestMrpAccountWorkorder(TestBomPriceOperationCommon):
             "Labor entry should not be duplicated when backorder=always",
         )
 
+    def test_mrp_user_produces_mo_while_the_clock_moves_on(self):
+        """ Marking an order done dates its done moves again with the clock. Once the clock
+        has moved on since their completion, that replays their valuation, whose correction
+        entries a manufacturing user without accounting rights may not create.
+        """
+        mrp_user = new_test_user(self.env, 'temp_mrp_user_clock', 'mrp.group_mrp_user')
+        with freeze_time(fields.Datetime.now(), auto_tick_seconds=1):
+            mo_1 = self._create_mo(self.bom_1, 1)
+            mo_1.with_user(mrp_user).button_mark_done()
+        self.assertEqual(mo_1.state, 'done')
+
     def test_mrp_user_with_timesheet_permissions_can_produce_mo(self):
         """ Test that an MRP user with timesheet access but without accounting rights
         can complete a Manufacturing Order when analytic distribution is applied,

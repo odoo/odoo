@@ -183,6 +183,11 @@ class StockMove(models.Model):
         """ Editing the done date of a valued move (to the past or the future) shifts the
         on-hand context of every move in between, so the valuation has to be replayed
         from the earliest impacted date.
+
+        The replay is the valuation of the moves, run as the valuation of a move being done
+        is (see `_action_done`): the user who dates the move, like the stock user applying a
+        count at its counting date or the manufacturing user whose completed order dates its
+        moves, may hold no right on the correction entries.
         """
         recompute_date = None
         if vals.get('date'):
@@ -191,7 +196,7 @@ class StockMove(models.Model):
             recompute_date = min([*impacted_moves.mapped('date'), new_date]) if impacted_moves else False
         res = super().write(vals)
         if recompute_date:
-            impacted_moves._set_value(recompute_date=recompute_date)
+            impacted_moves.sudo()._set_value(recompute_date=recompute_date)
         return res
 
     def _read_group_select(self, table, aggregate_spec):
