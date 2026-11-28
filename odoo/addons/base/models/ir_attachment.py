@@ -1067,8 +1067,36 @@ class IrAttachment(models.Model):
             except OSError:
                 pass
 
+<<<<<<< cf3a5c31a2c93b1335c2d07d1ff372c9fba30a74
         elif self.url:
             return Stream(type='url', url=self.url, **kw)
+||||||| 76c0dec9c4910520f7ba222290cfbbf4603f972a
+        elif self.url:
+            # When the URL targets a file located in an addon, assume it
+            # is a path to the resource. It saves an indirection and
+            # stream the file right away.
+            static_path = root.get_static_file(
+                self.url,
+                host=request.httprequest.environ.get('HTTP_HOST', '')
+            )
+            if static_path:
+                return Stream.from_path(static_path, public=True)
+            else:
+                kw.update(type='url', url=self.url)
+=======
+        elif self.url and not self.db_datas:
+            # When the URL targets a file located in an addon, assume it
+            # is a path to the resource. It saves an indirection and
+            # stream the file right away.
+            static_path = root.get_static_file(
+                self.url,
+                host=request.httprequest.environ.get('HTTP_HOST', '')
+            )
+            if static_path:
+                return Stream.from_path(static_path, public=True)
+            else:
+                kw.update(type='url', url=self.url)
+>>>>>>> 2638a8a7d681cc90eb92d155d7c3ee4dbc408b1e
 
         data = self.raw.content
         return Stream(
