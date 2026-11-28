@@ -1,28 +1,6 @@
-import { Component, onWillDestroy, t, useProps, xml } from "@odoo/owl";
-import { useSubEnv } from "@web/owl2/utils";
+import { Component, t, useProps, xml } from "@odoo/owl";
+import { provideDropdownGroup } from "@web/core/dropdown/_behaviours/dropdown_group_hook";
 
-const GROUPS = new Map();
-
-function getGroup(id) {
-    if (!GROUPS.has(id)) {
-        GROUPS.set(id, {
-            group: new Set(),
-            count: 0,
-        });
-    }
-    GROUPS.get(id).count++;
-    return GROUPS.get(id).group;
-}
-
-function removeGroup(id) {
-    const groupData = GROUPS.get(id);
-    groupData.count--;
-    if (groupData.count <= 0) {
-        GROUPS.delete(id);
-    }
-}
-
-export const DROPDOWN_GROUP = Symbol("dropdownGroup");
 export class DropdownGroup extends Component {
     static template = xml`<t t-call-slot="default"/>`;
     props = useProps({
@@ -31,12 +9,6 @@ export class DropdownGroup extends Component {
     });
 
     setup() {
-        if (this.props.group) {
-            const group = getGroup(this.props.group);
-            onWillDestroy(() => removeGroup(this.props.group));
-            useSubEnv({ [DROPDOWN_GROUP]: group });
-        } else {
-            useSubEnv({ [DROPDOWN_GROUP]: new Set() });
-        }
+        provideDropdownGroup(this.props.group);
     }
 }
