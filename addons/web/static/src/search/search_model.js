@@ -1282,8 +1282,9 @@ export class SearchModel extends EventBus {
     }
 
     /**
-     * Creates 1 "Shared" filter from URl encoded domain.
-     * @param {string} urlDomain - Uri encoded domain
+     * Creates 1 "Shared" filter from the URL domain.
+     * The router already decodes the query string: values are used as is.
+     * @param {string} urlDomain - domain from the URL
      * @param {{ anyErrors: boolean, anySuccess: boolean }} urlApplyStatus
      */
     _createUrlFilter(urlDomain, urlApplyStatus) {
@@ -1291,11 +1292,10 @@ export class SearchModel extends EventBus {
             return;
         }
         try {
-            const decodedDomain = decodeURIComponent(urlDomain);
             this.createNewFilters([
                 {
                     description: "Shared",
-                    domain: new Domain(decodedDomain).toString(),
+                    domain: new Domain(urlDomain).toString(),
                     name: "sharedDomainFromUrl",
                 },
             ]);
@@ -1307,12 +1307,12 @@ export class SearchModel extends EventBus {
 
     /**
      * Recreates GroupBys (including sub items and order) filter from encoded parameters
-     * @param {string} urlGroupBy - encoded list of fields to group by
+     * @param {string} urlGroupBy - JSON list of fields to group by
      * @param {{ anyErrors: boolean, anySuccess: boolean }} urlApplyStatus
      */
     _createUrlGroupBy(urlGroupBy, urlApplyStatus) {
         try {
-            const decodedGroupBys = urlGroupBy ? JSON.parse(decodeURIComponent(urlGroupBy)) : [];
+            const decodedGroupBys = urlGroupBy ? JSON.parse(urlGroupBy) : [];
             if (decodedGroupBys.length === 0) {
                 return;
             }
@@ -1325,7 +1325,7 @@ export class SearchModel extends EventBus {
 
     /**
      * Recreates ordering logic (either from fields or groupBy)
-     * @param {Object} urlOrderBy - encoded orderBy (can be multiple)
+     * @param {string} urlOrderBy - JSON orderBy (can be multiple)
      * @param {{ anyErrors: boolean, anySuccess: boolean }} urlApplyStatus
      */
     _createUrlOrderBy(urlOrderBy, urlApplyStatus) {
@@ -1333,7 +1333,7 @@ export class SearchModel extends EventBus {
             return;
         }
         try {
-            this.globalOrderBy = JSON.parse(decodeURIComponent(urlOrderBy));
+            this.globalOrderBy = JSON.parse(urlOrderBy);
             const orderByCount = this.globalOrderBy.find((o) => o.name == "__count");
             if (orderByCount) {
                 this.orderByCount = orderByCount.asc ? "Asc" : "Desc";

@@ -62,6 +62,20 @@ test("URL with single filter creates filter with domain", async () => {
     expect(searchBar.env.searchModel.domain).toEqual([]);
 });
 
+test("URL with a percent sign in the domain applies it unchanged", async () => {
+    // the router already decodes the query string: "%" must not be decoded again
+    const domain = '["|", ["state", "=", "100%"], ["state", "=", "a%20b"]]';
+    redirect("?domain=" + encodeURIComponent(domain));
+    const searchBar = await mountWithSearch(SearchBar, { resModel: "mock.purchase.order" });
+
+    expect(`.o_searchview .o_searchview_facet`).toHaveCount(1);
+    expect(searchBar.env.searchModel.domain).toEqual([
+        "|",
+        ["state", "=", "100%"],
+        ["state", "=", "a%20b"],
+    ]);
+});
+
 test("URL with multiple filters creates shared filter", async () => {
     const domain = '["&", ["state", "=", "sent"], ["partner_id", "ilike", "me"]]';
     redirect("?domain=" + encodeURIComponent(domain));
