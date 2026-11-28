@@ -6,8 +6,10 @@ from functools import wraps
 from datetime import timedelta
 
 from dateutil.parser import parse
+from psycopg2.errors import UniqueViolation
 
 from odoo import api, fields, models
+from odoo.exceptions import ConcurrencyError
 from odoo.fields import Domain
 from odoo.modules.registry import Registry
 from odoo.sql_db import BaseCursor
@@ -318,8 +320,12 @@ class MicrosoftCalendarSync(models.AbstractModel):
             dict(self._microsoft_to_odoo_values(e, with_ids=True, create=True), need_sync_m=False)
             for e in (new - new_recurrence)
         ]
-        synced_events = self.with_context(dont_notify=True, skip_contact_description=True)._create_from_microsoft(new, odoo_values)
-        synced_recurrences, updated_events = self._sync_recurrence_microsoft2odoo(existing, new_recurrence)
+        try:
+            synced_events = self.with_context(dont_notify=True, skip_contact_description=True)._create_from_microsoft(new, odoo_values)
+            synced_recurrences, updated_events = self._sync_recurrence_microsoft2odoo(existing, new_recurrence)
+        except UniqueViolation as e:
+            # Imported by a concurrent synchronization, retry to match it
+            raise ConcurrencyError() from e
         synced_events |= updated_events
 
         # remove cancelled events and recurrences

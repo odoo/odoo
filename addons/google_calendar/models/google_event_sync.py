@@ -3,6 +3,7 @@ import logging
 
 from dateutil.parser import parse
 from markupsafe import Markup
+from psycopg2.errors import UniqueViolation
 from requests import HTTPError
 
 from odoo.addons.google_account.models.google_service import TIMEOUT
@@ -11,6 +12,7 @@ from odoo.addons.google_calendar.utils.google_event import GoogleEvent
 from odoo.addons.google_calendar.utils.google_calendar_service import GoogleCalendarService
 
 from odoo import _, api, fields, models
+from odoo.exceptions import ConcurrencyError
 from odoo.fields import Domain
 from odoo.tools import email_normalize
 
@@ -216,8 +218,12 @@ class GoogleEventSync(models.AbstractModel):
             dict(self._odoo_values(e, calendar, default_reminders), need_sync=False)
             for e in new
         ]
-        new_odoo = self.with_context(dont_notify=True, skip_contact_description=True)._create_from_google(new, calendar,
-                                                                                                          odoo_values)
+        try:
+            new_odoo = self.with_context(dont_notify=True, skip_contact_description=True)._create_from_google(new, calendar,
+                                                                                                              odoo_values)
+        except UniqueViolation as e:
+            # Imported by a concurrent synchronization, retry to match it
+            raise ConcurrencyError() from e
         cancelled = existing.cancelled()
         cancelled_odoo = self.browse(cancelled.odoo_ids(self.env))
 

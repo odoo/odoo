@@ -7,7 +7,7 @@ from zoneinfo import ZoneInfo
 from dateutil.relativedelta import relativedelta
 
 from odoo.tests.common import tagged, new_test_user, users
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ConcurrencyError, ValidationError
 from odoo.addons.google_calendar.models.res_users import ResUsers
 from odoo.addons.google_calendar.tests.test_sync_common import TestSyncGoogle, patch_api
 from odoo.addons.google_calendar.utils.google_calendar_service import GoogleEvent, GoogleCalendarService
@@ -933,6 +933,37 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         self.sync(GoogleEvent([values]))
         self.assertFalse(recurrence.exists(), "The recurrence should be deleted")
         self.assertFalse(events.exists(), "All events should be deleted")
+        self.assertGoogleAPINotCalled()
+
+    @patch_api
+    def test_sync_retries_recurrence_imported_concurrently(self):
+        """ A recurrence already imported by a concurrent synchronization makes the synchronization retry. """
+        values = {
+            'id': 'oj44nep1ldf8a3ll02uip0c9aa',
+            'description': '',
+            'organizer': {'email': 'odoocalendarref@gmail.com', 'self': True},
+            'summary': 'Weekly meeting',
+            'visibility': 'public',
+            'recurrence': ['RRULE:FREQ=WEEKLY;WKST=SU;COUNT=3;BYDAY=MO'],
+            'reminders': {'useDefault': True},
+            'start': {'dateTime': '2020-01-06T18:00:00+01:00', 'timeZone': 'Europe/Brussels', 'date': None},
+            'end': {'dateTime': '2020-01-06T19:00:00+01:00', 'timeZone': 'Europe/Brussels', 'date': None},
+        }
+        CalendarRecurrence = self.env['calendar.recurrence']
+        calendar = self.env.user.primary_calendar_id
+        CalendarRecurrence._sync_google2odoo(GoogleEvent([dict(values)]), calendar)
+
+        # a concurrent synchronization does not see the recurrence imported above
+        with (
+            patch.object(GoogleEvent, 'exists', return_value=GoogleEvent([])),
+            self.assertRaises(ConcurrencyError),
+            tools.mute_logger('odoo.sql_db'),
+            self.env.cr.savepoint(),
+        ):
+            CalendarRecurrence._sync_google2odoo(GoogleEvent([dict(values)]), calendar)
+
+        self.assertEqual(CalendarRecurrence.search_count([('google_id', '=', values['id'])]), 1)
+        self.assertEqual(self.env['calendar.event'].search_count([('google_id', '=like', values['id'] + '%')]), 3)
         self.assertGoogleAPINotCalled()
 
     @patch_api

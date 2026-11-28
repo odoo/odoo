@@ -1014,6 +1014,30 @@ class TestSyncOdoo2Google(TestSyncOdoo2GoogleCommon):
             'attendees': [],  # Attendees are added on an update, not on creation.
         }, timeout=3)
 
+    @patch_api
+    def test_event_duplication_recurrence_occurrence(self):
+        """ A copy of a synced occurrence is a new event, outside the recurrence. """
+        event = self.env['calendar.event'].create({
+            'name': "Event",
+            'start': datetime(2020, 1, 15, 8, 0),
+            'stop': datetime(2020, 1, 15, 9, 0),
+            'recurrency': True,
+            'rrule_type': 'weekly',
+            'wed': True,
+            'end_type': 'count',
+            'count': 2,
+            'need_sync': False,
+        })
+        recurrence = event.recurrence_id
+        recurrence.google_id = 'aaaaaaaaa'
+        occurrence = recurrence.calendar_event_ids.sorted('start')[1]
+
+        event_copy = occurrence.copy()
+
+        self.assertFalse(event_copy.recurrence_id)
+        self.assertFalse(event_copy.google_id)
+        self.assertEqual(len(recurrence.calendar_event_ids), 2)
+
     def test_event_over_send_updates(self):
         """Test that events that are over don't sent updates to attendees."""
         with self.mock_datetime_and_now("2023-01-10"):
