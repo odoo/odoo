@@ -51,6 +51,28 @@ class TestServerActionsEmail(MailCommon, TestServerActionsBase):
                          'Contains Contact created message')
         self.assertFalse(self.test_partner.message_partner_ids)
 
+    def test_action_email_not_in_chatter(self):
+        self.template.auto_delete = False
+        self.action.write({
+            'mail_post_method': 'email',
+            'state': 'mail_post',
+            'template_id': self.template.id,
+        })
+
+        with self.mock_mail_gateway(mail_unlink_sent=True):
+            self.action.with_context(self.context).run()
+            mail = self.assertMailMail(
+                self.test_partner, 'outgoing', content='Hello TestingPartner',
+                fields_values={'model': self.test_partner._name, 'res_id': self.test_partner.id},
+            )
+            chatter_messages = self.env['mail.message']._message_fetch(domain=None, thread=self.test_partner)['messages']
+            self.assertNotIn(mail.mail_message_id, chatter_messages)
+
+            mail.send()
+            self.assertEqual(mail.state, 'sent')
+            self.assertSentEmail(mail.email_from, [self.test_partner], subject=mail.subject)
+            self.assertNotIn(mail.mail_message_id, self.test_partner.message_ids)
+
     def test_action_followers(self):
         self.test_partner.message_unsubscribe(self.test_partner.message_partner_ids.ids)
         random_partner = self.env['res.partner'].create({'name': 'Thierry Wololo'})
@@ -238,6 +260,7 @@ class TestServerActionsEmail(MailCommon, TestServerActionsBase):
             content='Hello Test NoMailThread',
             fields_values={
                 'email_from': 'someone@example.com',
+                'message_type': 'email_outgoing',
                 'subject': 'About Test NoMailThread',
             }
         )

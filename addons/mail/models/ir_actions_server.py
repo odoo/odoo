@@ -349,11 +349,13 @@ class IrActionsServer(models.Model):
             )
         else:
             template = self.template_id.with_context(cleaned_ctx)
+            email_values = {'message_type': 'user_notification'} if self.model_id.is_mail_thread else None
             for res_id in res_ids:
                 template.send_mail(
                     res_id,
                     force_send=False,
-                    raise_exception=False
+                    raise_exception=False,
+                    email_values=email_values,
                 )
         return False
 
