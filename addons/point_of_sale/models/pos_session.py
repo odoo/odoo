@@ -1261,6 +1261,20 @@ class PosSession(models.Model):
         if len(to_reconcile) > 1:
             to_reconcile.with_context(skip_invoice_sync=True).reconcile()
 
+    def _prepare_partial_reversal_move_vals(self, orders, original_move, line_commands):
+        self.ensure_one()
+        return {
+            'invoice_cash_rounding_id': original_move.invoice_cash_rounding_id.id,
+            'date': fields.Date.today(),
+            'ref': self.env._("Partial reversal of %s for PoS Order invoicing", original_move.name),
+            'reversed_pos_order_id': orders.id if len(orders) == 1 else False,  # In case of invoice consolidation, order reversal isn't linked to a single order
+            'line_ids': line_commands,
+            'journal_id': original_move.journal_id.id,
+            'reversed_entry_id': original_move.id,
+            'pos_session_ids': [(4, self.id)],
+            'always_tax_exigible': True,
+        }
+
     def _create_partial_reversal_move_from_session_closing(self, orders):
         """
         Create a misc move to reverse POS orders and "remove" it from the
@@ -1306,18 +1320,9 @@ class PosSession(models.Model):
             linked_to_pos=True,
         )
 
-        reference = _("Partial reversal of %s for PoS Order invoicing", original_move.name)
-        move = move_ctx.with_context(check_move_validity=False).create({
-            'invoice_cash_rounding_id': original_move.invoice_cash_rounding_id.id,
-            'date': fields.Date.today(),
-            'ref': reference,
-            'reversed_pos_order_id': orders.id if len(orders) == 1 else None,  # In case of invoice consolidation, order reversal isn't linked to a single order
-            'line_ids': reverse_move_lines,
-            'journal_id': original_move.journal_id.id,
-            'reversed_entry_id': original_move.id,
-            'pos_session_ids': [(4, self.id)],
-            'always_tax_exigible': True,
-        })
+        move = move_ctx.with_context(check_move_validity=False).create(
+            self._prepare_partial_reversal_move_vals(orders, original_move, reverse_move_lines),
+        )
 
         # The cash rounding of the orders is what is left once their
         # products, taxes and payments are reversed.
