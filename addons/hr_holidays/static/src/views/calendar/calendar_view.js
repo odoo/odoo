@@ -2,7 +2,7 @@ import { calendarView } from "@web/views/calendar/calendar_view";
 
 import { TimeOffCalendarController } from "./calendar_controller";
 import { TimeOffCalendarModel } from "./calendar_model";
-import { TimeOffCalendarRenderer, TimeOffDashboardCalendarRenderer } from "./calendar_renderer";
+import { TimeOffCalendarRenderer } from "./calendar_renderer";
 
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
@@ -37,7 +37,12 @@ export const timeOffCalendarHrLeaveView = {
 
 registry.category("views").add("time_off_calendar_dashboard", {
     ...timeOffCalendarHrLeaveView,
-    Renderer: TimeOffDashboardCalendarRenderer,
+    props: (props, view) => {
+        const viewProps = timeOffCalendarHrLeaveView.props(props, view);
+
+        // The time off cards and the allocation request are shown in the side panel
+        return { ...viewProps, archInfo: { ...viewProps.archInfo, showDashboard: true } };
+    },
 });
 
 registry.category("views").add("time_off_management_calendar", {

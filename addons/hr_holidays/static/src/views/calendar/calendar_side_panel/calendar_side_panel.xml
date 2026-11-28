@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="hr_holidays.TimeOffCalendarSidePanel" t-inherit="web.CalendarSidePanel" t-inherit-mode="primary">
+        <xpath expr="//DatePicker" position="before">
+            <div t-if="this.showDashboard" class="pt-3">
+                <TimeOffDashboard employeeId="this.props.model.employeeId" vertical="true"/>
+            </div>
+            <div t-if="this.showAllocationRequest" class="o_timeoff_allocation_request pt-3">
+                <button type="button" class="btn btn-secondary w-100 py-3" t-on-click="this.openNewAllocation">
+                    Allocation Request
+                </button>
+            </div>
+        </xpath>
         <xpath expr="//div[hasclass('o_calendar_sidepanel_content')]" position="inside">
             <div class="o_calendar_filter mt-4">
                 <h5>Legend</h5>

@@ -3,10 +3,13 @@ import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { Cache } from "@web/core/utils/cache";
 import { useAsyncComputed, useService } from "@web/core/utils/hooks";
 import { computed } from "@odoo/owl";
+import { useNewAllocationRequest } from "@hr_holidays/views/hooks";
+import { TimeOffDashboard } from "@hr_holidays/dashboard/time_off_dashboard";
 
 export class TimeOffCalendarSidePanel extends CalendarSidePanel {
     static components = {
         ...CalendarSidePanel.components,
+        TimeOffDashboard,
     };
     static template = "hr_holidays.TimeOffCalendarSidePanel";
 
@@ -14,6 +17,7 @@ export class TimeOffCalendarSidePanel extends CalendarSidePanel {
         super.setup();
 
         this.orm = useService("orm");
+        this.newAllocRequest = useNewAllocationRequest();
         this.getFormattedDateSpan = function getFormattedDateSpan(start, end) {
             const n = "numeric";
             const s = "short";
@@ -45,6 +49,23 @@ export class TimeOffCalendarSidePanel extends CalendarSidePanel {
         this.mandatoryDays = computed(() =>
             this._mapIsoToDatetimes(this.specialDays().mandatoryDays || [])
         );
+    }
+
+    /**
+     * The time off dashboard (not the management and reporting calendars), on large screens
+     */
+    get showDashboard() {
+        return Boolean(this.props.model.meta.showDashboard) && !this.uiService.isSmall;
+    }
+
+    get showAllocationRequest() {
+        return this.showDashboard && this.props.model.canCreate;
+    }
+
+    openNewAllocation() {
+        this.newAllocRequest({
+            employeeId: this.props.model.employeeId,
+        });
     }
 
     _mapIsoToDatetimes(days) {

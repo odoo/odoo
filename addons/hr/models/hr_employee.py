@@ -190,7 +190,7 @@ class HrEmployee(models.Model):
     lang = fields.Selection(selection=_lang_get, string="Lang", groups="hr.group_hr_user")
     place_of_birth = fields.Char('Place of Birth', groups="hr.group_hr_user", tracking=True)
     country_of_birth = fields.Many2one('res.country', string="Country of Birth", groups="hr.group_hr_user", tracking=True)
-    birthday = fields.Date('Birthday', groups="hr.group_hr_user", tracking=True)
+    birthday = fields.Date('Birthdate', groups="hr.group_hr_user", tracking=True)
     birthday_public_display = fields.Boolean('Show Birthday To Employees', groups="hr.group_hr_user", default=False)
     birthday_public_display_string = fields.Char("Public Date of Birth", compute="_compute_birthday_public_display_string", default="hidden")
     age = fields.Integer('Age', groups='hr.group_hr_user', compute='_compute_age')

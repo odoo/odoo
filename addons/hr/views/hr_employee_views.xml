@@ -329,6 +329,7 @@
                             <page name="personal_information" string="Personal" groups="hr.group_hr_user">
                                 <group>
                                     <group string="Private Contact">
+                                        <field name="legal_name" invisible="split_legal_name"/>
                                         <field name="private_email" placeholder="e.g. myprivateemail@example.com" string="Email"/>
                                         <field name="private_phone_sanitized" invisible="1"/> <!-- read by the phone widget of private_phone for the tel: link -->
                                         <field name="private_phone_formatted" invisible="1"/> <!-- read by the phone widget of private_phone for the displayed format -->
@@ -382,13 +383,17 @@
                                         </div>
                                     </group>
                                     <group string="Personal Information" name="hr_birth_group">
-                                        <field name="legal_name" invisible="split_legal_name"/>
                                         <label for="birthday"/>
-                                        <div class="d-flex align-items-center gap-2" name="birth_and_age">
-                                            <field name="birthday" nolabel="1" class="oe_inline o_hr_narrow_field"/>
-                                            <span class="text-muted ms-3" invisible="not birthday">(<label for="age" class="d-inline"/> <field name="age" nolabel="1" class="oe_inline o_hr_narrow_field"/>)</span>
+                                        <div class="d-flex flex-column" name="div_birthday">
+                                            <div class="d-flex align-items-center gap-2" name="birth_and_age">
+                                                <field name="birthday" nolabel="1" class="oe_inline o_hr_narrow_field"/>
+                                                <span class="text-muted ms-3" invisible="not birthday">(<label for="age" class="d-inline"/> <field name="age" nolabel="1" class="oe_inline o_hr_narrow_field"/>)</span>
+                                            </div>
+                                            <div class="d-flex align-items-center" invisible="not birthday">
+                                                <field name="birthday_public_display" widget="boolean_toggle" class="w-auto"/>
+                                                <label for="birthday_public_display" string="Show in directory" class="fw-normal"/>
+                                            </div>
                                         </div>
-                                        <field name="birthday_public_display" invisible="not birthday" widget="boolean_toggle"/>
                                         <label for="place_of_birth"/>
                                         <div class="o_row" name="birth_location">
                                             <field name="place_of_birth" class="oe_inline o_hr_narrow_field" nolabel="1" placeholder="City"/>
@@ -396,6 +401,24 @@
                                             <field name="country_of_birth" class="oe_inline o_hr_narrow_field" nolabel="1" placeholder="Country"/>
                                         </div>
                                         <field name="sex"/>
+                                    </group>
+                                    <group string="Address" name="hr_location_group">
+                                        <label for="private_street" string="Private Address"/>
+                                        <div class="o_address_format o_hr_address">
+                                            <field name="private_street" placeholder="Street..." class="o_address_street"/>
+                                            <field name="private_street2" placeholder="Street 2..." class="o_address_street"/>
+                                            <field name="private_city" placeholder="City" class="o_address_city"/>
+                                            <field name="private_state_id" class="o_address_state" placeholder="State"
+                                                options='{"no_open": True, "no_create": True}' context="{'default_country_id': private_country_id}"
+                                                domain="[('id', 'in', allowed_country_state_ids)]"/>
+                                            <field name="private_zip" placeholder="ZIP" class="o_address_zip"/>
+                                            <field name="private_country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
+                                        </div>
+                                        <label for="distance_home_work"/>
+                                        <div class="o_row" name="div_km_home_work">
+                                            <field name="distance_home_work"/>
+                                            <span><field name="distance_home_work_unit"/></span>
+                                        </div>
                                     </group>
                                     <group name="citizenship" string="Citizenship">
                                         <field name="country_id" options='{"no_open": True, "no_create": True}'/>
@@ -428,24 +451,6 @@
                                         <field name="emergency_phone_sanitized" invisible="1"/> <!-- read by the phone widget of emergency_phone for the tel: link -->
                                         <field name="emergency_phone_formatted" invisible="1"/> <!-- read by the phone widget of emergency_phone for the displayed format -->
                                         <field name="emergency_phone" widget="phone" class="o_force_ltr" string="Phone"/>
-                                    </group>
-                                    <group string="Location" name="hr_location_group">
-                                        <label for="private_street" string="Private Address"/>
-                                        <div class="o_address_format o_hr_address">
-                                            <field name="private_street" placeholder="Street..." class="o_address_street"/>
-                                            <field name="private_street2" placeholder="Street 2..." class="o_address_street"/>
-                                            <field name="private_city" placeholder="City" class="o_address_city"/>
-                                            <field name="private_state_id" class="o_address_state" placeholder="State" 
-                                                options='{"no_open": True, "no_create": True}' context="{'default_country_id': private_country_id}"
-                                                domain="[('id', 'in', allowed_country_state_ids)]"/>
-                                            <field name="private_zip" placeholder="ZIP" class="o_address_zip"/>
-                                            <field name="private_country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
-                                        </div>
-                                        <label for="distance_home_work"/>
-                                        <div class="o_row" name="div_km_home_work">
-                                            <field name="distance_home_work"/>
-                                            <span><field name="distance_home_work_unit"/></span>
-                                        </div>
                                     </group>
                                     <group string="Family" name="hr_family_group">
                                         <field name="marital"/>

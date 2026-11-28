@@ -152,7 +152,7 @@ class ResUsers(models.Model):
     employee_count = fields.Integer(compute='_compute_employee_count')
     employee_resource_calendar_id = fields.Many2one(related='employee_id.resource_calendar_id', string="Employee's Working Hours", readonly=True)
     bank_account_ids = fields.Many2many('res.partner.bank', **related_employee_field('bank_account_ids'))
-    birthday = fields.Date(**related_employee_field('birthday'), user_writeable=True)
+    birthday = fields.Date(**related_employee_field('birthday', string="Birthdate"), user_writeable=True)
     birthday_public_display = fields.Boolean(**related_employee_field('birthday_public_display'), user_writeable=True)
 
     current_employee_skill_ids = fields.One2many('hr.employee.skill', compute='_compute_current_employee_skill_ids',

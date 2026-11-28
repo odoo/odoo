@@ -4361,4 +4361,4 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             leave_form = Form(leave)
             leave_form.request_date_to = date(2026, 4, 15)
             self.assertEqual(leave_form.number_of_days, 7)
-            self.assertEqual(leave_form.allocation_display_warning, "Only 6.0 day(s) available")
+            self.assertEqual(leave_form.allocation_display_warning, "Only 6.0 days available")
