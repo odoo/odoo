@@ -15,10 +15,12 @@ registry.category("web_tour.tours").add('website_event_booth_tour', {
     run: "click",
     expectUnloadPage: true,
 }, {
-    content: 'Select the first two booths',
+    content: "Check that the first booth is selected by default",
+    trigger: ".o_wbooth_booths .form-check:first-child input[name=event_booth_ids]:not(:visible):checked",
+}, {
+    content: "Select the second booth",
     trigger: ".o_wbooth_booths input[name=event_booth_ids]:not(:visible)",
     run() {
-        document.querySelectorAll('.o_wbooth_booths input[name="event_booth_ids"]')[0].click();
         document.querySelectorAll('.o_wbooth_booths input[name="event_booth_ids"]')[1].click();
     },
 }, {

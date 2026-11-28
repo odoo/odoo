@@ -18,9 +18,8 @@ registry.category("web_tour.tours").add('event_booth_sale_pricelists_different_c
         expectUnloadPage: true,
     },
     {
-        content: 'Select the booth',
-        trigger: ".o_wbooth_booths input[name=event_booth_ids]:nth-child(1):not(:visible)",
-        run: "click",
+        content: "Check that the first booth is selected by default",
+        trigger: ".o_wbooth_booths .form-check:first-child input[name=event_booth_ids]:not(:visible):checked",
     },
     {
         content: 'Confirm the booth by clicking the submit button',
@@ -47,7 +46,6 @@ registry.category("web_tour.tours").add('event_booth_sale_pricelists_different_c
         pricelistName: "EUR",
         eventName: "Test Event Booths",
         price: "99.00",
-        priceSelected: "99",
         priceCart: "99.00",
         priceBeforeDiscount: "110.00",
     }),
@@ -55,7 +53,6 @@ registry.category("web_tour.tours").add('event_booth_sale_pricelists_different_c
         pricelistName: "EX",
         eventName: "Test Event Booths",
         price: "990.00",
-        priceSelected: "990",
         priceCart: "990.00",
         priceBeforeDiscount: "1,100.00",
     }),
