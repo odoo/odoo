@@ -101,6 +101,39 @@ class TestEquipment(TestEquipmentCommon):
         new_maintenance_count = self.env['maintenance.request'].search_count([('name', '=', 'Test forever maintenance'), ('state', '=', 'normal')])
         self.assertGreater(new_maintenance_count, 0)
 
+    def test_recurring_and_reopened_request_stage_of_team(self):
+        """ The next occurrence of a recurring request and a reopened request
+        must be put in the first stage allowed for their team, not in the first
+        stage of another team. """
+        team_a, team_b = self.maintenance_team.create([{'name': 'Team A'}, {'name': 'Team B'}])
+        stage_team_a = self.env['maintenance.stage'].create({
+            'name': 'Team A Triage',
+            'sequence': 0,
+            'maintenance_team_ids': [(6, 0, team_a.ids)],
+        })
+        first_stage_team_b = self.env.ref('maintenance.stage_0')
+        request = self.maintenance_request.create({
+            'name': 'Team B recurring maintenance',
+            'maintenance_team_id': team_b.id,
+            'maintenance_type': 'preventive',
+            'recurring_maintenance': True,
+            'repeat_type': 'forever',
+        })
+        self.assertEqual(request.stage_id, first_stage_team_b)
+
+        request.state = 'done'
+        next_request = self.maintenance_request.search([
+            ('name', '=', 'Team B recurring maintenance'), ('state', '=', 'normal'),
+        ])
+        self.assertEqual(next_request.maintenance_team_id, team_b)
+        self.assertNotEqual(next_request.stage_id, stage_team_a)
+        self.assertEqual(next_request.stage_id, first_stage_team_b)
+
+        next_request.write({'stage_id': self.env.ref('maintenance.stage_1').id})
+        next_request.cancel_equipment_request()
+        next_request.reset_equipment_request()
+        self.assertEqual(next_request.stage_id, first_stage_team_b)
+
 
 @tagged("post_install", "-at_install")
 class TestEquipmentPostInstall(TestEquipmentCommon):
