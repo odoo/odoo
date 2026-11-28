@@ -1,6 +1,7 @@
 import { useService } from "@web/core/utils/hooks";
 import { Component } from "@odoo/owl";
 import { FollowerSubtypeDialog } from "@mail/core/web/follower_subtype_dialog";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 
 /**
@@ -22,7 +23,7 @@ export class Follower extends Component {
     onClickDetails() {
         this.store.openDocument({
             id: this.props.follower.partner_id.id,
-            model: "res.partner"
+            model: "res.partner",
         });
         this.props.close?.();
     }
@@ -36,6 +37,20 @@ export class Follower extends Component {
     }
 
     async onClickRemove() {
+        const { follower } = this.props;
+        const dialogProps = follower.thread.getFollowerRemovalDialogProps(follower);
+        if (dialogProps) {
+            this.env.services.dialog.add(ConfirmationDialog, {
+                ...dialogProps,
+                confirm: () => this.remove(),
+                cancel: () => {},
+            });
+        } else {
+            await this.remove();
+        }
+    }
+
+    async remove() {
         await this.props.follower.remove();
         this.props.onFollowerChanged?.();
     }
