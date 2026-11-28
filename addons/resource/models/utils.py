@@ -42,7 +42,15 @@ def float_to_time(hours):
     if hours == 24.0:
         return time.max
     fractional, integral = math.modf(hours)
-    return time(int(integral), int(float_round(60 * fractional, precision_digits=0)), 0)
+    hour = int(integral)
+    minute = int(float_round(60 * fractional, precision_digits=0))
+    # rounding the minutes can carry over to a full hour, e.g. 16.9959 hours
+    if minute == 60:
+        hour += 1
+        minute = 0
+    if hour == 24:
+        return time.max
+    return time(hour, minute, 0)
 
 
 def _boundaries(intervals, opening, closing):
