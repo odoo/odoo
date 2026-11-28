@@ -70,6 +70,10 @@ class SaleOrderLine(models.Model):
     def _is_discount_line(self):
         return super()._is_discount_line() or self.reward_id.sudo().reward_type == "discount"
 
+    def _filter_logged_lines(self):
+        """Override of `sale` to not log the changes of the reward lines, managed by the system."""
+        return super()._filter_logged_lines().filtered(lambda line: not line.is_reward_line)
+
     def _reset_loyalty(self, complete=False):
         """Reset the line(s) to a state which does not impact reward computation.
 

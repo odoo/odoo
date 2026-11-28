@@ -67,6 +67,7 @@ This module contains all the common features of Sales Management and eCommerce.
             "sale/static/src/xml/combo_menu_widget.xml",
             "sale/static/src/js/extra_total_field/*",
             "sale/static/src/js/labeled_field_short_labels.js",
+            "sale/static/src/js/product_catalog/*",
             "sale/static/src/js/labeled_float_field/*",
             "sale/static/src/js/labeled_monetary_field/*",
             "sale/static/src/js/labeled_percentage_field/*",

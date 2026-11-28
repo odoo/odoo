@@ -3,14 +3,27 @@
 
 import json
 import math
+from contextlib import contextmanager
 from datetime import timedelta
 from itertools import groupby
+
+from markupsafe import Markup
 
 from odoo import SUPERUSER_ID, api, fields, models
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.http import request
-from odoo.tools import SQL, OrderedSet, float_is_zero, float_round, format_amount, is_html_empty
+from odoo.tools import (
+    SQL,
+    OrderedSet,
+    float_compare,
+    float_is_zero,
+    float_repr,
+    float_round,
+    format_amount,
+    formatLang,
+    is_html_empty,
+)
 from odoo.tools.mail import html_keep_url
 from odoo.tools.urls import urljoin
 
@@ -29,6 +42,13 @@ SALE_ORDER_STATE = [
     ("sale", "Sales Order"),
     ("cancel", "Cancelled"),
 ]
+
+# The line changes beyond are summed up in the chatter, e.g. when adding many products at once
+MAX_LOGGED_LINE_CHANGES = 10
+# The totals tracked with the line changes of sent and confirmed orders (see `_log_line_changes`)
+LINE_CHANGES_TRACKED_FIELDS = ("amount_untaxed", "amount_total")
+# The key holding the line changes to log at the end of the transaction
+PENDING_LINE_CHANGES_KEY = "sale.order.pending_line_changes"
 
 
 class SaleOrder(models.Model):
@@ -1521,7 +1541,13 @@ class SaleOrder(models.Model):
                     vals.get("company_id")
                 ).next_by_code("sale.order", sequence_date=seq_date) or self.env._("New")
 
-        return super().create(vals_list)
+        orders = super().create(vals_list)
+        # The lines created with their order are not logged: their next changes are compared with
+        # the orders once created
+        if pending_line_changes := self._get_pending_line_changes():
+            for order in orders:
+                pending_line_changes["old_values"].pop(order.id, None)
+        return orders
 
     def _get_copiable_order_lines(self):
         """Return the order lines that can be copied to a new order."""
@@ -1554,7 +1580,10 @@ class SaleOrder(models.Model):
     def write(self, vals):
         if "pricelist_id" in vals and any(so.state == "sale" for so in self):
             raise UserError(self.env._("You cannot change the pricelist of a confirmed order !"))
-        return super().write(vals)
+        if "order_line" not in vals and "pricelist_id" not in vals:
+            return super().write(vals)
+        with self._log_line_changes():
+            return super().write(vals)
 
     # === ACTION METHODS ===#
 
@@ -2332,6 +2361,269 @@ class SaleOrder(models.Model):
         fallback on partner-based computation using ``_mail_get_partner_fields``."""
         return []
 
+    @contextmanager
+    def _log_line_changes(self):
+        """Log the changes of the order lines made within the context at the end of the
+        transaction, in a single message per order with the changes of the order totals. Nothing is
+        logged on quotation drafts, whose totals and pricelist are tracked as fields, nor when the
+        changes fail, as they are rolled back.
+
+        The orders are compared with their state before their first change of the transaction: the
+        intermediate states (e.g. reward lines reset before being removed) aren't logged, and the
+        totals of successive messages follow each other. The product catalog logs its changes when
+        leaving it, see `log_catalog_line_changes`.
+        """
+        if not (pending_line_changes := self._prepare_line_changes_log()):
+            yield
+            return
+        pending_line_changes["running"] += 1
+        try:
+            yield
+        finally:
+            pending_line_changes["running"] -= 1
+            if (
+                not pending_line_changes["running"]
+                and self.env.cr.cache.get(PENDING_LINE_CHANGES_KEY) is pending_line_changes
+            ):
+                # Flushed in the middle of the changes: logged at the end of the transaction again
+                del self.env.cr.cache[PENDING_LINE_CHANGES_KEY]
+                self.env.cr.precommit.data[PENDING_LINE_CHANGES_KEY] = pending_line_changes
+                self.env.cr.precommit.add(self._post_pending_line_changes)
+
+    def _prepare_line_changes_log(self):
+        """Save the state of the orders before their first change of the transaction, to log the
+        changes of their lines at the end of it (see `_log_line_changes`).
+
+        :return: The pending line changes, or None when the changes of the orders aren't logged.
+        :rtype: dict | None
+        """
+        if (
+            self._track_disabled()
+            or self.env.context.get("skip_intercompany_sync")
+            or self.env.context.get("catalog_update")
+        ):
+            return None
+        orders = self.filtered(lambda order: order.id and order.state != "draft")
+        pending_line_changes = self._get_pending_line_changes()
+        if not pending_line_changes:
+            if not orders:  # e.g. eCommerce carts
+                return None
+            pending_line_changes = {"old_values": {}, "running": 0}
+            self.env.cr.precommit.data[PENDING_LINE_CHANGES_KEY] = pending_line_changes
+            self.env.cr.precommit.add(self._post_pending_line_changes)
+        for order in orders:
+            pending_line_changes["old_values"].setdefault(
+                order.id, order._get_line_changes_values()
+            )
+        return pending_line_changes
+
+    def _get_pending_line_changes(self):
+        """Return the line changes to log at the end of the transaction, if any: in the precommit
+        data, or in the cursor cache while the transaction is flushed in the middle of the changes
+        (e.g. by the stock rules of the lines), which clears the precommit data."""
+        return self.env.cr.precommit.data.get(PENDING_LINE_CHANGES_KEY) or self.env.cr.cache.get(
+            PENDING_LINE_CHANGES_KEY
+        )
+
+    def _post_pending_line_changes(self):
+        """Log the line changes of the transaction, see `_log_line_changes`."""
+        pending_line_changes = self.env.cr.precommit.data.get(PENDING_LINE_CHANGES_KEY)
+        if not pending_line_changes:
+            return
+        if pending_line_changes["running"]:
+            # Flushed in the middle of the changes: kept until they are done
+            self.env.cr.cache[PENDING_LINE_CHANGES_KEY] = pending_line_changes
+            return
+        for order_id, old_values in pending_line_changes["old_values"].items():
+            if order := self.browse(order_id).exists():
+                order._post_line_changes(old_values)
+
+    def _get_line_changes_values(self):
+        """Return the values of the order compared to log the changes of its lines."""
+        self.ensure_one()
+        return {
+            "pricelist": self.pricelist_id.id,
+            **{fname: self[fname] for fname in LINE_CHANGES_TRACKED_FIELDS},
+            "lines": {
+                line.id: {
+                    "product": line.product_id.id,
+                    "name": line.product_id.display_name or line.name,
+                    "qty": line.product_uom_qty,
+                    "uom": line.product_uom_id.name,
+                    "price_unit": line.price_unit,
+                    "technical_price_unit": line.technical_price_unit,
+                    "discount": line.discount,
+                }
+                # The lines without quantity (e.g. optional products) are logged as added
+                # when their quantity is set
+                for line in self.order_line._filter_logged_lines()
+                if line.product_uom_qty
+            },
+        }
+
+    def _post_line_changes(self, old_values):
+        """Log the changes of the order lines and totals since ``old_values``, see
+        ``_get_line_changes_values``.
+
+        The unit prices and discounts are logged only when set manually, and not when the pricelist
+        changes. The totals are logged even when no line change is, with the other tracked fields of
+        the order, in a single message at the end of the transaction.
+        """
+        self.ensure_one()
+        new_values = self._get_line_changes_values()
+        pricelist_changed = old_values["pricelist"] != new_values["pricelist"]
+        old_lines, new_lines = old_values["lines"], new_values["lines"]
+
+        def format_line(line_values):
+            return self.env._(
+                "%(product)s (Quantity: %(qty)s, Unit Price: %(price)s)",
+                product=line_values["name"],
+                qty=self._format_line_quantity(line_values["qty"], line_values["uom"]),
+                price=format_amount(self.env, line_values["price_unit"], self.currency_id),
+            )
+
+        updated_logs, added_logs, removed_logs = [], [], []
+        for line_id, old in old_lines.items():
+            new = new_lines.get(line_id)
+            if not new or new["product"] != old["product"]:
+                removed_logs.append(self.env._("Removed: %s", format_line(old)))
+        for line_id, new in new_lines.items():
+            old = old_lines.get(line_id)
+            if not old or new["product"] != old["product"]:
+                added_logs.append(self.env._("Added: %s", format_line(new)))
+                continue
+            changes = self._get_line_update_changes(
+                self.order_line.browse(line_id), old, new, pricelist_changed=pricelist_changed
+            )
+            if changes:
+                updated_logs.append(
+                    Markup('%s:<div class="ps-3">%s</div>')
+                    % (new["name"], Markup("<br/>").join(changes))
+                )
+
+        body_parts = []
+        if pricelist_changed and self.pricelist_id:
+            body_parts.append(
+                self.env._("Prices updated (Pricelist: %s)", self.pricelist_id.display_name)
+            )
+        if logs := updated_logs + added_logs + removed_logs:
+            items = Markup().join(
+                Markup("<li>%s</li>") % log for log in logs[:MAX_LOGGED_LINE_CHANGES]
+            )
+            if (hidden_count := len(logs) - MAX_LOGGED_LINE_CHANGES) > 0:
+                # Aligned with the changes, without bullet
+                items += Markup('<li class="list-unstyled">%s</li>') % (
+                    self.env._("... and 1 more change")
+                    if hidden_count == 1
+                    else self.env._("... and %s more changes", hidden_count)
+                )
+            body_parts.append(
+                Markup("<strong>%s</strong><ul>%s</ul>")
+                % (self.env._("Order lines updated:"), items)
+            )
+        changed_tracked_values = {
+            fname: old_values[fname]
+            for fname in LINE_CHANGES_TRACKED_FIELDS
+            if self.currency_id.compare_amounts(old_values[fname], new_values[fname])
+        }
+        body = Markup("<br/>").join(body_parts)
+        if changed_tracked_values:
+            # In the same message as the other tracked fields of the order
+            self._track_add({self.id: changed_tracked_values}, body=body)
+        elif body:
+            self._message_log(body=body, message_type="tracking")
+
+    def _format_line_quantity(self, quantity, uom_name=None):
+        """Return the quantity of a line in the user's language, without trailing zeros (e.g. "2",
+        "2.5"), followed by its unit when given (e.g. "2 Units")."""
+        digits = self.env["decimal.precision"].precision_get("Product Unit")
+        decimals = float_repr(quantity, digits).rstrip("0").partition(".")[2]
+        formatted_quantity = formatLang(self.env, quantity, digits=len(decimals))
+        return f"{formatted_quantity} {uom_name}" if uom_name else formatted_quantity
+
+    def _get_line_update_changes(self, line, old, new, *, pricelist_changed):
+        """Return the logs of the quantity, unit price and discount changes of a line.
+
+        :param sale.order.line line: The line, with its new values.
+        :param dict old: The values of the line before the change, see
+            ``_get_line_changes_values``.
+        :param dict new: The values of the line after the change.
+        :param bool pricelist_changed: Whether the pricelist of the order changed, which recomputes
+            the prices and discounts.
+        :rtype: list[str]
+        """
+        changes = []
+        qty_changed = line.product_uom_id.compare(old["qty"], new["qty"])
+        if qty_changed or old["uom"] != new["uom"]:
+            # The unit once at the end, unless it changed too
+            old_qty = self._format_line_quantity(
+                old["qty"], old["uom"] if old["uom"] != new["uom"] else None
+            )
+            new_qty = self._format_line_quantity(new["qty"], new["uom"])
+            changes.append(self.env._("Quantity: %(old)s -> %(new)s", old=old_qty, new=new_qty))
+            if self.state == "sale":
+                if line.product_id.type == "consu":
+                    changes.append(
+                        self.env._(
+                            "Delivered Quantity: %s",
+                            self._format_line_quantity(line.qty_delivered, new["uom"]),
+                        )
+                    )
+                changes.append(
+                    self.env._(
+                        "Invoiced Quantity: %s",
+                        self._format_line_quantity(line.qty_invoiced, new["uom"]),
+                    )
+                )
+        if pricelist_changed:
+            return changes
+
+        precision_get = self.env["decimal.precision"].precision_get
+        price_precision = precision_get("Product Price")
+        discount_precision = precision_get("Discount")
+        # A recomputed price also updates the technical price, a manual one doesn't
+        if float_compare(
+            old["price_unit"], new["price_unit"], precision_digits=price_precision
+        ) and not float_compare(
+            old["technical_price_unit"],
+            new["technical_price_unit"],
+            precision_digits=price_precision,
+        ):
+            changes.append(
+                self.env._(
+                    "Unit Price: %(old)s -> %(new)s",
+                    old=format_amount(self.env, old["price_unit"], self.currency_id),
+                    new=format_amount(self.env, new["price_unit"], self.currency_id),
+                )
+            )
+        # The pricelist only recomputes the discount when the quantity changes
+        if float_compare(
+            old["discount"], new["discount"], precision_digits=discount_precision
+        ) and (
+            not qty_changed
+            or float_compare(
+                new["discount"], line._get_pricelist_discount(), precision_digits=discount_precision
+            )
+        ):
+            changes.append(
+                self.env._(
+                    "Discount: %(old)s%% -> %(new)s%%", old=old["discount"], new=new["discount"]
+                )
+            )
+        return changes
+
+    def _track_prepare(self, field_names):
+        """Override of `mail` to not track the totals and the pricelist of sent and confirmed
+        orders as fields: they are logged with the line changes (see `_log_line_changes`), in a
+        single message even when the stock rules of the lines flush the tracking."""
+        field_names = set(field_names)
+        line_changes_fnames = {*LINE_CHANGES_TRACKED_FIELDS, "pricelist_id"}
+        if line_changes_fnames.isdisjoint(field_names):  # e.g. most computes
+            return super()._track_prepare(field_names)
+        drafts = self.filtered(lambda order: order.state == "draft")
+        super(SaleOrder, self - drafts)._track_prepare(field_names - line_changes_fnames)
+        return super(SaleOrder, drafts)._track_prepare(field_names)
+
     def _track_log_get_default_subtype(self, track_init_values):
         self.ensure_one()
         if "state" in track_init_values and self.state == "sale":
@@ -2737,6 +3029,25 @@ class SaleOrder(models.Model):
         return self.analytic_account_id
 
     # === CATALOG === #
+
+    def get_catalog_line_changes_values(self):
+        """Return the values of the lines when opening the product catalog, to log their changes
+        when leaving it (see `log_catalog_line_changes`), or False when they aren't logged."""
+        self.ensure_one()
+        return self.state != "draft" and self._get_line_changes_values()
+
+    def log_catalog_line_changes(self, old_values):
+        """Log the line changes made in the product catalog in a single message, as the catalog
+        writes each change in its own request.
+
+        :param dict old_values: The values returned by `get_catalog_line_changes_values` when
+            opening the catalog.
+        """
+        self.ensure_one()
+        self.check_access("write")
+        # The line ids are strings once serialized in JSON
+        lines = {int(line_id): values for line_id, values in old_values["lines"].items()}
+        self._post_line_changes({**old_values, "lines": lines})
 
     def _get_action_add_from_catalog_extra_context(self):
         return {

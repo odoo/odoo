@@ -7,6 +7,7 @@ from freezegun import freeze_time
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command
 from odoo.tests import new_test_user, tagged
+from odoo.tools import html2plaintext
 from odoo.tools.float_utils import float_compare
 
 from odoo.addons.sale_loyalty.tests.common import TestSaleCouponCommon
@@ -138,6 +139,57 @@ class TestLoyalty(TestSaleCouponCommon):
             len(claimable_rewards),
             2,
             "Now that the ewallet has some points they should both be applicable.",
+        )
+
+    def _create_sent_order_with_order_discount(self, quantity, rule_vals):
+        """Create a sent quotation of `quantity` product C (100 each), with the 10% discount on the
+        order of an automatic promotion with the given rule."""
+        program = self.env["loyalty.program"].create({
+            "name": "10% Discount",
+            "program_type": "promotion",
+            "applies_on": "current",
+            "trigger": "auto",
+            "rule_ids": [Command.create(rule_vals)],
+            "reward_ids": [
+                Command.create({
+                    "reward_type": "discount",
+                    "discount": 10,
+                    "discount_mode": "percent",
+                    "discount_applicability": "order",
+                })
+            ],
+        })
+        order = self._create_so(
+            order_line=[
+                Command.create({"product_id": self.product_C.id, "product_uom_qty": quantity})
+            ]
+        )
+        self._auto_rewards(order, program)
+        order.action_quotation_sent()
+        return order
+
+    def test_reward_line_updates_are_not_logged(self):
+        order = self._create_sent_order_with_order_discount(1, {})
+        order.order_line.filtered(lambda line: not line.is_reward_line).product_uom_qty = 2
+        order._update_programs_and_rewards()  # Updates the price of the reward line
+        self.env.cr.flush()  # Posts the tracking of the order
+        self.assertEqual(
+            len(order.message_ids.filtered(lambda m: "Order lines updated" in m.body)),
+            1,
+            "Only the quantity change should be logged, not the update of the reward line",
+        )
+
+    def test_removed_reward_logs_the_total_change(self):
+        order = self._create_sent_order_with_order_discount(3, {"minimum_amount": 200})
+        order.order_line.filtered(lambda line: not line.is_reward_line).product_uom_qty = 1
+        self.env.cr.flush()  # Logs the quantity change, as in a separate request
+
+        order._update_programs_and_rewards()  # Resets the reward line, then removes it
+        self.env.cr.flush()  # Posts the tracking of the order
+        self.assertEqual(
+            " ".join(html2plaintext(order.message_ids[0].body).split()),
+            "$ 70.00 → *$ 100.00* (Total) $ 70.00 → *$ 100.00* (Untaxed Amount)",
+            "The totals should start from the last logged ones, without the reset reward line",
         )
 
     def test_cancel_order_with_coupons(self):
