@@ -14,6 +14,7 @@ import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 class Partner extends models.Model {
     name = fields.Char();
     type = fields.Char();
+    bank_ids = fields.Many2many({ relation: "res.partner.bank" });
 
     _records = [
         {
@@ -37,6 +38,14 @@ class Partner extends models.Model {
         `,
         search: `<search/>`,
     };
+}
+
+class PartnerBank extends models.Model {
+    _name = "res.partner.bank";
+
+    name = fields.Char();
+    allow_out_payment = fields.Boolean();
+    color = fields.Integer();
 }
 
 class AccountPaymentTerm extends models.Model {
@@ -70,8 +79,36 @@ class AccountPaymentTermLine extends models.Model {
     ];
 }
 
-defineModels([AccountPaymentTerm, AccountPaymentTermLine, Partner]);
+defineModels([AccountPaymentTerm, AccountPaymentTermLine, Partner, PartnerBank]);
 defineMailModels();
+
+describe("FieldMany2ManyTagsBanks", () => {
+    test.tags("desktop");
+    test("forwards the field context to the bank list action", async () => {
+        mockService("action", {
+            doAction(action) {
+                expect(action.context.default_bank_test).toBe("field context");
+            },
+        });
+        await mountView({
+            type: "form",
+            resModel: "partner",
+            arch: `
+                <form>
+                    <field
+                        name="bank_ids"
+                        widget="many2many_tags_banks"
+                        context="{'default_bank_test': 'field context'}"
+                        options="{'color_field': 'color',
+                                  'allow_out_payment_field': 'allow_out_payment'}"
+                    />
+                </form>
+            `,
+        });
+
+        await contains('button[aria-label="Internal link"]').click();
+    });
+});
 
 describe("AccountFileUploader", () => {
     test("widget contains context based on the record despite field not in view", async () => {
