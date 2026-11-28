@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_presenly_approval_rule_list" model="ir.ui.view">
+        <field name="name">presenly.approval.route.list</field>
+        <field name="model">presenly.approval.rule</field>
+        <field name="arch" type="xml">
+            <list string="Approval Routes"
+                  decoration-warning="not is_complete"
+                  decoration-muted="not active">
+                <field name="sequence" widget="handle" string="Order"/>
+                <field name="name" string="Step Name"/>
+                <field name="request_type_display" string="Request"/>
+                <field name="scope_display" string="Applies At"/>
+                <field name="approver_display" string="Who Approves"/>
+                <field name="company_id" groups="base.group_multi_company" optional="show"/>
+                <field name="is_complete" string="Configured" optional="show"/>
+                <field name="active" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_presenly_approval_rule_form" model="ir.ui.view">
+        <field name="name">presenly.approval.route.step.form</field>
+        <field name="model">presenly.approval.rule</field>
+        <field name="arch" type="xml">
+            <form string="Approval Step">
+                <sheet>
+                    <widget name="web_ribbon" title="Needs Configuration" bg_color="text-bg-warning" invisible="is_complete"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <field name="is_complete" invisible="1"/>
+                    <field name="active" invisible="1"/>
+                    <field name="required" invisible="1"/>
+                    <div class="oe_title">
+                        <label for="name" string="Step Name"/>
+                        <h1><field name="name" placeholder="e.g. Manager Review"/></h1>
+                    </div>
+                    <div class="alert alert-info" role="alert">
+                        Each record is one mandatory approval step. Steps run from the smallest Order to the largest. Employees cannot submit when no complete route applies.
+                    </div>
+                    <group>
+                        <group string="1. Request Type">
+                            <field name="company_id" required="1"/>
+                            <field name="is_overtime_route" string="Overtime Route"
+                                   help="Mark this step as the Overtime / Lembur approval route for the company/location scope."/>
+                            <field name="permission_type_id" string="Permission Type"
+                                   domain="[('is_complete', '=', True), ('active', '=', True), ('company_id', '=', company_id)]"
+                                   options="{'no_create': True}"
+                                   invisible="leave_type_id or is_overtime_route"/>
+                            <field name="leave_type_id" string="Time Off Type"
+                                   domain="[('active', '=', True), ('company_id', 'in', [False, company_id])]"
+                                   options="{'no_create': True}"
+                                   invisible="permission_type_id or is_overtime_route"/>
+                            <div class="alert alert-info" role="alert" colspan="2"
+                                 invisible="not is_overtime_route">
+                                This step approves Presenly Overtime requests.
+                            </div>
+                            <field name="request_type_display" readonly="1"/>
+                            <field name="sequence" string="Order"
+                                   help="Approval runs from the smallest Order to the largest. Suggested values: 10, 20, 30."/>
+                        </group>
+                        <group string="2. Work Location Scope">
+                            <field name="work_location_id" string="Only at Work Location"
+                                   domain="[('active', '=', True), ('company_id', '=', company_id)]"
+                                   options="{'no_create': True}"
+                                   help="Leave empty for the company default route. Select a location only to override the default step at that site."/>
+                            <field name="scope_display" readonly="1"/>
+                            <div class="alert alert-light" role="alert" colspan="2">
+                                A location-specific step replaces the company-default step with the same Order for that location.
+                            </div>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="3. Who Approves">
+                            <field name="approver_type" string="Approver Source"/>
+                            <field name="approver_user_id" string="Specific User"
+                                   widget="many2one_avatar_user"
+                                   domain="[('active', '=', True), ('company_ids', 'in', company_id)]"
+                                   options="{'no_create': True}"
+                                   invisible="approver_type != 'user'"/>
+                            <field name="approver_group_id" string="Odoo Group"
+                                   options="{'no_create': True}"
+                                   invisible="approver_type != 'group'"/>
+                            <field name="approver_display" readonly="1"/>
+                        </group>
+                        <group string="How Approvers Are Resolved">
+                            <div class="text-muted" colspan="2">
+                                <p><strong>Employee Manager:</strong> the employee's manager/Time Off approver.</p>
+                                <p><strong>Work Location Manager:</strong> the Location Manager configured on the request's Work Location.</p>
+                                <p><strong>HR Officer:</strong> active Time Off Officers in the request company.</p>
+                                <p><strong>Specific User or Odoo Group:</strong> the selected active users in the request company.</p>
+                            </div>
+                        </group>
+                    </group>
+                    <div class="alert alert-warning" role="alert" invisible="is_complete">
+                        Complete Company, exactly one request type, Step Name, and the selected approver source. Incomplete steps are ignored, and a missing route blocks submission.
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_presenly_approval_rule_search" model="ir.ui.view">
+        <field name="name">presenly.approval.rule.search</field>
+        <field name="model">presenly.approval.rule</field>
+        <field name="arch" type="xml">
+            <search string="Approval Routes">
+                <field name="name"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="work_location_id"/>
+                <field name="permission_type_id"/>
+                <field name="leave_type_id"/>
+                <field name="is_overtime_route"/>
+                <filter name="overtime" string="Overtime Route" domain="[('is_overtime_route', '=', True)]"/>
+                <filter name="complete" string="Complete" domain="[('is_complete', '=', True)]"/>
+                <filter name="incomplete" string="Incomplete" domain="[('is_complete', '=', False)]"/>
+                <filter name="active" string="Active" domain="[('active', '=', True)]"/>
+                <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
+                <separator/>
+                <filter name="group_company" string="Company" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                <filter name="group_location" string="Work Location" context="{'group_by': 'work_location_id'}"/>
+                <filter name="group_permission_type" string="Permission Type" context="{'group_by': 'permission_type_id'}"/>
+                <filter name="group_leave_type" string="Time Off Type" context="{'group_by': 'leave_type_id'}"/>
+                <filter name="group_sequence" string="Step Order" context="{'group_by': 'sequence'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_presenly_approval_rule" model="ir.actions.act_window">
+        <field name="name">Approval Routes</field>
+        <field name="res_model">presenly.approval.rule</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_presenly_approval_rule_search"/>
+        <field name="context">{'active_test': True}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No approval route steps yet</p>
+            <p>Start from a Permission Type or Time Off Type and use its Approval Steps smart button. Add one row per mandatory approver, ordered 10, 20, 30. Leave Work Location empty for the company default; select a location only for an override.</p>
+        </field>
+    </record>
+
+    <!-- Immutable approval snapshot shared by Permission and native Time Off. -->
+    <record id="view_presenly_approval_request_list" model="ir.ui.view">
+        <field name="name">presenly.approval.request.list</field>
+        <field name="model">presenly.approval.request</field>
+        <field name="arch" type="xml">
+            <list string="My Approvals" create="0" edit="0" delete="0" duplicate="false"
+                  decoration-info="state == 'pending'"
+                  decoration-success="state == 'approved'"
+                  decoration-danger="state == 'rejected'"
+                  decoration-muted="state == 'cancelled'">
+                <field name="target_model" string="Request Type"/>
+                <field name="target_display_name" string="Request"/>
+                <field name="employee_id" widget="many2one_avatar_employee"/>
+                <field name="work_location_id" optional="show"/>
+                <field name="progress_display" string="Progress"/>
+                <field name="current_approver_ids" widget="many2many_tags" optional="show"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'pending'"
+                       decoration-success="state == 'approved'"
+                       decoration-danger="state == 'rejected'"
+                       decoration-muted="state == 'cancelled'"/>
+                <field name="started_at" optional="hide"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+                <button name="action_open_target" type="object" string="Review" icon="fa-external-link"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_presenly_approval_request_form" model="ir.ui.view">
+        <field name="name">presenly.approval.request.form</field>
+        <field name="model">presenly.approval.request</field>
+        <field name="arch" type="xml">
+            <form string="Approval Journey" create="0" edit="0" delete="0" duplicate="false">
+                <header>
+                    <button name="action_open_target" type="object" string="Review Request" class="oe_highlight"/>
+                    <field name="state" widget="statusbar" statusbar_visible="pending,approved,rejected,cancelled"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Approved" bg_color="text-bg-success" invisible="state != 'approved'"/>
+                    <widget name="web_ribbon" title="Rejected" bg_color="text-bg-danger" invisible="state != 'rejected'"/>
+                    <widget name="web_ribbon" title="Cancelled" bg_color="text-bg-secondary" invisible="state != 'cancelled'"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group string="Request">
+                            <field name="target_model"/>
+                            <field name="target_display_name"/>
+                            <field name="employee_id" widget="many2one_avatar_employee"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="work_location_id"/>
+                        </group>
+                        <group string="Current Status">
+                            <field name="progress_display"/>
+                            <field name="current_approver_ids" widget="many2many_tags" invisible="state != 'pending'"/>
+                            <field name="started_at"/>
+                            <field name="completed_at" invisible="not completed_at"/>
+                        </group>
+                    </group>
+                    <separator string="Approval Journey"/>
+                    <field name="step_ids" nolabel="1" readonly="1">
+                        <list create="0" edit="0" delete="0"
+                              decoration-info="state == 'pending'"
+                              decoration-success="state == 'approved'"
+                              decoration-danger="state == 'rejected'"
+                              decoration-muted="state in ('waiting', 'cancelled')">
+                            <field name="level"/>
+                            <field name="name"/>
+                            <field name="assigned_user_ids" widget="many2many_tags"/>
+                            <field name="state" widget="badge"
+                                   decoration-info="state == 'pending'"
+                                   decoration-success="state == 'approved'"
+                                   decoration-danger="state == 'rejected'"
+                                   decoration-muted="state in ('waiting', 'cancelled')"/>
+                            <field name="decision_user_id" widget="many2one_avatar_user" optional="show"/>
+                            <field name="decision_date" optional="show"/>
+                            <field name="decision_note" optional="hide"/>
+                        </list>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_presenly_approval_request_search" model="ir.ui.view">
+        <field name="name">presenly.approval.request.search</field>
+        <field name="model">presenly.approval.request</field>
+        <field name="arch" type="xml">
+            <search string="Approval Journeys">
+                <field name="target_display_name"/>
+                <field name="employee_id"/>
+                <field name="work_location_id"/>
+                <filter name="pending" string="Pending" domain="[('state', '=', 'pending')]"/>
+                <filter name="approved" string="Approved" domain="[('state', '=', 'approved')]"/>
+                <filter name="rejected" string="Rejected" domain="[('state', '=', 'rejected')]"/>
+                <filter name="cancelled" string="Cancelled" domain="[('state', '=', 'cancelled')]"/>
+                <separator/>
+                <filter name="group_request_type" string="Request Type" context="{'group_by': 'target_model'}"/>
+                <filter name="group_employee" string="Employee" context="{'group_by': 'employee_id'}"/>
+                <filter name="group_location" string="Work Location" context="{'group_by': 'work_location_id'}"/>
+                <filter name="group_company" string="Company" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_presenly_my_approvals" model="ir.actions.act_window">
+        <field name="name">My Approvals</field>
+        <field name="res_model">presenly.approval.request</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_presenly_approval_request_search"/>
+        <field name="domain">[('id', '=', 0)]</field>
+        <field name="context">{'search_default_pending': 1, 'create': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No requests are waiting for your approval</p>
+            <p>Permission and Time Off requests assigned to your current approval step appear here.</p>
+        </field>
+    </record>
+
+    <record id="action_server_presenly_my_approvals" model="ir.actions.server">
+        <field name="name">My Approvals</field>
+        <field name="model_id" ref="presenly.model_presenly_approval_request"/>
+        <field name="state">code</field>
+        <field name="code">action = model.action_open_my_approvals()</field>
+        <field name="group_ids" eval="[(4, ref('presenly.group_presenly_approver'))]"/>
+    </record>
+</odoo>
