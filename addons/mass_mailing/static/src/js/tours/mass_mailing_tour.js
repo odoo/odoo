@@ -89,10 +89,6 @@
         content: _t("Check the email address and click send."),
         run: "click",
     }, {
-        trigger: "button.btn-close",
-        content: _t("Alright, let's send this mailing"),
-        run: "click",
-    }, {
         trigger: 'button[name="action_launch"]',
         content: _t("Ready for take-off!"),
         run: "click",
