@@ -8,9 +8,7 @@ class MrpProduction(models.Model):
     _inherit = 'mrp.production'
 
     def _cal_price(self, consumed_moves):
-        finished_move = self.move_finished_ids.filtered(lambda x: x.product_id == self.product_id and x.state not in ('done', 'cancel') and x.quantity > 0)
-        # Take the price unit of the reception move
-        last_done_receipt = finished_move.move_dest_ids.filtered(lambda m: m.state == 'done')[-1:]
+        last_done_receipt = self._get_last_done_receipt()
         if last_done_receipt.is_subcontract:
             quantity = last_done_receipt.quantity
             bill_data = last_done_receipt._get_value_from_account_move(quantity)
@@ -21,3 +19,9 @@ class MrpProduction(models.Model):
             else:
                 self.extra_cost = (bill_data['value'] + po_data['value']) / quantity
         return super()._cal_price(consumed_moves=consumed_moves)
+
+    def _get_last_done_receipt(self):
+        finished_move = self.move_finished_ids.filtered(lambda x: x.product_id == self.product_id and x.state not in ('done', 'cancel') and x.quantity > 0)
+        # Take the price unit of the reception move
+        last_done_receipt = finished_move.move_dest_ids.filtered(lambda m: m.state == 'done')[-1:]
+        return last_done_receipt
