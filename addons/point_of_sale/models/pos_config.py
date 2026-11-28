@@ -169,7 +169,7 @@ class PosConfig(models.Model):
     limit_categories = fields.Boolean("Restrict Categories")
     module_pos_restaurant = fields.Boolean("Is a Bar/Restaurant")
     module_pos_avatax = fields.Boolean("AvaTax PoS Integration", help="Use automatic taxes mapping with Avatax in PoS")
-    module_pos_discount = fields.Boolean("Global Discounts")
+    module_pos_discount = fields.Boolean("Global Discounts", default=True)
     module_pos_appointment = fields.Boolean("Online Booking")
     module_pos_deposit = fields.Boolean("Deposit Management")
     use_header_or_footer = fields.Boolean("Custom Header & Footer")

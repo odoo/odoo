@@ -11,7 +11,14 @@ class PosConfig(models.Model):
     iface_discount = fields.Boolean(string='Order Discounts', help='Allow the cashier to give discounts on the whole order.')
     discount_pc = fields.Float(string='Discount Value', help='The default discount value when clicking on the Discount button', default=10.0)
     discount_product_id = fields.Many2one('product.product', string='Discount Product',
-        domain=[('sale_ok', '=', True)], help='The product used to apply the discount on the ticket.')
+        domain=[('sale_ok', '=', True)], help='The product used to apply the discount on the ticket.',
+        default=lambda self: self._default_discount_product_id())
+
+    def _default_discount_product_id(self):
+        product = self.env.ref("pos_discount.product_product_consumable", raise_if_not_found=False)
+        if product and (not product.company_id or product.company_id == self.env.company):
+            return product
+        return False
 
     @api.model
     def _default_discount_value_on_module_install(self):
