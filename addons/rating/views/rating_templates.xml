@@ -47,42 +47,55 @@
 
         <!-- External page: rate and submit feedback -->
         <template id="rating_external_page_submit" name="Rate our Services">
+            <t t-set="rate_colors" t-value="{5: 'success', 3: 'warning', 1: 'danger'}"/>
             <t t-call="web.frontend_layout">
-                <div class="container mb-5 mt-4 o_rating_page_submit">
+                <div class="o_rating_page_submit container my-sm-5">
                     <div class="oe_structure" id="oe_structure_rate_submit_header"/>
-                    <div class="row text-center justify-content-center">
-                        <h1 class="col-12 mt-5">Thank you for rating our services!</h1>
-                        <form class="col-md-6" t-attf-action="/rate/#{token}/submit_feedback" method="post">
-                            <div class="btn-group row flex-nowrap justify-content-center w-100 mt-5"
-                                 role="group"
-                                 data-bs-toggle="buttons">
-                                <t t-foreach="rate_names" t-as="rate_name">
-                                    <input type="radio" name="rate"
-                                           class="btn-check"
-                                           t-attf-id="rate_{{rate_name}}"
-                                           t-att-value="rate_name"
-                                           t-att-checked="rate == rate_name"/>
-                                    <label t-attf-class="col p-4 btn o_rating_label shadow-none transition-base {{rate == rate_name and 'active' or ''}}"
-                                           t-att-for="'rate_%s' % (rate_name)">
-                                        <img t-attf-src='/rating/static/src/img/rating_#{rate_name}.svg'
-                                             t-att-alt="rate_name_value"
-                                             t-att-title="rate_name_value"
-                                             t-attf-class="o_{{rate_name_value.lower()}}"/>
-                                    </label>
-                                </t>
-                            </div>
-                            <p class="mt-5">
-                                Feel free to share feedback on your experience:
-                            </p>
-                            <input type="hidden" name="csrf_token"
-                                   t-att-value="request.csrf_token()"/>
-                            <textarea class="form-control" name="feedback" rows="8"
-                                      t-att-value="rating.feedback"></textarea>
-                            <button type="submit" class="btn btn-primary mt-4"
-                                    style="margin-top:8px;">Send Feedback</button>
-                        </form>
-                        <div class="oe_structure" id="oe_structure_rate_submit_footer"/>
+                    <div class="row justify-content-center">
+                        <div class="o_rating_page_col col-lg-9 col-xl-8 rounded-4 p-4 p-md-5">
+                            <h1 class="h3-fs text-sm-center">Thank you for rating our services!</h1>
+                            <p class="text-sm-center text-muted fw-medium mb-0">Your rating has been recorded.</p>
+                            <form t-attf-action="/rate/#{token}/submit_feedback" method="post">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                <div class="row row-cols-3 g-3 my-4">
+                                    <t t-foreach="rate_names" t-as="rate_name">
+                                        <t t-set="rate_color" t-value="rate_colors[rate_name]"/>
+                                        <div class="col">
+                                            <input
+                                                type="radio"
+                                                name="rate"
+                                                class="o_rating_input btn-check"
+                                                t-attf-id="rate_{{rate_name}}"
+                                                t-att-value="rate_name"
+                                                t-att-checked="rate == rate_name"
+                                                autocomplete="off"/>
+                                            <label
+                                                t-att-for="'rate_%s' % (rate_name)"
+                                                t-attf-class="o_rating_label btn d-flex flex-column align-items-center h-100 gap-2 border-#{rate_color} rounded-3 py-4 px-2 bg-#{rate_color}-subtle"
+                                            >
+                                                <img
+                                                    t-attf-src="/rating/static/src/img/rating_#{rate_name}.svg"
+                                                    t-att-alt="rate_name_value" width="48" height="48"/>
+                                                <span t-out="rate_name_value"/>
+                                            </label>
+                                        </div>
+                                    </t>
+                                </div>
+                                <label for="rating_feedback" class="form-label fw-medium">Feel free to share feedback on your experience</label>
+                                <textarea
+                                    id="rating_feedback"
+                                    class="form-control"
+                                    name="feedback"
+                                    rows="5"
+                                    placeholder="What went well? What could be better?"
+                                    t-out="rating.feedback or ''"/>
+                                <div class="d-flex justify-content-end mt-3">
+                                    <button type="submit" class="btn btn-primary">Send Feedback</button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
+                    <div class="oe_structure" id="oe_structure_rate_submit_footer"/>
                 </div>
             </t>
         </template>
