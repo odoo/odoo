@@ -130,10 +130,10 @@ class PosOrder(models.Model):
         self.ensure_one()
         errors = []
 
-        if self.state not in ('paid', 'done', 'invoiced'):
+        if self.state not in ('paid', 'done'):
             errors.append(_("Veri*Factu documents can only be generated for paid, posted or invoiced Point of Sale Orders."))
 
-        if self.state == 'invoiced' and not cancellation:
+        if self.is_invoiced and not cancellation:
             errors.append(_("Veri*Factu documents can only be generated for invoiced Point of Sale Orders for cancellation purpose."))
 
         return errors
