@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_inherit_mass_mailing_euro_compliance" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.mass.mailing.euro.compliance</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="mass_mailing.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//setting[@name='dedicated_server_setting_container']" position="after">
+                <setting name="mail_tracking_restrictions" help="Disable open and/or click tracking by default for recipients in selected countries (e.g. France, Italy) to comply with local privacy laws.">
+                    <field name="restrict_mail_tracking" string="Mailing Tracking Restrictions"/>
+                    <group class="content-group" invisible="not restrict_mail_tracking">
+                        <field name="default_disable_open_tracking" string="Disable Open Tracking"/>
+                        <field name="default_disable_click_tracking" string="Disable Click Tracking"/>
+                        <field name="default_blacklisted_country_ids" options="{'no_create': True}" class="w-100"
+                               widget="many2many_tags" string="For recipients in" placeholder="All Countries, including blank"/>
+                    </group>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>
