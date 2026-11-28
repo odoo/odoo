@@ -27,10 +27,11 @@ import { useAncestors } from "@mail/core/common/ancestor_plugin";
 import { FullscreenHint } from "@mail/discuss/call/common/fullscreen_hint";
 
 /**
- * What a small screen keeps in its bar; everything else goes into "More". "deafen" is there
- * because it swaps places with "mute": without it the bar loses its audio control once deafened.
+ * What a compact bar (small screen or Picture in Picture) keeps visible; everything else
+ * goes into "More". "deafen" is there because it swaps places with "mute": without it the
+ * bar loses its audio control once deafened.
  */
-const SMALL_SCREEN_BAR_ACTION_IDS = [
+const COMPACT_BAR_ACTION_IDS = [
     "camera-on",
     "deafen",
     "mute",
@@ -328,8 +329,8 @@ export class CallActionList extends Component {
         this.actions = computedShallowEqual(
             () => {
                 const partition = toRaw(this.callActions).partition;
-                if (this.ui.isSmall()) {
-                    return this.smallScreenActions(partition);
+                if (this.ui.isSmall() || this.env.pipWindow) {
+                    return this.compactActions(partition);
                 }
                 const other = partition.other.filter(
                     (a) => !a.tags.includes(ACTION_TAGS.CALL_LAYOUT)
@@ -398,12 +399,13 @@ export class CallActionList extends Component {
     }
 
     /**
-     * The groups of a small screen's bar, in bar order. Everything folds into a single "More": the
-     * wide bar's one menu per group is more chrome than a phone fits.
+     * The groups of a compact bar, in bar order. Used on small screens and in the Picture in
+     * Picture window, where the wide bar's one menu per group does not fit. Everything folds
+     * into a single "More".
      *
      * @param {{ group: Array<Array>, other: Array }} partition
      */
-    smallScreenActions(partition) {
+    compactActions(partition) {
         const barGroups = [];
         const moreGroups = [];
         const joinLeave = [];
@@ -413,7 +415,7 @@ export class CallActionList extends Component {
             for (const action of groupActions) {
                 if (action.tags.includes(ACTION_TAGS.JOIN_LEAVE_CALL)) {
                     joinLeave.push(action);
-                } else if (SMALL_SCREEN_BAR_ACTION_IDS.includes(action.id)) {
+                } else if (COMPACT_BAR_ACTION_IDS.includes(action.id)) {
                     kept.push(action);
                 } else {
                     moved.push(action);

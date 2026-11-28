@@ -3259,3 +3259,19 @@ test("camera turns on without blur when the blur model fails", async () => {
     await waitFor("button[title='Turn camera off']");
     await expect.waitForSteps(["warn: Blur model unavailable", "blur model closed"]);
 });
+
+test("PiP Call controls shows one More button with recording for recording-enabled users", async () => {
+    const { popoutIframe } = mockPipWindow();
+    await startCallWithRecordingPermissions();
+    await contains(".o-discuss-CallActionList button[title='More']:count(1)").click();
+    await contains(".o-dropdown-item[name='picture-in-picture']:count(1)").click();
+    await mailContains(".o-discuss-CallActionList button[title='More']:count(1)", {
+        target: popoutIframe.contentDocument,
+    });
+    await click(".o-discuss-CallActionList button[title='More']", {
+        target: popoutIframe.contentDocument,
+    });
+    await mailContains(".o-dropdown-item[name='record-call']", {
+        target: popoutIframe.contentDocument,
+    });
+});
