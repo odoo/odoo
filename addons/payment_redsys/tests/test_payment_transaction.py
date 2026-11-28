@@ -21,7 +21,9 @@ class TestPaymentTransaction(RedsysCommon):
 
     def test_no_item_missing_from_merchant_parameters(self):
         """Test that all important items are present in the merchant parameters."""
+        self.env['res.lang']._activate_lang('es_ES')
         tx = self._create_transaction(flow='redirect')
+        tx = tx.with_context(lang='es_ES')
         merchant_parameters = tx._redsys_prepare_merchant_parameters()
         converted_amount = payment_utils.to_minor_currency_units(tx.amount, tx.currency_id)
         self.assertEqual(merchant_parameters['DS_MERCHANT_AMOUNT'], str(converted_amount))
@@ -29,6 +31,7 @@ class TestPaymentTransaction(RedsysCommon):
         self.assertEqual(merchant_parameters['DS_MERCHANT_ORDER'], tx.reference)
         self.assertEqual(merchant_parameters['DS_MERCHANT_PAYMETHODS'], 'C')  # credit card
         self.assertTrue('DS_MERCHANT_EMV3DS' in merchant_parameters)
+        self.assertEqual(merchant_parameters['DS_MERCHANT_CONSUMERLANGUAGE'], '001')
 
     def test_search_by_reference_returns_tx(self):
         """Test that the transaction is returned from the payment data."""

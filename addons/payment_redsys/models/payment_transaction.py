@@ -112,6 +112,11 @@ class PaymentTransaction(models.Model):
             ),
             'DS_MERCHANT_EMV3DS': emv3ds_payload
         }
+        language_code = payment_utils.get_language_code(
+            self.env.lang or "", const.LANGUAGE_CODES_MAPPING, fallback=None
+        )
+        if language_code:
+            merchant_parameters["DS_MERCHANT_CONSUMERLANGUAGE"] = language_code
         return merchant_parameters
 
     @api.model

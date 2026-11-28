@@ -28,6 +28,23 @@ PAYMENT_METHODS_MAPPING = {
     'jcb': '9',
 }
 
+# Mapping of language prefixes (e.g.: 'fr') to Redsys consumer language codes.
+# Redsys defaults to Spanish when the language is omitted.
+LANGUAGE_CODES_MAPPING = {
+    'es': '001',
+    'en': '002',
+    'ca': '003',
+    'fr': '004',
+    'de': '005',
+    'nl': '006',
+    'it': '007',
+    'sv': '008',
+    'pt': '009',
+    'pl': '011',
+    'gl': '012',
+    'eu': '013',
+}
+
 # Mapping of Redsys error codes to generic error messages. Error codes are received with 4-digits.
 # See https://pagosonline.redsys.es/desarrolladores-inicio/integrate-con-nosotros/parametros-de-entrada-y-salida/#tablepress-11_wrapper
 ERROR_CODE_GROUPS = {
