@@ -12,7 +12,19 @@
                         <field name="peppol_warnings" class="o_field_html" widget="actionable_errors"/>
                     </div>
 
-                    <div name="peppol_registration">
+                    <div class="alert alert-info" role="status" invisible="not peppol_kyc_processing">
+                        Your Peppol registration is being processed. You will be able to send and receive
+                        electronic invoices once the verification is completed.
+                        <div class="mt-2">
+                            <button name="button_cancel_kyc"
+                                type="object"
+                                string="Cancel verification"
+                                class="btn btn-link p-0"
+                                confirm="This will cancel your ongoing identity verification. Do you want to continue?"/>
+                        </div>
+                    </div>
+
+                    <div name="peppol_registration" invisible="peppol_kyc_processing">
                         <p class="text-muted" invisible="not use_parent_connection">
                             This branch company will use the active Peppol connection found on
                             <field name="parent_company_name" class="oe_inline o_form_label" readonly="1"/>
@@ -64,7 +76,7 @@
                 </sheet>
                 <footer>
                     <widget name="peppol_settings_buttons"
-                            invisible="account_peppol_proxy_state in ('rejected', False)"/>
+                            invisible="account_peppol_proxy_state in ('rejected', False) or peppol_kyc_processing"/>
                 </footer>
             </form>
         </field>

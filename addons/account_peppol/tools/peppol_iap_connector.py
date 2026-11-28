@@ -41,7 +41,7 @@ class PeppolIAPConnector:
             raise UserError(_("Failed to connect to Odoo Peppol Proxy."))
         return response_vals
 
-    def can_connect(self, *, peppol_identifier, db_uuid, callback_url, connect_token, contact_email=None, webhook_url=None):
+    def can_connect(self, *, peppol_identifier, db_uuid, callback_url, connect_token, contact_email=None, webhook_url=None, country_code=None):
         return self.request_public_http('GET', '/api/peppol/2/can_connect', params={
             'dbuuid': db_uuid,
             'peppol_identifier': peppol_identifier,
@@ -49,6 +49,7 @@ class PeppolIAPConnector:
             'connect_token': connect_token,
             'contact_email': contact_email,
             'webhook_url': webhook_url,
+            'country_code': country_code,
         })
 
     def create_connection(self, *, peppol_identifier, db_uuid, public_key, auth_token=None, **company_details):
@@ -62,3 +63,9 @@ class PeppolIAPConnector:
         }
         response = self.request_public_http('POST', '/api/peppol/2/connect', data=params)
         return response
+
+    def kyc_cancel(self, *, db_uuid, kyc_request_uuid):
+        return self.request_public_http('POST', '/api/peppol/2/kyc_cancel', data={
+            'dbuuid': db_uuid,
+            'kyc_request_uuid': kyc_request_uuid,
+        })

@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import json
 import contextlib
 try:
     import phonenumbers
@@ -13,6 +14,7 @@ from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import A
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import DEPRECATED_PEPPOL_EAS
 from odoo.addons.account_peppol.tools.demo_utils import handle_demo
 
+KYC_VERIFICATION_PARAM = 'account_peppol.kyc_verification.%s'  # % company.id
 
 class PeppolRegistration(models.TransientModel):
     _name = 'peppol.registration'
@@ -93,6 +95,7 @@ class PeppolRegistration(models.TransientModel):
         store=True,
         readonly=False,
     )
+    peppol_kyc_processing = fields.Boolean(compute='_compute_peppol_kyc_processing')
 
     # -------------------------------------------------------------------------
     # ONCHANGE METHODS
@@ -241,6 +244,11 @@ class PeppolRegistration(models.TransientModel):
         for wizard in self:
             wizard.company_id.peppol_eas = wizard.peppol_eas
 
+    @api.depends('company_id')
+    def _compute_peppol_kyc_processing(self):
+        for wizard in self:
+            wizard.peppol_kyc_processing = bool(wizard.company_id._peppol_get_kyc_verification())
+
     # -------------------------------------------------------------------------
     # BUSINESS ACTIONS
     # -------------------------------------------------------------------------
@@ -356,11 +364,11 @@ class PeppolRegistration(models.TransientModel):
         ]).active = False
         edi_proxy_client.flush_model(['active'])
 
-        authorization_url = self.env['res.company']._peppol_select_kyc_url(
-            company._peppol_can_connect(edi_identification.lower())
-        )
+        can_connect_vals = company._peppol_can_connect(edi_identification.lower())
+        authorization_url = self.env['res.company']._peppol_select_kyc_url(can_connect_vals)
 
         if authorization_url:
+            company._peppol_set_kyc_verification(can_connect_vals['kyc_request_uuid'], 'processing')
             # redirect to IAP KYC link (that will redirect back to here thru callback)
             return {'type': 'ir.actions.act_url', 'url': authorization_url, 'target': 'self'}
 
@@ -520,3 +528,8 @@ class PeppolRegistration(models.TransientModel):
         else:
             self.company_id._reset_peppol_configuration()
         return True
+
+    def button_cancel_kyc(self):
+        self.ensure_one()
+        self.company_id._peppol_cancel_kyc_verification()
+        return self._action_open_peppol_form()
