@@ -102,6 +102,11 @@
         &.o_ignore_in_tour {
             pointer-events: none;
         }
+
+        /* Keep the previous page displayed while the next one loads below. */
+        &.o_iframe_previous {
+            z-index: 1;
+        }
     }
 }
 

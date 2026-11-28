@@ -78,7 +78,9 @@ test("top window url in action context parameter", async () => {
         },
     });
     await setupWebsiteBuilder(`<h1> Homepage </h1>`);
-    expect(websiteBuilder.initialUrl).toBe("/website/force/1?path=%2F");
+    expect(websiteBuilder.state.iframes.map(({ src }) => src)).toEqual([
+        "/website/force/1?path=%2F",
+    ]);
 });
 
 test("getRecordInfo retrieves the info from the #wrap element", async () => {

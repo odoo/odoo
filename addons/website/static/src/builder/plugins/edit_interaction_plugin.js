@@ -37,6 +37,9 @@ export class EditInteractionPlugin extends Plugin {
         );
         const event = new CustomEvent("edit_interaction_plugin_loaded");
         event.shared = this.__editor.shared;
+        // Several pages may be loaded at the same time (e.g. while reloading
+        // the editor): only the one being edited must answer.
+        event.editableDocument = this.document;
         window.parent.document.dispatchEvent(event);
     }
     destroy() {
