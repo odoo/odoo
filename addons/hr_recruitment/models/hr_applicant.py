@@ -1253,7 +1253,7 @@ class HrApplicant(models.Model):
             for applicant in self:
                 score = applicant._get_matching_scores(job)["matching_score"] if job else applicant.matching_score
                 if score:
-                    name = f"{applicant.display_name or applicant.name} \t --{score:.0f}%--"
+                    name = f"{applicant.display_name or ''} \t --{score:.0f}%--"
                     applicant.display_name = name.strip()
 
     @api.model
