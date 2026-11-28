@@ -1,15 +1,22 @@
 import { animationFrame, waitFor, press } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
+import { waitUntilOrdersSynced } from "@point_of_sale/../tests/unit/utils";
 import { clickControlButton, ensurePane } from "@point_of_sale/../tests/unit/ui_utils";
 
-export async function clickTable(name) {
+export async function clickTable(name, store = false) {
+    if (store) {
+        await waitUntilOrdersSynced(store);
+    }
     await contains(
         `.o_fp_canvas .o_fp_table:not(.syncing):has(.o_fp_table_number:contains("${name}"))`
     ).click();
     await animationFrame();
 }
 
-export async function clickTableById(tableId) {
+export async function clickTableById(tableId, store = false) {
+    if (store) {
+        await waitUntilOrdersSynced(store);
+    }
     await contains(`.o_fp_table[data-table_id='${tableId}']`).click();
     await animationFrame();
 }
