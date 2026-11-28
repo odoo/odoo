@@ -335,6 +335,16 @@ class TestTimesheet(TestCommonTimesheet):
         favorite_project = self.env['account.analytic.line'].with_user(self.user_employee)._get_favorite_project_id()
         self.assertFalse(favorite_project, "A user without timesheet and without access to the internal project should have no favorite project.")
 
+    def test_project_domain_includes_private_project_of_team_member(self):
+        """ A team member of a private project should be able to select it when logging time,
+        even if they do not follow it. """
+        self.project.allowed_internal_user_ids |= self.user_employee
+        self.assertNotIn(self.user_employee.partner_id, self.project.message_partner_ids)
+        Timesheet = self.env['account.analytic.line'].with_user(self.user_employee)
+        project_domain = Timesheet._fields['project_id'].get_comodel_domain(Timesheet)
+        self.assertIn(self.project, self.env['project.project'].with_user(self.user_employee).search(project_domain),
+            "The private project should be selectable by its team members on their timesheets.")
+
     def test_recompute_amount_for_multiple_timesheets(self):
         """ Check that amount is recomputed correctly when setting unit_amount for multiple timesheets at once. """
         Timesheet = self.env['account.analytic.line']
