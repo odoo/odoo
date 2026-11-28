@@ -29,11 +29,14 @@ The audit is complete when every pattern has been swept and every hit judged.
 | Sweep for | Judge against |
 | --- | --- |
 | `sudo(`, `with_user(`, `with_company(` | [Don't over-sudo](#dont-over-sudo) |
+| `browse(` of ids from a request or an RPC argument; `env.is_admin()`, `env.is_system()` | [Don't over-sudo](#dont-over-sudo) |
+| `context.get(` of a key that skips a check | [Default to private methods](#default-to-private-methods) |
+| `base.public_user`, `base.public_partner` | [Routes: auth, POST, CSRF](#routes-auth-post-csrf) |
 | `cr.execute`, `SQL(`, `.format`/`%`/f-string near SQL | [Use the ORM; parameterize SQL](#use-the-orm-parameterize-sql) |
 | domain built from request, RPC, or stored field values | [Domain injection](#domain-injection) |
 | public (non-`_`) model methods | [Default to private methods](#default-to-private-methods) |
 | `@http.route(`, bare `@route(` | [Routes: auth, POST, CSRF](#routes-auth-post-csrf) |
-| `innerHTML`, `insertAdjacentHTML`, `markup(` (JS), `Markup(` (Python), `t-raw` (dead code) | [Prevent XSS](#prevent-xss-escape-on-the-way-into-the-dom) |
+| `innerHTML`, `insertAdjacentHTML`, `markup(` (JS), `Markup(` (Python), `escape(`, `htmlEscape(`, `t-raw` (dead code) | [Prevent XSS](#prevent-xss-escape-on-the-way-into-html) |
 | password/token/secret fields | [Field-level access](#field-level-access) |
 | `related=` crossing models (sudo-computed by default) | [Field-level access](#field-level-access) |
 | `open(` | [Open files with `file_open`](#open-files-with-file_open-not-open) |
@@ -115,6 +118,23 @@ the attacker's reading:
   classmethods/staticmethods, and anything decorated `@api.private` anywhere
   in the MRO. Check that before flagging a public-named method as exposed;
   `@api.private` is the sanctioned fix when renaming would break callers.
+- The context is RPC input too: the caller sets any key in it. A key that
+  skips a check, or does what the caller could not do alone, holds a
+  module-level sentinel tested by identity, which JSON cannot carry. Set it
+  with `with_context` on the one call that needs it:
+
+  ```python
+  SKIP_BOOK_LOCK = object()
+
+  books.with_context(skip_book_lock=SKIP_BOOK_LOCK).write(vals)
+
+  # in write()
+  if self.env.context.get('skip_book_lock') is not SKIP_BOOK_LOCK:
+      self._check_book_lock()
+  ```
+
+  A boolean stays fine for a key that only changes what the caller may
+  already do.
 
 ## Use the ORM; parameterize SQL
 
@@ -149,6 +169,29 @@ the attacker's reading:
   - **create**: arbitrary model / values;
   - **write**: arbitrary model / record / values;
   - **search**: arbitrary model / domain / injection.
+- Ids from a request or an RPC argument are attacker-chosen. Before any
+  `sudo()` that acts on them or returns their data, check in the user's
+  environment that the user may reach them: `search([('id', 'in', ids)])`
+  (with `active_test=False` when archived records count) checks existence
+  and read access in one query, so a record the user cannot read answers
+  like a missing one; add `check_access('write')` or
+  `check_access('unlink')` on the result when the action changes or
+  deletes them. The sudo is only for what comes after, which the user
+  cannot do alone: `/mail/message/post` checks the thread with
+  `_get_thread_with_access_for_post`, then posts with
+  `thread.sudo().message_post()`. A bare `browse(ids)` checks
+  nothing. A group check (`has_group`) does not replace it: the access rows
+  and their domains decide access to a record. The other way in is an
+  access token, checked as in [Timing attacks](#timing-attacks).
+- `env.is_admin()` and `env.is_system()` return True in sudo mode, and code
+  reached from sudo code (a field read through a `sudo()` record, a method
+  called by a sudo caller) runs in sudo mode; they are deprecated from
+  21.0 for that reason. Write what you mean: `env.user._is_admin()` or
+  `env.user._is_system()` when the question is about the user (a
+  non-stored flag with `depends_context('uid')`, a value shown to them),
+  as the answer must not change with sudo, and
+  `env.su or env.user._is_admin()` (or `_is_system()`, as the call it
+  replaces) for a guard that trusted sudo code must pass.
 - Controllers: never `record.sudo().write(post)` with raw request params;
   whitelist keys (`{k: post[k] for k in ('name', 'email') if post.get(k)}`).
 - Under `sudo()`, x2many `Command` payloads in `vals` execute with sudo **on
@@ -173,8 +216,14 @@ the attacker's reading:
   link and perform the action as the logged-in victim.
 - Templates that POST must include `<input type="hidden" name="csrf_token"
   t-att-value="request.csrf_token()"/>`.
+- Tell a visitor who is not logged in with `env.user._is_public()`, never
+  by comparing with one record (`env.ref('base.public_user')`, its partner
+  `base.public_partner`, or their ids): each company can have its own copy
+  of the public user, with its own partner
+  (`res.company._get_public_user()`, in `base`). For example the website
+  of another company runs as that company's public user.
 
-## Prevent XSS (escape on the way into the DOM)
+## Prevent XSS (escape on the way into HTML)
 
 - Reflected (script in URL/params) and stored (script saved by a
   low-privileged user) both execute with the victim's session, far more than
@@ -195,11 +244,31 @@ the attacker's reading:
   ``markup`<td>${name}</td>` `` (placeholders auto-escape; plain
   `markup(str)` marks raw HTML), use the `@web/core/utils/html` helpers
   (`setInnerHtml`, `htmlJoin`), or render through OWL `t-out`.
+- An element of the live document runs the handlers of the HTML set in it
+  as soon as it is parsed, attached or not: `innerHTML` on a detached
+  element fires `<img src=x onerror=...>`. To parse HTML only to walk or
+  change it, use an inert document (`DOMParser`, as
+  `createDocumentFragmentFromContent` of `@web/core/utils/html` does),
+  never `createElement` then `innerHTML`. Its nodes moved into the page
+  run there: only safe HTML (sanitized, `markup`) goes back in.
 - **Escaping vs sanitizing**: escaping (TEXT→CODE) is always mandatory when
   mixing data with code, even for trusted data. Sanitizing (CODE→safer CODE)
   is only for **untrusted** CODE and only works **after** escaping (sanitizing
   raw TEXT corrupts it). `fields.Html`/`html_sanitize` options
   (e.g. `strip_classes`) tune the level.
+- Escape only on the way into HTML. A value set as an attribute
+  (`t-att-*`, `setAttribute`) or as text (`textContent`) is text for the
+  DOM already: escaped first, it shows `&amp;` to the user. Escaping
+  never made an attribute safe either: a URL in `href` or `src` needs its
+  scheme checked (no `javascript:`), and an `on*` attribute takes no user
+  value. The placeholders of `Markup`/`markup` escape their values too:
+  `markupsafe.escape()` (`odoo.tools.html_escape`) around one adds
+  nothing, and `html.escape()`, which returns a plain `str`, gets escaped
+  twice.
+- Mark content safe (`Markup()`, `markup()`) on the line where it becomes
+  safe: where it is sanitized, or right after the RPC that returns a
+  sanitized field. Marked further down, the reader of that line cannot tell
+  why the content is safe, and the next caller passes a raw string in.
 
 ## Open files with `file_open`, not `open`
 
