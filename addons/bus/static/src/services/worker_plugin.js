@@ -1,7 +1,7 @@
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
-import { Plugin, signal, usePlugin } from "@odoo/owl";
+import { Plugin, signal, usePlugin, useScope } from "@odoo/owl";
 import { BusParametersPlugin } from "@bus/bus_parameters_plugin";
 import { services } from "@web/core/services";
 
@@ -18,6 +18,7 @@ export class WorkerPlugin extends Plugin {
     #isUsingSharedWorker = Boolean(browser.SharedWorker);
     #state = signal(WORKER_STATE.UNINITIALIZED);
     #resolveWorkerInit = null;
+    #pluginManager = useScope().pluginManager;
 
     setup() {
         const promWithResolvers = Promise.withResolvers();
@@ -33,7 +34,7 @@ export class WorkerPlugin extends Plugin {
         }
     }
 
-    #startWorker() {
+    async #startWorker() {
         if (!session.bus_info) {
             console.warn("Worker service cannot start: missing 'session.bus_info'.");
             this.#state.set(WORKER_STATE.FAILED);
@@ -41,6 +42,15 @@ export class WorkerPlugin extends Plugin {
             return;
         }
         this.#state.set(WORKER_STATE.INITIALIZING);
+        // The worker relays the bus notifications to the tab as soon as it connects. Plugins are
+        // started in batches of increasing sequence: connect once they are all started, so that
+        // those started after the bus (e.g. the ones started after the legacy services) don't
+        // miss the notifications received in between.
+        // FIXME: requires the Owl fix setting `ready` before `startPlugins` starts the first
+        // batch ("[FIX] owl-core: set plugin manager ready before starting plugins"). Until the
+        // vendored Owl includes it, `ready` read from a first batch plugin is the previous,
+        // already resolved promise.
+        await this.#pluginManager?.ready;
         let workerURL = `${this.#params.serverURL()}/bus/websocket_worker_bundle?v=${
             session.bus_info.worker_version
         }`;
