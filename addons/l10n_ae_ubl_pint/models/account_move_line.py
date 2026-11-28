@@ -92,3 +92,24 @@ class AccountMoveLine(models.Model):
                 'level': 'danger',
             }))
         return errors
+
+    def _l10n_ae_get_report_details(self):
+        """ The item type, HS code, service accounting code and RCM goods type printed under the line on the
+        invoice PDF. Like the XML: nothing without an item type, no HS code on services, no service accounting
+        code on goods.
+        """
+        self.ensure_one()
+        item_type = self.l10n_ae_item_type
+        if not item_type:
+            return []
+        goods_service_type = self.l10n_ae_goods_service_type
+        details = [
+            dict(self._fields['l10n_ae_item_type']._description_selection(self.env))[item_type],
+            item_type in {'G', 'B'} and self.l10n_ae_hs_code,
+            item_type in {'S', 'B'} and self.l10n_ae_service_accounting_code,
+            goods_service_type and "%s-%s" % (
+                goods_service_type,
+                dict(self._fields['l10n_ae_goods_service_type']._description_selection(self.env))[goods_service_type],
+            ),
+        ]
+        return [detail for detail in details if detail]
