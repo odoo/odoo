@@ -1,4 +1,5 @@
 from .test_project_base import TestProjectCommon
+from odoo import Command
 from odoo.tests import tagged
 
 
@@ -125,3 +126,66 @@ class TestProjectConfig(TestProjectCommon):
         project_user_config = self.user_settings_project_user.embedded_actions_config_ids
         self.assertEqual(len(project_user_config), 1, 'There should still be only one embedded action setting created.')
         self.assertEqual(project_user_config, user_config, 'The existing user config should be unchanged.')
+
+    def test_project_admin_inherits_manager_embedded_config(self):
+        self.user_projectuser.write({'group_ids': [Command.link(self.env.ref('project.group_project_manager').id)]})
+        project = self.env['project.project'].create({
+            'name': 'Project with a shared top menu',
+            'user_id': self.user_projectmanager.id,
+            'privacy_visibility': 'employees',
+        })
+        action = self.env.ref('project.act_project_project_2_project_task_all')
+        milestones = self.env.ref('project.project_embedded_action_project_milestones')
+        burndown = self.env.ref('project.project_embedded_action_project_burndown_chart')
+        config = {
+            'embedded_actions_order': [burndown.id, False, milestones.id],
+            'embedded_actions_visibility': [False, milestones.id, burndown.id],
+            'embedded_visibility': True,
+        }
+        self.user_settings_project_manager.set_embedded_actions_setting(action.id, project.id, {
+            'res_model': 'project.project',
+            **config,
+        })
+        settings = self.user_settings_project_user.with_user(self.user_projectuser).with_context(
+            res_model='project.project', res_id=project.id,
+        )
+        self.assertFalse(settings.embedded_actions_config_ids)
+
+        config_key = f'{action.id}+{project.id}'
+        self.assertEqual(settings.get_embedded_actions_settings()[config_key], config)
+        self.assertEqual(len(settings.embedded_actions_config_ids), 1)
+        self.assertEqual(settings.embedded_actions_config_ids._embedded_action_settings_format()[config_key], config)
+
+    def test_project_admin_default_embedded_config(self):
+        action = self.env.ref('project.act_project_project_2_project_task_all')
+        overview = self.env.ref('project.project_embedded_action_project_overview')
+        expected_config = {
+            'embedded_actions_visibility': [False, overview.id],
+            'embedded_actions_order': [],
+            'embedded_visibility': True,
+        }
+        for manager_id in (self.user_projectmanager.id, self.user_projectuser.id, False):
+            with self.subTest(manager_id=manager_id):
+                project = self.env['project.project'].create({
+                    'name': 'Project without a top menu configuration',
+                    'user_id': manager_id,
+                    'privacy_visibility': 'employees',
+                })
+                settings = self.user_settings_project_manager.with_user(self.user_projectmanager).with_context(
+                    res_model='project.project', res_id=project.id,
+                )
+                config_key = f'{action.id}+{project.id}'
+                config_count = len(settings.embedded_actions_config_ids)
+                self.assertNotIn(config_key, settings.embedded_actions_config_ids._embedded_action_settings_format())
+                self.assertEqual(settings.get_embedded_actions_settings()[config_key], expected_config)
+                self.assertEqual(len(settings.embedded_actions_config_ids), config_count + 1)
+                self.assertEqual(settings.embedded_actions_config_ids._embedded_action_settings_format()[config_key], expected_config)
+
+                custom_config = {
+                    'embedded_actions_visibility': [False],
+                    'embedded_actions_order': [overview.id, False],
+                    'embedded_visibility': False,
+                }
+                settings.set_embedded_actions_setting(action.id, project.id, custom_config)
+                self.assertEqual(settings.get_embedded_actions_settings()[config_key], custom_config)
+                self.assertEqual(len(settings.embedded_actions_config_ids), config_count + 1)

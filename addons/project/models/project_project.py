@@ -1091,14 +1091,6 @@ class ProjectProject(models.Model):
             })
         return dict(action, context=action_context)
 
-    def action_view_tasks_analysis(self):
-        """ return the action to see the tasks analysis report of the project """
-        action = self.env['ir.actions.act_window']._for_xml_id('project.action_project_task_user_tree')
-        action['display_name'] = _("%(name)s's Tasks Analysis", name=self.name)
-        action_context = ast.literal_eval(action['context']) if action['context'] else {}
-        action_context['search_default_project_id'] = self.id
-        return dict(action, context=action_context)
-
     def action_get_list_view(self):
         action = self.env['ir.actions.act_window']._for_xml_id('project.project_milestone_action')
         action['display_name'] = _("%(name)s's Milestones", name=self.name)

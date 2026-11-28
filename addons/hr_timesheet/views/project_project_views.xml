@@ -79,11 +79,6 @@
                     <field name="encode_uom_in_days"/>
                     <field name="allocated_hours"/>
                 </xpath>
-                <xpath expr="//div[@name='card_menu_view']" position="inside">
-                    <div role="menuitem" t-if="record.allow_timesheets.raw_value and !record.is_template.raw_value" groups="hr_timesheet.group_hr_timesheet_user">
-                        <a name="action_project_timesheets" type="object">Timesheets</a>
-                    </div>
-                </xpath>
                 <xpath expr="//field[@name='tag_ids']" position="before">
                     <t t-set="badgeColor" t-value="'text-success'"/>
                     <t t-set="badgeColor" t-value="'text-danger'" t-if="record.remaining_hours.raw_value &lt; 0"/>

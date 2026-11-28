@@ -12,7 +12,7 @@ registry.category("web_tour.tours").add('project_create_sol_tour', {
         content: "Open the project dropdown of project name 'Test History Project'.",
         run: "hover && click .o_kanban_record:contains(Test History Project):first .o_dropdown_kanban .dropdown-toggle",
     }, {
-        trigger: ".o_kanban_card_manage_settings a:contains('Settings')",
+        trigger: ".o-dropdown--kanban-record-menu a:contains('Settings')",
         content: 'Start editing the project.',
         run: "click",
     }, {
