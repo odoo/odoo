@@ -278,3 +278,76 @@ class TestSaleStockMultiCompany(TestSaleCommon, ValuationReconciliationTestCommo
         delivery.picking_id.button_validate()
 
         self.assertEqual(so.order_line.qty_delivered, 5.0, "Intercompany transfers are being counted incorrectly")
+
+    def test_intercompany_resupply_delivered_qty(self):
+        """Check that the receipt from the inter-company transit resupplying the selling company
+        does not count as a return on the delivered quantity of the sale order line."""
+        company_a = self.env.company
+        company_b = self.company_data_2['company']
+        wh_a, wh_b = self.warehouse_A, self.warehouse_B
+        interco_location = self.env.ref('stock.stock_location_inter_company')
+        customer_location = self.env.ref('stock.stock_location_customers')
+
+        self.product_a.is_storable = True
+        self.env['stock.quant']._update_available_quantity(self.product_a, wh_a.lot_stock_id, 5.0)
+        route = self.env['stock.route'].create({
+            'name': 'Resupply B from A via Interco',
+            'company_id': False,
+            'rule_ids': [
+                Command.create({
+                    'name': 'Co B to Customer',
+                    'action': 'pull',
+                    'location_src_id': wh_b.lot_stock_id.id,
+                    'location_dest_id': customer_location.id,
+                    'picking_type_id': wh_b.out_type_id.id,
+                    'procure_method': 'make_to_order',
+                    'company_id': company_b.id,
+                }),
+                Command.create({
+                    'name': 'Interco to Co B',
+                    'action': 'pull',
+                    'location_src_id': interco_location.id,
+                    'location_dest_id': wh_b.lot_stock_id.id,
+                    'picking_type_id': wh_b.in_type_id.id,
+                    'procure_method': 'make_to_order',
+                    'company_id': company_b.id,
+                }),
+                Command.create({
+                    'name': 'Co A to Interco',
+                    'action': 'pull',
+                    'location_src_id': wh_a.lot_stock_id.id,
+                    'location_dest_id': interco_location.id,
+                    'picking_type_id': wh_a.out_type_id.id,
+                    'procure_method': 'make_to_stock',
+                    'company_id': company_a.id,
+                    'location_dest_from_rule': True,
+                }),
+            ],
+        })
+        self.product_a.route_ids = [Command.set(route.ids)]
+
+        so = self.env['sale.order'].with_company(company_b).create({
+            'partner_id': self.partner_a.id,
+            'company_id': company_b.id,
+            'warehouse_id': wh_b.id,
+            'order_line': [Command.create({'product_id': self.product_a.id, 'product_uom_qty': 5.0})],
+        })
+        so.action_confirm()
+
+        moves = self.env['stock.move'].search([('product_id', '=', self.product_a.id)])
+        self.assertRecordValues(moves.sorted('id'), [
+            {'location_id': wh_b.lot_stock_id.id, 'location_dest_id': customer_location.id, 'company_id': company_b.id},
+            {'location_id': interco_location.id, 'location_dest_id': wh_b.lot_stock_id.id, 'company_id': company_b.id},
+            {'location_id': wh_a.lot_stock_id.id, 'location_dest_id': interco_location.id, 'company_id': company_a.id},
+        ])
+        delivery, receipt_b, shipment_a = moves.sorted('id').picking_id
+        for picking in (shipment_a, receipt_b):
+            picking.move_ids.quantity = 5.0
+            picking.move_ids.picked = True
+            picking.with_company(picking.company_id).button_validate()
+        self.assertEqual(so.order_line.qty_delivered, 0.0)
+
+        delivery.move_ids.quantity = 5.0
+        delivery.move_ids.picked = True
+        delivery.with_company(company_b).button_validate()
+        self.assertEqual(so.order_line.qty_delivered, 5.0)
