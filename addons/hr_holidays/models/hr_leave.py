@@ -870,6 +870,7 @@ class HrLeave(models.Model):
                 domain = [
                     ('start_date', '<=', leave.request_date_to),
                     ('end_date', '>=', leave.request_date_from),
+                    ('company_id', '=', (leave.employee_company_id or self.env.company).id),
                     '|',
                         ('resource_calendar_id', '=', False),
                         ('resource_calendar_id', '=', leave.resource_calendar_id.id),
