@@ -427,3 +427,23 @@ class TestFlexibleResourceCalendar(TransactionCase):
         self.assertEqual(leave.state, 'validate')
         work_entries = self.flex_employee.version_id.generate_work_entries(date(2025, 2, 4), date(2025, 2, 4))
         self.assertEqual([(vals['work_entry_type_id'], vals['duration']) for vals in work_entries], [(leave_type, 10)])
+
+    def test_day_of_working_time_in_hours_lasts_the_average_day(self):
+        """On a flexible schedule, a day of working time in hours lasts the average day by default,
+        whatever the timezone of the employee."""
+        self.flex_employee.tz = 'Europe/Brussels'
+        work_type = self.env['hr.work.entry.type'].create({
+            'name': 'Training Hours',
+            'code': 'FLEXWORKHOURS',
+            'count_as': 'working_time',
+            'requires_allocation': False,
+            'request_unit': 'hour',
+        })
+        form = Form(self.env['hr.leave'].with_context(
+            default_request_date_from=date(2025, 2, 4), default_request_date_to=date(2025, 2, 4)))
+        form.employee_id = self.flex_employee
+        form.work_entry_type_id = work_type
+        leave = form.save()
+
+        self.assertEqual((leave.request_hour_from, leave.request_hour_to), (8, 16))
+        self.assertEqual(leave.number_of_hours, 8)
