@@ -1239,7 +1239,7 @@ class PosSession(models.Model):
             if not payment.payment_method_id.journal_id:
                 continue
             accounting_partner = self.env["res.partner"]._find_accounting_partner(payment.partner_id)
-            destination_account = accounting_partner.property_account_receivable_id
+            destination_account = accounting_partner.with_company(self.company_id).property_account_receivable_id
             vals_list.append(self._get_split_account_payment_vals(payment, amounts, accounting_partner, destination_account))
             entries.append((payment, amounts, destination_account))
         account_payments = self.env['account.payment'].create(vals_list)
@@ -1446,7 +1446,7 @@ class PosSession(models.Model):
                               payment_method=payment.payment_method_id.name,
                               order=payment.pos_order_id.name))
         partial_vals = {
-            'account_id': accounting_partner.property_account_receivable_id.id,
+            'account_id': accounting_partner.with_company(self.company_id).property_account_receivable_id.id,
             'move_id': self.move_id.id,
             'partner_id': accounting_partner.id,
             'name': '%s - %s' % (self.name, payment.payment_method_id.name),
@@ -1559,7 +1559,7 @@ class PosSession(models.Model):
             'payment_ref': payment.name,
             'pos_session_id': self.id,
             'journal_id': journal.id,
-            'counterpart_account_id': accounting_partner.property_account_receivable_id.id,
+            'counterpart_account_id': accounting_partner.with_company(self.company_id).property_account_receivable_id.id,
             'partner_id': accounting_partner.id,
             **amount_values
         }

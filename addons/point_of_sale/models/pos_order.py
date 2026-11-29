@@ -1084,7 +1084,7 @@ class PosOrder(models.Model):
         for payment_id in self.payment_ids:
             is_split_transaction = payment_id.payment_method_id.split_transactions
             if is_split_transaction:
-                reversed_move_receivable_account_id = self.partner_id.property_account_receivable_id
+                reversed_move_receivable_account_id = self.partner_id.with_company(self.company_id).property_account_receivable_id
             else:
                 reversed_move_receivable_account_id = payment_id.payment_method_id.receivable_account_id or self.company_id.account_default_pos_receivable_account_id
 
@@ -1151,7 +1151,7 @@ class PosOrder(models.Model):
         accounts = (
             self.company_id.account_default_pos_receivable_account_id |
             self.payment_ids.mapped('payment_method_id.receivable_account_id') |
-            partner.property_account_receivable_id
+            partner.with_company(self.company_id).property_account_receivable_id
         )
 
         candidate_lines = reversal_entry.line_ids
@@ -1159,7 +1159,7 @@ class PosOrder(models.Model):
             candidate_lines |= payment_moves.line_ids
         else:
             candidate_lines |= self.session_move_id.line_ids.filtered(
-                lambda l: l.partner_id == partner and l.account_id == partner.property_account_receivable_id
+                lambda l: l.partner_id == partner and l.account_id == partner.with_company(self.company_id).property_account_receivable_id
             )
 
         lines_by_account = {}
