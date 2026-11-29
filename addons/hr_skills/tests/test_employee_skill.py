@@ -2,11 +2,14 @@
 from dateutil.relativedelta import relativedelta
 import datetime
 
+from lxml import etree
+
 from odoo import fields
 
 from odoo.exceptions import ValidationError
 from odoo.tests import Form
 from odoo.tests.common import TransactionCase
+from odoo.tools.safe_eval import safe_eval
 
 
 class TestEmployeeSkills(TransactionCase):
@@ -553,3 +556,19 @@ class TestEmployeeSkills(TransactionCase):
         employee_form.current_employee_skill_ids.remove(index=index)
         employee_form.save()
         self.assertEqual(len(self.employee.employee_skill_ids), 6, "the certification is removed because an other expired certification has the same validity range")
+
+    def test_certification_expiring_today_is_valid(self):
+        today = fields.Date.context_today(self.env.user)
+        expiring_today, expired = self.env['hr.employee.skill'].create([{
+            'skill_type_id': self.certification.id,
+            'skill_id': self.certification.skill_ids[1].id,
+            'skill_level_id': self.certification.skill_level_ids[level].id,
+            'employee_id': self.employee.id,
+            'valid_from': today - relativedelta(years=1),
+            'valid_to': valid_to,
+        } for level, valid_to in [(2, today), (1, today - relativedelta(days=1))]])
+
+        search_arch = etree.fromstring(self.env.ref('hr_skills.hr_employee_skill_view_search').arch)
+        filter_domain = safe_eval(search_arch.xpath("//filter[@name='valid_certification']")[0].get('domain'))
+        valid = self.env['hr.employee.skill'].search(filter_domain + [('id', 'in', (expiring_today | expired).ids)])
+        self.assertEqual(valid, expiring_today, "A certification expiring today is still valid")
