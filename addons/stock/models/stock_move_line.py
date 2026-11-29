@@ -910,6 +910,7 @@ class StockMoveLine(models.Model):
         returns: dictionary {product_id+name+description+uom: {product, name, description, quantity, product_uom}, ...}
         """
         aggregated_move_lines = {}
+        counted_moves = {}
 
         # Loops to get backorders, backorders' backorders, and so and so...
         backorders = self.env['stock.picking']
@@ -951,9 +952,19 @@ class StockMoveLine(models.Model):
                     'packaging_qty_ordered': packaging_qty_ordered if packaging_qty_ordered is not None else packaging_quantity,
                     'product': move_line.product_id,
                 }
+                counted_moves[line_key] = {move_line.move_id.id}
             else:
-                aggregated_move_lines[line_key]['qty_ordered'] = uom.round(aggregated_move_lines[line_key]['qty_ordered'] + quantity)
-                aggregated_move_lines[line_key]['packaging_qty_ordered'] = move_line.move_id.packaging_uom_id.round(aggregated_move_lines[line_key]['packaging_qty_ordered'] + packaging_quantity)
+                qty_ordered = quantity
+                packaging_qty_ordered = packaging_quantity
+                if not kwargs.get('strict') and move_line.move_id.id not in counted_moves[line_key]:
+                    # First line of another move sharing this key: count its demand, minus the
+                    # quantities of its other lines, which are added when they get aggregated.
+                    counted_moves[line_key].add(move_line.move_id.id)
+                    other_move_lines = move_line.move_id.move_line_ids - move_line
+                    qty_ordered = uom.round(move_line.move_id.product_uom_qty - sum(m.product_uom_id._compute_quantity(m.quantity, uom) for m in other_move_lines))
+                    packaging_qty_ordered = uom._compute_quantity(qty_ordered, move_line.move_id.packaging_uom_id)
+                aggregated_move_lines[line_key]['qty_ordered'] = uom.round(aggregated_move_lines[line_key]['qty_ordered'] + qty_ordered)
+                aggregated_move_lines[line_key]['packaging_qty_ordered'] = move_line.move_id.packaging_uom_id.round(aggregated_move_lines[line_key]['packaging_qty_ordered'] + packaging_qty_ordered)
                 aggregated_move_lines[line_key]['quantity'] = uom.round(aggregated_move_lines[line_key]['quantity'] + quantity)
                 aggregated_move_lines[line_key]['packaging_quantity'] = move_line.move_id.packaging_uom_id.round(aggregated_move_lines[line_key]['packaging_quantity'] + packaging_quantity)
 

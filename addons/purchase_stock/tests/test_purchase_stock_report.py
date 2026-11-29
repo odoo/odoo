@@ -441,3 +441,91 @@ class TestPurchaseStockReports(TestReportsCommon):
         self.assertEqual(data['qty_total:sum'], 10)
         self.assertEqual(data['qty_on_time:sum'], 10)
         self.assertEqual(data['on_time_rate:sum'], 100)
+
+    def test_delivery_slip_partially_received(self):
+        """ Check that for a PO with two lines of the same product received short or over, the delivery slip
+        counts the demand of each PO line.
+        """
+        po_short, po_over = self.env['purchase.order'].create([{
+            'partner_id': self.partner.id,
+            'order_line': [
+                Command.create({'product_id': self.product.id, 'product_qty': qty})
+                for qty in (5, 2)
+            ],
+        } for _ in range(2)])
+        (po_short | po_over).button_confirm()
+
+        receipt_short = po_short.picking_ids
+        receipt_short.move_ids.filtered(lambda m: m.product_uom_qty == 2).quantity = 1
+        receipt_short.move_ids.picked = True
+        Form.from_action(self.env, receipt_short.button_validate()).save().process_cancel_backorder()
+
+        [aggregated_line] = receipt_short.move_ids.move_line_ids._get_aggregated_product_quantities().values()
+        self.assertEqual(aggregated_line['qty_ordered'], 7)
+        self.assertEqual(aggregated_line['quantity'], 6)
+
+        receipt_over = po_over.picking_ids
+        receipt_over.move_ids.filtered(lambda m: m.product_uom_qty == 2).quantity = 4
+        receipt_over.move_ids.picked = True
+        receipt_over.button_validate()
+
+        [aggregated_line] = receipt_over.move_ids.move_line_ids._get_aggregated_product_quantities().values()
+        self.assertEqual(aggregated_line['qty_ordered'], 7)
+        self.assertEqual(aggregated_line['quantity'], 9)
+
+    def test_delivery_slip_partially_received_with_lot(self):
+        """ Check that for a PO with two lines of the same product received in several lots, the delivery slip
+        counts the demand of each PO line.
+        """
+        self.product.tracking = 'lot'
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [
+                Command.create({'product_id': self.product.id, 'product_qty': qty})
+                for qty in (5, 3)
+            ],
+        })
+        po.button_confirm()
+
+        receipt = po.picking_ids
+        move_5, move_3 = receipt.move_ids.sorted('product_uom_qty', reverse=True)
+        move_5.move_line_ids.lot_name = 'LOT1'
+        move_3.move_line_ids.write({'lot_name': 'LOT2', 'quantity': 1})
+        move_3.move_line_ids = [Command.create({
+            'product_id': self.product.id,
+            'picking_id': receipt.id,
+            'lot_name': 'LOT3',
+            'quantity': 1,
+        })]
+        receipt.move_ids.picked = True
+        Form.from_action(self.env, receipt.button_validate()).save().process_cancel_backorder()
+
+        [aggregated_line] = receipt.move_ids.move_line_ids._get_aggregated_product_quantities().values()
+        self.assertEqual(aggregated_line['qty_ordered'], 8)
+        self.assertEqual(aggregated_line['quantity'], 7)
+
+    def test_delivery_slip_partially_received_with_packaging(self):
+        """ Check that for a PO with two lines of the same product with packaging, the delivery slip
+        also counts the demand of each PO line.
+        """
+        pack_of_6 = self.env.ref('uom.product_uom_pack_6')
+        self.product.uom_ids = [Command.link(pack_of_6.id)]
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [
+                Command.create({'product_id': self.product.id, 'product_qty': 1, 'product_uom_id': pack_of_6.id})
+                for _ in range(2)
+            ],
+        })
+        po.button_confirm()
+
+        receipt = po.picking_ids
+        receipt.move_ids[1].quantity = 3
+        receipt.move_ids.picked = True
+        Form.from_action(self.env, receipt.button_validate()).save().process_cancel_backorder()
+
+        [aggregated_line] = receipt.move_ids.move_line_ids._get_aggregated_product_quantities().values()
+        self.assertEqual(aggregated_line['qty_ordered'], 12)
+        self.assertEqual(aggregated_line['packaging_qty_ordered'], 2)
+        self.assertEqual(aggregated_line['quantity'], 9)
+        self.assertEqual(aggregated_line['packaging_quantity'], 1.5)
