@@ -148,6 +148,14 @@ class TestPurchaseStockValuation(PurchaseTestCommon):
         po.order_line.price_unit = 15
         self.assertEqual(move_in_1.value, 150)
 
+        # Matching a posted bill with the PO line must revalue the receipt
+        bill = self._create_bill(self.product, quantity=10, price_unit=20)
+        self.env.flush_all()
+        match_lines = self.env['purchase.bill.line.match'].search([('partner_id', '=', self.vendor.id)])
+        match_lines.action_match_lines()
+        self.assertEqual(bill.invoice_line_ids.purchase_line_id, po.order_line)
+        self.assertEqual(move_in_1.value, 200)
+
     def test_avco_after_po_discount_update(self):
         """Changing only the discount of a confirmed PO line must revalue the
         receipt and the AVCO cost.
