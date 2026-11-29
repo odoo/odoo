@@ -3,6 +3,7 @@ import { onWillStart } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";
 import { _t } from "@web/core/l10n/translation";
+import { user } from "@web/core/user";
 
 export class ProductCatalogKanbanController extends KanbanController {
     static template = "ProductCatalogKanbanController";
@@ -14,7 +15,10 @@ export class ProductCatalogKanbanController extends KanbanController {
         this.orderResModel = this.props.context.product_catalog_order_model;
         this.backToQuotationDebounced = useDebounced(this.backToQuotation, 500)
 
-        onWillStart(() => this.onWillStart());
+        onWillStart(() => {
+            this.create_access = user.checkAccessRight("product.template", "create")
+            this.onWillStart();
+        });
     }
 
     async onWillStart() {
@@ -24,7 +28,7 @@ export class ProductCatalogKanbanController extends KanbanController {
 
     // Force the slot for the "Back to Quotation" button to always be shown.
     get canCreate() {
-        return true;
+        return this.create_access;
     }
 
     get stateFiels() {
